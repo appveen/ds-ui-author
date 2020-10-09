@@ -1,0 +1,181 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.overlay {
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.75);
+  top: 0;
+  left: 0;
+}
+.modal {
+  margin: 0 auto;
+  margin-top: 30px;
+  width: calc(100vw - 96px);
+  height: calc(100vh - 96px);
+  .modal-body {
+    height: calc(100vh - 214px);
+    .source-to-destination {
+      .logo {
+        width: 15vw;
+        height: 7vh;
+      }
+      .hr-line {
+        width: 14vmax;
+        border-bottom: 1px solid $accent;
+      }
+    }
+    .mapping-block {
+      .blue-logo {
+        color: $capiot;
+      }
+      .fields {
+        width: 500px;
+        .search-attributes {
+          position: absolute;
+          top: 10px;
+          left: 15px;
+        }
+        .field-list {
+          overflow-y: auto;
+        }
+        .field-item {
+          transition: 0.25s;
+          &:not(.no-action):hover {
+            .handle {
+              .fa {
+                transition: 0.25s;
+                opacity: 1;
+              }
+            }
+          }
+          &:not(.no-action):active {
+            transition: 0.25s;
+            background: $secondary;
+          }
+          .lines {
+            height: 34px !important;
+          }
+          .handle {
+            .fa {
+              transition: 0.25s;
+              opacity: 0;
+            }
+          }
+        }
+      }
+      .mapper-wrapper {
+        overflow-y: auto;
+      }
+      .mapper {
+        .mapper-field-block {
+          &.error {
+            border: 1px solid $danger !important;
+            background: rgba($danger, 0.1) !important;
+          }
+          &:nth-child(odd) {
+            background: $light;
+          }
+          .source-fields {
+            .field {
+              height: 46px;
+              .field-clear {
+                min-width: 48px;
+                max-width: 48px;
+              }
+              .field-placeholder {
+                min-width: 348px;
+                max-width: 348px;
+                .drop-here-label {
+                  display: none;
+                }
+                &.over {
+                  background: $accent;
+                  .add-attribute-label {
+                    display: none;
+                  }
+                  .drop-here-label {
+                    display: block;
+                  }
+                }
+                &.mapped {
+                  min-width: 300px;
+                  max-width: 300px;
+                }
+              }
+              .field-line {
+                border-bottom: 2px solid $dark;
+              }
+              .vertical-bar {
+                height: 16px;
+                border-right: 2px solid $dark;
+              }
+            }
+          }
+          .destination-field-wrapper {
+            .destination-field {
+              height: 46px;
+              min-width: 360px;
+              max-width: 360px;
+            }
+          }
+          .mapper-field-header {
+            height: 46px;
+          }
+        }
+      }
+    }
+  }
+}
+.vertical-line,
+.horizonal-line {
+  border-width: 2px !important;
+  min-width: 15px;
+}
+.function {
+  .function-circle {
+    width: 30px;
+    height: 30px;
+    margin-left: -30px;
+    border-radius: 15px;
+  }
+  .function-line,
+  .line {
+    border-bottom: 2px solid $dark;
+  }
+  .function-line {
+    width: 15px;
+  }
+  .line {
+    width: 30px;
+    &.no-function {
+      width: 45px;
+    }
+  }
+}
+.line-to-bottom,
+.line-to-top {
+  height: 24px;
+  border-right: 2px solid $dark;
+  margin-right: 15px;
+}
+.field-toggle-state {
+  min-width: 20px;
+  width: 20px;
+  height: 20px;
+}
+.symbol {
+  width: 6vmax;
+  height: 4vh;
+  border-radius: 10px;
+  .line {
+    width: 20px;
+    border-bottom: 1px solid $black;
+  }
+}
+
+.field-type-badge {
+  min-width: 26px;
+  max-width: 26px;
+  min-height: 20px;
+  max-height: 20px;
+}

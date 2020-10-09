@@ -1,0 +1,96 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+  <div class="align-self-center text-center">
+    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="text-secondary mt-2">Processing...</div>
+  </div>
+</div>
+<div class="d-flex flex-column position-relative">
+  <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+  <div class="options d-flex justify-content-between align-items-center w-100  px-3">
+    <div class="font-weight-bold font-lg">Bookmarks</div>
+    <div class="d-flex align-items-center ignore-outside">
+      <button class="add-new btn-min-width btn btn-primary ignore-outside" type="button" (click)="createNewBookmark()"
+        *ngIf="hasPermission('PMBM')">
+        <span class="fa fa-plus mr-2 ignore-outside"></span>
+        <span class="text ignore-outside">New Bookmark</span>
+      </button>
+    </div>
+  </div>
+  <div class="d-flex flex-column w-100 mt-2 px-3">
+    <div class="bookmark-table-wrapper">
+      <div class="data-grid-options d-flex align-items-center justify-content-between px-2">
+        <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center">
+            <odp-round-check [(checked)]="checkAllBookmark" [edit]={status:true}></odp-round-check>
+            <span class="text-primary font-sm ml-2" (click)="checkAllBookmark=!checkAllBookmark">Select All</span>
+          </div>
+          <div class="d-flex align-items-center ml-4 hover" *ngIf="enableBulkDelete" (click)="bulkDelete()">
+           <span class="fa fa-trash text-danger font-sm"></span>
+            <button  type="button" class="btn btn-link text-danger font-sm" >Delete</button>
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <span class="page-info">
+            {{startNo}}-{{endNo}} of {{totalRecords}}
+          </span>
+          <button type="button" class="btn btn-link ml-2" [disabled]="disablePrev" (click)="prevPage()">
+            <span class="fa fa-angle-left"></span>
+          </button>
+          <button type="button" class="btn btn-link ml-2" [disabled]="disableNext" (click)="nextPage()">
+            <span class="fa fa-angle-right"></span>
+          </button>
+        </div>
+      </div>
+      <div class="data-grid border" odpDataGrid [columns]="tableColumns" (sortModelChange)="sortModelChange($event)">
+        <div class="data-grid-header">
+          <div class="data-grid-row">
+            <div id="_checkbox" class="data-grid-cell head-cell d-flex align-items-center no-move no-grip no-sort">
+            </div>
+            <div id="name" class="data-grid-cell head-cell d-flex align-items-center no-move">Bookmark Name</div>
+            <div id="url" class="data-grid-cell head-cell d-flex align-items-center no-move">URL</div>
+            <div id="createdBy" class="data-grid-cell head-cell d-flex align-items-center no-move">Created By</div>
+            <div id="_metadata.createdAt" class="data-grid-cell head-cell d-flex align-items-center no-move">Created On
+            </div>
+            <div id="_options" class="data-grid-cell head-cell d-flex align-items-center no-move no-grip no-sort" *ngIf="hasPermission('PMBM')">
+              Action
+            </div>
+          </div>
+        </div>
+        <div class="data-grid-body">
+          <div class="data-grid-row" *ngFor="let bookmark of bookmarkList;let bookmarkIndex=index" (dblclick)="manageBookmark($event,bookmarkIndex)">
+            <div class="data-grid-cell d-flex align-items-center">
+              <odp-round-check [(checked)]="bookmark.checked" [edit]={status:true}></odp-round-check>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center">{{bookmark.name}}</div>
+            <div class="data-grid-cell d-flex align-items-center">
+              {{bookmark.url}}
+              <span *ngIf="bookmark?.options==='NEW_TAB'" class="ml-1 fa fa-sm fa-external-link-alt text-muted"></span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center">{{getUserName(bookmark.createdBy)}}</div>
+            <div class="data-grid-cell d-flex align-items-center">
+              {{bookmark._metadata.createdAt | date:'dd-MMM-yyy, hh:mm a'}}</div>
+            <div *ngIf="hasPermission('PMBM')" class="data-grid-cell d-flex align-items-center justify-content-end">
+              <span class="fa fa-trash text-muted hover" (click)="deleteBookbark(bookmark)"></span>
+            </div>
+          </div>
+          <div class="data-grid-row full-row" *ngIf="bookmarkList.length===0 && !showLazyLoader">
+            <div class="data-grid-cell d-flex align-items-center justify-content-center w-100">
+              <span class="text-muted">No Bookmarks Found</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex position-absolute user-manage" *ngIf="showManageBookmark" [@slideIn]>
+    <odp-manage-bookmarks [bookmark]="selectedBookmark" [toggleBookmarkMng]="showManageBookmark"
+      (toggleBookmarkMngChange)="showManageBookmark=$event;getBookmarkList();getBookmarkCount()" (cancelBookMarkPage)="showManageBookmark=$event"></odp-manage-bookmarks>
+  </div>
+</div>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+  <odp-group-icon [size]="18" color="DD5151" class="mt-1"></odp-group-icon>
+</odp-delete-modal>
+
+<odp-delete-modal [open]="openBulkDeleteModal" (close)="closeBulkDeleteModal($event)">
+  <odp-group-icon [size]="18" color="DD5151" class="mt-1"></odp-group-icon>
+</odp-delete-modal>

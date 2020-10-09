@@ -1,0 +1,226 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+  <div class="align-self-center text-center">
+    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="text-secondary mt-2">Processing...</div>
+  </div>
+</div>
+<div class="d-flex flex-column w-100 h-100">
+  <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+  <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description"
+    [edit]="{status:edit.status && canEditService}">
+    <div class="d-flex justify-content-end align-items-center">
+      <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link mr-3" id="sbButtonCancel">
+        <span class="fa fa-close mr-2"></span>
+        <span class="text">Cancel</span>
+      </button>
+      <button *ngIf="edit.id && !edit.status && hasWritePermission && serviceObj.type!='internal' "
+        (click)="enableEdit(true)" type="button" class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
+        <span class="odp-edit mr-2"></span>
+        <span class="text">Edit</span>
+      </button>
+      <button
+        *ngIf="edit.id && !edit.status && hasWritePermission && serviceObj.status!=='Undeployed' && serviceObj.type==='internal'"
+        (click)="enableEdit(true)" type="button" class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
+        <span class="odp-edit mr-2"></span>
+        <span class="text">Edit</span>
+      </button>
+      
+      <button *ngIf="edit.status && hasWritePermission" (click)="checkAndSave();edit.status=false" type="button"
+        class="edit-button btn btn-min-width btn-primary mr-3" id="sbButtonSave">
+        <span class="fa fa-save mr-2"></span>
+        <span class="text">Save</span>
+      </button>
+      <button *ngIf="edit.status && canSaveAndDeploy" [disabled]="!isValidSchema"
+        (click)="checkSaveAndDeploy();edit.status=false" type="button" class="edit-button btn btn-min-width btn-dark"
+        id="sbButtonSaveAndDeploy">
+        <span class="fa fa-save mr-2"></span>
+        <span class="text">Save &amp; Deploy</span>
+      </button>
+    </div>
+  </odp-basic-info>
+  <form [formGroup]="form" class="d-flex flex-column w-100 h-100 px-3">
+    <div class="d-flex flex-column w-100 h-100 border-top border-left border-right">
+      <div class="tabs d-flex align-items-center border-bottom" (click)="showHiddenMenu()" id="sbTabs">
+        <div class="text-dark px-3 py-2 hover" *ngIf="hasPermissionForTab('D')" (click)="activeTab=0"
+          [ngClass]="{'active':activeTab==0}">
+          <span>Design</span>
+          <span class="fa fa-circle fa-xs ml-2"
+            [ngClass]="{'show':changesDoneInDesign,'text-danger':errorInDesign}"></span>
+        </div>
+        <div class="text-dark px-3 py-2 hover" *ngIf="hasPermissionForTab('I')" (click)="activeTab=1"
+          [ngClass]="{'active':activeTab==1}">
+          <span>Integration</span>
+          <span class="fa fa-circle fa-xs ml-2"
+            [ngClass]="{'show':changesDoneInIntegration,'text-danger':errorInIntegration}"></span>
+        </div>
+        <div class="text-dark px-3 py-2 hover" *ngIf="hasPermissionForTab('E')" (click)="activeTab=2"
+          [ngClass]="{'active':activeTab==2}">
+          <span>Experience</span>
+          <span class="fa fa-circle fa-xs ml-2"
+            [ngClass]="{'show':changesDoneInExperience,'text-danger':errorInExperience}"></span>
+        </div>
+        <div class="text-dark px-3 py-2 hover" *ngIf="hasPermissionForTab('R')" (click)="activeTab=4"
+          [ngClass]="{'active':activeTab==4}">
+          <span>Roles</span>
+          <span class="fa fa-circle fa-xs ml-2"
+            [ngClass]="{'show':changesDoneInRoles,'text-danger':errorInRoles}"></span>
+        </div>
+        <div class="text-dark px-3 py-2 hover" *ngIf="hasPermissionForTab('S')" (click)="activeTab=3"
+          [ngClass]="{'active':activeTab==3}">
+          <span>Settings</span>
+          <span class="fa fa-circle fa-xs ml-2"
+            [ngClass]="{'show':changesDoneInConfiguration,'text-danger':errorInConfiguration}"></span>
+        </div>
+        <div class="text-dark px-3 py-2 hover" (click)="activeTab=5" [ngClass]="{'active':activeTab==5}"
+          *ngIf="!edit.status && (hasPermissionStartsWith('PVDSA','SM') || hasPermissionStartsWith('PVDSA','SM_'+serviceObj._id))">
+          Audit
+        </div>
+        <div class="text-dark px-3 py-2 hover" (click)="activeTab=10" [ngClass]="{'active':activeTab==10}"
+          *ngIf="clickCount>9">JSON</div>
+        <div class="text-dark px-3 py-2 hover" (click)="activeTab=11" [ngClass]="{'active':activeTab==11}"
+          *ngIf="clickCount>9">Schema</div>
+      </div>
+      <div class="builder-body d-flex flex-column w-100" *ngIf="hasAnyTabPermission">
+        <ng-container>
+          <div class="w-100 builder" [ngClass]="{'d-none':activeTab != 0,'d-flex':activeTab == 0}">
+            <div class="d-flex flex-column w-100">
+              <div class="options d-flex justify-content-between align-items-center border-bottom px-3">
+                <span class="text-dark font-weight-bold">Attributes</span>
+                <div class="d-flex justify-content-end align-items-center"
+                  *ngIf="edit.status && serviceObj?.type!=='internal'">
+                  <button type="button" class="btn btn-link pr-0" (click)="addGroup('after')" id="sbInsertAttribute">
+                    Insert
+                  </button>
+                  <div ngbDropdown class="d-inline-block mr-3">
+                    <button type="button" class="btn btn-link px-1 pt-2" id="insertDropDown" ngbDropdownToggle></button>
+                    <div ngbDropdownMenu>
+                      <button type="button" class="dropdown-item" (click)="addGroup('before')"
+                        [disabled]="idFieldId===selectedFieldId">Insert Before</button>
+                      <button type="button" class="dropdown-item" (click)="addGroup('after')">Insert After</button>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-link" (click)="resetBuilder()" id="sbClearAll">
+                    Delete All
+                  </button>
+                </div>
+              </div>
+              <div class="schema-creator scroll position-relative" id="schema-creator" [scrollTop]="schemaFieldheight">
+                <ng-container formArrayName="definition">
+                  <div [sortablejs]="definitions"
+                    [sortablejsOptions]="{sort: editable, filter: '.disabled', onMove: sortableOnMove }">
+                    <ng-container *ngFor="let def of definitions;let fieldIndex = index; let first = first;">
+                      <div [class.disabled]="def.value.hasOwnProperty('_id')">
+                        <odp-structure-field [formGroupName]="fieldIndex" [all]="form.get('definition')"
+                          [index]="fieldIndex" [first]="first" [edit]="edit" [type]="serviceObj?.type">
+                        </odp-structure-field>
+                      </div>
+                    </ng-container>
+                  </div>
+                  <div class="add-attribute d-flex align-items-center text-muted"
+                    *ngIf="edit.status && serviceObj?.type!=='internal'">
+                    <span class="d-flex align-items-center hover" (click)="addGroup()" id="schemaFieldObjectAddField">
+                      <span class="fa fa-plus fa-xs mr-1"></span>
+                      <span class="text">New Attribute</span>
+                    </span>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <div class="properties-wrapper builder-body border-left">
+              <odp-structure-field-properties [edit]="edit" [type]="serviceObj?.type"></odp-structure-field-properties>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container>
+          <odp-integration #integrationComponent [form]="form" [edit]="edit" [ngClass]="{'d-none':activeTab !== 1}">
+          </odp-integration>
+        </ng-container>
+        <ng-container *ngIf="activeTab == 2">
+          <div class="w-100 builder">
+            <div class="schema-creator scroll position-relative" id="schema-creator" [scrollTop]="schemaFieldheight">
+              <div class="builder-body border-left">
+                <odp-wizards [form]="form" [edit]="edit"></odp-wizards>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container>
+          <odp-configuration [form]="form" [edit]="edit" [versionConfig]="versionConfig"
+            [ngClass]="{'d-none':activeTab != 3}"></odp-configuration>
+        </ng-container>
+        <ng-container *ngIf="activeTab == 4">
+          <div class="d-flex flex-column w-100">
+            <odp-manage-permissions #permissionsComponent [name]="name" [(role)]="role" [definitions]="definitions"
+              [edit]="edit" [ngClass]="{'d-none':activeTab != 4}">
+            </odp-manage-permissions>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="activeTab == 5">
+          <odp-logs [serviceObj]="serviceObj"></odp-logs>
+        </ng-container>
+        <ng-container *ngIf="activeTab == 10">
+          <div class="d-flex flex-column w-100">
+            <div class="builder-body scroll p-3 position-relative hover" (click)="copyJSON(exampleJSON)">
+              <div class="d-flex align-items-center position-absolute copy-symbol">
+                <span class="text-muted mr-2">Click to Copy</span>
+                <span class="fa fa-copy text-primary"></span>
+              </div>
+              <pre>{{exampleJSON|json}}</pre>
+              <!-- <div [innerHTML]="toPrettyJSON(exampleJSON)"></div> -->
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="activeTab == 11">
+          <div class="d-flex flex-column w-100">
+            <div class="builder-body scroll p-3 position-relative hover" (click)="copyJSON(exampleSchema)">
+              <div class="d-flex align-items-center position-absolute copy-symbol">
+                <span class="text-muted mr-2">Click to Copy</span>
+                <span class="fa fa-copy text-primary"></span>
+              </div>
+              <pre>{{exampleSchema|json}}</pre>
+              <!-- <div [innerHTML]="toPrettyJSON(exampleSchema)"></div> -->
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </form>
+</div>
+
+<ng-template #deleteModalTemplate>
+  <div class="modal-body p-4">
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="d-flex align-items-center">
+        <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
+          <odp-service-icon [size]="18" color="DD5151" class="mt-1"></odp-service-icon>
+        </span>
+        <span class="font-weight-bold mb-1">{{deleteModal.title}}</span>
+      </div>
+      <span class="fa fa-times text-secondary hover " (click)="deleteModalTemplateRef.close(false)"></span>
+    </div>
+    <p class="text-secondary text-center my-5">{{deleteModal.message}}</p>
+    <div class="d-flex align-items-center justify-content-end">
+      <button type="button" class="btn btn-min-width btn-delete" (click)="deleteModalTemplateRef.close(true)"
+        id="sbDeleteModalYes">Yes</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #pageChangeModalTemplate>
+  <div class="modal-body p-4">
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="d-flex align-items-center">
+        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+          <odp-service-icon [size]="18" color="202a36" class="mt-1"></odp-service-icon>
+        </span>
+        <span class="font-weight-bold mb-1">Unsaved change</span>
+      </div>
+      <span class="fa fa-times text-secondary hover " (click)="pageChangeModalTemplateRef.close(false)"></span>
+    </div>
+    <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
+    <div class="d-flex align-items-center justify-content-end">
+      <button type="button" class="btn btn-min-width btn-dark"
+        (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+    </div>
+  </div>
+</ng-template>

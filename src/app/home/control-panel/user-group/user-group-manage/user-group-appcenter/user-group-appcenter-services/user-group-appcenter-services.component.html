@@ -1,0 +1,105 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+  <div class="align-self-center text-center">
+    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="text-secondary mt-2">Processing...</div>
+  </div>
+</div>
+<div class="d-flex flex-column justify-content-center py-3">
+  <div class="d-flex align-items-center border-bottom pb-3">
+    <span class="fa fa-shield-alt mr-2"></span>
+    <span class="font-weight-bold">Data Service Access Settings</span>
+  </div>
+  <div class="role-list align-self-center pt-2">
+    <ng-container *ngFor="let srvc of serviceList; let srvcIndex = index">
+      <div class="role-list-item d-flex flex-column border border-border"
+        [ngClass]="{'selected rounded':toggleAccordion[srvcIndex]}">
+        <div class="role-list-item-head d-flex justify-content-between align-items-center px-3 hover"
+          [ngClass]="{'bg-light':toggleAccordion[srvcIndex]}"
+          (click)="collapseAccordion();toggleAccordion[srvcIndex] = true">
+          <div class="name">
+            <span class="odp-entities fa-sm mr-2"></span>
+            <span class="text">{{ srvc.entityName }}</span>
+          </div>
+          <span class="permissions d-flex align-items-center text-muted">
+            <ng-container
+              *ngIf="aggregatePermission[srvc.entity] && aggregatePermission[srvc.entity]['total'] === 'manage'">
+              <span class="d-flex align-items-center justify-content-center icon odp-manager text-primary"></span>
+              <span class="d-flex align-items-center justify-content-center fa fa-angle-right text-muted"></span>
+              <span class="d-flex align-items-center justify-content-center icon fa fa-plus-circle text-accent"
+                *ngIf="aggregatePermission[srvc.entity]['POST']"></span>
+              <span class="d-flex align-items-center justify-content-center icon odp-edit text-primary"
+                *ngIf="aggregatePermission[srvc.entity]['PUT']"></span>
+              <span class="d-flex align-items-center justify-content-center icon odp-delete text-danger"
+                *ngIf="aggregatePermission[srvc.entity]['DELETE']"></span>
+              <span class="d-flex align-items-center justify-content-center icon odp-approver text-info"
+                *ngIf="aggregatePermission[srvc.entity]['REVIEW']"></span>
+              <span class="d-flex align-items-center justify-content-center icon fa fa-forward text-success"
+                *ngIf="aggregatePermission[srvc.entity]['SKIP_REVIEW']"></span>
+            </ng-container>
+            <ng-container
+              *ngIf="aggregatePermission[srvc.entity] && aggregatePermission[srvc.entity]['total'] === 'view'">
+              <span class="d-flex align-items-center justify-content-center icon odp-view mr-1 text-accent"></span>
+              <span class="text text-accent">View Attributes</span>
+            </ng-container>
+            <ng-container
+              *ngIf="!aggregatePermission[srvc.entity] || aggregatePermission[srvc.entity]['total'] === 'no'">
+              <span class="fas fa-ban mr-2"></span>
+              <span class="text">No Access</span>
+            </ng-container>
+          </span>
+          <span class="toggle text-muted text-right">
+            <span *ngIf="toggleAccordion[srvcIndex]" class="fa fa-times"
+              (click)="$event.stopPropagation();toggleAccordion[srvcIndex] = false"></span>
+            <span *ngIf="!toggleAccordion[srvcIndex]" class="fa fa-angle-down"></span>
+          </span>
+        </div>
+        <div class="role-list-item-body bg-white font-sm" *ngIf="toggleAccordion[srvcIndex]">
+          <ng-container *ngFor="let role of srvc.roles; let roleIndex = index">
+            <div class="role-list-sub-item d-flex justify-content-between align-items-center px-3">
+              <div class="name">
+                <span *ngIf="hasManage(role)" class="odp-manager text-primary fa-sm mr-2"></span>
+                <span *ngIf="!hasManage(role)" class="odp-view text-success fa-sm mr-2"></span>
+                <span class="text">{{ role.name }}</span>
+              </div>
+              <span class="permissions d-flex align-items-center text-muted">
+                <ng-container *ngIf="hasManage(role)">
+                  <span class="d-flex align-items-center justify-content-center icon odp-manager text-primary"></span>
+                  <span class="d-flex align-items-center justify-content-center fa fa-angle-right text-muted"></span>
+                  <span class="d-flex align-items-center justify-content-center icon fa fa-plus-circle text-accent"
+                    *ngIf="hasMethod(role,'POST')"></span>
+                  <span class="d-flex align-items-center justify-content-center icon odp-edit text-primary"
+                    *ngIf="hasMethod(role,'PUT')"></span>
+                  <span class="d-flex align-items-center justify-content-center icon odp-delete text-danger"
+                    *ngIf="hasMethod(role,'DELETE')"></span>
+                  <span class="d-flex align-items-center justify-content-center icon odp-approver text-info"
+                    *ngIf="hasMethod(role,'REVIEW')"></span>
+                  <span class="d-flex align-items-center justify-content-center icon fa fa-forward text-success"
+                    *ngIf="hasMethod(role,'SKIP_REVIEW')"></span>
+                </ng-container>
+                <ng-container *ngIf="!hasManage(role)">
+                  <span class="d-flex align-items-center justify-content-center icon odp-view mr-1 text-accent"></span>
+                  <span class="text text-accent">View Attributes</span>
+                </ng-container>
+              </span>
+              <span class="toggle">
+                <label class="switch accent mb-0 mr-3 mt-1" [attr.for]="role.id" *ngIf="hasPermission('PMGCDS')">
+                  <input type="checkbox" value="true" [attr.id]="role.id" (change)="toggleRole($event,role,srvc)"
+                    [ngModel]="roleActive(role)">
+                  <span class="slider"></span>
+                  <span class="toggler border-border"></span>
+                </label>
+                <span class="text ml-2">
+                  <ng-container *ngIf="roleActive(role)">Yes</ng-container>
+                  <ng-container *ngIf="!roleActive(role)">No</ng-container>
+                </span>
+              </span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="(!serviceList || serviceList.length==0) && !showLazyLoader">
+      <p class="text-center font-weight-bold text-muted">No Data Services</p>
+    </ng-container>
+  </div>
+</div>

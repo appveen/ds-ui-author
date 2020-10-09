@@ -1,0 +1,64 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+  <div class="align-self-center text-center">
+    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="text-secondary mt-2">Processing...</div>
+  </div>
+</div>
+<div class="d-flex flex-column justify-content-center py-3">
+  <div class="d-flex align-items-center border-bottom pb-3">
+    <span class="fa fa-shield-alt mr-2"></span>
+    <span class="font-weight-bold">Interaction Flows Access Settings</span>
+  </div>
+  <div class="role-list align-self-center pt-2">
+    <ng-container *ngFor="let ptnr of partnerList; let ptnrIndex = index">
+      <div class="role-list-item d-flex flex-column border border-border"
+        [ngClass]="{'selected rounded':toggleAccordion[ptnrIndex]}">
+        <div class="role-list-item-head d-flex justify-content-between align-items-center px-3 hover"
+          [ngClass]="{'bg-light':toggleAccordion[ptnrIndex]}"
+          (click)="collapseAccordion();toggleAccordion[ptnrIndex] = true">
+          <div class="name">
+            <span class="odp-entities fa-sm mr-2"></span>
+            <span class="text">{{ ptnr?.name }}</span>
+          </div>
+          <span class="permissions d-flex align-items-center text-muted">
+            <ng-container
+              *ngIf="!aggregatePermission[ptnr.entity] || aggregatePermission[ptnr.entity]['total'] === 'no'">
+              <!-- <span class="fas fa-ban mr-2"></span> -->
+              <span class="text" *ngIf="getAccess(ptnr)">Access {{ptnr?.flows?.length}} / {{getAccess(ptnr)}}</span>
+              <span class="text" *ngIf="!getAccess(ptnr)">No Access </span>
+            </ng-container>
+          </span>
+          <span class="toggle text-muted text-right">
+            <span *ngIf="toggleAccordion[ptnrIndex]" class="fa fa-times"
+              (click)="$event.stopPropagation();toggleAccordion[ptnrIndex] = false"></span>
+            <span *ngIf="!toggleAccordion[ptnrIndex]" class="fa fa-angle-down"></span>
+          </span>
+        </div>
+        <div class="role-list-item-body bg-white font-sm" *ngIf="toggleAccordion[ptnrIndex]">
+          <ng-container *ngFor="let role of ptnr.flows; let roleIndex = index">
+            <div class="role-list-sub-item d-flex justify-content-between align-items-center px-3">
+              <div class="name">
+                <span class="text">{{ getFlowName(role)}}</span>
+              </div>
+              <span class="toggle">
+                <label class="switch accent mb-0 mr-3 mt-1" [attr.for]="role" *ngIf="hasPermission('PMGCI')">
+                  <input type="checkbox" value="true" [attr.id]="role" (change)="toggleRole(role)"
+                    [ngModel]="roleActive(role)">
+                  <span class="slider"></span>
+                  <span class="toggler border-border"></span>
+                </label>
+                <span class="text ml-2">
+                  <ng-container *ngIf="roleActive(role)">Yes</ng-container>
+                  <ng-container *ngIf="!roleActive(role)">No</ng-container>
+                </span>
+              </span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="(!partnerList || partnerList.length==0)&& !showLazyLoader">
+      <p class="text-center font-weight-bold text-muted">No Partners</p>
+    </ng-container>
+  </div>
+</div>

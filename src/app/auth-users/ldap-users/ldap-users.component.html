@@ -1,0 +1,109 @@
+<div class="d-flex flex-column w-100 h-100">
+  <div class="d-flex justify-content-between align-items-center w-100 px-3 py-2 border-bottom">
+    <div class="d-flex align-items-center">
+      <button class="btn btn-link text-secondary p-0">Users</button>
+      <span class="text-secondary fa fa-angle-right mx-2"></span>
+      <button class="btn btn-link text-secondary p-0">Manage User</button>
+      <span class="text-secondary fa fa-angle-right mx-2"></span>
+      <span class="text-primary">Add Users</span>
+    </div>
+  </div>
+  <div class="d-flex flex-column w-100 h-100">
+    <div class="d-flex justify-content-between align-items-center p-3">
+      <h5 class="text-dark m-0">Add Users from LDAP</h5>
+      <div>
+        <button class="btn btn-link mr-3" (click)="cancel()">
+          <span class="fa fa-angle-left mr-2"></span>
+          <span class="text">Cancel</span>
+        </button>
+        <button class="btn btn-primary btn-min-width" [disabled]="selectedUsers.length==0" (click)="importUserDetails()">Import</button>
+      </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-center">
+      <div class="w-75 d-flex align-items-center">
+        <input type="text" class="form-control mr-3" placeholder="Search Users" minlength="3" [(ngModel)]="searchModal.searchText"
+          (keyup.enter)="searchUsers()">
+        <button class="btn btn-secondary btn-min-width" [disabled]="!searchModal.searchText" (click)="searchUsers()">Search</button>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-between align-items-center mt-3 mb-2 w-75">
+        <div class="d-flex align-items-center">
+          <span class="text-secondary">Users found:&nbsp;</span>
+          <span class="text-dark">{{users.length}}</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <span class="text-secondary">Selected:&nbsp;</span>
+          <span class="text-dark">{{selectedUsers.length}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column justify-content-center align-items-center" *ngIf="users.length>0">
+      <div class="d-flex align-items-center justify-content-between user-list-item-head border-bottom p-2 w-75" (click)="allUserSelected=!allUserSelected">
+        <div class="d-flex align-items-center cell">
+          <label for="userSelect" class="mb-0 mr-3 circle-select rounded-circle bg-white border border-secondary d-flex align-items-center justify-content-center"
+            [ngClass]="{'selected':allUserSelected}">
+            <span class="fa fa-check" [ngClass]="{'d-none':!allUserSelected}"></span>
+          </label>
+          <span class="text-white">Name</span>
+        </div>
+        <div class="text-white cell">User ID</div>
+        <div class="text-white cell">Email ID</div>
+      </div>
+      <div class="user-list w-75">
+        <div class="d-flex align-items-center justify-content-between user-list-item border-bottom p-2" *ngFor="let user of users;let userIndex = index"
+          (click)="toggleSelectedUser(userIndex)">
+          <div class="d-flex align-items-center cell">
+            <label for="userSelect" class="mb-0 mr-3 circle-select rounded-circle border border-secondary d-flex align-items-center justify-content-center"
+              [ngClass]="{'selected':user.selected,'bg-secondary text-white':user.exist}">
+              <span class="fa fa-check" [ngClass]="{'d-none':!user.selected}"></span>
+            </label>
+            <span class="text-dark">{{user.name}}</span>
+          </div>
+          <div class="text-secondary cell">{{user.username}}</div>
+          <div class="text-secondary cell">{{user.email}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #importDetailsModal>
+  <div class="modal-body p-4">
+    <div class="d-flex flex-column w-100 align-items-center justify-content-between">
+      <h5 class="text-dark font-weight-bold text-center m-0 p-3 w-100">Importing the following Users?</h5>
+      <div class="w-100 selected-users-list">
+        <table class="table">
+          <tr *ngFor="let user of selectedUsers">
+            <td>{{user.basicDetails.name}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.basicDetails.alternateEmail}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="d-flex w-100 justify-content-end align-items-center p-3">
+        <button class="btn btn-link" (click)="importDetailsModalRef.close(false)">
+          <span class="fa fa-angle-left mr-2"></span>
+          <span class="text">Modify list</span>
+        </button>
+        <button class="btn btn-dark min-btn-width" (click)="importDetailsModalRef.close(true)">Confirm</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #importingUsersModal>
+  <div class="modal-body p-4">
+    <div class="d-flex flex-column w-100 align-items-center justify-content-between">
+      <div class="d-flex align-items-center justify-content-center position-relative my-4">
+        <div class="spinner-big-icon fa-pulse"></div>
+        <span class="fa fa-arrow-down text-secondary position-absolute fa-2x"></span>
+      </div>
+      <p class="text-dark font-weight-bold text-center m-0">Importing Users</p>
+      <p class="text-secondary text-center p-3">
+        This may take few minutes. Please do not navigate away, refresh or close this window.
+      </p>
+    </div>
+  </div>
+</ng-template>

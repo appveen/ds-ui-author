@@ -1,0 +1,341 @@
+<div class="container pt-4">
+    <div class="d-flex flex-column">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex">
+                <div class="thumbnail border bg-light d-flex align-items-center justify-content-center">
+                    <img *ngIf="appData.logo.thumbnail" [src]="appData.logo.thumbnail" alt="Logo">
+                    <odp-app-icon *ngIf="!appData.logo || !appData.logo.thumbnail" color="aaa"></odp-app-icon>
+                </div>
+                <div class="d-flex flex-column justify-content-between py-1">
+                    <div class="d-flex flex-column pl-3">
+                        <div class="app-name font-weight-bold">{{appData._id}}</div>
+                        <input type="text" class="form-control-plaintext" [(ngModel)]="appData.description" placeholder="Add a description"
+                            [ngModelOptions]="{standalone: true}">
+                        <!-- <div *ngIf="!appData.description" class="text-muted">Add a description</div>
+                        <div *ngIf="appData.description" class="text-secondary">{{appData.description}}</div> -->
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center px-3">
+                            <span class="odp-entities text-accent mr-2"></span>
+                            <span class="text-secondary">
+                                <ng-container *ngIf="servicesCount==0">No</ng-container>
+                                <ng-container *ngIf="servicesCount>0">{{servicesCount}}</ng-container>
+                                &nbsp;Services
+                            </span>
+                        </div>
+                        <!-- <button class="btn btn-sm text-secondary btn-link" [disabled]="servicesCount==0">
+                            <span class="fa fa-play mr-2" [ngClass]="{'text-success':servicesCount>0}"></span>
+                            <span class="text-secondary">Start All</span>
+                        </button>
+                        <button class="btn btn-sm text-secondary btn-link" [disabled]="servicesCount==0">
+                            <span class="fa fa-stop mr-2" [ngClass]="{'text-danger':servicesCount>0}"></span>
+                            <span class="text-secondary">Stop All</span>
+                        </button> -->
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-column align-items-end">
+                <button class="btn btn-link font-weight-bold" routerLink="/admin">
+                    <span class="fa fa-angle-left mr-2"></span>
+                    <span class="text">Back</span>
+                </button>
+                <button class="btn btn-link font-weight-bold" [ngClass]="{'text-success':changesDone}" [disabled]="!changesDone"
+                    (click)="save()">
+                    Save Changes
+                </button>
+                <!-- <button class="btn btn-link font-weight-bold">Launch Now</button> -->
+                <button class="btn btn-link font-weight-bold text-danger" (click)="delete()">Delete App</button>
+            </div>
+        </div>
+        <div class="d-flex flex-column p-3">
+            <div class="tabs d-flex w-100 border-bottom">
+                <!-- <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 0}"
+                     (click)="activeTab = 0">
+                    <span class="text">Keys &amp; Identity</span>
+                </div> -->
+                <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab==1}" (click)="activeTab = 1">
+                    <span class="text">Personalize</span>
+                </div>
+                <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 2}" (click)="activeTab = 2">
+                    <span class="text">Users</span>
+                </div>
+                <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 3}" (click)="activeTab = 3">
+                    <span class="text">Groups</span>
+                </div>
+            </div>
+            <div class="tab-content w-100 pt-3">
+                <ng-container *ngIf="activeTab == 0">
+                    <div class="d-flex align-items-end justify-content-between">
+                        <div class="d-flex w-50">
+                            <div class="d-flex flex-column px-2">
+                                <span class="far fa-id-badge fa-lg mt-1 text-secondary"></span>
+                            </div>
+                            <div class="d-flex flex-column w-75">
+                                <span class="font-weight-bold mb-3">Identity</span>
+                                <input type="text" class="form-control" placeholder="No Keys configured">
+                            </div>
+                        </div>
+                        <div class="d-flex w-50">
+                            <div class="d-flex flex-column px-2">
+                                <span class="fas fa-infinity text-secondary"></span>
+                            </div>
+                            <div class="d-flex flex-column w-75">
+                                <span class="font-weight-bold mb-3">Integtarions</span>
+                                <input type="text" class="form-control" placeholder="API key">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between mt-4">
+                        <div class="d-flex w-50">
+                            <div class="d-flex flex-column px-2">
+                                <span class="far fa-id-badge fa-lg mt-1 text-secondary"></span>
+                            </div>
+                            <div class="d-flex flex-column w-75">
+                                <span class="font-weight-bold mb-3">Keys for Remote Servers</span>
+                                <input type="text" class="form-control" placeholder="No Keys configured">
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="activeTab == 1">
+                    <div class="d-flex align-items-start justify-content-between mb-3">
+                        <div class="d-flex align-items-start">
+                            <div class="d-flex flex-column">
+                                <span class="text-secondary pl-3">Logo</span>
+                                <label class="drop-box-logo drop-box d-flex align-items-center justify-content-center m-3"
+                                ngbTooltip="Optimum size: 300px X 80px" placement="top">
+                                    <input type="file" name="logoFile" id="logoFile" class="d-none" (change)="imageUpload($event,'logo')">
+                                    <img *ngIf="appData.logo.full" [src]="appData.logo.full" class="drop-box-logo-holder">
+                                    <span *ngIf="!appData.logo.full" class="fa fa-image fa-3x text-muted"></span>
+                                </label>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <span class="text-secondary pl-3">Thumbnail</span>
+                                <label class="drop-box-thumbnail drop-box d-flex align-items-center justify-content-center m-3"
+                                       ngbTooltip="Optimum size: 80px X 80px" placement="top"
+                                    (change)="imageUpload($event,'thumbnail')">
+                                    <input type="file" name="thumbnailFile" id="thumbnailFile" class="d-none">
+                                    <img *ngIf="appData.logo.thumbnail" [src]="appData.logo.thumbnail" class="drop-box-thumbnail-holder"
+                                        alt="logo">
+                                    <span *ngIf="!appData.logo.thumbnail" class="fa fa-image fa-3x text-muted"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column justify-content-between theme-settings">
+                            <div class="d-flex align-items-center">
+                                <span class="text-secondary label">Lights:</span>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="theme" [(ngModel)]="appData.appCenterStyle.theme">
+                                    <label ngbButtonLabel class="btn-outline-primary">
+                                        <input ngbButton type="radio" value="light">
+                                        <span class="fa fa-sun mr-2"></span>
+                                        <span class="text">Light</span>
+                                    </label>
+                                    <label ngbButtonLabel class="btn-outline-dark">
+                                        <input ngbButton type="radio" value="dark">
+                                        <span class="fa fa-moon mr-2"></span>
+                                        <span class="text">Dark</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="text-secondary label">Dark Banner:</span>
+                                <label class="switch accent mb-0 mr-3 mt-1" for="darkBanner">
+                                    <input type="checkbox" value="dark" [(ngModel)]="appData.appCenterStyle.bannerColor"
+                                        id="darkBanner">
+                                    <span class="slider"></span>
+                                    <span class="toggler"></span>
+                                </label>
+                            </div>
+                            <div class="d-flex align-items-center position-relative">
+                                <span class="text-secondary label">Color Scheme:</span>
+                                <div class="selected-color hover" [ngStyle]="selectedColorStyle" (click)="toggleColorPicker=!toggleColorPicker"></div>
+                                <div class="position-absolute color-palette" *ngIf="toggleColorPicker" odpClickOutside
+                                    [ignore]="['.selected-color']" (outside)="toggleColorPicker=!$event">
+                                    <odp-color-picker [(color)]="appData.appCenterStyle.primaryColor"></odp-color-picker>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <odp-app-center-preview [logo]="appData.logo.full" [color]="appData.appCenterStyle.primaryColor"
+                        (textColor)="appData.appCenterStyle.textColor" [theme]="appData.appCenterStyle.theme"
+                        [bannerColor]="appData.appCenterStyle.bannerColor"></odp-app-center-preview>
+                </ng-container>
+                <ng-container *ngIf="activeTab == 2">
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>App Users ({{ userList ? userList.length : '0'}})</strong>
+                        <strong class="text-success hover" (click)="otherAppUsers()">+ Add Users</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class=" w-100">
+                            <table class="table table-hover" id="_userTable1">
+                                <thead class="bg-accent text-white">
+                                    <tr>
+                                        <th scope="col" width="290px"><span class="ml-3 pl-1">Name</span></th>
+                                        <th scope="col">User Name</th>
+                                        <th scope="col">Email ID</th>
+                                        <th scope="col">Last Login</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let usr of userList;let usrIndex=index">
+                                        <td class="col-name d-flex align-items-center" [ngClass]="{'border-top-0': usrIndex === 0}">
+                                            <div class="admin-icon-holder mr-1 d-flex align-items-center justify-content-center">
+                                                <span *ngIf="isAppAdmin(usr)" class="fa fa-star text-warning"
+                                                    ngbTooltip="App admin of current active App"></span>
+                                            </div>
+                                            <div class="name-wrapper text-truncate">
+                                                <ng-container *ngIf="usr.basicDetails;else noName">
+                                                    <ng-container *ngIf="usr.basicDetails.name && usr.basicDetails.name.trim();else noName">
+                                                        <span *ngIf="usr.basicDetails.name.length > 50" [ngbTooltip]="usr.basicDetails.name"
+                                                            placement="top">{{usr.basicDetails.name}}</span>
+                                                        <span *ngIf="usr.basicDetails.name.length <= 50">{{usr.basicDetails.name}}</span>
+                                                        <span *ngIf="isThisUser(usr)" class="text-accent mr-3">(You)</span>
+                                                    </ng-container>
+                                                </ng-container>
+                                                <ng-template #noName>
+                                                    <span class="text-muted">N.A.</span>
+                                                </ng-template>
+                                            </div>
+                                        </td>
+                                        <td class="text-secondary">{{usr.username}}</td>
+                                        <td class="text-secondary">
+                                            <div *ngIf="usr?.basicDetails?.alternateEmail">{{usr?.basicDetails?.alternateEmail}}</div>
+                                        </td>
+                                        <td>
+                                            <span class="text-secondary">{{usr?._metadata?.lastUpdated|date: 'dd-MMM-yyyy, hh:mm'}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="userList.length==0">
+                                        <td colspan="8" class="text-center">No users found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="activeTab == 3">
+                    <div class="d-flex flex-column w-100">
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Groups ({{ groupList ? groupList.length : '0'}})</strong>
+                        </div>
+                        <div class="d-flex flex-column w-100">
+                            <div class=" w-100">
+                                <table class="table table-hover table-hover">
+                                    <thead class="bg-accent text-white">
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Members</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let group of groupList;let i=index">
+                                            <td>{{group.name}}</td>
+                                            <td>{{group.users?.length}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #deleteModal>
+    <div class="modal-body d-flex flex-column align-items-center">
+        <!-- <div class="thumbnail border bg-light d-flex align-items-center justify-content-center">
+          <img *ngIf="appData.logo.thumbnail" [src]="appData.logo.thumbnail" alt="Logo">
+          <span *ngIf="!appData.logo.thumbnail" class="fa fa-university text-secondary"></span>
+        </div> -->
+        <div class="d-flex align-items-center justify-content-center my-3">
+            <odp-delete-icon size="60">
+                <odp-app-icon color="aaa" size="28" class="pt-1"></odp-app-icon>
+            </odp-delete-icon>
+        </div>
+        <div class="my-3 text-center">
+            <p class="font-weight-bold">Delete {{appData._id}}</p>
+            <p class="text-secondary">Are you sure you want to delete app "{{appData._id}}"? This action will delete
+                the entire app including all the data services within it. This action is undoable.</p>
+        </div>
+        <div class="d-flex align-items-center justify-content-end w-100">
+            <button type="button" class="btn btn-link mr-3" (click)="deleteModalRef.close(false)">Cancel</button>
+            <button type="button" class="btn btn-dark btn-min-width" (click)="deleteModalRef.close(true)">Delete</button>
+        </div>
+    </div>
+</ng-template>
+
+<div class="popup-overlay" *ngIf="addUserModal" (click)="addUserModal = false"></div>
+<div class="popup-content p-3" *ngIf="addUserModal">
+    <div class="d-flex justify-content-between mb-5">
+        <strong>Search Users to Add to <span class="text-accent">{{appData._id + ' '}}</span>App</strong>
+        <button class="btn btn-min-width btn-dark" (click)="addSelectedUsers()">Add Users</button>
+    </div>
+    <ng-container class="position-absolute">
+        <div class="d-flex mb-4 position-relative justify-content-center">
+            <odp-search-box (enteredText)="filterUserText = $event" (reset)="filterUserText = null"></odp-search-box>
+        </div>
+    </ng-container>
+    <div class="d-flex flex-column w-100">
+        <div class="modal-user-list">
+            <table class="table table-hover table-hover" id="_userTable">
+                <thead class="thead-accent">
+                    <tr>
+                        <th scope="col" width="50px;">
+                            <div class="d-flex justify-content-center">
+                                <label class="checkbox-container pl-2">
+                                    <input type="checkbox" id="selectAllUsers" [(ngModel)]="allUsers" (change)="selectAllUsrs()">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </th>
+                        <th scope="col" width="290px">Name</th>
+                        <th scope="col">User ID</th>
+                        <th scope="col">Email ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usr of appUsers|filterUser:filterUserText;let usrIndex=index" [ngClass]="{'selectedRow': usr.checked}"
+                        (click)="toggleUserSelection(usr)">
+                        <td class="hover img-td position-relative" id="_userIndex">
+                            <figure class="d-flex align-items-center justify-content-center position-absolute v-middle">
+                                <div class="user-img-container" [ngClass]="{'usr-selected': usr.checked}">
+                                    <img *ngIf="usr.logo && usr.logo.thumbnail" [src]="usr.logo.thumbnail" alt="Logo">
+                                    <span *ngIf="!usr.logo || !usr.logo.thumbnail" class="far fa-user fa-sm text-secondary"></span>
+                                </div>
+                                <figcaption class="position-absolute checkmark-pos" *ngIf="usr.checked">
+                                    <span class="fas fa-check fa-lg text-accent"></span>
+                                </figcaption>
+                            </figure>
+                        </td>
+                        <td class="hover td-content-height col-name text-truncate">
+                            <ng-container *ngIf="usr.basicDetails;else noName">
+                                <ng-container *ngIf="usr.basicDetails.name && usr.basicDetails.name.trim();else noName">
+                                    <span *ngIf="usr.basicDetails.name.length > 50" [ngbTooltip]="usr.basicDetails.name"
+                                        placement="top">{{usr.basicDetails.name}}</span>
+                                    <span *ngIf="usr.basicDetails.name.length <= 50">{{usr.basicDetails.name}}</span>
+                                </ng-container>
+                            </ng-container>
+                            <ng-template #noName>
+                                <span class="text-muted">N.A.</span>
+                            </ng-template>
+                        </td>
+                        <td class="text-secondary hover td-content-height">{{usr?.username}}</td>
+                        <td class="text-secondary d-flex hover td-content-height">
+                            {{usr?.basicDetails?.email}}
+                        </td>
+                    </tr>
+                    <tr *ngIf="!showLazyLoader && (appUsers|filterUser:filterUserText).length==0">
+                        <td colspan="8" class="text-center td-content-height">No users found</td>
+                    </tr>
+                    <tr *ngIf="showLazyLoader">
+                        <td colspan="8" class="text-center">
+                            <span class="fa fa-spinner fa-pulse fa-lg"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

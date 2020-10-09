@@ -1,0 +1,123 @@
+<ng-container>
+    <div class="overlay d-flex w-100 h-100 position-fixed" (click)="done(false)"></div>
+    <div class="modal d-block rounded m-5" (dragover)="dragOverEvent($event)">
+        <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title">Format Mapper</h5>
+            <button type="button" class="close" aria-label="Close" (click)="done(false)">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body bg-white d-flex flex-column p-0">
+            <div class="mapping-block d-flex w-100 h-100 border-bottom">
+                <div class="fields d-flex flex-column h-100 bg-light border-right w-25">
+                    <div class="field-list mt-3">
+                        <div class="field-list-item d-flex flex-column">
+                            <div class="field-item d-flex align-items-center px-4 no-action">
+                                <div class="p-2 font-weight-bold text-secondary">Headers</div>
+                            </div>
+                        </div>
+                        <ng-container *ngFor="let srcDef of sourceDefinition;let i=index;">
+                            <ng-container *ngIf="srcDef.key == '$headers'">
+                                <ng-container *ngTemplateOutlet="fieldsTemplate;context:{def:srcDef}"></ng-container>
+                            </ng-container>
+                        </ng-container>
+                        <div class="field-list-item d-flex flex-column">
+                            <div class="field-item d-flex align-items-center px-4 no-action">
+                                <div class="p-2 font-weight-bold text-secondary">Body</div>
+                            </div>
+                        </div>
+                        <ng-container *ngFor="let srcDef of sourceDefinition;let i=index;">
+                            <ng-container *ngIf="srcDef.key != '$headers'">
+                                <ng-container *ngTemplateOutlet="fieldsTemplate;context:{def:srcDef}"></ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="mapper-wrapper h-100 w-100">
+                    <div class="mapper d-flex flex-column p-3">
+                        <div class="mapper-field-block d-flex border-left border-right border-top bg-white">
+                            <div class="mapper-field-header">
+                                <div class="p-3 m-0 font-weight-bold text-secondary">Headers</div>
+                            </div>
+                        </div>
+                        <ng-container *ngFor="let item of mapping;let mappingIndex=index;let mappingLast=last;">
+                            <div *ngIf="item.target.isHeader"
+                                class="mapper-field-block border-left border-right border-top"
+                                [ngClass]="{'border-bottom':mappingLast}">
+                                <ng-container *ngIf="item.target.key != '$headers'">
+                                    <odp-mapping-block [edit]="edit" [index]="mappingIndex" [mappings]="mapping">
+                                    </odp-mapping-block>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                        <div class="mapper-field-block d-flex border-left border-right border-top bg-white">
+                            <div class="mapper-field-header">
+                                <div class="p-3 m-0 font-weight-bold text-secondary">Body</div>
+                            </div>
+                        </div>
+                        <ng-container *ngFor="let item of mapping;let mappingIndex=index;let mappingLast=last;">
+                            <div *ngIf="!item.target.isHeader"
+                                class="mapper-field-block border-left border-right border-top"
+                                [ngClass]="{'border-bottom':mappingLast}">
+                                <ng-container *ngIf="item.target.key != '$headers'">
+                                    <odp-mapping-block [edit]="edit" [index]="mappingIndex" [mappings]="mapping">
+                                    </odp-mapping-block>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-primary" (click)="done(true)">Done</button>
+        </div>
+    </div>
+</ng-container>
+
+
+<ng-template #fieldsTemplate let-def="def" let-linkTop="linkTop" let-linkBottom="linkBottom">
+    <div class="field-list-item d-flex flex-column">
+        <div class="field-item d-flex align-items-center px-4"
+            [ngClass]="{'no-action':def.canToggle||!def.properties.name}" [draggable]="!def.canToggle && edit.status"
+            (drag)="dragEvent($event,def)">
+            <ng-container *ngIf="def.key!='$headers'">
+                <div class="field-toggle-state d-flex mr-2">
+                    <div class="toggle-state-icon d-flex h-100 w-100 align-items-center justify-content-center rounded bg-accent px-1"
+                        *ngIf="def.canToggle">
+                        <span class="fa fa-minus text-white"></span>
+                    </div>
+                </div>
+                <ng-container *ngIf="!def.isHeader">
+                    <ng-container *ngFor="let depth of def.depth;let df=first;let dl=last;">
+                        <div class="lines d-flex align-items-center">
+                            <div
+                                class="vertical-line border-right align-self-start {{verticalLineClass(def,depth,df,dl)}}">
+                            </div>
+                            <div class="horizonal-line border-bottom" [ngClass]="{'border-0':!dl}">
+                            </div>
+                        </div>
+                    </ng-container>
+                    <odp-field-type [field]="def" class="mr-2"></odp-field-type>
+                </ng-container>
+                <ng-container *ngIf="def.isHeader">
+                    <span
+                        class="border text-accent bg-white rounded d-flex align-items-center justify-content-center field-type-badge mr-2">H</span>
+                </ng-container>
+                <div class="field-name w-100 text-truncate py-2"
+                    [ngClass]="{'hover':edit.status,'no-action':!edit.status}" [odpTruncated]="def.properties.name">
+                    {{def.properties.name}}
+                </div>
+                <div class="handle hover" *ngIf="edit.status">
+                    <span class="fa fa-th"></span>
+                </div>
+            </ng-container>
+        </div>
+        <div class="field-sub-item" *ngIf="def.isObject || def.isArray">
+            <ng-container *ngFor="let srcDef of def.definition;let i=index;let l=last">
+                <ng-container *ngTemplateOutlet="fieldsTemplate;context:{def:srcDef,linkBottom:!l,linkTop:true}">
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>

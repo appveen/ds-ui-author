@@ -1,0 +1,127 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="d-flex flex-column w-100 h-100" [formGroup]="form">
+    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+    <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="edit">
+        <div class="d-flex justify-content-end align-items-center">
+            <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link mr-3"
+                id="sbButtonCancel">
+                <span class="fa fa-close mr-2"></span>
+                <span class="text">Cancel</span>
+            </button>
+            <button *ngIf="edit.id && !edit.status && hasWritePermission" (click)="edit.status=true;" type="button"
+                class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
+                <span class="odp-edit mr-2"></span>
+                <span class="text">Edit</span>
+            </button>
+            <button *ngIf="edit.status && hasWritePermission" [disabled]="!isValidSchema"
+                (click)="saveSchema();edit.status=false" type="button" class="edit-button btn btn-min-width btn-dark"
+                id="_saveSchema">
+                <span class="fa fa-save mr-2"></span>
+                <span class="text">Save</span>
+            </button>
+        </div>
+    </odp-basic-info>
+    <!-- <div class="action d-flex align-items-center justify-content-between w-100 p-3">
+        <div class="d-flex align-items-center position-relative" [formGroup]="form">
+            <span class="name-label text-secondary">Library Name</span>
+            <input *ngIf="edit.status" type="text" class="form-control pr-4" formControlName="name" id="sbName"
+                placeholder="Untitled library" [ngClass]="{'is-invalid': libNameErr}" #libName odpAutoFocus>
+            <span *ngIf="!edit.status" class="text-dark">{{form.get('name').value}}</span>
+            <span class="fas fa-question-circle text-danger text-danger position-absolute field-error-symbol" *ngIf="form.get('name').dirty && form.get('name').hasError('required')"
+                ngbTooltip="You cannot leave this blank" placement="right"></span>
+            <span class="fas fa-question-circle text-danger text-danger position-absolute field-error-symbol" *ngIf="form.get('name').dirty && form.get('name').hasError('length')"
+                ngbTooltip="Name should be less than 40 characters" placement="right"></span>
+        </div>
+        
+    </div> -->
+    <div class="d-flex flex-column w-100 px-3">
+        <div class="d-flex flex-column w-100 border-top border-right border-left">
+            <div class="d-flex w-100 builder">
+                <div class="d-flex flex-column w-100 builder-body">
+                    <div class="options d-flex justify-content-between align-items-center border-bottom px-3">
+                        <span class="text-dark font-weight-bold">Attributes</span>
+                        <div class="d-flex justify-content-end align-items-center" *ngIf="edit.status">
+                            <button type="button" class="btn btn-link pr-0" (click)="addField('after')"
+                                id="sbInsertAttribute">
+                                Insert
+                            </button>
+                            <div ngbDropdown class="d-inline-block mr-3">
+                                <button type="button" class="btn btn-link px-1 pt-2" id="insertDropDown"
+                                    ngbDropdownToggle></button>
+                                <div ngbDropdownMenu>
+                                    <button type="button" class="dropdown-item"
+                                        (click)="addField('before')">Insert Before</button>
+                                    <button type="button" class="dropdown-item"
+                                        (click)="addField('after')">Insert After</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-link" (click)="clearSchema()" id="sbClearAll">
+                                Delete All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="schema-creator scroll position-relative" id="schema-creator">
+                        <ng-container formArrayName="definition">
+                            <ng-container *ngFor="let def of definitions;let i = index;let first = first;">
+                                <odp-structure-field [formGroupName]="i" [all]="form.get('definition')" [index]="i"
+                                    [first]="first" [edit]="edit" [isLibrary]="true"></odp-structure-field>
+                            </ng-container>
+                            <div class="add-attribute d-flex align-items-center text-muted" *ngIf="edit.status">
+                                <span class="d-flex align-items-center hover" (click)="addField()"
+                                    id="schemaFieldObjectAddField">
+                                    <span class="fa fa-plus fa-xs mr-1"></span>
+                                    <span class="text">New Attribute</span>
+                                </span>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="properties-wrapper builder-body border-left">
+                    <odp-structure-field-properties [edit]="edit" [isLibrary]="true"></odp-structure-field-properties>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #deleteModalEle>
+    <div class="modal-body p-4">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-library-icon [size]="18" color="DD5151" class="mt-1"></odp-library-icon>
+                </span>
+                <span class="font-weight-bold mb-1">{{deleteModal.title}}</span>
+            </div>
+            <span class="fa fa-times text-secondary hover " (click)="deleteModalEleRef.close(false)"></span>
+        </div>
+        <p class="text-secondary text-center my-5">{{deleteModal.message}}?</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-delete" (click)="deleteModalEleRef.close(true)">Yes</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #pageChangeModalTemplate>
+    <div class="modal-body p-4">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-library-icon [size]="18" color="202a36" class="mt-1"></odp-library-icon>
+                </span>
+                <span class="font-weight-bold mb-1">Unsaved change</span>
+            </div>
+            <span class="fa fa-times text-secondary hover " (click)="pageChangeModalTemplateRef.close(false)"></span>
+        </div>
+        <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-dark" (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+        </div>
+    </div>
+</ng-template>

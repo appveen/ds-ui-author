@@ -1,0 +1,16 @@
+<svg viewBox="-12 -11 24 131" height="131px" width="24px">
+    <g>
+        <line x1="0" y1="0" x2="0" y2="32"></line>
+        <line x1="0" y1="36" x2="0" y2="40"></line>
+        <line x1="0" y1="44" x2="0" y2="48"></line>
+        <line x1="0" y1="52" x2="0" y2="56"></line>
+        <g class="circle" (click)="onClick($event)" [ngClass]="{'disabled':!edit.status}">
+            <circle cx="0" cy="78" r="12"></circle>
+            <path *ngIf="hasResNodes" style="transform:translate(4300px, 70px);"
+                d="M-4306,10.879l1.464-1.464,5.656-5.656,3.536,3.535-5.586,5.586-1.536,1.536-3.768.231Zm8.464-8.464L-4296.121,1l3.535,3.536L-4294,5.949Z" />
+        </g>
+        <line x1="0" y1="100" x2="0" y2="104"></line>
+        <line x1="0" y1="108" x2="0" y2="112"></line>
+        <line x1="0" y1="116" x2="0" y2="120"></line>
+    </g>
+</svg>

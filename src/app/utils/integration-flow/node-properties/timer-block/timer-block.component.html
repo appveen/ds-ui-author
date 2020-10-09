@@ -1,0 +1,113 @@
+<!-- <div class="node-properties-block security-block d-flex flex-column">
+    <div class="title d-flex align-items-center justify-content-between px-3">
+        <span class="font-weight-bold mr-2">Timer Settings</span>
+    </div>
+    <div class="d-flex flex-column px-3">
+        <div class="form-group">
+            <odp-checkbox [edit]="edit" [(checked)]="enableTimer">
+                Enable Timer
+            </odp-checkbox>
+        </div>
+        <ng-container *ngIf="enableTimer">
+            <div class="form-group position-relative">
+                <label for="startDate">From</label>
+                <div class="d-flex position-relative floating-btn-group">
+                    <div class="form-control d-flex align-items-center bg-light text-dark border-0">
+                        <span *ngIf="!flowData?.timer?.startAt" class="default-text">Set Date &amp; Time</span>
+                        <span *ngIf="flowData?.timer?.startAt" class="">{{flowData.timer.startAt | date:'dd MMM yyyy'}}
+                            at <span *ngIf="!flowData?.timer?.allDay" class="time">
+                                {{flowData.timer.startAt | date:'hh:mm:ss'}}
+                            </span>
+                        </span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-link text-accent position-absolute"
+                        (click)="$event.stopPropagation();togglePickerStartDate=true">
+                        Pick
+                    </button>
+                </div>
+                <odp-date-picker odpClickOutside (outside)="togglePickerStartDate=false"
+                    [(togglePicker)]="togglePickerStartDate"
+                    [options]="{buttons:true,floating:true,type:flowData?.timer?.allDay ? 'date' : 'date-time'}"
+                    [(from)]="flowData.timer.startAt">
+                </odp-date-picker>
+            </div>
+            <div class="form-group position-relative">
+                <label for="endDate">To</label>
+                <div class="d-flex position-relative floating-btn-group">
+                    <div class="form-control d-flex align-items-center bg-light border-0 text-dark">
+                        <span *ngIf="!flowData.timer.endAt" class="default-text">Set Date &amp; Time</span>
+                        <span *ngIf="flowData.timer.endAt" class="">{{flowData.timer.endAt | date:'dd MMM yyyy'}}
+                            at <span *ngIf="!flowData?.timer?.allDay" class="time">
+                                {{flowData.timer.endAt | date:'hh:mm:ss'}}
+                            </span>
+                        </span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-link text-accent position-absolute"
+                        (click)="$event.stopPropagation();togglePickerEndDate=true">
+                        Pick
+                    </button>
+                </div>
+                <odp-date-picker odpClickOutside (outside)="togglePickerEndDate=false"
+                    [(togglePicker)]="togglePickerEndDate"
+                    [options]="{buttons:true,floating:true,type:flowData?.timer?.allDay ? 'date' : 'date-time'}"
+                    [(from)]="flowData.timer.endAt">
+                </odp-date-picker>
+            </div>
+            <div class="form-group position-relative">
+                <label for="endDate">
+                    <odp-checkbox [edit]="edit" [(checked)]="allDay">
+                        All Day
+                    </odp-checkbox>
+                </label>
+            </div>
+            <div class="form-group position-relative">
+                <label for="repeat">Repeat</label>
+                <div class="form-control d-flex align-items-center justify-content-between mr-1"
+                    (click)="showRepeatOptions=true;$event.stopPropagation()">
+                    <div *ngIf="flowData?.timer?.repeat=='none' || !flowData?.timer?.repeat" class="text-dark">Do not
+                        repeat</div>
+                    <div *ngIf="flowData?.timer?.repeat=='hour'" class="text-dark">Hourly</div>
+                    <div *ngIf="flowData?.timer?.repeat=='date'" class="text-dark">Daily</div>
+                    <div *ngIf="flowData?.timer?.repeat=='week'" class="text-dark">Weekly</div>
+                    <div *ngIf="flowData?.timer?.repeat=='month'" class="text-dark">Monthly</div>
+                    <div *ngIf="flowData?.timer?.repeat=='custom'" class="text-dark">Custom</div>
+                    <div *ngIf="flowData?.timer?.repeat=='cron'" class="text-dark">Setup cron</div>
+                    <span class="fa fa-angle-down text-accent"></span>
+                </div>
+                <div *ngIf="showRepeatOptions" class="bound-dropdown d-flex flex-column position-absolute"
+                    odpClickOutside (outside)="showRepeatOptions=false">
+                    <div class="bound-dropdown-item d-flex align-items-center p-3" (click)="setRepeat('none')">
+                        Do not repeat
+                    </div>
+                    <div class="bound-dropdown-item d-flex align-items-center p-3" (click)="setRepeat('hour')">
+                        Hourly
+                    </div>
+                    <div class="bound-dropdown-item d-flex align-items-center p-3" (click)="setRepeat('date')">
+                        Daily
+                    </div>
+                    <div class="bound-dropdown-item d-flex align-items-center p-3" (click)="setRepeat('week')">
+                        Weekly
+                    </div>
+                    <div class="bound-dropdown-item d-flex align-items-center p-3" (click)="setRepeat('month')">
+                        Monthly
+                    </div>
+                    <div class="bound-dropdown-item d-flex align-items-center p-3" (click)="setRepeat('custom')">
+                        Custom
+                    </div>
+                    <div class="bound-dropdown-item d-flex align-items-center p-3" (click)="setRepeat('cron')">
+                        Setup cron
+                    </div>
+                </div>
+            </div>
+            <div class="form-group position-relative" *ngIf="flowData?.timer?.repeat=='cron'">
+                <label for="cron">CRON</label>
+                <input type="text" class="form-control" [(ngModel)]="flowData.timer.cronRegEx" minlength="6"
+                    maxlength="6">
+                <div class="form-text">For more information on CRON <a class="text-accent"
+                        href="https://en.wikipedia.org/wiki/Cron" target="_blank">Click here</a></div>
+            </div>
+        </ng-container>
+    </div>
+</div> -->
+
+<!-- <odp-delete-modal [open]="deleteDirectoryModal" (close)="onDeleteDirectory($event)"></odp-delete-modal> -->

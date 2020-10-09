@@ -1,0 +1,342 @@
+<div class="configuration d-flex flex-column w-100" [formGroup]="form">
+  <div class="d-flex p-3 builder-body">
+    <div class="">
+      <div class="d-flex flex-column w-100">
+        <span class="font-weight-bold mb-3">About this Data Service</span>
+        <div class="d-flex w-100 pr-5">
+          <div class="position-relative w-100">
+            <textarea *ngIf="edit.status && canEdit('BU')" class="form-control pr-4 description"
+              formControlName="description" placeholder="Enter a description for this data service" rows="4"></textarea>
+            <span *ngIf="!edit.status || !canEdit('BU')"
+              class="text-dark d-inline-block description custom-text-overflow">
+              {{form.get('description').value?form.get('description').value:'This data service does not have a description.'}}
+            </span>
+            <span class="fa fa-xs fa-circle text-danger position-absolute textarea-error-symbol"
+              *ngIf="form.get('description').dirty && form.get('description').hasError('length')"
+              ngbTooltip="Description should be less than 250 characters" placement="right"></span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex w-100 mt-3" *ngIf="canView('SDH') || canView('SPD')">
+        <div class="d-flex flex-column w-50">
+          <span class="font-weight-bold">Data Settings</span>
+          <span class="text-accent my-2">These settings defines how records are handled</span>
+          <div class="d-flex flex-column w-100 px-3">
+            <div class="d-flex mt-3" *ngIf="canView('SPD')">
+              <div class="text-secondary option-label">
+                Delete data permanently when a record is deleted at the App Center
+              </div>
+              <div class="switch-container d-flex align-items-center justify-content-center">
+                <ng-container *ngIf="edit.status && canEdit('SPD')">
+                  <label class="switch accent mb-0 mr-2">
+                    <input type="checkbox" formControlName="permanentDeleteData">
+                    <span class="slider"></span>
+                    <span class="toggler"></span>
+                  </label>
+                  <span class="text">{{ form.get('permanentDeleteData').value ? 'Yes' : 'No'}}</span>
+                </ng-container>
+                <ng-container *ngIf="!edit.status || !canEdit('SPD')">
+                  <span class="text d-flex" *ngIf="form && form.get('permanentDeleteData').value">
+                    <span
+                      class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
+                      <span class="fa fa-check text-white"></span>
+                    </span>
+                    <span class="text">Yes</span>
+                  </span>
+                  <span class="text d-flex" *ngIf="!form || !form.get('permanentDeleteData').value">
+                    <span
+                      class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1"></span>
+                    <span class="text">No</span>
+                  </span>
+                </ng-container>
+              </div>
+            </div>
+            <div class="d-flex mt-3" *ngIf="canView('SDH')">
+              <div class="text-secondary option-label">
+                Keep a history of data when data is changed?
+              </div>
+              <div class="switch-container d-flex align-items-center justify-content-center">
+                <ng-container *ngIf="edit.status && canEdit('SPD')">
+                  <label class="switch accent mb-0 mr-2">
+                    <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="retainDataHistory"
+                      (ngModelChange)="onVersionChange($event)">
+                    <span class="slider"></span>
+                    <span class="toggler"></span>
+                  </label>
+                  <span class="text">{{ retainDataHistory ? 'Yes' : 'No'}}</span>
+                </ng-container>
+                <ng-container *ngIf="!edit.status || !canEdit('SPD')">
+                  <span class="text d-flex" *ngIf="retainDataHistory">
+                    <span
+                      class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
+                      <span class="fa fa-check text-white"></span>
+                    </span>
+                    <span class="text">Yes</span>
+                  </span>
+                  <span class="text d-flex" *ngIf="!retainDataHistory">
+                    <span
+                      class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1"></span>
+                    <span class="text">No</span>
+                  </span>
+                </ng-container>
+              </div>
+            </div>
+            <div class="d-flex mt-3" *ngIf="retainDataHistory && canView('SDH')">
+              <div class="text-secondary option-label">
+                Retain data by
+              </div>
+              <div class="d-flex flex-column">
+                <div class="btn-group btn-group-toggle" (change)="patchVersionValue(true)" ngbRadioGroup
+                  [ngModelOptions]="{standalone: true}" [(ngModel)]="versionConfig.type">
+                  <label ngbButtonLabel class="btn btn-outline-accent">
+                    <input ngbButton type="radio" value="count" [disabled]="!edit.status || !canEdit('SPD')"> Versions
+                  </label>
+                  <label ngbButtonLabel class="btn btn-outline-accent">
+                    <input ngbButton type="radio" value="time" [disabled]="!edit.status || !canEdit('SPD')"> Duration
+                  </label>
+                </div>
+                <ng-container>
+                  <select *ngIf="form.get('versionValidity.validityType').value == 'time'" class="form-control my-2"
+                    [(ngModel)]="versionConfig.value" [ngModelOptions]="{standalone: true}"
+                    (change)="patchVersionValue()" [disabled]="!edit.status || !canEdit('SPD')">
+                    <option value="">All</option>
+                    <option value="custom">Custom</option>
+                    <option value="1 months">1 Month</option>
+                    <option value="3 months">3 Month</option>
+                    <option value="6 months">6 Month</option>
+                    <option value="1 years">1 Year</option>
+                  </select>
+                  <select *ngIf="form.get('versionValidity.validityType').value == 'count'" class="form-control my-2"
+                    (change)="patchVersionValue()" [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="versionConfig.value" [disabled]="!edit.status || !canEdit('SPD')">
+                    <option value="-1" selected>All</option>
+                    <option value="custom">Custom</option>
+                    <option value="10">Last 10</option>
+                    <option value="25">Last 25</option>
+                    <option value="50">Last 50</option>
+                    <option value="100">Last 100</option>
+                  </select>
+                </ng-container>
+                <div *ngIf="versionConfig.isCustomValue" class="custom-input-number position-relative">
+                  <input type="number" class="form-control" [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="versionConfig.customValue" #vcCustomval="ngModel" (change)="patchVersionValue()"
+                    min="1" [disabled]="!edit.status || !canEdit('SPD')">
+                  <span class="fa fa-xs fa-circle text-danger position-absolute version-error-symbol"
+                    ngbTooltip="Custom value should not be less than '1'" placement="right"
+                    *ngIf="!validityValidator && vcCustomval.touched"></span>
+                  <select class="embeded-select position-absolute text-accent bg-white border-0"
+                    *ngIf="form.get('versionValidity.validityType').value == 'time'"
+                    [ngModelOptions]="{standalone: true}" [(ngModel)]="versionConfig.customValueSuffix"
+                    (change)="patchVersionValue()" [disabled]="!edit.status || !canEdit('SPD')">
+                    <option value="minutes">Minutes</option>
+                    <option value="hour">Hour</option>
+                    <option value="days">Days</option>
+                    <option value="months">Months</option>
+                    <option value="years">Years</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column w-100 mt-2 mb-1" *ngIf="canView('SDH') || canView('SPD')">
+          <span class="font-weight-bold">Insights Settings</span>
+          <div class="d-flex  mt-2" *ngIf="canView('SDH')">
+              <div class="text-secondary option-label">
+               Disable Insights
+              </div>
+              <div class="switch-container d-flex align-items-center justify-content-center">
+                <ng-container *ngIf="edit.status && canEdit('SPD')">
+                  <label class="switch accent mb-0 mr-2">
+                    <input type="checkbox" formControlName="disableInsights">
+                    <span class="slider"></span>
+                    <span class="toggler"></span>
+                  </label>
+                  <span class="text">{{ form.get('disableInsights').value ? 'Yes' : 'No'}}</span>
+                </ng-container>
+                <ng-container *ngIf="!edit.status || !canEdit('SPD')">
+                  <span class="text d-flex" *ngIf="form && form.get('disableInsights').value">
+                    <span
+                      class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
+                      <span class="fa fa-check text-white"></span>
+                    </span>
+                    <span class="text">Yes</span>
+                  </span>
+                  <span class="text d-flex" *ngIf="form && !form.get('disableInsights').value">
+                    <span
+                      class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1"></span>
+                    <span class="text">No</span>
+                  </span>
+                </ng-container>
+              </div>
+            </div>
+      </div>
+      <div class="mt-3" *ngIf="edit.status && canEdit('SRE')">
+        <div class="d-flex flex-column w-50 p-3 reset-data">
+          <div class="d-flex">
+            <div class="mr-2 warning position-relative">
+              <span class="fas fa-xs fa-exclamation position-absolute icon-pos"></span>
+            </div>
+            <div><strong>Reset</strong></div>
+          </div>
+          <div class="mt-3">Note that, these actions are <strong>permanent and can not be undone.</strong></div>
+          <div class="d-flex ml-3 mt-3">
+            <div class="d-flex flex-column">
+              <div>Clear logs</div>
+              <div class="text-secondary">Remove all logs generated by hooks and workflows</div>
+            </div>
+            <div class="btn-link text-danger hover mt-auto ml-5" (click)="purgeData('logs')">Purge all Logs</div>
+          </div>
+          <div class="d-flex ml-3 mt-3">
+            <div class="d-flex flex-column">
+              <div>Clear audit</div>
+              <div class="text-secondary desc">Remove all audit information of the data service and the documents saved
+              </div>
+            </div>
+            <div class="btn-link text-danger hover mt-3 ml-5" (click)="purgeData('audits')">Purge all Audit</div>
+          </div>
+          <div class="d-flex ml-3 mt-3">
+            <div class="d-flex flex-column">
+              <div>Clear all data</div>
+              <div class="text-secondary desc">Remove all data that has been saved for this service. This would include
+                logs, audit, files and documents The counter would also be reset</div>
+            </div>
+            <div class="btn-link text-danger hover mt-3 ml-5" (click)="purgeData('all')">
+              <strong>Purge all Data</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="">
+      <div class="d-flex flex-column mb-4" *ngIf="canView('SEP')">
+        <strong class="font-weight-bold mb-3">Customize API endpoint</strong>
+        <input *ngIf="edit.status && canEdit('SEP')" type="text" class="form-control" formControlName="api"
+          id="sbAPIEndpoint">
+        <span *ngIf="!edit.status || !canEdit('SEP')" class="form-control-plaintext">{{form.get('api').value}}</span>
+      </div>
+      <div class="d-flex flex-column  fuzzy-toggle" *ngIf="canView('SFS')">
+        <div class="d-flex mb-2">
+          <div class="font-weight-bold">Fuzzy-search:</div>
+          <div class="value-width ml-3">
+            <odp-switch [edit]="{status:edit.status && canEdit('SFS')}" [(checked)]="fuzzySearch"></odp-switch>
+          </div>
+        </div>
+        <div class="text-secondary ">Enabling fuzzy-search will allow you to search across all text fields.</div>
+        <div class="text-secondary">It is recommended to not enable fuzzy-search if the data service has a lot of text
+          fields (>10) or nested fields (e.g. Collection of Group having Collections).</div>
+      </div>
+      <div class="d-flex flex-column w-100" *ngIf="canView('SPR')">
+        <span class="font-weight-bold mt-3 mb-2">Properties</span>
+        <table class="table">
+          <thead class="bg-light text-secondary">
+            <tr>
+              <th class="border-0">#</th>
+              <th class="border-0">Key</th>
+              <th class="border-0">Value</th>
+              <th class="border-0"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of headers;let i=index">
+              <td>{{i+1}}.</td>
+              <td class="text-secondaary">
+                {{item.key}}
+              </td>
+              <td class="text-dark">
+                {{item.value}}
+              </td>
+              <td>
+                <span *ngIf="edit.status && canEdit('SPR')" class="fa fa-trash text-danger hover"
+                  (click)="removeHeader(item.key)"></span>
+              </td>
+            </tr>
+            <tr *ngIf="edit.status && canEdit('SPR')">
+              <td colspan="4">
+                <button type="button" class="btn btn-link" (click)="openHeadersModal()">
+                  <span class="fa fa-plus mr-2"></span>
+                  <span class="text">Add Property</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex flex-column w-100 px-3">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #keyValModalTemplate>
+  <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center">
+    <div class="d-flex align-items-center justify-content-between mb-3 w-100">
+      <div class="d-flex align-items-center">
+        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+          <odp-service-icon [size]="18" color="202a36" class="mt-1"></odp-service-icon>
+        </span>
+        <span class="font-weight-bold mb-1" *ngIf="headerData && headerData.isEdit">Edit Properties</span>
+        <span class="font-weight-bold mb-1" *ngIf="!headerData || !headerData.isEdit">Add Properties</span>
+      </div>
+      <span class="fa fa-times text-muted hover" (click)="keyValModalTemplateRef.close(false)"></span>
+    </div>
+    <div class="info d-flex flex-column align-self-center justify-content-center w-100">
+      <div class="form-group">
+        <label for="key">Key</label>
+        <div class="w-100 position-relative headers-key-wrapper">
+          <input #headerKey="ngModel" id="key" type="text" class="form-control" [(ngModel)]="headerData.key"
+            maxlength="24" pattern="[a-zA-Z0-9_-]+" required [disabled]="headerData.isEdit" odpAutoFocus
+            (keyup.enter)="headerValue.focus()"
+            [ngClass]="{'is-invalid':headerKey.invalid && (headerKey.dirty || headerKey.touched)}">
+          <ng-container *ngIf="headerKey.invalid && (headerKey.dirty || headerKey.touched)">
+            <span *ngIf="headerKey?.errors?.required" class="text-danger position-absolute fa fa-exclamation-circle"
+              container="body" ngbTooltip="Key is required"></span>
+            <span *ngIf="headerKey?.errors?.pattern" class="text-danger position-absolute fa fa-exclamation-circle"
+              container="body"
+              ngbTooltip="Key can be only alphanumeric and can only contain underscore(_) and dash(-)"></span>
+          </ng-container>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="value">Value</label>
+        <input #headerValue id="value" type="text" class="form-control" [(ngModel)]="headerData.value"
+          (keyup.enter)="headerSave.click()">
+      </div>
+      <div class="d-flex flex-column align-items-end w-100 mt-auto">
+        <button #headerSave type="button" class="btn btn-dark btn-min-width" id="keyValueModalYes"
+          [disabled]="headerKey.invalid" (click)="keyValModalTemplateRef.close(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #purgeModalTemplate>
+  <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center" odpFocusNext
+    (trigger)="purgeModalTemplateRef.close(true)">
+    <div class="d-flex align-items-center justify-content-between mb-2 w-100">
+      <div class="d-flex align-items-center">
+        <span class="icon-wrapper modify-red rounded-circle d-flex align-items-center justify-content-center mr-2">
+          <span class="fas fa-exclamation"></span>
+        </span>
+        <span class="font-weight-bold mb-1"><strong>{{purgeModal.title}}</strong></span>
+      </div>
+      <span class="fa fa-times text-muted hover" (click)="purgeModalTemplateRef.close(false)"></span>
+    </div>
+    <div class="info d-flex flex-column align-self-center justify-content-center w-100">
+      <div class="desc-pos">{{purgeModal.desc}}</div>
+      <div class="text-center mt-3 px-4">
+        <span class="confirm-text">
+          Please type in the name of the data service to confirm
+        </span>
+      </div>
+      <input type="text" class="form-control mt-3 service-name" placeholder="Enter the Data Service name"
+        [(ngModel)]="confirmServiceName" odpAutoFocus>
+      <div class="text-center mt-3">
+        <button class="btn btn-danger" type="button"
+          (click)="purgeModalTemplateRef.close(true)">{{purgeModal.btnText}}</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

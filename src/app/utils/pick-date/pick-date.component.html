@@ -1,0 +1,37 @@
+<div class="wrapper d-flex flex-column align-items-center p-3">
+    <div class="pick-date"></div>
+    <ng-container *ngIf="!hasStep">
+        <div class="text mt-1">Pick Date(s)</div>
+        <div class="d-flex align-items-center justify-content-between w-100 my-2"
+            *ngFor="let rows of table;let fr=first;let lr=last">
+            <div *ngIf="fr" class="selector-block"></div>
+            <div *ngIf="fr" class="selector-block"></div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (click)="onClick(item)"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected(item),'text-dark':!isSelected(item)}"
+                *ngFor="let item of rows">{{item}}
+            </div>
+            <div *ngIf="lr" class="selector-block"></div>
+            <div *ngIf="lr" class="selector-block"></div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="hasStep">
+        <div class="text mt-1">Select Date(s) Range</div>
+        <div class="d-flex align-items-center justify-content-between w-100 my-2"
+            *ngFor="let rows of table;let fr=first;let lr=last">
+            <div *ngIf="fr" class="selector-block"></div>
+            <div *ngIf="fr" class="selector-block"></div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (click)="onClick(item)" (mouseover)="mouseOverItem = item" (mouseout)="mouseOverItem = null"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected(item) || isMouseOver(item) || inRange(item),'text-dark':!(isSelected(item) || isMouseOver(item) || inRange(item))}"
+                *ngFor="let item of rows">{{item}}
+            </div>
+            <div *ngIf="lr" class="selector-block"></div>
+            <div *ngIf="lr" class="selector-block"></div>
+        </div>
+    </ng-container>
+    <!-- <div class="d-flex align-items-center w-100 mt-2">
+        <button type="button" class="btn btn-dark w-50 mr-3" (click)="onClear()">Clear</button>
+        <button type="button" class="btn btn-primary w-50" [disabled]="isInvalid" (click)="onDone()">Set</button>
+    </div> -->
+</div>

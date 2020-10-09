@@ -1,0 +1,8 @@
+<div class="custom-control custom-checkbox my-1 mr-sm-2 d-flex position-relative">
+    <div *ngIf="!edit.status" class="overlay w-100 h-100 position-absolute"></div>
+    <input type="checkbox" class="custom-control-input" [attr.id]="id" [disabled]="disabled || !edit.status"
+        [ngModel]="checked" (ngModelChange)="onChange($event)">
+    <label class="custom-control-label accent" [attr.for]="id">
+        <ng-content></ng-content>
+    </label>
+</div>

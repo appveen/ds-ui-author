@@ -1,0 +1,51 @@
+.data-format-type {
+  border-top-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  min-width: 74px;
+  max-width: 74px;
+  min-height: 24px;
+  max-height: 24px;
+  padding: 0px 3px;
+  font-family: monospace;
+  &.data-format-type-sm {
+    min-width: 42px;
+    max-width: 74px;
+    min-height: 16px;
+    max-height: 16px;
+    border-top-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    font-size: 9px;
+  }
+  &.csv {
+    background: rgba(#dfddee, 1);
+    color: rgba(#1802a2, 0.8);
+  }
+  &.xml {
+    background: rgba(#f2dcdc, 1);
+    color: rgba(#cf0000, 0.8);
+  }
+  &.xls {
+    background: rgba(#e3e9dd, 1);
+    color: rgba(#407b03, 0.8);
+  }
+  &.xlsx {
+    background: rgba(#e3fadd, 1);
+    color: rgba(#408c03, 0.8);
+  }
+  &.bin {
+    background: rgba(#dde8f0, 1);
+    color: rgba(#0169ba, 0.8);
+  }
+  &.json {
+    background: rgba(#e9dde7, 1);
+    color: rgba(#780560, 0.8);
+  }
+  &.delimiter {
+    background: rgba(#f7e9e0, 1);
+    color: rgba(#ff771d, 0.8);
+  }
+  &.fixed {
+    background: rgba(#d3d5d7, 1);
+    color: rgba(#202a36, 0.8);
+  }
+}

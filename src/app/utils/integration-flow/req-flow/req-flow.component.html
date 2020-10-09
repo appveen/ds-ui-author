@@ -1,0 +1,14 @@
+<svg [attr.width]="width" height="350px" [attr.viewBox]="viewBox">
+    <g>
+        <!-- <text class="text-color" text-anchor="middle" x="12px">Request</text> -->
+        <!-- <g odp-req-start [flowData]="flowData" (clicked)="selectTimerNode($event)"></g>
+        <g odp-flow-line [ngStyle]="getLineStyle(0)"></g> -->
+        <g odp-flow-line [ngStyle]="getLineStyle(nodeList.length)"></g>
+        <g *ngFor="let node of nodeList;let i=index">
+            <g odp-req-node [index]="i" [nodeList]="nodeList" [flowData]="flowData" [ngStyle]="getNodeStyle(i)"
+                (click)="selectNode($event,i)"></g>
+            <g *ngIf="edit.status && (nodeList.length-1!=i || !hasLastNode)" odp-add-node (add)="addNode($event)" [index]="i+1"
+                [ngStyle]="getAddStyle(i+1)"></g>
+        </g>
+    </g>
+</svg>

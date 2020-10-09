@@ -1,0 +1,16 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.condition {
+  white-space: nowrap;
+}
+.value-options-dropdown > div {
+  min-width: 160px;
+  &:hover {
+    cursor: pointer;
+    background: $light;
+  }
+}
+.text-underline {
+  border-bottom: 1px dashed;
+}

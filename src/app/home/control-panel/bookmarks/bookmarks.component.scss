@@ -1,0 +1,15 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.options {
+    min-height: 50px;
+    max-height: 50px;
+  }
+  .user-manage {
+    // top: 116px;
+    right: 0;
+}
+.bookmark-table-wrapper{
+  min-height: calc(100vh - 160px);
+  min-height: calc(100vh - 160px);
+}

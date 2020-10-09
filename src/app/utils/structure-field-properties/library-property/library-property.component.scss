@@ -1,0 +1,20 @@
+.label-width {
+  min-width: 120px;
+}
+.sub-level-width {
+  min-width: 105px;
+}
+.value-width {
+  min-width: 250px;
+  max-width: 250px;
+  // overflow: hidden;
+  .label_type {
+    display: inline-block;
+    padding-left: 40px;
+    padding-top: 3px;
+  }
+}
+.list-add-button {
+  top: 5px;
+  right: 10px;
+}

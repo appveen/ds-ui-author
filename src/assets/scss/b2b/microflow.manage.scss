@@ -1,0 +1,386 @@
+.microflow_main{
+      height: 100%;
+      width: 100%;
+      .service_main{
+          height: 100%;
+          .service_tab{
+              float: left;
+              height: 100%;
+              width: 100%;
+          }
+          .microflow_list{
+              float: left;
+              height: 100%;
+              width: 20%;
+              border-right: 1px solid #c6c5c5;
+              position: relative;
+              li{
+                  border-bottom:1px solid #dbdbdd;
+                  background-color: #f2f4f6;
+                  position: relative;
+                  .rm_microflow{
+                      height: 10px;
+                      width: 10px;
+                      display: block;
+                      position: absolute;
+                      right: 10px;
+                      top: 13px;
+                  }
+              }
+              .search{
+                  position: absolute;
+                  top: 0;
+                  width: 100%;
+                  margin: 0;
+                  padding: 0;
+                  li{
+                      height: 45px;
+                      padding: 0 1em;
+                      background-color: #fdfdfd;
+                      border-bottom: none;
+                      border-bottom: 1px solid #ccc;
+                      input{
+                          height: 100%;
+                          margin: 0 !important;
+                          width: 100%;
+                          background-image: url('./../../img/search_filter.svg');
+                          background-size: 24px auto;
+                          background-repeat: no-repeat;
+                          background-position: left center;
+                          font-size: 16px;
+                          color: #5d646d;
+                          padding-left: 25px;
+                          font-weight: 300;
+                          margin-top: 5px;
+                          border: 0;
+                          outline: 0;
+                          opacity: .5;
+                          -webkit-transition: all .3s;
+                          transition: all .3s;
+                      }
+                  }
+              }
+              .list{
+                  position: absolute;
+                  width: 100%;
+                  top:45px;
+                  margin: 0;
+                  padding: 0;
+                  height: 75%;
+                  max-height: 80%;
+                  overflow: auto;
+                  li{
+                      height: 40px;
+                      line-height: 40px;
+                      padding: 0 1em;
+                      transition: all 0.2s ease-in-out;
+                      &:first-child{
+                          border-top:none;
+                      }
+                      &:hover{
+                          cursor: pointer;
+                          background: #dcdcdc;
+                      }
+                      &.microflow_selected{
+                          background: #ccc;
+                      }
+                  }
+              }
+              .add_new{
+                  position: absolute;
+                  bottom: 0;
+                  height: 50px;
+                  width: 100%;
+                  margin: 0;
+                  padding: 0;
+                  text-align: center;
+              }
+          }
+      }
+      .microflow_tab{
+          position: relative;
+          float: left;
+          padding: 1em;
+          height: 100%;
+          width: 80%;
+          overflow: auto;
+          overflow-x: hidden;
+          .flow{
+              position: relative;
+              top:30px;
+              .entity{
+                  .entity_label{
+                      height: 100px;
+                      width: 100px;
+                      line-height: 100px;
+                      text-align: center;
+                      border: 1px solid #ccc;
+                      box-shadow:0 0 15px 1px rgba(0,0,0,0.2);
+                      transition:1s all;
+                  }
+                  .flow_left{
+                      &.entity_label{
+                          float: left;
+                      }
+                      + .flow_line{
+                          left: 8em;
+                      }
+                  }
+                  .flow_right{
+                      &.entity_label{
+                          float: right;
+                      }
+                      + .flow_line{
+                          right: 8em;
+                      }
+                  }
+                  .flow_line{
+                      border: 1px solid #ccc;
+                      position: absolute;
+                      width: 100%;
+                      top: 50px;
+                      &:after{
+                          content:'';
+                          position:absolute;
+                          right: -5px;
+                          width: 0;
+                          height: 0;
+                          border-bottom: 8px solid transparent;
+                          border-top: 8px solid transparent;
+                          border-left: 8px solid #ccc;
+                          font-size: 0;
+                          line-height: 0;
+                          top: -8px;
+                      }
+                  }
+              }
+              .flow_hub{
+                  margin: 19px auto;
+                  height: 60px;
+                  width: 60px;
+                  border-radius: 50%;
+                  background-color: #c2d0e5;
+                  background-position: center 12px;
+                  background-repeat: no-repeat;
+                  background-size: 80%;
+              }
+              &.inbound{
+                  transform: rotateY(180deg);
+                  .entity_label{
+                      transform: rotateY(180deg);
+                  }
+              }
+          }
+          .flow_control{
+              margin-top: 20px;
+              >div{
+                  float: left;
+                  margin: 0 auto;
+                  text-align: center;
+                  position: relative;
+                  .flow_direction{
+                      transition:1s all ease;
+                      &:before{
+                          width: 200px;
+                          border: 1px solid #ccc;
+                          position: absolute;
+                          content: "";
+                          right: -4.5em;
+                          top: 10px;
+                      }
+                      &:after {
+                          content: "";
+                          width: 0;
+                          height: 0;
+                          border-top: 10px solid transparent;
+                          border-bottom: 10px solid transparent;
+                          border-left: 15px solid #ccc;
+                          position: absolute;
+                          right: -5em;
+                          top: 1px;
+                      }
+                      &.flow_inbound{
+                          transform: rotateY(180deg);
+                      }
+                  }
+              }
+          }
+          .flow_config{
+              &.config_left{
+                  position: absolute;
+                  width: 100%;
+                  top: 100px;
+                  ul{
+                      list-style: none;
+                      padding-top: 25px;
+                      padding-left: 75px;
+                      li{
+                          height: 45px;
+                          line-height: 45px;
+                          border: 1px solid #ccc;
+                          border-radius:20px;
+                          margin: 5px;
+                          position: relative;
+                          div{
+                              margin-left: 20px;
+                          }
+                          .psuedo{
+                              position: absolute;
+                              border: 1px solid #ccc;
+                              width: 35px;
+                              top: 20px;
+                              left: -35px;
+                              &:before{
+                                  content: '';
+                                  position: absolute;
+                                  height: 54px;
+                                  border: 1px solid #ccc;
+                                  top: -54px;
+                              }
+                              &:after{
+                                  content: '';
+                                  position: absolute;
+                                  height: 15px;
+                                  width: 15px;
+                                  border: 1px solid #ccc;
+                                  right: 0;
+                                  background: #ccc;
+                                  border-radius: 50%;
+                                  top: -8px;
+                              }
+                          }
+                          .title{
+                              margin: 3px 15px;
+                              display: block;
+                              select{
+                                  border: none;
+                                  outline: none;
+                                  box-shadow: none;
+                              }
+                              input{
+                                  border:none;
+                                  outline:none;
+                                  box-shadow: none;
+                              }
+                          }
+                      }
+                  }
+              }
+              &.config_right{
+                  position: absolute;
+                  width: 100%;
+                  top: 100px;
+                  ul{
+                      list-style: none;
+                      padding-top: 25px;
+                      padding-right: 75px;
+                      li{
+                          height: 45px;
+                          line-height: 45px;
+                          border: 1px solid #ccc;
+                          border-radius:20px;
+                          margin: 5px;
+                          position: relative;
+                          right: 32px;
+                          div{
+                              margin-left: 20px;
+                          }
+                          .psuedo{
+                              position: absolute;
+                              border: 1px solid #ccc;
+                              width: 35px;
+                              top: 20px;
+                              right: -35px;
+                              &:before{
+                                  content: '';
+                                  position: absolute;
+                                  height: 54px;
+                                  border: 1px solid #ccc;
+                                  top: -54px;
+                                  right:-1px;
+                              }
+                              &:after{
+                                  content: '';
+                                  position: absolute;
+                                  height: 15px;
+                                  width: 15px;
+                                  border: 1px solid #ccc;
+                                  left: -1px;
+                                  background: #ccc;
+                                  border-radius: 50%;
+                                  top: -8px;
+                              }
+                          }
+                          .title{
+                              margin: 3px 15px;
+                              display: block;
+                              &.flip_transform{
+                                  transform: rotateY(180deg);
+                                  display: block;
+                                  padding-left: 20px;
+                              }
+                              select{
+                                  border: none;
+                                  outline: none;
+                                  box-shadow: none;
+                              }
+                              input{
+                                  border:none;
+                                  outline:none;
+                                  box-shadow: none;
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
+
+.microflow_main{
+       .cp-tab{
+           height: 100%;
+       }
+       li{
+           list-style: none;
+       }
+   }
+
+.flow_switch{
+       position: relative;
+       display: inline-block;
+       width: 60px;
+       height: 25px;
+       input{
+           display:none;
+       }
+       input:checked + .flow_slider {
+           background-color: #185e9d;
+       }
+       input:focus + .flow_slider {
+           box-shadow: 0 0 1px #185e9d;
+       }
+       input:checked + .flow_slider:before {
+            left:  30px;
+        }
+       .flow_slider{
+           position: absolute;
+           cursor: pointer;
+           top: 0;
+           left: 0;
+           right: 0;
+           bottom: 0;
+           background-color: #303F9F;
+           transition: .4s;
+           &:before{
+               position: absolute;
+               content: "";
+               height: 16px;
+               width: 26px;
+               left: 4px;
+               bottom: 4px;
+               background-color: white;
+               transition: .4s;
+           }
+       }
+   }

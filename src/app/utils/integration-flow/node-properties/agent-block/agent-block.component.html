@@ -1,0 +1,106 @@
+<div *ngIf="showBlock" class="node-properties-block security-block d-flex flex-column">
+    <div class="title d-flex align-items-center justify-content-between px-3">
+        <span class="font-weight-bold mr-2">Agent Settings</span>
+    </div>
+    <div class="d-flex flex-column px-3">
+        <div *ngIf="showAppAgentSelect" class="form-group">
+            <label for="appAgent">App Agent</label>
+            <select *ngIf="!fetchingAgents" name="appAgent" id="appAgent" class="custom-select" [ngModel]="node.meta.target" (ngModelChange)="selectAppAgent($event)" [disabled]="!edit.status"
+                [ngClass]="{'is-invalid':agentNotSelected}">
+                <option value="">
+                    {{appAgents.length==0 ? 'No Active App Agents' : '---Select Agent---'}}
+                </option>
+                <option [value]="agent.agentID" *ngFor="let agent of appAgents">
+                    {{agent.name}}
+                </option>
+            </select>
+        </div>
+        <div *ngIf="isInputBlock" class="form-group">
+            <label for="inputDirectories">Input Directory(s)</label>
+            <div class="d-flex position-relative floating-btn-group">
+                <input #inputDirectories id="inputDirectories" type="text" class="form-control"
+                    (keyup.enter)="addInputDirectory(inputDirectories)" [disabled]="!edit.status">
+                <button *ngIf="edit.status" type="button" class="btn btn-sm btn-link text-accent position-absolute"
+                    (click)="addInputDirectory(inputDirectories)">
+                    Add
+                </button>
+            </div>
+            <!-- <div class="input-group">
+                <input #inputDirectories id="inputDirectories" type="text" class="form-control"
+                    (keyup.enter)="addInputDirectory(inputDirectories)">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-sm btn-accent" (click)="addInputDirectory(inputDirectories)">
+                        <span class="fa fa-plus"></span>
+                    </button>
+                </div>
+            </div> -->
+            <div class="list-group mt-2">
+                <div *ngFor="let item of node.meta.inputDirectories;let i=index"
+                    class="list-group-item d-flex align-items-center justify-content-between p-2">
+                    <div class="d-flex align-items-center text-truncate ">
+                        <odp-round-check [edit]="edit" [(checked)]="item.watchSubDirectories" container="body"
+                            ngbTooltip="Watch Sub-Directories">
+                        </odp-round-check>
+                        <span class="text ml-3 text-truncate" [ngbTooltip]="item.path">{{item.path}}</span>
+                    </div>
+                    <button *ngIf="edit.status" type="button" class="btn btn-link text-danger btn-sm"
+                        (click)="removeInputDirectory(i)">
+                        <span class="fa fa-times"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!isInputBlock" class="form-group">
+            <!-- <label for="mirrorInputDirectories">Mirror Input Directory(s)</label>
+            <div class="input-group">
+                <odp-switch id="mirrorInputDirectories" [edit]="edit" [(checked)]="node.meta.mirrorInputDirectories">
+                </odp-switch>
+            </div> -->
+            <odp-checkbox [edit]="edit" [(checked)]="node.meta.mirrorInputDirectories">
+                Mirror Input Directory(s)
+            </odp-checkbox>
+        </div>
+        <div *ngIf="!isInputBlock" class="form-group">
+            <label for="outputDirectories">Output Directory(s)</label>
+            <div class="d-flex position-relative floating-btn-group">
+                <input #outputDirectories id="outputDirectories" type="text" class="form-control"
+                    (keyup.enter)="addOutputDirectory(outputDirectories)" [disabled]="!edit.status">
+                <button *ngIf="edit.status" type="button" class="btn btn-sm btn-link text-accent position-absolute"
+                    (click)="addOutputDirectory(outputDirectories)">
+                    Add
+                </button>
+            </div>
+            <!-- <div class="input-group">
+                <input #outputDirectories id="outputDirectories" type="text" class="form-control"
+                    (keyup.enter)="addOutputDirectory(outputDirectories)">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-sm btn-accent" (click)="addOutputDirectory(outputDirectories)">
+                        <span class="fa fa-plus"></span>
+                    </button>
+                </div>
+            </div> -->
+            <div class="list-group mt-2">
+                <div *ngFor="let item of node.meta.outputDirectories;let i=index"
+                    class="list-group-item d-flex align-items-center justify-content-between p-2">
+                    <span class="text">{{item.path}}</span>
+                    <button *ngIf="edit.status" type="button" class="btn btn-link text-danger btn-sm"
+                        (click)="removeOutputDirectory(i)">
+                        <span class="fa fa-times"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!isInputBlock" class="form-group">
+            <!-- <label for="generateHeaders">Generate Headers</label>
+            <div class="input-group">
+                <odp-switch id="generateHeaders" [edit]="edit" [(checked)]="node.meta.generateHeaders">
+                </odp-switch>
+            </div> -->
+            <odp-checkbox [edit]="edit" [(checked)]="node.meta.generateHeaders">
+                Generate Headers
+            </odp-checkbox>
+        </div>
+    </div>
+</div>
+
+<odp-delete-modal [open]="deleteDirectoryModal" (close)="onDeleteDirectory($event)"></odp-delete-modal>

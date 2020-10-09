@@ -1,0 +1,234 @@
+<div class="d-flex flex-column hooks-content w-100">
+  <div class="d-flex align-items-center border-bottom pb-3">
+    <span class="fa fa-shield-alt mr-2"></span>
+    <span class="font-weight-bold">Library Access Settings</span>
+  </div>
+  <div class="d-flex align-items-start w-100 py-3 border-bottom">
+    <div class="service-name">
+      <span class="fa fa-globe mr-2"></span>
+      <span class="font-weight-bold mr-1">Global</span>
+      <span class="text-accent">(All Libraries)</span>
+    </div>
+    <div class="d-flex flex-column align-items-center permission-div">
+      <span class="normal-heading mb-3">Permission</span>
+      <!-- <div class="permission-card add d-flex flex-column justify-content-center align-items-center rounded hover"
+        (click)="toggleDropdown['GLOBAL'] = hasPermission('PMGAL')?(!toggleDropdown['GLOBAL']):false" odpClickOutside
+        (outside)="toggleDropdown['GLOBAL']=false">
+        <div class="permission-icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
+          <div class="permission-icon rounded-circle d-flex align-items-center justify-content-center bg-white border"
+            [ngClass]="{'border-success':globalPermissionType === 'View','border-primary':globalPermissionType === 'Manage','border-border':globalPermissionType === 'Hide'}">
+            <span *ngIf="globalPermissionType === 'Manage'" class="odp-manager text-primary"></span>
+            <span *ngIf="globalPermissionType === 'View'" class="odp-view text-success"></span>
+            <span *ngIf="globalPermissionType === 'Hide'" class="fa fa-ban text-muted"></span>
+          </div>
+        </div>
+        <div class="permission-selector text-center mt-2 text-secondary position-relative">
+          <div class="permission-selected text bg-white hover">{{globalPermissionType}}</div>
+          <div class="permission-selector-dropdown bg-white d-flex flex-column rounded position-absolute" *ngIf="toggleDropdown['GLOBAL']">
+            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover" (click)="togglePermission('PNL');toggleDropdown['GLOBAL']=false">
+              <div class="icon d-flex align-items-center justify-content-center">
+                <span class="fa fa-ban text-muted"></span>
+              </div>
+              <span class="text-secondary font-weight-bold">Hide</span>
+            </div>
+            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover" (click)="togglePermission('PVL');toggleDropdown['GLOBAL']=false">
+              <span class="icon d-flex align-items-center justify-content-center">
+                <span class="odp-view text-success"></span>
+              </span>
+              <span class="text-secondary font-weight-bold">View</span>
+            </div>
+            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover" (click)="togglePermission('PML');toggleDropdown['GLOBAL']=false">
+              <span class="icon d-flex align-items-center justify-content-center">
+                <span class="odp-manager text-primary"></span>
+              </span>
+              <span class="text-secondary font-weight-bold">Manage</span>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="position-relative">
+        <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
+          (click)="toggleDropdown['GLOBAL']=hasPermission('PMGAL')?(!toggleDropdown['GLOBAL']):false"
+          [ngClass]="{'blocked':globalPermissionType === 'Hide','view':globalPermissionType === 'View','manage':globalPermissionType === 'Manage','hover':hasPermission('PMGAL')}">
+          <div class="icon d-flex align-items-center justify-content-center">
+            <span *ngIf="globalPermissionType === 'Hide'" class="fa fa-lock"></span>
+            <span *ngIf="globalPermissionType === 'View'" class="fa fa-eye"></span>
+            <span *ngIf="globalPermissionType === 'Manage'" class="fa fa-pen"></span>
+          </div>
+          <div *ngIf="globalPermissionType === 'Hide'" class="text">Blocked</div>
+          <div *ngIf="globalPermissionType === 'View'" class="text">View</div>
+          <div *ngIf="globalPermissionType === 'Manage'" class="text">Manage</div>
+          <span *ngIf="hasPermission('PMGAL')" class="fa fa-angle-down fa-sm"></span>
+        </div>
+        <div *ngIf="toggleDropdown['GLOBAL']" class="rounded-dropdown" odpClickOutside
+          (outside)="toggleDropdown['GLOBAL']=false">
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="togglePermission('PNL');toggleDropdown['GLOBAL']=false">
+            <div class="icon d-flex align-items-center justify-content-center blocked">
+              <span class="fa fa-lock"></span>
+            </div>
+            <div class="text">Blocked</div>
+          </div>
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="togglePermission('PVL');toggleDropdown['GLOBAL']=false">
+            <div class="icon d-flex align-items-center justify-content-center view">
+              <span class="fa fa-eye"></span>
+            </div>
+            <div class="text">View</div>
+          </div>
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="togglePermission('PML');toggleDropdown['GLOBAL']=false">
+            <div class="icon d-flex align-items-center justify-content-center manage">
+              <span class="fa fa-pen"></span>
+            </div>
+            <div class="text">Manage</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex align-items-center justify-content-between py-3" *ngIf="showException">
+    <span class="font-weight-bold">Exceptions</span>
+    <button *ngIf="hasPermission('PMGAL')" class="btn btn-link" type="button" (click)="openExceptionModal()">+Add
+      Exception</button>
+  </div>
+  <div class="d-flex align-items-start w-100 py-3" *ngFor="let srvc of exceptionList">
+    <div class="service-name">
+      <div class="d-flex align-items-start">
+        <span class="odp-entities fa-sm mr-2"></span>
+        <span *ngIf="srvc.name" class="text-secondary font-weight-bold">{{srvc.name}}</span>
+        <span *ngIf="!srvc.name" class="fa fa-spinner fa-pulse"></span>
+      </div>
+      <button *ngIf="hasPermission('PMGAL')" type="button" class="btn btn-link btn-sm text-danger mt-2"
+        (click)="removeException(srvc)">
+        <span class="fa fa-times mr-2"></span>
+        <span class="text">Remove</span>
+      </button>
+    </div>
+    <div class="d-flex flex-column align-items-center permission-div">
+      <span class="normal-heading mb-3">Permission</span>
+      <!-- <div class="permission-card add d-flex flex-column justify-content-center align-items-center rounded hover"
+        (click)="toggleDropdown[srvc._id] = hasPermission('PMGAL')?(!toggleDropdown[srvc._id]):false" odpClickOutside
+        (outside)="toggleDropdown[srvc._id]=false">
+        <div class="permission-icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
+          <div class="permission-icon rounded-circle d-flex align-items-center justify-content-center bg-white border"
+            [ngClass]="{'border-success':getSelectedPermission(srvc) === 'View','border-primary':getSelectedPermission(srvc) === 'Manage','border-border':getSelectedPermission(srvc) === 'Hide'}">
+            <span *ngIf="getSelectedPermission(srvc) === 'Manage'" class="odp-manager text-primary"></span>
+            <span *ngIf="getSelectedPermission(srvc) === 'View'" class="odp-view text-success"></span>
+            <span *ngIf="getSelectedPermission(srvc) === 'Hide'" class="fa fa-ban text-muted"></span>
+          </div>
+        </div>
+        <div class="permission-selector text-center mt-2 text-secondary position-relative">
+          <div class="permission-selected text bg-white hover">{{getSelectedPermission(srvc)}}</div>
+          <div class="permission-selector-dropdown bg-white d-flex flex-column rounded position-absolute mb-3"
+            *ngIf="toggleDropdown[srvc._id]">
+            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover"
+              (click)="togglePermission('PNL',srvc);toggleDropdown[srvc._id]=false">
+              <div class="icon d-flex align-items-center justify-content-center">
+                <span class="fa fa-ban text-muted"></span>
+              </div>
+              <span class="text-secondary font-weight-bold">Hide</span>
+            </div>
+            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover"
+              (click)="togglePermission('PVL',srvc);toggleDropdown[srvc._id]=false">
+              <span class="icon d-flex align-items-center justify-content-center">
+                <span class="odp-view text-success"></span>
+              </span>
+              <span class="text-secondary font-weight-bold">View</span>
+            </div>
+            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover"
+              (click)="togglePermission('PML',srvc);toggleDropdown[srvc._id]=false">
+              <span class="icon d-flex align-items-center justify-content-center">
+                <span class="odp-manager text-primary"></span>
+              </span>
+              <span class="text-secondary font-weight-bold">Manage</span>
+            </div>
+            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover border-top"
+              (click)="removeException(srvc);toggleDropdown[srvc._id]=false">
+              <span class="text-danger font-sm">Remove Exception</span>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="position-relative">
+        <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
+          (click)="toggleDropdown[srvc._id]=hasPermission('PMGAL')?(!toggleDropdown[srvc._id]):false"
+          [ngClass]="{'blocked':getSelectedPermission(srvc) === 'Hide','view':getSelectedPermission(srvc) === 'View','manage':getSelectedPermission(srvc) === 'Manage','hover':hasPermission('PMGAL')}">
+          <div class="icon d-flex align-items-center justify-content-center">
+            <span *ngIf="getSelectedPermission(srvc) === 'Hide'" class="fa fa-lock"></span>
+            <span *ngIf="getSelectedPermission(srvc) === 'View'" class="fa fa-eye"></span>
+            <span *ngIf="getSelectedPermission(srvc) === 'Manage'" class="fa fa-pen"></span>
+          </div>
+          <div *ngIf="getSelectedPermission(srvc) === 'Hide'" class="text">Blocked</div>
+          <div *ngIf="getSelectedPermission(srvc) === 'View'" class="text">View</div>
+          <div *ngIf="getSelectedPermission(srvc) === 'Manage'" class="text">Manage</div>
+          <span *ngIf="hasPermission('PMGAL')" class="fa fa-angle-down fa-sm"></span>
+        </div>
+        <div *ngIf="toggleDropdown[srvc._id]" class="rounded-dropdown" odpClickOutside
+          (outside)="toggleDropdown[srvc._id]=false">
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="togglePermission('PNL',srvc);toggleDropdown[srvc._id]=false">
+            <div class="icon d-flex align-items-center justify-content-center blocked">
+              <span class="fa fa-lock"></span>
+            </div>
+            <div class="text">Blocked</div>
+          </div>
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="togglePermission('PVL',srvc);toggleDropdown[srvc._id]=false">
+            <div class="icon d-flex align-items-center justify-content-center view">
+              <span class="fa fa-eye"></span>
+            </div>
+            <div class="text">View</div>
+          </div>
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="togglePermission('PML',srvc);toggleDropdown[srvc._id]=false">
+            <div class="icon d-flex align-items-center justify-content-center manage">
+              <span class="fa fa-pen"></span>
+            </div>
+            <div class="text">Manage</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #exceptionListModal>
+  <div class="modal-body p-4">
+    <div class="d-flex align-items-center font-weight-bold">
+      <odp-library-icon size="16" active="true" class="mr-2"></odp-library-icon>
+      <div class="text">Select Library to add as exception</div>
+    </div>
+    <div class="d-flex align-items-center justify-content-center my-4">
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=''"></odp-search-box>
+    </div>
+    <div class="service-list">
+      <table class="table table-hover">
+        <thead class="bg-accent text-white">
+          <tr>
+            <th>
+              <odp-table-checkbox [(checked)]="checkAll"></odp-table-checkbox>
+            </th>
+            <th class="align-middle">Name</th>
+            <th class="align-middle">Attributes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let srvc of libraryList|commonFilter:'name':searchTerm">
+            <tr *ngIf="!srvc.hide">
+              <td>
+                <odp-table-checkbox [(checked)]="srvc.selected"></odp-table-checkbox>
+              </td>
+              <td>{{srvc.name}}</td>
+              <td>{{srvc.attribute}}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <div class="d-flex align-items-center justify-content-end">
+      <button type="button" class="btn btn-link mr-3" (click)="exceptionListModalRef.close(false)">Cancel</button>
+      <button type="button" class="btn btn-primary btn-min-width" (click)="exceptionListModalRef.close(true)">Select</button>
+    </div>
+  </div>
+</ng-template>

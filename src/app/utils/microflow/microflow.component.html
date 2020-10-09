@@ -1,0 +1,1306 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="d-flex flex-column align-self-stretch w-100">
+    <odp-basic-info hideLogo="true" [(name)]="data.name" [(description)]="data.description" [nameCharLimit]="30"
+        [edit]="hasPermission('PMPFMBU') ? {status:true} : {status:false}">
+        <button type="button" class="btn btn-link" (click)="cancel()">Cancel</button>
+        <button type="button" class="btn btn-link mr-3" (click)="save(true)" [disabled]="invalidFlow || flowPending"
+            *ngIf="hasPermission('PMPFMD')">Save &amp;
+            Deploy</button>
+        <button type="button" class="btn btn-primary btn-min-width" (click)="save()">Save</button>
+    </odp-basic-info>
+    <div class="d-flex align-self-stretch w-100 h-100 border-top">
+        <div class="d-flex flex-column w-100 position-relative drawing-area">
+            <div class="design-controls d-flex align-items-center w-100 justify-content-between position-absolute pl-3">
+                <div class="zoom-control d-flex align-items-center">
+                    <button type="button" (click)="zoomFactor= zoomFactor > 1 ? zoomFactor-0.25 : 1"
+                        class="btn btn-link" ngbTooltip="Zoom In">
+                        <span class="fa fa-plus"></span>
+                    </button>
+                    <button type="button" (click)="zoomFactor=zoomFactor+0.25" class="btn btn-link"
+                        ngbTooltip="Zoom Out">
+                        <span class="fa fa-minus"></span>
+                    </button>
+                </div>
+                <div class="d-flex align-items-center" *ngIf="hasPermission('PMPFMBU') || hasPermission('PVPFMB')">
+                    <span class="text-secondary mr-2">Direction</span>
+                    <div class="btn-group" ngbDropdown>
+                        <button class="btn px-2 border" ngbDropdownToggle [disabled]="commonService.viewMicroFlow">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <ng-container *ngIf="data.direction=='Inbound'">
+                                        <span class="fa fa-arrow-circle-down fa-rotate-45 text-create mr-2"></span>
+                                        <span class="text-secondary">Inbound</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="data.direction=='Outbound'">
+                                        <span class="fa fa-arrow-circle-up fa-rotate-45 text-accent mr-2"></span>
+                                        <span class="text-secondary">Outbound</span>
+                                    </ng-container>
+                                </div>
+                                <span class="fa fa-angle-down text-accent"></span>
+                            </div>
+                        </button>
+                        <div class="dropdown-menu p-0" ngbDropdownMenu>
+                            <button type="button" class="dropdown-item px-2"
+                                (click)="data.direction='Inbound';changeDirection()">
+                                <span class="fa fa-arrow-circle-down fa-rotate-45 text-create mr-2"></span>
+                                <span class="text-secondary">Inbound</span>
+                            </button>
+                            <button type="button" class="dropdown-item px-2"
+                                (click)="data.direction='Outbound';changeDirection()">
+                                <span class="fa fa-arrow-circle-up fa-rotate-45 text-accent mr-2"></span>
+                                <span class="text-secondary">Outbound</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-link text-secondary" (click)="clearAll()">Clear All</button>
+            </div>
+            <svg #canvas id="designCanvas" class="d-flex w-100 h-100" [attr.viewBox]="viewBox" (mousemove)="pan($event)"
+                (mousedown)="onMousedown($event)" (click)="deSelectNode($event)">
+                <g id="design">
+                    <g *ngFor="let item of items;let i = index;let f = first;let l = last;">
+                        <g class="microflow-node">
+                            <!-- <g *ngIf="item.selected && i>0" class="hover" (click)="deleteItem(i)">
+                            <rect [attr.x]="item.cx+16" [attr.y]="item.cy-64" width="20" class="delete-icon" height="20"
+                                rx="2" ry="2" />
+                            <image [attr.x]="item.cx + 16 + 5" [attr.y]="item.cy - 64 + 5" width="10" height="10"
+                                fill="#fff" xlink:href="assets/img/trash-solid.svg" />
+                        </g> -->
+                            <circle *ngIf="item.type == 'circle'" [attr.cx]="item.cx" [attr.cy]="item.cy"
+                                [attr.r]="item.r" class="node-item green hover" (click)="selectItem(item)"
+                                [ngClass]="{'selected':item.selected}" />
+                            <rect *ngIf="item.type == 'square'" [attr.x]="item.x1" [attr.y]="item.y1"
+                                [attr.width]="item.width" class="node-item black hover" [attr.height]="item.height"
+                                rx="5" ry="5" (click)="selectItem(item)" [ngClass]="{'selected':item.selected}" />
+                            <polygon *ngIf="item.type == 'hexagon'" [attr.points]="item.points"
+                                class="node-item blue hover" (click)="selectItem(item)"
+                                [ngClass]="{'selected':item.selected}" />
+                            <text [attr.x]="item.cx" [attr.y]="item.cy+65" text-anchor="middle"
+                                fill="#0082C9">{{item.data.name}}</text>
+                            <image *ngIf="mapperInvalid(i) && !f" [attr.x]="item.selected?item.cx - 48:item.cx - 34"
+                                [attr.y]="item.cy - 8" width="16" height="16" xlink:href="assets/img/warning-circle.svg"
+                                class="hover" />
+                            <g *ngIf="flowEnded !== i" odpClickOutside (outside)="item.addNew = false"
+                                [ignore]="['.add-dropdown']">
+                                <line [attr.x1]="item.cx" [attr.y1]="item.cy" [attr.x2]="item.cx+100"
+                                    [attr.y2]="item.cy" class="node-item" stroke-width="2"
+                                    [ngClass]="{'green':item.type == 'circle','black':item.type == 'square','blue':item.type == 'hexagon'}" />
+                                <g *ngIf="!l" (mouseover)="toggleAddIcon[i]=true" (mouseout)="toggleAddIcon[i]=false">
+                                    <!-- <rect *ngIf="!toggleAddIcon[i]" [attr.x]="item.cx+104" [attr.y]="item.cy-3"
+                                    [attr.width]="16" [attr.height]="6" fill="#aaa" rx="3" ry="3" /> -->
+                                    <g class="hover" (click)="toggleAddIcon[i]=false;addHexagon(i)">
+                                        <circle [attr.cx]="item.cx + 104 + 8" [attr.cy]="item.cy" [attr.r]="7"
+                                            fill="#FF6F00" />
+                                        <image [attr.x]="item.cx + 104 + 4" [attr.y]="item.cy - 4" width="8" height="8"
+                                            xlink:href="assets/img/plus-solid.svg" />
+                                    </g>
+                                </g>
+                                <line *ngIf="!l" [attr.x1]="item.cx+124" [attr.y1]="item.cy" [attr.x2]="item.cx+224"
+                                    [attr.y2]="item.cy" class="node-item" stroke-width="2"
+                                    [ngClass]="{'green':item.type == 'circle','black':item.type == 'square','blue':item.type == 'hexagon'}" />
+                                <g *ngIf="l" class="hover" (click)="item.addNew = true">
+                                    <circle [attr.cx]="l?item.cx+116:item.cx+224" [attr.cy]="item.cy" [attr.r]="7"
+                                        fill="#FF6F00" />
+                                    <image [attr.x]="l?item.cx+120-8:item.cx + 224 - 4" [attr.y]="item.cy - 4" width="8"
+                                        height="8" xlink:href="assets/img/plus-solid.svg" />
+                                </g>
+                                <g *ngIf="item.addNew && (hasPermission('PVPFMB') || hasPermissionStartsWith('PMPFM'))"
+                                    class="add-dropdown ignore-outside">
+                                    <g (click)="addHexagon(i)" class="hover">
+                                        <rect [attr.x]="item.cx+134" [attr.y]="item.cy+10" width="140"
+                                            class="select-node-type" height="30" rx="5" ry="5" />
+                                        <polygon [attr.points]="getPolygonPoints(item.cx+149,item.cy+15,20)"
+                                            class="node-item blue" />
+                                        <text [attr.x]="item.cx+169" [attr.y]="item.cy+30" fill="#000">Process</text>
+                                    </g>
+                                    <g (click)="addSquare(i)" class="hover">
+                                        <rect [attr.x]="item.cx+134" [attr.y]="item.cy+42" width="140"
+                                            class="select-node-type" height="30" rx="5" ry="5" />
+                                        <rect [attr.x]="item.cx+139" [attr.y]="item.cy+47" width="20"
+                                            class="node-item black" height="20" rx="5" ry="5" />
+                                        <text [attr.x]="item.cx+169" [attr.y]="item.cy+62" fill="#000">Output</text>
+                                    </g>
+                                </g>
+                            </g>
+                            <image *ngIf="item?.data?.meta?.sourceType=='FILE'" [attr.x]="item.cx - 8"
+                                [attr.y]="item.cy - 8" width="16" height="16" xlink:href="assets/img/file.svg"
+                                class="hover" (click)="selectItem(item)" />
+                            <image *ngIf="item?.data?.meta?.sourceType=='REST' || item?.data?.meta?.sourceType=='SOAP'"
+                                [attr.x]="item.cx - 8" [attr.y]="item.cy - 8" width="16" height="16"
+                                xlink:href="assets/img/api.svg" class="hover" (click)="selectItem(item)" />
+                            <image *ngIf="item?.data?.meta?.blockType=='PROCESS'" [attr.x]="item.cx - 8"
+                                [attr.y]="item.cy - 8" width="16" height="16" xlink:href="assets/img/mapper.svg"
+                                class="hover" (click)="selectItem(item)" />
+                            <g *ngIf="item.selected">
+                                <rect [attr.x]="item.cx - 88" [attr.y]="item.cy + 52" width="176" height="70"
+                                    fill="#fff" rx="4" ry="4" />
+                                <polygon [attr.points]="getTrianglePoints(item.cx,item.cy+44,8)" style="fill:#fff;" />
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+            <div class="block-type position-absolute d-flex align-items-center justify-content-center ignore-outside"
+                [ngStyle]="dropdownStyle" ngbDropdown *ngIf="selectedNode">
+                <ng-container *ngIf="selectedNode?.data?.meta?.blockType=='INPUT'">
+                    <button *ngIf="selectedNode?.data?.meta?.sourceType=='FILE'"
+                        [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                        class="btn btn-link text-secondary dropdown-toggle d-flex align-items-center" ngbDropdownToggle>
+                        <odp-file-icon size="18" color="1CAD49" class="mr-2"></odp-file-icon>
+                        <span class="text">File</span>
+                        <span class="ml-2 fa fa-angle-down"></span>
+                    </button>
+                    <button
+                        *ngIf="selectedNode?.data?.meta?.sourceType=='REST' || selectedNode?.data?.meta?.sourceType=='SOAP'"
+                        [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                        class="btn btn-link text-secondary dropdown-toggle d-flex align-items-center" ngbDropdownToggle>
+                        <odp-api-icon size="18" color="1CAD49" class="mr-2"></odp-api-icon>
+                        <span class="text">API</span>
+                        <span class="ml-2 fa fa-angle-down"></span>
+                    </button>
+                    <div class="dropdown-menu" ngbDropdownMenu>
+                        <a class="dropdown-item d-flex align-items-center"
+                            (click)="selectedNode.data.meta.sourceType = 'FILE';changeSourceType('FILE')">
+                            <odp-file-icon size="18" color="1CAD49" class="mr-2"></odp-file-icon>
+                            <span class="text">File</span>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center"
+                            (click)="selectedNode.data.meta.sourceType = 'REST';changeSourceType('REST')">
+                            <odp-api-icon size="18" color="1CAD49" class="mr-2"></odp-api-icon>
+                            <span class="text">API</span>
+                        </a>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="selectedNode?.data?.meta?.blockType=='PROCESS'">
+                    <button *ngIf="selectedNode?.data?.meta?.formatType=='nanoService'"
+                        [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                        class="btn btn-link text-secondary dropdown-toggle d-flex align-items-center" ngbDropdownToggle>
+                        <odp-nano-service-icon size="18" color="0082C9" class="mr-2"></odp-nano-service-icon>
+                        <span class="text">Nano Service</span>
+                        <span class="ml-2 fa fa-angle-down"></span>
+                    </button>
+                    <button *ngIf="selectedNode?.data?.meta?.formatType=='dataService'"
+                        [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                        class="btn btn-link text-secondary dropdown-toggle d-flex align-items-center" ngbDropdownToggle>
+                        <odp-service-icon size="18" color="0082C9" class="mr-2"></odp-service-icon>
+                        <span class="text">Data Service</span>
+                        <span class="ml-2 fa fa-angle-down"></span>
+                    </button>
+                    <div class="dropdown-menu" ngbDropdownMenu>
+                        <a class="dropdown-item d-flex align-items-center px-2"
+                            (click)="selectedNode.data.meta.formatType = 'nanoService';changeFormatType('nanoService')">
+                            <odp-nano-service-icon size="18" color="0082C9" class="mr-2"></odp-nano-service-icon>
+                            <span class="text">Nano Service</span>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center px-2"
+                            (click)="selectedNode.data.meta.formatType = 'dataService';changeFormatType('dataService')">
+                            <odp-service-icon size="18" color="0082C9" class="mr-2"></odp-service-icon>
+                            <span class="text">Data Service</span>
+                        </a>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="selectedNode?.data?.meta?.blockType=='OUTPUT'">
+                    <button *ngIf="selectedNode?.data?.meta?.targetType=='FILE'"
+                        [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                        class="btn btn-link text-secondary dropdown-toggle d-flex align-items-center" ngbDropdownToggle>
+                        <odp-file-icon size="18" color="202A36" class="mr-2"></odp-file-icon>
+                        <span class="text">File</span>
+                        <span class="ml-2 fa fa-angle-down"></span>
+                    </button>
+                    <button
+                        *ngIf="selectedNode?.data?.meta?.targetType=='REST' || selectedNode?.data?.meta?.targetType=='SOAP'"
+                        [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                        class="btn btn-link text-secondary dropdown-toggle d-flex align-items-center" ngbDropdownToggle>
+                        <odp-api-icon size="18" color="202A36" class="mr-2"></odp-api-icon>
+                        <span class="text">API</span>
+                        <span class="ml-2 fa fa-angle-down"></span>
+                    </button>
+                    <div class="dropdown-menu" ngbDropdownMenu>
+                        <a class="dropdown-item d-flex align-items-center"
+                            (click)="selectedNode.data.meta.targetType = 'FILE';changeSourceType('FILE')">
+                            <odp-file-icon size="18" color="202A36" class="mr-2"></odp-file-icon>
+                            <span class="text">File</span>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center"
+                            (click)="selectedNode.data.meta.targetType = 'REST';changeSourceType('REST')">
+                            <odp-api-icon size="18" color="202A36" class="mr-2"></odp-api-icon>
+                            <span class="text">API</span>
+                        </a>
+                    </div>
+                </ng-container>
+            </div>
+            <input *ngIf="selectedNode && selectedNode.data" type="text" [(ngModel)]="selectedNode.data.name"
+                (blur)="blockNameChange($event)" (ngModelChange)="blockNameChange(null,$event)"
+                [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                class="form-control position-absolute" [ngStyle]="textBoxStyle" placeholder="Enter name">
+            <div class="minimap-bar d-flex align-items-center position-absolute w-100 px-3">
+                <div class="position-relative w-100">
+                    <div class="d-flex align-items-center">
+                        <div class="minimap-left w-100"></div>
+                        <div class="minimap-slider"></div>
+                        <div class="minimap-right w-100"></div>
+                    </div>
+                    <svg *ngIf="minimapY" class="minimap" xmlns="http://www.w3.org/2000/svg"
+                        [attr.viewBox]="minimapViewBox">
+                        <use href="#design" height="36" x="-300" [attr.y]="minimapY" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="properties border-left d-flex flex-column ignore-outside">
+            <div *ngIf="selectedNode"
+                class="properties-header d-flex align-items-center justify-content-between px-3 border-bottom bg-light">
+                <div class="d-flex align-items-center">
+                    <span *ngIf="selectedNode?.data?.name" class="text text-accent text-truncate text-width"
+                        [odpTruncated]="selectedNode?.data?.name">{{selectedNode?.data?.name}}</span>
+                    <span *ngIf="!selectedNode?.data?.name" class="text text-muted text-truncate">Untitled Node</span>
+                </div>
+                <button type="button" class="btn btn-link text-danger" (click)="deleteBlock()"
+                    *ngIf="selectedNode.type !== 'circle'">
+                    <span class="fa fa-trash"></span>
+                </button>
+            </div>
+            <div class="properties-body p-3">
+                <ng-container *ngIf="selectedNode && selectedNode.type === 'circle'">
+                    <!-- <div class="font-weight-bold w-100 mb-3">Configuration</div> -->
+                    <div class="d-flex flex-column mt-3 align-items-center justify-content-center w-100">
+                        <ng-container *ngIf="selectedNode?.data?.meta?.sourceType == 'FILE'">
+                            <div class="d-flex w-100 mb-2 form-data" *ngIf="data.direction=='Outbound'">
+                                <div class="label">Agent
+                                    <sup class="text-danger">*</sup>
+                                </div>
+                                <div class="value w-100">
+                                    <select *ngIf="appAgents.length<=10" class="form-control"
+                                        [(ngModel)]="selectedNode.data.meta.source">
+                                        <option [value]="undefined">
+                                            {{appAgents.length==0 ? 'No Active App Agents' : '---Select Agent---'}}
+                                        </option>
+                                        <option [value]="agent.agentID" *ngFor="let agent of appAgents">
+                                            {{agent.name}}
+                                        </option>
+                                    </select>
+                                    <input *ngIf="appAgents.length>10" type="text" class="form-control"
+                                        [ngModel]="selectedNode.data.meta.source"
+                                        (selectItem)="selectAgent($event,'source')" [ngbTypeahead]="search"
+                                        [inputFormatter]="inputFormatter" [resultFormatter]="resultFormatter">
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Input Directory(s)&nbsp;
+                                    <small class="text-muted">(optional)</small>
+                                </div>
+                                <div class="value w-100">
+                                    <div class="input-group">
+                                        <input #inputDirectoryEle type="text" class="form-control"
+                                            (keyup.enter)="addInputDirectory(inputDirectoryEle)">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-dark"
+                                                (click)="addInputDirectory(inputDirectoryEle)">
+                                                <span class="fa fa-plus"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="list-group">
+                                        <div class="list-group-item d-flex align-items-center justify-content-between"
+                                            *ngFor="let item of inputDirectories;let i=index">
+                                            <div class="d-flex align-items-center">
+                                                <odp-round-check class="mr-2" [id]="i"
+                                                    ngbTooltip="Watch Sub-Directories"
+                                                    [(checked)]="item.watchSubDirectories"></odp-round-check>
+                                                <div class="text-dark">{{item.path}}</div>
+                                            </div>
+                                            <span class="fa fa-trash text-danger hover"
+                                                (click)="removeInputDirectory(i)"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="selectedNode?.data?.meta?.sourceType == 'REST'">
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Type
+                                    <sup class="text-danger">*</sup>
+                                </div>
+                                <div class="value w-100">
+                                    <select class="form-control" [(ngModel)]="selectedNode.data.meta.sourceType"
+                                        [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                                        (change)="selectedNode.data.meta.sourceType=='REST'?selectedNode.data.meta.contentType='JSON':selectedNode.data.meta.contentType='XML'">
+                                        <option value="REST">REST</option>
+                                        <option value="SOAP">SOAP</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="selectedNode?.data?.meta?.sourceType == 'SOAP'">
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Type
+                                    <sup class="text-danger">*</sup>
+                                </div>
+                                <div class="value w-100">
+                                    <select class="form-control" [(ngModel)]="selectedNode.data.meta.sourceType"
+                                        (change)="selectedNode.data.meta.sourceType=='REST'?selectedNode.data.meta.contentType='JSON':selectedNode.data.meta.contentType='XML'">
+                                        <option value="REST">REST</option>
+                                        <option value="SOAP">SOAP</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div class="d-flex w-100 mb-2 form-data"
+                            *ngIf="selectedNode.data.meta.contentType!='BINARY' && !selectedNode?.data?.sourceFormat?.name">
+                            <div class="label">Data Structure
+                                <sup class="text-danger">*</sup>
+                            </div>
+                            <div class="value w-100">
+                                <odp-format-selector [restrictToFormat]="restrictToFormat"
+                                    [format]="selectedNode.data.sourceFormat" (formatChange)="setFormat($event)"
+                                    class="align-self-center ignore-outside">
+                                    <odp-partner-icon size="18" color="1CAD49" class="mt-1"></odp-partner-icon>
+                                    <div class="btn-label text-accent text-left">Select Data Structure</div>
+                                </odp-format-selector>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex w-100 mb-2 form-data" *ngIf="selectedNode?.data?.sourceFormat?.name">
+                        <div class="label">Data Structure
+                            <sup class="text-danger">*</sup>
+                        </div>
+                        <div class="value w-100">
+                            <div class="d-flex flex-column w-100">
+                                <div class="bg-light px-2 d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center"
+                                        *ngIf="selectedNode?.data?.sourceFormat?.type == 'dataService'">
+                                        <odp-service-icon active="true" size="16" class="mt-1 mr-2"></odp-service-icon>
+                                        <span class="text ml-2">Data Service</span>
+                                    </div>
+                                    <div class="d-flex align-items-center"
+                                        *ngIf="selectedNode?.data?.sourceFormat?.type == 'dataFormat'">
+                                        <odp-data-format-icon active="true" size="16" class="mt-1 mr-2">
+                                        </odp-data-format-icon>
+                                        <span class="text ml-2">Data Format</span>
+                                    </div>
+                                    <div class="d-flex align-items-center"
+                                        *ngIf="selectedNode?.data?.sourceFormat?.type == 'custom'">
+                                        <odp-custom-format-icon active="true" size="16" class="mt-1 mr-2">
+                                        </odp-custom-format-icon>
+                                        <span class="text ml-2">Custom</span>
+                                    </div>
+                                    <button type="button" class="btn btn-link text-accent"
+                                        [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                                        (click)="removeFormat()">Change</button>
+                                </div>
+                                <div class="d-flex align-items-center mt-2">
+                                    <div class="label d-flex align-items-center">
+                                        <span class="text-secondary font-sm">Name</span>
+                                    </div>
+                                    <div class="value w-100 d-flex align-items-center">
+                                        <span class="text-dark font-weight-bold font-sm text-width text-truncate"
+                                            [odpTruncated]="selectedNode?.data?.sourceFormat?.name">{{selectedNode?.data?.sourceFormat?.name}}</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mt-2">
+                                    <div class="label d-flex align-items-center">
+                                        <span class="text-secondary font-sm">Attributes</span>
+                                    </div>
+                                    <div class="value w-100 d-flex align-items-center">
+                                        <span
+                                            class="text-dark font-weight-bold font-sm">{{selectedNode?.data?.sourceFormat?.attributeCount}}</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mt-2">
+                                    <div class="label d-flex align-items-center">
+                                        <span class="text-secondary font-sm">Type</span>
+                                    </div>
+                                    <div class="value w-100 d-flex align-items-center">
+                                        <odp-format-type-badge [data]="selectedNode?.data?.sourceFormat">
+                                        </odp-format-type-badge>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="selectedNode.data.meta.contentType === 'BINARY'">
+                        <div class="form-data d-flex mb-3 mt-2">
+                            <div class="label">Data Structure</div>
+                            <div class="value w-100">
+                                <div class="binary-format d-flex align-items-center justify-content-between">
+                                    <odp-format-type-badge [data]="{formatType:'BINARY'}">
+                                    </odp-format-type-badge>
+                                    <span class="fa fa-times-circle text-danger mr-2 hover"
+                                        (click)="removeFormat()"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="selectedNode?.data?.meta?.sourceType == 'REST'">
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Custom Headers</div>
+                            <div class="value w-100">
+                                <div class="d-flex align-items-center mb-2"
+                                    *ngFor="let item of selectedNode.data.meta.customHeadersList;let i=index">
+                                    <div class="label d-flex align-items-center">
+                                        <odp-round-check class="mr-2" [id]="item.key" [(checked)]="item.checked"
+                                            (checkedChange)="headerToggle()">
+                                        </odp-round-check>
+                                        <span *ngIf="!item.new" class="text">{{item.key}}</span>
+                                        <input *ngIf="item.new" type="text" class="form-control mr-2"
+                                            (ngModelChange)="headerKeyChange(item,$event)" [ngModel]="item.key">
+                                    </div>
+                                    <div class="value w-100 d-flex align-items-center">
+                                        <input type="text" class="form-control mr-2" [(ngModel)]="item.value">
+                                        <span class="remove-header">
+                                            <span *ngIf="item.new" class="fa fa-times text-danger"
+                                                (click)="removeHeader(i)"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-link text-accent" (click)="addNewHeader()"
+                                    [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow">
+                                    <span class="fa fa-plus mr-2"></span>
+                                    <span class="text">Add New</span>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <!-- <ng-container
+                        *ngIf="selectedNode?.data?.meta?.sourceType == 'REST' || selectedNode?.data?.meta?.sourceType == 'SOAP'">
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Two way SSL</div>
+                            <div class="value w-100">
+                                <odp-switch [edit]="{status:true}" [(checked)]="twoWaySSL"></odp-switch>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 mb-2 form-data pt-3" *ngIf="twoWaySSL">
+                            <div class="label">Select Certificate(s)</div>
+                            <div class="value w-100">
+                                <select class="form-control" [(ngModel)]="selectedNode.data.meta.secretIds" multiple>
+                                    <option [value]="item.secretId" *ngFor="let item of certificates">{{item.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </ng-container> -->
+                    <div *ngIf="selectedNode?.data?.meta?.sourceType == 'FILE'"
+                        class="sub-header px-3 py-2 bg-light mb-3 text-secondary">File Options</div>
+                    <ng-container
+                        *ngIf="selectedNode?.data?.meta?.contentType == 'EXCEL' || selectedNode?.data?.meta?.contentType == 'CSV' || selectedNode?.data?.meta?.contentType == 'FLATFILE'">
+                        <div class="d-flex w-100 mb-2 form-data"
+                            *ngIf="selectedNode?.data?.meta?.contentType == 'EXCEL'">
+                            <div class="label">Password&nbsp;
+                                <small class="text-muted">(optional)</small>
+                            </div>
+                            <div class="value w-100">
+                                <input type="password" class="form-control"
+                                    [(ngModel)]="selectedNode.data.meta.fileDetails.password">
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Rows to skip&nbsp;
+                                <small class="text-muted">(optional)</small>
+                            </div>
+                            <div class="value w-100"></div>
+                        </div>
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="border-right ml-2 mr-2 d-flex align-self-stretch"></div>
+                            <div class="d-flex flex-column w-100">
+                                <div class="d-flex w-100 mb-2 form-data">
+                                    <div class="label short">Start Rows</div>
+                                    <div class="value w-100">
+                                        <input type="number" class="form-control"
+                                            [(ngModel)]="selectedNode.data.meta.skipStartRows">
+                                    </div>
+                                </div>
+                                <div class="d-flex w-100 form-data">
+                                    <div class="label short">End Rows</div>
+                                    <div class="value w-100">
+                                        <input type="number" class="form-control"
+                                            [(ngModel)]="selectedNode.data.meta.skipEndRows">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="selectedNode.data.meta.contentType === 'BINARY' && selectedNode?.data?.meta?.sourceType == 'FILE'">
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Extensions&nbsp;
+                                <small class="text-muted">(optional)</small>
+                            </div>
+                            <div class="value w-100"></div>
+                        </div>
+                        <div class="d-flex flex-wrap mb-3 w-100">
+                            <div class="file-ext-block d-flex align-items-start mb-2"
+                                *ngFor="let ext of fileExtentionList">
+                                <odp-round-check class="mr-2" [checked]="getFileExtention(ext)"
+                                    (checkedChange)="setFileExtention($event,ext)"></odp-round-check>
+                                <span class="text-secondary">{{ext}}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Custom Extensions&nbsp;
+                                <small class="text-muted">(optional)</small>
+                            </div>
+                            <div class="value w-100">
+                                <div class="input-group">
+                                    <input #customExtentionEle type="text" class="form-control"
+                                        (keyup.enter)="addCustomExtention(customExtentionEle)">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-dark"
+                                            (click)="addCustomExtention(customExtentionEle)">
+                                            <span class="fa fa-plus"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="list-group">
+                                    <div class="list-group-item d-flex align-items-center justify-content-between"
+                                        *ngFor="let item of customExtensions;let i=index">
+                                        <div class="text-dark">{{item.extension}}</div>
+                                        <span class="fa fa-trash text-danger hover"
+                                            (click)="removeCustomExtention(item.extension)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="selectedNode?.data?.meta?.sourceType == 'FILE'">
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">File Pattern&nbsp;
+                                <small class="text-muted">(optional)</small>
+                            </div>
+                            <div class="value w-100">
+                                <div class="input-group">
+                                    <input #filePatternEle type="text" class="form-control"
+                                        (keyup.enter)="addFilePattern(filePatternEle)">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-dark"
+                                            (click)="addFilePattern(filePatternEle)">
+                                            <span class="fa fa-plus"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <small class="text-muted form-text">Should be between <span
+                                        class="text-accent">/</span>&lt;&lt;pattern&gt;&gt;<span
+                                        class="text-accent">/</span></small>
+                                <div class="list-group">
+                                    <div class="list-group-item d-flex align-items-center justify-content-between"
+                                        *ngFor="let item of filePatterns;let i=index">
+                                        <div class="text-dark">{{item}}</div>
+                                        <span class="fa fa-trash text-danger hover"
+                                            (click)="removeFilePattern(item)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Size in Bytes&nbsp;
+                                <small class="text-muted">(optional)</small>
+                            </div>
+                            <div class="value w-100">
+                                <input type="number" class="form-control"
+                                    [(ngModel)]="selectedNode.data.meta.fileMaxSize" max="104857600">
+                                <small class="text-muted form-text">Max. 100MB</small>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <!-- <ng-container *ngIf="selectedNode?.data?.meta?.sourceType == 'REST'"> -->
+                    <div class="sub-header px-3 py-2 bg-light mb-3 text-secondary">Security Settings</div>
+                    <div class="d-flex w-100 mb-2 form-data">
+                        <div class="label">Enable Trusted IP</div>
+                        <div class="value w-100">
+                            <odp-switch [edit]="{status:true}" [(checked)]="ipWhitelistEnabled"
+                                [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow">
+                            </odp-switch>
+                        </div>
+                    </div>
+                    <div class="d-flex w-100 mb-2 form-data" *ngIf="ipWhitelistEnabled">
+                        <div class="label">Trusted IP</div>
+                        <div class="value w-100">
+                            <div class="input-group">
+                                <input #ipListEle type="text" class="form-control" (keyup.enter)="addIpList(ipListEle)">
+                                <div class="input-group-append">
+                                    <button type="button" class="btZn btn-dark" (click)="addIpList(ipListEle)">
+                                        <span class="fa fa-plus"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="list-group">
+                                <div class="list-group-item d-flex align-items-center justify-content-between"
+                                    *ngFor="let item of ipList;let i=index">
+                                    <div class="text-dark">{{item}}</div>
+                                    <span class="fa fa-trash text-danger hover" (click)="removeIpList(i)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="selectedNode?.data?.meta?.sourceType == 'REST'">
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Two way SSL</div>
+                            <div class="value w-100">
+                                <odp-switch [edit]="{status:true}" [(checked)]="twoWaySSL"
+                                    [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow">
+                                </odp-switch>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 mb-2 form-data pt-3" *ngIf="twoWaySSL">
+                            <div class="label">Select Certificate(s)</div>
+                            <div class="value w-100">
+                                <select class="form-control" [(ngModel)]="selectedNode.data.meta.secretIds" multiple>
+                                    <option [value]="item.secretId" *ngFor="let item of certificates">{{item.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <!-- </ng-container> -->
+                    <div class="sub-header px-3 py-2 bg-light mb-3 text-secondary">Others</div>
+                    <div class="d-flex w-100 mb-2 form-data">
+                        <div class="label">Description&nbsp;
+                            <small class="text-muted">(optional)</small>
+                        </div>
+                        <div class="value w-100">
+                            <textarea id="description" rows="2" class="form-control"
+                                [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                                [(ngModel)]="selectedNode.data.description"></textarea>
+                        </div>
+                    </div>
+                    <ng-container
+                        *ngIf="selectedNode?.data?.meta?.sourceType == 'REST' || selectedNode?.data?.meta?.sourceType == 'FILE'">
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Unique Remote Transaction ID</div>
+                            <label class="switch accent mb-0 mr-3 mt-1" for="uniqueRemoteTransaction">
+                                <input type="checkbox" [ngModel]="selectedNode.data.meta.uniqueRemoteTransaction"
+                                    [disabled]="(hasPermission('PVPFMB') && !hasPermissionStartsWith('PMPFM')) || commonService.viewMicroFlow"
+                                    (input)="selectedNode.data.meta.uniqueRemoteTransaction = !selectedNode.data.meta.uniqueRemoteTransaction"
+                                    id="uniqueRemoteTransaction">
+                                <span class="slider"></span>
+                                <span class="toggler toggler-pos"></span>
+                            </label>
+                            <div class="mt-1">{{selectedNode.data.meta.uniqueRemoteTransaction ? 'Yes' : 'No'}}</div>
+                        </div>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="selectedNode?.data?.meta?.sourceType == 'FILE' && selectedNode.data.meta.uniqueRemoteTransaction">
+                        <div class="d-flex w-100 mb-2 form-data ml-4">
+                            <div class="sub-label">Filename</div>
+                            <label class="switch accent mb-0 mr-3 mt-1" for="fileName">
+                                <input type="checkbox"
+                                    [ngModel]="selectedNode.data.meta.uniqueRemoteTransactionOptions.fileName"
+                                    (input)="selectedNode.data.meta.uniqueRemoteTransactionOptions.fileName = !selectedNode.data.meta.uniqueRemoteTransactionOptions.fileName"
+                                    id="fileName">
+                                <span class="slider"></span>
+                                <span class="toggler toggler-pos"></span>
+                            </label>
+                            <div class="mt-1">
+                                {{selectedNode.data.meta.uniqueRemoteTransactionOptions.fileName ? 'Yes' : 'No'}}</div>
+                        </div>
+                        <div class="d-flex w-100 mb-2 form-data mb-1 ml-4">
+                            <div class="sub-label">Checksum</div>
+                            <label class="switch accent mb-0 mr-3 mt-1" for="checksum">
+                                <input type="checkbox"
+                                    [ngModel]="selectedNode.data.meta.uniqueRemoteTransactionOptions.checksum"
+                                    (input)="selectedNode.data.meta.uniqueRemoteTransactionOptions.checksum = !selectedNode.data.meta.uniqueRemoteTransactionOptions.checksum"
+                                    id="checksum">
+                                <span class="slider"></span>
+                                <span class="toggler toggler-pos"></span>
+                            </label>
+                            <div class="mt-1">
+                                {{selectedNode.data.meta.uniqueRemoteTransactionOptions.checksum ? 'Yes' : 'No'}}</div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="selectedNode && selectedNode.type === 'hexagon'">
+                    <ng-container *ngIf="selectedNode.data.sourceFormat?.type && selectedNode.data.targetFormat?.type">
+                        <div class="w-100 text-secondary">Selected
+                            {{selectedNode.data.meta.formatType == 'nanoService' ? 'Nano Service' : 'Data Service'}}
+                        </div>
+                        <div class="selected-phase text-secondary border d-flex align-items-center justify-content-between m-3 px-2"
+                            [ngClass]="{'is-invalid border-danger':!isValidService}"
+                            [ngbTooltip]="isValidService?'':'Data Structures are not assigned'">
+                            <div class="d-flex align-items-center">
+                                <odp-service-icon *ngIf="mapperRight?.data?.sourceFormat?.type === 'dataService'"
+                                    active="true" size="16" class="mt-1 ml-2"></odp-service-icon>
+                                <odp-data-format-icon *ngIf="mapperRight?.data?.sourceFormat?.type === 'dataFormat'"
+                                    active="true" size="16" class="mt-1 ml-2"></odp-data-format-icon>
+                                <odp-custom-format-icon *ngIf="mapperRight?.data?.sourceFormat?.type == 'custom'"
+                                    active="true" size="16" class="mt-1 ml-2"></odp-custom-format-icon>
+                                <span class="text ml-2">{{mapperRight?.data?.meta?.formatName}}</span>
+                            </div>
+                            <button type="button" class="btn btn-link text-accent"
+                                (click)="removeFormat()">change</button>
+                        </div>
+                        <ng-container>
+                            <div class="w-100 text-secondary">Data Mapping</div>
+                            <div class="d-flex mt-3 align-items-center w-100">
+                                <div class="format">
+                                    <div
+                                        class="rounded-circle attribute-count bg-light d-flex align-items-center justify-content-center">
+                                        {{mapperLeft?.data?.targetFormat?.attributeCount}}
+                                    </div>
+                                </div>
+                                <div class="border-top border-secondary w-100"></div>
+                                <div *ngIf="showMapper"
+                                    class="map-data-btn border d-flex align-items-center justify-content-center hover"
+                                    (click)="openMapper=!openMapper"
+                                    [ngClass]="{'border-accent text-accent':selectedNode?.data?.meta?.xslt,'border-danger is-invalid text-danger':!selectedNode?.data?.meta?.xslt}">
+                                    <div class="d-flex align-items-center">
+                                        <span class="fa fa-exchange-alt mr-2"></span>
+                                        <span class="text">Map Data</span>
+                                    </div>
+                                </div>
+                                <div class="border-top border-secondary w-100"></div>
+                                <div class="format">
+                                    <div
+                                        class="rounded-circle attribute-count bg-light d-flex align-items-center justify-content-center">
+                                        {{mapperRight?.data?.sourceFormat?.attributeCount}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex mb-4 mt-2 align-items-center justify-content-between w-100">
+                                <div class="format d-flex flex-column align-items-start">
+                                    <div class="d-flex align-items-center">
+                                        <odp-service-icon *ngIf="mapperLeft?.data?.targetFormat?.type === 'dataService'"
+                                            active="true" size="16" class="mt-1 mr-2"></odp-service-icon>
+                                        <odp-data-format-icon
+                                            *ngIf="mapperLeft?.data?.targetFormat?.type === 'dataFormat'" active="true"
+                                            size="16" class="mt-1 mr-2"></odp-data-format-icon>
+                                        <odp-custom-format-icon *ngIf="mapperLeft?.data?.targetFormat?.type == 'custom'"
+                                            active="true" size="16" class="mt-1 mr-2"></odp-custom-format-icon>
+                                        <span class="text-width text-truncate"
+                                            [odpTruncated]="mapperLeft?.data?.targetFormat?.name">{{mapperLeft?.data?.targetFormat?.name}}</span>
+                                    </div>
+                                    <odp-format-type-badge [data]="mapperLeft?.data?.targetFormat">
+                                    </odp-format-type-badge>
+                                </div>
+                                <div class="format d-flex flex-column align-items-end">
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-width text-truncate"
+                                            [odpTruncated]="mapperRight?.data?.sourceFormat?.name">{{mapperRight?.data?.sourceFormat?.name}}</span>
+                                        <odp-service-icon
+                                            *ngIf="mapperRight?.data?.sourceFormat?.type === 'dataService'"
+                                            active="true" size="16" class="mt-1 ml-2"></odp-service-icon>
+                                        <odp-data-format-icon
+                                            *ngIf="mapperRight?.data?.sourceFormat?.type === 'dataFormat'" active="true"
+                                            size="16" class="mt-1 ml-2"></odp-data-format-icon>
+                                        <odp-custom-format-icon
+                                            *ngIf="mapperRight?.data?.sourceFormat?.type == 'custom'" active="true"
+                                            size="16" class="mt-1 ml-2"></odp-custom-format-icon>
+                                    </div>
+                                    <odp-format-type-badge [data]="mapperRight?.data?.sourceFormat">
+                                    </odp-format-type-badge>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="selectedNode.data.meta.formatType == 'nanoService'">
+                            <div class="d-flex w-100 mb-2 form-data pt-3">
+                                <div class="label">Custom Headers</div>
+                                <div class="value w-100">
+                                    <div class="d-flex align-items-center mb-2"
+                                        *ngFor="let item of selectedNode.data.meta.customHeadersList;let i=index">
+                                        <div class="label d-flex align-items-center">
+                                            <odp-round-check class="mr-2" [id]="item.key" [(checked)]="item.checked"
+                                                (checkedChange)="headerToggle()">
+                                            </odp-round-check>
+                                            <span *ngIf="!item.new" class="text">{{item.key}}</span>
+                                            <input *ngIf="item.new" type="text" class="form-control mr-2"
+                                                (ngModelChange)="headerKeyChange(item,$event)" [ngModel]="item.key">
+                                        </div>
+                                        <div class="value w-100 d-flex align-items-center">
+                                            <input type="text" class="form-control mr-2" [(ngModel)]="item.value">
+                                            <span class="remove-header">
+                                                <span *ngIf="item.new" class="fa fa-times text-danger"
+                                                    (click)="removeHeader(i)"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-link text-accent" (click)="addNewHeader()">
+                                        <span class="fa fa-plus mr-2"></span>
+                                        <span class="text">Add New</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-2 form-data pt-3">
+                                <div class="label">Timeout (ms)</div>
+                                <div class="value w-100">
+                                    <input type="number" class="form-control"
+                                        [(ngModel)]="selectedNode.data.meta.connectionDetails.requestTimeout">
+                                </div>
+                            </div>
+                            <!-- <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Two way SSL</div>
+                                <div class="value w-100">
+                                    <odp-switch [edit]="{status:true}" [(checked)]="twoWaySSL"></odp-switch>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-2 form-data pt-3" *ngIf="twoWaySSL">
+                                <div class="label">Select Certificate(s)</div>
+                                <div class="value w-100">
+                                    <select class="form-control" [(ngModel)]="selectedNode.data.meta.secretIds"
+                                        multiple>
+                                        <option [value]="item.secretId" *ngFor="let item of certificates">{{item.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div> -->
+                        </ng-container>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="!selectedNode.data.sourceFormat?.type || !selectedNode.data.targetFormat?.type">
+                        <div class="d-flex flex-column">
+                            <div class="text-secondary" *ngIf="selectedNode.data.meta.formatType == 'nanoService'">
+                                Select a Nano Service</div>
+                            <div class="text-secondary" *ngIf="selectedNode.data.meta.formatType == 'dataService'">
+                                Select a Data Service</div>
+                            <div class="d-flex justify-content-center my-3">
+                                <odp-search-box (enteredText)="searchFormat($event)" (reset)="clearSearch()">
+                                </odp-search-box>
+                            </div>
+                            <div class="format-list">
+                                <div class="format-list-item d-flex align-items-center text-secondary font-weight-bold hover"
+                                    (click)="selectPhase(item)" *ngFor="let item of formatList">
+                                    <span class="hexagon mx-3"></span>
+                                    <span class="text-truncate" [odpTruncated]="item.name">{{item.name}}</span>
+                                </div>
+                                <div class="font-weight-bold text-center mb-3"
+                                    *ngIf="(!formatList || formatList.length==0) && searchTerm">
+                                    <span class="text-muted">No Records Found</span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container>
+                        <div class="sub-header px-3 py-2 bg-light mb-3 text-secondary">Security Settings</div>
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Allow Untrusted Connections</div>
+                            <div class="value w-100">
+                                <odp-switch [edit]="{status:true}" [(checked)]="trustAllCerts"
+                                    [disabled]="validateServerIdentity"></odp-switch>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Validate Server Identity</div>
+                            <div class="value w-100">
+                                <odp-switch [edit]="{status:true}" [(checked)]="validateServerIdentity"
+                                    [disabled]="trustAllCerts"></odp-switch>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Two way SSL</div>
+                            <div class="value w-100">
+                                <odp-switch [edit]="{status:true}" [(checked)]="twoWaySSL">
+                                </odp-switch>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 mb-2 form-data pt-3" *ngIf="validateServerIdentity">
+                            <div class="label">Select Certificate(s)</div>
+                            <div class="value w-100">
+                                <select class="form-control" [(ngModel)]="selectedNode.data.meta.secretIds" multiple>
+                                    <option [value]="item.secretId" *ngFor="let item of certificates">{{item.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="sub-header px-3 py-2 bg-light mb-3 text-secondary">Others</div>
+                    <div class="d-flex w-100 mb-2 form-data">
+                        <div class="label">Description</div>
+                        <div class="value w-100">
+                            <textarea id="description" rows="2" class="form-control"
+                                [(ngModel)]="selectedNode.data.description"></textarea>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="selectedNode && selectedNode.type === 'square'">
+                    <div class="d-flex flex-column mt-3 align-items-center justify-content-center w-100">
+                        <ng-container *ngIf="selectedNode?.data?.meta?.targetType == 'FILE'">
+                            <div class="d-flex w-100 mb-2 form-data" *ngIf="data.direction=='Inbound'">
+                                <div class="label">Agent
+                                    <sup class="text-danger">*</sup>
+                                </div>
+                                <div class="value w-100">
+                                    <select *ngIf="appAgents.length<=10" class="form-control"
+                                        [(ngModel)]="selectedNode.data.meta.target"
+                                        [ngClass]="{'is-invalid':agentNotSelected}">
+                                        <option [value]="undefined">
+                                            {{appAgents.length==0 ? 'No Active App Agents' : '---Select Agent---'}}
+                                        </option>
+                                        <option [value]="agent.agentID" *ngFor="let agent of appAgents">
+                                            {{agent.name}}
+                                        </option>
+                                    </select>
+                                    <input *ngIf="appAgents.length>10" type="text" class="form-control"
+                                        [ngModel]="selectedNode.data.meta.target"
+                                        (selectItem)="selectAgent($event,'target')" [ngbTypeahead]="search"
+                                        [inputFormatter]="inputFormatter" [resultFormatter]="resultFormatter">
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Mirror Input Directory(s)&nbsp;
+                                    <small class="text-muted">(optional)</small>
+                                </div>
+                                <div class="value w-100">
+                                    <div class="value w-100">
+                                        <odp-round-check class="mr-2" id="mirrorInputDirectories"
+                                            [(checked)]="selectedNode.data.meta.mirrorInputDirectories">
+                                        </odp-round-check>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Output Directory(s)&nbsp;
+                                    <small class="text-muted">(optional)</small>
+                                </div>
+                                <div class="value w-100">
+                                    <div class="value w-100">
+                                        <div class="input-group">
+                                            <input #outputDirectoryEle type="text" class="form-control"
+                                                (keyup.enter)="addOutputDirectory(outputDirectoryEle)">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-dark"
+                                                    (click)="addOutputDirectory(outputDirectoryEle)">
+                                                    <span class="fa fa-plus"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="list-group">
+                                            <div class="list-group-item d-flex align-items-center justify-content-between"
+                                                *ngFor="let item of outputDirectories;let i=index">
+                                                <div class="text-dark">{{item.path}}</div>
+                                                <span class="fa fa-trash text-danger hover"
+                                                    (click)="removeOutputDirectory(i)"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="selectedNode?.data?.meta?.targetType == 'REST'">
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Type
+                                    <sup class="text-danger">*</sup>
+                                </div>
+                                <div class="value w-100">
+                                    <select class="form-control" [(ngModel)]="selectedNode.data.meta.targetType"
+                                        (change)="selectedNode.data.meta.targetType=='REST'?selectedNode.data.meta.contentType=null:selectedNode.data.meta.contentType='XML'">
+                                        <option value="REST">REST</option>
+                                        <option value="SOAP">SOAP</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="selectedNode?.data?.meta?.targetType == 'SOAP'">
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Type
+                                    <sup class="text-danger">*</sup>
+                                </div>
+                                <div class="value w-100">
+                                    <select class="form-control" [(ngModel)]="selectedNode.data.meta.targetType"
+                                        (change)="selectedNode.data.meta.targetType=='REST'?selectedNode.data.meta.contentType=null:selectedNode.data.meta.contentType='XML'">
+                                        <option value="REST">REST</option>
+                                        <option value="SOAP">SOAP</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Content Type
+                                    <sup class="text-danger">*</sup>
+                                </div>
+                                <div class="value w-100">
+                                    <select class="form-control" [(ngModel)]="selectedNode.data.meta.contentType">
+                                        <option value="XML">XML</option>
+                                        <option value="WSDL-XML">Document</option>
+                                        <option value="JAXRPC-XML">RPC</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">WSDL</div>
+                                <div class="value w-100">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend" ngbDropdown>
+                                            <button *ngIf="selectedNode?.data?.meta?.wsdlType=='url'"
+                                                class="btn btn-accent dropdown-toggle" ngbDropdownToggle>URL</button>
+                                            <button *ngIf="selectedNode?.data?.meta?.wsdlType=='file'"
+                                                class="btn btn-accent dropdown-toggle" ngbDropdownToggle>File</button>
+                                            <div class="dropdown-menu" ngbDropdownMenu>
+                                                <a class="dropdown-item"
+                                                    (click)="selectedNode.data.meta.wsdlType = 'file'">File</a>
+                                                <a class="dropdown-item"
+                                                    (click)="selectedNode.data.meta.wsdlType = 'url'">URL</a>
+                                            </div>
+                                        </div>
+                                        <input *ngIf="selectedNode?.data?.meta?.wsdlType=='url'" type="text"
+                                            class="form-control" odpReadWsdl
+                                            [(ngModel)]="selectedNode.data.meta.wsdlValue"
+                                            (content)="wsdlContent($event)">
+                                        <input *ngIf="selectedNode?.data?.meta?.wsdlType=='file'" type="file"
+                                            class="form-control" odpReadWsdl
+                                            [(ngModel)]="selectedNode.data.meta.wsdlValue"
+                                            (content)="wsdlContent($event)">
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div class="d-flex w-100 mb-2 form-data"
+                            *ngIf="selectedNode.data.meta.contentType!='BINARY' && selectedNode.data.meta.contentType!=='JAXRPC-XML' && selectedNode.data.meta.contentType!=='WSDL-XML' && !selectedNode?.data?.targetFormat?.name">
+                            <div class="label">Data Structure</div>
+                            <div class="value w-100">
+                                <odp-format-selector [format]="selectedNode.data.targetFormat"
+                                    [restrictToFormat]="restrictToFormat" (formatChange)="setFormat($event)"
+                                    class="align-self-center ignore-outside">
+                                    <odp-partner-icon size="18" color="1CAD49" class="mt-1"></odp-partner-icon>
+                                    <div class="btn-label text-accent text-left">Pick Data Structure</div>
+                                </odp-format-selector>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="selectedNode.data.source && selectedNode.data.target">
+                        <ng-container>
+                            <div class="d-flex mt-3 align-items-center w-100">
+                                <div class="format">
+                                    <div
+                                        class="rounded-circle attribute-count bg-light d-flex align-items-center justify-content-center">
+                                        {{mapperLeft?.data?.targetFormat?.attributeCount}}
+                                    </div>
+                                </div>
+                                <div class="border-top border-secondary w-100"></div>
+                                <div *ngIf="showMapper"
+                                    class="map-data-btn border d-flex align-items-center justify-content-center hover"
+                                    (click)="openMapper=!openMapper"
+                                    [ngClass]="{'border-accent text-accent':selectedNode?.data?.meta?.xslt,'border-danger is-invalid text-danger':!selectedNode?.data?.meta?.xslt}">
+                                    <div class="d-flex align-items-center">
+                                        <span class="fa fa-exchange-alt mr-2"></span>
+                                        <span class="text">Map Data</span>
+                                    </div>
+                                </div>
+                                <div class="border-top border-secondary w-100"></div>
+                                <div class="format">
+                                    <div
+                                        class="rounded-circle attribute-count bg-light d-flex align-items-center justify-content-center">
+                                        {{mapperRight?.data?.sourceFormat?.attributeCount}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex mb-4 mt-2 align-items-center justify-content-between w-100">
+                                <div class="format d-flex flex-column align-items-start">
+                                    <div class="d-flex align-items-center">
+                                        <odp-service-icon *ngIf="mapperLeft?.data?.targetFormat?.type === 'dataService'"
+                                            active="true" size="16" class="mt-1 mr-2"></odp-service-icon>
+                                        <odp-data-format-icon
+                                            *ngIf="mapperLeft?.data?.targetFormat?.type === 'dataFormat'" active="true"
+                                            size="16" class="mt-1 mr-2"></odp-data-format-icon>
+                                        <odp-custom-format-icon *ngIf="mapperLeft?.data?.targetFormat?.type == 'custom'"
+                                            active="true" size="16" class="mt-1 mr-2"></odp-custom-format-icon>
+                                        <span class="text-width text-truncate"
+                                            [odpTruncated]="mapperLeft?.data?.targetFormat?.name">{{mapperLeft?.data?.targetFormat?.name}}</span>
+                                    </div>
+                                    <odp-format-type-badge [data]="mapperLeft?.data?.targetFormat">
+                                    </odp-format-type-badge>
+                                </div>
+                                <div class="format d-flex flex-column align-items-end">
+                                    <div class="d-flex align-items-center">
+                                        <span class="fa fa-angle-left text-accent mr-2 hover"
+                                            (click)="removeFormat()"></span>
+                                        <span class="text-width text-truncate"
+                                            [odpTruncated]="mapperRight?.data?.sourceFormat?.name">{{mapperRight?.data?.sourceFormat?.name}}</span>
+                                        <odp-service-icon
+                                            *ngIf="mapperRight?.data?.sourceFormat?.type === 'dataService'"
+                                            active="true" size="16" class="mt-1 ml-2"></odp-service-icon>
+                                        <odp-data-format-icon
+                                            *ngIf="mapperRight?.data?.sourceFormat?.type === 'dataFormat'" active="true"
+                                            size="16" class="mt-1 ml-2"></odp-data-format-icon>
+                                        <odp-custom-format-icon
+                                            *ngIf="mapperRight?.data?.sourceFormat?.type == 'custom'" active="true"
+                                            size="16" class="mt-1 ml-2"></odp-custom-format-icon>
+                                    </div>
+                                    <odp-format-type-badge [data]="mapperRight?.data?.sourceFormat">
+                                    </odp-format-type-badge>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="selectedNode.data.meta.contentType === 'BINARY'">
+                        <div class="form-data d-flex mb-3 mt-2">
+                            <div class="label">Data Structure</div>
+                            <div class="value w-100">
+                                <div class="binary-format d-flex align-items-center justify-content-between">
+                                    <odp-format-type-badge [data]="{formatType:'BINARY'}">
+                                    </odp-format-type-badge>
+                                    <span class="fa fa-times-circle text-danger mr-2 hover"
+                                        (click)="removeFormat()"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="selectedNode?.data?.meta?.targetType == 'REST'">
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Custom Headers</div>
+                            <div class="value w-100">
+                                <div class="d-flex align-items-center mb-2"
+                                    *ngFor="let item of selectedNode.data.meta.customHeadersList;let i=index">
+                                    <div class="label d-flex align-items-center">
+                                        <odp-round-check class="mr-2" [id]="item.key" [(checked)]="item.checked"
+                                            (checkedChange)="headerToggle()">
+                                        </odp-round-check>
+                                        <span *ngIf="!item.new" class="text">{{item.key}}</span>
+                                        <input *ngIf="item.new" type="text" class="form-control mr-2"
+                                            (ngModelChange)="headerKeyChange(item,$event)" [ngModel]="item.key">
+                                    </div>
+                                    <div class="value w-100 d-flex align-items-center">
+                                        <input type="text" class="form-control mr-2" [(ngModel)]="item.value">
+                                        <span class="remove-header">
+                                            <span *ngIf="item.new" class="fa fa-times text-danger"
+                                                (click)="removeHeader(i)"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-link text-accent" (click)="addNewHeader()">
+                                    <span class="fa fa-plus mr-2"></span>
+                                    <span class="text">Add New</span>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="selectedNode?.data?.meta?.targetType == 'REST' || selectedNode?.data?.meta?.targetType == 'SOAP'">
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">URL
+                                <sup class="text-danger">*</sup>
+                            </div>
+                            <div class="value w-100">
+                                <textarea type="text" class="form-control"
+                                    [(ngModel)]="selectedNode.data.meta.connectionDetails.url" rows="2"
+                                    [ngClass]="{'is-invalid':!isValidURL}"></textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 mb-2 form-data pt-3">
+                            <div class="label">Timeout (ms)</div>
+                            <div class="value w-100">
+                                <input type="number" class="form-control"
+                                    [(ngModel)]="selectedNode.data.meta.connectionDetails.requestTimeout">
+                            </div>
+                        </div>
+                        <ng-container *ngIf="hasHttps">
+                            <div class="sub-header px-3 py-2 bg-light mb-3 text-secondary">Security Settings</div>
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Allow Untrusted Connections</div>
+                                <div class="value w-100">
+                                    <odp-switch [edit]="{status:true}" [(checked)]="trustAllCerts"
+                                        [disabled]="validateServerIdentity"></odp-switch>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Validate Server Identity</div>
+                                <div class="value w-100">
+                                    <odp-switch [edit]="{status:true}" [(checked)]="validateServerIdentity"
+                                        [disabled]="trustAllCerts"></odp-switch>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-2 form-data">
+                                <div class="label">Two way SSL</div>
+                                <div class="value w-100">
+                                    <odp-switch [edit]="{status:true}" [(checked)]="twoWaySSL">
+                                    </odp-switch>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-2 form-data pt-3" *ngIf="validateServerIdentity">
+                                <div class="label">Select Certificate(s)</div>
+                                <div class="value w-100">
+                                    <select class="form-control" [(ngModel)]="selectedNode.data.meta.secretIds"
+                                        multiple>
+                                        <option [value]="item.secretId" *ngFor="let item of certificates">{{item.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="selectedNode?.data?.meta?.contentType == 'EXCEL' || selectedNode?.data?.meta?.contentType == 'CSV' || selectedNode?.data?.meta?.contentType == 'FLATFILE'">
+                        <div class="d-flex w-100 mb-2 form-data">
+                            <div class="label">Generate Headers</div>
+                            <div class="value w-100">
+                                <odp-switch [(checked)]="selectedNode.data.meta.generateHeaders" [edit]="{status:true}">
+                                </odp-switch>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="sub-header px-3 py-2 bg-light mb-3 text-secondary">Others</div>
+                    <div class="d-flex w-100 mb-2 form-data">
+                        <div class="label">Description</div>
+                        <div class="value w-100">
+                            <textarea id="description" rows="2" class="form-control"
+                                [(ngModel)]="selectedNode.data.description"></textarea>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+
+<odp-mapper class="ignore-outside" *ngIf="openMapper" [(toggleMapper)]="openMapper"
+    [commonSourceTarget]="mapperLeft?.data?.targetFormat?.id===mapperRight?.data?.sourceFormat?.id"
+    [source]="mapperLeft?.data?.targetFormat?.definition" [sourceType]="mapperLeft?.data?.targetFormat?.formatType"
+    [destination]="mapperRight?.data?.sourceFormat?.definition"
+    [destinationType]="mapperRight?.data?.sourceFormat?.formatType" [(xslt)]="selectedNode.data.meta.xslt"></odp-mapper>
+
+<ng-template #selectWSDLOperationTemplate>
+    <div class="modal-body p-4 ignore-outside">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="font-lg font-weight-bold text-accent">Select an Operation</div>
+            <span class="fa fa-times text-muted hover" (click)="selectWSDLOperationTemplateRef.close(false)"></span>
+        </div>
+        <div class="operation-list my-3">
+            <ng-container *ngFor="let item of wsdlOperations;let i=index;">
+                <!-- <div class="service-name">{{item.serviceName}}</div> -->
+                <ng-container>
+                    <ng-container *ngFor="let pt of item.portTypes;let pti=index;">
+                        <ng-container>
+                            <!-- <div class="d-flex align-items-center">
+                                <div class="service-name mr-2">{{pt.binding}}</div>
+                                <div class="service-name mr-2">{{pt.portType}}</div>
+                            </div> -->
+                            <div class="list-group">
+                                <div class="list-group-item list-group-item-action hover"
+                                    (click)="selectWSDLOperation(op,pt.portType,pt.binding)"
+                                    *ngFor="let op of pt.operations;let opi=index;">
+                                    {{op}}
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+        </div>
+        <!-- <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-create btn-min-width">Select</button>
+        </div> -->
+    </div>
+</ng-template>
+
+<odp-delete-modal class="ignore-outside" [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+    <odp-partner-icon [size]="18" color="DD5151" class="mt-1"></odp-partner-icon>
+</odp-delete-modal>
+
+<ng-template #pageChangeModalTemplate>
+    <div class="modal-body p-4 ignore-outside">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-partner-icon [size]="18" color="202a36" class="mt-1"></odp-partner-icon>
+                </span>
+                <span class="font-weight-bold mb-1">Unsaved Changes</span>
+            </div>
+            <span class="fa fa-times text-secondary hover " (click)="pageChangeModalTemplateRef.close(false)"></span>
+        </div>
+        <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-dark"
+                (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+        </div>
+    </div>
+</ng-template>

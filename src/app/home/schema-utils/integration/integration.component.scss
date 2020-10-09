@@ -1,0 +1,54 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.builder-body {
+  min-height: calc(100vh - 204px);
+  max-height: calc(100vh - 204px);
+  overflow-y: auto;
+
+  .hooks-dashboard {
+    width: 200px;
+  }
+
+  .text-small {
+    font-size: 0.8125rem;
+  }
+
+  .text-bold {
+    font-weight: bold;
+  }
+
+  .hooks-content {
+    .preHook-desc {
+      max-width: 500px;
+      min-width: 500px;
+      max-height: 34px;
+      min-height: 34px;
+    }
+
+    .hook-table {
+      .hHook-table__row:hover {
+        background: $light;
+      }
+      .hook-table__header {
+        background: $heading-highlight;
+        color: $white;
+        font-size: 0.8125rem;
+        max-height: 36px;
+        min-height: 36px;
+      }
+      .hook-name {
+        min-width: 180px;
+        max-width: 180px;
+      }
+      .hook-url {
+        min-width: 550px;
+        max-width: 550px;
+      }
+    }
+  }
+}
+.field-error-symbol {
+  top: 7px;
+  left: 90%;
+}

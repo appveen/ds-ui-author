@@ -1,0 +1,49 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.header {
+  min-height: 50px;
+  max-height: 50px;
+}
+.options {
+  .add-new {
+    visibility: hidden;
+    transition: 0.25s;
+    &.show {
+      visibility: visible;
+    }
+  }
+  .search-form {
+    width: 400px;
+  }
+}
+
+.app-list {
+  height: calc(100vh - 170px);
+  overflow-y: auto;
+}
+
+table {
+  span {
+    vertical-align: middle;
+  }
+  [class^="odp-"],
+  [class*=" odp-"] {
+    font-size: 16px;
+    line-height: 0;
+  }
+  .description-td {
+    min-width: 650px;
+    max-width: 650px;
+  }
+}
+
+.icon-position {
+  top: 8px;
+  right: 6px;
+}
+
+.textarea-icon-position {
+  top: 8px;
+  right: 24px;
+}

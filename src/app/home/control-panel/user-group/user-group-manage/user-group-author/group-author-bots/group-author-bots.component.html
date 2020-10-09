@@ -1,0 +1,170 @@
+<div class="d-flex flex-column groups-content w-100">
+  <div class="top-bar d-flex align-items-center justify-content-between bg-light pl-3">
+    <span class="font-weight-bold">Bot Access Settings</span>
+    <!-- <span class="help d-flex align-items-center" (click)="showHelp()">
+      <span class="fa fa-info-circle mx-1"></span>
+      <span class="text">Help</span>
+    </span> -->
+  </div>
+  <div class="text-accent p-3">Bot Info</div>
+  <div class="basic-settings d-flex align-items-start w-100 p-3 border-bottom">
+    <div class="label">
+      <span class="font-weight-bold mr-1">
+        <span class="text">Access Level</span>
+        <br>
+        <span class="text-muted font-13">
+            Permission to view or make changes to bot details like name, phone, apps, attributes, etc.
+        </span>
+      </span>
+    </div>
+    <div class="value pl-4 d-flex flex-column">
+      <div class="level-one position-relative mb-3">
+        <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
+          (click)="dropdownToggle['botInfo']=hasPermission('PMGAB')?(!dropdownToggle['botInfo']):false"
+          [ngClass]="{'blocked':basicPermission === 'blocked','view':basicPermission === 'view','manage':basicPermission === 'manage','hover':hasPermission('PMGAB')}">
+          <div class="icon d-flex align-items-center justify-content-center">
+            <span *ngIf="basicPermission === 'blocked'" class="fa fa-lock"></span>
+            <span *ngIf="basicPermission === 'view'" class="fa fa-eye"></span>
+            <span *ngIf="basicPermission === 'manage'" class="fa fa-pen"></span>
+          </div>
+          <div *ngIf="basicPermission === 'blocked'" class="text">Blocked</div>
+          <div *ngIf="basicPermission === 'view'" class="text">View</div>
+          <div *ngIf="basicPermission === 'manage'" class="text">Manage</div>
+          <span *ngIf="hasPermission('PMGAB')" class="fa fa-angle-down fa-sm"></span>
+        </div>
+        <div *ngIf="dropdownToggle['botInfo']" class="rounded-dropdown" odpClickOutside
+          (outside)="dropdownToggle['botInfo']=false">
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="dropdownToggle['botInfo']=false;basicPermission='PNBB'">
+            <div class="icon d-flex align-items-center justify-content-center blocked">
+              <span class="fa fa-lock"></span>
+            </div>
+            <div class="text">Blocked</div>
+          </div>
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="dropdownToggle['botInfo']=false;basicPermission='PVBB'">
+            <div class="icon d-flex align-items-center justify-content-center view">
+              <span class="fa fa-eye"></span>
+            </div>
+            <div class="text">View</div>
+          </div>
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="dropdownToggle['botInfo']=false;basicPermission=['PMBBC','PMBBU','PMBBD']">
+            <div class="icon d-flex align-items-center justify-content-center manage">
+              <span class="fa fa-pen"></span>
+            </div>
+            <div class="text">Manage</div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="basicPermission==='manage'" class="level-two position-relative d-flex align-items-center mb-3">
+        <div class="round-checkbox d-flex align-items-center justify-content-between mr-3"
+          [ngClass]="{'checked':createPermission,'disabled':!hasPermission('PMGAB')}" (click)="togglePermissionLevel('C')">
+          <div class="text">Create</div>
+          <div class="round-check d-flex align-items-center justify-content-center">
+            <span class="fa fa-check"></span>
+          </div>
+        </div>
+        <div class="round-checkbox d-flex align-items-center justify-content-between mr-3"
+          [ngClass]="{'checked':editPermission,'disabled':!hasPermission('PMGAB')}" (click)="togglePermissionLevel('U')">
+          <div class="text">Edit</div>
+          <div class="round-check d-flex align-items-center justify-content-center">
+            <span class="fa fa-check"></span>
+          </div>
+        </div>
+        <div class="round-checkbox d-flex align-items-center justify-content-between mr-3"
+          [ngClass]="{'checked':deletePermission,'disabled':!hasPermission('PMGAB')}" (click)="togglePermissionLevel('D')">
+          <div class="text">Delete</div>
+          <div class="round-check d-flex align-items-center justify-content-center">
+            <span class="fa fa-check"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="p-3 d-flex align-items-center w-100">
+    <span class="sub-heading text-accent">Access Settings</span>
+  </div>
+  <div class="access-settings d-flex align-items-start w-100 p-3">
+    <div class="label">
+      <span class="font-weight-bold mr-1">
+        <span class="text">Session & Login Access</span>
+        <br>
+        <span class="text-muted font-13">Permission to reset password and logout bot.</span>
+      </span>
+    </div>
+    <div class="value pl-4 d-flex flex-column">
+      <div class="level-one position-relative mb-3">
+        <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
+          (click)="dropdownToggle['session']=hasPermission('PMGAB')?(!dropdownToggle['session']):false"
+          [ngClass]="{'blocked':sessionPermission === 'blocked','manage':sessionPermission === 'manage','hover':hasPermission('PMGAB')}">
+          <div class="icon d-flex align-items-center justify-content-center">
+            <span *ngIf="sessionPermission === 'blocked'" class="fa fa-lock"></span>
+            <span *ngIf="sessionPermission === 'manage'" class="fa fa-pen"></span>
+          </div>
+          <div *ngIf="sessionPermission === 'blocked'" class="text">Blocked</div>
+          <div *ngIf="sessionPermission === 'manage'" class="text">Manage</div>
+          <span *ngIf="hasPermission('PMGAB')" class="fa fa-angle-down fa-sm"></span>
+        </div>
+        <div *ngIf="dropdownToggle['session']" class="rounded-dropdown" odpClickOutside
+          (outside)="dropdownToggle['session']=false">
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="dropdownToggle['session']=false;sessionPermission='PNBA'">
+            <div class="icon d-flex align-items-center justify-content-center blocked">
+              <span class="fa fa-lock"></span>
+            </div>
+            <div class="text">Blocked</div>
+          </div>
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="dropdownToggle['session']=false;sessionPermission='PMBA'">
+            <div class="icon d-flex align-items-center justify-content-center manage">
+              <span class="fa fa-pen"></span>
+            </div>
+            <div class="text">Manage</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="groups-settings d-flex align-items-start w-100 p-3">
+    <div class="label">
+      <span class="font-weight-bold mr-1">
+        <span class="text">Bot groups</span>
+        <br>
+        <span class="text-muted font-13">Permission to add or remove groups from a bot.</span>
+      </span>
+    </div>
+    <div class="value pl-4 d-flex flex-column">
+      <div class="level-one position-relative mb-3">
+        <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
+          (click)="dropdownToggle['group']=hasPermission('PMGAB')?(!dropdownToggle['group']):false"
+          [ngClass]="{'blocked':groupPermission === 'blocked','manage':groupPermission === 'manage','hover':hasPermission('PMGAB')}">
+          <div class="icon d-flex align-items-center justify-content-center">
+            <span *ngIf="groupPermission === 'blocked'" class="fa fa-lock"></span>
+            <span *ngIf="groupPermission === 'manage'" class="fa fa-pen"></span>
+          </div>
+          <div *ngIf="groupPermission === 'blocked'" class="text">Blocked</div>
+          <div *ngIf="groupPermission === 'manage'" class="text">Manage</div>
+          <span *ngIf="hasPermission('PMGAB')" class="fa fa-angle-down fa-sm"></span>
+        </div>
+        <div *ngIf="dropdownToggle['group']" class="rounded-dropdown" odpClickOutside
+          (outside)="dropdownToggle['group']=false">
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="dropdownToggle['group']=false;groupPermission='PNBG'">
+            <div class="icon d-flex align-items-center justify-content-center blocked">
+              <span class="fa fa-lock"></span>
+            </div>
+            <div class="text">Blocked</div>
+          </div>
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="dropdownToggle['group']=false;groupPermission='PMBG'">
+            <div class="icon d-flex align-items-center justify-content-center manage">
+              <span class="fa fa-pen"></span>
+            </div>
+            <div class="text">Manage</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

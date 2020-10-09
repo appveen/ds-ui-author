@@ -1,0 +1,153 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.text-blue {
+  color: #3498db;
+}
+.overflow-y {
+  overflow-y: auto;
+  max-height: calc(100vh - 209px);
+}
+.form-wrapper{
+  .label{
+    width: 260px !important;
+  }
+}
+.wizard {
+  max-width: 300px;
+  min-width: 300px;
+  .circle {
+    min-width: 16px;
+    max-width: 16px;
+    min-height: 16px;
+    max-height: 16px;
+    font-size: 10px;
+  }
+  .active {
+    color: #3498db !important;
+    .text {
+      color: #3498db !important;
+      font-weight: bold;
+    }
+    .circle {
+      border: 4px solid #3498db !important;
+    }
+  }
+}
+.fingerprint {
+  min-width: 36px;
+  max-width: 36px;
+  min-height: 36px;
+  max-height: 36px;
+}
+.block {
+  width: 410px;
+  input {
+    max-height: 28px;
+    min-width: 230px;
+  }
+}
+.heading {
+  min-height: 74px;
+  max-height: 74px;
+}
+.validation-step {
+  .circle {
+    min-width: 28px;
+    max-width: 28px;
+    min-height: 28px;
+    max-height: 28px;
+  }
+  .lines {
+    margin-left: 14px;
+    .line {
+      min-height: 8px;
+      max-height: 8px;
+      border-width: 2px !important;
+    }
+  }
+}
+.set-super-admin-step {
+  .block {
+    min-width: 90%;
+    max-width: 90%;
+  }
+  .search-form {
+    .fa-search {
+      top:8px;
+      left: 8px;
+    }
+    input {
+      text-indent: 16px;
+      max-height: 36px;
+    }
+  }
+  .user-list {
+    min-height: calc(100vh - 322px);
+    max-height: calc(100vh - 322px);
+    overflow-y: auto;
+    .user-list-item {
+      .cell {
+        min-width: 33%;
+      }
+      .circle-select {
+        min-width: 30px;
+        max-width: 30px;
+        min-height: 30px;
+        max-height: 30px;
+        &.selected {
+          border-color: #3498db !important;
+          background: #3498db;
+          color: #fff;
+        }
+      }
+      &:hover {
+        cursor: pointer;
+        background: $light;
+      }
+    }
+  }
+}
+.review-step {
+  .block {
+    min-width: 600px;
+    max-width: 600px;
+    .label {
+      min-width: 140px;
+      max-width: 140px;
+    }
+  }
+}
+.fingerprint-icon {
+  min-width: 36px;
+  min-height: 36px;
+}
+.spinner-small-icon {
+  min-width: 28px;
+  min-height: 28px;
+}
+.super-admin-icon {
+  min-width: 70px;
+  min-height: 70px;
+}
+.form-icon {
+  min-width: 18px;
+  min-height: 18px;
+}
+.users-icon {
+  min-width: 70px;
+  min-height: 70px;
+  & + .odp-delete {
+    min-width: 24px;
+    min-height: 24px;
+    font-size: 9px;
+    bottom: 0px;
+    right: 0px;
+    border: 2px solid #fff;
+  }
+}
+
+.spinner-big-icon{
+    min-width: 70px;
+    min-height: 70px;   
+}

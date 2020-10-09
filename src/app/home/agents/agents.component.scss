@@ -1,0 +1,51 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.options {
+  min-height: 50px;
+  max-height: 50px;
+}
+
+.grid-container {
+  height: calc(100vh - 214px);
+  .ag-grid-options {
+    height: 32px;
+  }
+  .ag-grid-container {
+    height: calc(100vh - 246px);
+  }
+}
+
+.agent-config-wrapper {
+  label {
+    min-width: 150px;
+  }
+  odp-switch {
+    min-width: 68px;
+  }
+}
+.context-menu {
+  min-width: 180px;
+  max-width: 180px;
+  min-height: 30px;
+  background: #fff 0 0 no-repeat padding-box;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  border: 1px solid #ececec;
+  border-radius: 6px;
+  opacity: 1;
+  align-items: flex-start;
+  button {
+    &:hover {
+      background-color: $light;
+    }
+  }
+}
+.no-focus {
+  box-shadow: none !important;
+}
+
+.agent-name-wrapper{
+  .fa-exclamation-circle {
+    right: 5px;
+  }
+}

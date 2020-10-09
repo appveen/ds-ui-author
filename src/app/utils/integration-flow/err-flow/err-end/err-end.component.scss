@@ -1,0 +1,14 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+path {
+  fill: $danger;
+  stroke: none;
+}
+line {
+  stroke: rgba($danger, 0.5);
+  stroke-width: 2;
+}
+circle {
+  fill: rgba($danger, 0.5);
+}

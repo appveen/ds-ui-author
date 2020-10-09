@@ -1,0 +1,287 @@
+<div class="d-flex flex-column w-100 h-100">
+  <div class="d-flex justify-content-between align-items-center w-100 px-3 py-2 border-bottom">
+    <div class="d-flex align-items-center">
+      <button class="btn btn-link text-secondary p-0">Users</button>
+      <span class="text-secondary fa fa-angle-right mx-2"></span>
+      <button class="btn btn-link text-secondary p-0" (click)="navigateToUsers()">Switch Authentication Type</button>
+      <span class="text-secondary fa fa-angle-right mx-2"></span>
+      <span class="text-primary">Directory</span>
+    </div>
+  </div>
+  <div class="d-flex w-100">
+    <div class="d-flex flex-column wizard p-4 mx-5">
+      <div class="font-weight-bold mb-4">Configuration Wizard</div>
+      <div class="d-flex align-items-center justify-content-between mb-4" [ngClass]="{'active':activeStep == 0}">
+        <div class="d-flex align-items-center">
+          <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
+            [ngClass]="{'fa fa-check border-accent bg-accent text-white':activeStep > 0,'border-secondary':activeStep<1}"></span>
+          <span class="text text-secondary">Directory Settings</span>
+        </div>
+        <span class="fa fa-angle-right fa-lg d-none" [ngClass]="{'d-none':activeStep != 0}"></span>
+      </div>
+      <!-- <div class="d-flex align-items-center justify-content-between mb-4" [ngClass]="{'active':activeStep == 1}">
+          <div class="d-flex align-items-center">
+            <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center" [ngClass]="{'fa fa-check border-accent bg-accent text-white':activeStep > 1,'border-secondary':activeStep<2}"></span>
+            <span class="text text-secondary">Settings Validation</span>
+          </div>
+          <span class="fa fa-angle-right fa-lg d-none" [ngClass]="{'d-none':activeStep != 1}"></span>
+        </div> -->
+      <div class="d-flex align-items-center justify-content-between mb-4" [ngClass]="{'active':activeStep == 1}">
+        <div class="d-flex align-items-center">
+          <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
+            [ngClass]="{'fa fa-check border-accent bg-accent text-white':activeStep > 2,'border-secondary':activeStep<3}"></span>
+          <span class="text text-secondary">Set SuperAdmin</span>
+        </div>
+        <span class="fa fa-angle-right fa-lg d-none" [ngClass]="{'d-none':activeStep != 1}"></span>
+      </div>
+      <div class="d-flex align-items-center justify-content-between mb-4" [ngClass]="{'active':activeStep == 2}">
+        <div class="d-flex align-items-center">
+          <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
+            [ngClass]="{'fa fa-check border-accentbg-accent text-white':activeStep > 3,'border-secondary':activeStep<4}"></span>
+          <span class="text text-secondary">Review</span>
+        </div>
+        <span class="fa fa-angle-right fa-lg d-none" [ngClass]="{'d-none':activeStep != 2}"></span>
+      </div>
+      <div class="d-flex align-items-center justify-content-between mb-4" [ngClass]="{'active':activeStep == 3}">
+        <div class="d-flex align-items-center">
+          <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
+            [ngClass]="{'fa fa-check border-accent bg-accent text-white':activeStep > 4,'border-secondary':activeStep<5}"></span>
+          <span class="text text-secondary">Finish</span>
+        </div>
+        <span class="fa fa-angle-right fa-lg d-none" [ngClass]="{'d-none':activeStep != 3}"></span>
+      </div>
+    </div>
+    <div class="d-flex flex-column w-100 h-100" [formGroup]="ldapForm">
+      <div class="d-flex flex-column w-100 directory-settings-step" id="directorySettingsStep" *ngIf="activeStep==0">
+        <div class="d-flex align-items-center justify-content-between border-bottom py-3 mx-4 heading">
+          <div class="d-flex align-items-center">
+            <div class="rounded-circle d-flex align-items-center justify-content-center bg-light mr-2 fingerprint">
+              <span class="fingerprint-icon"></span>
+            </div>
+            <div class="d-flex flex-column">
+              <span class="text-blue font-weight-bold">Active Directory Settings</span>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <button class="btn btn-link mr-3" (click)="cancel()">Cancel</button>
+            <button class="btn btn-primary btn-min-width" (click)="validate()">Validate</button>
+          </div>
+        </div>
+        <div class="form-wrapper ml-5 pl-4 pt-3 overflow-y">
+          <div class="d-flex flex-column block">
+            <div class="d-flex align-items-center mb-2">
+              <span class="form-icon text-muted mr-2"></span>
+              <span class="font-weight-bold">Azure Connection</span>
+            </div>
+            <div class="d-flex flex-column pl-4 ml-2">
+              <div class="d-flex align-items-center mb-3">
+                <span class="label text-secondary">Client ID</span>
+                <input type="text" class="w-100 form-control" formControlName="clientId">
+              </div>
+              <div class="d-flex align-items-center mb-3">
+                <span class="label text-secondary">Client Secret</span>
+                <input type="password" class="w-100 form-control" formControlName="clientSecret">
+              </div>
+              <div class="d-flex align-items-center mb-3">
+                <span class="label text-secondary">Tenant</span>
+                <input type="text" class="w-100 form-control" formControlName="tenant">
+              </div>
+              <div class="d-flex align-items-center mb-3">
+                <span class="label text-secondary">Username Attribute</span>
+                <select name="adUserAttribute" id="adUserAttribute" class="custom-select" formControlName="adUserAttribute">
+                  <option value="mail">mail</option>
+                  <option value="userPrincipalName">userPrincipalName</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column w-100 set-super-admin-step" id="setSuperAdminStep" *ngIf="activeStep==1">
+        <div class="d-flex align-items-center justify-content-between border-bottom py-3 mx-4 heading">
+          <div class="d-flex align-items-center">
+            <div class="rounded-circle d-flex align-items-center justify-content-center bg-light mr-2 fingerprint">
+              <span class="fingerprint-icon"></span>
+            </div>
+            <div class="d-flex flex-column">
+              <span class="text-blue font-weight-bold">Set Super Admin</span>
+              <span>
+                <span class="text-dark">Azure Tenant:&nbsp;</span>
+                <span class="text-secondary">{{ldapForm.value.tenant}}</span>
+              </span>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <button class="btn btn-link mr-3" (click)="activeStep=0;setSuperAdminBtn=false;resetSearch();">
+              <span class="fa fa-angle-left mr-2"></span>
+              <span class="text">Back</span>
+            </button>
+            <button class="btn btn-min-width" [ngClass]="{'btn-primary':adminSelected}" (click)="review()"
+              [disabled]="!adminSelected">Continue</button>
+          </div>
+        </div>
+        <div class="ml-5 pl-4 pt-3 overflow-y">
+          <div class="d-flex flex-column block mt-3">
+            <div class="search-form d-flex position-relative">
+              <span class="fa fa-search position-absolute text-secondary"></span>
+              <input type="text" class="form-control" placeholder="Search by Name" formControlName="searchText"
+                (keyup.enter)="searchSuperAdmin()">
+              <button class="btn btn-secondary btn-min-width ml-3" (click)="searchSuperAdmin()"
+                [disabled]="!ldapForm.get('searchText').value || ldapForm.get('searchText').invalid">
+                Search
+              </button>
+            </div>
+            <div class="d-flex mt-3 mb-2">
+              <span class="text-secondary">Users found:&nbsp;</span>
+              <span class="text-dark">{{users.length}}</span>
+            </div>
+            <div class="user-list">
+              <div class="d-flex flex-column align-items-center justify-content-center my-4" *ngIf="users.length==0">
+                <span class="super-admin-icon"></span>
+                <span class="text-secondary text-center mt-3">
+                  Start by searching for the<br>desired User's Name
+                </span>
+              </div>
+              <div class="d-flex align-items-center justify-content-between user-list-item border-bottom p-2"
+                *ngFor="let user of users;let userIndex = index" (click)="toggleSelectedUser(userIndex)">
+                <div class="d-flex align-items-center cell">
+                  <label for="userSelect"
+                    class="mb-0 mr-3 circle-select rounded-circle border border-secondary d-flex align-items-center justify-content-center"
+                    [ngClass]="{'selected':user.selected}">
+                    <span class="fa fa-check" [ngClass]="{'d-none':!user.selected}"></span>
+                  </label>
+                  <span class="text-dark">{{user.name}}</span>
+                </div>
+                <div class="text-secondary cell">{{user.username}}</div>
+                <!-- <div class="text-secondary cell">{{user.email}}</div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column w-100 review-step" id="reviewStep" *ngIf="activeStep==2">
+        <div class="d-flex align-items-center justify-content-between border-bottom py-3 mx-4 heading">
+          <div class="d-flex align-items-center">
+            <div class="rounded-circle d-flex align-items-center justify-content-center bg-light mr-2 fingerprint">
+              <span class="fingerprint-icon"></span>
+            </div>
+            <div class="d-flex flex-column">
+              <span class="text-blue font-weight-bold">Review</span>
+              <span>
+                <span class="text-dark">Azure URL:&nbsp;</span>
+                <span class="text-secondary">{{ldapForm.value.url}}</span>
+              </span>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <button class="btn btn-link mr-3" (click)="activeStep=2;">
+              <span class="fa fa-angle-left mr-2"></span>
+              <span class="text">Back</span>
+            </button>
+            <button class="btn btn-min-width btn-dark" (click)="warning()">Complete</button>
+          </div>
+        </div>
+        <div class="ml-5 pl-4 pt-3 overflow-y">
+          <div class="d-flex flex-column block">
+            <div class="d-flex align-items-center mb-2">
+              <span class="form-icon text-muted mr-2"></span>
+              <span class="font-weight-bold">Azure AD Connection</span>
+            </div>
+            <div class="d-flex flex-column pl-4 ml-2">
+              <div class="d-flex align-items-center mb-3">
+                <span class="text-secondary w-100 label">Client ID</span>
+                <span class="form-control-plaintext">{{ldapForm.get('clientId').value}}</span>
+              </div>
+              <div class="d-flex align-items-center mb-3">
+                <span class="text-secondary w-100 label">Client Secret</span>
+                <input type="password" class="form-control-plaintext" [value]="ldapForm.get('clientSecret').value"
+                  readonly>
+              </div>
+              <div class="d-flex align-items-center mb-3">
+                <span class="text-secondary w-100 label">Tenant</span>
+                <span class="form-control-plaintext">{{ldapForm.get('tenant').value}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-column block mb-4">
+            <div class="d-flex align-items-center mb-2">
+              <span class="far fa-user-circle text-secondary mr-2 fa-lg"></span>
+              <span class="font-weight-bold">Super Admin User</span>
+            </div>
+            <div class="d-flex flex-column pl-4 ml-2">
+              <div class="d-flex align-items-center mb-3">
+                <span class="text-secondary w-100 label">Username</span>
+                <span class="text-dark w-100">{{selectedUserDetails.username}}</span>
+              </div>
+              <div class="d-flex align-items-center mb-3">
+                <span class="text-secondary w-100 label">Name</span>
+                <span class="text-dark w-100">{{selectedUserDetails.name}}</span>
+              </div>
+              <div class="d-flex align-items-center mb-3">
+                <span class="text-secondary w-100 label">Email</span>
+                <span class="text-dark w-100">{{selectedUserDetails.username}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #warningModal>
+  <div class="modal-body p-4">
+    <div class="d-flex flex-column w-100 align-items-center justify-content-between">
+      <div class="d-flex align-items-center justify-content-center position-relative my-4">
+        <span class="users-icon"></span>
+        <span
+          class="bg-danger text-white odp-delete rounded-circle position-absolute d-flex align-items-center justify-content-center"></span>
+      </div>
+      <p class="text-dark font-weight-bold text-center m-0">Confirm?</p>
+      <p class="text-secondary text-center p-3">
+        <span class="text-danger font-weight-bold">Important:&nbsp;</span>
+        All existing local users will be removed, and only authorized directory user will be allowed to login.
+      </p>
+      <div class="d-flex justify-content-between mb-3 w-75">
+        <button class="btn btn-link" (click)="warningModalRef.close(false)">Go Back</button>
+        <button class="btn btn-primary" (click)="complete()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #applyingChangesModal>
+  <div class="modal-body p-4">
+    <div *ngIf="completed.pending" class="d-flex flex-column w-100 align-items-center justify-content-between">
+      <div class="d-flex align-items-center justify-content-center position-relative py-4">
+        <span class="spinner-big-icon fa-pulse my-4 d-flex align-items-center justify-content-center"></span>
+        <span class="odp-delete text-danger position-absolute"></span>
+      </div>
+      <p class="text-dark font-weight-bold text-center m-0">Applying Changes</p>
+      <p class="text-secondary text-center p-3">
+        This may take few minutes. Please do not navigate away, refresh or close this window.
+      </p>
+    </div>
+    <ng-container *ngIf="!completed.pending">
+      <div *ngIf="completed.status" class="d-flex flex-column w-100 align-items-center justify-content-between">
+        <div class="circle bg-success">
+          <span class="fa text-white fa-check"></span>
+        </div>
+        <p class="text-dark font-weight-bold text-center m-0">Completed</p>
+        <p class="text-secondary text-center p-3">
+          Logging out in <span class="text-primary" odpTimeoutTrigger="20" (trigger)="logout()"></span>
+        </p>
+        <button class="btn btn-link mt-3 mb-3" (click)="logout()">Log out now</button>
+      </div>
+      <div *ngIf="!completed.status" class="d-flex flex-column w-100 align-items-center justify-content-between">
+        <div class="circle bg-danger">
+          <span class="fa text-white fa-exclamation"></span>
+        </div>
+        <p class="text-dark font-weight-bold text-center m-0">Failed</p>
+        <p class="text-secondary text-center p-3">
+          {{completed.message}}
+        </p>
+        <button class="btn btn-link mt-3 mb-3" (click)="goBack()">Go Back</button>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

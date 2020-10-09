@@ -1,0 +1,460 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="d-flex flex-column w-100 h-100" [formGroup]="form">
+    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+    <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="{status:edit.status && canEditNanoService}">
+        <div class="d-flex justify-content-end align-items-center">
+            <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link"
+                id="cancelNanoServiceBtn">
+                <span class="fa fa-close mr-2"></span>
+                <span class="text">Cancel</span>
+            </button>
+            <button *ngIf="edit.id && !edit.status && canManageNanoService(edit.id)" (click)="edit.status=true;"
+                type="button" class="edit-button btn btn-min-width btn-primary ml-3" id="editNanoServiceBtn">
+                <span class="odp-edit mr-2"></span>
+                <span class="text">Edit</span>
+            </button>
+            <button *ngIf="edit.status" (click)="saveNanoService();" type="button"
+                class="edit-button btn btn-min-width btn-dark ml-3" id="saveNanoServiceBtn">
+                <span class="fa fa-save mr-2"></span>
+                <span class="text">Save</span>
+            </button>
+        </div>
+    </odp-basic-info>
+    <div class="d-flex flex-column px-3">
+        <div class="d-flex align-items-center tab-list border-bottom">
+            <div class="d-flex align-items-center tab-list-item px-3" *ngIf="hasDesignTabViewPermission()"
+                [ngClass]="{'border-accent text-accent':activeTab===0}" (click)="activeTab=0">Design</div>
+            <div class="d-flex align-items-center tab-list-item px-3" *ngIf="hasPermission('PVPF')"
+                [ngClass]="{'border-accent text-accent':activeTab===1}" (click)="activeTab=1">Integration Flows</div>
+        </div>
+        <div class="scrollable border-top" *ngIf="activeTab===0 && hasDesignTabViewPermission()">
+            <div class="d-flex flex-column w-100 px-3">
+                <div class="d-flex align-items-start w-100 py-5 px-4">
+                    <div class="selector in-selector d-flex flex-column align-items-center" *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
+                        <div
+                            class="bg-success rounded-circle mb-5 d-flex align-items-center justify-content-center text-white font-xs">
+                            IN</div>
+                        <div class="selector-box d-flex flex-column align-items-center border rounded w-100"
+                            [ngClass]="{'bg-light':selectedInType,'bg-secondary':!selectedInType}">
+                            <div *ngIf="!selectedInType"
+                                class="selected-details d-flex align-items-center justify-content-center w-100 bg-white">
+                                <div class="selector-options d-flex flex-column">
+                                    <div class="text-secondary mb-3 text-center px-4">Select Data Structure for Input
+                                        Data
+                                    </div>
+                                    <odp-format-selector *ngIf="edit.status" (formatChange)="setInputFormat($event)"
+                                        [restrictToFormat]="restrictToFormat">
+                                        <odp-nano-service-icon size="18" class="mt-1" color="1CAD49">
+                                        </odp-nano-service-icon>
+                                        <span class="btn-label">Select Data Structure</span>
+                                    </odp-format-selector>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedInType"
+                                class="selected-details d-flex flex-column align-items-center w-100 bg-white">
+                                <div class="selected-name d-flex align-items-center justify-content-center mb-2 border">
+                                    <div *ngIf="selectedInType == 'dataService'" class="d-flex align-items-center">
+                                        <odp-service-icon active="true" size="16" class="mt-1"></odp-service-icon>
+                                        <span class="text ml-2">Data Service</span>
+                                    </div>
+                                    <div *ngIf="selectedInType == 'dataFormat'" class="d-flex align-items-center">
+                                        <odp-data-format-icon active="true" size="16" class="mt-1">
+                                        </odp-data-format-icon>
+                                        <span class="text ml-2">Data Format</span>
+                                    </div>
+                                    <div *ngIf="selectedInType == 'binary'" class="d-flex align-items-center">
+                                        <odp-format-type-badge [data]="{formatType:'BINARY'}"></odp-format-type-badge>
+                                        <span class="text ml-2">Binary</span>
+                                    </div>
+                                </div>
+                                <div *ngIf="selectedInType"
+                                    class="selected-data d-flex flex-column align-items-start justify-content-center mt-2 w-100 px-3">
+                                    <div *ngIf="selectedInType != 'binary'"
+                                        class="d-flex align-items-start mb-3 w-100 justify-content-between">
+                                        <label for="inName" class="text-secondary">Name</label>
+                                        <div class="value font-weight-bold text-truncate">{{form.get('in.name').value}}
+                                        </div>
+                                    </div>
+                                    <div *ngIf="selectedInType != 'binary'"
+                                        class="d-flex align-items-start w-100 justify-content-between">
+                                        <label for="inName" class="text-secondary">Attributes</label>
+                                        <div class="value font-weight-bold">{{form.get('in.attributeCount').value}}
+                                        </div>
+                                    </div>
+                                    <button *ngIf="edit.status && hasPermission('PMNSIO')" type="button"
+                                        class="btn btn-link mt-auto mb-2 align-self-center"
+                                        (click)="removeDataStructure('in')">Change</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nano-service-details d-flex flex-column w-100">
+                        <div class="link d-flex align-items-center" *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
+                            <div class="border-top border-success w-100"></div>
+                            <div class="nanoservices-config mt-2"></div>
+                            <div class="border-top border-accent w-100"></div>
+                        </div>
+                        <div class="details-form align-self-center my-3" *ngIf="hasDetailViewPermission()">
+                            <div class="d-flex align-items-center mb-3" *ngIf="hasPermission('PVNSURL') || hasPermission('PMNSURL')">
+                                <span class="fa fa-link text-secondary mr-2"></span>
+                                <span class="text font-weight-bold">URL
+                                    <sup class="text-danger">*</sup>
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-start mb-2">
+                                <textarea *ngIf="edit.status && hasPermission('PMNSURL')" class="form-control" id="url" rows="3"
+                                    placeholder="Enter URL" formControlName="url"></textarea>
+                                <div *ngIf="!edit.status && (hasPermission('PVNSURL') || hasPermission('PMNSURL'))" class="form-control-plaintext">
+                                    <ng-container *ngIf="form.get('url').value">{{form.get('url').value}}</ng-container>
+                                    <span *ngIf="!form.get('url').value" class="text-muted">N.A.</span>
+                                </div>
+                            </div>
+                            <!-- <div class="d-flex align-items-center mb-3">
+                            <span class="fa fa-link text-secondary mr-2"></span>
+                            <span class="text font-weight-bold">Allow Untrusted Connections</span>
+                            <odp-switch class="ml-4" [edit]="edit" [(checked)]="checkedControl"></odp-switch>
+                        </div> -->
+                            <div class="d-flex align-items-center mb-3" *ngIf="hasPermission('PVNSH') || hasPermission('PMNSH')">
+                                <span class="fa fa-link text-secondary mr-2"></span>
+                                <span class="text font-weight-bold">Properties</span>
+                            </div>
+                            <div class="d-flex align-items-start mb-2" *ngIf="hasPermission('PVNSH') || hasPermission('PMNSH')">
+                                <table class="table">
+                                    <thead class="bg-accent text-white">
+                                        <tr>
+                                            <th>Key</th>
+                                            <th>Value</th>
+                                            <th class="text-right pr-0">
+                                                <button *ngIf="edit.status && hasPermission('PMNSH')" type="button"
+                                                    class="btn btn-link text-white ml-auto"
+                                                    (click)="openHeadersModal()">
+                                                    <span class="fa fa-plus"></span>
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of keyValList;let i=index">
+                                            <td (click)="openHeadersModal(item)">{{item.key}}</td>
+                                            <td (click)="openHeadersModal(item)">{{item.value}}</td>
+                                            <td class="text-right">
+                                                <button *ngIf="edit.status" type="button" class="btn btn-link"
+                                                    (click)="removeHeader(item.key)">
+                                                    <span class="fa fa-trash text-muted"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="!keyValList || keyValList.length==0">
+                                            <td colspan="3" class="text-muted">No Key-Values set</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="selector out-selector d-flex flex-column align-items-center" *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
+                        <div
+                            class="bg-accent rounded-circle mb-5 d-flex align-items-center justify-content-center text-white font-xs">
+                            OUT</div>
+                        <div class="selector-box d-flex flex-column align-items-center border rounded w-100"
+                            [ngClass]="{'bg-light':selectedOutType,'bg-secondary':!selectedOutType}">
+                            <div *ngIf="!selectedOutType"
+                                class="selected-details d-flex align-items-center justify-content-center w-100 bg-white">
+                                <div class="selector-options d-flex flex-column">
+                                    <div class="text-secondary mb-3 text-center px-4">Select Data Structure for Output
+                                        Data
+                                    </div>
+                                    <odp-format-selector *ngIf="edit.status" (formatChange)="setOutputFormat($event)"
+                                        [restrictToFormat]="restrictToFormat">
+                                        <odp-nano-service-icon size="18" class="mt-1" color="1CAD49">
+                                        </odp-nano-service-icon>
+                                        <span class="btn-label">Select Data Structure</span>
+                                    </odp-format-selector>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedOutType"
+                                class="selected-details d-flex flex-column align-items-center w-100 bg-white">
+                                <div class="selected-name d-flex align-items-center justify-content-center mb-2 border">
+                                    <div *ngIf="selectedOutType == 'dataService'" class="d-flex align-items-center">
+                                        <odp-service-icon active="true" size="16" class="mt-1"></odp-service-icon>
+                                        <span class="text ml-2">Data Service</span>
+                                    </div>
+                                    <div *ngIf="selectedOutType == 'dataFormat'" class="d-flex align-items-center">
+                                        <odp-data-format-icon active="true" size="16" class="mt-1">
+                                        </odp-data-format-icon>
+                                        <span class="text ml-2">Data Format</span>
+                                    </div>
+                                    <div *ngIf="selectedOutType == 'binary'" class="d-flex align-items-center">
+                                        <odp-format-type-badge [data]="{formatType:'BINARY'}"></odp-format-type-badge>
+                                        <span class="text ml-2">Binary</span>
+                                    </div>
+                                </div>
+                                <div *ngIf="selectedOutType"
+                                    class="selected-data d-flex flex-column align-items-start justify-content-center mt-2 px-3 w-100">
+                                    <div *ngIf="selectedOutType != 'binary'"
+                                        class="d-flex align-items-start mb-3 w-100 justify-content-between">
+                                        <label for="outName" class="text-secondary">Name</label>
+                                        <div class="value font-weight-bold text-truncate">{{form.get('out.name').value}}
+                                        </div>
+                                    </div>
+                                    <div *ngIf="selectedOutType != 'binary'"
+                                        class="d-flex align-items-start w-100 justify-content-between">
+                                        <label for="outName" class="text-secondary">Attributes</label>
+                                        <div class="value font-weight-bold">{{form.get('out.attributeCount').value}}
+                                        </div>
+                                    </div>
+                                    <button *ngIf="edit.status && hasPermission('PMNSIO')" type="button"
+                                        class="btn btn-link mt-auto mb-2 align-self-center"
+                                        (click)="removeDataStructure('out')">Change</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scrollable border-top" *ngIf="activeTab===1">
+            <div class="d-flex flex-column w-100 p-3">
+                <div class="d-flex align-item-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <span class="fa fa-exchange-alt mr-2 text-accent"></span>
+                        <span class="text font-weight-bold">Integration Flows</span>
+                    </div>
+                    <odp-search-box (reset)="flowSearchTerm=null" (enteredText)="flowSearchTerm=$event;">
+                    </odp-search-box>
+                    <span>&nbsp;</span>
+                </div>
+            </div>
+            <div class="microflow-list">
+                <table class="table">
+                    <thead>
+                        <tr class="bg-secondary text-white">
+                            <th>Name</th>
+                            <th>Version</th>
+                            <th>Type</th>
+                            <th>Direction</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of microflows|filterTeam:flowSearchTerm;let i = index">
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span
+                                        class="status rounded d-flex align-items-center justify-content-center mr-2 {{getStatus(item.status)}}">{{getStatus(item.status)}}</span>
+                                    <span
+                                        [ngClass]="{'text-danger':item.runningVersion!=item.version,'text-secondary':item.runningVersion==item.version}">{{item.name}}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div *ngIf="item.runningVersion && item.runningVersion>0"
+                                        class="version rounded d-flex align-items-center justify-content-center mr-2">
+                                        v{{item.runningVersion}}</div>
+                                    <div *ngIf="item.nextFlow" class="new-version rounded d-flex align-items-center">
+                                        <div class="version-number d-flex align-items-center justify-content-center">
+                                            v{{(item.runningVersion || 0)+1}}</div>
+                                        <div class="version-text d-flex align-items-center justify-content-center">Saved
+                                        </div>
+                                    </div>
+                                    <div *ngIf="!item.runningVersion && !item.nextFlow"
+                                        class="new-version rounded d-flex align-items-center">
+                                        <div class="version-number d-flex align-items-center justify-content-center">
+                                            v{{item.runningVersion || 1}}</div>
+                                        <div class="version-text d-flex align-items-center justify-content-center">Saved
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="position-relative" odpClickOutside (outside)="item.flowDetails=false">
+                                <div class="flow-type d-flex align-items-center" [ngClass]="{'active':item.flowDetails}"
+                                    (click)="item.flowDetails=!item.flowDetails">
+                                    <div class="flow-in-out d-flex align-items-center pl-2">
+                                        <span class="text-success">{{item.inputType.toLowerCase()}}</span>
+                                        <span class="fa fa-caret-right text-secondary mx-2"></span>
+                                        <span class="text-dark"
+                                            *ngIf="item.outputType">{{item.outputType.toLowerCase()}}</span>
+                                        <span class="text-dark" *ngIf="!item.outputType">api</span>
+                                    </div>
+                                    <div class="flow-expand d-flex align-items-center justify-content-center">
+                                        <span class="fa fa-angle-down"></span>
+                                    </div>
+                                </div>
+                                <div class="flow-details d-flex flex-column align-items-start position-absolute bg-white pb-2"
+                                    *ngIf="item.flowDetails">
+                                    <div class="d-flex align-items-center pl-2 mt-3">
+                                        <div
+                                            class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-sm">
+                                            {{item.inputType.toLowerCase()}}
+                                        </div>
+                                        <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-sm">
+                                            Partner Agent:
+                                        </span>
+                                        <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-sm">
+                                            Flow End Point:
+                                        </span>
+                                    </div>
+                                    <div class="d-flex align-items-center mt-2 w-100">
+                                        <div class="input-group mx-2">
+                                            <input #inputNode *ngIf="item.inputType === 'FILE'" type="text"
+                                                class="form-control border-0" readonly="true"
+                                                [ngModel]="getInAgent(item)" [ngModelOptions]="{standalone: true}">
+                                            <input #inputNode *ngIf="item.inputType === 'API'" type="text"
+                                                class="form-control border-0" readonly="true"
+                                                [ngModel]="replacePort(item.gatewayFQDN,item.port)"
+                                                [ngModelOptions]="{standalone: true}">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-light"
+                                                    (click)="copyToClipboard('input')">
+                                                    <span class="fa fa-copy"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ng-container *ngIf="item.outputType">
+                                        <div class="d-flex align-items-center pl-2 mt-3">
+                                            <div
+                                                class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-sm">
+                                                {{item.outputType.toLowerCase()}}
+                                            </div>
+                                            <span *ngIf="item.outputType === 'FILE'"
+                                                class="text-secondary ml-2 font-sm">
+                                                App Agent:
+                                            </span>
+                                            <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-sm">
+                                                External API:
+                                            </span>
+                                        </div>
+                                        <div class="d-flex align-items-center mt-2 w-100">
+                                            <div class="input-group mx-2">
+                                                <input #outputNode *ngIf="item.outputType === 'FILE'" type="text"
+                                                    class="form-control border-0" readonly="true"
+                                                    [ngModel]="getOutAgent(item)" [ngModelOptions]="{standalone: true}">
+                                                <input #outputNode *ngIf="item.outputType === 'API'" type="text"
+                                                    class="form-control border-0" readonly="true"
+                                                    [ngModel]="getAPIEnpoint(item)"
+                                                    [ngModelOptions]="{standalone: true}">
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-light"
+                                                        (click)="copyToClipboard('output')">
+                                                        <span class="fa fa-copy"></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="direction">
+                                    <span class="fa fa-rotate-45 mr-1"
+                                        [ngClass]="{'fa-arrow-circle-down text-create':item.direction=='Inbound','fa-arrow-circle-up text-accent':item.direction=='Outbound'}"></span>
+                                    <span class="text-secondary">{{item.direction}}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-secondary">{{item._metadata.lastUpdated | date:'medium'}}</span>
+                            </td>
+                        </tr>
+                        <tr *ngIf="microflows.length==0">
+                            <td colspan="9">
+                                <div class="d-flex py-3 w-100">
+                                    <div
+                                        class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
+                                        <div class="text">No Integration Flows is using this Nano Service</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #pageChangeModalTemplate>
+    <div class="modal-body p-4">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-nano-service-icon [size]="18" color="202a36" class="mt-1"></odp-nano-service-icon>
+                </span>
+                <span class="font-weight-bold mb-1">Unsaved Changes</span>
+            </div>
+            <span class="fa fa-times text-secondary hover " (click)="pageChangeModalTemplateRef.close(false)"></span>
+        </div>
+        <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-dark" (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #dataChangeModalTemplate>
+    <div class="modal-body p-4">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-nano-service-icon [size]="18" color="202a36" class="mt-1"></odp-nano-service-icon>
+                </span>
+                <span class="font-weight-bold mb-1">Changes made</span>
+            </div>
+            <span class="fa fa-times text-secondary hover " (click)="dataChangeModalTemplateRef.close(false)"></span>
+        </div>
+        <p class="text-secondary text-center my-5">You have made changes in this Nano Service, You might have to
+            redeploy any Integration flows which is using this Nano Service.</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-link text-dark" (click)="dataChangeModalTemplateRef.close(false)">Cancel</button>
+            <button type="button" class="btn btn-min-width btn-dark" (click)="dataChangeModalTemplateRef.close(true)">Ok</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #keyValModalTemplate>
+    <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center">
+        <div class="d-flex align-items-center justify-content-between mb-3 w-100">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-nano-service-icon [size]="18" color="202a36" class="mt-1"></odp-nano-service-icon>
+                </span>
+                <span class="font-weight-bold mb-1" *ngIf="headerData && headerData.isEdit">Edit Properties</span>
+                <span class="font-weight-bold mb-1" *ngIf="!headerData || !headerData.isEdit">Add Properties</span>
+            </div>
+            <span class="fa fa-times text-muted hover" (click)="keyValModalTemplateRef.close(false)"></span>
+        </div>
+        <div class="info d-flex flex-column align-self-center justify-content-center w-100">
+            <div class="form-group">
+                <label for="key">Key</label>
+                <div class="w-100 position-relative headers-key-wrapper">
+                    <input #headerKey="ngModel" id="key" type="text" class="form-control" [(ngModel)]="headerData.key"
+                        maxlength="24" pattern="[a-zA-Z0-9_-]+" required [disabled]="headerData.isEdit" odpAutoFocus
+                        (keyup.enter)="headerValue.focus()"
+                        [ngClass]="{'is-invalid':headerKey.invalid && (headerKey.dirty || headerKey.touched)}">
+                    <ng-container *ngIf="headerKey.invalid && (headerKey.dirty || headerKey.touched)">
+                        <span *ngIf="headerKey?.errors?.required"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Key is required"></span>
+                        <span *ngIf="headerKey?.errors?.pattern"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Key can be only alphanumeric and can only contain underscore(_) and dash(-)"></span>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="value">Value</label>
+                <input #headerValue id="value" type="text" class="form-control" [(ngModel)]="headerData.value"
+                    (keyup.enter)="headerSave.click()">
+            </div>
+            <div class="d-flex flex-column align-items-end w-100 mt-auto">
+                <button #headerSave type="button" class="btn btn-dark btn-min-width" id="keyValueModalYes"
+                    [disabled]="headerKey.invalid" (click)="keyValModalTemplateRef.close(true)">Save</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

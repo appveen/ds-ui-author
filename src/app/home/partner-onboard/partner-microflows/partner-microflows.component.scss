@@ -1,0 +1,274 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.overlay {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+.new-flow-window {
+  position: absolute;
+  z-index: 11;
+  top: 15px;
+  left: calc(50% - 160px);
+}
+.microflow-list {
+  min-height: calc(100vh - 300px);
+  max-height: calc(100vh - 300px);
+  overflow: auto;
+  .table {
+    td {
+      max-height: 40px !important;
+      min-height: 40px !important;
+      height: 40px !important;
+      padding: 0 !important;
+      padding-left: 5px !important;
+      vertical-align: middle !important;
+      .version {
+        min-width: 24px;
+        max-width: 24px;
+        min-height: 16px;
+        max-height: 16px;
+        font-size: 10px;
+        background: $accent;
+        color: $white;
+      }
+      .new-version {
+        font-size: 10px;
+        color: $white;
+        overflow: hidden;
+        .version-number {
+          min-width: 24px;
+          max-width: 24px;
+          min-height: 16px;
+          max-height: 16px;
+          background: $heading-highlight;
+        }
+        .version-text {
+          min-width: 39px;
+          max-width: 39px;
+          min-height: 16px;
+          max-height: 16px;
+          background: $border;
+        }
+      }
+      .new-version {
+        background: $heading-highlight;
+      }
+      .status {
+        min-width: 48px;
+        max-width: 48px;
+        min-height: 16px;
+        max-height: 16px;
+        font-size: 10px;
+        &.online {
+          background: $create;
+          color: $white;
+        }
+        &.offline {
+          background: $heading-highlight;
+          color: $white;
+        }
+        &.draft {
+          background: $accent;
+          color: $white;
+        }
+        &.error {
+          background: $delete;
+          color: $white;
+        }
+        &.pending {
+          background: $warning;
+          color: $black;
+          animation: pending 0.5s alternate infinite;
+        }
+      }
+      &.options-cell {
+        overflow: hidden;
+        min-width: 300px;
+        .options {
+          max-width: 300px;
+          min-height: 38px;
+          max-height: 38px;
+          box-shadow: -1px 0px 3px rgba(#000000, 0.15);
+          z-index: 3;
+          right: -300px;
+          top: 0;
+          transition: 0.25s;
+          &.show {
+            right: 0;
+          }
+        }
+      }
+      .flow-type {
+        min-width: 84px;
+        max-width: 84px;
+        &.active {
+          box-shadow: 0px 0px 3px rgba(#000000, $alpha: 0.24);
+        }
+        .flow-in-out {
+          min-width: 68px;
+          max-width: 68px;
+          min-height: 38px;
+          max-height: 38px;
+          background: $white;
+        }
+        .flow-expand {
+          min-width: 16px;
+          max-width: 16px;
+          min-height: 38px;
+          max-height: 38px;
+          background: $white;
+          color: $secondary;
+        }
+        &:hover {
+          cursor: pointer;
+          .flow-in-out {
+            background: $light;
+          }
+          .flow-expand {
+            background: $secondary;
+            color: $white;
+          }
+        }
+      }
+      .flow-details {
+        min-width: 248px;
+        max-width: 248px;
+        max-height: 180px;
+        box-shadow: 0px 2px 3px rgba(#000000, $alpha: 0.24);
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+        margin-top: -8px;
+        z-index: 10;
+        .flow-type-icon {
+          min-width: 32px;
+          max-width: 32px;
+          min-height: 32px;
+          max-height: 32px;
+        }
+      }
+    }
+    tr {
+      &:hover {
+        background: $light;
+      }
+    }
+  }
+}
+
+.table thead th {
+  padding: 5px;
+  vertical-align: middle;
+}
+
+.no-microflow {
+  min-width: 320px;
+  max-width: 320px;
+  min-height: 130px;
+  max-height: 130px;
+  border-radius: 12px;
+  background: #f7f7f7;
+  color: $heading-highlight;
+}
+
+.delete-partner-modal-body {
+  .icon-wrapper {
+    background: rgba($delete, 0.2);
+  }
+  .info {
+    min-height: 222px;
+    max-height: 222px;
+  }
+}
+
+.new-partner-modal-body {
+  .icon-wrapper {
+    background: rgba($create, 0.2);
+  }
+}
+
+.new-partner-modal-body,
+.delete-partner-modal-body {
+  label {
+    min-width: 100px;
+  }
+  .icon-wrapper {
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+  }
+  #description {
+    resize: none;
+  }
+  .starter-type {
+    min-width: 96px;
+    max-width: 96px;
+    min-height: 104px;
+    max-height: 104px;
+    box-shadow: 0px 1px 3px rgba(#000000, 0.24);
+    .check-circle {
+      min-width: 12px;
+      max-width: 12px;
+      min-height: 12px;
+      max-height: 12px;
+      border: 1px solid $border;
+      .inner-check-circle {
+        min-width: 4px;
+        max-width: 4px;
+        min-height: 4px;
+        max-height: 4px;
+      }
+    }
+    .icon-wrapper {
+      min-width: 48px;
+      max-width: 48px;
+      min-height: 48px;
+      max-height: 48px;
+      background: $light;
+      color: $text-muted;
+      .api-icon,
+      .file-icon {
+        min-width: 16px;
+        max-width: 16px;
+        min-height: 16px;
+        max-height: 16px;
+        background-position: center;
+        background-size: cover;
+      }
+    }
+    &.active {
+      box-shadow: 0px 3px 9px rgba(#0082c9, 0.32);
+      border: 1px solid $accent;
+      .check-circle {
+        background: $accent;
+        border-color: $accent;
+      }
+      .icon-wrapper {
+        background: $create;
+        color: $white;
+      }
+    }
+  }
+}
+.flow-name-wrapper {
+  .fa-exclamation-circle {
+    right: 6px;
+    top: 6px;
+    z-index: 2;
+  }
+}
+@keyframes pending {
+  from {
+    background: rgba($warning, 1);
+  }
+  to {
+    background: darken($warning, 20);
+  }
+}

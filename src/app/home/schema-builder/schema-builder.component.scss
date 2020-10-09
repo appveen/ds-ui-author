@@ -1,0 +1,107 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.action {
+  .name-label {
+    min-width: 50px;
+  }
+  input {
+    min-width: 400px;
+  }
+}
+
+.tabs {
+  div {
+    transition: 0.25s;
+    border-bottom: 4px solid transparent;
+    min-height: 40px;
+    &.active,
+    &:hover {
+      border-bottom: 4px solid $accent;
+    }
+    &.active {
+      color: $accent !important;
+      font-weight: bold;
+    }
+    .fa {
+      opacity: 0;
+      transition: 0.5s;
+      font-size: 8px;
+      &.show {
+        opacity: 0.6;
+      }
+    }
+  }
+}
+.properties-wrapper {
+  min-width: 430px;
+  max-width: 430px;
+}
+.builder {
+  .options {
+    min-height: 40px;
+    max-height: 40px;
+  }
+}
+
+.add-attribute {
+  min-height: 36px;
+  max-height: 36px;
+  margin-left: 32px;
+}
+
+.scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: calc(100vh - 264px);
+  max-height: calc(100vh - 264px);
+}
+
+.builder-body {
+  min-height: calc(100vh - 224px);
+  max-height: calc(100vh - 224px);
+  &.schema-creator {
+    min-height: calc(100vh - 244px);
+    max-height: calc(100vh - 244px);
+    padding-bottom: 10px !important;
+  }
+  .copy-symbol {
+    right: 10px;
+    top: 10px;
+    opacity: 0;
+    transition: 0.25s;
+  }
+  .copy-text {
+    right: 26px;
+    top: 10px;
+    opacity: 0;
+    transition: 0.25s;
+  }
+  &:hover {
+    .copy-symbol {
+      opacity: 1;
+    }
+  }
+}
+
+.steps {
+  .step {
+    .circle {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      border-radius: 15px;
+      font-size: 12px;
+    }
+    .text {
+      font-size: 14px;
+    }
+  }
+}
+
+.field-error-symbol {
+  top: 9px;
+  right: 7px;
+  opacity: 0.7;
+  transition: 0.5s;
+}

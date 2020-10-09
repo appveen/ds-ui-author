@@ -1,0 +1,9 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+$accent-light: #B2D9EF;
+
+.text-color {
+  stroke: $accent;
+  fill: $accent;
+}

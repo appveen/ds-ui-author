@@ -1,0 +1,22 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.certificate-details {
+  .key {
+    min-width: 200px;
+  }
+  .value {
+    min-width: 320px;
+  }
+}
+
+.platform {
+  min-width: 90px;
+  min-height: 90px;
+  .k8s-icon {
+    width: 30px;
+    height: 30px;
+    background-position: center;
+    background-size: cover;
+  }
+}

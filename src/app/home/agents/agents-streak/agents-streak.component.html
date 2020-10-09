@@ -1,0 +1,10 @@
+<ng-container *ngIf="agent.interactions?.length>0">
+    <span class="streak mr-1" *ngFor="let item of agent.interactions" [ngClass]="{'bg-delete':item=='E',
+        'bg-create':item=='S',
+        'bg-primary':item=='P' || item=='U',
+        'bg-border':item=='N',
+        'bg-accent':item=='Q'}"></span>
+</ng-container>
+<span *ngIf="!agent.interactions || agent.interactions?.length==0" class="text-muted">
+    N.A.
+</span>

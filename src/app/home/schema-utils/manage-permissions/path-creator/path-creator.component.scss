@@ -1,0 +1,22 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.data-key-name {
+  white-space: nowrap;
+}
+.data-key-path {
+  &.hover:hover {
+    color: $accent;
+  }
+}
+.add-field {
+  min-width: 90px;
+}
+.custom-value{
+  min-width: 220px;
+  max-width: 220px
+}
+
+.selector-list-item{
+  color: #000;
+}

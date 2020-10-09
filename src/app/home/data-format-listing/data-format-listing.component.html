@@ -1,0 +1,238 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+  <div class="align-self-center text-center">
+    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="text-secondary mt-2">Processing...</div>
+  </div>
+</div>
+<div class="d-flex flex-column w-100 h-100">
+  <odp-breadcrumb></odp-breadcrumb>
+  <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3 mb-3">
+    <div class="font-weight-bold font-lg text-accent">List of Data Formats</div>
+    <odp-search-box (enteredText)="search($event)" (reset)="clearSearch()"></odp-search-box>
+    <!-- <button type="button" class="add-new btn-min-width btn btn-primary show" id="createDataFormat"
+      [routerLink]="['/app',app,'dfm']" *ngIf="hasManagePermission('DF')"> -->
+    <button type="button" class="add-new btn-min-width btn btn-primary show" id="createDataFormat"
+      (click)="newDataFormat()" *ngIf="hasManagePermission('DF')">
+      <span class="fa fa-plus mr-2"></span>
+      <span class="text">New Data Format</span>
+    </button>
+  </div>
+  <div class="d-flex flex-column w-100 px-3">
+    <div class="card-container" (scroll)="loadMore($event)">
+      <div class="d-flex flex-wrap">
+        <!-- <div *ngIf="hasManagePermission('DF') && (!dataFormatList || dataFormatList.length==0) && !showLazyLoader"
+          class="card m-2 add-card hover" [routerLink]="['/app',app,'dfm']"> -->
+        <div *ngIf="hasManagePermission('DF') && (!dataFormatList || dataFormatList.length==0) && !showLazyLoader"
+          class="card m-2 add-card hover" (click)="newDataFormat()">
+          <div class="card-body d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center">
+              <div class="d-flex align-items-center justify-content-center bg-primary rounded-circle circle">
+                <span class="fa fa-plus fa-lg text-white"></span>
+              </div>
+              <div class="align-self-center text-dark ml-3 font-weight-bold">New Data Format</div>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngFor="let dataFormat of dataFormatList;let i=index">
+          <div class="card m-2" *ngIf="hasPermissionForDataFormat(dataFormat._id)">
+            <div class="card-body p-0 d-flex flex-column align-items-center position-relative">
+              <div class="top-bar d-flex justify-content-between align-items-center w-100">
+                <div class="d-flex align-items-start">
+                  <odp-format-type-badge [data]="dataFormat"></odp-format-type-badge>
+                  <div *ngIf="dataFormat.formatType === 'DELIMITER'"
+                    class="data-format-type d-flex align-items-center justify-content-center font-sm font-weight-bold ml-1">
+                    {{dataFormat.character}}
+                  </div>
+                </div>
+                <div class="data-format-options text-muted d-flex align-items-center position-relative">
+                  <div class="microflows d-flex align-items-center mr-3">
+                    <!-- <span class="fa fa-external-link-alt font-xs mr-2"></span> -->
+                    <span class="text-dark">{{dataFormat?.flowCount || '0'}}</span>
+                  </div>
+                  <div class="dropdown" ngbDropdown placement="bottom-right">
+                    <span class="fa fa-ellipsis-h pr-2 hover" ngbDropdownToggle></span>
+                    <div ngbDropdownMenu class="p-0" *ngIf="canEditDataFormat(dataFormat._id)">
+                      <button type="button" class="dropdown-item font-sm" (click)="cloneDataFormat(i)"
+                        [attr.id]="'cloneDataFormat-'+i">
+                        <span class="text">Clone</span>
+                      </button>
+                      <button type="button" class="dropdown-item font-sm"
+                        [routerLink]="['/app',app,'dfm',dataFormat._id]" [attr.id]="'viewDataFormat-'+i">
+                        <span class="text">View</span>
+                      </button>
+                      <button type="button" class="dropdown-item font-sm" (click)="editDataFormat(i)"
+                        [attr.id]="'editDataFormat-'+i">
+                        <span class="text">Edit</span>
+                      </button>
+                      <button type="button" class="dropdown-item font-sm" (click)="deleteDataFormat(i)"
+                        [attr.id]="'deleteDataFormat-'+i">
+                        <span class="text">Delete</span>
+                      </button>
+                    </div>
+                    <div ngbDropdownMenu class="p-0" *ngIf="!canEditDataFormat(dataFormat._id)">
+                      <button type="button" class="dropdown-item font-sm"
+                        [routerLink]="['/app',app,'dfm',dataFormat._id]" [attr.id]="'viewDataFormat-'+i">
+                        <span class="text">View</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="body d-flex flex-column align-self-start justify-content-start p-2 w-100">
+                <div class="data-format-name w-100 text-truncate">{{dataFormat.name}}</div>
+                <div class="data-format-description text-muted font-sm mt-1">
+                  {{dataFormat.description ? dataFormat.description : 'No Description'}}
+                </div>
+              </div>
+              <!-- <div class="options d-flex flex-column bg-light position-absolute" [ngClass]="{'active':showMoreOptions[i]}"
+                odpClickOutside (outside)="showMoreOptions[i]=false">
+                <div class="position-relative d-flex flex-column">
+                  <div class="position-absolute more-options bg-border align-self-center" (click)="showMoreOptions[i]=!showMoreOptions[i]"></div>
+                  <div class="d-flex align-items-center">
+                    <button type="button" class="card-button font-sm text-secondary" [routerLink]="['/app',app,'dfm',dataFormat._id]"
+                      [attr.id]="'viewDataFormat-'+i">
+                      <span class="fa fa-eye mr-2"></span>
+                      <span class="text">View</span>
+                    </button>
+                    <button type="button" class="card-button font-sm text-secondary" (click)="editDataFormat(i)"
+                      [attr.id]="'editDataFormat-'+i">
+                      <span class="fa fa-pencil-alt mr-2"></span>
+                      <span class="text">Edit</span>
+                    </button>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <button type="button" class="card-button font-sm text-secondary" (click)="deleteDataFormat(i)"
+                      [attr.id]="'deleteDataFormat-'+i">
+                      <span class="fa fa-trash mr-2"></span>
+                      <span class="text">Delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="d-flex flex-column w-100 justify-content-center align-items-center p-3"
+        *ngIf="!dataFormatList.length">
+        <h5 class="my-4 text-secondary">No Data Format</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+  <odp-data-format-icon [size]="18" color="DD5151" class="mt-1"></odp-data-format-icon>
+</odp-delete-modal>
+
+<ng-template #newDataFormatModal>
+  <div class="new-data-format-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="form">
+    <div class="d-flex flex-column w-100">
+      <div class="newDFHeader mb-3">
+        <div class="icon-container">
+          <odp-data-format-icon size="16" color="1CAD49"></odp-data-format-icon>
+        </div>
+        <span class="font-weight-bold">New Data format</span>
+        <span class="fa fa-times text-muted hover" (click)="newDataFormatModalRef.close(false)"></span>
+      </div>
+      <div class="d-flex flex-column w-100">
+        <label for="name" class="font-sm text-secondary">
+          <span class="text">Name</span>
+          <sup class="text-danger font-normal sup-top" ngbTooltip="Mandatory field">*</sup>
+        </label>
+        <div class="name-wrapper position-relative">
+          <input newDataFormatName type="text" class="form-control" id="name" placeholder="Untitled Data format"
+            formControlName="name" (keyup.enter)="newDataFormatTextarea.focus()" odpAutoFocus
+            [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
+          <ng-container *ngIf="form.get('name').dirty">
+            <span *ngIf="form.get('name').hasError('required')"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Name is required"></span>
+            <span *ngIf="form.get('name').hasError('maxlength')"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Name should be within 30 characters"></span>
+            <span *ngIf="form.get('name').hasError('pattern')"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
+          </ng-container>
+        </div>
+        <label for="description" class="font-sm text-secondary mt-3">Description</label>
+        <div class="name-wrapper position-relative">
+          <textarea #newDataFormatTextarea class="form-control" id="description" rows="5" placeholder="No description"
+            formControlName="description" (keydown.enter)="$event.preventDefault()"
+            (keyup.enter)="newDataFormatModalRef.close(true)" (keyup)="form.get('name').markAsDirty()"></textarea>
+          <ng-container *ngIf="form.get('description').dirty">
+            <span *ngIf="form.get('description').hasError('maxlength')"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Description should be within 240 characters"></span>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-self-end justify-content-end w-100 mt-3">
+      <button type="button" class="btn btn-min-width btn-create" id="newDataFormatModalYes" [disabled]="form.invalid"
+        (click)="newDataFormatModalRef.close(true)">Create</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #cloneDataFormatModal>
+  <div class="new-data-format-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="cloneForm">
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center">
+          <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
+            <odp-data-format-icon size="16" color="1CAD49" class="mt-1"></odp-data-format-icon>
+          </span>
+          <span class="font-weight-bold mb-1">Clone Data DataFormat</span>
+        </div>
+        <span class="fa fa-times text-muted hover" (click)="cloneDataFormatModalRef.close(false)"></span>
+      </div>
+      <p>
+        <span class="text-muted">You are Cloning:&nbsp;</span>
+        <span class="font-weight-bold">{{cloneData.name}}</span>
+      </p>
+      <div class="d-flex flex-column w-100">
+        <div class="form-group">
+          <label for="name" class="font-sm text-secondary">
+            <span class="text">Clone Name</span>
+            <sup class="text-danger font-normal sup-top" ngbTooltip="Mandatory field">*</sup>
+          </label>
+          <div class="name-wrapper position-relative">
+            <input cloneDataFormatName type="text" class="form-control" id="name" placeholder="Untitled Data Format"
+              formControlName="name" (keyup.enter)="cloneDataFormatTextarea.focus()" odpAutoFocus
+              [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
+            <ng-container *ngIf="form.get('name').dirty">
+              <span *ngIf="form.get('name').hasError('required')"
+                class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                ngbTooltip="Name is required"></span>
+              <span *ngIf="form.get('name').hasError('maxlength')"
+                class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                ngbTooltip="Name should be within 30 characters"></span>
+              <span *ngIf="form.get('name').hasError('pattern')"
+                class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description" class="font-sm text-secondary mt-3">Clone Description</label>
+          <div class="name-wrapper position-relative">
+            <textarea #cloneDataFormatTextarea class="form-control" id="description" rows="5"
+              placeholder="No description" formControlName="description" (keydown.enter)="$event.preventDefault()"
+              (keyup.enter)="triggerClone()"></textarea>
+            <ng-container *ngIf="form.get('description').dirty">
+              <span *ngIf="form.get('description').hasError('maxlength')"
+                class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                ngbTooltip="Description should be within 240 characters"></span>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-self-end justify-content-end w-100 mt-3">
+      <button type="button" class="btn btn-min-width btn-create" id="cloneDataFormatModalYes"
+        [disabled]="cloneForm.invalid" (click)="triggerClone()">Clone</button>
+    </div>
+  </div>
+</ng-template>

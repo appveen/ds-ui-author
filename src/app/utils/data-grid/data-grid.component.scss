@@ -1,0 +1,40 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.data-grid-wrapper{
+    border: 1px solid $data-grid-border;
+    .data-grid-options{
+        background: $data-grid-options;
+        min-height: 40px;
+        max-height: 40px;
+        border-bottom: 1px solid $data-grid-border;
+        .data-grid-page-info{
+            min-width: 120px;
+        }
+        .btn-link.dropdown-toggle{
+            &::after{
+                display: none;
+            }
+        }
+    }
+    .data-grid-header{
+        margin-top: 40px;
+        background: $data-grid-header;
+        min-height: 32px;
+        max-height: 32px;
+        border-bottom: 1px solid $data-grid-border;
+        overflow: hidden;
+    }
+    .data-grid-body{
+        margin-top: 72px;
+        overflow-y: auto;
+    }
+    .dummy-row{
+        min-height: 40px;
+        max-height: 40px;
+        .dummy-cell{
+            min-height: 40px;
+            max-height: 40px;
+        }
+    }
+}

@@ -1,0 +1,53 @@
+<div class="field-list-item d-flex flex-column">
+    <div class="field-item d-flex align-items-center px-4"
+        [ngClass]="{'no-action':definition.canToggle||!definition.properties.name}" (mousedown)="onMouseDown($event)">
+        <div class="field-toggle-state d-flex mr-2">
+            <div class="toggle-state-icon d-flex align-items-center justify-content-center rounded bg-accent px-1"
+                [ngClass]="{'show': definition.canToggle}">
+                <span class="fa fa-minus text-white"></span>
+            </div>
+        </div>
+        <ng-container *ngIf="!definition.isHeader">
+            <ng-container *ngFor="let d of depth;let df=first;let dl=last">
+                <div class="lines d-flex align-items-center ml-2">
+                    <div class="vertical-line align-self-start"
+                        [ngClass]="{'full': !definition.lastChild,'border-right':dl || (depth.length>2 && df)}">
+                    </div>
+                    <div class="horizonal-line" [ngClass]="{'border-bottom':dl}">
+                    </div>
+                </div>
+            </ng-container>
+            <odp-field-type [field]="definition" class="mr-2"></odp-field-type>
+        </ng-container>
+        <ng-container *ngIf="definition.isHeader">
+            <span
+                class="border text-accent bg-white rounded d-flex align-items-center justify-content-center field-type-badge mr-2">H</span>
+        </ng-container>
+        <div class="field-name w-100 text-truncate py-2 cur-pointer" [odpTruncated]="definition.properties.name">
+            {{definition.properties.name}}
+        </div>
+        <div class="handle hover">
+            <span class="fa fa-th"></span>
+        </div>
+    </div>
+    <div class="field-sub-item" *ngIf="definition.isObject || definition.isArray">
+        <ng-container *ngFor="let srcDef of definition.definition;let i=index;let l=last">
+            <odp-source-field [definition]="srcDef" [last]="last"></odp-source-field>
+        </ng-container>
+    </div>
+</div>
+
+
+<div *ngIf="showGhostEle"
+    class="ghost-element field-item d-flex align-items-center justify-content-between px-2 border rounded position-fixed bg-white"
+    [ngStyle]="ghostEleStyle">
+    <div class="d-flex align-items-center">
+        <odp-field-type [field]="definition" class="mr-2"></odp-field-type>
+        <div class="field-name w-100 text-truncate py-2 cur-pointer" [odpTruncated]="definition.properties.name">
+            {{definition.properties.name}}
+        </div>
+    </div>
+    <div class="handle hover">
+        <span class="fa fa-th"></span>
+    </div>
+</div>

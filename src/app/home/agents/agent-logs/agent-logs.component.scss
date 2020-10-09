@@ -1,0 +1,32 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.options {
+  min-height: 72px;
+  max-height: 72px;
+}
+.grid-options {
+  min-height: 36px;
+  max-height: 36px;
+}
+.platform {
+  min-width: 90px;
+  min-height: 90px;
+}
+.quick-info {
+  min-height: 32px;
+}
+
+.ag-grid-container {
+  width: 100%;
+  height: calc(100vh - 210px);
+}
+
+.agent-config-wrapper {
+  label {
+    min-width: 150px;
+  }
+  odp-switch {
+    min-width: 68px;
+  }
+}

@@ -1,0 +1,137 @@
+<div class="d-flex flex-column position-absolute type-dropdown type-div bg-white" odpClickOutside (outside)="close()"
+  [ignore]="['.ignore-click']">
+  <div class="border pt-2 pb-2 rounded-top-radius d-flex flex-wrap justify-content-center">
+    <button type="button" class="btn btn-link type-width d-flex justify-content-center align-items-center" [ngClass]="{'text-accent':selectAllowed(i)}"
+      *ngFor="let type of types; let i = index;" [disabled]="!selectAllowed(i)" (click)="switchType(type,$event)">
+      <span class="{{type.class}}" [ngbTooltip]="getTooltipText(i)" placement="left"></span>
+    </button>
+  </div>
+  <div *ngIf="type == 'String'" class="border type-div rounded-bottom-radius">
+    <div class="d-flex flex-column">
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('')">
+        <label class="radio-container">Text
+          <input type="radio" class="mr-2" name="Text" id="Text" value=""
+            [checked]="detailedType == ''" id="_text">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('long')">
+        <label class="radio-container">Long Text
+          <input type="radio" class="mr-2" name="Text" value="long"
+            [checked]="detailedType == 'long'" id="_longtext">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('rich')">
+        <label class="radio-container">Rich Text
+          <input type="radio" class="mr-2" name="Text" id="rich" value="rich"
+            [checked]="detailedType == 'rich'" id="_richText">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('email')">
+        <label class="radio-container">Email
+          <input type="radio" class="mr-2" name="Text" id="email" value="email"
+            [checked]="detailedType == 'email'">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('password')">
+        <label class="radio-container">Secure Text 
+          <input type="radio" class="mr-2" name="Text" id="password" value="password"
+            [checked]="detailedType == 'password'">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('enum')">
+        <label class="radio-container">List of values
+          <input type="radio" class="mr-2" name="Text" id="enumvl" value="enum"
+            [checked]="detailedType == 'enum'">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="type == 'Number'" class="border type-div rounded-bottom-radius">
+    <div class="d-flex flex-column">
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('')">
+        <label class="radio-container">Number
+          <input type="radio" class="mr-2" name="Num" id="Num" value=""
+            [checked]="detailedType === ''">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('enum')">
+        <label class="radio-container">List of values
+          <input type="radio" class="mr-2" name="Num" id="enum" value="enum"
+            [checked]="detailedType === 'enum'">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('currency')">
+        <label class="radio-container">Currency
+          <input type="radio" class="mr-2" name="Num" id="currency" value="currency"
+            [checked]="detailedType === 'currency'">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="type == 'Date'" class="border type-div rounded-bottom-radius">
+    <div class="d-flex flex-column">
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('date')">
+        <label class="radio-container" id="dateType">Date
+          <input type="radio" class="mr-2" name="date" id="date" value="date"
+            [checked]="dateType === 'date'">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('datetime-local')">
+        <label class="radio-container" id="dateTimeType">Date &amp; Time
+          <input type="radio" class="mr-2" name="date" id="dateTime" value="datetime-local"
+            [checked]="dateType === 'datetime-local'">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="type == 'Geojson'" class="border type-div rounded-bottom-radius">
+    <div class="d-flex flex-column">
+      <div class="d-flex background-hover pl-2 pt-2" (click)="changeDetailedType('point')">
+        <label class="radio-container">Point on a map
+          <input type="radio" class="mr-2" name="map" id="point" value="point"
+            [checked]="geoType === 'point'">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div>
+      <!-- <div class="d-flex background-hover pl-2 pt-2" for="area" (click)="hideAllSubDivs(propIndex);">
+        <label class="radio-container">Area using a polygon marker
+          <input type="radio" class="mr-2" name="map" id="area" value="area"
+            [checked]="geoType === 'area'">
+          <span class="radio-checkmark"></span>
+        </label>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
+<ng-template #typeChangeModalTemplate>
+    <div class="modal-body p-4">
+      <div class="d-flex align-items-center">
+        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+          <odp-service-icon *ngIf="!isDataFormat && !isLibrary" [size]="18" color="202a36" class="mt-1">
+          </odp-service-icon>
+          <odp-data-format-icon *ngIf="isDataFormat" [size]="18" color="202a36" class="mt-1">
+          </odp-data-format-icon>
+          <odp-library-icon *ngIf="isLibrary" [size]="18" color="202a36" class="mt-1"></odp-library-icon>
+        </span>
+        <span class="font-weight-bold mb-1">Change data type?</span>
+      </div>
+      <p class="text-dark text-center my-5">This may lead to data inconsistency. Are you sure you want to continue?</p>
+      <div class="d-flex align-items-center justify-content-end">
+        <button type="button" class="btn btn-min-width btn-dark mr-3" (click)="typeChangeModalTemplateRef.close(false)">No</button>
+        <button type="button" class="btn btn-min-width btn-dark" (click)="typeChangeModalTemplateRef.close(true)">Yes</button>
+      </div>
+    </div>
+  </ng-template>

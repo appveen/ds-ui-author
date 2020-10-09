@@ -1,0 +1,490 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+
+
+<div class="d-flex flex-column">
+    <div class="options d-flex justify-content-between align-items-center w-100  px-3">
+        <div class="font-weight-bold font-lg">Bots</div>
+        <button class="btn btn-primary mt-2" (click)="createBot()" *ngIf="hasPermission('PMBBC')">
+            <span class="fa fa-plus mr-2"></span>
+            <span class="text">Add New Bot</span>
+        </button>
+
+        <!-- <odp-search-box (enteredText)="search($event)" ></odp-search-box> -->
+        <!-- <div></div> -->
+    </div>
+</div>
+
+<ng-container *ngIf="botCount>0">
+    <div class="d-flex m-3">
+        <div class="side-bar border-left border-top">
+            <div class="d-flex name-card justify-content-between align-items-center">
+                <!-- <span class="ml-2 font-weight-bold text-muted ">Name</span> -->
+                <div class="search-box position-relative d-flex justify-content- align-items-center ml-1"
+                    [ngClass]="{'ignore-outside': ignoreOutside}">
+                    <input type="text" name="searchTerm" id="searchTerm" maxlength="40" #searchInput
+                        [(ngModel)]="searchTerm" (ngModelChange)="onChange($event)" (focus)="onFocus($event)"
+                        autocomplete="off" (blur)="onBlur($event)" class="form-control"
+                        [ngClass]="{'ignore-outside': ignoreOutside}">
+                    <div *ngIf="!searchInput.value" [@slide]="slideState" class="position-absolute text-muted"
+                        [ngClass]="{'ignore-outside': ignoreOutside}" (click)="searchInput.focus()">
+                        <!-- <span class="fas fa-search mr-2" [ngClass]="{'ignore-outside': ignoreOutside}"
+                            (click)="searchInput.focus()"></span> -->
+                        <span [ngClass]="{'ignore-outside': ignoreOutside}" class="ml-2 font-weight-bold text-muted "
+                            (click)="searchInput.focus()">Name</span>
+                    </div>
+                    <span *ngIf="!searchInput.value"
+                        class="info fas fa-search text-muted position-absolute high-zIndex">&nbsp;</span>
+                    <span *ngIf="searchInput.value"
+                        class="fa fa-times-circle text-danger position-absolute hover high-zIndex"
+                        (click)="clear()"></span>
+                </div>
+
+                <!-- <button class="add-new btn-min-width btn btn-link" (click)="createBot()" *ngIf="hasPermission('PMBBC')">
+                    <span class="fa fa-plus mr-2"></span>
+                    <span class="text">New Bot</span>
+                </button> -->
+            </div>
+
+            <ng-container *ngFor="let bot of botRecords; let i=index">
+                <div class="d-flex name-card justify-content-between align-items-center px-3  hover"
+                    (click)="selectRecord(i)" (mouseover)="bot.hovered=true" (mouseout)="bot.hovered=false"
+                    [ngClass]="{'bg-light':bot.hovered || (bot._id ===selectedBot._id)}">
+                    <div class="icon-div" [ngClass]="{'text-success':bot.isActive,'text-muted':!bot.isActive}">
+                        <span class="odp-bots font-xl"></span>
+
+                        <!-- <odp-bot-icon [size]="18" [color]="getColor(bot)" class="mt-1"></odp-bot-icon> -->
+                    </div>
+                    <div class="name-div">
+                        <span>{{bot?.basicDetails?.name}}</span>
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <div class="details border">
+            <div class="d-flex  mt-5" *ngIf="botRecords.length>0">
+                <div class="status-card d-flex ml-4 flex-column ">
+                    <div class="icon-card d-flex mx-auto "
+                        [ngClass]="{'icon-card-enable text-white':selectedBot.isActive,'icon-card-disable text-muted':!selectedBot.isActive}">
+                        <div class="bot-icon-32 m-auto ">
+                            <span class="odp-bots "></span>
+                        </div>
+                    </div>
+
+                    <div class="mx-auto">
+                        <span class="toggle">
+                            <label class="switch accent mb-0 mr-1" [attr.for]="selectedBot.id"
+                                *ngIf="hasPermission('PMBA')">
+                                <input type="checkbox" value="selectedBot.isActive" [attr.id]="selectedBot.id"
+                                    (change)="toggleStatus($event)" [ngModel]="selectedBot.isActive">
+                                <span class="slider"></span>
+                                <span class="toggler border-border"></span>
+                            </label>
+                            <span *ngIf="selectedBot.isActive" class="text-success font-weight-bold ml-2">
+                                <ng-container>Enabled</ng-container>
+                            </span>
+                            <span *ngIf="!selectedBot.isActive" class="text-border font-weight-bold ml-2">
+                                <ng-container>Disabled</ng-container>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="d-flex mt-4 mx-auto">
+                        <button class="btn bg-light mr-2" (click)="editBot()" *ngIf="hasPermission('PMBBU')">
+                            <span class="fa fa-pen mr-2"></span>
+                            <span class="text">Edit</span>
+                        </button>
+                        <button class="btn bg-light " *ngIf="hasPermission('PMBBD')" (click)="deleteUser()">
+                            <span class="fa fa-trash mr-2"></span>
+                            <span class="text">Delete</span>
+                        </button>
+                    </div>
+                    <div class="mx-auto mt-4 text-border"> Created :
+                        {{selectedBot?._metadata?.createdAt | date: 'dd-MM-yyyy' }} </div>
+                </div>
+                <div class="d-flex flex-column ml-4 details-card">
+                    <div class="font-weight-bold title">
+                        <span>{{selectedBot?.basicDetails?.name}}</span></div>
+                    <div class="d-flex mt-1">
+                        <span>Bot ID - </span>
+                        <span class="text-accent mr-1">{{selectedBot?._id}}</span>
+                        <span class="odp-copy text-muted" (click)="copyId()"></span>
+                    </div>
+                    <div class="mt-3 font-weight-bold">
+                        <span>Description</span>
+                    </div>
+                    <div [ngClass]="{'text-muted':!selectedBot?.description}" class="w-100 desc">
+                        {{selectedBot?.description ?selectedBot?.description:'NA' }}
+                    </div>
+                    <div class="d-flex justify-content-between w-100 mt-2 border-bottom tab-wrapper">
+                        <div class="tab-list-wrapper d-flex align-items-center justify-content-between  ">
+                            <div class="tab-list d-flex align-items-center">
+                                <div class="d-flex align-items-center justify-content-center tab-list-item hover"
+                                    [ngClass]="{'active':activeTab==0}" (click)="activeTab=0">
+                                    Keys</div>
+                                <div class="d-flex align-items-center justify-content-center tab-list-item hover"
+                                    [ngClass]="{'active':activeTab==1}" (click)="activeTab=1">
+                                    Properties</div>
+                                <div class="d-flex align-items-center justify-content-center tab-list-item hover"
+                                    *ngIf="manageGroup || viewGroup" [ngClass]="{'active':activeTab==2}"
+                                    (click)="activeTab=2;getUserTeam()">
+                                    Groups
+                                </div>
+                            </div>
+                        </div>
+                        <button *ngIf="activeTab==0 && hasPermission('PMBBU')" class="btn btn-success mt-2"
+                            (click)="createBotKey()">
+                            <span class="fa fa-plus mr-2"></span>
+                            <span class="text">New Key</span>
+                        </button>
+                        <button *ngIf="activeTab==1 && hasPermission('PMBBU')" class="btn btn-success mt-2"
+                            (click)="createNewProperty()">
+                            <span class="fa fa-plus mr-2"></span>
+                            <span class="text">New property </span>
+                        </button>
+                        <button *ngIf="activeTab==2 && manageGroup" class="btn btn-success mt-2" (click)="assignTeam()">
+                            <span class="fa fa-plus mr-2"></span>
+                            <span class="text">Add to groups</span>
+                        </button>
+                    </div>
+                    <div class="prop-container">
+                        <ng-container *ngIf="activeTab===0">
+                            <odp-manage-bot-key [selectedBot]="selectedBot" (dataChange)="onDataChange($event)">
+                            </odp-manage-bot-key>
+
+                        </ng-container>
+                        <ng-container *ngIf="activeTab===1">
+                            <odp-manage-bot-property [selectedBot]="selectedBot" (dataChange)="onDataChange($event)">
+                            </odp-manage-bot-property>
+
+                        </ng-container>
+                        <ng-container *ngIf="activeTab===2">
+                            <odp-manage-bot-group [selectedBot]="selectedBot" [userTeams]="userTeams"
+                                (dataChange)="onDataChangeInGroup($event)"></odp-manage-bot-group>
+
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="botRecords.length===0">
+                <div class="new  d-flex justify-content-center align-items-center">
+                    <div class="new-bot  m-auto">
+                        <div class="d-flex flex-column  justify-content-center align-items-center h-100">
+                            <span class="mx-auto font-xl text-muted font-weight-bold">Searched Bot not found</span>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+    </div>
+</ng-container>
+<ng-container *ngIf="botCount==0">
+    <div class="new  d-flex justify-content-center align-items-center">
+        <div class="new-bot  m-auto">
+            <div class="d-flex flex-column  justify-content-center align-items-center">
+                <span class="mx-auto mt-4 font-weight-bold">Bot in data.stack</span>
+                <div class="mx-3 mt-3 align-items-center text-muted text-center">Bots provide API only access into
+                    data.stack.
+                    Other
+                    applications/systems can use Bot credentials to access data.stack.</div>
+                <button class="btn mt-3 btn-success btn-min-width" (click)="createBot()" *ngIf="hasPermission('PMBBC')">
+                    <span class="fa fa-plus mr-2"></span>
+                    <span class="text">Create New</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #newBotModal>
+    <div class="new-Bot-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="botForm">
+        <div class="d-flex flex-column w-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center">
+                    <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
+                        <span class="odp-bots mt-2 font-xl text-success"></span>
+                    </span>
+                    <span *ngIf="isCreate" class="font-weight-bold mt-2">Create Bot</span>
+                    <span *ngIf="!isCreate" class="font-weight-bold mt-2">Edit Bot</span>
+                </div>
+                <span *ngIf="isCreate" class="fa fa-times text-muted hover"
+                    (click)="newBotModalRef.close(false)"></span>
+                <span *ngIf="!isCreate" class="fa fa-times text-muted hover"
+                    (click)="editBotModalRef.close(false)"></span>
+            </div>
+            <div class="d-flex flex-column w-100">
+                <label for="name" class="font-sm text-secondary">
+                    <span class="text">Name</span>
+                    <sup class="text-danger font-normal sup-top " ngbTooltip="Mandatory field">*</sup>
+                </label>
+                <div class="name-wrapper position-relative">
+                    <input newBotName type="text" class="form-control" id="name" placeholder="Untitled Bot"
+                        formControlName="botName" (keyup.enter)="newBotTextarea.focus()" odpAutoFocus
+                        [ngClass]="{'is-invalid':botForm.get('botName').invalid && botForm.get('botName').dirty}">
+                    <ng-container *ngIf="botForm.get('botName').dirty">
+                        <span *ngIf="botForm.get('botName').hasError('required')"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Name is required"></span>
+                        <span *ngIf="botForm.get('botName').hasError('maxlength')"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Name should be within 30 characters"></span>
+                        <span *ngIf="botForm.get('botName').hasError('pattern')"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
+                    </ng-container>
+                </div>
+                <label for="description" class="font-sm text-secondary mt-3">Description</label>
+                <div class="name-wrapper position-relative">
+                    <textarea #newBotTextarea class="form-control" id="description" rows="5"
+                        placeholder="No description" formControlName="desc" (keydown.enter)="$event.preventDefault()"
+                        (keyup.enter)="closeBotModals()"></textarea>
+                    <ng-container *ngIf="botForm.get('desc').dirty">
+                        <span *ngIf="botForm.get('desc').hasError('maxlength')"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Description should be within 240 characters"></span>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-self-end justify-content-end w-100 mt-3">
+            <!-- <button type="button" class="btn btn-link mr-3" id="newBotModalNo" (click)="c(false)">Cancel</button> -->
+            <button *ngIf="isCreate" type="button" class="btn btn-min-width btn-create" id="newBotModalYes"
+                [disabled]="botForm.invalid" (click)="newBotModalRef.close(true)">Create</button>
+            <button *ngIf="!isCreate" type="button" class="btn btn-min-width btn-create button-link" id="newBotModalYes"
+                [disabled]="botForm.invalid" (click)="editBotModalRef.close(true)">save</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #newKeyModal>
+    <div class="new-Bot-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="keyForm">
+        <div class="d-flex flex-column w-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center">
+                    <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
+                        <span class="odp-bots mt-2 font-xl text-success"></span>
+                    </span>
+                    <span *ngIf="isCreate" class="font-weight-bold mt-2">Add a key</span>
+                    <!-- <span *ngIf="!isCreate" class="font-weight-bold mt-2">Edit key</span> -->
+                </div>
+                <span class="fa fa-times text-muted hover" (click)="newKeyModalRef.close(false)"></span>
+            </div>
+            <div class="d-flex flex-column w-100">
+                <label for="name" class="font-sm text-secondary">
+                    <span class="text">Label for the key</span>
+                    <sup class="text-danger font-normal sup-top" ngbTooltip="Mandatory field">*</sup>
+                </label>
+                <div class="name-wrapper position-relative">
+                    <input newlabel type="text" class="form-control" id="name" placeholder="Give a label to identify"
+                        formControlName="label" (keyup.enter)="newBotTextarea.focus()" odpAutoFocus
+                        [ngClass]="{'is-invalid':keyForm.get('label').invalid && keyForm.get('label').dirty}">
+                    <ng-container *ngIf="keyForm.get('label').dirty">
+                        <span *ngIf="keyForm.get('label').hasError('required')"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Name is required"></span>
+                        <span *ngIf="keyForm.get('label').hasError('maxlength')"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Name should be within 30 characters"></span>
+                        <span *ngIf="keyForm.get('label').hasError('pattern')"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
+                    </ng-container>
+                </div>
+                <span class="text-muted font-sm mt-1">Key will be generated automatically on finish creating</span>
+                <label for="description" class="font-sm text-secondary mt-3">
+                    <span class="text">Expiry(In days)</span>
+                    <sup class="text-danger font-normal sup-top" ngbTooltip="Mandatory field">*</sup>
+
+                </label>
+                <div class="name-wrapper position-relative">
+                    <input newBotName type="number" class="form-control" id="name" placeholder=""
+                        formControlName="expires" (keyup.enter)="newKeyModalRef.close(true)"
+                        [ngClass]="{'is-invalid':keyForm.get('expires').invalid && keyForm.get('expires').dirty}">
+
+                    <!-- <textarea #newBotTextarea class="form-control" id="description" rows="5"
+                            placeholder="No description" formControlName="desc" (keydown.enter)="$event.preventDefault()"
+                            (keyup.enter)="newKeyModalRef.close(true)"></textarea> -->
+                    <ng-container *ngIf="keyForm.get('expires').dirty">
+                        <span *ngIf="keyForm.get('expires').hasError('required')"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Expiry is required"></span>
+                        <span *ngIf="keyForm.get('expires').hasError('min')"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Mininum value is 1"></span>
+                        <span *ngIf="isInvalidDate"
+                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Please enter the No of days within September 13, 275760"></span>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-self-end justify-content-end w-100 mt-3">
+            <!-- <button type="button" class="btn btn-link mr-3" id="newKeyModalNo" (click)="c(false)">Cancel</button> -->
+            <button *ngIf="isCreate" type="button" class="btn btn-min-width btn-create" id="newKeyModalYes"
+                [disabled]="keyForm.invalid || isInvalidDate" (click)="newKeyModalRef.close(true)">Create</button>
+
+        </div>
+    </div>
+</ng-template>
+<ng-template #newAttributeModal>
+    <div class="modal-body new-attribute-modal ignore-outside d-flex flex-column">
+        <div class="d-flex justify-content-between">
+            <div class="font-lg ">
+                <strong class="">New Attribute</strong>
+            </div>
+            <button type="button" class="btn btn-link " (click)="addNewDetail()">+ Add New</button>
+        </div>
+        <div class="p-4 form-body ">
+            <table class="table" [formGroup]="additionalDetails">
+                <thead class="bg-accent text-white">
+                    <tr>
+                        <th>Name</th>
+                        <th>Key</th>
+                        <th>Type</th>
+                        <th>Value</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="extraInfo">
+                    <tr *ngFor="let control of userAttributes;let i=index" [formGroupName]="i">
+                        <td>
+                            <div class="mr-3 position-relative">
+                                <input type="text" id="new-label" (keypress)="newField($event)" class="form-control"
+                                    formControlName="label" #newLabel [ngClass]="{'is-invalid': getLabelError(i)}"
+                                    odpAutoFocus (change)="setKey(i)">
+                                <ng-container *ngIf="additionalDetails.get(['extraInfo', i,'label']).dirty">
+                                    <span *ngIf="additionalDetails.get(['extraInfo', i,'label']).hasError('required')"
+                                        class="text-danger position-absolute fa fa-exclamation-circle error-icon"
+                                        container="body" ngbTooltip="Name is required"></span>
+                                    <span *ngIf="additionalDetails.get(['extraInfo', i,'label']).hasError('maxlength')"
+                                        class="text-danger position-absolute fa fa-exclamation-circle error-icon"
+                                        container="body" ngbTooltip="Name should be within 30 characters"></span>
+                                </ng-container>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mr-3 position-relative">
+                                <span class="">{{control.get('key').value}}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-wrapper w-100 position-relative mr-3">
+                                <div class="form-control hover ignore-click"
+                                    (click)="toggleFieldTypeSelector[i]=!toggleFieldTypeSelector[i]">
+                                    <odp-field-type [label]="true"
+                                        [field]="{type:control.get('type').value,properties:{}}">
+                                    </odp-field-type>
+                                </div>
+                                <div *ngIf="toggleFieldTypeSelector[i]"
+                                    class="type-dropdown border p-2 rounded d-flex flex-wrap justify-content-center position-absolute bg-white">
+                                    <button type="button"
+                                        class="btn btn-link type-width d-flex justify-content-center align-items-center text-accent ignore-click"
+                                        *ngFor="let type of types; let typeIndex = index;"
+                                        (click)="setUserAttributeType(type,i);$event.stopPropagation();">
+                                        <span class="{{type.class}}" placement="left"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="val-input position-relative">
+                                <input *ngIf="control.get('type').value === 'String'" type="text" id="new-val"
+                                    (keypress)="newField($event)" class="form-control" formControlName="value"
+                                    [ngClass]="{'is-invalid': getValError(i)}">
+                                <input *ngIf="control.get('type').value === 'Number'" type="number" id="new-val"
+                                    (keypress)="newField($event)" class="form-control" formControlName="value"
+                                    [ngClass]="{'is-invalid': getValError(i)}">
+                                <input *ngIf="control.get('type').value === 'Date'" type="date" id="new-val"
+                                    (keypress)="newField($event)" class="form-control" formControlName="value"
+                                    [ngClass]="{'is-invalid': getValError(i)}">
+                                <odp-switch *ngIf="control.get('type').value === 'Boolean'" [edit]="{status:true}"
+                                    [checked]="getUserAttributeValue(i)"
+                                    (checkedChange)="setUserAttributeValue($event,i)"></odp-switch>
+                                <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                                    *ngIf="control.get('type').value !== 'Boolean' && getValError(i)"
+                                    ngbTooltip="This is a required field" placement="right"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="del-field ml-auto pt-2 hover" (click)="removeField(i);$event.stopPropagation();"
+                                *ngIf="i > 0">
+                                <span class="fas fa-times-circle fa-lg text-secondary"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex align-items-end justify-content-end mt-auto">
+            <button type="button" class="btn btn-link"
+                (click)="newAttributeModalRef.close(false);$event.stopPropagation();">Cancel</button>
+            <button type="button" class="btn btn-min-width  btn-dark ml-5"
+                (click)="addExtraDetails();$event.stopPropagation();">Save</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #assignTeamModal>
+    <div class="assignApp-modal ignore-outside">
+        <div class="modal-header ignore-outside p-4">
+            <div class="text-dark d-flex ignore-outside">
+                <label for="addApp" class="label-width ignore-outside">
+                    <strong class="ignore-outside">Add Groups</strong>
+                </label>
+                <div class="position-relative ignore-outside">
+                    <odp-search-box (enteredText)="teamSearch($event)" (reset)="resetTeams()" [ignoreOutside]="true">
+                    </odp-search-box>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body p-4 ignore-outside">
+            <div class="d-flex flex-wrap ignore-outside">
+                <div class="team-card d-flex flex-column my-3 mx-4 ignore-outside"
+                    *ngFor="let team of allTeams| filterTeam: filterTeamStr; index as teamIndex;">
+                    <div class="team-thumbnail d-flex align-items-center justify-content-center hover ignore-outside"
+                        [ngClass]="{'team-selected': team['teamSelected'], 'bg-white': !team['teamSelected']}"
+                        (click)="addTeam(teamIndex)">
+                        <figure
+                            class="d-flex flex-column align-items-center justify-content-center position-relative ignore-outside">
+                            <img *ngIf="team.logo && team.logo.thumbnail" [src]="team.logo.thumbnail" alt="team-logo">
+                            <div *ngIf="!team.logo || !team.logo.thumbnail"
+                                class="d-flex flex-column justify-content-center align-items-center pt-4 ignore-outside">
+                                <span class="fas fa-users fa-lg mb-2 text-muted ignore-outside"></span>
+                                <strong class="team-strength ignore-outside"
+                                    [ngClass]="{'text-secondary': team['teamSelected']}">
+                                    {{team.users.length}}
+                                </strong>
+                            </div>
+                            <figcaption class="team-thumbnail-caption position-absolute ignore-outside"
+                                *ngIf="team['teamSelected']">
+                                <span class="fas fa-check ignore-outside"></span>
+                                <span class="text ignore-outside">Selected</span>
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div class="app-name text-truncate text-center mt-2 ignore-outside">{{team.name}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer p-3 d-flex w-100 bg-white mt-auto justify-content-end align-items-center">
+            <button type="button" class="btn btn-link mr-3 ignore-outside" (click)="assignTeamModalRef.close(false)"
+                id="appAddModalNo">Cancel</button>
+            <button type="button" class="btn btn-dark btn-min-width ignore-outside"
+                (click)="assignTeamModalRef.close(true)" id="appAddModalYes">Add</button>
+        </div>
+    </div>
+</ng-template>
+
+
+<odp-delete-modal [open]="openDeleteBotModal" (close)="closeDeleteBotModal($event)">
+    <span class="odp-bots  font-xl text-success"></span>
+
+</odp-delete-modal>

@@ -1,0 +1,26 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.field-wrapper{
+    height: 32px;
+}
+.value-width {
+  min-width: 100px;
+  max-width: 300px;
+}
+.bookmark-container {
+  min-width: 500px;
+  max-width: 500px;
+}
+.font-sm {
+  font-size: 13px;
+}
+.rounded-circle {
+  min-width: 16px;
+  max-width: 16px;
+  min-height: 16px;
+  max-height: 16px;
+}
+.toggler {
+  top: 0;
+}

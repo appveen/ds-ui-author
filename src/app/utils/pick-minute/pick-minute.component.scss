@@ -1,0 +1,21 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.wrapper {
+  min-width: 290px;
+  max-width: 290px;
+  .text {
+    font-size: 12px;
+  }
+  .selector-block {
+    width: 32px;
+    height: 32px;
+    &:not(.disabled):hover {
+      cursor: pointer;
+      background: $light;
+    }
+  }
+  .custom-values {
+    min-height: 48px;
+  }
+}

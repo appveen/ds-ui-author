@@ -1,0 +1,106 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.top-bar {
+  min-height: 40px;
+  max-height: 40px;
+  border-radius: 20px;
+  .help {
+    cursor: pointer;
+    min-width: 56px;
+    max-width: 56px;
+    min-height: 20px;
+    max-height: 20px;
+    border-radius: 10px;
+    margin-left: 8px;
+    margin-right: 8px;
+    background: #01a7c2;
+    color: $white;
+    font-size: 12px;
+    .text {
+      font-size: 11px;
+      letter-spacing: 0.25px;
+    }
+  }
+}
+.basic-settings,
+.roles-settings {
+  .label {
+    min-width: 138px;
+    max-width: 138px;
+  }
+}
+.normal-heading {
+  color: $heading-highlight;
+  font-size: 13px;
+}
+.sub-heading {
+  min-width: 376px;
+}
+.horizontal-labels {
+  .normal-heading {
+    min-width: 48px;
+    max-width: 48px;
+  }
+}
+.roles-row {
+  .normal-heading {
+    min-width: 214px;
+    max-width: 214px;
+  }
+}
+
+.big-checkbox {
+  min-width: 48px;
+  max-width: 48px;
+  min-height: 24px;
+  max-height: 24px;
+  border-radius: 4px;
+  border: 1px solid $data-grid-border;
+  cursor: pointer;
+  &.disabled {
+    background: #f9f9f9;
+  }
+  &.locked {
+    background: $light;
+    cursor: default !important;
+  }
+  &.checked {
+    &.blocked {
+      &.locked {
+        color: rgba($danger, 0.32);
+      }
+      &:not(.locked) {
+        color: $danger;
+        border-color: #f8dcdc;
+        background: #f8dcdc;
+      }
+    }
+    &.view {
+      &.locked {
+        color: rgba($success, 0.32);
+      }
+      &:not(.locked) {
+        color: $success;
+        border-color: #d1efda;
+        background: #d1efda;
+      }
+    }
+    &.manage {
+      &.locked {
+        color: rgba($primary, 0.32);
+      }
+      &:not(.locked) {
+        color: $primary;
+        border-color: #ffe2cc;
+        background: #ffe2cc;
+      }
+    }
+    .fa-check {
+      visibility: visible;
+    }
+  }
+  .fa-check {
+    visibility: hidden;
+  }
+}

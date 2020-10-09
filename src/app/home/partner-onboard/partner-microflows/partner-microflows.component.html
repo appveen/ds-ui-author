@@ -1,0 +1,364 @@
+<div class="d-flex flex-column">
+    <odp-loading *ngIf="pendingApiCalls"></odp-loading>
+    <div class="sub-heading text-dark font-weight-bold mb-3 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <span class="fa fa-exchange-alt mr-2 text-accent"></span>
+            <span class="text">Integration Flows</span>
+        </div>
+        <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+        <button type="button" class="btn btn-sm btn-link" (click)="newMicroflow()"
+            *ngIf="edit.status && edit.id && canCreateFlow()">
+            <span class="fa fa-plus-circle mr-2"></span>
+            <span class="text">New Integration Flows</span>
+        </button>
+    </div>
+    <div class="microflow-list"
+        *ngIf="hasPermission('PVPFMB') || hasPermissionStartsWith('PMPFMB') || hasPermission('PMPFPS') || hasPermission('PMPFPD')">
+        <table class="table">
+            <thead>
+                <tr class="bg-secondary text-white">
+                    <th class="ignore-click">
+                        <!-- <odp-table-checkbox class="ignore-click" [(checked)]="checkAll"></odp-table-checkbox> -->
+                    </th>
+                    <th>Name</th>
+                    <th>Version</th>
+                    <th>Type</th>
+                    <th>Direction</th>
+                    <!-- <th>Last Invoked</th> -->
+                    <th>Last Updated</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr odpClickOutside [ignore]="['.fa-ellipsis-h','.ignore-click']" (outside)="item.selected=false"
+                    *ngFor="let item of microflows|filterTeam:searchTerm;let i = index"
+                    [ngClass]="{'bg-light':item.selected}">
+                    <td>
+                        <div class="checkbox">
+                            <!-- <odp-table-checkbox [(checked)]="item.selected"></odp-table-checkbox> -->
+                        </div>
+                    </td>
+                    <td (mouseover)="item.selected=true" (mouseout)="item.selected=false">
+                        <div class="d-flex align-items-center">
+                            <span
+                                class="status rounded d-flex align-items-center justify-content-center mr-2 {{getStatus(item.status)}}">{{getStatus(item.status)}}</span>
+                            <span
+                                [ngClass]="{'text-danger':item.invalid || item.nextFlow,'text-secondary':!(item.invalid && item.nextFlow) }">{{item.name}}</span>
+                        </div>
+                    </td>
+                    <td (mouseover)="item.selected=true" (mouseout)="item.selected=false">
+                        <div class="d-flex align-items-center">
+                            <div *ngIf="item.runningVersion && item.runningVersion>0"
+                                class="version rounded d-flex align-items-center justify-content-center mr-2">
+                                v{{item.runningVersion}}</div>
+                            <div *ngIf="item.nextFlow" class="new-version rounded d-flex align-items-center">
+                                <div class="version-number d-flex align-items-center justify-content-center">
+                                    v{{(item.runningVersion || 0)+1}}</div>
+                                <div class="version-text d-flex align-items-center justify-content-center">Saved</div>
+                            </div>
+                            <div *ngIf="!item.runningVersion && !item.nextFlow"
+                                class="new-version rounded d-flex align-items-center">
+                                <div class="version-number d-flex align-items-center justify-content-center">
+                                    v{{item.runningVersion || 1}}</div>
+                                <div class="version-text d-flex align-items-center justify-content-center">Saved</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="position-relative" odpClickOutside (outside)="item.flowDetails=false">
+                        <div class="flow-type d-flex align-items-center" [ngClass]="{'active':item.flowDetails}"
+                            (click)="item.flowDetails=!item.flowDetails">
+                            <div class="flow-in-out d-flex align-items-center pl-2">
+                                <span class="text-success">{{item.inputType.toLowerCase()}}</span>
+                                <span class="fa fa-caret-right text-secondary mx-2"></span>
+                                <span class="text-dark" *ngIf="item.outputType">{{item.outputType.toLowerCase()}}</span>
+                                <span class="text-dark" *ngIf="!item.outputType">api</span>
+                            </div>
+                            <div class="flow-expand d-flex align-items-center justify-content-center">
+                                <span class="fa fa-angle-down"></span>
+                            </div>
+                        </div>
+                        <div class="flow-details d-flex flex-column align-items-start position-absolute bg-white pb-2"
+                            *ngIf="item.flowDetails">
+                            <div class="d-flex align-items-center pl-2 mt-3">
+                                <div
+                                    class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-sm">
+                                    {{item.inputType.toLowerCase()}}
+                                </div>
+                                <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-sm">
+                                    Partner Agent:
+                                </span>
+                                <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-sm">
+                                    Flow End Point:
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center mt-2 w-100">
+                                <div class="input-group mx-2">
+                                    <div class="input-group-prepend">
+                                        <button type="button" class="btn btn-outline-dark"
+                                            ngbTooltip="Switch between external and internal endpoint"
+                                            (click)="toggleEdgeGateway[i] = !toggleEdgeGateway[i]"
+                                            [ngClass]="{'active':toggleEdgeGateway[i]}">
+                                            <span class="fa fa-external-link-alt"></span>
+                                        </button>
+                                    </div>
+                                    <input #inputNode *ngIf="item.inputType === 'FILE'" type="text"
+                                        class="form-control border-0" readonly="true" [ngModel]="getInAgent(item)">
+                                    <input #inputNode *ngIf="item.inputType === 'API' && !toggleEdgeGateway[i]"
+                                        ngbTooltip="This is internal endpoint" type="text" class="form-control border-0"
+                                        readonly="true" [ngModel]="replacePort(item.gatewayFQDN,item.port)">
+                                    <input #inputNode *ngIf="item.inputType === 'API' && toggleEdgeGateway[i]"
+                                        ngbTooltip="This is external endpoint" type="text" class="form-control border-0"
+                                        readonly="true" [ngModel]="replacePort(item.edgeGatewayFQDN,item.port)">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-light" (click)="copyToClipboard('input')">
+                                            <span class="fa fa-copy"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="item.outputType">
+                                <div class="d-flex align-items-center pl-2 mt-3">
+                                    <div
+                                        class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-sm">
+                                        {{item.outputType.toLowerCase()}}
+                                    </div>
+                                    <span *ngIf="item.outputType === 'FILE'" class="text-secondary ml-2 font-sm">
+                                        App Agent:
+                                    </span>
+                                    <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-sm">
+                                        External API:
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center mt-2 w-100">
+                                    <div class="input-group mx-2">
+                                        <input #outputNode *ngIf="item.outputType === 'FILE'" type="text"
+                                            class="form-control border-0" readonly="true" [ngModel]="getOutAgent(item)">
+                                        <input #outputNode *ngIf="item.outputType === 'API'" type="text"
+                                            class="form-control border-0" readonly="true"
+                                            [ngModel]="getAPIEnpoint(item)">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-light"
+                                                (click)="copyToClipboard('output')">
+                                                <span class="fa fa-copy"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </td>
+                    <td (mouseover)="item.selected=true" (mouseout)="item.selected=false">
+                        <div class="direction">
+                            <span class="fa fa-rotate-45 mr-1"
+                                [ngClass]="{'fa-arrow-circle-down text-create':item.direction=='Inbound','fa-arrow-circle-up text-accent':item.direction=='Outbound'}"></span>
+                            <span class="text-secondary">{{item.direction}}</span>
+                        </div>
+                    </td>
+                    <!-- <td (click)="item.selected=!item.selected">
+                        <span class="text-secondary">{{replacePort(item.gatewayFQDN,item.port)}}</span>
+                    </td> -->
+                    <td (mouseover)="item.selected=true" (mouseout)="item.selected=false">
+                        <span class="text-secondary">{{item._metadata.lastUpdated | date:'medium'}}</span>
+                    </td>
+                    <td (mouseover)="item.selected=true" (mouseout)="item.selected=false">
+                        <div class="d-flex align-items-center text-danger">
+                            <ng-container *ngIf="item.invalid">
+                                <span class="fa fa-exclamation-circle mr-2"></span>
+                                <span class="text">Validation Error</span>
+                            </ng-container>
+                            <ng-container *ngIf="!item.invalid">
+                                <ng-container *ngIf="item.nextFlow">
+                                    <span class="fa fa-exclamation-circle mr-2"></span>
+                                    <span class="text">Out of sync</span>
+                                </ng-container>
+                            </ng-container>
+                            &nbsp;
+                        </div>
+                    </td>
+                    <td class="options-cell position-relative" (mouseover)="item.selected=true"
+                        (mouseout)="item.selected=false">
+                        <div class="d-flex align-items-center justify-content-end w-100">
+                            <span class="fa fa-ellipsis-h text-secondary hover mr-3"
+                                (click)="item.selected=!item.selected"></span>
+                        </div>
+                        <div [ngClass]="{'show':item.selected}"
+                            class="options bg-white position-absolute d-flex align-items-center justify-content-end">
+                            <button
+                                *ngIf="item.status == 'Stopped' && canStartStopFlow(item._id) && hasPermission('PMPFPS')"
+                                [disabled]="item.invalid" type="button" class="btn btn-link" (click)="startFlow(item)">
+                                Start
+                            </button>
+                            <button
+                                *ngIf="item.status == 'Active' && canStartStopFlow(item._id) && hasPermission('PMPFPS')"
+                                type="button" class="btn btn-link" (click)="stopFlow(item)">
+                                Stop
+                            </button>
+                            <button *ngIf="(item.status == 'Draft' || item.nextFlow) && item.status != 'Pending' && !item.invalid && canDeployFlow(item._id)
+                                        && hasPermission('PMPFPD')" [disabled]="item.invalid" type="button"
+                                class="btn btn-link" (click)="deployFlow(item)">
+                                Deploy
+                            </button>
+                            <button *ngIf="hasPermission('PVPFMB') || hasPermissionStartsWith('PMPFM')" type="button"
+                                class="btn btn-link" (click)="viewMicroflow(item.nextFlow ? item.nextFlow : item._id)">
+                                View
+                            </button>
+                            <button *ngIf="edit.status && canEditFlow(item._id) && hasPermission('PMPFMBU')"
+                                type="button" class="btn btn-link"
+                                (click)="toggleMicroflow(item.nextFlow ? item.nextFlow : item._id)">
+                                Edit
+                            </button>
+                            <button *ngIf="edit.status && canDeleteFlow(item._id) && hasPermission('PMPFMBD')"
+                                type="button" class="btn btn-link text-danger" (click)="deleteFlow(i)">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr *ngIf="microflows.length==0">
+                    <td colspan="9">
+                        <div class="d-flex py-3 w-100">
+                            <div
+                                class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
+                                <div class="text">No Integration Flows has been created.</div>
+                                <button type="button" class="btn btn-create mt-2" (click)="newMicroflow()"
+                                    *ngIf="edit.status && edit.id && canCreateFlow()">
+                                    <span class="fa fa-plus-circle mr-2"></span>
+                                    <span class="text">Create New</span>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div *ngIf="toggleNewIntegrationFlow" class="overlay" (click)="toggleNewIntegrationFlow=false"></div>
+<div *ngIf="toggleNewIntegrationFlow" class="new-flow-window">
+    <odp-new-flow [edit]="edit" (done)="onDone($event)" (cancel)="toggleNewIntegrationFlow=false"
+        [(data)]="newIntegrationFlowData">
+    </odp-new-flow>
+</div>
+
+<!-- <ng-template #newIntegrationFlow>
+    <div class="new-partner-modal-body modal-body p-4 d-flex flex-column align-items-center" [formGroup]="form">
+        <div class="d-flex align-items-center justify-content-between mb-3 w-100">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-partner-icon size="16" color="1CAD49" class="mt-1"></odp-partner-icon>
+                </span>
+                <span class="font-weight-bold mb-1">New Integration Flow</span>
+            </div>
+            <span class="fa fa-times text-muted hover" (click)="newIntegrationFlowRef.close(false)"></span>
+        </div>
+        <ng-container *ngIf="newIntegrationFlowStep==1">
+            <div class="d-flex flex-column w-100">
+                <div class="d-flex flex-column w-100">
+                    <label for="name" class="font-sm text-secondary">
+                        <span class="text">Name</span>
+                        <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+                    </label>
+                    <div class="d-flex position-relative flow-name-wrapper">
+                        <input type="text" class="form-control" id="name" placeholder="Untitled Integration Flow"
+                            formControlName="name" (keyup.enter)="newFlowTextarea.focus()" odpAutoFocus>
+                        <span *ngIf="form.get('name').hasError('maxlength')"
+                            class="fa fa-exclamation-circle text-danger position-absolute"
+                            ngbTooltip="Name cannot be more then 20 charaters." container="body"></span>
+                    </div>
+                    <label for="description" class="font-sm text-secondary mt-3">Description</label>
+                    <textarea #newFlowTextarea class="form-control" id="description" rows="5"
+                        placeholder="No description" formControlName="description"
+                        (keydown.enter)="$event.preventDefault()" (keyup.enter)="newIntegrationFlowStep=2"></textarea>
+                </div>
+            </div>
+            <div class="d-flex align-self-end justify-content-between w-100 mt-3">
+                <span class="text">
+                    <span class="text-dark">{{newIntegrationFlowStep}}</span>
+                    <span class="text-secondary">/2</span>
+                </span>
+                <button type="button" class="btn btn-link" id="newPartnerModalYes" [disabled]="form.get('name').invalid"
+                    (click)="newIntegrationFlowStep=2">Next</button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="newIntegrationFlowStep==2">
+            <div class="d-flex flex-column w-100">
+                <div class="d-flex flex-column w-100">
+                    <label for="direction" class="mt-3 mb-0 text-center">
+                        Choose the starter type.
+                    </label>
+                    <small class="text-muted mb-3 text-center">Use arrow keys &larr;&nbsp;&rarr; to select</small>
+                    <div class="d-flex justify-content-center align-items-center" ngbRadioGroup
+                        formControlName="inputType">
+                        <label ngbButtonLabel for="apiType"
+                            class="starter-type rounded d-flex flex-column align-items-center justify-content-center hover p-0 mb-0 mr-3"
+                            [ngClass]="{'active':apiType.checked}">
+                            <div
+                                class="check-circle rounded-circle d-flex align-items-center justify-content-center align-self-end mr-3">
+                                <div class="inner-check-circle bg-white rounded-circle"></div>
+                            </div>
+                            <div class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
+                                <div class="api-icon"></div>
+                            </div>
+                            <span class="text mt-1 font-sm">API</span>
+                            <input ngbButton #apiType type="radio" class="d-none" name="blockType" id="apiType"
+                                value="api">
+                        </label>
+                        <label ngbButtonLabel for="fileType"
+                            class="starter-type rounded d-flex flex-column align-items-center justify-content-center hover p-0 mb-0"
+                            [ngClass]="{'active':fileType.checked}">
+                            <div
+                                class="check-circle rounded-circle d-flex align-items-center justify-content-center align-self-end mr-3">
+                                <div class="inner-check-circle bg-white rounded-circle"></div>
+                            </div>
+                            <div class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
+                                <div class="file-icon"></div>
+                            </div>
+                            <span class="text mt-1 font-sm">File</span>
+                            <input ngbButton #fileType type="radio" class="d-none" name="blockType" id="fileType"
+                                value="file">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center align-self-end justify-content-between w-100 mt-3 mt-auto">
+                <span class="d-flex align-items-center">
+                    <span class="text-dark">{{newIntegrationFlowStep}}</span>
+                    <span class="text-secondary">/2</span>
+                </span>
+                <div class="d-flex align-items-center">
+                    <button type="button" class="btn btn-link" id="newPartnerModalYes"
+                        (click)="newIntegrationFlowStep=1">Back</button>
+                    <button type="button" class="btn btn-min-width btn-create" id="newPartnerModalYes"
+                        [disabled]="form.invalid" (click)="saveFlow()">Create</button>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</ng-template> -->
+
+<ng-template #alertModalTemplate>
+    <div class="modal-body p-4 d-flex flex-column">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center align-self-start">
+                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-partner-icon [size]="18" color="202a36" class="mt-1"></odp-partner-icon>
+                </span>
+                <span class="font-weight-bold">{{alertModalData.title}}</span>
+            </div>
+            <span class="fa fa-times text-secondary hover" (click)="alertModalTemplateRef.close(false)"></span>
+        </div>
+        <div class="d-flex flex-column my-5 w-100">
+            <div class="text-dark text-center mt-1" [innerHTML]="alertModalData.message"></div>
+        </div>
+        <div class="d-flex align-self-end">
+            <button type="button" class="btn btn-dark btn-min-width" id="viewPasswordModalClose"
+                (click)="alertModalTemplateRef.close(true)">Yes</button>
+        </div>
+    </div>
+</ng-template>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+    <odp-partner-icon [size]="18" color="DD5151" class="mt-1"></odp-partner-icon>
+</odp-delete-modal>

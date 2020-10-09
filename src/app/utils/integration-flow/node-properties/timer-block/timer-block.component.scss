@@ -1,0 +1,51 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.text-min-width {
+  min-width: 50px;
+}
+.add-bound {
+  min-height: 24px;
+  max-height: 24px;
+  border-radius: 12px;
+  &.active {
+    background: rgba($success, 0.3);
+  }
+}
+.plus-circle {
+  min-width: 24px;
+  max-width: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  border-radius: 12px;
+  background: rgba($success, 0.3);
+}
+.remove-bound {
+  min-width: 24px;
+  max-width: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  border-radius: 12px;
+  background: rgba($danger, 0.3);
+}
+
+.bound-dropdown {
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.14);
+  border-radius: 4px;
+  background: $white;
+  min-width: 290px;
+  z-index: 8;
+  .bound-dropdown-item {
+    color: $secondary;
+    &:hover {
+      cursor: pointer;
+      background: $light;
+    }
+  }
+}
+
+.picker-modal {
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.14);
+  right: -10px;
+  z-index: 9;
+}

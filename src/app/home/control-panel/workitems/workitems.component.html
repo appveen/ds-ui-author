@@ -1,0 +1,59 @@
+<div class="wf-container p-4">
+  <div class="d-flex align-items-center mb-4">
+    <i class="fas fa-clipboard-check"></i>
+    <div class="font-xl ml-2 pl-1 font-weight-bold">Reviews</div>
+  </div>
+  <div class="d-flex mb-3">
+    <div class="d-flex flex-column wf-status-card wf-pending">
+      <div class="d-flex wf-title text-secondary p-2">
+        <i class="far fa-clock"></i>
+        <div class="font-sm ml-2 font-weight-bold">Pending</div>
+      </div>
+      <div class="d-flex justify-content-center font-lg font-weight-bold mt-auto mb-auto">42</div>
+    </div>
+    <div class="d-flex flex-column wf-status-card wf-approved ml-4">
+      <div class="d-flex p-2 wf-title text-success">
+        <i class="far fa-check-circle"></i>
+        <div class="font-sm ml-2 font-weight-bold">Approved</div>
+      </div>
+      <div class="d-flex justify-content-center font-lg font-weight-bold mt-auto mb-auto">42</div>
+    </div>
+    <div class="d-flex flex-column wf-status-card wf-reject ml-4">
+      <div class="d-flex p-2 text-danger">
+        <i class="far fa-times-circle"></i>
+        <div class="font-sm ml-2 font-weight-bold">Reject</div>
+      </div>
+      <div class="d-flex justify-content-center font-lg font-weight-bold mt-auto mb-auto">42</div>
+    </div>
+    <div class="d-flex flex-column wf-status-card wf-rework ml-4">
+      <div class="d-flex p-2 text-rework">
+        <i class="fas fa-reply"></i>
+        <div class="font-sm ml-2 font-weight-bold">Sent for Rework</div>
+      </div>
+      <div class="d-flex justify-content-center font-lg font-weight-bold mt-auto mb-auto">42</div>
+    </div>
+    <div class="d-flex flex-column wf-status-card wf-draft ml-auto">
+      <div class="d-flex p-2">
+        <i class="far fa-square fa-sm"></i>
+        <div class="font-sm ml-2 font-weight-bold">Drafts</div>
+      </div>
+      <div class="d-flex justify-content-center font-lg font-weight-bold mt-auto mb-auto">42</div>
+    </div>
+  </div>
+  <div class="data-grid border" odpDataGrid [columns]="columnDefs">
+    <div class="data-grid-header">
+      <div class="data-grid-row">
+        <div [attr.id]="col.dataKey" *ngFor="let col of columnDefs" class="data-grid-cell head-cell d-flex align-items-center">
+          <span *ngIf="col.properties.name !== 'search'">{{col.properties.name}}</span>
+          <span *ngIf="col.properties.name === 'search'" class="fas fa-search text-accent"></span>
+        </div>
+      </div>
+    </div>
+    <div class="data-grid-body">
+      <div class="data-grid-row" *ngFor="let data of wfData" [ngClass]="{'selected':data._checked, 'highlighted': data.newRcrd}">
+        <div *ngFor="let col of columnDefs" class="data-grid-cell no-padding d-flex align-items-center">
+          
+        </div>
+    </div>
+  </div>
+</div>

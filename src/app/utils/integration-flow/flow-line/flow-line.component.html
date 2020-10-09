@@ -1,0 +1,6 @@
+<svg>
+    <g [ngClass]="{'request': type=='request','response': type=='response','error': type=='error'}">
+        <line x1="0" [attr.y1]="y" [attr.x2]="width" [attr.y2]="y" />
+        <polygon *ngIf="arrow" [attr.points]="polygonPoints" />
+    </g>
+</svg>

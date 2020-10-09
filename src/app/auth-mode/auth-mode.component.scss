@@ -1,0 +1,77 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.overlay {
+  min-width: calc(100vw - 300px);
+  min-height: 100vh;
+  background: rgba(#000000, $alpha: 0.3);
+  position: fixed;
+  top: 0;
+  z-index: 9;
+  left: -100vw;
+  transition: 0.1s;
+  &.show {
+    left: 0;
+  }
+}
+
+.header {
+  min-height: 60px;
+  max-height: 60px;
+  .logo {
+    min-height: 57px;
+    max-height: 57px;
+    min-width: 200px;
+    max-width: 200px;
+    background-repeat: no-repeat;
+  }
+  .text {
+    min-height: 50px;
+    max-height: 50px;
+    font-weight: 600;
+    .platform-name {
+      margin-top: 3px;
+      font-size: 18px;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+    .product-name {
+      margin-top: -3px;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+  }
+}
+.sidenav {
+  min-width: 170px;
+  max-width: 170px;
+  min-height: calc(100vh - 60px);
+  max-height: calc(100vh - 60px);
+  transition: 0.25s;
+  &.hide {
+    margin-left: -170px;
+  }
+  .icon-block {
+    min-height: 50px;
+    max-height: 50px;
+    text-align: left;
+    outline: 0;
+    position: relative;
+    color: $secondary;
+    .icon {
+      min-width: 50px;
+      max-width: 50px;
+      min-height: 50px;
+      max-height: 50px;
+    }
+    a {
+      text-decoration: none !important;
+    }
+  }
+}
+.body {
+  transition: 0.25s;
+  min-height: calc(100vh - 60px);
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+}

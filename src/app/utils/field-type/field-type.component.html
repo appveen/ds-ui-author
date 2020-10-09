@@ -1,0 +1,11 @@
+<div class="d-flex align-items-center">
+    <span
+        class="{{getClass()}} border text-accent bg-white rounded d-flex align-items-center justify-content-center field-type-badge"></span>
+    <span *ngIf="label" class="text-secondary ml-2">{{getLabel()}}</span>
+    <ng-container *ngIf="collectionType">
+        <span class="text-secondary mx-2">of</span>
+        <span
+        class="{{collectionClass}} border text-accent bg-white rounded d-flex align-items-center justify-content-center field-type-badge"></span>
+        <span *ngIf="label" class="text-secondary ml-2">{{collectionType}}</span>
+    </ng-container>
+</div>

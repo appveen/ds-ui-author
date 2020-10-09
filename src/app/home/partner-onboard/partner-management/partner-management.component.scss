@@ -1,0 +1,134 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+@keyframes loader-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.overlay {
+  max-width: 288px;
+  min-width: 288px;
+  max-height: 380px;
+  min-height: 380px;
+}
+.settings-overlay {
+  min-height: 251px;
+  max-height: 251px;
+  min-width: 600px;
+  max-width: 600px;
+}
+.manage-cards {
+    min-width: 240px;
+    max-width: 240px;
+    min-height: 174px;
+    max-height: 174px;
+    border-color: #ececec;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.24);
+    border-radius: 4px;
+    overflow: hidden;
+    .service-card {
+      min-height: 50px;
+      max-height: 50px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+  
+  .service-status-card {
+    min-width: 240px;
+    max-width: 240px;
+    min-height: 40px;
+    max-height: 40px;
+    border-color: #ececec;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.24);
+    border-radius: 4px;
+    overflow: hidden;
+    .start-circle {
+      min-width: 48px;
+      max-width: 48px;
+      min-height: 48px;
+      max-height: 48px;
+      border-radius: 24px;
+      margin-top: -11px;
+    }
+  
+    .action-card {
+      position: relative;
+      margin-top: 37px;
+      font-size: 12px;
+    }
+    .stop-action-card {
+      position: relative;
+      margin-top: 28px;
+      font-size: 12px;
+    }
+    .animate-wrap {
+      margin-left: 92px;
+    }
+    .play-icon {
+      z-index: 3;
+      margin-left: 18px;
+      margin-top: 4px;
+    }
+  }
+  .align-text {
+    position: relative;
+    top: 32px;
+    right: 17px;
+  }
+  .start-action {
+    position: relative;
+    top: 8px;
+  }
+  .starting-action {
+    position: relative;
+    top: 1px;
+    margin-left: 40px;
+    display: none;
+  }
+  .success-action {
+    position: relative;
+    top: 1px;
+    margin-left: 40px;
+    display: none;
+  }
+  .tick-action {
+    position: relative;
+    left: 16px;
+    font-size: 22px;
+    top: 15px;
+    display: none;
+  }
+  .start-all-btn {
+    height: 32px;
+    margin-left: 27px !important;
+    width: 140px;
+    margin-top: 34px;
+  }
+  .circle-loader {
+    border-left: #1cad49 1px solid;
+    animation: loader-spin 1.2s infinite linear;
+    vertical-align: top;
+    border-radius: 24px;
+    width: 48px;
+    height: 48px;
+    position: relative;
+    bottom: 12px;
+    display: none;
+  }
+  .stop-circle-loader {
+    border-left: #e41414 1px solid;
+    animation: loader-spin 1.2s infinite linear;
+    vertical-align: top;
+    border-radius: 24px;
+    width: 48px;
+    height: 48px;
+    position: relative;
+    margin-top: -11px;
+    display: none;
+     margin-left: -128px;
+  }

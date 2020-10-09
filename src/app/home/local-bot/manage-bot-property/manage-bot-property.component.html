@@ -1,0 +1,107 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+
+<table>
+    <tbody>
+        <ng-container *ngFor="let attr of userAttributeList; let i=index">
+            <tr class="key-row border-bottom" [ngClass]="{'bg-light':attr.hovered}" (mouseover)="attr.hovered=true"
+                (mouseout)="attr.hovered=false">
+
+                <td>
+                    <div class="text-secondary mr-2 key-ellipsis" [ngbTooltip]="attr?.label">
+                        {{attr?.label}}</div>
+                </td>
+                <td>
+                    <div class="d-flex">
+                        <div class="mr-2">
+                            <odp-field-type [field]="{type:attr.type,properties:{}}">
+                            </odp-field-type>
+                        </div>
+                        <div class="mr-2 value-ellipsis" [ngbTooltip]="attr?.value">{{attr?.value}}
+                        </div>
+                    </div>
+                </td>
+                <td class="options-cell position-relative" *ngIf="hasPermission('PMBBU')">
+                    <div class="d-flex align-items-center justify-content-end w-100">
+                        <span class="fa fa-ellipsis-h text-secondary hover mr-3"></span>
+                    </div>
+                    <div [ngClass]="{'show':attr.hovered}" *ngIf="hasPermission('PMBBU')"
+                        class="options bg-white position-absolute d-flex align-items-center justify-content-end text-accent">
+
+                        <button type="button" class="btn btn-link" (click)="openEditAttributeModal(attr)">
+                            Edit
+                        </button>
+
+                    </div>
+                </td>
+                <td>
+                    <!-- <span class="fa fa-pen text-muted mt-1 delete-prop mr-2"
+                    (click)="openEditAttributeModal(attr);$event.stopPropagation()"></span> -->
+
+                    <button class="add-new btn-min-width btn btn-link"
+                        (click)="deleteAdditionInfo(attr?.key)" *ngIf="hasPermission('PMBBU')">Delete</button>
+                </td>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>
+<ng-template #editAttributeModal>
+    <div class="modal-body p-4 ignore-outside">
+        <div class="d-flex justify-content-between">
+            <div class="font-lg mb-3">
+                <strong class="">Edit Attribute</strong>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="key">Label</label>
+            <input id="key" type="text" class="form-control" [(ngModel)]="editAttribute.label">
+        </div>
+        <div class="form-group">
+            <label for="key">Key</label>
+            <input id="key" type="text" class="form-control" [(ngModel)]="editAttribute.key" [disabled]="true">
+            <small class="form-text"></small>
+        </div>
+        <div class="form-group input-wrapper position-relative">
+            <label for="key">Type</label>
+            <div class="form-control hover ignore-click"
+                (click)="toggleFieldTypeSelector['edit']=!toggleFieldTypeSelector['edit']">
+                <odp-field-type [label]="true" [field]="{type:editAttribute.type,properties:{}}">
+                </odp-field-type>
+            </div>
+            <div *ngIf="toggleFieldTypeSelector['edit']"
+                class="type-dropdown border p-2 rounded d-flex flex-wrap justify-content-center position-absolute bg-white">
+                <button type="button"
+                    class="btn btn-link type-width d-flex justify-content-center align-items-center text-accent ignore-click"
+                    *ngFor="let type of types; let typeIndex = index;"
+                    (click)="editAttribute.type=type;$event.stopPropagation();">
+                    <span class="{{type.class}}" placement="left"></span>
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="value">Value</label>
+            <input *ngIf="editAttribute.type === 'String'" id="value" type="text" class="form-control"
+                [(ngModel)]="editAttribute.value">
+            <input *ngIf="editAttribute.type === 'Number'" id="value" type="number" class="form-control"
+                [(ngModel)]="editAttribute.value">
+            <input *ngIf="editAttribute.type === 'Date'" id="value" type="date" class="form-control"
+                [(ngModel)]="editAttribute.value">
+            <odp-switch *ngIf="editAttribute.type === 'Boolean'" [edit]="{status:true}"
+                [(checked)]="editAttribute.value"></odp-switch>
+        </div>
+        <div class="d-flex align-items-center justify-content-end mt-4">
+            <button type="button" class="btn btn-min-width btn-dark ignore-click mr-3"
+                (click)="editAttributeModalRef.close(false)">Cancel</button>
+            <button type="button" class="btn btn-min-width btn-success ignore-click"
+                (click)="editAttributeModalRef.close(true)">Save</button>
+        </div>
+    </div>
+</ng-template>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+    <odp-user-icon [size]="18" color="202A36" class="mt-1"></odp-user-icon>
+</odp-delete-modal>

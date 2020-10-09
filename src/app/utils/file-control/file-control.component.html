@@ -1,0 +1,12 @@
+<div class="control-wrapper">
+    <input #fileEle type="file" class="d-none" (change)="onChange($event)">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <button type="button" class="btn btn-accent" (click)="fileEle.click()">Browse</button>
+        </div>
+        <div class="form-control d-flex align-items-center justify-content-between">
+            <div class="filename">{{filename}}</div>
+            <div class="filesize text-muted">{{filesize}}</div>
+        </div>
+    </div>
+</div>

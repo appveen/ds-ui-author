@@ -1,0 +1,14 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+.create-modal-body {
+    .info {
+        min-height: 222px;
+        max-height: 222px;
+    }
+    .name-input-wrapper{
+        .fa-exclamation-circle{
+            top: 7px;
+            right: 6px;
+        }
+    }
+}

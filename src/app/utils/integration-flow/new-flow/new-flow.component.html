@@ -1,0 +1,94 @@
+<div class="wrapper d-flex flex-column">
+    <div class="header d-flex align-items-center px-3">
+        <span class="font-weight-bold">Integration Flow</span>
+    </div>
+    <div class="body d-flex flex-column align-items-stretch p-3">
+        <div class="form-group">
+            <label for="name" class="label">
+                <span>Name</span>
+                <sup class="text-danger font-normal high-zIndex sup-top" ngbTooltip="Mandatory field">*</sup>
+            </label>
+            <div class="name-wrapper position-relative">
+                <input id="name" type="text" class="form-control" [(ngModel)]="data.name" odpAutoFocus
+                    [disabled]="!edit.status" required #name="ngModel"
+                    [ngClass]="{'is-invalid':name.invalid && name.dirty}">
+                <span *ngIf="name?.errors?.required && name.dirty"
+                    class="text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
+                    ngbTooltip="Name is required"></span>
+                <span *ngIf="data?.name?.length>40"
+                    class="text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
+                    ngbTooltip="Name should not be more than 40 characters."></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputType" class="label">Trigger Type</label>
+            <input #triggerTypeApi id="triggerTypeApi" class="d-none" type="radio" name="inputType" value="api"
+                [(ngModel)]="inputType" [disabled]="!edit.status">
+            <div class="d-flex align-items-center" (click)="triggerTypeApi.click()">
+                <div tabindex="0" (odpSpaceKey)="triggerTypeApi.click()"
+                    class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                    [ngClass]="{'checked':inputType == 'api','bg-light':(triggerTypeApi.disabled && !triggerTypeApi.checked)}">
+                    <div class="round-radio-inner"
+                        [ngClass]="{'bg-light':triggerTypeApi.disabled,'bg-white':!triggerTypeApi.disabled}">
+                    </div>
+                </div>
+                <span class="text ml-2">API</span>
+            </div>
+            <input #triggerTypeFile id="triggerTypeFile" class="d-none" type="radio" name="inputType" value="file"
+                [(ngModel)]="inputType" [disabled]="!edit.status">
+            <div class="d-flex align-items-center mt-2" (click)="triggerTypeFile.click()">
+                <div tabindex="0" (odpSpaceKey)="triggerTypeFile.click()"
+                    class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                    [ngClass]="{'checked':inputType == 'file','bg-light':(triggerTypeFile.disabled && !triggerTypeFile.checked)}">
+                    <div class="round-radio-inner"
+                        [ngClass]="{'bg-light':triggerTypeFile.disabled,'bg-white':!triggerTypeFile.disabled}"></div>
+                </div>
+                <span class="text ml-2">File</span>
+            </div>
+            <!-- <input #triggerTypeTimer id="triggerTypeTimer" class="d-none" type="radio" name="inputType" value="timer"
+                [(ngModel)]="inputType">
+            <div class="d-flex align-items-center mt-2" (click)="triggerTypeTimer.click()">
+                <div tabindex="0" (odpSpaceKey)="triggerTypeTimer.click()"
+                    class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                    [ngClass]="{'checked':inputType == 'timer'}">
+                    <div class="round-radio-inner bg-white"></div>
+                </div>
+                <span class="text ml-2">Timer</span>
+            </div> -->
+        </div>
+        <div class="form-group">
+            <label for="direction" class="label">Direction</label>
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <input #inbound id="inbound" type="radio" class="d-none" name="direction" value="Inbound"
+                    [(ngModel)]="data.direction" (ngModelChange)="onDirectionChange($event)" [disabled]="!edit.status">
+                <div class="d-flex align-items-center" (click)="inbound.click()">
+                    <div tabindex="0" (odpSpaceKey)="inbound.click()"
+                        class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                        [ngClass]="{'checked':inbound.checked,'bg-light':(inbound.disabled && !inbound.checked)}">
+                        <div class="round-radio-inner"
+                            [ngClass]="{'bg-light':inbound.disabled,'bg-white':!inbound.disabled}"></div>
+                    </div>
+                    <span class="text ml-2">Inbound</span>
+                </div>
+                <input #outbound id="outbound" type="radio" class="d-none" name="direction" value="Outbound"
+                    [(ngModel)]="data.direction" (ngModelChange)="onDirectionChange($event)" [disabled]="!edit.status">
+                <div class="d-flex align-items-center mr-5" (click)="outbound.click()">
+                    <div tabindex="0" (odpSpaceKey)="outbound.click()"
+                        class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                        [ngClass]="{'checked':outbound.checked,'bg-light':(outbound.disabled && !outbound.checked)}">
+                        <div class="round-radio-inner"
+                            [ngClass]="{'bg-light':outbound.disabled,'bg-white':!outbound.disabled}"></div>
+                    </div>
+                    <span class="text ml-2">Outbound</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="edit.status" class="footer d-flex align-items-center justify-content-between p-3 mt-auto">
+        <button type="button" class="btn btn-dark" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="onDone()" [disabled]="!isValid">Done</button>
+    </div>
+    <div *ngIf="!edit.status" class="footer d-flex align-items-center justify-content-between p-3 mt-auto">
+        <button type="button" class="btn btn-dark" (click)="onCancel()">Close</button>
+    </div>
+</div>

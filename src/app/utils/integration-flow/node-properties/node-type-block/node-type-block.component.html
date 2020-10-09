@@ -1,0 +1,172 @@
+<div *ngIf="!hideBlock" class="node-properties-block node-block d-flex flex-column">
+    <div class="title d-flex align-items-center justify-content-between px-3">
+        <span class="font-weight-bold mr-2">Node Settings</span>
+    </div>
+    <div class="d-flex flex-column px-3">
+        <div class="form-group">
+            <label for="type">Type</label>
+            <div class="d-flex align-items-center mb-2">
+                <div class="btn-group" ngbDropdown>
+                    <button *ngIf="nodeType=='API' && showApiOption" type="button" class="btn btn-dark btn-sm"
+                        ngbDropdownToggle [disabled]="!edit.status">
+                        API
+                    </button>
+                    <button *ngIf="nodeType=='FILE' && showFileOption" type="button" class="btn btn-dark btn-sm"
+                        ngbDropdownToggle [disabled]="!edit.status">
+                        File
+                    </button>
+                    <ng-container *ngIf="node.meta.blockType !== 'INPUT'">
+                        <button *ngIf="nodeType=='nanoService'" type="button" class="btn btn-dark btn-sm"
+                            ngbDropdownToggle [disabled]="!edit.status">
+                            Nano Service
+                        </button>
+                        <button *ngIf="nodeType=='dataService'" type="button" class="btn btn-dark btn-sm"
+                            ngbDropdownToggle [disabled]="!edit.status">
+                            Data Service
+                        </button>
+                    </ng-container>
+                    <div class="dropdown-menu" ngbDropdownMenu>
+                        <button *ngIf="showApiOption" type="button" [disabled]="nodeType=='API'" ngbDropdownItem
+                            (click)="changeNodeType('API')">API</button>
+                        <button *ngIf="showFileOption" type="button" [disabled]="nodeType=='FILE'" ngbDropdownItem
+                            (click)="changeNodeType('FILE')">File</button>
+                        <ng-container *ngIf="node.meta.blockType !== 'INPUT'">
+                            <button type="button" [disabled]="nodeType=='nanoService'" ngbDropdownItem
+                                (click)="changeFormatType('nanoService')">
+                                Nano Service
+                            </button>
+                            <button type="button" [disabled]="nodeType=='dataService'" ngbDropdownItem
+                                (click)="changeFormatType('dataService')">
+                                Data Service
+                            </button>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="form-group">
+            <label for="type">Type</label>
+            <div *ngIf="ioBlock || isLastNode" class="d-flex align-items-center mb-2">
+                <div class="d-flex align-items-center w-50" (click)="nodeTypeAPI.click()">
+                    <input #nodeTypeAPI id="type" class="d-none" type="radio" name="nodeType" value="API"
+                        [ngModel]="nodeType" (ngModelChange)="changeNodeType($event)">
+                    <div class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                        [ngClass]="{'checked':nodeTypeAPI.checked}">
+                        <div class="round-radio-inner bg-white"></div>
+                    </div>
+                    <span class="text ml-2">API</span>
+                </div>
+                <div class="d-flex align-items-center" (click)="nodeTypeFile.click()">
+                    <input #nodeTypeFile id="type" class="d-none" type="radio" name="nodeType" value="FILE"
+                        [ngModel]="nodeType" (ngModelChange)="changeNodeType($event)">
+                    <div class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                        [ngClass]="{'checked':nodeTypeFile.checked}">
+                        <div class="round-radio-inner bg-white"></div>
+                    </div>
+                    <span class="text ml-2">File</span>
+                </div>
+            </div>
+            <div *ngIf="node.meta.blockType !== 'INPUT'" class="d-flex align-items-center">
+                <div class="d-flex align-items-center w-50" (click)="nodeTypeNanoService.click()">
+                    <input #nodeTypeNanoService id="type" class="d-none" type="radio" name="nodeType"
+                        value="nanoService" [ngModel]="node.meta.formatType" (ngModelChange)="changeFormatType($event)">
+                    <div class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                        [ngClass]="{'checked':nodeTypeNanoService.checked}">
+                        <div class="round-radio-inner bg-white"></div>
+                    </div>
+                    <span class="text ml-2">Nano Service</span>
+                </div>
+                <div class="d-flex align-items-center" (click)="nodeTypeDataService.click()">
+                    <input #nodeTypeDataService id="type" class="d-none" type="radio" name="nodeType"
+                        value="dataService" [ngModel]="node.meta.formatType" (ngModelChange)="changeFormatType($event)">
+                    <div class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                        [ngClass]="{'checked':nodeTypeDataService.checked}">
+                        <div class="round-radio-inner bg-white"></div>
+                    </div>
+                    <span class="text ml-2">Data Service</span>
+                </div>
+            </div>
+        </div> -->
+        <div *ngIf="nodeType == 'API'" class="form-group">
+            <label for="protocol">Protocol</label>
+            <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center w-50" (click)="protocolREST.click()">
+                    <input #protocolREST id="protocol" class="d-none" type="radio" name="protocol" value="REST"
+                        [ngModel]="node.meta.sourceType" (ngModelChange)="changeIOType($event)"
+                        [disabled]="!edit.status">
+                    <div class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                        [ngClass]="{'checked':protocolREST.checked}">
+                        <div class="round-radio-inner bg-white"></div>
+                    </div>
+                    <span class="text ml-2">REST</span>
+                </div>
+                <!-- <div class="d-flex align-items-center" (click)="protocolSOAP.click()">
+                    <input #protocolSOAP id="protocol" class="d-none" type="radio" name="protocol" value="SOAP"
+                        [ngModel]="node.meta.sourceType" (ngModelChange)="changeIOType($event)"
+                        [disabled]="!edit.status">
+                    <div class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                        [ngClass]="{'checked':protocolSOAP.checked}">
+                        <div class="round-radio-inner bg-white"></div>
+                    </div>
+                    <span class="text ml-2">SOAP</span>
+                </div> -->
+            </div>
+        </div>
+        <!-- <odp-soap-block *ngIf="ioBlock" [edit]="edit" [index]="index" [node]="node" [nodeList]="nodeList" [flowData]="flowData">
+        </odp-soap-block> -->
+        <odp-select-format-block *ngIf="ioBlock" [edit]="edit" [index]="index" [node]="node" [nodeList]="nodeList"
+            [flowData]="flowData">
+        </odp-select-format-block>
+        <odp-select-service-block *ngIf="!ioBlock" [edit]="edit" [index]="index" [node]="node" [nodeList]="nodeList"
+            [propertyType]="propertyType" [flowData]="flowData">
+        </odp-select-service-block>
+        <div class="form-group" *ngIf="showURL">
+            <label for="url" [ngClass]="{'text-danger': errors && (errors.invalidURL)}">URL</label>
+            <textarea name="url" id="url" cols="30" rows="3" class="form-control"
+                [(ngModel)]="node.meta.connectionDetails.url" [disabled]="!edit.status"></textarea>
+        </div>
+        <div class="form-group" *ngIf="showTimeout">
+            <label for="timeout">Timeout (ms)</label>
+            <input id="timeout" type="number" class="form-control"
+                [(ngModel)]="node.meta.connectionDetails.requestTimeout" [disabled]="!edit.status">
+        </div>
+        <!-- <div class="form-group" *ngIf="showAbortOnError">
+            <odp-checkbox [edit]="edit" [(checked)]="node.meta.connectionDetails.abortOnError" [disabled]="!transactions">
+                Abort on Error
+            </odp-checkbox>
+        </div> -->
+        <odp-custom-headers-block [edit]="edit" [index]="index" [node]="node" [nodeList]="nodeList"
+            [flowData]="flowData">
+        </odp-custom-headers-block>
+    </div>
+</div>
+
+<ng-template #deleteModalTemplate>
+    <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center ignore-outside">
+        <div class="d-flex align-items-center justify-content-between mb-3 w-100">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <span class="odp-flows text-danger"></span>
+                </span>
+                <span class="font-weight-bold mb-1">{{modalData?.title}}</span>
+            </div>
+            <span class="fa fa-times text-muted hover ignore-click"
+                (click)="deleteModalTemplateRef.close(false)"></span>
+        </div>
+        <div class="info d-flex flex-column align-self-center justify-content-center w-100">
+            <div class="d-flex justify-content-center pt-3 info-msg">
+                <span class="text-secondary text-center" [innerHTML]="modalData?.message"></span>
+            </div>
+            <div class="d-flex align-items-center justify-content-end w-100">
+                <button type="button" class="btn btn-dark btn-min-width ignore-click mr-3" id="deleteModalCancel"
+                    (click)="$event.stopPropagation();deleteModalTemplateRef.close(false)">
+                    <span class="text">Cancel</span>
+                </button>
+                <button type="button" class="btn btn-delete btn-min-width ignore-click" id="deleteModalYes"
+                    (click)="$event.stopPropagation();deleteModalTemplateRef.close(true)">
+                    <span class="text">Change</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

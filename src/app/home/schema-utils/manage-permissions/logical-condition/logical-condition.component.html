@@ -1,0 +1,28 @@
+<!-- <select class="border-0 bg-white text-success text-uppercase" [(ngModel)]="condition">
+    <option value="$eq">is equal to</option>
+    <option value="$ne">is not equal to</option>
+    <option value="$gt">is greater then</option>
+    <option value="$lt">is lesser then</option>
+    <option value="$gte">is greater then equal to</option>
+    <option value="$lte">is lesser then equal to</option>
+</select> -->
+
+<div class="position-relative">
+    <div class="condition ignore-outside text-underline" (click)="optionsDropDown=edit.status" [ngClass]="{'hover':edit.status}">
+        <span *ngIf="condition.condition == '$eq'" class="">is equal to</span>
+        <span *ngIf="condition.condition == '$ne'" class="">is not equal to</span>
+        <span *ngIf="condition.condition == '$gt' && showOperator('$gt')" class="">is greater then</span>
+        <span *ngIf="condition.condition == '$lt' && showOperator('$lt')" class="">is lesser then</span>
+        <span *ngIf="condition.condition == '$gte' && showOperator('$gte')" class="">is greater then equal to</span>
+        <span *ngIf="condition.condition == '$lte' && showOperator('$lte')" class="">is lesser then equal to</span>
+    </div>
+    <div *ngIf="optionsDropDown" class="value-options-dropdown options-dropdown position-absolute bg-white rounded"
+        odpClickOutside (outside)="optionsDropDown=false">
+        <div class="p-2 " (click)="onChange('$eq')">is equal to</div>
+        <div class="p-2 " (click)="onChange('$ne')">is not equal to</div>
+        <div class="p-2 " (click)="onChange('$gt')" *ngIf="showOperator('$gt')">is greater then</div>
+        <div class="p-2 " (click)="onChange('$lt')" *ngIf="showOperator('$lt')">is lesser then</div>
+        <div class="p-2 " (click)="onChange('$gte')" *ngIf="showOperator('$gte')">is greater then equal to</div>
+        <div class="p-2 " (click)="onChange('$lte')" *ngIf="showOperator('$lte')">is lesser then equal to</div>
+    </div>
+</div>

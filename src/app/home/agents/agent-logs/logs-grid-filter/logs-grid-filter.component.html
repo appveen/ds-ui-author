@@ -1,0 +1,15 @@
+<div class="mt-2">
+    <input *ngIf="field==='content'" type="text" class="border rounded bg-white w-100" [(ngModel)]="value" odpOnChange
+        (textChange)="onChange($event)">
+    <input *ngIf="field==='timeStamp'" type="date" class="border rounded bg-white w-100" [(ngModel)]="value"
+        (ngModelChange)="onChange($event)">
+    <select *ngIf="field==='logLevel'" class="border rounded bg-white w-100" [(ngModel)]="value"
+        (ngModelChange)="onChange($event)">
+        <option value="">--All--</option>
+        <option value="DEBUG">DEBUG</option>
+        <option value="INFO">INFO</option>
+        <option value="WARN">WARNING</option>
+        <option value="ERROR">ERROR</option>
+        <option value="FATAL">FATAL</option>
+    </select>
+</div>

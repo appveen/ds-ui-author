@@ -1,0 +1,13 @@
+// @import "../bootstrap/src/assets/scss/bootstrap/_variables.scss";
+@import "../bootstrap/bootstrap.scss";
+@import "b2b.icons.scss";
+@import "partner.list.scss";
+@import "partner.manage.scss";
+@import "microflow.manage.scss";
+@import "microflow.mapper.scss";
+@import "formula.builder.scss";
+
+.partner {
+    // background-image: url('../../img/library.svg');
+    background-size: 19px auto !important;
+}

@@ -1,0 +1,5 @@
+
+<input type="date" class="mt-1 w-100" *ngIf="definition?.field ==='_metadata.createdAt'"
+    [(ngModel)]="value" (change)="onChange($event.target.value)">
+<input type="text" class=" mt-1 w-100" *ngIf="definition?.field ==='summary'"  odpOnChange
+(textChange)="onChange($event)">

@@ -1,0 +1,24 @@
+<div class="wrapper d-flex flex-column align-items-center p-3">
+    <div class="pick-minute"></div>
+    <div class="text mt-1">Pick Minutes(s)</div>
+    <div class="d-flex align-items-center justify-content-between w-100 my-2" *ngFor="let rows of table">
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+            (click)="onClick(item)"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected(item),'text-dark':!isSelected(item)}"
+            *ngFor="let item of rows">:{{item}}
+        </div>
+    </div>
+    <div class="custom-values d-flex align-items-center justify-content-between w-100 my-3">
+
+    </div>
+    <div class="form-group w-100">
+        <label for="addMore">Add more:</label>
+        <div class="d-flex position-relative floating-btn-group">
+            <input type="number" class="form-control" placeholder="Eg: 36, 28, 36" [ngClass]="{'is-invalid':customValueInvalid}" (keyup.enter)="addCustom()" [(ngModel)]="customValue">
+            <button type="button" class="btn btn-sm btn-link text-accent position-absolute" (click)="addCustom()" [disabled]="customValueInvalid">
+                Add
+            </button>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary w-100 mt-2" [disabled]="isInvalid" (click)="onDone()">Set</button>
+</div>

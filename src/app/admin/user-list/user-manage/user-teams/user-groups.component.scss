@@ -1,0 +1,27 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.appname-label {
+    width: 125px;
+}
+
+.active-app {
+    font-weight: bold;
+    color: $accent;
+}
+
+.service-roles {
+    .search-input {
+        width: 240px;
+    }
+
+    .search-icon {
+        top: 7px;
+        left: -22px;
+    }
+}
+
+.content-height {
+    height: 40px;
+}
+

@@ -1,0 +1,31 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+svg {
+  position: static;
+  left: 0;
+  top: 0;
+}
+rect {
+  fill: none;
+}
+.two {
+  stroke-width: 2;
+}
+.two,
+.three {
+  stroke-linecap: round;
+}
+.active {
+  line,
+  path,
+  rect:first-child {
+    stroke: $black !important;
+  }
+  .one {
+    fill: lighten($border, 10) !important;
+  }
+  .four {
+    fill: lighten($accent, 10) !important;
+  }
+}

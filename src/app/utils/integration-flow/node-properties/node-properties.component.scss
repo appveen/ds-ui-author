@@ -1,0 +1,57 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.wrapper {
+  min-width: 336px;
+  max-width: 336px;
+  background: #fff;
+  overflow: auto;
+  min-height: calc(100vh - 142px);
+  max-height: calc(100vh - 142px);
+  .header {
+    min-height: 72px;
+    max-height: 72px;
+
+    .node-properties-titlebar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+
+      .node-properties-title {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+
+        .ellipsis {
+          max-width: 245px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .tabs {
+      .tab {
+        min-height: 36px;
+        max-height: 36px;
+        border-bottom: 2px solid transparent;
+        color: $border;
+        font-size: 13px;
+        &.active {
+          color: $accent;
+          border-bottom-color: $accent;
+        }
+      }
+    }
+  }
+  .mapping-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 9px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.8);
+    &:hover {
+      cursor: pointer;
+      box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.8);
+    }
+  }
+}

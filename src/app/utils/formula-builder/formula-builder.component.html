@@ -1,0 +1,159 @@
+<div class="overlay d-flex w-100 h-100 position-fixed" (click)="back()"></div>
+<div class="formula-builder d-flex flex-column modal m-5">
+    <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">Formula Builder</h5>
+        <button type="button" class="close" aria-label="Close" (click)="back()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body d-flex flex-row h-100 bg-white">
+        <div class="d-flex flex-column formulae-container">
+            <ul class="list-group">
+                <li class="list-group-item d-flex align-items-center" *ngFor="let attribute of attributes"
+                    (click)="addAttribute(attribute)">
+                    <odp-field-type [field]="attribute"></odp-field-type>
+                    <span class="text ml-2">{{attribute.properties.name}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="d-flex flex-column align-items-center w-75 p-4 formula-holder">
+            <div class="mb-3">Formula Builder</div>
+            <div class="w-100 pb-4 border-bottom">
+                <div class="d-flex flex-row justify-content-center">
+                    <div class="d-flex flex-row align-items-center">
+                        <div><span class="odp-entities fa-2x"></span></div>
+                        <div class="cLine"></div>
+                        <div class="formula-editor d-flex flex-wrap align-items-center pl-2">
+                            <ng-container *ngFor="let f of formula">
+                                <ng-container
+                                    *ngTemplateOutlet="functionTemplate;context:{func:f,selectedArg:selectedArg}">
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                        <ng-template #functionTemplate let-func="func" let-selectedArg="selectedArg">
+                            <span *ngIf="func.operationType=='function'" class="function mr-2">
+                                <span *ngIf="func.operation == selectedFunction?.operation"
+                                    class="fa fa-times-circle text-danger" (click)="removeFunction()"></span>
+                                <span class="function-name"
+                                    [ngClass]="{'selected-arg':func.operation == selectedFunction?.operation}"
+                                    (click)="selectFunction(func)">{{func.label}}</span>
+                                <span class="bracket-open">(</span>
+                                <ng-container *ngFor="let a of func._args;let pi = index;let fp = first;let lp = last">
+                                    <span *ngIf="!fp" class="comma mr-1">,</span>
+                                    <span *ngIf="a.type != 'DEDUCED'" class="params" tabindex="1"
+                                        (keyup)="typedValue($event)" (click)="selectArg(a)"
+                                        [ngClass]="{'selected-arg':a.id == selectedArg?.id}">
+                                        <ng-container *ngIf="a.label">{{a.label}}</ng-container>
+                                        <ng-container *ngIf="!a.label" [ngbTooltip]="a.description">&lt;&lt;param
+                                            {{pi+1}}&gt;&gt;</ng-container>
+                                    </span>
+                                    <ng-container *ngIf="a.type == 'DEDUCED'">
+                                        <ng-container
+                                            *ngTemplateOutlet="functionTemplate;context:{func:a,selectedArg:selectedArg}">
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+                                <span class="bracket-close">)</span>
+                            </span>
+                            <span *ngIf="func.operationType=='operator'" class="operator mr-2">
+                                <span *ngIf="func.operation == selectedFunction?.operation"
+                                    class="fa fa-times-circle text-danger" (click)="removeFunction()"></span>
+                                <ng-container *ngFor="let a of func._args;let pi = index;let fp = first;let lp = last">
+                                    <span *ngIf="a.type != 'DEDUCED'" class="params" tabindex="1"
+                                        (keyup)="typedValue($event)" (click)="selectArg(a)"
+                                        [ngClass]="{'selected-arg':a.id == selectedArg?.id}">
+                                        <ng-container *ngIf="a.label">{{a.label}}</ng-container>
+                                        <ng-container *ngIf="!a.label" [ngbTooltip]="a.description">&lt;&lt;param
+                                            {{pi+1}}&gt;&gt;</ng-container>
+                                    </span>
+                                    <span *ngIf="fp" class="operator-name mx-2"
+                                        [ngClass]="{'selected-arg':func.operation == selectedFunction?.operation}"
+                                        (click)="selectFunction(func)">{{func.label}}</span>
+                                    <ng-container *ngIf="a.type == 'DEDUCED'">
+                                        <ng-container
+                                            *ngTemplateOutlet="functionTemplate;context:{func:a,selectedArg:selectedArg}">
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+                            </span>
+                        </ng-template>
+                        <div class="cLine"></div>
+                        <div><span class="odp-library fa-2x to-cloud"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="formulae-container">
+            <div class="d-flex flex-column">
+                <div class="formulee-accordion" *ngFor="let func of functionList">
+                    <div class="fx-header p-2 d-flex flex-row align-items-center"
+                        (click)="func.selected ? collapseOthers() : (collapseOthers() && func.selected=true)">
+                        <div class="w-75">
+                            <span>{{func.category}}</span>
+                        </div>
+                        <div class="w-25">
+                            <span class="fa d-flex justify-content-end accordion-arrow"
+                                [ngClass]="{'fa-angle-down':!func.selected,'fa-angle-up':func.selected}"></span>
+                        </div>
+                    </div>
+                    <div class="fx-body" *ngIf="func.selected">
+                        <div class="d-flex flex-column">
+                            <ul class="pl-3 small-font">
+                                <li>
+                                    <ul class="pl-0 cp">
+                                        <li *ngFor="let item of func.items" (click)="addFunction(item)">
+                                            <ng-container *ngIf="item.operationType == 'function'">
+                                                <small class="green-text">
+                                                    =<span>{{item.label}}</span>
+                                                </small>
+                                                <span>(</span>
+                                                <div class="d-inline-block">
+                                                    <span
+                                                        *ngFor="let param of item._args; let fp = first; let lp = last; let i = index;">
+                                                        <span *ngIf="!fp" class="mr-1">,</span>
+                                                        <span *ngIf="param.type == 'string'"
+                                                            class="bg-white d-inline-block pl-1 pr-1 mt-1">abc</span>
+                                                        <span *ngIf="param.type == 'date'"
+                                                            class="bg-white d-inline-block pl-1 pr-1 mt-1">'dd-mm-yyyy'</span>
+                                                        <span *ngIf="param.type == 'number'"
+                                                            class="bg-white d-inline-block pl-1 pr-1 mt-1">123</span>
+                                                        <span *ngIf="param.type == 'array'"
+                                                            class="bg-white d-inline-block pl-1 pr-1 mt-1">[123]</span>
+                                                    </span>
+                                                </div>
+                                                <span>)</span>
+                                            </ng-container>
+                                            <ng-container *ngIf="item.operationType == 'operator'">
+                                                <small class="green-text">
+                                                    =
+                                                </small>
+                                                <div class="d-inline-block">
+                                                    <span
+                                                        *ngFor="let param of item._args; let fp = first; let lp = last; let i = index;">
+                                                        <span *ngIf="!fp" class="mx-1 green-text">{{item.label}}</span>
+                                                        <span *ngIf="param.type == 'string'"
+                                                            class="bg-white d-inline-block pl-1 pr-1 mt-1">abc</span>
+                                                        <span *ngIf="param.type == 'date'"
+                                                            class="bg-white d-inline-block pl-1 pr-1 mt-1">'dd-mm-yyyy'</span>
+                                                        <span *ngIf="param.type == 'number'"
+                                                            class="bg-white d-inline-block pl-1 pr-1 mt-1">123</span>
+                                                        <span *ngIf="param.type == 'array'"
+                                                            class="bg-white d-inline-block pl-1 pr-1 mt-1">[123]</span>
+                                                    </span>
+                                                </div>
+                                            </ng-container>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-link mr-3" (click)="back()">Back</button>
+        <button type="button" class="btn btn-primary" (click)="done()">Done</button>
+    </div>
+</div>

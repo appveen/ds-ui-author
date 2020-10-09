@@ -1,0 +1,9 @@
+<div class="d-flex flex-column w-100 h-100">
+  <div class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white border-bottom border-dark">
+    <div class="left d-flex align-items-center">
+      <div class="logo"></div>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</div>
+<div class="overlay" [ngClass]="{'show':showProfileOptions}" (click)="showProfileOptions=false"></div>

@@ -1,0 +1,90 @@
+<!-- <div class="">
+    <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+        <div class="align-self-center text-center">
+            <span class="fa fa-spinner fa-pulse fa-3x"></span>
+            <div class="text-secondary mt-2">Processing...</div>
+        </div>
+    </div>
+    <div class="table-wrapper">
+        <div class="data-grid-options d-flex align-items-center justify-content-between px-2">
+            <div class="d-flex align-items-center"></div>
+            <div class="d-flex align-items-center">
+                <span class="page-info">
+                    {{startNo}}-{{endNo}} of {{totalCount}}
+                </span>
+                <button type="button" class="btn btn-link ml-2" [disabled]="disablePrev" (click)="prevPage()">
+                    <span class="fa fa-angle-left"></span>
+                </button>
+                <button type="button" class="btn btn-link ml-2" [disabled]="disableNext" (click)="nextPage()">
+                    <span class="fa fa-angle-right"></span>
+                </button>
+            </div>
+        </div>
+        <div class="data-grid border" odpDataGrid [columns]="tableColumns" (sortModelChange)="sortSelected($event)">
+            <div class="data-grid-header">
+                <div class="data-grid-row">
+                    <div id="_checkbox" class="data-grid-cell head-cell no-move d-flex align-items-center">#</div>
+                    <div id="timestamp" class="data-grid-cell head-cell no-move d-flex align-items-center"
+                        [ngClass]="{'d-none':!_columns.timestamp.show}">
+                        <div class="d-flex align-items-center">
+                            TimeStamp
+                        </div>
+                    </div>
+                    <div id="summary" class="data-grid-cell head-cell no-move d-flex align-items-center"
+                        [ngClass]="{'d-none':!_columns.summary.show}">Summary</div>
+                </div>
+            </div>
+            <div class="data-grid-body">
+                <div class="data-grid-row" *ngFor="let log of logs; let i = index">
+                    <div class="data-grid-cell d-flex align-items-center">{{(i + (currentPage-1)*pageSize) + 1}}</div>
+                    <div class="data-grid-cell d-flex align-items-center"
+                        [ngClass]="{'d-none':!_columns.timestamp.show}">
+                        {{log.timestamp | date:'dd-MMM-yyyy hh:mm:ss a' || 'None'}}</div>
+                    <div class="data-grid-cell d-flex align-items-center" [ngClass]="{'d-none':!_columns.summary.show}">
+                        {{log.summary ? log.summary : 'No Summary found'}}
+                    </div>
+                </div>
+                <div class="data-grid-row justify-content-center full-row" *ngIf="showLazyLoader">
+                    <div class="data-grid-cell d-flex align-items-center" class="text-center">
+                        <span class="fa fa-spinner fa-pulse fa-lg"></span>
+                    </div>
+                </div>
+                <div class="data-grid-row justify-content-center full-row" *ngIf="!showLazyLoader && logs.length === 0">
+                    <div class="data-grid-cell d-flex align-items-center w-100">
+                        <div class="no-users font-normal text-secondary">No Logs Found</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #logModal>
+    <div class="modal-header bg-secondary d-block">
+        <h5 class="text-dark">Logs:&nbsp;
+            <span class="font-weight-bold">{{selectedLog.txnId}}</span>
+            <small class="text-secondary pl-1">(Transaction ID)</small>
+        </h5>
+    </div>
+    <div class="modal-body audit-object-log ">
+        <div class="d-flex flex-row">
+            <div class="diffJSON">
+                <div [innerHTML]="jsonDiff"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer p-3 bg-light">
+        <button type="button" class="btn btn-min-width btn-light mx-3 float-right" (click)="logModalRef.close(false)">Close</button>
+    </div>
+</ng-template> -->
+<div class="text-gray-medium mr-3 mt-2 d-flex justify-content-end " *ngIf="loaded">
+    <label class="m-0">Showing {{loaded}} of {{currentRecordsCount}}</label>
+</div>
+<div class="mt-2">
+    <div class="grid-container">
+        <ag-grid-angular #agGrid style="width: 100%; height: 100%;" class="ag-theme-balham border-0"
+            [columnDefs]="columnDefs" [floatingFilter]="true" (filterModified)="filterModified($event)"
+            (gridReady)="onReady($event)" [gridOptions]="gridOptions" cacheBlockSize="30" (sortChanged)="sortChanged($event)" [overlayNoRowsTemplate]="noRowsTemplate">
+        </ag-grid-angular>
+    </div>
+</div>

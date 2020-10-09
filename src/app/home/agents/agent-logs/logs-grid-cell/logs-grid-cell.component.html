@@ -1,0 +1,13 @@
+<ng-container *ngIf="value">
+    <span *ngIf="field=='_checkbox'">{{value}}</span>
+    <span *ngIf="field == 'timeStamp'">{{value | date:'yyyy MMM dd, HH:mm:ss'}}</span>
+    <span *ngIf="field == 'logLevel'" class="text font-weight-bold" [ngClass]="{'text-secondary':value=='DEBUG',
+        'text-info':value=='INFO',
+        'text-warning':value=='WARN',
+        'text-success':value=='SUCCESS',
+        'text-danger':value=='ERROR'}">{{value}}</span>
+    <span *ngIf="field == 'content'" class="text">{{value}}</span>
+</ng-container>
+<ng-container *ngIf="!value">
+    <span class="text-muted">N.A.</span>
+</ng-container>

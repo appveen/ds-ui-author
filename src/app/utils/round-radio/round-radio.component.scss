@@ -1,0 +1,14 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.round-radio-wrapper{
+    border-radius: 50%;
+    border: 1px solid $border;
+    .round-radio-inner{
+        border-radius: 50%;
+    }
+    &.checked{
+        border: 1px solid $accent;
+        background: $accent;
+    }
+}

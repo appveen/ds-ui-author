@@ -1,0 +1,13 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.data-grid-row{
+    min-height: 40px;
+    max-height: 40px;
+    &:hover{
+        background: $data-grid-header;
+    }
+    &.selected{
+        background: $data-grid-border;
+    }
+}

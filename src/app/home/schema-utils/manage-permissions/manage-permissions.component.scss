@@ -1,0 +1,202 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.basic-info {
+  min-height: 150px;
+  min-height: 150px;
+}
+
+.enable-review {
+  min-height: 80px;
+  min-height: 80px;
+}
+
+.field-wrapper {
+  min-height: 36px;
+  max-height: 36px;
+  border-left: 5px solid transparent;
+  &.active {
+    border-left-color: $dark;
+  }
+  .icon {
+    min-width: 14px;
+    max-width: 14px;
+    min-height: 14px;
+    max-height: 14px;
+  }
+  .error-icon {
+    right: 5px;
+    top: 9px;
+  }
+  .searching-relation {
+    right: 4px;
+    top: 7px;
+  }
+  .type-icon-holder {
+    min-width: 28px;
+    max-width: 28px;
+    min-height: 22px;
+    max-height: 22px;
+    font-size: 16px;
+  }
+}
+
+.permission-container {
+  height: calc(100% - 16px);
+}
+
+.role-container {
+  overflow-y: auto;
+  height: calc(100vh - 205px);
+}
+.field-toggle-state {
+  min-width: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.first-column {
+  min-width: 200px;
+  max-width: 200px;
+}
+.role-control {
+  min-width: 600px;
+  max-width: 600px;
+}
+
+.role-control-right {
+  min-width: 400px;
+  max-width: 400px;
+}
+.switch-card {
+  min-width: 220px;
+  max-width: 220px;
+}
+
+.create-rule-icon,
+.delete-rule-icon,
+.edit-rule-icon,
+.approve-rule-icon {
+  background-size: 76px;
+  background-position: -18px;
+  width: 40px;
+  height: 48px;
+}
+
+.fields-container {
+  min-width: 500px;
+  max-width: 500px;
+}
+.role-list {
+  overflow-y: auto;
+  min-height: calc(100vh - 249px);
+  max-height: calc(100vh - 249px);
+}
+.roles-list {
+  min-width: 250px;
+  max-width: 250px;
+}
+.roles-list-item {
+  min-height: 68px;
+  max-height: 68px;
+  border-left: 5px solid $white;
+  &.active {
+    border-left: 5px solid $dark;
+    background-color: $light !important;
+  }
+  .symbol-holder {
+    min-width: 50px;
+    max-width: 50px;
+  }
+}
+
+.color-create {
+  color: #01a7c2;
+}
+.color-edit {
+  color: #fba200;
+}
+.color-delete {
+  color: #bd0404;
+}
+.color-approve {
+  color: #5733ff;
+}
+
+textarea {
+  resize: none;
+}
+
+.switch {
+  .toggler {
+    top: -1px !important;
+  }
+}
+
+.check-circle {
+  max-width: 16px;
+  max-height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  .fa {
+    font-size: 10px;
+  }
+}
+
+.role-name-width {
+  max-width: 190px;
+}
+
+.info {
+  top: 7px;
+  left: 96%;
+}
+
+.radio-btn-grp {
+  .btn-container {
+    min-width: 150px;
+    max-width: 150px;
+    min-height: 32px;
+    max-height: 32px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease-in;
+  }
+}
+
+.rule-wrapper {
+  width: calc(100vw - 510px);
+  min-height: 300px;
+  overflow-x: auto;
+  .rule-block {
+    transition: 0.25s;
+    outline: 0;
+    width: fit-content;
+    &.focus {
+      background: rgba($accent, 0.24);
+      .badge-light {
+        background: #fff !important;
+        color: #000 !important;
+      }
+    }
+    .rule-block-gutter {
+      min-width: 43px;
+      .gutter-16 {
+        min-height: 16px;
+        max-height: 16px;
+      }
+    }
+  }
+}
+
+.tab-container {
+  min-height: 500px;
+}
+.tab-list {
+  min-height: 32px;
+  max-height: 32px;
+  .tab {
+    min-height: 32px;
+    max-height: 32px;
+    border-bottom: 3px solid transparent;
+  }
+}

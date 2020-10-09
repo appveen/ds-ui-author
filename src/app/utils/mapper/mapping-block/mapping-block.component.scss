@@ -1,0 +1,110 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+
+.mapper-field-block {
+  &.error {
+    border: 1px solid $danger !important;
+    background: rgba($danger, 0.1) !important;
+  }
+  .source-fields {
+    .field {
+      height: 46px;
+      .field-clear {
+        min-width: 48px;
+        max-width: 48px;
+      }
+      .field-placeholder {
+        min-width: 348px;
+        max-width: 348px;
+        .drop-here-label {
+          display: none;
+        }
+        &.over {
+          background: $accent;
+          .add-attribute-label {
+            display: none;
+          }
+          .drop-here-label {
+            display: block;
+          }
+        }
+        &.mapped {
+          min-width: 300px;
+          max-width: 300px;
+        }
+      }
+      .field-line {
+        border-bottom: 2px solid $dark;
+      }
+      .vertical-bar {
+        height: 16px;
+        border-right: 2px solid $dark;
+      }
+    }
+  }
+  .destination-field-wrapper {
+    .destination-field {
+      height: 46px;
+      min-width: 360px;
+      max-width: 360px;
+    }
+  }
+  .mapper-field-header {
+    height: 46px;
+  }
+}
+
+.vertical-line,
+.horizonal-line {
+  border-width: 2px !important;
+  min-width: 15px;
+}
+.function {
+  .function-circle {
+    width: 30px;
+    height: 30px;
+    margin-left: -30px;
+    border-radius: 15px;
+  }
+  .function-line,
+  .line {
+    border-bottom: 2px solid $dark;
+  }
+  .function-line {
+    width: 15px;
+  }
+  .line {
+    width: 30px;
+    &.no-function {
+      width: 45px;
+    }
+  }
+}
+.line-to-bottom,
+.line-to-top {
+  height: 24px;
+  border-right: 2px solid $dark;
+  margin-right: 15px;
+}
+.field-toggle-state {
+  min-width: 20px;
+  width: 20px;
+  height: 20px;
+}
+.symbol {
+  width: 6vmax;
+  height: 4vh;
+  border-radius: 10px;
+  .line {
+    width: 20px;
+    border-bottom: 1px solid $black;
+  }
+}
+
+.field-type-badge {
+  min-width: 26px;
+  max-width: 26px;
+  min-height: 20px;
+  max-height: 20px;
+}

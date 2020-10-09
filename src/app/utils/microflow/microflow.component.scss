@@ -1,0 +1,247 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+svg {
+  left: 0;
+  margin: 0;
+  padding: 0;
+}
+
+svg #grid:hover {
+  cursor: grab;
+}
+
+line {
+  stroke-linecap: round;
+}
+
+.drawing-area {
+  overflow: hidden;
+}
+
+.minimap-bar,
+.design-controls {
+  min-height: 36px;
+  max-height: 36px;
+  z-index: 10;
+}
+
+.minimap-bar {
+  bottom: 0px;
+  background: rgba(#202a36, 0.32);
+}
+
+.design-controls {
+  background: rgba($white, 0.7);
+}
+
+.minimap {
+  min-height: 36px;
+  max-height: 36px; // margin-top: -18px;
+}
+
+.cover-right,
+.cover-left {
+  background: rgba($color: #000000, $alpha: 0.5);
+  height: 30px;
+}
+
+.cover-left {
+  min-width: 60px;
+}
+
+.visible-area {
+  height: 30px;
+  min-width: 345px;
+}
+
+.properties {
+  min-width: 430px;
+  max-width: 430px;
+  min-height: calc(100vh - 183px);
+  max-height: calc(100vh - 183px);
+}
+
+.delete-icon {
+  fill: #dd5151;
+}
+
+.select-node-type {
+  fill: #fefefe;
+}
+
+.dropdown {
+  .dropdown-toggle {
+    min-width: 120px;
+    max-width: 120px;
+  }
+  .dropdown-menu {
+    min-width: 150px;
+    max-width: 150px;
+    width: 150px;
+    left: 5px !important;
+  }
+}
+
+.dropdown-toggle {
+  &::after {
+    display: none;
+  }
+}
+
+.block-type {
+  odp-file-icon,
+  odp-api-icon,
+  odp-nano-service-icon,
+  odp-service-icon {
+    min-width: 18px;
+    max-width: 18px;
+    min-height: 18px;
+    max-height: 18px;
+  }
+  .dropdown-toggle {
+    max-width: unset;
+  }
+  .dropdown-menu {
+    max-width: unset;
+  }
+}
+
+.node-item {
+  transition: 0.25s;
+  transform-origin: center;
+  transform-box: fill-box;
+  transform: scale(1);
+  stroke-width: 3;
+  &.green {
+    fill: #1cad49;
+    stroke: #1cad49;
+  }
+  &.green.selected {
+    stroke: darken($color: #1cad49, $amount: 10);
+  }
+  &.black {
+    fill: #202a36;
+    stroke: #202a36;
+  }
+  &.black.selected {
+    stroke: darken($color: #202a36, $amount: 10);
+  }
+  &.blue {
+    fill: #0082c9;
+    stroke: #0082c9;
+  }
+  &.blue.selected {
+    stroke: darken($color: #0082c9, $amount: 10);
+  }
+  &.selected {
+    transform: scale(1.6);
+  }
+}
+.node-mapper {
+  fill: #fff;
+}
+
+.properties {
+  .properties-header {
+    min-height: 40px;
+    max-height: 40px;
+    .text.text-truncate {
+      max-width: 330px;
+    }
+    .change-to-dropdown {
+      box-shadow: 0px 0px 5px #ccc;
+      right: 10px;
+      top: 8px;
+      min-width: 140px;
+      max-width: 140px;
+    }
+  }
+  .properties-body {
+    min-height: calc(100vh - 223px);
+    max-height: calc(100vh - 223px);
+    overflow-y: auto;
+    .attribute-count {
+      min-width: 48px;
+      max-width: 48px;
+      min-height: 48px;
+      max-height: 48px;
+    }
+    .map-data-btn {
+      border-radius: 14px;
+      min-width: 120px;
+      max-width: 120px;
+      min-height: 28px;
+      max-height: 28px;
+    }
+    .format-list {
+      .format-list-item {
+        min-height: 40px;
+        max-height: 40px;
+        .hexagon {
+          min-width: 30px;
+          min-height: 30px;
+          background-size: contain;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+        &:hover {
+          background: $light;
+        }
+      }
+    }
+    .selected-phase {
+      min-height: 40px;
+      max-height: 40px;
+      border-radius: 20px;
+    }
+  }
+  .form-data {
+    .label {
+      min-width: 166px;
+      max-width: 166px;
+      color: $heading-highlight;
+      &.short {
+        max-width: 148px;
+        min-width: 148px;
+      }
+    }
+    .sub-label {
+      min-width: 142px;
+      max-width: 142px;
+      color: $heading-highlight;
+    }
+    .value {
+      .label {
+        min-width: 100px;
+        max-width: 100px;
+      }
+      .remove-header {
+        min-width: 10px;
+        max-width: 10px;
+      }
+    }
+  }
+  .sub-header {
+    margin-left: -16px;
+    margin-right: -16px;
+  }
+}
+
+.operation-list {
+  max-height: calc(100vh - 230px);
+  overflow: auto;
+  .list-group-item:hover {
+    color: $accent;
+  }
+}
+.text-width {
+  max-width: 120px;
+}
+
+.toggler-pos {
+  top: -2px !important;
+  box-shadow: 0 3px 6px $border !important;
+}
+.file-ext-block {
+  min-width: 94px;
+}

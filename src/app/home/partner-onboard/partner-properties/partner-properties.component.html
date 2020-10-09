@@ -1,0 +1,181 @@
+<div class="d-flex w-100">
+  <div class="d-flex flex-column mr-2" [ngClass]="{'w-50':trustedIPFeatureActive,'w-100':!trustedIPFeatureActive}"
+    *ngIf="canViewHeaders() || canUpdateHeaders()">
+    <div class="sub-heading text-dark font-weight-bold mb-3 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <span class="fa fa-exchange-alt mr-2 text-accent"></span>
+        <span class="text">Properties</span>
+      </div>
+      <!-- <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box> -->
+      <button type="button" class="btn btn-sm btn-link" (click)="openPropertiesModal()"
+        *ngIf="edit.status && edit.id && canCreateHeaders()">
+        <span class="fa fa-plus-circle mr-2"></span>
+        <span class="text">New Property</span>
+      </button>
+    </div>
+    <div class="d-flex">
+      <div class="property-list w-100">
+        <table class="table">
+          <thead>
+            <tr class="bg-secondary text-white">
+              <th>Key</th>
+              <th>Value</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of keyValueList;let i = index">
+              <td (click)="openPropertiesModal(item)">
+                <span class="text-secondary">{{item.key}}</span>
+              </td>
+              <td (click)="openPropertiesModal(item)">
+                <span class="text-secondary">{{item.value}}</span>
+              </td>
+              <td class="text-right">
+                <span class="text-secondary" *ngIf="edit.status && edit.id && canDeleteHeaders()">
+                  <button type="button" class="btn btn-link" (click)="removeProperty(item.key)">
+                    <span class="fa fa-trash text-muted"></span>
+                  </button>
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="keyValueList.length==0">
+              <td colspan="3">
+                <div class="d-flex py-3 w-100">
+                  <div class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
+                    <div class="text">No Properties has been created.</div>
+                    <button type="button" class="btn btn-create mt-2" (click)="openPropertiesModal()"
+                      *ngIf="edit.status && edit.id && canCreateHeaders()">
+                      <span class="fa fa-plus-circle mr-2"></span>
+                      <span class="text">Create New</span>
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex flex-column ml-2 w-50" *ngIf="(canUpdateHeaders() || canViewHeaders()) && trustedIPFeatureActive">
+    <div class="sub-heading text-dark font-weight-bold mb-3 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <span class="fa fa-exchange-alt mr-2 text-accent"></span>
+        <span class="text">Trusted IP List</span>
+      </div>
+      <div class="d-flex align-items-center">
+        <!-- <span class="text-dark mx-2">Enable</span>
+        <odp-switch [(checked)]="enabledIpWhitelist" [edit]="edit"></odp-switch> -->
+        <odp-checkbox [(checked)]="enabledIpWhitelist" [edit]="edit">Enable</odp-checkbox>
+      </div>
+    </div>
+    <div class="property-list" [formGroup]="partner">
+      <p *ngIf="!enabledIpWhitelist" class="text-secondary font-weight-bold">Please enable trusted IP to start adding
+        IP Addresses </p>
+      <table *ngIf="enabledIpWhitelist" class="table" formGroupName="agentIPWhitelisting">
+        <thead>
+          <tr class="bg-secondary text-white">
+            <th>IP Address</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody formArrayName="list">
+          <tr *ngFor="let ip of ipList.controls;let i = index">
+            <td>
+              <div class="position-relative" *ngIf="edit.status && edit.id && canUpdateHeaders()">
+                <input type="text" class="form-control" [formControlName]="i">
+                <span *ngIf="ipList.controls[i].hasError('ip')"
+                  class="ip-error-icon fa fa-exclamation-circle text-danger position-absolute"
+                  ngbTooltip="Please enter a vaid IP Address"></span>
+                <span *ngIf="ipList.controls[i].hasError('required')"
+                  class="ip-error-icon fa fa-exclamation-circle text-danger position-absolute"
+                  ngbTooltip="IP Address is required"></span>
+              </div>
+              <ng-container *ngIf="!(edit.status && edit.id)">
+                <span class="text-secondary">{{ip.value}}</span>
+              </ng-container>
+            </td>
+            <td class="text-right" *ngIf="edit.status && edit.id && canUpdateHeaders()">
+              <span class="text-secondary">
+                <button type="button" class="btn btn-link" (click)="removeIP(i)">
+                  <span class="fa fa-trash text-muted"></span>
+                </button>
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="ipList.length==0">
+            <td colspan="3">
+              <div class="d-flex py-3 w-100">
+                <div class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
+                  <div class="text">No IP Address Added.</div>
+                  <button type="button" class="btn btn-create mt-2" (click)="addIP()"
+                    *ngIf="edit.status && edit.id && canUpdateHeaders()">
+                    <span class="fa fa-plus-circle mr-2"></span>
+                    <span class="text">Create New</span>
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="ipList.length!=0">
+            <td colspan="2">
+              <button type="button" class="btn btn-sm btn-link" (click)="addIP()"
+                *ngIf="edit.status && edit.id && enabledIpWhitelist && canUpdateHeaders()">
+                <span class="fa fa-plus-circle mr-2"></span>
+                <span class="text">New IP Address</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #keyValModalTemplate>
+  <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center" [formGroup]="form">
+    <div class="d-flex align-items-center justify-content-between mb-3 w-100">
+      <div class="d-flex align-items-center">
+        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+          <odp-partner-icon [size]="18" color="202a36" class="mt-1"></odp-partner-icon>
+        </span>
+        <span class="font-weight-bold mb-1" *ngIf="data && data.isEdit">Edit Key-Value</span>
+        <span class="font-weight-bold mb-1" *ngIf="!data || !data.isEdit">Add Key-Value</span>
+      </div>
+      <span class="fa fa-times text-muted hover" (click)="keyValModalTemplateRef.close(false)"></span>
+    </div>
+    <div class="info d-flex flex-column align-self-center justify-content-center w-100">
+      <div class="form-group">
+        <label for="key">Key</label>
+        <div class="w-100 position-relative headers-key-wrapper">
+          <input #headerKey id="key" type="text" class="form-control" formControlName="key" 
+            odpAutoFocus (keyup.enter)="headerValue.focus()"
+            [ngClass]="{'is-invalid':form.get('key').invalid && (form.get('key').dirty || form.get('key').touched)}">
+          <ng-container *ngIf="form.get('key').invalid && (form.get('key').dirty || form.get('key').touched)">
+            <span *ngIf="form.get('key')?.errors?.required"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Key is required"></span>
+            <span *ngIf="form.get('key')?.errors?.pattern"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Key can consists of alphanumeric, dash(-) and underscore(_) characters only. "></span>
+            <span *ngIf="form.get('key')?.errors?.maxlength"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Key should not be more than 24 characters "></span>
+
+          </ng-container>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="value">Value</label>
+        <input #headerValue id="value" type="text" class="form-control" formControlName="value"
+          (keyup.enter)="headerSave.click()">
+      </div>
+      <div class="d-flex flex-column align-items-end w-100 mt-auto">
+        <button #headerSave type="button" class="btn btn-dark btn-min-width" id="keyValueModalYes"
+          (click)="keyValModalTemplateRef.close(true)" [disabled]="form.invalid">Save</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

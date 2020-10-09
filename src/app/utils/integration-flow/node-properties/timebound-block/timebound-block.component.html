@@ -1,0 +1,170 @@
+<div *ngIf="showBlock" class="node-properties-block security-block d-flex flex-column">
+    <div class="title d-flex align-items-center justify-content-between px-3">
+        <span class="font-weight-bold mr-2">Timebound Settings</span>
+        <odp-switch [edit]="edit" [(checked)]="flowData.timer.enabled" (checkedChange)="onTimeboundToggle($event)">
+        </odp-switch>
+    </div>
+    <div class="d-flex flex-column px-3">
+        <!-- <div class="form-group position-relative">
+            <label for="endDate">
+                <odp-checkbox [edit]="edit" [(checked)]="flowData.timer.enabled">
+                    Enable Timebound
+                </odp-checkbox>
+            </label>
+        </div> -->
+        <!-- <ng-container *ngIf="flowData.timer.enabled">
+            <span class="font-weight-bold my-2">Time Window</span>
+            <div class="form-group position-relative">
+                <div class="d-flex align-items-center mb-2 position-relative">
+                    <span class="text-secondary sub-label">Months</span>
+                    <div class="form-control ml-2 text-accent"
+                        [ngClass]="{'bg-light':!edit.status,'bg-white':edit.status}" (click)="openSlider($event,'month')">
+                        {{monthsInText}}
+                    </div>
+                    <div *ngIf="showSlider=='month'" class="position-absolute slider-window border rounded bg-white"
+                        odpClickOutside (outside)="showSlider=null">
+                        <odp-slider-month [toggle]="showSlider=='month'" (toggleChange)="showSlider=null"
+                            [value]="getValue(3)" (valueChange)="setValue($event,3)"></odp-slider-month>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 position-relative">
+                    <span class="text-secondary sub-label">Days</span>
+                    <div class="form-control ml-2 text-accent"
+                        [ngClass]="{'bg-light':!edit.status,'bg-white':edit.status}" (click)="openSlider($event,'date')">
+                        {{datesInText}}
+                    </div>
+                    <div *ngIf="showSlider=='date'" class="position-absolute slider-window border rounded bg-white"
+                        odpClickOutside (outside)="showSlider=null">
+                        <odp-slider-date [toggle]="showSlider=='date'" (toggleChange)="showSlider=null"
+                            [value]="getValue(2)" (valueChange)="setValue($event,2)"></odp-slider-date>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 position-relative">
+                    <span class="text-secondary sub-label">Week Days</span>
+                    <div class="form-control ml-2 text-accent"
+                        [ngClass]="{'bg-light':!edit.status,'bg-white':edit.status}" (click)="openSlider($event,'week')">
+                        {{weeksInText}}
+                    </div>
+                    <div *ngIf="showSlider=='week'" class="position-absolute slider-window border rounded bg-white"
+                        odpClickOutside (outside)="showSlider=null">
+                        <odp-slider-week [toggle]="showSlider=='week'" (toggleChange)="showSlider=null"
+                            [value]="getValue(4)" (valueChange)="setValue($event,4)"></odp-slider-week>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 position-relative">
+                    <span class="text-secondary sub-label">Hour</span>
+                    <div class="form-control ml-2 text-accent"
+                        [ngClass]="{'bg-light':!edit.status,'bg-white':edit.status}" (click)="openSlider($event,'hour')">
+                        {{hoursInText}}
+                    </div>
+                    <div *ngIf="showSlider=='hour'" class="position-absolute slider-window border rounded bg-white"
+                        odpClickOutside (outside)="showSlider=null">
+                        <odp-time-picker [toggle]="showSlider=='hour'" (toggleChange)="showSlider=null"
+                            [(value)]="selectedHours"></odp-time-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="restrictedZoneAction">Out of Time Window Action</label>
+                <select name="restrictedZoneAction" id="restrictedZoneAction" class="custom-select"
+                    [(ngModel)]="flowData.timer.restrictedZoneAction" [disabled]="!edit.status">
+                    <option value="queue">Queue</option>
+                    <option value="reject">Reject</option>
+                </select>
+            </div>
+        </ng-container> -->
+
+        <ng-container *ngIf="flowData.timer.enabled">
+            <hr class="w-100 m-0">
+            <div class="form-group position-relative mt-3">
+                <label for="startDate" class="font-weight-bold text-dark">Start Date</label>
+                <input type="datetime-local" name="startDate" id="startDate" class="form-control"
+                    [(ngModel)]="startDate" [disabled]="!edit.status">
+                <span *ngIf="isInvalidStartEndDate" class="form-text text-danger">Start Date should be before End Date</span>
+            </div>
+            <div class="form-group position-relative">
+                <label for="endDate" class="font-weight-bold text-dark">End Date</label>
+                <input type="datetime-local" name="endDate" id="endDate" class="form-control" [(ngModel)]="endDate"
+                    [disabled]="!edit.status">
+                <span *ngIf="isInvalidStartEndDate" class="form-text text-danger">End Date should be after Start Date</span>
+            </div>
+            <hr class="w-100 m-0">
+            <span class="font-weight-bold my-2">Green Zone</span>
+            <div class="form-group position-relative">
+                <div class="d-flex align-items-center mb-2 position-relative">
+                    <span class="text-secondary sub-label">Hour</span>
+                    <div class="form-control ml-2 text-accent font-13"
+                        [ngClass]="{'bg-light':!edit.status,'bg-white':edit.status}"
+                        (click)="openSlider($event,'hour')">
+                        {{hoursInText}}
+                    </div>
+                    <div *ngIf="showSlider=='hour'" class="position-absolute slider-window border rounded bg-white"
+                        odpClickOutside (outside)="showSlider=null">
+                        <odp-time-picker [toggle]="showSlider=='hour'" (toggleChange)="showSlider=null"
+                            [(value)]="selectedHours"></odp-time-picker>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center position-relative">
+                    <span class="text-secondary sub-label">Week Days</span>
+                    <div class="form-control ml-2 text-accent font-13"
+                        [ngClass]="{'bg-light':!edit.status,'bg-white':edit.status}"
+                        (click)="openSlider($event,'week')">
+                        {{weeksInText}}
+                    </div>
+                    <div *ngIf="showSlider=='week'" class="position-absolute slider-window border rounded bg-white"
+                        odpClickOutside (outside)="showSlider=null">
+                        <odp-slider-week [toggle]="showSlider=='week'" (toggleChange)="showSlider=null"
+                            [value]="getValue(4)" (valueChange)="setValue($event,4)"></odp-slider-week>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="enableCalendars" class="form-group">
+                <label for="greenZone">Calendars</label>
+                <select name="greenZone" id="greenZone" class="custom-select" (change)="onGreeZoneChange($event)"
+                    [disabled]="!edit.status">
+                    <option value="">---select---</option>
+                    <option *ngFor="let cal of calendarList" [value]="cal">{{cal}}</option>
+                </select>
+                <div *ngIf="flowData.timer.greenZone && flowData.timer.greenZone.length > 0" class="list-group">
+                    <div *ngFor="let item of flowData.timer.greenZone;let i=index"
+                        class="list-group-item p-2 d-flex align-items-center justify-content-between">
+                        <span class="text">{{item}}</span>
+                        <button type="button" class="btn btn-link text-danger" (click)="removeGreenZone(i)"
+                            *ngIf="edit.status">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr class="w-100 m-0">
+            <span class="font-weight-bold my-2">Red Zone</span>
+            <div *ngIf="enableCalendars" class="form-group">
+                <label for="redZone">Calendars</label>
+                <select name="redZone" id="redZone" class="custom-select" (change)="onRedZoneChange($event)"
+                    [disabled]="!edit.status">
+                    <option value="">---select---</option>
+                    <option *ngFor="let cal of calendarList" [value]="cal">{{cal}}</option>
+                </select>
+                <div *ngIf="flowData.timer.redZone && flowData.timer.redZone.length > 0" class="list-group">
+                    <div *ngFor="let item of flowData.timer.redZone;let i=index"
+                        class="list-group-item p-2 d-flex align-items-center justify-content-between">
+                        <span class="text">{{item}}</span>
+                        <button type="button" class="btn btn-link text-danger" (click)="removeRedZone(i)"
+                            *ngIf="edit.status">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- <hr class="w-100 m-0"> -->
+            <div class="form-group">
+                <label for="restrictedZoneAction">Red Zone Action</label>
+                <select name="restrictedZoneAction" id="restrictedZoneAction" class="custom-select"
+                    [(ngModel)]="flowData.timer.restrictedZoneAction" [disabled]="!edit.status">
+                    <option value="queue">Queue</option>
+                    <option value="reject">Reject</option>
+                </select>
+            </div>
+        </ng-container>
+    </div>
+</div>

@@ -1,0 +1,808 @@
+@import "toastr.scss";
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+@font-face {
+  font-family: "Lato";
+  src: url("../fonts/default/Lato-Regular.woff") format("woff"),
+    /* Pretty Modern Browsers */ url("../fonts/default/Lato-Light.woff")
+      format("woff"),
+    /* Pretty Modern Browsers */ url("../fonts/default/Lato-Italic.woff")
+      format("woff"),
+    /* Pretty Modern Browsers */ url("../fonts/default/Lato-Bold.woff")
+      format("woff"),
+    /* Pretty Modern Browsers */ url("../fonts/default/Lato-Regular.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */ url("../fonts/default/Lato-Light.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */ url("../fonts/default/Lato-Italic.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */ url("../fonts/default/Lato-Bold.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */
+      url("../fonts/default/Lato-Regular.svg#svgFontName") format("svg"),
+    /* Legacy iOS */ url("../fonts/default/Lato-Light.svg#svgFontName")
+      format("svg"),
+    /* Legacy iOS */ url("../fonts/default/Lato-Italic.svg#svgFontName")
+      format("svg"),
+    /* Legacy iOS */ url("../fonts/default/Lato-Bold.svg#svgFontName")
+      format("svg"); /* Legacy iOS */
+}
+
+// Hiding spinner on input of number
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Webkit browsers like Safari and Chrome */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.hover:hover {
+  cursor: pointer;
+
+  & * {
+    cursor: pointer;
+  }
+}
+
+.angle-img {
+  background: url("../img/angle.png");
+}
+
+.angle-ld-img {
+  background: url("../img/angle_ld.png");
+}
+
+.users-icon {
+  background: url("../img/users.svg");
+}
+
+.pending-icon {
+  background: url("../img/pending.svg");
+}
+
+.super-admin-icon {
+  background: url("../img/superAdmin.svg");
+}
+
+.spinner-small-icon {
+  background: url("../img/spinner-small.svg");
+}
+
+.spinner-big-icon {
+  background: url("../img/spinner-big.svg");
+}
+
+.fingerprint-icon {
+  background: url("../img/fingerprint.svg");
+}
+
+.form-icon {
+  background: url("../img/form.svg");
+}
+
+.logo {
+  background-image: url("../img/data.stack_author_light_optimized.svg");
+}
+
+.login-img {
+  background: url("../img/flower.gif");
+}
+.azure-logo {
+  background: url("../img/azure.png");
+}
+.nanoservices-config {
+  background: url("../img/nanoservices_config.svg");
+}
+.hexagon {
+  background: url("../img/hexagon.svg");
+}
+.mapper-warning {
+  background: url("../img/warning-circle.svg");
+}
+
+.api-icon {
+  background: url("../img/api.svg");
+}
+
+.file-icon {
+  background: url("../img/file.svg");
+}
+.upload-icon {
+  background: url("../img/upload-icon.svg");
+}
+.ic-parse-settings {
+  background: url("../img/ic-parse-settings.svg");
+}
+.il-filetype-csv {
+  background: url("../img/il-filetype-csv.svg");
+}
+.il-filetype-xls {
+  background: url("../img/il-filetype-xls.svg");
+}
+.ic-mapper {
+  background: url("../img/ic-mapper.svg");
+}
+.ic-conflict {
+  background: url("../img/ic-conflict.svg");
+}
+.ic-finish {
+  background: url("../img/ic-finish.svg");
+}
+.ic-upload {
+  background: url("../img/ic-upload.svg");
+}
+.ic-wand {
+  background: url("../img/wand.svg");
+}
+.ic-upload-m {
+  background: url("../img/ic-upload-m.svg");
+}
+.ic-name {
+  background: url("../img/name.svg");
+}
+.bookmark {
+  background: url("../img/bookmark.svg");
+}
+.bookmarkNew {
+  background: url("../img/bookmarkNew.svg");
+}
+.bookmark-active {
+  background: url("../img/bookmarkActive.svg");
+}
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.azure-loader {
+  background: url("../img/Loader.svg");
+  min-width: 70px;
+  max-width: 70px;
+  min-height: 70px;
+  max-height: 70px;
+  background-position: center;
+  animation: rotate 1s steps(16, end) infinite;
+}
+.create-rule-icon {
+  background-image: url("../img/Create-Rule-disabled.svg");
+
+  &.active {
+    background-image: url("../img/Create-Rule-enabled.svg");
+    background-color: transparent;
+    border: 0;
+  }
+}
+
+.delete-rule-icon {
+  background-image: url("../img/Delete-Rule-disabled.svg");
+
+  &.active {
+    background-image: url("../img/Delete-Rule-enabled.svg");
+    background-color: transparent;
+    border: 0;
+  }
+}
+
+.edit-rule-icon {
+  background-image: url("../img/edit-Rule-disabled.svg");
+
+  &.active {
+    background-image: url("../img/edit-Rule-enabled.svg");
+    background-color: transparent;
+    border: 0;
+  }
+}
+
+.approve-rule-icon {
+  background-image: url("../img/Approve-Rule-disabled.svg");
+
+  &.active {
+    background-image: url("../img/Approve-Rule-enabled.svg");
+    background-color: transparent;
+    border: 0;
+  }
+}
+
+.default-loader {
+  position: absolute;
+  z-index: 500;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.login-animation {
+  width: 100vw;
+  height: 100vh;
+  background: #bdbdbd;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  text-align: center;
+  font-size: 20px;
+
+  img {
+    margin-top: 15%;
+    height: 118px;
+    width: 100px;
+  }
+
+  .text-bottom {
+    position: fixed;
+    color: #eeeeee;
+    font-size: 12px;
+    bottom: 0;
+    width: 100%;
+  }
+}
+
+.font-xl {
+  font-size: 18px;
+}
+
+.font-lg {
+  font-size: 16px;
+}
+
+.font-sm {
+  font-size: 13px;
+}
+.font-md {
+  font-size: 14px;
+}
+.font-xsm {
+  font-size: 11px;
+}
+
+.breadcrumb {
+  max-height: 42px;
+}
+
+#toast-container .toast {
+  box-shadow: none !important;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.btn-min-width {
+  display: flex;
+  min-width: 120px;
+  width: max-content;
+}
+
+.switch {
+  &.primary {
+    input:checked ~ .slider {
+      background: $primary !important;
+    }
+  }
+
+  &.accent {
+    input:checked ~ .slider {
+      background: $accent !important;
+    }
+  }
+}
+
+.dropdown .dropdown-item {
+  &:hover {
+    color: $primary !important;
+    background: $light;
+  }
+}
+
+.fade.show {
+  //z-index: 1072;
+}
+
+.modal-content {
+  width: 400px !important;
+  border-radius: 20px;
+  overflow: hidden;
+
+  .circle {
+    width: 75px;
+    height: 75px;
+    border-radius: 50px;
+    text-align: center;
+    line-height: 75px;
+    font-size: 32px;
+    margin: 20px auto;
+  }
+
+  .del {
+    display: block;
+    text-decoration: none !important;
+    color: $border !important;
+    margin-bottom: 0;
+  }
+
+  .ins {
+    display: block;
+    text-decoration: none !important;
+    color: $primary !important;
+    margin-bottom: 0;
+  }
+
+  .modal-footer {
+    border-top: 1px solid $secondary !important;
+  }
+
+  .details-block {
+    min-width: 500px;
+
+    .block {
+      .form-control {
+        min-width: 240px;
+        max-height: 28px;
+      }
+    }
+  }
+}
+
+.modal-lg,
+.modal-xl {
+  .modal-content {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+.purge-model {
+  .modal-content {
+    width: 320px !important;
+    height: 280px !important;
+    margin-left: 90px !important;
+  }
+}
+
+.preHook-modal {
+  .modal-content {
+    width: 600px !important;
+    height: 500px !important;
+
+    .label-width {
+      width: 140px;
+    }
+
+    .value-width {
+      width: 400px;
+      .info-icon {
+        right: 4px;
+        top: 8px;
+      }
+    }
+
+    .modal-body {
+      min-height: 386px !important;
+      max-height: 386px !important;
+    }
+
+    .modal-header {
+      background: $light;
+    }
+
+    .modal-footer {
+      border: none !important;
+    }
+  }
+}
+
+.addEditUser-modal {
+  @extend .preHook-modal;
+
+  .modal-content {
+    .label-width {
+      width: 200px;
+    }
+  }
+}
+
+.modal-content {
+  animation: zoomIn 300ms cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.assignApp-modal {
+  .modal-content {
+    min-width: 650px !important;
+    max-width: 650px !important;
+    min-height: 500px !important;
+    max-height: 500px !important;
+    .modal-header {
+      border: none !important;
+      min-width: 700px !important;
+      max-width: 700px !important;
+
+      .label-width {
+        width: 220px;
+      }
+
+      .search-input {
+        width: 300px;
+      }
+    }
+
+    .modal-body {
+      min-width: 650px !important;
+      max-width: 650px !important;
+      min-height: 360px !important;
+      max-height: 360px !important;
+      overflow-y: auto !important;
+    }
+
+    .modal-footer {
+      border: none !important;
+    }
+  }
+}
+
+.exp-modal {
+  .modal-content {
+    height: 500px !important;
+    .label-width {
+      width: 150px;
+    }
+    .value-width {
+      width: 450px;
+    }
+    .modal-body {
+      min-height: 435px !important;
+      max-height: 435px !important;
+    }
+    .modal-header {
+      background: $light;
+    }
+    .modal-footer {
+      border: none !important;
+    }
+  }
+}
+
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  .text {
+    font-size: 14px;
+    margin: 0;
+    float: left;
+    line-height: 18px;
+  }
+}
+
+/* Hide the browser's default checkbox */
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: -8px;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  transition: 0.25s;
+}
+
+/* On mouse-over, add a grey background color */
+.checkbox-container {
+  &:hover,
+  &:focus {
+    input ~ .checkmark {
+      background-color: #eee;
+    }
+  }
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkbox-container input:checked ~ .checkmark {
+  background-color: $white;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkbox-container .checkmark:after {
+  left: 8px;
+  top: 5px;
+  width: 6px;
+  height: 12px;
+  border: solid $accent;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+// Custom colorful radio button
+.form {
+  &-radio-group {
+    width: 100%;
+    display: inline-block;
+  }
+  &-radio-input {
+    display: none;
+  }
+  &-radio-label {
+    font-size: 0.8rem;
+    cursor: pointer;
+    position: relative;
+    padding-left: 1.7rem;
+  }
+  &-radio-button {
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    border: 2px solid $light;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    &::after {
+      display: block;
+      content: "";
+      height: 13px;
+      width: 13px;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: $light;
+      opacity: 0;
+      transition: opacity 0.1s;
+    }
+    &.green {
+      border: 2px solid $green;
+      &::after {
+        background-color: $green;
+      }
+    }
+    &.yellow {
+      border: 2px solid lighten($primary, 0.5);
+      &::after {
+        background-color: lighten($primary, 0.5);
+      }
+    }
+    &.red {
+      border: 2px solid $red;
+      &::after {
+        background-color: $red;
+      }
+    }
+    &.blue {
+      border: 2px solid $accent;
+      &::after {
+        background-color: $accent;
+      }
+    }
+  }
+  &-radio-input:checked + &-radio-label &-radio-button::after {
+    opacity: 1;
+  }
+}
+
+/* Customize the label for input type radio (the container) START */
+
+.radio-container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.radio-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.radio-checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: #eee;
+  border-radius: 50%;
+  border: 1px solid #2196f3;
+}
+
+/* When the radio button is checked, add a blue background */
+.radio-container input:checked ~ .radio-checkmark {
+  background-color: #2196f3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.radio-checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.radio-container input:checked ~ .radio-checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.radio-container .radio-checkmark:after {
+  left: 6px;
+  top: 4px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+/* Customize the label for input type radio (the container) END */
+
+.switch {
+  position: relative;
+  cursor: pointer;
+
+  .slider {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    width: 30px;
+    height: 12px;
+    border-radius: 6px;
+    background: #ccc;
+    transition: 0.25s;
+  }
+
+  .toggler {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    background: #fff;
+    border: 1px solid $border;
+    left: 0px;
+    top: 1px;
+    transition: 0.25s;
+    position: absolute;
+  }
+
+  input {
+    display: none;
+  }
+
+  input:checked ~ .toggler {
+    left: 12px;
+  }
+
+  .switch {
+    &.accent {
+      input:checked ~ .toggler {
+        border: 1px solid $accent;
+      }
+    }
+
+    &.primary {
+      input:checked ~ .toggler {
+        border: 1px solid $primary;
+      }
+    }
+  }
+}
+
+.control-width {
+  max-width: 300px !important;
+}
+
+.fa-rotate-90 {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.fa-rotate-45 {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: $accent;
+  outline: none;
+  opacity: 0.9;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.slider:not(:disabled):hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: $white;
+  border: 1px solid $secondary;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb,
+.slider::-moz-range-thumb,
+.slider::-ms-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: $white;
+  border: 1px solid $secondary;
+  cursor: pointer;
+}

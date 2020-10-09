@@ -1,0 +1,113 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<odp-breadcrumb></odp-breadcrumb>
+<div class="d-flex flex-column wrapper position-relative" [formGroup]="form">
+    <!-- <odp-microflow *ngIf="toggleMicroflow" class="w-100 wrapper design-window d-flex"
+        [(toggleMicroflow)]="toggleMicroflow" [partner]="form" [id]="microflowId"></odp-microflow> -->
+    <odp-integration-flow *ngIf="toggleMicroflow" class="w-100 wrapper design-window d-flex"
+        [(toggleMicroflow)]="toggleMicroflow" [partner]="form" [id]="microflowId"></odp-integration-flow>
+    <ng-container *ngIf="!toggleMicroflow">
+        <div class="header d-flex align-items-start justify-content-between mr-3">
+            <odp-basic-info class="w-100" [(logo)]="logo" [(name)]="name" [nameCharLimit]="30"
+                [(description)]="description" [pattern]="'[a-z0-9A-Z\\s_-]+'"
+                [edit]="{status:edit.status && canEditPartner}">
+                <!-- <button type="button" class="btn btn-link" (click)="deletePartner()" *ngIf="value._id">Delete</button> -->
+                <button type="button" class="btn btn-link" (click)="cancel()">Cancel</button>
+                <button type="button" class="btn btn-dark btn-min-width ml-3" [disabled]="form.invalid"
+                    *ngIf="edit.status && hasWritePermission" (click)="save()">Save</button>
+                <button type="button" class="btn btn-dark btn-min-width ml-3" [disabled]="form.invalid"
+                    *ngIf="!edit.status && edit.id && hasWritePermission" (click)="enableEdit()">Edit</button>
+            </odp-basic-info>
+        </div>
+        <div
+            class="tab-list-wrapper d-flex align-items-center justify-content-between border-bottom border-border mx-3">
+            <div class="tab-list d-flex align-items-center">
+                <div class="d-flex align-items-center justify-content-center tab-list-item hover"
+                    [ngClass]="{'active':activeTab==0}" (click)="activeTab=0" *ngIf="hasPermissionForTab('F')">
+                    Integration Flows</div>
+                <!-- <div class="d-flex align-items-center justify-content-center tab-list-item hover" [ngClass]="{'active':activeTab==1}"
+                    (click)="activeTab=1">Configuration</div> -->
+                <div class="d-flex align-items-center justify-content-center tab-list-item hover"
+                    [ngClass]="{'active':activeTab==2}" (click)="activeTab=2" *ngIf="hasPermissionForTab('P')">Profiles
+                </div>
+                <div class="d-flex align-items-center justify-content-center tab-list-item hover"
+                    [ngClass]="{'active':activeTab==3}" (click)="activeTab=3" *ngIf="hasPermissionForTab('H')">
+                    Properties</div>
+                <div class="d-flex align-items-center justify-content-center tab-list-item hover"
+                    [ngClass]="{'active':activeTab==4}" (click)="activeTab=4" *ngIf="hasPermissionForTab('M')">
+                    Management</div>
+            </div>
+            <div class="others">
+                <div class="text-secondary">V{{value.__v?value.__v:1}}; Last modified on: {{value?._metadata?.lastUpdated |date:'dd-MMM-yyyy hh:mm:ss a' }}</div>
+            </div>
+        </div>
+        <div class="tab-container-wrapper mx-3 px-3 pt-3">
+            <odp-partner-microflows *ngIf="activeTab==0" [partner]="form" [edit]="edit"
+                (openMicroflow)="openMicroflow($event)">
+            </odp-partner-microflows>
+            <odp-partner-configuration *ngIf="activeTab==1" [edit]="edit"></odp-partner-configuration>
+            <odp-partner-secrets *ngIf="activeTab==2" [partner]="form" [edit]="edit"></odp-partner-secrets>
+            <odp-partner-properties *ngIf="activeTab==3" [partner]="form" [edit]="edit"></odp-partner-properties>
+            <odp-partner-management *ngIf="activeTab==4" [partner]="form" [edit]="edit"></odp-partner-management>
+        </div>
+    </ng-container>
+</div>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+    <odp-partner-icon [size]="18" color="DD5151" class="mt-1"></odp-partner-icon>
+</odp-delete-modal>
+
+<ng-template #downloadAgentModalTemplate>
+    <div class="modal-body p-4 d-flex flex-column align-items-center">
+        <div class="d-flex flex-column my-3">
+            <!-- <p class="text-dark font-weight-bold text-center">Enter name of Agent</p>
+            <input type="text" class="form-control w-75 align-self-center" [(ngModel)]="agentConfig.name"> -->
+            <p class="text-dark font-weight-bold text-center mt-3">Choose your platform</p>
+            <div class="d-flex align-items-center justify-content-center">
+                <div class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
+                    (click)="downloadAgentModalTemplateRef.close('windows')">
+                    <span class="fab fa-windows"></span>
+                    <span class="text mt-3">Windows</span>
+                </div>
+                <div class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
+                    (click)="downloadAgentModalTemplateRef.close('darwin')">
+                    <span class="fab fa-apple"></span>
+                    <span class="text mt-3">Mac OS</span>
+                </div>
+                <div class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
+                    (click)="downloadAgentModalTemplateRef.close('linux')">
+                    <span class="fab fa-linux"></span>
+                    <span class="text mt-3">Linux</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-self-end">
+            <button type="button" class="btn btn-link" id="deletePartnerModalNo"
+                (click)="downloadAgentModalTemplateRef.close(false)">Close</button>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #pageChangeModalTemplate>
+    <div class="modal-body p-4">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-partner-icon [size]="18" color="202a36" class="mt-1"></odp-partner-icon>
+                </span>
+                <span class="font-weight-bold mb-1">Unsaved Changes</span>
+            </div>
+            <span class="fa fa-times text-secondary hover " (click)="pageChangeModalTemplateRef.close(false)"></span>
+        </div>
+        <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-dark"
+                (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+        </div>
+    </div>
+</ng-template>

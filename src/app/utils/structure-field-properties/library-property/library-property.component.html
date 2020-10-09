@@ -1,0 +1,21 @@
+<div [formGroup]="form.get('properties')">
+  <div class="d-flex w-100 mb-4">
+    <div class="label-width text-secondary">Linked Library</div>
+    <div class="value-width">
+      <ng-container *ngIf="edit.status">
+        <input *ngIf="libraries.length==0 || libraries.length>10" class="form-control" type="text" [ngbTypeahead]="searchSchema" [inputFormatter]="formatter"
+          #schema="ngbTypeahead" (selectItem)="selectSchema($event)" [resultFormatter]="formatter"
+          [value]="form.get('properties.schemaName').value">
+          <select *ngIf="libraries.length!=0 && libraries.length<=10" id="schema" class="form-control"
+          formControlName="schema">
+          <option [value]="null">---select---</option>
+          <option *ngFor="let item of libraries" [value]="item._id">{{item.name}}</option>
+        </select>
+      </ng-container>
+      <ng-container *ngIf="!edit.status">
+          <span *ngIf="schemaName">{{schemaName}}</span>
+          <span *ngIf="!schemaName" class="text-muted">-</span>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+  <div class="align-self-center text-center">
+    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="text-secondary mt-2">Processing...</div>
+  </div>
+</div>
+<div class="bookmark-container py-3">
+  <div class="d-flex justify-content-between align-items-center pb-3 border-bottom">
+    <div class="d-flex align-items-center">
+      <span class="fa fa-shield-alt mr-2"></span>
+      <span class="font-weight-bold">Bookmarks Access Settings</span>
+    </div>
+    <div class="d-flex justify-content-end align-items-center" *ngIf="hasPermission('PMGCBM')">
+      <button type="button" class="btn btn-link p-0" id="sbInsertAttribute">
+        Mark All
+      </button>
+      <div ngbDropdown class="d-inline-block mr-3">
+        <button type="button" class="btn btn-link p-0" id="insertDropDown" ngbDropdownToggle></button>
+        <div ngbDropdownMenu>
+          <button type="button" class="dropdown-item" (click)="markAllSelected()">Selected</button>
+          <button type="button" class="dropdown-item" (click)="markAllDeSelected()">DeSelected</button>
+        </div>
+      </div>
+    </div>
+    <!-- <span class="font-weight-bold text-accent">Mark all</span> -->
+  </div>
+  <div class="d-flex flex-column justify-content-center">
+    <ng-container *ngFor="let bookmark of bookmarkList;let i=index;">
+      <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3">
+        <div class="d-flex align-items-center">
+          <span class="d-flex align-items-center mr-2 value-width font-md">
+            <span>{{bookmark.name}}</span>
+          </span>
+          <!-- <div class="input-control position-relative mr-3 font-xsm">
+            <div class="field form-control-plaintext text-muted">{{bookmark.url}}</div>
+          </div> -->
+        </div>
+        <div class="d-flex align-items-center" id="viewCheckbox">
+          <label class="switch accent mb-0 mr-3 mt-1" *ngIf="hasPermission('PMGCBM')">
+            <input type="checkbox" value="true" (change)="changeValue(bookmark._id)"
+              [checked]="isChecked(bookmark._id)">
+            <span class="slider"></span>
+            <span class="toggler"></span>
+          </label>
+          <span class="text ml-2">
+            <ng-container *ngIf="isChecked(bookmark._id)">Yes</ng-container>
+            <ng-container *ngIf="!isChecked(bookmark._id)">No</ng-container>
+          </span>
+          <!-- <span class="text">yes</span> -->
+          <!-- <span class="text">{{ isChecked(bookmark._id) ? 'Yes' : 'No'}} </span> -->
+        </div>
+        <!-- <div class="d-flex align-items-center">
+          <span class="text d-flex" *ngIf="isChecked(bookmark._id) ">
+            <span class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
+              <span class="fa fa-check text-white"></span>
+            </span>
+            <span class="text">Yes</span>
+          </span>
+          <span class="text d-flex"  *ngIf="!isChecked(bookmark._id) ">
+            <span class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1"></span>
+            <span class="text">No</span>
+          </span>
+        </div> -->
+      </div>
+    </ng-container>
+    <p class="text-muted" *ngIf="!bookmarkList.length && !showLazyLoader">No records found</p>
+  </div>
+</div>

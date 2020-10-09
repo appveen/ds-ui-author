@@ -1,0 +1,31 @@
+<svg [attr.width]="width" height="350px" [attr.viewBox]="viewBox">
+    <g>
+        <text class="text-color" text-anchor="middle" x="12">Response</text>
+        <g odp-res-start [edit]="edit" [nodeList]="nodeList" (clicked)="$event.stopPropagation();showDropdown=!showDropdown"></g>
+        <g *ngIf="nodeList.length==0 && edit.status" class="customize-response" (click)="addNode(0)">
+            <rect x="36" y="78" rx="12" ry="12" width="128px" height="24px"></rect>
+            <text x="42" y="94">Customize response</text>
+        </g>
+        <g *ngIf="nodeList.length>0">
+            <g odp-flow-line type="response" [ngStyle]="getLineStyle(0)"></g>
+            <g odp-flow-line type="response" [ngStyle]="getLineStyle(nodeList.length)"></g>
+            <g *ngFor="let node of nodeList;let i=index">
+                <g odp-res-node [index]="i" [nodeList]="nodeList" [flowData]="flowData" [ngStyle]="getNodeStyle(i)"
+                    (click)="selectNode($event,i)">
+                </g>
+                
+                <g *ngIf="edit.status" odp-add-node (add)="addNode($event)" [index]="i+1" [ngStyle]="getAddStyle(i+1)">
+                </g>
+            </g>
+            <g odp-res-end [ngStyle]="resEndStyle"></g>
+        </g>
+        <g *ngIf="showDropdown" class="svg-dropdown" odpClickOutside (outside)="showDropdown=false"
+            (click)="deleteAllNodes()">
+            <rect x="14" y="104" rx="4" ry="4" width="100px" height="24px"></rect>
+            <text x="20" y="120">Clear Nodes</text>
+        </g>
+    </g>
+</svg>
+
+
+<odp-delete-modal [open]="deleteAllNodeModal" (close)="triggerDeleteAllNode($event)"></odp-delete-modal>

@@ -1,0 +1,38 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.request {
+  line,
+  polygon {
+    stroke-width: 1;
+    stroke: #7fc0e4;
+  }
+  polygon {
+    stroke-linejoin: round;
+    fill: #7fc0e4;
+  }
+}
+
+.response {
+  line,
+  polygon {
+    stroke-width: 1;
+    stroke: #8dd6a3;
+  }
+  polygon {
+    stroke-linejoin: round;
+    fill: #8dd6a3;
+  }
+}
+
+.error {
+  line,
+  polygon {
+    stroke-width: 1;
+    stroke: #eea7a7;
+  }
+  polygon {
+    stroke-linejoin: round;
+    fill: #eea7a7;
+  }
+}

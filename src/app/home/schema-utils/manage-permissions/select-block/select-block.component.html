@@ -1,0 +1,172 @@
+<div class="rule-block-select d-flex flex-column align-items-start position-relative">
+    <div class="d-flex align-items-center mb-2 w-100">
+        <div class="text-right left-side">
+            <span class="font-weight-bold">SELECT FROM</span>
+        </div>
+        <div class="data-key-selector border rounded mx-2 d-flex align-items-center bg-white">
+            <div class="data-key-path d-flex align-items-center px-2">
+                <div *ngIf="dataService && dataService.name"
+                    class="selected-data-service d-flex align-items-center ignore-outside"
+                    [ngbTooltip]="edit.status ? 'Change' : ''" [ngClass]="{'hover':edit.status}"
+                    (click)="showDataServiceList=edit.status">
+                    <odp-service-icon size="16" color="0082C9"></odp-service-icon>
+                    <span class="selector-name ml-2">{{dataService.name}}</span>
+                </div>
+                <ng-container *ngIf="!dataService || !dataService.name">
+                    <div class="d-flex align-items-center ignore-outside" [ngClass]="{'hover':edit.status}"
+                        (click)="showDataServiceList=edit.status">
+                        <div class="bg-light px-2 rounded">
+                            <span class="fa fa-plus fa-xs text-accent"></span>
+                        </div>
+                        <span class="ml-2">Add</span>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <!-- <button *ngIf="index!=0  && edit.status" type="button" class="btn btn-sm btn-link text-secondary"
+            (click)="removeThis()">Remove</button> -->
+        <button *ngIf="edit.status && index>0" type="button"
+            class="btn btn-sm btn-link text-secondary ignore-outside ml-auto"
+            (click)="rowDropDown['global']=!rowDropDown['global']">
+            <span class="fa fa-ellipsis-v"></span>
+        </button>
+        <div *ngIf="rowDropDown['global']"
+            class="row-options-dropdown options-dropdown position-absolute bg-white rounded" odpClickOutside
+            (outside)="rowDropDown['global']=false">
+            <div class="d-flex align-items-center hover p-2" (click)="removeThis()">
+                <span class="mx-2 text-secondary">Delete</span>
+            </div>
+        </div>
+
+        <div *ngIf="showDataServiceList"
+            class="selector-dropdown d-flex flex-column border rounded bg-white position-absolute" odpClickOutside
+            (outside)="showDataServiceList=false;searchList=[]">
+            <div class="p-2">
+                <input type="text" class="form-control" odpAutoFocus (odpSearchTerm)="searchService($event)"
+                    placeholder="Search Data Service">
+            </div>
+            <div class="selector-list">
+                <div class="selector-list-item d-flex align-items-center p-2 hover" *ngFor="let item of searchList"
+                    (click)="selectService(item)">
+                    <odp-service-icon size="16" color="0082C9"></odp-service-icon>
+                    <span class="selector-name ml-2">{{item.name}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-container>
+        <div class="d-flex align-items-center mb-2 position-relative"
+            *ngFor="let cond of conditions;let i=index;let f=first;let l=last">
+            <div class="text-right left-side">
+                <span *ngIf="cond.type === '$where'" class="text-success">where</span>
+                <span *ngIf="cond.type === '$and'" class="text-success hover">and</span>
+                <span *ngIf="cond.type === '$or'" class="text-success hover">or</span>
+            </div>
+            <div *ngIf="loading" class="data-key-selector border rounded mx-2 d-flex align-items-center bg-white">
+                <odp-loading-placeholder height="26" width="80"></odp-loading-placeholder>
+            </div>
+            <div *ngIf="!loading" class="data-key-selector border rounded mx-2 d-flex align-items-center bg-white"
+                [ngClass]="{'invalid':pathInvalid[i+'_key']}">
+                <div class="data-key-path d-flex align-items-center px-2">
+                    <odp-service-icon size="16" color="0082C9"></odp-service-icon>
+                    <span class="selector-name ml-2">{{dataService.name}}</span>
+                </div>
+                <div class="angle-block fill">
+                    <div class="angle-box"></div>
+                </div>
+                <odp-path-creator [edit]="edit" [definition]="serviceDefinition" [(path)]="cond.key"
+                    (isInvalid)="pathInvalid[i+'_key'] = $event" (pathChange)="cond.value=null;constructFilter()"
+                    (field)="cond.field = $event">
+                </odp-path-creator>
+            </div>
+            <div class="condition-selector text-success px-2">
+                <odp-logical-condition [edit]="edit" [(condition)]="conditions[i]" [field]="cond.field"
+                    (conditionChange)="constructFilter()"></odp-logical-condition>
+            </div>
+            <div *ngIf="loading" class="data-key-selector border rounded mx-2 d-flex align-items-center bg-white">
+                <odp-loading-placeholder height="26" width="80"></odp-loading-placeholder>
+            </div>
+            <div *ngIf="!loading"
+                class="data-key-selector border rounded mx-2 d-flex align-items-center position-relative bg-white"
+                [ngClass]="{'invalid':pathInvalid[i+'_value']}">
+                <div class="data-key-path d-flex align-items-center px-2 ignore-outside bg-white"
+                    [ngClass]="{'hover':index>0}" (click)="rowValueTypeDropDown[i]=!rowValueTypeDropDown[i]">
+                    <ng-container *ngIf="!rowValueType[i] || rowValueType[i] === 'user'">
+                        <span class="far fa-user text-accent"></span>
+                        <span class="selector-name ml-2">Logged In User</span>
+                    </ng-container>
+                    <ng-container *ngIf="rowValueType[i] == 'ans' && index>0">
+                        <span class="far fa-bookmark text-accent"></span>
+                        <span class="selector-name ml-2">ANS</span>
+                    </ng-container>
+                    <ng-container *ngIf="rowValueType[i] == 'value'">
+                        <span class="far fa-bookmark text-accent"></span>
+                        <span class="selector-name ml-2">Value</span>
+                    </ng-container>
+                </div>
+                <div class="angle-block">
+                    <div class="angle-box bg-white"></div>
+                </div>
+                <odp-path-creator *ngIf="rowValueType[i] != 'value'" [edit]="edit" [definition]="getValueDefinition(i)"
+                    [(path)]="cond.value" (isInvalid)="pathInvalid[i+'_value'] = $event"
+                    (pathChange)="constructFilter()">
+                </odp-path-creator>
+                <ng-container *ngIf="rowValueType[i] == 'value'">
+                    <input *ngIf="!cond?.field?.type || cond?.field?.type == 'String'" type="text" class="form-control"
+                        [(ngModel)]="cond.value" (ngModelChange)="constructFilter()">
+                    <input *ngIf="cond?.field?.type == 'Number'" type="number" class="form-control"
+                        [(ngModel)]="cond.value" (ngModelChange)="constructFilter()">
+                    <input *ngIf="cond?.field?.type == 'Date'" type="date" class="form-control" [(ngModel)]="cond.value"
+                        (ngModelChange)="constructFilter()">
+                    <odp-switch *ngIf="cond?.field?.type == 'Boolean'" [(checked)]="cond.value"
+                        (checkedChange)="constructFilter()" [edit]="edit"></odp-switch>
+                    <!-- <input *ngIf="cond?.field?.type == 'Boolean'" type="checkbox" class="form-control" [(ngModel)]="cond.value"> -->
+                </ng-container>
+                <div *ngIf="rowValueTypeDropDown[i]"
+                    class="value-options-dropdown options-dropdown position-absolute bg-white rounded" odpClickOutside
+                    (outside)="rowValueTypeDropDown[i]=false">
+                    <div class="d-flex align-items-center hover p-2"
+                        (click)="rowValueType[i]='user';rowValueTypeDropDown[i]=false;cond.value=null;constructFilter()">
+                        <span class="mx-2 text-secondary">Logged In User</span>
+                    </div>
+                    <div *ngIf="index>0" class="d-flex align-items-center hover p-2"
+                        (click)="rowValueType[i]='ans';rowValueTypeDropDown[i]=false;cond.value=null;constructFilter()">
+                        <span class="mx-2 text-secondary">ANS</span>
+                    </div>
+                    <div class="d-flex align-items-center hover p-2"
+                        (click)="rowValueType[i]='value';rowValueTypeDropDown[i]=false;cond.value=null;constructFilter();pathInvalid[i+'_value']=false">
+                        <span class="mx-2 text-secondary">Value</span>
+                    </div>
+                </div>
+            </div>
+            <button *ngIf="!f && edit.status" type="button"
+                class="btn btn-sm btn-link mx-3 text-secondary ignore-outside" (click)="rowDropDown[i]=!rowDropDown[i]">
+                <span class="fa fa-ellipsis-v"></span>
+            </button>
+            <div *ngIf="rowDropDown[i]" class="row-options-dropdown options-dropdown position-absolute bg-white rounded"
+                odpClickOutside (outside)="rowDropDown[i]=false">
+                <div class="d-flex align-items-center hover p-2" (click)="removeCondition(i)">
+                    <span class="mx-2 text-secondary">Delete</span>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="edit.status" class="d-flex align-items-center mb-2 position-relative">
+            <div class="text-right left-side">
+                <button type="button" class="btn btn-sm btn-light ignore-outside"
+                    (click)="optionsDropDown=!optionsDropDown">
+                    <span class="fa fa-plus"></span>
+                </button>
+            </div>
+            <div *ngIf="optionsDropDown"
+                class="common-options-dropdown options-dropdown position-absolute bg-white rounded" odpClickOutside
+                (outside)="optionsDropDown=false">
+                <div class="common-options-item d-flex align-items-center hover p-2" (click)="addCondition('$and')">
+                    <span class="mx-2 text-success">AND</span>
+                </div>
+                <div class="common-options-item d-flex align-items-center hover p-2" (click)="addCondition('$or')">
+                    <span class="mx-2 text-success">OR</span>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

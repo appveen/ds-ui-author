@@ -1,0 +1,166 @@
+<div class="d-flex flex-column w-100">
+    <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 border-bottom"
+        [ngClass]="{'active bg-light':active}" [formGroup]="form" (click)="activateProperty()">
+        <div class="d-flex align-items-center" formGroupName="properties">
+            <span class="spacer border-right border-secondary" [ngStyle]="getSpacing()"></span>
+            <span class="icon mr-2">
+                <span class="fa fa-bars text-muted hover" *ngIf="!idField && edit.status && type!=='internal'"></span>
+            </span>
+            <span class="icon odp-pin text-muted mr-2 fa-xs mt-1" *ngIf="idField"></span>
+            <span class="icon d-flex align-items-center mr-2" *ngIf="!idField">
+                <span class="fa text-secondary fa-lg hover" (click)="collapse=!collapse" *ngIf="canCollapse"
+                    [ngClass]="{'fa-caret-right':collapse,'fa-caret-down':!collapse}"></span>
+                <span class="fa fa-asterisk text-danger"
+                    *ngIf="form.get('properties.required') && form.get('properties.required').value"></span>
+            </span>
+            <div class="input-control position-relative mr-3">
+                <span class="field form-control-plaintext word-elipsis" *ngIf="!edit.status || type==='internal'"
+                    [ngbTooltip]="form.get('properties.name').value"
+                    #tooltip="ngbTooltip">{{form.get('properties.name').value}}</span>
+                <input #inputField *ngIf="edit.status && type!=='internal'" (focus)="activateProperty()" placement="top"
+                    [ngbTooltip]="tipContent" #tooltip="ngbTooltip" triggers="manual"
+                    (blur)="checkType(inputField.value);searchService();" (keyup.enter)="addField()"
+                    (shift.delete)="deleteField($event)" type="text" class="field" formControlName="name"
+                    (paste)="pasteOnField($event)" [attr.placeholder]="placeholder" [attr.id]="fieldId"
+                    [ngClass]="{'form-control-plaintext':!active,'form-control':active, 'is-invalid pl-2': hasError}"
+                    odpKeyStrokes (shift.enter)="addField(true)">
+                <span class="fas fa-question-circle text-danger position-absolute error-icon" *ngIf="hasError"
+                    [ngbTooltip]="validationError" placement="right"></span>
+                <span class="fa fa-spinner fa-pulse position-absolute searching-relation"
+                    *ngIf="searchingRelation"></span>
+                <!-- <div class="" id="tooltip" placement="top" [ngbTooltip]="tipContent" #tooltip="ngbTooltip"
+                    triggers="manual"></div> -->
+            </div>
+            <odp-field-type [field]="field" label="true"></odp-field-type>
+        </div>
+        <div class="d-flex field-options">
+            <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 hover"
+            [ngClass]="{'active':form.get('properties.readonly')?.value}"  placement="top" ngbTooltip="Mark as read-only" (click)="setReadOnly(form.get('properties.readonly'))"
+            *ngIf="(!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
+            && form.get('type').value !== 'Object') && edit.status && type!=='internal'">
+                <span class="odp-no-edit"></span>
+            </div>
+            <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 "
+            [ngClass]="{'active':form.get('properties.readonly')?.value}"  placement="top" ngbTooltip="Marked as read-only" 
+            *ngIf="form.get('properties.readonly')?.value &&  !edit.status && type!=='internal'">
+                <span class="odp-no-edit"></span>
+            </div>
+            <span *ngIf="canDelete && edit.status && type!=='internal'" class="fa hover"
+                [ngClass]="{'fa-times-circle text-danger fa-lg':active,'fa-times text-muted mr-1':!active}"
+                (click)="remove()"></span>
+        </div>
+    </div>
+</div>
+
+<div class="add-attribute d-flex align-items-center text-muted" *ngIf="edit.status && canAdd && type!=='internal'"
+    [ngStyle]="style">
+    <span class="d-flex align-items-center hover" (click)="addField()" id="schemaFieldObjectAddField">
+        <span class="fa fa-plus fa-xs mr-1"></span>
+        <span class="text">New Attribute</span>
+    </span>
+</div>
+
+<div *ngIf="objectFields" [ngClass]="{'d-none':collapse}">
+    <div [sortablejs]="objectFields.controls" [sortablejsOptions]="{sort:editable}">
+        <ng-container *ngFor="let def of objectFields.controls;let i = index">
+            <div>
+                <odp-structure-field [all]="objectFields" [index]="i" [isLibrary]="isLibrary"
+                    [isDataFormat]="isDataFormat" [formatType]="formatType" [edit]="edit" [level]="level+1"
+                    [isDataFormatUsed]="isDataFormatUsed">
+                </odp-structure-field>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<div *ngIf="arrayFields" [ngClass]="{'d-none':collapse}">
+    <div [sortablejs]="arrayFields.controls" [sortablejsOptions]="{sort:editable}">
+        <ng-container *ngFor="let def of arrayFields.controls;let i = index">
+            <div>
+                <odp-structure-field [all]="arrayFields" [index]="i" [isLibrary]="isLibrary"
+                    [isDataFormat]="isDataFormat" [formatType]="formatType" [edit]="edit" [level]="level+1"
+                    [isDataFormatUsed]="isDataFormatUsed">
+                </odp-structure-field>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #tipContent let-message="message">
+    <span (click)="closeTooltip()">{{message}}</span>
+</ng-template>
+
+<ng-template #validationError>
+    <div class="d-flex flex-column">
+        <div *ngIf="form.get('properties.name').touched && form.get('key').hasError('required')"
+            class="d-flex justify-content-start">
+            <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+            <span>You cannot leave this blank</span>
+        </div>
+        <div *ngIf="form.get('properties.name').hasError('length')" class="d-flex justify-content-start">
+            <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+            <span>Field name should be less than 40 characters</span>
+        </div>
+        <div *ngIf="form.hasError('sameName')" class="d-flex justify-content-start">
+            <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+            <span>Duplicate attribute name</span>
+        </div>
+        <div *ngIf="form.get('properties.relatedTo') && form.get('properties.relatedTo').hasError('required')"
+            class="d-flex justify-content-start">
+            <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+            <span>'Relates To' field is mandatory</span>
+        </div>
+        <div *ngIf="invalidFieldName" class="d-flex justify-content-start">
+            <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+            <span>Field name can only be alphanumeric and can contain underscore(_), dot(.), hyphen(-), dollar($)</span>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #nameChangeModal>
+    <div class="modal-body p-4">
+        <div class="d-flex align-items-center">
+            <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                <odp-service-icon *ngIf="isLibrary" [size]="18" color="202a36" class="mt-1">
+                </odp-service-icon>
+                <odp-data-format-icon *ngIf="isDataFormat" [size]="18" color="202a36" class="mt-1">
+                </odp-data-format-icon>
+                <odp-library-icon *ngIf="!isLibrary && !isDataFormat" [size]="18" color="202a36" class="mt-1">
+                </odp-library-icon>
+            </span>
+            <span class="font-weight-bold mb-1">{{nameChange.title}}</span>
+        </div>
+        <p class="text-dark text-center my-5">{{nameChange.message}}</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-dark mr-3"
+                (click)="nameChangeModalRef.close(false)">No</button>
+            <button type="button" class="btn btn-min-width btn-dark"
+                (click)="nameChangeModalRef.close(true)">Yes</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #flowDeployAlertModal>
+    <div class="modal-body p-4">
+        <div class="d-flex align-items-center">
+            <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                <odp-service-icon *ngIf="isLibrary" [size]="18" color="202a36" class="mt-1">
+                </odp-service-icon>
+                <odp-data-format-icon *ngIf="isDataFormat" [size]="18" color="202a36" class="mt-1">
+                </odp-data-format-icon>
+                <odp-library-icon *ngIf="!isLibrary && !isDataFormat" [size]="18" color="202a36" class="mt-1">
+                </odp-library-icon>
+            </span>
+            <span class="font-weight-bold mb-1">Structure Changed</span>
+        </div>
+        <p class="text-dark text-center my-5">You might have to redeployed all the flow(s) which is using this data
+            format.</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-dark mr-3"
+                (click)="flowDeployAlertModalRef.close(false)">Cancel</button>
+            <button type="button" class="btn btn-min-width btn-dark"
+                (click)="flowDeployAlertModalRef.close(true)">Ok</button>
+        </div>
+    </div>
+</ng-template>

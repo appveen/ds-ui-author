@@ -1,0 +1,165 @@
+<div class="form-group">
+    <label for="endpoint"
+        [ngClass]="{'text-danger': errors && (errors.invalidDataService || errors.invalidNanoService)}">
+        <span *ngIf="node.meta.formatType == 'dataService'" class="">Data Service</span>
+        <span *ngIf="node.meta.formatType == 'nanoService'" class="">Nano Service</span>
+    </label>
+    <div *ngIf="!node.meta.formatId">
+        <button *ngIf="edit.status" type="button" class="btn btn-sm btn-link text-accent" (click)="openSearchService()">Select
+            a&nbsp;
+            <span *ngIf="node.meta.formatType == 'dataService'" class="">Data Service</span>
+            <span *ngIf="node.meta.formatType == 'nanoService'" class="">Nano Service</span>
+        </button>
+    </div>
+    <div *ngIf="node.meta.formatId" class="d-flex flex-column selected-format">
+        <div class="service-name d-flex align-items-center justify-content-between px-2 rounded bg-light">
+            <div class="text-dark font-weight-bold">{{node.meta.formatName}}</div>
+            <button *ngIf="edit.status" type="button" class="format-change btn btn-sm btn-link text-accent p-0"
+                (click)="openSearchService()">Change</button>
+        </div>
+        <div class="service-info d-flex align-items-center justify-content-between mt-2">
+            <div class="d-flex align-items-center">
+                <odp-format-type-badge small="true" [data]="node.sourceFormat">
+                </odp-format-type-badge>
+                <span class="fa fa-arrow-right mx-2 text-muted"></span>
+                <odp-format-type-badge small="true" [data]="node.targetFormat">
+                </odp-format-type-badge>
+                <button class="btn btn-sm btn-link p-0 ml-2 text-accent service-url text-truncate"
+                    [odpTruncated]="node.meta.connectionDetails.url">{{node.meta.connectionDetails.url}}</button>
+            </div>
+        </div>
+    </div>
+    <!-- <div *ngIf="node.meta.formatId" class="d-flex flex-column selected-format">
+        <div class="d-flex align-items-center justify-content-center">
+            <div class="req-format bg-accent d-flex align-items-center justify-content-center">
+                <span class="text-white">{{node.sourceFormat.formatType}}</span>
+            </div>
+            <div class="req-link border-accent"></div>
+            <div class="format-info bg-light d-flex flex-column align-items-center">
+                <span class="text-dark format-name font-weight-bold mt-1">{{node.meta.formatName}}</span>
+                <span class="format-url text-secondary text-truncate"
+                    [odpTruncated]="node.meta.connectionDetails.url">{{node.meta.connectionDetails.url}}</span>
+                <button type="button" class="format-change btn btn-sm btn-link text-accent p-0 mt-auto"
+                    (click)="openSearchService()">Change</button>
+            </div>
+            <div class="res-link border-success"></div>
+            <div class="res-format bg-success d-flex align-items-center justify-content-center">
+                <span class="text-white">{{node.targetFormat.formatType}}</span>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+
+<ng-template #serviceSelectorModal>
+    <div class="service-modal-body modal-body p-4 d-flex flex-column align-items-center ignore-outside">
+        <div class="d-flex align-items-center justify-content-between mb-3 w-100">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <span class="odp-settings text-dark"></span>
+                </span>
+                <span class="font-weight-bold mb-1">Select a Service</span>
+            </div>
+            <span class="fa fa-times text-muted hover ignore-click"
+                (click)="serviceSelectorModalRef.close(false)"></span>
+        </div>
+        <div class="info d-flex flex-column align-self-center justify-content-center w-100">
+            <div class="form-group">
+                <label for="searchService">Search Service</label>
+                <input id="searchService" type="text" class="form-control focus-accent" name="searchService"
+                    (odpSearchTerm)="searchService($event)">
+            </div>
+            <div class="service-list-headers d-flex align-items-stretch border-bottom border-dark">
+                <div class="service-list-item-head d-flex align-items-center px-3 text-accent checkbox"></div>
+                <div class="service-list-item-head d-flex align-items-center px-3 text-accent name">Name</div>
+                <div *ngIf="node.meta.formatType === 'dataService'" class="service-list-item-head d-flex align-items-center px-3 text-accent attributes">
+                    Attributes
+                </div>
+                <div class="service-list-item-head d-flex align-items-center px-3 text-accent io-format">
+                    I/O format
+                </div>
+            </div>
+            <div class="service-list">
+                <div class="service-list-row d-flex align-items-stretch border-bottom" *ngFor="let item of serviceList"
+                    (click)="selectService(item)">
+                    <div class="service-list-item d-flex align-items-center px-3 checkbox">
+                        <div class="d-flex align-items-center w-50">
+                            <input id="type" class="d-none" type="radio" name="radio" [(ngModel)]="item.selected">
+                            <div class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                                [ngClass]="{'checked':item.selected}">
+                                <div class="round-radio-inner bg-white"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-list-item d-flex align-items-center px-3 name">{{item.name}}</div>
+                    <div *ngIf="node.meta.formatType === 'dataService'" class="service-list-item d-flex align-items-center px-3 attributes">
+                        {{getAttributeCount(item.definition)}}
+                    </div>
+                    <div class="service-list-item d-flex align-items-center px-3 io-format d-flex align-items-center">
+                        <odp-format-type-badge small="true" [data]="item.in"></odp-format-type-badge>
+                        <span class="fa fa-arrow-right mx-2 text-muted"></span>
+                        <odp-format-type-badge small="true" [data]="item.out"></odp-format-type-badge>
+                        <div class="url ml-3 text-truncate" [odpTruncated]="item.url">{{item.url}}</div>
+                    </div>
+                </div>
+                <div *ngIf="serviceList.length==0"
+                    class="service-list-item d-flex align-items-center justify-content-between">
+                    <div>
+                        No Results Found
+                    </div>
+                </div>
+
+                <!-- <div class="list-group list-group-flush">
+                    <div class="list-group-item list-group-item-action d-flex align-items-center"
+                        *ngFor="let item of serviceList" (click)="selectService(item)">
+                        <div class="p-2">
+                            <div class="d-flex align-items-center w-50">
+                                <input id="type" class="d-none" type="radio" name="radio" [(ngModel)]="item.selected">
+                                <div class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
+                                    [ngClass]="{'checked':item.selected}">
+                                    <div class="round-radio-inner bg-white"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="in-format d-flex align-items-center justify-content-start">
+                            <div class="bg-accent text-white p-2 rounded">
+                                {{item?.in?.formatType ? item.in.formatType : 'JSON'}}
+                            </div>
+                            <div class="border-bottom border-accent w-100"></div>
+                        </div>
+                        <div class="info-width d-flex flex-column w-100 bg-light p-2 rounded border">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="text-dark">
+                                    {{item.name}}
+                                </div>
+                                <div class="badge badge-dark">{{item.definition ? 'Data Service':'Nano Service'}}</div>
+                            </div>
+                            <div *ngIf="item.url" class="d-flex mt-1 url text-muted">{{item.url}}</div>
+                        </div>
+                        <div class="out-format d-flex align-items-center justify-content-end">
+                            <div class="border-bottom border-success w-100"></div>
+                            <div class="bg-success text-white p-2 rounded">
+                                {{item?.out?.formatType ? item.out.formatType : 'JSON'}}</div>
+                        </div>
+                    </div>
+                    <div *ngIf="serviceList.length==0"
+                        class="list-group-item d-flex align-items-center justify-content-between">
+                        <div>
+                            No Results Found
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-end w-100 mt-3">
+            <button type="button" class="btn btn-link text-dark ignore-click mr-3" id="selectorModalCancel"
+                (click)="$event.stopPropagation();serviceSelectorModalRef.close(false)">
+                <span class="text">Cancel</span>
+            </button>
+            <button type="button" class="btn btn-dark btn-min-width ignore-click" id="selectorModalYes"
+                [disabled]="!isServiceSelected" (click)="$event.stopPropagation();serviceSelectorModalRef.close(true)">
+                <span class="text">Use</span>
+            </button>
+        </div>
+    </div>
+</ng-template>

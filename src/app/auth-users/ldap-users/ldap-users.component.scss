@@ -1,0 +1,39 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.user-list {
+  height: calc(100vh - 328px);
+  overflow-y: auto;
+}
+.user-list-item,
+.user-list-item-head {
+  .cell {
+    min-width: 33%;
+  }
+  .circle-select {
+    min-width: 30px;
+    max-width: 30px;
+    min-height: 30px;
+    max-height: 30px;
+    &.selected {
+      color: #3498db;
+    }
+  }
+}
+.user-list-item {
+  &:hover {
+    cursor: pointer;
+    background: $light;
+  }
+}
+.user-list-item-head {
+  background: #3498db;
+}
+.selected-users-list {
+  min-height: calc(100vh - 300px);
+  overflow-y: auto;
+}
+.spinner-big-icon{
+    min-height: 70px;
+    min-width: 70px;
+}

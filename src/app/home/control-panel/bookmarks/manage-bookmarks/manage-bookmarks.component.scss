@@ -1,0 +1,77 @@
+
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.bookmark-container {
+    background-color: $white;
+    height: calc(100vh - 65px);
+    min-width: 360px;
+    max-width: 360px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.18);
+    // overflow-y: auto;
+}
+.icon-wrapper {
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    background: rgba($create, 0.2);
+}
+.switch .toggler {
+    top: -1px;
+  }
+  .sub-level-width{
+      min-width: 100px;
+  }
+  .bookmark-prop{
+    max-height: calc(100vh - 175px);
+    min-height: calc(100vh - 175px);
+    overflow-y: auto;
+  }
+  .key-value-container{
+      min-width: 288px;
+      max-width: 288px;
+      min-height: 140px;
+      max-height: 140px;
+  }
+  .kv-container{
+    min-height: 180px;
+    max-height: 180px; 
+  }
+  .key-input{
+    min-height:28px ;
+    max-height: 28px;
+  }
+  sup{
+      top:-0.1em;
+  }
+  .check-circle {
+    max-width: 16px;
+    max-height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    .fa {
+      font-size: 10px;
+    }
+  }
+  .ic-name{
+    min-width: 8px;
+    max-width: 8px;
+    min-height: 15px;
+    max-height: 15px;
+  }
+  .text-info1{
+    color: #66B4DE;
+  }
+  .image-div{
+    min-width: 25px;
+    max-width: 25px;
+  }
+  .sub-width{
+    min-width: 60px;
+    max-width: 60px;
+  }
+  .duplicate-err-icon{
+    top: 15px;
+    left: 93%;
+  }

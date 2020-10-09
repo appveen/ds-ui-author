@@ -1,0 +1,346 @@
+<div class="d-flex flex-column  mt-2 data-container">
+
+    <div class="d-flex  mb-2 justify-content-between">
+        <div class="d-flex">
+            <div class="option d-flex align-items-center mr-2 hover" (click)="toggleLogOptions($event);">
+                <div class="ml-2">Log Type</div>
+                <div class="ml-auto mr-2 ">
+                    <span class="fas fa-angle-down"></span>
+                </div>
+
+            </div>
+            <div class="option d-flex align-items-center hover mr-2" (click)="toggleOperationOptions($event)">
+                <div class="ml-2">Operation</div>
+                <div class="ml-auto mr-2 ">
+                    <span class="fas fa-angle-down"></span></div>
+            </div>
+            <div class="option d-flex align-items-center hover" (click)="toggleDsOptions($event)">
+                <div class="mx-2">Data Services</div>
+                <div class="ml-auto mr-2 ">
+                    <span class="fas fa-angle-down"></span></div>
+            </div>
+        </div>
+        <div class="text-gray-medium mr-3" *ngIf="loaded">
+            <label class="m-0">Showing {{loaded}} of {{currentRecordsCount}}</label>
+        </div>
+    </div>
+
+
+    <div class="advance-options position-absolute bg-white showLogOptions" *ngIf="showLogOptions" odpClickOutside
+        (outside)="showLogOptions=false">
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="logtype.api" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">Service Api</label>
+        </div>
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="logtype.preHook" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">Pre-Hook</label>
+        </div>
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="logtype.postHook" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">Post-Hook</label>
+        </div>
+        <!-- <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="logtype.submitHook" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">SubmitHook</label>
+        </div>
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="logtype.approveHook" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">ApproveHook</label>
+        </div>
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="logtype.reviewHook" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">ReviewHook</label>
+        </div>
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="logtype.sendForReviewHook" class="ml-2" [edit]="{status:true}">
+            </odp-checkbox>
+            <label class="text-secondary  mb-0">SendForReviewHook</label>
+        </div>
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="logtype.discardHook" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">DiscardHook</label>
+        </div> -->
+
+        <div class="d-flex">
+            <button type="button" class="btn bg-light w-100 btn-rn" (click)="clearLogType()">Clear</button>
+            <button type="button" class="btn bg-accent w-100 btn-rn" (click)="filterChange('logtype')">
+                <span class="text-white">Update</span></button>
+        </div>
+
+    </div>
+    <!-- <div class="advance-options position-absolute bg-white showResponseOptions" *ngIf="showResponseOptions"
+        odpClickOutside (outside)="showResponseOptions=false">
+        <div class=" d-flex align-items-center" *ngFor="let item of responseType | keyvalue">
+            <odp-checkbox [(checked)]="item.value" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">{{item.key}} </label>
+        </div>
+        <div class="d-flex">
+            <button type="button" class="btn bg-light w-100">Clear</button>
+            <button type="button" class="btn bg-accent w-100" (click)="filterChange('responseType')">
+                <span class="text-white">Update</span></button>
+        </div>
+    </div> -->
+
+    <div class="advance-options position-absolute bg-white showOperationOptions" *ngIf="showOperationOptions"
+        odpClickOutside (outside)="showOperationOptions=false">
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="operationType.GET" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">GET</label>
+        </div>
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="operationType.POST" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">POST</label>
+        </div>
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="operationType.PUT" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">PUT</label>
+        </div>
+        <div class=" d-flex align-items-center">
+            <odp-checkbox [(checked)]="operationType.DELETE" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+            <label class="text-secondary  mb-0">DELETE</label>
+        </div>
+        <div class="d-flex">
+            <button type="button" class="btn bg-light w-100 btn-rn" (click)="clearOperations()">Clear</button>
+            <button type="button" class="btn bg-accent w-100 btn-rn" (click)="filterChange('operationType')">
+                <span class="text-white">Update</span></button>
+        </div>
+    </div>
+    <div class="advance-options position-absolute bg-white showResponseOptions" *ngIf="showDsOptions" odpClickOutside
+        (outside)="showDsOptions=false">
+        <div class="dsContainer">
+            <ng-container *ngFor=" let ds of dataservices">
+                <div class=" d-flex align-items-center">
+                    <odp-checkbox [(checked)]="ds.selected" class="ml-2" [edit]="{status:true}"></odp-checkbox>
+                    <label class="text-secondary  mb-0">{{ds.name}}</label>
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="d-flex">
+            <button type="button" class="btn bg-light w-100 btn-rn" (click)="clearDs()">Clear</button>
+            <button type="button" class="btn bg-accent w-100 btn-rn" (click)="filterChange('operationType')">
+                <span class="text-white">Update</span></button>
+        </div>
+    </div>
+    <div class="grid-container">
+        <ag-grid-angular #agGrid style="width: 100%; height: 100%;" class="ag-theme-balham border-0"
+            [columnDefs]="columnDefs" (rowDoubleClicked)="showDetails($event)" [floatingFilter]="true"
+            rowModelType="infinite" (filterModified)="filterModified($event)" (gridReady)="onReady($event)"
+            [datasource]="dataSource" cacheBlockSize="30" (sortChanged)="sortChanged($event)" [overlayNoRowsTemplate]="noRowsTemplate">
+        </ag-grid-angular>
+    </div>
+
+    <div class="req-container position-absolute " *ngIf="showDetail">
+        <div class="d-flex align-items-center justify-content-between pt-4 ml-4">
+            <span class="font-weight-bold mb-1">{{selectedLog?.txnId}}</span>
+            <span class="fa fa-times text-muted hover mr-4" (click)="showDetail =false"></span>
+        </div>
+        <div class="tabs d-flex align-items-center border-bottom mt-3" id="sbTabs">
+            <div class="text-dark px-3 py-2 hover" (click)="activateTab(0)" [ngClass]="{'active':activeTab==0}">
+                <span>Request</span>
+            </div>
+            <div class="text-dark px-3 py-2 hover" (click)="activateTab(1)" [ngClass]="{'active':activeTab==1}">
+                <span>Response</span>
+            </div>
+        </div>
+
+        <div class="bg-light p-1 detail-container" #scrollMe>
+            <div class="m-2 bg-white req-details">
+                <div class="font-weight-bold  pl-3 pt-3">Request</div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Method & URL</div>
+                    <div class="d-flex px-4 pt-2">
+                        <div class="bg-dark method mr-2">
+                            <span class="text-white">{{selectedLog?.operation}}</span>
+                        </div>
+                        <pre class="url">{{selectedLog?.url}}</pre>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Time</div>
+                    <div class="d-flex px-4 pt-2">
+                        <div class="ml-1">
+                            {{selectedLog?._metadata.createdAt | date:'dd-MMM-yyyy hh:mm:ss a'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Source of request</div>
+                    <div class="d-flex px-4 pt-2">
+                        <odp-service-icon size="18"></odp-service-icon>
+                        <span class="ml-1 text-accent">
+                            {{ nameFormatter(selectedLog.serviceId)}}
+                        </span>
+                    </div>
+                    <div class="d-flex px-4 pt-2">
+                        <span class=" ml-1 dot-link"></span>
+                        <span class="mx-1 mt-1 far fa-bell"></span>
+                        <!-- <span class="mx-1">Remote IP</span> -->
+                        <div>{{selectedLog.logType}}</div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Requested By</div>
+                    <div class="d-flex px-4 pt-2">
+                        <span class="far fa-user"></span>
+                        <span class="ml-1 text-accent">
+                            {{selectedLog?.userId}}
+                        </span>
+                    </div>
+                    <div class="d-flex px-4 pt-2">
+                        <span class=" ml-1 dot-link"></span>
+                        <span class="mx-1">Remote IP</span>
+                        <div class="text-accent">{{selectedLog.source}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="m-2 bg-white req-details">
+                <div class="font-weight-bold  pl-3 pt-3">Response</div>
+
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Outcome</div>
+                    <div class="d-flex px-4 pt-2">
+                        <div class="method" [ngClass]="{
+                            'bg-success':selectedLog?.statusCode === 200,
+                            'bg-danger':selectedLog?.statusCode === 400}">
+                            <span class="text-white ml-1">{{selectedLog?.statusCode}}</span>
+                        </div>
+                        <div class="ml-1">
+                            {{selectedLog?.status}}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Time</div>
+                    <div class="d-flex px-4 pt-2">
+                        <div class="ml-1">
+                            {{selectedLog?._metadata.createdAt | date:'dd-MMM-yyyy hh:mm:ss a'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Transaction ID</div>
+                    <div class="d-flex px-4 pt-2">
+
+                        <div class="ml-1 text-accent">
+                            {{selectedLog?.txnId}}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom"
+                    *ngIf="selectedLog?.operation==='POST' || selectedLog?.operation==='PUT' ">
+                    <div class="text-muted">Change Log</div>
+                    <div class="d-flex px-4 pt-2">
+                        <button class="btn btn-link text-accent ml-1" *ngIf="selectedLog?.logType==='api'  "
+                            (click)="showObject()">
+                            view change log
+                        </button>
+                        <button class="btn btn-link text-accent ml-1" *ngIf="selectedLog?.logType!=='api'"
+                            (click)="showHookObject()">
+                            view change hooklog
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<ng-template #logModal>
+    <div class="modal-header bg-secondary d-block">
+        <h5 class="text-dark">Logs:&nbsp;
+            <span class="font-weight-bold">{{selectedLog?.txnId}}</span>
+            <small class="text-secondary pl-1">(Transaction ID)</small>
+        </h5>
+        <div class="row">
+            <div class="col">
+                <div class="font-weight-bold">Diagnostics</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="row" class="audit-log-table">
+            <table class="table">
+                <thead>
+                    <th style="width: 13%;">SI No</th>
+                    <th>Diagnostics</th>
+                    <th>Value</th>
+                </thead>
+                <tbody *ngFor="let req of getKeys(selectedLog?.reqBody) ; let i =index">
+                    <td>{{i+1}}</td>
+                    <td>{{req}}</td>
+                    <td>
+                        <div class="value-div" *ngIf="isStringValue(req)">
+                            {{getValue(req)}}
+                        </div>
+                        <div class="value-div" *ngIf="!isStringValue(req)">
+                            {{ getValue(req) | json }}
+                        </div>
+                    </td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer p-3 bg-light">
+        <button type="button" class="btn btn-min-width btn-light mx-3 float-right"
+            (click)="logModalRef.close(false)">Close</button>
+    </div>
+</ng-template>
+
+
+<ng-template #hookModal>
+    <div class="modal-header bg-secondary d-block">
+        <h5 class="text-dark m-0 font-weight-bold">Logs:
+            <span class="font-weight-bold">{{selectedLog?.txnId}}</span>
+        </h5>
+        <div *ngIf="selectedLog.comment" class="btn-group" role="group">
+            <button (click)="activeModalTab = 0" [ngClass]="{'active':activeModalTab == 0}" class="btn btn-icon"
+                type="button">Payload
+            </button>
+            <button (click)="activeModalTab = 1" [ngClass]="{'active':activeModalTab == 1}" class="btn btn-icon"
+                type="button">Pre-Hook log
+            </button>
+        </div>
+    </div>
+    <div class="modal-body audit-object-log">
+        <div *ngIf="activeModalTab == 0" class="d-flex flex-row">
+            <div class="w-50">
+                <div class="col text-secondary font-weight-bold">Old Data</div>
+                <div class="col">
+                    <pre class="text-dark min-height">{{selectedLog?.data?.old|json}}</pre>
+                </div>
+            </div>
+            <div class="w-50">
+                <div class="col text-secondary font-weight-bold">New Data</div>
+                <div class="col">
+                    <pre class="text-dark min-height">{{selectedLog?.data?.new|json}}</pre>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="activeModalTab == 1 && selectedLog?.comment" class="d-flex flex-row">
+            <table class="table table-sm">
+                <thead>
+                    <th>S.No.</th>
+                    <th>Message Returned</th>
+                    <th>Timestamp</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1.</td>
+                        <td>{{selectedLog?.comment}}</td>
+                        <td>{{selectedLog?.timestamp|date:'dd-MMM-yyyy hh:mm:ss a' || 'None'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer p-3 bg-light">
+        <button (click)="hookModalRef.close(false)" class="btn btn-min-width btn-light mx-3 float-right"
+            type="button">Close</button>
+    </div>
+</ng-template>

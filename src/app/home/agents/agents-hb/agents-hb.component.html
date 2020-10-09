@@ -1,0 +1,13 @@
+<div *ngIf="agent.heartbeat >-1" class="d-flex align-items-center">
+    <div class="strength-tower d-flex flex-column mr-2 {{getStrength(agent.streak)}}">
+        <div class="strength-high"></div>
+        <div class="strength-medium"></div>
+        <div class="strength-low"></div>
+    </div>
+    <span class="text-muted">
+        {{agent.heartbeat}}s
+    </span>
+</div>
+<span *ngIf="!agent.heartbeat || agent.heartbeat == -1" class="text-muted">
+    N.A.
+</span>

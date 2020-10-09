@@ -1,0 +1,31 @@
+.toggle-state-icon {
+  width: 16px;
+  height: 16px;
+  visibility: hidden;
+  font-size: 10px;
+  &.show {
+    visibility: visible;
+  }
+}
+.lines {
+  min-height: 34px;
+  .vertical-line {
+    min-height: 17px;
+    &.full {
+      min-height: 34px;
+    }
+  }
+  .horizonal-line {
+    min-width: 12px;
+  }
+}
+
+.ghost-element {
+  min-width: 200px;
+  max-width: 200px;
+  z-index: 10;
+}
+.field-type-badge {
+  min-width: 26px;
+  min-height: 20px;
+}

@@ -1,0 +1,719 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+  <div class="align-self-center text-center">
+    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="text-secondary mt-2">Processing</div>
+  </div>
+</div>
+<div class="d-flex flex-column w-100 h-100">
+  <div class="d-flex w-100">
+    <div class="d-flex flex-column wizard p-4 bg-light">
+      <div class="font-weight-bold mb-4">Bulk User Upload Wizard</div>
+      <div class="d-flex align-items-center justify-content-between mb-4" [ngClass]="{'active':activeStep == 0}">
+        <div class="d-flex align-items-center">
+          <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
+            [ngClass]="{'border-secondary':activeStep==0}"></span>
+          <span class="text text-secondary">Select File</span>
+        </div>
+        <span class="fa fa-angle-right fa-lg d-none" [ngClass]="{'d-none':activeStep != 0}"></span>
+      </div>
+      <div class="d-flex align-items-center justify-content-between mb-4" [ngClass]="{'active':activeStep == 1}">
+        <div class="d-flex align-items-center">
+          <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
+            [ngClass]="{'border-secondary':activeStep==1}"></span>
+          <span class="text text-secondary">File Settings</span>
+        </div>
+        <span class="fa fa-angle-right fa-lg d-none" [ngClass]="{'d-none':activeStep != 1}"></span>
+      </div>
+      <div class="d-flex align-items-center justify-content-between mb-4" [ngClass]="{'active':activeStep == 2}">
+        <div class="d-flex align-items-center">
+          <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
+            [ngClass]="{'border-secondary':activeStep==2}"></span>
+          <span class="text text-secondary">Columns Mapping</span>
+        </div>
+        <span class="fa fa-angle-right fa-lg d-none" [ngClass]="{'d-none':activeStep != 2}"></span>
+      </div>
+      <div class="d-flex align-items-center justify-content-between mb-4" [ngClass]="{'active':activeStep == 3}">
+        <div class="d-flex align-items-center">
+          <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
+            [ngClass]="{'border-secondary':activeStep==3}"></span>
+          <span class="text text-secondary">Resolve Conflicts</span>
+        </div>
+        <span class="fa fa-angle-right fa-lg d-none" [ngClass]="{'d-none':activeStep != 3}"></span>
+      </div>
+      <div class="d-flex align-items-center justify-content-between mb-4" [ngClass]="{'active':activeStep == 4}">
+        <div class="d-flex align-items-center">
+          <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
+            [ngClass]="{'border-secondary':activeStep==4}"></span>
+          <span class="text text-secondary">Finish</span>
+        </div>
+        <span class="fa fa-angle-right fa-lg d-none" [ngClass]="{'d-none':activeStep != 4}"></span>
+      </div>
+      <button class="btn btn-link mt-auto" (click)="cancel()">Cancel and Exit</button>
+    </div>
+    <div class="d-flex flex-column w-100 h-100 ml-4 mt-4 position-relative" *ngIf="activeStep==0">
+      <div class="d-flex flex-column">
+        <div class="d-flex ml-3">
+          <div class="d-flex justify-content-center align-items-center bg-light small-icon-div">
+            <div class="ic-upload small-icon"></div>
+          </div>
+          <span class="text-accent pl-3 pt-2">Select File</span>
+        </div>
+
+        <div class="messsage border-top mt-3 ml-3"></div>
+
+        <label class="drop-box-logo drop-box d-flex align-items-center justify-content-center m-3" odpDragAndDrop
+          placement="top" (fileData)="dragAndUpload($event)" (dragOver)="dragOver($event)" (dragOut)="dragOut($event)"
+          [ngClass]="{'bg-light-green':ripple}" *ngIf="!uploadObj.showUploadTag">
+          <input type="file" name="logoFile" id="logoFile" class="d-none" (change)="selectAndUpload($event)">
+          <div class="d-flex flex-column align-items-center justify-content-center">
+            <div class="upload-icon " *ngIf="!ripple"></div>
+            <div class="d-flex  justify-content-center   align-items-center bg ripple-div circle-ripple" *ngIf="ripple">
+              <div class="ic-upload-m "></div>
+            </div>
+            <!-- <div class=" circle-ripple"></div> -->
+            <!-- <div class="circle-ripple" >
+              <span class="ic-upload big-Icon circle-ripple"></span>
+            </div> -->
+            <span class="text-accent pt-4 font-weight-bold ">Drag and drop your file here</span>
+          </div>
+        </label>
+        <label class="d-flex justify-content-between align-items-center small-drop-box p-2" odpDragAndDrop
+          *ngIf="uploadObj.showUploadTag">
+          <div class="d-flex align-items-center ">
+            <div class="il-filetype-csv"></div>
+            <input type="file" name="logoFile" id="logoFile" class="d-none" (change)="selectAndUpload($event)">
+            <span class="text-muted ml-2">{{fileData?.fileName}}</span>
+          </div>
+          <!-- [ngClass]="{'b-right':uploadObj.uploadProgress >30,b-bottom':uploadObj.uploadProgress>50,b-left':uploadObj.uploadProgress>90}" -->
+          <div class="d-flex justify-content-between align-items-center px-2 tags bg-light spinner-tag"
+            [ngClass]="{'bg-danger1':uploadObj.uploadError }">
+            <div class="d-flex">
+              <div class="spinner mr-2" *ngIf="uploadObj.showUploadSpinner"
+                [ngClass]="{'b-right':uploadObj.uploadProgress >30,'b-bottom':uploadObj.uploadProgress >90}">
+              </div>
+              <div class="mapper-warning" *ngIf="uploadObj.uploadError"></div>
+              <span class="text-accent text-accent d-flex align-items-center font-sm ml-1"
+                *ngIf="uploadObj.showUploadSpinner">Uploading...</span>
+              <span class="text-danger text-accent d-flex align-items-center font-sm ml-1"
+                *ngIf="!uploadObj.showUploadSpinner">{{uploadObj.errorMsg?uploadObj.errorMsg:uploadError}}</span>
+            </div>
+            <div class="text-muted font-sm" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
+            <div class="text-accent font-sm" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
+          </div>
+          <span class="text-accent hover" *ngIf="!uploadObj.showUploadTag && !parseObj.showParseTag ">Re-Upload</span>
+        </label>
+        <div class="d-flex justify-content-between messsage ml-3">
+          <span class="text-muted font-sm">Supported file types(csv,xslx)</span>
+          <span class="text-muted font-sm">Having issue ?Click here to select file using the explorer</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column w-100 h-100 ml-4 mt-4" *ngIf="activeStep==1">
+      <div class="d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex">
+            <div class="d-flex justify-content-center align-items-center bg-light small-icon-div">
+
+              <div class="ic-parse-settings small-icon"></div>
+            </div>
+            <span class="text-accent pl-3 pt-2">File Settings</span>
+          </div>
+          <div class="d-flex">
+            <button class="btn btn-link text-priary mr-3 " (click)="back()"><span
+                class="fa fa fa-angle-left text-priary mr-1"></span>Back</button>
+            <button class="btn btn-primary font-weight-bold" (click)="parseFile()">
+              Parse File <span class="fa fa fa-angle-right text-priary ml-1"></span>
+            </button>
+          </div>
+        </div>
+        <label class="d-flex justify-content-between align-items-center small-drop-box p-2" odpDragAndDrop>
+          <div class="d-flex align-items-center ">
+            <div class="il-filetype-csv"></div>
+            <input type="file" name="logoFile" id="logoFile" class="d-none" (change)="selectAndUpload($event)">
+            <span class="text-muted ml-2">{{fileData?.fileName}}</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center px-2 tags bg-light spinner-tag"
+            *ngIf="parseObj.showParseTag" [ngClass]="{'bg-danger1':parseObj.parseError }">
+            <div class="d-flex">
+              <div class="spinner mr-2" *ngIf="parseObj.showParseSpinner"></div>
+              <div class="mapper-warning" *ngIf="parseObj.parseError"></div>
+              <span class="text-accent text-accent d-flex align-items-center font-sm ml-1"
+                *ngIf="parseObj.showParseSpinner">Parseing
+                file...</span>
+              <span class="text-danger text-accent d-flex align-items-center font-sm ml-1"
+                *ngIf="!parseObj.showParseSpinner">Parseing
+                failed...</span>
+            </div>
+            <!-- <div class="text-muted font-sm" *ngIf="parseObj.showParseSpinner">362 found</div> -->
+            <div class="text-accent font-sm" *ngIf="!parseObj.showParseSpinner">Retry</div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center px-2 tags bg-light spinner-tag"
+            *ngIf="uploadObj.showUploadTag" [ngClass]="{'bg-danger1':uploadObj.uploadError }">
+            <div class="d-flex">
+              <div class="spinner mr-2" *ngIf="uploadObj.showUploadSpinner"
+                [ngClass]="{'b-right':uploadObj.uploadProgress >30,'b-bottom':uploadObj.uploadProgress >90}">
+              </div>
+              <div class="mapper-warning" *ngIf="uploadObj.uploadError"></div>
+              <span class="text-accent text-accent d-flex align-items-center font-sm ml-1"
+                *ngIf="uploadObj.showUploadSpinner">Uploading...</span>
+              <span class="text-danger text-accent d-flex align-items-center font-sm ml-1"
+                *ngIf="!uploadObj.showUploadSpinner">{{uploadObj.errorMsg}}</span>
+            </div>
+            <div class="text-muted font-sm" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
+            <div class="text-accent font-sm" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
+          </div>
+          <span class="text-accent hover" *ngIf="!uploadObj.showUploadTag && !parseObj.showParseTag ">Re-Upload</span>
+        </label>
+        <div class="d-flex flex-column ml-4 mt-4">
+          <span class="font-weight-bold ">File Settings</span>
+          <div class="d-flex flex-column ml-3 mt-3">
+            <div class="d-flex w-100 mb-4" *ngIf="fileData?.type!='csv'">
+              <div class="label-width text-secondary">Sheet to read</div>
+              <div class="value-width ml-40">
+                <select name="" id="" class="form-control" [(ngModel)]="fileSettings.sheet">
+                  <option *ngFor="let item of fileData?.sheets" class="form-control" [value]="item">{{item}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="d-flex w-100 mb-4">
+              <div class="label-width text-secondary">Rows to skip</div>
+              <div class="value-width text-muted ml-40">Min and max lengths of the value</div>
+            </div>
+            <div class="border-left d-flex flex-column mb-4 ml-4">
+              <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-column position-relative">
+                <div class="d-flex">
+                  <div class="sub-level-width text-secondary">From the top</div>
+                  <div>
+                    <input class="form-control short ml-20" placeholder="Row Number" type="number" min="0"
+                      [(ngModel)]="fileSettings.topSkip">
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex w-10 ml-2 pl-2 d-flex flex-column position-relative">
+                <div class="d-flex">
+                  <div class="sub-level-width text-secondary">From the bottom</div>
+                  <div class="d-flex flex-row">
+                    <input class="value-width form-control short ml-20" placeholder="Row Number" type="number" min="0"
+                      [(ngModel)]="fileSettings.bottomSkip">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex w-100 mb-4">
+              <div class="label-width text-secondary">Mark first record as header</div>
+              <div class="d-flex align-items-center ml-50 ">
+                <label class="switch accent mb-0 mt-1" for="createSwitch" id="create">
+                  <input type="checkbox" id="createSwitch" [(ngModel)]="fileSettings.fileHeaders">
+                  <span class="slider"></span>
+                  <span class="toggler"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column w-100 h-100 ml-4 mt-4" *ngIf="activeStep==2">
+      <div class="d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex">
+            <div class="d-flex justify-content-center align-items-center bg-light small-icon-div">
+
+              <div class="ic-mapper small-icon"></div>
+            </div>
+            <span class="text-accent pl-3 pt-2">Columns Mapping</span>
+          </div>
+          <div class="d-flex">
+            <button class="btn btn-link text-priary mr-3 " (click)="back()"><span
+                class="fa fa fa-angle-left text-priary mr-1"></span>Back</button>
+            <button class="btn btn-primary font-weight-bold" (click)="continue()">
+              Continue <span class="fa fa fa-angle-right text-priary ml-1"></span>
+            </button>
+          </div>
+        </div>
+        <!-- <label class="d-flex justify-content-between align-items-center small-drop-box p-2" odpDragAndDrop>
+          <div class="d-flex align-items-center ">
+            <div class="il-filetype-csv"></div>
+            <input type="file" name="logoFile" id="logoFile" class="d-none" (change)="selectAndUpload($event)">
+            <span class="text-muted ml-2">{{fileData?.fileName}}</span>
+          </div>
+          <span class="text-accent hover">Re-Upload</span>
+        </label> -->
+        <label class="d-flex justify-content-between align-items-center small-drop-box p-2" odpDragAndDrop>
+          <div class="d-flex align-items-center ">
+            <div class="il-filetype-csv"></div>
+            <input type="file" name="logoFile" id="logoFile" class="d-none" (change)="selectAndUpload($event)">
+            <span class="text-muted ml-2">{{fileData?.fileName}}</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center px-2 tags bg-light spinner-tag"
+            *ngIf="uploadObj.showUploadTag" [ngClass]="{'bg-danger1':uploadObj.uploadError }">
+            <div class="d-flex">
+              <div class="spinner mr-2" *ngIf="uploadObj.showUploadSpinner"
+                [ngClass]="{'b-right':uploadObj.uploadProgress >30,'b-bottom':uploadObj.uploadProgress >90}"></div>
+              <div class="mapper-warning" *ngIf="uploadObj.uploadError"></div>
+              <span class="text-accent text-accent d-flex align-items-center font-sm ml-1"
+                *ngIf="uploadObj.showUploadSpinner">Uploading...</span>
+              <span class="text-danger text-accent d-flex align-items-center font-sm ml-1"
+                *ngIf="!uploadObj.showUploadSpinner">{{uploadObj.errorMsg}}...</span>
+            </div>
+            <div class="text-muted font-sm" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
+            <div class="text-accent font-sm" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
+          </div>
+          <span class="text-accent hover" *ngIf="!uploadObj.showUploadTag && !parseObj.showParseTag ">Re-Upload</span>
+        </label>
+        <div class="d-flex flex-column ml-4 mt-4 mapping">
+          <div class="d-flex justify-content-between">
+            <span class="font-weight-bold ">Target Column</span>
+            <div class="d-flex text-accent" *ngIf="fileMappingData.headerMapping">
+              <span class="ic-wand small-icon"></span>
+              <span class="font-weight-bold  hover" (click)="autoMap()">Auto Map</span>
+            </div>
+          </div>
+          <form [formGroup]="fileMappingFrom">
+            <div class="d-flex flex-column ml-3 mt-3">
+              <div class="d-flex w-100 mb-4 align-items-center">
+                <div class="label-width text-secondary p-2 bg-light rounded">User name</div>
+                <div class="border-top line"></div>
+                <div class="value-width">
+                  <select name="" id="" class="form-control" formControlName="username"
+                    [ngClass]="{'is-invalid':!fileMappingFrom.get('username').valid &&  fileMappingFrom.get('username').touched }">
+                    <option value="">----Select----</option>
+                    <option *ngFor="let item of fileMappingData?.headers?.fileKeys" [value]="item.name">{{item?.name}}</option>
+                  </select>
+                </div>
+                <span class="mapper-warning "
+                  *ngIf="fileMappingFrom.get('username').invalid &&  fileMappingFrom.get('username').touched"></span>
+
+              </div>
+              <div class="d-flex w-100 mb-4 align-items-center">
+                <div class="label-width text-secondary p-2 bg-light rounded">Name</div>
+                <div class="border-top line"></div>
+                <div class="value-width">
+                  <select name="" id="" class="form-control" [formControlName]="'basicDetails.name'"
+                    [ngClass]="{'is-invalid':!fileMappingFrom.get(['basicDetails.name']).valid &&  fileMappingFrom.get(['basicDetails.name']).touched }">
+                    <option value="">----Select----</option>
+                    <option *ngFor="let item of fileMappingData?.headers?.fileKeys;let i =index" [value]="item.name">
+                      {{item?.name}}</option>
+                  </select>
+                </div>
+                <span class="mapper-warning "
+                  *ngIf="!fileMappingFrom.get(['basicDetails.name']).valid &&  fileMappingFrom.get(['basicDetails.name']).touched"></span>
+
+              </div>
+              <div class="d-flex w-100 mb-4 align-items-center">
+                <div class="label-width text-secondary p-2 bg-light rounded">Password</div>
+                <div class="border-top line"></div>
+                <div class="value-width">
+                  <select name="" id="" class="form-control" formControlName="password"
+                    [ngClass]="{'is-invalid':!fileMappingFrom.get('password').valid &&  fileMappingFrom.get('password').touched }">
+                    <option value="">----Select----</option>
+                    <option *ngFor="let item of fileMappingData?.headers?.fileKeys" [value]="item.name">{{item?.name}}</option>
+                  </select>
+                </div>
+                <span class="mapper-warning "
+                  *ngIf="!fileMappingFrom.get('password').valid &&  fileMappingFrom.get('password').touched"></span>
+
+              </div>
+              <div class="d-flex w-100 mb-4 align-items-center">
+                <div class="label-width text-secondary p-2 bg-light rounded">Phone</div>
+                <div class="border-top line"></div>
+                <div class="value-width">
+                  <select name="" id="" class="form-control" [formControlName]="'basicDetails.phone'">
+                    <option value="">----Select----</option>
+                    <option *ngFor="let item of fileMappingData?.headers?.fileKeys" [value]="item.name">{{item?.name}}</option>
+                  </select>
+                </div>
+
+              </div>
+            </div>
+          </form>
+          <!-- <div class="d-flex flex-column ml-3 mt-3">
+            <div class="d-flex w-100 mb-4 align-items-center">
+              <div class="label-width text-secondary p-2 bg-light rounded">User name</div>
+              <div class="border-top line"></div>
+              <div class="value-width">
+                <select name="" id="" class="form-control" [(ngModel)]="fileMapping.username">
+                  <option value="">----Select----</option>
+                  <option *ngFor="let item of fileMappingData?.headers?.fileKeys" [value]="item">{{item}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="d-flex w-100 mb-4 align-items-center">
+              <div class="label-width text-secondary p-2 bg-light rounded">Name</div>
+              <div class="border-top line"></div>
+              <div class="value-width">
+                <select name="" id="" class="form-control" [(ngModel)]="fileMapping['basicDetails.name']">
+                  <option value="">----Select----</option>
+                  <option *ngFor="let item of fileMappingData?.headers?.fileKeys" [value]="item">{{item}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="d-flex w-100 mb-4 align-items-center">
+              <div class="label-width text-secondary p-2 bg-light rounded">Password</div>
+              <div class="border-top line"></div>
+              <div class="value-width">
+                <select name="" id="" class="form-control" [(ngModel)]="fileMapping.password">
+                  <option value="">----Select----</option>
+                  <option *ngFor="let item of fileMappingData?.headers?.fileKeys" [value]="item">{{item}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="d-flex w-100 mb-4 align-items-center">
+              <div class="label-width text-secondary p-2 bg-light rounded">Phone</div>
+              <div class="border-top line"></div>
+              <div class="value-width">
+                <select name="" id="" class="form-control" [(ngModel)]="fileMapping['basicDetails.phone']">
+                  <option value="">----Select----</option>
+                  <option *ngFor="let item of fileMappingData?.headers?.fileKeys" [value]="item">{{item}}</option>
+                </select>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column w-100 h-100 ml-4 mt-4" *ngIf="activeStep==3">
+      <div class="d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <div class="d-flex justify-content-center align-items-center bg-light small-icon-div">
+
+              <div class="ic-conflict small-icon"></div>
+            </div>
+            <span class="text-accent pl-3 pt-2">Review/Resolve</span>
+          </div>
+          <div class="d-flex">
+            <button class="btn btn-link text-priary mr-3 " (click)="back()"><span
+                class="fa fa fa-angle-left text-priary mr-1"></span>Back</button>
+            <button class="btn btn-primary font-weight-bold" (click)="resolveContinue()"
+              [disabled]="errorLog?.total === errorLog?.errors">
+              Continue <span class="fa fa fa-angle-right text-priary ml-1"></span>
+            </button>
+          </div>
+        </div>
+        <!-- <label class="d-flex justify-content-between align-items-center small-drop-box p-2" odpDragAndDrop>
+          <div class="d-flex align-items-center ">
+            <div class="il-filetype-csv"></div>
+            <input type="file" name="logoFile" id="logoFile" class="d-none" (change)="selectAndUpload($event)">
+            <span class="text-muted ml-2">{{fileData?.fileName}}</span>
+          </div>
+          <span class="text-accent hover">Re-Upload</span>
+        </label> -->
+        <label class="d-flex justify-content-between align-items-center small-drop-box p-2" odpDragAndDrop>
+          <div class="d-flex align-items-center ">
+            <div class="il-filetype-csv"></div>
+            <input type="file" name="logoFile" id="logoFile" class="d-none" (change)="selectAndUpload($event)">
+            <span class="text-muted ml-2">{{fileData?.fileName}}</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center px-2 tags bg-light spinner-tag"
+            *ngIf="uploadObj.showUploadTag" [ngClass]="{'bg-danger1':uploadObj.uploadError }">
+            <div class="d-flex">
+              <div class="spinner mr-2" *ngIf="uploadObj.showUploadSpinner"
+                [ngClass]="{'b-right':uploadObj.uploadProgress >30,'b-bottom':uploadObj.uploadProgress >90}">
+              </div>
+              <div class="mapper-warning" *ngIf="uploadObj.uploadError"></div>
+              <span class="text-accent text-accent d-flex align-items-center font-sm ml-1"
+                *ngIf="uploadObj.showUploadSpinner">Uploading...</span>
+              <span class="text-danger text-accent d-flex align-items-center font-sm ml-1"
+                *ngIf="!uploadObj.showUploadSpinner">{{uploadObj.errorMsg}}...</span>
+            </div>
+            <div class="text-muted font-sm" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
+            <div class="text-accent font-sm" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
+          </div>
+          <span class="text-accent hover" *ngIf="!uploadObj.showUploadTag && !parseObj.showParseTag ">Re-Upload</span>
+        </label>
+        <div class="d-flex align-items-center mt-4 mx-4">
+          <div class="d-flex justify-content-between border align-items-center px-2 tags text-muted"
+            [ngClass]="{'selected-record':displayRecord==='All'}" (click)="setFilter('All');displayRecord='All'">
+            <ng-container *ngIf="showLazyLoader">
+              <odp-loading-placeholder width="120" height="15"></odp-loading-placeholder>
+            </ng-container>
+            <ng-container *ngIf="!showLazyLoader">
+              <span class="font-sm ">Records Found</span>
+              <span>{{errorLog?.total}}</span>
+            </ng-container>
+          </div>
+
+          <div class="d-flex justify-content-between border align-items-center px-2 tags text-muted ml-3"
+            [ngClass]="{'selected-record':displayRecord==='Valid'}"
+            (click)="setFilter('Validated');displayRecord='Valid'">
+            <ng-container *ngIf="showLazyLoader">
+              <odp-loading-placeholder width="120" height="15"></odp-loading-placeholder>
+            </ng-container>
+            <ng-container *ngIf="!showLazyLoader">
+              <div class="d-flex">
+                <span class="status active"></span>
+                <span class="font-sm ml-1">Valid Records </span>
+              </div>
+              <span>{{errorLog?.total-(errorLog?.errors+errorLog?.conflicts)}}</span>
+            </ng-container>
+          </div>
+          <div class="d-flex justify-content-between border align-items-center px-2 tags text-muted ml-3"
+            (click)="setFilter('conflict');displayRecord='Conflict'"
+            [ngClass]="{'selected-record':displayRecord==='Conflict'}">
+            <ng-container *ngIf="showLazyLoader">
+              <odp-loading-placeholder width="120" height="15"></odp-loading-placeholder>
+            </ng-container>
+            <ng-container *ngIf="!showLazyLoader">
+              <div class="d-flex">
+                <span class="status pending"></span>
+                <span class="font-sm ml-1">Duplicates</span>
+              </div>
+              <span>{{errorLog?.conflicts}}</span>
+            </ng-container>
+          </div>
+          <div class="d-flex justify-content-between border align-items-center px-2 tags text-muted ml-3"
+            (click)="setFilter('Error');displayRecord='Error'" [ngClass]="{'selected-record':displayRecord==='Error'}">
+            <ng-container *ngIf="showLazyLoader">
+              <odp-loading-placeholder width="120" height="15"></odp-loading-placeholder>
+            </ng-container>
+            <ng-container *ngIf="!showLazyLoader">
+              <div class="d-flex">
+                <span class="status stopped"></span>
+                <span class="font-sm ml-1">Errors</span>
+              </div>
+              <span>{{errorLog?.errors}}</span>
+            </ng-container>
+          </div>
+        </div>
+        <!-- <div class="mt-4 usrTable">
+          <odp-data-grid (loadData)="loadMore($event)" [totalRecords]="totalUserCount" [pageSize]=10
+            [loading]="tableLoader">
+            <odp-data-grid-header width="40">
+            </odp-data-grid-header>
+            <odp-data-grid-header width="80">
+              Import
+            </odp-data-grid-header>
+            <odp-data-grid-header width="40">
+              #
+            </odp-data-grid-header>
+            <odp-data-grid-header width="250">
+              User Name
+            </odp-data-grid-header>
+            <odp-data-grid-header width="200">
+              Name
+            </odp-data-grid-header>
+            <odp-data-grid-header width="130">
+              Phone
+            </odp-data-grid-header>
+            <odp-data-grid-header width="70">
+              Action
+            </odp-data-grid-header>
+            <odp-data-grid-row class="d-block abc" *ngFor="let usr of userList;let usrIndex=index"
+              (click)="resolveConflict(usrIndex)" [ngClass]="{
+              'bg-danger1 ':usr?.status==='Error',
+              'bg-light ': isConflictIgnoredRecord(usr),
+              'bg-yellow':isConflictRecord(usr)}">
+              <ng-container>
+                <odp-data-grid-cell>
+                  <span class="status stopped" *ngIf="usr?.status==='Error'"></span>
+                  <span class="status pending" *ngIf="isConflictRecord(usr)"></span>
+                  <span class="fa fa-check-circle small-icon text-success" *ngIf="isConflictResovedRecord(usr)"></span>
+                  <span class="fa fa-times small-icon text-muted" *ngIf="isConflictIgnoredRecord(usr)"></span>
+                  <span class="fa fa-check small-icon text-success"
+                    *ngIf="usr?.status!=='Error' && !usr.conflict"></span>
+                </odp-data-grid-cell>
+                <odp-data-grid-cell>
+                  <span>{{usrIndex+1}}</span>
+                </odp-data-grid-cell>
+                <odp-data-grid-cell>
+                  <span>{{usr?.data?.username}}</span>
+                </odp-data-grid-cell>
+                <odp-data-grid-cell>
+                  <span>{{usr?.data.basicDetails?.name}}</span>
+                </odp-data-grid-cell>
+                <odp-data-grid-cell>
+                  <span>{{usr?.data.basicDetails?.phone}}</span>
+                </odp-data-grid-cell>
+                <odp-data-grid-cell>
+                  <span class="fa fa-ellipsis-h small-icon text-muted"
+                    *ngIf="usr?.status=='Error' || !usr.conflict"></span>
+                  <span class="text-primary" *ngIf="usr?.status!=='Error' && usr.conflict">Resolve</span>
+                </odp-data-grid-cell>
+              </ng-container>
+            </odp-data-grid-row>
+
+            <odp-data-grid-row *ngIf="(!userList || userList.length==0) && !showLazyLoader">
+              <span class="text-muted">No Records</span>
+            </odp-data-grid-row>
+          </odp-data-grid>
+        </div> -->
+        <div class="d-flex flex-column w-100 ">
+          <div class="card-container bg-white mt-3">
+              <div class="data-grid-options d-flex align-items-center justify-content-end py-2">
+                  <div class="d-flex align-items-center">
+                      <span class="page-info">
+                          {{startNo}}-{{endNo}} of {{totalUserCount}}
+                      </span>
+                      <button type="button" class="btn btn-link ml-2" [disabled]="disablePrev" (click)="prevPage()">
+                          <span class="fa fa-angle-left"></span>
+                      </button>
+                      <button type="button" class="btn btn-link ml-2" [disabled]="disableNext" (click)="nextPage()">
+                          <span class="fa fa-angle-right"></span>
+                      </button>
+                  </div>
+              </div>
+              <div class="table-height">
+                  <div class="data-grid border" odpDataGrid >
+                      <div class="data-grid-header">
+                          <div class="data-grid-row">
+                              <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="Import">
+                                  Import</div>
+                              <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="hash">#
+                              </div>
+                              <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="userName">
+                                  User Name</div>
+                              <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="name">Name
+                              </div>
+                              <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id='phone'>Phone
+                              </div>
+                              <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id='action'>
+                                  Action</div>
+                              <!-- <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id='btn'></div> -->
+                          </div>
+                      </div>
+                      <div class="data-grid-body">
+                          <div class="data-grid-row" *ngFor="let usr of userList; let usrIndex = index"  (click)="resolveConflict(usrIndex)" [ngClass]="{
+                            'bg-danger1 ':usr?.status==='Error',
+                            'bg-light ': isConflictIgnoredRecord(usr),
+                            'bg-yellow':isConflictRecord(usr)}">
+                              <!-- <div class="data-grid-cell d-flex align-items-center">
+                                  <odp-round-check [edit]="{status:true}" [(checked)]="usr.checked"></odp-round-check>
+                              </div> -->
+                              <!-- <div class="data-grid-cell d-flex align-items-center"
+                                   (click)="resolveConflict(usrIndex)" [ngClass]="{
+                                      'bg-danger1 ':usr?.status==='Error',
+                                      'bg-light ': isConflictIgnoredRecord(usr),
+                                      'bg-yellow':isConflictRecord(usr)}">
+      
+                              </div> -->
+                              <div class="data-grid-cell d-flex align-items-center">
+                                  <span class="status stopped" *ngIf="usr?.status==='Error'"></span>
+                                  <span class="status pending" *ngIf="isConflictRecord(usr)"></span>
+                                  <span class="fa fa-check-circle small-icon text-success"
+                                      *ngIf="isConflictResovedRecord(usr)"></span>
+                                  <span class="fa fa-times small-icon text-muted" *ngIf="isConflictIgnoredRecord(usr)"></span>
+                                  <span class="fa fa-check small-icon text-success"
+                                      *ngIf="usr?.status!=='Error' && !usr.conflict"></span> </div>
+                              <div class="data-grid-cell d-flex align-items-center"> <span>{{usrIndex+1}}</span></div>
+                              <div class="data-grid-cell d-flex align-items-center"> <span>{{usr?.data?.username}}</span>
+                              </div>
+                              <div class="data-grid-cell d-flex align-items-center">
+                                  <span>{{usr?.data.basicDetails?.name}}</span> </div>
+                              <div class="data-grid-cell d-flex align-items-center">
+                                  <span>{{usr?.data.basicDetails?.phone}}</span> </div>
+      
+                              <div class="data-grid-cell d-flex align-items-center"> <span
+                                      class="fa fa-ellipsis-h small-icon text-muted"
+                                      *ngIf="usr?.status=='Error' || !usr.conflict"></span>
+                                  <span class="text-primary" *ngIf="usr?.status!=='Error' && usr.conflict">Resolve</span>
+                              </div>
+      
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column w-100 h-100 ml-4 mt-4" *ngIf="activeStep==4">
+      <div class="d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <div class="d-flex justify-content-center align-items-center bg-light small-icon-div">
+
+              <div class="ic-finish small-icon"></div>
+            </div>
+            <span class="text-accent pl-3 pt-2">Finish</span>
+          </div>
+          <div class="d-flex">
+            <!-- <button class="btn btn-link text-priary mr-3 " (click)="back()"><span class="fa fa fa-angle-left text-priary mr-1"></span>Cancel</button> -->
+            <button class="btn btn-success font-weight-bold" (click)="cancel()">
+              Finish <span class="fa fa fa-angle-right text-priary ml-1"></span>
+            </button>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center small-drop-box p-2">
+          <div class="d-flex align-items-center ">
+            <div class="il-filetype-csv small-icon"></div>
+            <span class="text-muted ml-2">{{fileData?.fileName}}</span>
+          </div>
+        </div>
+        <div class="d-flex mt-4 ml-4">
+          <div class="border finishBox align-items-center d-flex justify-content-center">
+            <div class="d-flex justify-content-center finish  align-items-center bg-light">
+              <span class="fa fa-check text-success big-Icon"></span>
+            </div>
+          </div>
+          <div class="d-flex flex-column ml-4">
+            <div class="text-success">{{finalLog?.created}} users imported succesfully</div>
+            <div class="d-flex mt-3 justify-content-between">
+              <div>Records found</div>
+              <div> {{finalLog?.created + finalLog?.ignored}}</div>
+            </div>
+            <div class="d-flex mt-3 justify-content-between">
+              <div>Records imported</div>
+              <div> {{finalLog?.created}}</div>
+            </div>
+            <div class="d-flex mt-3 justify-content-between">
+              <div>Records ignored</div>
+              <div> {{finalLog?.ignored}}</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="text-muted mt-3 ml-4">Redirecting to user listing page in {{timer}} seconds</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #conflictModel>
+  <div class="modal-body p-4 ">
+    <div class="d-flex-column ">
+      <div class="d-flex">
+        <div class="d-flex justify-content-center align-items-center bg-light small-icon-div">
+          <div class="ic-conflict small-icon text-primary"></div>
+        </div>
+        <div class="font-weight-bold ml-4 pt-2">Resolve Duplicates</div>
+      </div>
+      <!-- <div class="d-flex flex-column p-4">
+        <div class="font-weight-bold ">Original</div>
+        <div class="text-muted font-sm">Select Original to make no changes and ignore conflicts records</div>
+        <div class="d-flex rounded confict-div align-items-center justify-content-between p-2 "
+          [ngClass]="{'selected-record':selectedConflictRecords[0]?.selected}" (click)="markselected(0)">
+          <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
+            [ngClass]="{'border-blue':selectedConflictRecords[0]?.selected}"></span>
+          <span>#</span>
+          <span>{{selectedConflictRecords[0]?.data?.username}}</span>
+          <span>{{selectedConflictRecords[0]?.data.basicDetails?.name}}</span>
+          <span>{{selectedConflictRecords[0]?.data.basicDetails?.phone}}</span>
+        </div>
+      </div> -->
+      <div class="d-flex flex-column p-4">
+        <div class="font-weight-bold ">Duplicates</div>
+        <div class="text-muted font-sm">Select a record to use</div>
+        <div class="duplicates">
+          <ng-container *ngFor="let user of selectedConflictRecords;let uIndex=index">
+            <div class="d-flex confict-div align-items-center justify-content-between p-2 rounded" 
+              (click)="markselected(uIndex)" [ngClass]="{'selected-record':user?.selected}">
+              <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center "
+                [ngClass]="{'border-blue':user?.selected}"></span>
+              <span>{{uIndex}}</span>
+              <span>{{user?.data?.username}}</span>
+              <span>{{user?.data.basicDetails?.name}}</span>
+              <span>{{user?.data.basicDetails?.phone}}</span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end w-100">
+
+        <button type="button" class="btn btn-link mr-3" (click)="conflictModelRef.close(false);">Ignore All</button>
+        <button type="button" class="btn btn-primary btn-min-width" (click)="conflictModelRef.close(true)">Resolve</button>
+      </div>
+    </div>
+  </div>
+
+</ng-template>

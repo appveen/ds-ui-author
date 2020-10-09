@@ -1,0 +1,97 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.details-photo {
+  min-height: 20px;
+  max-height: 20px;
+  min-width: 20px;
+  max-width: 20px;
+}
+
+.label-width {
+  width: 200px;
+}
+
+.pwd-options {
+  left: 80%;
+}
+
+.props {
+  height: 100%;
+  counter-reset: attr-counter;
+
+  .attrs {
+    .key {
+      min-width: 160px;
+      max-width: 160px;
+
+      &::before {
+        counter-increment: attr-counter;
+        content: counter(attr-counter) ". ";
+        margin-right: 0.5rem;
+      }
+    }
+
+    .value {
+      min-width: 110px;
+    }
+  }
+}
+
+.delete-prop {
+  visibility: hidden;
+}
+
+.attrs:hover .delete-prop {
+  visibility: visible;
+  cursor: pointer;
+}
+
+.attrs {
+  .fa-ellipsis-v.dropdown-toggle::after {
+    display: none;
+  }
+}
+
+.modal-label {
+  min-width: 90px;
+}
+
+.modal-label-pwd {
+  min-width: 130px;
+}
+
+.type-dropdown {
+  top: 2rem;
+  z-index: 2;
+  width: 178px;
+  box-shadow: 0 0 15px $gray-400;
+  .type-width {
+    width: 40px;
+    height: 40px;
+    font-size: 1.125rem;
+    display: inline-block;
+    text-decoration: none;
+  }
+  .type-width:hover {
+    background: $light;
+    border-radius: 4px;
+  }
+}
+.eye-icon{   
+  padding: 6px;
+  border-radius: 0.25rem;
+  right: -1px;
+  border-bottom: 1px solid #ccc !important;
+  border-right: 1px solid #ccc !important;
+  border-top: 1px solid #ccc !important;
+}
+.password-input{
+  width:52%;
+  border-radius: 0.25em 0em 0em 0.25em;
+}
+
+.error-icon-password {
+  right: 11%;
+  top: 7px;
+}

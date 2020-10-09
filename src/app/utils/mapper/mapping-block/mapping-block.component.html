@@ -1,0 +1,77 @@
+<div class="mapper-field-block d-flex align-items-stretch w-100">
+  <div class="source-fields d-flex flex-column w-100">
+    <div class="field d-flex align-items-center" [ngClass]="{'valid-field':sourceField.valid}"
+      *ngFor="let sourceField of mapping.source;let sourceIndex = index;let sourceFirst = first;let sourceLast = last">
+      <div class="field-clear pl-3 text-muted hover" (click)="removeMapping(mapping,sourceIndex)"
+        *ngIf="sourceField.valid && edit.status">
+        Clear
+      </div>
+      <div [id]="sourceField.path" class="field-placeholder h-100 d-flex align-items-center pl-3" [ngClass]="{'disabled':mapping.disabled,
+             'text-muted':!sourceField.valid,
+             'mapped':sourceField.valid}" (drop)="dropEvent($event,sourceField,mapping)"
+        (dragleave)="dragLeaveEvent($event,mapping)" (dragenter)="dragEnterEvent($event,mapping)">
+        <odp-field-type *ngIf="sourceField.valid && !sourceField.isHeader" [field]="sourceField" class="mr-2">
+        </odp-field-type>
+        <div class="add-attribute-label w-100 text-truncate" [odpTruncated]="sourceField.name">
+          {{mapping.disabled?'':(sourceField.valid?sourceField.name:'Add attribute')}}
+        </div>
+        <span class="drop-here-label">
+          Drop Here
+        </span>
+      </div>
+      <div class="vertical-bar ml-1" [ngClass]="{'border-secondary':mapping.disabled}">
+      </div>
+      <div class="field-line w-100" [ngClass]="{'border-secondary':mapping.disabled,'border-0':!sourceField.valid}">
+      </div>
+      <div class="d-flex flex-column h-100">
+        <div class="line-to-top" [ngClass]="{'border-secondary':mapping.disabled,'border-0':sourceFirst}">
+        </div>
+        <div class="line-to-bottom" [ngClass]="{'border-secondary':mapping.disabled,'border-0':sourceLast}">
+        </div>
+      </div>
+      <div class="function d-flex align-items-center">
+        <div class="function-circle bg-success text-white align-items-center justify-content-center hover"
+          [ngClass]="{'d-none':!sourceFirst,'d-flex':sourceFirst}" (click)="openFormulaBuilder(mapping)">
+          <span class="fa fa-cubes"></span>
+        </div>
+        <div class="line"
+          [ngClass]="{'border-secondary':mapping.disabled,'border-0':!sourceField.valid || !sourceFirst}">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="destination-field-wrapper d-flex">
+    <div class="destination-field d-flex align-items-center pr-4 position-relative">
+      <div class="field-toggle-state d-flex align-items-center mr-2">
+        <span class="fa fa-caret-right"
+          [ngClass]="{'text-secondary':mapping.disabled,'text-dark':!mapping.disabled}"></span>
+      </div>
+      <div class="field-toggle-state d-flex mr-2">
+        <div
+          class="toggle-state-icon d-flex h-100 w-100 align-items-center justify-content-center rounded bg-accent px-1"
+          *ngIf="mapping.target.canToggle">
+          <span class="fa fa-minus text-white"></span>
+        </div>
+      </div>
+      <ng-container *ngIf="!mapping.target.isHeader">
+        <ng-container *ngFor="let depth of mapping.target.depth;let df=first;let dl=last;">
+          <div class="vertical-line border-right align-self-start {{verticalLineClass(mapping.target,depth,df,dl)}}">
+          </div>
+          <div class="horizonal-line border-bottom" [ngClass]="{'border-0':!dl}">
+          </div>
+        </ng-container>
+        <odp-field-type [field]="mapping.target" class="mr-2"></odp-field-type>
+        <div class="field-name w-100 text-truncate" [odpTruncated]="mapping.target.name">
+          {{mapping.target.name}}</div>
+      </ng-container>
+      <ng-container *ngIf="mapping.target.isHeader">
+        <span
+          class="border text-accent bg-white rounded d-flex align-items-center justify-content-center field-type-badge mr-2">H</span>
+        <div class="field-name w-100 text-truncate" [odpTruncated]="mapping.target.name">
+          {{mapping.target.properties.dataKey}}</div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<odp-formula-builder *ngIf="toggleFormulaBuilder" [(toggle)]="toggleFormulaBuilder" [(mapping)]="selectedMapping">
+</odp-formula-builder>

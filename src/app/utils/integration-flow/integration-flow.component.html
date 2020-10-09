@@ -1,0 +1,217 @@
+<div class="d-flex flex-column align-items-stretch w-100">
+    <div class="header d-flex align-items-center justify-content-between w-100 bg-light">
+        <button type="button" class="btn btn-link text-accent" (click)="back()">
+            <span class="fa fa-arrow-left mr-2"></span>
+            <span class="text">Back</span>
+        </button>
+        <div class="center d-flex align-items-center">
+            <div class="partner-name text-secondary">{{partnerName}}</div>
+            <span class="fa fa-angle-right mx-2 text-muted"></span>
+            <div class="partner-name font-weight-bold">{{data?.name}}</div>
+            <!-- <span class="fa fa-circle fa-xs mx-2"></span> -->
+            <span class="mx-2 text-muted">&bull;</span>
+            <div class="direction d-flex align-items-center" (click)="editDirection=!editDirection">
+                <ng-container *ngIf="direction === 'Inbound'">
+                    <span class="fa fa-arrow-circle-down fa-rotate-45 text-success"></span>
+                    <span class="direction-text mx-2">Inbound</span>
+                </ng-container>
+                <ng-container *ngIf="direction === 'Outbound'">
+                    <span class="fa fa-arrow-circle-up fa-rotate-45 text-accent"></span>
+                    <span class="direction-text mx-2">Outbound</span>
+                </ng-container>
+                <span class="fa fa-angle-down text-secondary"></span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center">
+            <div *ngIf="edit.status" class="btn btn-group btn-group-sm">
+                <button type="button" class="btn btn-primary btn-sm btn-min-width" (click)="save(false)"
+                    [disabled]="apiCallPending">Save</button>
+                <div class="btn-group btn-group-sm" ngbDropdown>
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle-split" ngbDropdownToggle
+                        [disabled]="apiCallPending"></button>
+                    <div class="dropdown-menu" ngbDropdownMenu>
+                        <button type="button" ngbDropdownItem (click)="save(true)"
+                            [disabled]="apiCallPending || flowInvalid">Save and
+                            Deploy</button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!edit.status" class="">
+                <button *ngIf="canEditFlow" type="button" class="btn btn-dark btn-sm btn-min-width mr-3"
+                    (click)="edit.status=true" [disabled]="apiCallPending">Edit</button>
+            </div>
+        </div>
+    </div>
+    <div class="design-board-wrapper position-relative w-100 h-100">
+        <odp-loading *ngIf="apiCallPending"></odp-loading>
+        <div *ngIf="editDirection" class="edit-flow-window">
+            <odp-new-flow [edit]="edit" (done)="onDone($event)" (cancel)="onCancel($event)" [(data)]="data">
+            </odp-new-flow>
+        </div>
+        <div *ngIf="editDirection" class="overlay"></div>
+        <div class="flow-nav d-flex align-items-center position-absolute">
+            <div tabindex="0" class="issues border d-flex align-items-center justify-content-center mr-2"
+                (keyup.enter)="toggleIssuesWindow=!toggleIssuesWindow"
+                [ngClass]="{'bg-danger border-danger text-white': totalErrors.length>0}"
+                (click)="$event.stopPropagation();totalErrors.length > 0 ? toggleIssuesWindow=!toggleIssuesWindow : toggleIssuesWindow=false">
+                <span class="text">{{totalErrors.length}} issues</span>
+            </div>
+            <span class="text mr-3 text-secondary">Goto</span>
+            <div class="req-flow-button d-flex align-items-center mr-2" [ngClass]="{'active':!errorFlowActive}"
+                (click)="toggleFlows('reqres')">
+                <span class="fa fa-circle text-accent mr-2"></span>
+                <span class="text">Request/Response</span>
+            </div>
+            <div class="err-flow-button d-flex align-items-center mr-2" [ngClass]="{'active':errorFlowActive}"
+                (click)="toggleFlows('error')">
+                <span class="fa fa-circle text-danger mr-2"></span>
+                <span class="text">Error flow</span>
+            </div>
+        </div>
+        <div *ngIf="toggleIssuesWindow" class="issues-window" odpClickOutside (outside)="toggleIssuesWindow=false">
+            <div class="issues-window-body">
+                <ng-container *ngFor="let item of totalErrors;let i=index;let l=last">
+                    <div *ngIf="hasErrors(item)" class="d-flex flex-column p-2 error-block"
+                        [ngClass]="{'border-bottom':!l}"
+                        (click)="toggleIssuesWindow=false;focusNode($event,item.nodeIndex,item.type)">
+                        <div class="text-secondary mb-2 d-flex align-items-center">
+                            <span class="fa fa-circle mr-2" [ngClass]="{'text-accent':item.type =='request',
+                                'text-success':item.type =='response',
+                                'text-danger':item.type =='error'}"></span>
+                            <span class="text">Issues in {{item.nodeIndex|indexToPos}} node:-</span>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="d-flex align-item-center" *ngIf="item.error == 'nodeNameExceedsLength'"
+                                title="Error">
+                                <div class="error-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">Node Name should be less than 40 characters</div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2"
+                                *ngIf="item.error == 'invalidInputDataStructure' || item.error == 'invalidOutputDataStructure'"
+                                title="Error">
+                                <div class="error-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">Data Structure not configured</div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2" *ngIf="item.error == 'invalidMapping'"
+                                title="Error">
+                                <div class="error-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">
+                                    Mapping not configured
+                                </div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2" *ngIf="item.error == 'invalidURL'" title="Error">
+                                <div class="error-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">URL not configured</div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2" *ngIf="item.error == 'invalidAgent'"
+                                title="Error">
+                                <div class="error-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">Agent not configured</div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2" *ngIf="item.error == 'invalidDataService'"
+                                title="Error">
+                                <div class="error-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">Data Service not configured</div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2" *ngIf="item.error == 'invalidNanoService'"
+                                title="Error">
+                                <div class="error-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">Nano Service not configured</div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2" *ngIf="item.error == 'invalidTransactionOptions'"
+                                title="Error">
+                                <div class="error-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">Unique Remote Txn ID not configured</div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2" *ngIf="item.error == 'invalidBinaryMapping'"
+                                title="Error">
+                                <div class="error-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">Data cannot be mapped between binary and non binary structures</div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2" *ngIf="item.error == 'invalidFileSize'"
+                                title="Error">
+                                <div class="error-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">File Size Invalid</div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2" *ngIf="item.error == 'currFormatChanged'"
+                                title="Warning">
+                                <div class="warning-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">
+                                    Data Structure was modified in this Node, Fix in Mapping may be required
+                                </div>
+                            </div>
+                            <div class="d-flex align-item-center mb-2" *ngIf="item.error == 'prevFormatChanged'"
+                                title="Warning">
+                                <div class="warning-number d-flex align-items-center justify-content-center mr-2">
+                                    {{i+1}}
+                                </div>
+                                <div class="text">
+                                    Data Structure was modified in previous Node, Fix in Mapping may be required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <svg #canvas id="designCanvas" class="d-flex w-100 h-100" odpViewBox [move]="moveCanvas"
+            (moved)="canvasMoved($event)" (click)="deSelectAllNode()">
+            <g style="transform: translate(40px,120px);">
+                <g odp-req-flow [flowData]="data" [edit]="edit" [partner]="partner" [nodeList]="reqNodeList"></g>
+                <g odp-res-flow [flowData]="data" [edit]="edit" [partner]="partner" [nodeList]="resNodeList"
+                    [ngStyle]="resFlowStyle">
+                </g>
+                <g odp-err-flow [flowData]="data" [edit]="edit" [partner]="partner" [nodeList]="errNodeList"
+                    [ngStyle]="errFlowStyle">
+                </g>
+            </g>
+        </svg>
+        <div class="properties-window position-absolute h-100" [ngClass]="{'show': hasActiveNode}">
+            <odp-node-properties [edit]="edit" [flowData]="data" [reqNodeList]="reqNodeList" [resNodeList]="resNodeList"
+                [errNodeList]="errNodeList">
+            </odp-node-properties>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #pageChangeModalTemplate>
+    <div class="modal-body p-4 ignore-outside">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-partner-icon [size]="18" color="202a36" class="mt-1"></odp-partner-icon>
+                </span>
+                <span class="font-weight-bold mb-1">Unsaved Changes</span>
+            </div>
+            <span class="fa fa-times text-secondary hover " (click)="pageChangeModalTemplateRef.close(false)"></span>
+        </div>
+        <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-dark"
+                (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+        </div>
+    </div>
+</ng-template>

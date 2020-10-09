@@ -1,0 +1,31 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.wrapper {
+  width: 290px;
+  height: 208px;
+  .label {
+    min-width: 64px;
+    max-width: 64px;
+  }
+  .input-wrapper {
+    max-width: 80px;
+    max-height: 28px;
+    .form-control {
+      text-indent: 20px;
+    }
+    .text {
+      top: 6px;
+      left: 6px;
+      color: #acacac;
+    }
+    .arrows {
+      max-width: 14px;
+      top: 0;
+      right: 4px;
+    }
+  }
+}
+.btn-min-width {
+  min-width: 80px;
+}

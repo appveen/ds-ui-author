@@ -1,0 +1,207 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.thumbnail {
+  min-width: 100px;
+  max-width: 100px;
+  min-height: 100px;
+  max-height: 100px;
+  border-radius: 30px;
+  overflow: hidden;
+  img {
+    min-width: 100px;
+    max-width: 100px;
+    min-height: 100px;
+    max-height: 100px;
+  }
+}
+.tabs {
+  min-height: 40px;
+  max-height: 40px;
+  .tab {
+    min-height: 40px;
+    max-height: 40px;
+    border-bottom: 4px solid transparent;
+    &.active {
+      border-color: $accent;
+      color: $accent;
+    }
+  }
+}
+
+.drop-box {
+  border: 2px dashed lighten($secondary, 20);
+  transition: 0.25s ease-in-out;
+  &.drop-box-thumbnail {
+    min-width: 80px;
+    max-width: 80px;
+    min-height: 80px;
+    max-height: 80px;
+    border-radius: 15px;
+  }
+  &.drop-box-logo {
+    min-width: 300px;
+    max-width: 300px;
+    min-height: 80px;
+    max-height: 80px;
+  }
+  &:hover {
+    border-color: #666;
+    cursor: pointer;
+  }
+  .drop-box-logo-holder {
+    min-width: 296px;
+    max-width: 296px;
+    min-height: 76px;
+    max-height: 76px;
+  }
+  .drop-box-thumbnail-holder {
+    min-width: 76px;
+    max-width: 76px;
+    min-height: 76px;
+    max-height: 76px;
+  }
+}
+
+.theme-settings {
+  height: 130px;
+  .label {
+    width: 100px;
+  }
+  .selected-color {
+    min-width: 28px;
+    max-width: 28px;
+    min-height: 28px;
+    max-height: 28px;
+    border-radius: 14px;
+  }
+}
+.switch .toggler {
+  top: -1px;
+}
+
+.color-palette {
+  box-shadow: 0px 0px 10px #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  top: 36px;
+  z-index: 10;
+}
+.image-cropper {
+  width: 300px;
+  height: 80px;
+  padding: 0;
+}
+
+.user-list {
+  max-height: calc(100vh - 366px);
+  overflow-y: auto;
+}
+
+.modal-user-list {
+  max-height: calc(100vh - 278px);
+  overflow: auto;
+    .user-img-container {
+        min-width: 28px;
+        max-width: 28px;
+        min-height: 28px;
+        max-height: 28px;
+        border-radius: 50%;
+        padding-top: 2px;
+        text-align: center;
+        border: 2px solid $border-color;
+    }
+    .checkmark-pos {
+        right: 5px;
+        font-size: .8rem;
+    }
+    .usr-selected {
+        background-color: rgba(0, 0, 0, .35);
+    }
+}
+
+.col-name {
+    max-width: 290px !important;
+}
+
+table {
+    span {
+        vertical-align: middle;
+    }
+
+    .symbol {
+        font-size: 32px;
+        line-height: 0;
+    }
+
+    [class^="odp-"],
+    [class*=" odp-"] {
+        font-size: 16px;
+        line-height: 0;
+    }
+
+    .thead-accent {
+        background-color: $accent !important;
+        color: $white;
+    }
+
+    td:not(:first-child) {
+        border-top: 1px solid $border-color;
+    }
+
+    .selectedRow {
+        background-color: $light;
+    }
+}
+
+.switch-card{
+  min-width: 348px;
+  max-width: 348px;
+  min-height: 60px;
+  max-height: 60px;
+  transition: 0.25s;
+  border-left: 4px solid transparent;
+  &.active,
+  &:hover {
+    border-left: 4px solid gray !important;
+  }
+}
+
+.popup {
+  &-overlay {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 15;
+    top: 0;
+    left: 0;
+    background: rgba($black, $alpha: 0.6);
+  }
+  &-content {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 80vh;
+    overflow: hidden;
+    border-radius: 5px;
+    z-index: 25;
+    background-color: $white;
+    box-shadow: 0 2rem 4rem rgba($black, .2);
+    label {
+      width: 28px;
+    }
+  }
+}
+
+.admin-icon-holder{
+    min-width: 16px;
+    max-width: 16px;
+    min-height: 16px;
+    max-height: 16px;
+}
+.name-wrapper{
+    min-width: 150px;
+    max-width: 150px;
+}

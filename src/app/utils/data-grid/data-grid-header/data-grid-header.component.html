@@ -1,0 +1,10 @@
+<div class="data-grid-header-cell text-secondary d-flex align-items-center justify-content-between" [ngClass]="{'w-100':noWidth}" [ngStyle]="style">
+  <div>
+    <ng-content></ng-content>
+  </div>
+  <div class="data-grid-header-cell-options mr-3" *ngIf="!hideOptions">
+    <span *ngIf="sortType == 'asc'" class="fa fa-long-arrow-alt-up text-muted mr-2" ngbTooltip="Ascending"></span>
+    <span *ngIf="sortType == 'desc'" class="fa fa-long-arrow-alt-down text-muted mr-2" ngbTooltip="Descending"></span>
+    <span class="vertical-bar" (mousedown)="onMouseDown($event)"></span>
+  </div>
+</div>

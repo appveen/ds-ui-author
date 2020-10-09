@@ -1,0 +1,130 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.header {
+  min-height: 40px;
+  max-height: 40px;
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.25);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: 8;
+}
+.edit-flow-window {
+  position: absolute;
+  top: 0px;
+  z-index: 9;
+  left: calc(50% - 214px);
+}
+
+.issues-window {
+  position: absolute;
+  top: 42px;
+  left: 32px;
+  z-index: 9;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.14);
+  background: rgba(#fff, 1);
+  border: 1px solid $border;
+  color: $black;
+  min-width: 240px;
+  max-width: 240px;
+  max-height: 304px;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 12px;
+  .issues-window-body {
+    overflow-y: auto;
+    max-height: 304px;
+    .error-block {
+      &:hover {
+        cursor: pointer;
+        background: $light;
+      }
+      .error-number,
+      .warning-number{
+        min-width: 20px;
+        max-width: 20px;
+        min-height: 20px;
+        max-height: 20px;
+      }
+      .error-number {
+        background: $danger;
+        color: $white;
+      }
+      .warning-number {
+        background: $warning;
+        color: $black;
+      }
+    }
+  }
+}
+
+.customize-response {
+  rect,
+  text {
+    transition: 0.25s;
+  }
+  rect {
+    fill: #c5ead0;
+  }
+  text {
+    fill: $success;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  &:hover {
+    cursor: pointer;
+    rect {
+      fill: $success;
+    }
+    text {
+      fill: $white;
+    }
+  }
+}
+
+.design-board-wrapper {
+  overflow: hidden;
+  .flow-nav {
+    top: 8px;
+    left: 32px;
+    font-size: 12px;
+  }
+  .req-flow-button,
+  .err-flow-button {
+    min-height: 32px;
+    max-height: 32px;
+    padding: 0px 10px;
+    border-radius: 16px;
+    border: 1px solid #ccc;
+    color: #ccc;
+    &.active {
+      border: 1px solid #000;
+      color: #000;
+    }
+  }
+  .issues {
+    width: 76px;
+    height: 32px;
+    color: $secondary;
+  }
+}
+
+.properties-window {
+  top: 0px;
+  visibility: hidden;
+  right: -400px;
+  z-index: 10;
+  box-shadow: -3px 1px 3px rgba(0, 0, 0, 0.14);
+  background: #fff;
+  transition: 0.25s;
+  &.show {
+    right: 0;
+    visibility: visible;
+  }
+}

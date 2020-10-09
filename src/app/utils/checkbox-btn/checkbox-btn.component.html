@@ -1,0 +1,6 @@
+<label class="btn-container d-flex rounded border align-items-center justify-content-between px-2" [ngClass]="{'bg-accent text-white':checked && !disabled,
+    'bg-light text-secondary':disabled,'hover':!disabled}">
+    <ng-content></ng-content>
+    <span *ngIf="!checked" class="far fa-circle" [ngClass]="{'text-muted':disabled,'text-accent':!disabled}"></span>
+    <span *ngIf="checked" class="far fa-check-circle" [ngClass]="{'text-muted':disabled,'text-white':!disabled}"></span>
+</label>

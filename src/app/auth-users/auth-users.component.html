@@ -1,0 +1,2 @@
+<odp-ldap-users *ngIf="toggle && authType=='ldap'" [admin]="admin" [toggle]="toggle" (toggleChange)="toggleChangeListner($event)"></odp-ldap-users>
+<odp-azure-users *ngIf="toggle && authType=='azure'" [admin]="admin" [toggle]="toggle" (toggleChange)="toggleChangeListner($event)"></odp-azure-users>

@@ -1,0 +1,51 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+$success-light: #bae6c8;
+
+.text-color {
+  stroke: $success;
+  fill: $success;
+}
+
+.customize-response {
+  rect,
+  text {
+    transition: 0.25s;
+  }
+  rect {
+    fill: $success-light;
+  }
+  text {
+    fill: $success;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  &:hover {
+    cursor: pointer;
+    rect {
+      fill: $success;
+    }
+    text {
+      fill: $white;
+    }
+  }
+}
+
+.svg-dropdown {
+  rect {
+    fill: $white;
+    stroke: $border;
+  }
+  text {
+    fill: $black;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  &:hover {
+    cursor: pointer;
+    rect {
+      fill: $light;
+    }
+  }
+}

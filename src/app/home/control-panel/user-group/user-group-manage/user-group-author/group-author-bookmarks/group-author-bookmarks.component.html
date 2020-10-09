@@ -1,0 +1,90 @@
+<div class="d-flex flex-column hooks-content w-100">
+  <div class="d-flex align-items-center border-bottom pb-3">
+    <span class="fa fa-shield-alt mr-2"></span>
+    <span class="font-weight-bold">Bookmarks Access Settings</span>
+  </div>
+  <div class="d-flex align-items-start w-100 py-3 border-bottom">
+    <div class="service-name">
+      <span class="fa fa-globe mr-2"></span>
+      <span class="font-weight-bold mr-1">Global</span>
+      <span class="text-accent">(Bookmarks)</span>
+    </div>
+    <div class="d-flex flex-column align-items-center permission-div">
+      <span class="normal-heading mb-3">Permission</span>
+      <!-- <div class="permission-card add d-flex flex-column justify-content-center align-items-center rounded hover"
+        (click)="toggleDropdown['GLOBAL'] = hasPermission('PMG')?(!toggleDropdown['GLOBAL']):false" odpClickOutside
+        (outside)="toggleDropdown['GLOBAL']=false"> -->
+      <!-- <div class="permission-icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
+          <div class="permission-icon rounded-circle d-flex align-items-center justify-content-center bg-white border"
+            [ngClass]="{'border-success':globalPermissionType === 'View','border-primary':globalPermissionType === 'Manage','border-border':globalPermissionType === 'Hide'}">
+            <span *ngIf="globalPermissionType === 'Manage'" class="odp-manager text-primary"></span>
+            <span *ngIf="globalPermissionType === 'View'" class="odp-view text-success"></span>
+            <span *ngIf="globalPermissionType === 'Hide'" class="fa fa-ban text-muted"></span>
+          </div>
+        </div> -->
+      <!-- <div class="permission-selector text-center mt-2 text-secondary position-relative">
+          <div class="permission-selected text bg-white hover">{{globalPermissionType}}</div>
+          <div class="permission-selector-dropdown bg-white d-flex flex-column rounded position-absolute" *ngIf="toggleDropdown['GLOBAL']">
+            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover" (click)="togglePermission('PNBM');toggleDropdown['GLOBAL']=false">
+              <div class="icon d-flex align-items-center justify-content-center">
+                <span class="fa fa-ban text-muted"></span>
+              </div>
+              <span class="text-secondary font-weight-bold">Hide</span>
+            </div>
+            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover" (click)="togglePermission('PVBM');toggleDropdown['GLOBAL']=false">
+              <span class="icon d-flex align-items-center justify-content-center">
+                <span class="odp-view text-success"></span>
+              </span>
+              <span class="text-secondary font-weight-bold">View</span>
+            </div>
+            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover" (click)="togglePermission('PMBM');toggleDropdown['GLOBAL']=false">
+              <span class="icon d-flex align-items-center justify-content-center">
+                <span class="odp-manager text-primary"></span>
+              </span>
+              <span class="text-secondary font-weight-bold">Manage</span>
+            </div>
+          </div>
+        </div> -->
+      <div class="position-relative">
+        <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
+          (click)="toggleDropdown['GLOBAL']=hasPermission('PMGABM')?(!toggleDropdown['GLOBAL']):false"
+          [ngClass]="{'blocked':globalPermissionType === 'Hide','view':globalPermissionType === 'View','manage':globalPermissionType === 'Manage','hover':hasPermission('PMGABM')}">
+          <div class="icon d-flex align-items-center justify-content-center">
+            <span *ngIf="globalPermissionType === 'Hide'" class="fa fa-lock"></span>
+            <span *ngIf="globalPermissionType === 'View'" class="fa fa-eye"></span>
+            <span *ngIf="globalPermissionType === 'Manage'" class="fa fa-pen"></span>
+          </div>
+          <div *ngIf="globalPermissionType === 'Hide'" class="text">Blocked</div>
+          <div *ngIf="globalPermissionType === 'View'" class="text">View</div>
+          <div *ngIf="globalPermissionType === 'Manage'" class="text">Manage</div>
+          <span *ngIf="hasPermission('PMGABM')" class="fa fa-angle-down fa-sm"></span>
+        </div>
+        <div *ngIf="toggleDropdown['GLOBAL']" class="rounded-dropdown" odpClickOutside
+          (outside)="toggleDropdown['GLOBAL']=false">
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="togglePermission('PNBM');toggleDropdown['GLOBAL']=false">
+            <div class="icon d-flex align-items-center justify-content-center blocked">
+              <span class="fa fa-lock"></span>
+            </div>
+            <div class="text">Blocked</div>
+          </div>
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="togglePermission('PVBM');toggleDropdown['GLOBAL']=false">
+            <div class="icon d-flex align-items-center justify-content-center view">
+              <span class="fa fa-eye"></span>
+            </div>
+            <div class="text">View</div>
+          </div>
+          <div class="rounded-dropdown-item d-flex align-items-center"
+            (click)="togglePermission('PMBM');toggleDropdown['GLOBAL']=false">
+            <div class="icon d-flex align-items-center justify-content-center manage">
+              <span class="fa fa-pen"></span>
+            </div>
+            <div class="text">Manage</div>
+          </div>
+        </div>
+      </div>
+      <!-- </div> -->
+    </div>
+  </div>
+</div>

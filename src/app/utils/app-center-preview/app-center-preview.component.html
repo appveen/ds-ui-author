@@ -1,0 +1,15 @@
+<div class="position-relative">
+    <img id="logo" *ngIf="logo" [src]="logo">
+    <svg id="canvas">
+        <defs>
+            <filter id="appShadow">
+                <feDropShadow dx="-2" dy="4" stdDeviation="5" />
+                <feDropShadow dx="2" dy="4" stdDeviation="5" />
+            </filter>
+            <filter id="tableShadow">
+                <feDropShadow dx="-1" dy="2" stdDeviation="2" />
+                <feDropShadow dx="1" dy="2" stdDeviation="2" />
+            </filter>
+        </defs>
+    </svg>
+</div>

@@ -1,0 +1,13 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+.delete-modal-body {
+    .info {
+        min-height: 150px;
+        max-height: 150px;
+    }
+    .info-msg{
+        min-height: 120px;
+        max-height: 120px;
+    }
+    word-break: break-word;
+}

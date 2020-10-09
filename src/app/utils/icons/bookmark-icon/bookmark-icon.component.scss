@@ -1,0 +1,25 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+svg {
+  position: static;
+  left: 0;
+  top: 0;
+}
+
+.no-stroke {
+  stroke: none;
+}
+
+.active {
+  .cls-1 {
+    fill: lighten($border, 10);
+    stroke-linecap: round;
+  }
+  .cls-2 {
+    fill: lighten($accent, 10);
+  }
+  .cls-3 {
+    fill: $modify;
+  }
+}

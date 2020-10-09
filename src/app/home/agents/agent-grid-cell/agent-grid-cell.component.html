@@ -1,0 +1,69 @@
+<div (contextmenu)="onRightClick()">
+    <ng-container *ngIf="value">
+        <span *ngIf="field == 'name'" class="d-flex align-items-center">
+            <odp-agents-hb *ngIf="dataAvailable" [agent]="data"></odp-agents-hb>
+            <a [routerLink]="data.agentID" class="text-accent font-weight-bold ml-3">{{value}}</a>
+        </span>
+        <span *ngIf="field == 'password'">
+            <a *ngIf="hasViewPermission(data._id, 'PMAPW')" href="#" class="text-accent"
+                (click)="$event.preventDefault();activateOption('showPassword')">Show Password</a>
+            <span *ngIf="!hasViewPermission(data._id, 'PMAPW')" class="text-muted">N.A.</span>
+        </span>
+        <code *ngIf="field == 'ipAddress'">{{value}}</code>
+        <span *ngIf="field == 'macAddress'">{{value}}</span>
+        <span *ngIf="field == 'heartbeat'">
+            <odp-agents-hb *ngIf="dataAvailable" [agent]="data"></odp-agents-hb>
+        </span>
+        <span *ngIf="field == 'streak'">
+            <odp-agents-streak *ngIf="dataAvailable" [agent]="data"></odp-agents-streak>
+        </span>
+        <span *ngIf="field == 'status'">
+            <span *ngIf="data.status=='RUNNING'" class="badge badge-success">{{data.status}}</span>
+            <span *ngIf="data.status=='DISABLED'" class="badge badge-dark">{{data.status}}</span>
+            <span *ngIf="data.status!=='RUNNING' &&  data.status!=='DISABLED'" class="badge badge-danger">STOPPED</span>
+        </span>
+        <span *ngIf="field == 'lastInvokedAt'">{{value | date:'yyyy MMM dd, HH:mm:ss'}}</span>
+        <span *ngIf="field == 'release'">{{value}}</span>
+        <span *ngIf="field == 'pendingFiles'">{{value}}</span>
+        <span *ngIf="field == '_options'">
+            <!-- <a *ngIf="hasViewPermission(data._id, 'PMAPW')" href="#" class="text-accent mr-2"
+                (click)="$event.preventDefault();activateOption('changePassword')">
+                Change Password
+            </a> -->
+            <a *ngIf="hasViewPermission(data._id, 'PMADL')" href="#" class="text-accent mr-2"
+                (click)="$event.preventDefault();activateOption('download')">
+                Download
+            </a>
+            <!-- <a *ngIf="hasViewPermission(data._id, 'PMADL')" href="#" class="text-accent mr-2"
+                (click)="$event.preventDefault();activateOption('update')">
+                Update
+            </a> -->
+            <a *ngIf="data.status === 'RUNNING' && hasViewPermission(data._id, 'PMAS')" href="#"
+                class="text-accent mr-2" (click)="$event.preventDefault();activateOption('stop')">
+                Stop
+            </a>
+            <a *ngIf="(data.status === 'RUNNING' || data.status === 'STOPPED' || data.status === 'PENDING' ) && hasViewPermission(data._id, 'PMAEN')"
+                href="#" class="text-accent mr-2" (click)="$event.preventDefault();activateOption('disable')">
+                Disable
+            </a>
+            <a *ngIf="data.status === 'DISABLED' && hasViewPermission(data._id, 'PMAEN')" href="#"
+                class="text-accent mr-2" (click)="$event.preventDefault();activateOption('enable')">
+                Enable
+            </a>
+            <!-- <span class="fa fa-info-circle text-accent mr-2" ngbTooltip="Right Click on the record for More Options" container="body"></span> -->
+            <!-- <a *ngIf="data.type == 'APPAGENT' && hasViewPermission(data._id, 'PMABD')" href="#" class="text-accent mr-2"
+                (click)="$event.preventDefault();activateOption('delete')">
+                Delete
+            </a>
+            <a *ngIf="hasViewPermission(data._id, 'PMABU')" href="#" class="text-accent mr-2"
+                (click)="$event.preventDefault();activateOption('edit')">
+                Edit
+            </a> -->
+        </span>
+    </ng-container>
+    <ng-container *ngIf="!value">
+        <span class="text-muted">N.A.</span>
+    </ng-container>
+</div>
+
+<odp-agents-options *ngIf="sendOption" [activateOption]="sendOption" (output)="updateStatus($event)"></odp-agents-options>

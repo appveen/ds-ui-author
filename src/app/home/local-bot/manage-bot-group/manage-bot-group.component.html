@@ -1,0 +1,23 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+        <div class="align-self-center text-center">
+            <span class="fa fa-spinner fa-pulse fa-3x"></span>
+            <div class="text-secondary mt-2">Processing...</div>
+        </div>
+    </div>
+<div class="d-flex flex-wrap team-container">
+    <div *ngFor="let team of userTeams"
+        class="d-flex flex-column align-items-center mb-3 py-2 team-overview position-relative">
+        <div *ngIf="hasPermission('PMBG')" class="position-absolute text-secondary remove-group" ngbTooltip="Remove this group" placement="top" (click)="removeGroupForUser(team.name, team._id)">
+            <span class="fas fa-ellipsis-v"></span>
+        </div>
+        <div class="team bg-white d-flex flex-column justify-content-center align-items-center mb-2">
+            <span class="fas fa-users fa-lg mb-2 text-muted"></span>
+            <strong class="team-strength">{{team.users.length}}</strong>
+        </div>
+        <span>{{team.name}}</span>
+    </div>
+</div>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+    <odp-user-icon [size]="18" color="202A36" class="mt-1"></odp-user-icon>
+</odp-delete-modal>

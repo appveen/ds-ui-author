@@ -1,0 +1,121 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.configuration {
+  .description {
+    min-height: 62px;
+    max-height: 62px;
+  }
+  textarea {
+    resize: none;
+  }
+  .option-label {
+    min-width: 260px;
+    max-width: 260px;
+  }
+}
+.builder-body {
+  min-height: calc(100vh - 224px);
+  max-height: calc(100vh - 224px);
+  overflow-y: auto;
+  .reset-data {
+    border: 1px solid $red;
+    border-radius: 4px;
+    background-color: lighten($red, 35%);
+    min-width: 706px;
+    max-width: 706px;
+    min-height: 304px;
+    max-height: 304px;
+    .warning {
+      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+      height: 17px;
+      width: 17px;
+      border-radius: 5px;
+      background-color: $red;
+      color: $white;
+      .icon-pos {
+        top: 25%;
+        left: 38%;
+      }
+    }
+  }
+}
+.desc {
+  max-width: 308px;
+}
+.switch-container {
+  width: 200px;
+}
+.switch {
+  .toggler {
+    top: -1px !important;
+  }
+}
+.embeded-select {
+  top: 3px;
+  right: 22px;
+}
+
+.check-circle {
+  max-width: 16px;
+  max-height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  .fa {
+    font-size: 10px;
+  }
+}
+
+.btn-outline-accent.active.disabled {
+  color: $white;
+  background-color: $accent;
+  border-color: $accent;
+}
+.form-control:disabled,
+.form-control[readonly],
+select[readonly],
+select:disabled {
+  background-color: #fff;
+  opacity: 1;
+  border: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.version-error-symbol {
+  top: 10px;
+  right: 10px;
+}
+.textarea-error-symbol {
+  top: 10px;
+  right: 20px;
+}
+.headers-key-wrapper{
+  .fa-exclamation-circle{
+      top: 7px;
+      right: 5px;
+  }
+}
+
+.desc-pos {
+  text-align: center;
+  line-height: 1.5;
+}
+
+.confirm-text {
+  display: inline-block;
+  font-weight: 600;
+}
+
+.modal-content {
+  width: 320px !important;
+  height: 288px !important;
+}
+
+input.service-name::placeholder {
+  text-align: center;
+}
+
+.fuzzy-toggle {
+  min-height: 40px;
+}

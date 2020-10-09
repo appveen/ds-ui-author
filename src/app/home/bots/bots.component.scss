@@ -1,0 +1,373 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.header {
+    min-height: 50px;
+    max-height: 50px;
+}
+
+.options {
+  min-height: 50px;
+  max-height: 50px;
+}
+
+.fill-empty-space {
+    height: 28px;
+}
+
+.admin-placeholder {
+    display: inline-block;
+    max-width: 16px;
+    min-width: 16px;
+}
+
+::ng-deep .check-circle-wrapper {
+    min-width: 25px !important;
+    max-width: 25px !important;
+    min-height: 25px !important;
+    max-height: 25px !important;
+}
+
+.user-list {
+    min-height: calc(100vh - 176px);
+    max-height: calc(100vh - 176px);
+    overflow-y: auto;
+    .user-img-container {
+        min-width: 28px;
+        max-width: 28px;
+        min-height: 28px;
+        max-height: 28px;
+        border-radius: 50%;
+        padding-top: 2px;
+        text-align: center;
+        border: 2px solid $border-color;
+    }
+
+    .usr-selected {
+        background-color: rgba(0, 0, 0, .35);
+    }
+
+    .td-content-height {
+        min-height: 40px !important;
+        max-height: 40px !important;
+        padding-left: 12px !important;
+        vertical-align: middle;
+        .v-middle {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+
+    .name-col {
+        max-width: 215px;
+    }
+
+    .email-col {
+        max-width: 215px;
+    }
+
+    .img-td {
+        min-height: 40px !important;
+        max-height: 40px !important;
+        padding: 0 0 0 10px!important;
+        vertical-align: middle;
+    }
+}
+
+table {
+    span {
+        vertical-align: middle;
+    }
+
+    .symbol {
+        font-size: 32px;
+        line-height: 0;
+    }
+
+    [class^="odp-"],
+    [class*=" odp-"] {
+        font-size: 16px;
+        line-height: 0;
+    }
+
+    .thead-accent {
+        background-color: $accent !important;
+        color: $white;
+    }
+
+    td:not(:first-child) {
+        border-top: 1px solid $border-color;
+    }
+
+    .selectedRow {
+        background-color: $light;
+    }
+}
+
+.users-icon {
+    min-width: 70px;
+    min-height: 70px;
+}
+
+.fingerprint-icon {
+    min-width: 36px;
+    min-height: 36px;
+}
+
+.line {
+    min-width: 60px;
+    border-width: 2px !important;
+}
+
+.super-admin-icon {
+    min-width: 70px;
+    min-height: 70px;
+}
+
+.spinner-big-icon {
+    min-width: 70px;
+    min-height: 70px;
+}
+
+.form-icon {
+    min-width: 18px;
+    min-height: 18px;
+}
+
+.check-circle {
+    max-width: 16px;
+    max-height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+
+    .fa {
+        font-size: 10px;
+    }
+}
+
+.user-option-class {
+    .fa-angle-down {
+        transform: rotate(0deg);
+        transition: 0.25s;
+    }
+
+    &.open {
+        .fa-angle-down {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.user-option-class > span {
+    padding-top: 3px;
+}
+
+.appUsersList {
+    top: 15px;
+    background-color: $white;
+    max-width: 7.875rem;
+    min-width: 7.875rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 4px 10px rgba($color: #000000, $alpha: 0.3);
+
+    ul {
+        list-style: none;
+
+        li:not(:last-child) {
+            border-bottom: $border-width solid $border-color;
+        }
+
+        /*li:last-child {
+            padding-bottom: .25rem !important;
+          }*/
+        li:hover {
+            background-color: $light;
+        }
+    }
+}
+
+.photo {
+    min-height: 28px;
+    max-height: 28px;
+    min-width: 28px;
+    max-width: 28px;
+    background: $border-color;
+}
+
+.user-manage {
+    top: 116px;
+    right: 0;
+}
+
+.no-users {
+    text-align: center;
+}
+
+.popup-content input.form-control {
+    width: 100% !important;
+}
+
+.teamList {
+    bottom: 30px;
+    background-color: $white;
+    max-height: 35vh;
+    overflow-y: auto;
+    border-radius: 4px;
+    z-index: 20;
+    ul {
+        list-style: none;
+        li:not(:last-child) {
+            border-bottom: $border-width solid $border-color;
+        }
+        li:hover {
+            background-color: $light;
+        }
+    }
+    &-newHeight {
+        max-height: 46vh;
+    }
+}
+
+.user-option-class {
+    .fa-angle-down {
+        transform: rotate(0deg);
+        transition: 0.25s;
+    }
+    &.open {
+        .fa-angle-down {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.addEditUser-modal {
+    width: 600px !important;
+    height: 520px !important;
+    .label-width {
+        width: 200px;
+    }
+    .value-width {
+        width: 400px;
+    }
+
+    .photo {
+        min-height: 50px;
+        max-height: 50px;
+        min-width: 50px;
+        max-width: 50px;
+        background: $border-color;
+    }
+
+    .add-icon {
+        background-color: $text-muted;
+        height: 25px;
+        width: 25px;
+        border-radius: 50%;
+        color: $white;
+        top: 52px;
+        left: 51%;
+        border: 1px solid $white;
+    }
+
+    .basic-detail-icon {
+        height: 25px;
+        width: 25px;
+        border-radius: 50%;
+        border: 1px solid $text-muted;
+        text-align: center;
+        padding-top: 1px;
+    }
+
+    span.error-icon {
+        top: 8px;
+        left: 92%;
+    }
+
+    div.error-icon {
+        width: 20px;
+        height: 20px;
+        background-color: $green;
+        color: $white;
+        text-align: center;
+        top: 5px;
+        left: 90%;
+    }
+
+    .modal-footer {
+        margin-top: -20px;
+    }
+}
+
+// Custom checkbox for selecting team
+// 1. customizing the label
+.team-checkbox {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+// 2. Hide the browser's default checkbox
+    input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+// Create a custom checkbox
+    .team-selected {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        border-radius: 4px;
+        background-color: #eee;
+    }
+
+// On mouse-over, add a grey background color
+    &:hover input ~ .team-selected {
+        background-color: $gray-400;
+    }
+
+// When the checkbox is checked, add a blue background
+    input:checked ~ .team-selected {
+        background-color: $accent;
+    }
+
+// Create the checkmark/indicator (hidden when not checked)
+    .team-selected:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+// Show the checkmark when checked
+    input:checked ~ .team-selected:after {
+        display: block;
+    }
+
+// Style the checkmark/indicator
+    .team-selected:after {
+        left: 7px;
+        top: 2px;
+        width: 7px;
+        height: 13px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+}
+.user-import{
+    top: 0;
+}
+.label-width{
+    min-width: 200px;
+}

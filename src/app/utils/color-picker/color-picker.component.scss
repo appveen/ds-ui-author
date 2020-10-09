@@ -1,0 +1,18 @@
+.palette {
+  min-width: 240px;
+  max-width: 240px;
+  .color {
+    min-width: 28px;
+    max-width: 28px;
+    min-height: 28px;
+    max-height: 28px;
+    margin: 6px;
+    border-radius: 14px;
+    &:hover {
+      cursor: pointer;
+    }
+    &.active {
+      border: 3px solid rgba(#FFF, 0.5);
+    }
+  }
+}

@@ -1,0 +1,32 @@
+<div class="text-gray-medium mr-3 mt-2 d-flex justify-content-end " *ngIf="loaded">
+    <label class="m-0">Showing {{loaded}} of {{currentRecordsCount}}</label>
+</div>
+<div class="mt-2">
+    <div class="grid-container">
+        <ag-grid-angular #agGrid style="width: 100%; height: 100%;" class="ag-theme-balham border-0"
+            [rowData]="rowData" [columnDefs]="columnDefs" [floatingFilter]="true"
+            (filterModified)="filterModified($event)" (gridReady)="onReady($event)" [gridOptions]="gridOptions"
+            cacheBlockSize="30" (sortChanged)="sortChanged($event)" [overlayNoRowsTemplate]="noRowsTemplate">
+        </ag-grid-angular>
+    </div>
+</div>
+
+<!-- <ng-template #logModal>
+    <div class="modal-header bg-secondary d-block">
+        <h5 class="text-dark">Logs:&nbsp;
+            <span class="font-weight-bold">{{selectedLog.txnId}}</span>
+            <small class="text-secondary pl-1">(Transaction ID)</small>
+        </h5>
+    </div>
+    <div class="modal-body audit-object-log ">
+        <div class="d-flex flex-row">
+            <div class="diffJSON">
+                <div [innerHTML]="jsonDiff"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer p-3 bg-light">
+        <button type="button" class="btn btn-min-width btn-light mx-3 float-right"
+            (click)="logModalRef.close(false)">Close</button>
+    </div>
+</ng-template> -->

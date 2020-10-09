@@ -1,0 +1,303 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="d-flex flex-column position-relative">
+    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+    <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3">
+        <div class="font-weight-bold font-lg">List of Bots</div>
+        <odp-search-box (enteredText)="search($event)" (reset)="clearSearch()"></odp-search-box>
+        <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mr-3">
+                <span *ngIf="authType==='local'" class="fa fa-info-circle text-muted"
+                    ngbTooltip="Authentication Mode: Local" container="body" placement="top"></span>
+                <span *ngIf="authType==='ldap'" class="fa fa-info-circle text-muted"
+                    ngbTooltip="Authentication Mode: LDAP" container="body" placement="top"></span>
+                <span *ngIf="authType==='azure'" class="fa fa-info-circle text-muted"
+                    ngbTooltip="Authentication Mode: Azure" container="body" placement="top"></span>
+            </div>
+            <ng-container *ngIf="selected==0 && hasPermission('PMB')">
+                <button class="add-new btn-min-width btn btn-primary" (click)="newBot()">
+                    <span class="fa fa-plus mr-2"></span>
+                    <span class="text">New Bot</span>
+                </button>
+            </ng-container>
+            <ng-container *ngIf="selected>0 && hasPermission('PMB'); else emptyDiv">
+                <button class="btn-min-width btn btn-primary" (click)="removeSelectedBots()">Remove Bot(s)
+                    ({{selected}})
+                </button>
+            </ng-container>
+            <ng-template #emptyDiv>
+                <div class="fill-empty-space"></div>
+            </ng-template>
+        </div>
+    </div>
+    <div class="d-flex flex-column w-100 mt-4 px-3">
+        <div class="user-list">
+            <odp-data-grid [(checkAll)]="checkAll" (loadData)="loadMore($event)" [totalRecords]="totalRecords"
+                [pageSize]="10" [loading]="showLazyLoader" (sortSelected)="sortSelected($event)">
+                <odp-data-grid-header width="50" *ngIf="hasPermission('PMB')">
+                </odp-data-grid-header>
+                <odp-data-grid-header width="200" key="basicDetails.name">
+                    Name
+                </odp-data-grid-header>
+                <odp-data-grid-header width="200" key="username">
+                    Client ID
+                </odp-data-grid-header>
+                <odp-data-grid-header width="200" key="basicDetails.phone">
+                    Phone
+                </odp-data-grid-header>
+                <odp-data-grid-header width="200" key="_metadata.lastUpdated">
+                    Last Login
+                </odp-data-grid-header>
+                <odp-data-grid-row *ngFor="let bot of botList;let usrIndex=index">
+                    <odp-data-grid-cell *ngIf="hasPermission('PMB')">
+                        <odp-round-check [(checked)]="bot.checked" [edit]="{status:true}"></odp-round-check>
+                    </odp-data-grid-cell>
+                    <odp-data-grid-cell (click)="editBot($event, bot)">
+                        <ng-container *ngIf="bot.basicDetails;else noName">
+                            <ng-container *ngIf="bot.basicDetails.name && bot.basicDetails.name.trim();else noName">
+                                <span *ngIf="bot.basicDetails.name.length > 50" class="text-secondary"
+                                    [ngbTooltip]="bot.basicDetails.name"
+                                    placement="top">{{bot.basicDetails.name}}</span>
+                                <span *ngIf="bot.basicDetails.name.length <= 50"
+                                    class="text-secondary">{{bot.basicDetails.name}}</span>
+                                <span *ngIf="isThisBot(bot)" class="text-accent ml-2">(You)</span>
+                            </ng-container>
+                        </ng-container>
+                        <ng-template #noName>
+                            <span class="text-muted">N.A.</span>
+                        </ng-template>
+                    </odp-data-grid-cell>
+                    <odp-data-grid-cell (click)="editBot($event, bot)">
+                        <ng-container *ngIf="bot.username;else noName">
+                            <span *ngIf="bot.username.length > 50" [ngbTooltip]="bot.username"
+                                class="min-span text-secondary" placement="top">{{bot.username}}</span>
+                            <span *ngIf="bot.username.length <= 50" class="text-secondary">{{bot.username}}</span>
+                        </ng-container>
+                    </odp-data-grid-cell>
+                    <odp-data-grid-cell (click)="editBot($event, bot)">
+                        <div class="text-secondary">
+                            {{ bot.basicDetails.phone ? bot.basicDetails.phone : '--' }}
+                        </div>
+                    </odp-data-grid-cell>
+                    <odp-data-grid-cell (click)="editBot($event, bot)">
+                        <span class="text-secondary">{{getLastActiveTime(bot._metadata.lastUpdated)}}</span>
+                    </odp-data-grid-cell>
+                    <odp-data-grid-cell (click)="editBot($event, bot)" class="text-right">
+                        <span class="text-accent fa fa-angle-right text-right"></span>
+                    </odp-data-grid-cell>
+                </odp-data-grid-row>
+                <odp-data-grid-row *ngIf="(!botList || botList.length==0) && !showLazyLoader">
+                    <span class="text-muted">No Records</span>
+                </odp-data-grid-row>
+            </odp-data-grid>
+            <!-- <table class="table table-hover table-hover" id="_userTable">
+                <thead class="thead-accent">
+                    <tr class="w-100">
+                        <th scope="col" width="50px;" class="pr-0">
+                            <odp-table-checkbox *ngIf="hasPermission('PMU')" [(checked)]="checkAll"></odp-table-checkbox>
+                        </th>
+                        <th class="font-weight-normal" scope="col" width="22%"><span class="ml-3">Name</span></th>
+                        <th class="font-weight-normal" scope="col" width="20%">Client ID</th>
+                        <th class="font-weight-normal" scope="col" width="16%">Phone</th>
+                        <th class="font-weight-normal" scope="col" width="22%">Email ID</th>
+                        <th class="font-weight-normal" scope="col" width="20%">Last Login</th>
+                        <th class="font-weight-normal" scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="botList.length > 0">
+                    <tr *ngFor="let usr of botList;let usrIndex=index" [ngClass]="{'selectedRow': usr.checked}">
+                        <td class="hover img-td position-relative" id="_userIndex">
+                            <div class="d-flex align-items-center justify-content-center" *ngIf="hasPermission('PMU')">
+                                <odp-table-checkbox [(checked)]="usr.checked"></odp-table-checkbox>
+                            </div>
+                        </td>
+                        <td class="hover td-content-height name-col text-truncate" (click)="editBot($event, usr)">
+                            <ng-container *ngIf="usr.basicDetails;else noName">
+                                <ng-container *ngIf="usr.basicDetails.name && usr.basicDetails.name.trim();else noName">
+                                    <div class="d-flex">
+                                        <span [ngbTooltip]="usr.basicDetails.name"
+                                             *ngIf="usr.basicDetails.name.length > 50"
+                                             placement="top">
+                                            <span class="admin-placeholder">
+                                                <sup *ngIf="isAppAdmin(usr)" class="fa fa-star text-warning"
+                                                     ngbTooltip="App admin of the active app"></sup>
+                                            </span>
+                                            <span>{{usr.basicDetails.name}}</span>
+                                        </span>
+                                        <span *ngIf="usr.basicDetails.name.length <= 50">
+                                            <span class="admin-placeholder">
+                                                <sup *ngIf="isAppAdmin(usr)" class="fa fa-star text-warning"
+                                                     ngbTooltip="App admin of the active app"></sup>
+                                            </span>
+                                            <span>{{usr.basicDetails.name}}</span>
+                                        </span>
+                                        <span *ngIf="isThisBot(usr)" class="text-accent mr-3">(You)</span></div>
+                                </ng-container>
+                            </ng-container>
+                            <ng-template #noName>
+                                <span class="text-muted">N.A.</span>
+                            </ng-template>
+                            <span *ngIf="isAppAdmin(usr)" class="fa fa-star text-warning" ngbTooltip="App admin of the active app"></span>
+                        </td>
+                        <td class="text-secondary hover td-content-height" (click)="editBot($event, usr)">{{usr.username}}</td>
+                        <td class="text-secondary" (click)="editBot($event, usr)">
+                            <span class="pr-4">{{ usr.basicDetails.phone ? usr.basicDetails.phone : '--' }}</span>
+                        </td>
+                        <td class="hover text-secondary td-content-height email-col text-truncate" (click)="editBot($event, usr)">
+                            <span class="pr-4" [ngbTooltip]="usr.basicDetails.email" *ngIf="usr.basicDetails.email && usr.basicDetails.email.length > 50"
+                                placement="top">
+                                {{ usr.basicDetails.email ? usr.basicDetails.email : '--' }}</span>
+                            <span class="pr-4" *ngIf="usr.basicDetails.email && usr.basicDetails.email.length <= 50">{{
+                                usr.basicDetails.email ? usr.basicDetails.email : '--' }}</span>
+                        </td>
+                        <td class="hover td-content-height" (click)="editBot($event, usr)">
+                            <span class="text-secondary">{{usr._metadata.lastUpdated|date: 'dd-MMM-yyyy, hh:mm'}}</span>
+                        </td>
+                        <td class="hover td-content-height" (click)="editBot($event, usr)">
+                            <span class="fas fa-angle-right text-muted"></span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="showLazyLoader">
+                        <td colspan="8" class="text-center">
+                            <span class="fa fa-spinner fa-pulse fa-lg"></span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!showLazyLoader && botList.length === 0">
+                    <tr>
+                        <td colspan="7">
+                            <div class="no-users font-normal text-secondary">No Bots Found</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
+        </div>
+    </div>
+
+    <div class="d-flex position-absolute user-manage" *ngIf="showUsrManage" [@slideIn]>
+        <odp-bots-manage [toggleBotMng]="showUsrManage"
+            (toggleBotMngChange)="showUsrManage = $event; breadcrumbPaths.pop();" [user]="selectedBot"
+            (removeBot)="removeBots($event)"></odp-bots-manage>
+    </div>
+</div>
+
+<ng-template #newBotModal>
+    <div class="modal-body px-4 py-3">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="d-flex align-items-center ">
+                <span class="icon-wrapper create rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-bot-icon [size]="18" color="1CAD49"></odp-bot-icon>
+                </span>
+                <span class="font-weight-bold">Create new Bot</span>
+            </div>
+            <span class="fa fa-times text-muted hover" (click)="newBotModalRef.close()"></span>
+        </div>
+        <div class="d-flex align-items-center ml-2">
+            <div class="basic-detail-icon mr-2">
+                <span class="far fa-user fa-sm text-secondary"></span>
+            </div>
+            <span class="text font-weight-bold">Basic Details</span>
+        </div>
+        <form class="d-flex flex-column p-4" [formGroup]="userForm" (ngSubmit)="!userExist ? addBot() : importBot()">
+            <div formGroupName="userData">
+                <div class="d-flex w-100 mb-3">
+                    <div class="label-width text-secondary">Client ID</div>
+                    <div class="value-width position-relative w-100">
+                        <input class="form-control" type="text" placeholder="Enter Client ID" formControlName="username"
+                            odpAutoFocus (blur)="checkForDuplicate()" [ngClass]="{'is-invalid': invalidBotname}">
+                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                            *ngIf="invalidBotname" ngbTooltip="This is a required field" placement="right"></span>
+                    </div>
+                </div>
+                <div class="d-flex w-100 mb-3">
+                    <div class="label-width text-secondary">Name</div>
+                    <div class="value-width position-relative w-100" formGroupName="basicDetails">
+                        <input #botNameControl class="form-control pr-4" type="text" placeholder="Enter Name"
+                            formControlName="name" [ngClass]="{'is-invalid': invalidName}">
+                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                            *ngIf="invalidName" ngbTooltip="This is a required field" placement="right"></span>
+                    </div>
+                </div>
+                <div *ngIf="!userExist" class="d-flex w-100 mb-3">
+                    <div class="label-width text-secondary">Client Secret</div>
+                    <div class="value-width position-relative w-100">
+                        <input #botPasswordControl class="form-control" type="password" placeholder="Client Secret"
+                            formControlName="password"
+                            [ngClass]="{'is-invalid': invalidPassword || invalidPasswordLength}">
+                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                            *ngIf="invalidPassword" ngbTooltip="This is a required field" placement="right"></span>
+                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                            *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"
+                            placement="right"></span>
+                    </div>
+                </div>
+                <div *ngIf="!userExist" class="d-flex w-100 mb-3">
+                    <div class="label-width text-secondary">Phone</div>
+                    <div class="value-width position-relative w-100" formGroupName="basicDetails">
+                        <input #botPhoneControl class="form-control" type="text" placeholder="Enter Phone Number"
+                            formControlName="phone">
+                    </div>
+                </div>
+                <!-- <div *ngIf="!userExist" class="d-flex w-100 mb-3">
+                    <div class="label-width text-secondary">Email ID</div>
+                    <div class="value-width position-relative w-100" formGroupName="basicDetails">
+                        <input class="form-control" type="text" placeholder="Enter Email Address"
+                            formControlName="email" [ngClass]="{'is-invalid': invalidEmail}">
+                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                            *ngIf="invalidEmail" ngbTooltip="Enter a valid email" placement="right"></span>
+                    </div>
+                </div> -->
+            </div>
+            <div *ngIf="hasPermission('PMG') && teamsArray.length>0">
+                <div class="d-flex w-100">
+                    <div class="label-width text-secondary">Teams</div>
+                    <div class="value-width position-relative w-100">
+                        <div class="d-flex flex-column position-relative">
+                            <div class="d-flex align-items-center hover user-option-class form-control ignore-outside"
+                                [ngClass]="{'open':displayTeamList}" (click)="displayTeamList = !displayTeamList"
+                                odpClickOutside (outside)="displayTeamList = false;" [ignore]="['.ignore-outside']">
+                                <span class="pr-2 w-100 ignore-outside">
+                                    {{ selectedTeamSize > 0 ? selectedTeamSize + ' team(s) selected'
+                                    : '--Select--'}}
+                                </span>
+                                <span class="fas fa-angle-down text-accent ignore-outside"></span>
+                            </div>
+                            <div *ngIf="displayTeamList" [@moveUp]
+                                class="teamList border mt-2 position-absolute w-100 ignore-outside"
+                                [ngClass]="{'teamList-newHeight':!userExist}">
+                                <ul class="p-0 mb-0 ignore-outside" formArrayName="teamData">
+                                    <li *ngFor="let team of teamsArray; index as teamIndex"
+                                        class="p-2 hover ignore-outside">
+                                        <label class="ignore-outside team-checkbox hover font-normal">
+                                            {{teamList[teamIndex].name}}
+                                            <input type="checkbox" class="mr-2 ignore-outside"
+                                                [formControlName]="teamIndex" (change)="checkTeamSize()">
+                                            <span class="team-selected ignore-outside"></span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                            *ngIf="invalidTeamSize" ngbTooltip="Bot should be part of at-least one team"
+                            placement="right"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- <button type="submit" class="d-none">Submit</button> -->
+        </form>
+        <div class="d-flex align-items-center justify-content-end">
+            <!-- <button type="button" class="btn btn-link mr-3" id="createNewBotNo" (click)="c(false)">Cancel</button> -->
+            <button #submitNewBot *ngIf="!userExist" type="button" class="btn btn-create btn-min-width"
+                id="createNewBotYes" (click)="addBot()">Create
+            </button>
+            <button #submitNewBot *ngIf="userExist" type="button" class="btn btn-dark btn-min-width" id="importBot"
+                (click)="importBot()">Import
+            </button>
+        </div>
+    </div>
+</ng-template>

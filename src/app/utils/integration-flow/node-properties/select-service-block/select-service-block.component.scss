@@ -1,0 +1,100 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.service-list-headers {
+  border-width: 2px;
+}
+.service-list-item-head,
+.service-list-item {
+  min-height: 40px;
+  max-height: 40px;
+  &.checkbox {
+    min-width: 48px;
+    max-width: 48px;
+  }
+  &.name {
+    min-width: 205px;
+    max-width: 205px;
+  }
+  &.attributes {
+    min-width: 96px;
+    max-width: 96px;
+  }
+  .url {
+    max-width: 354px;
+  }
+}
+.service-list-row {
+  &:hover {
+    background: $light;
+  }
+}
+
+.selected-format {
+  .service-name {
+    min-height: 28px;
+    max-height: 28px;
+  }
+  .service-info {
+    .service-url {
+      max-width: 130px;
+    }
+  }
+
+  .req-format,
+  .res-format {
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    border-radius: 50%;
+    font-size: 8px;
+    font-weight: bold;
+  }
+  .req-link,
+  .res-link {
+    border-bottom: 3px solid transparent;
+    min-width: 24px;
+  }
+  .format-info {
+    min-width: 180px;
+    max-width: 180px;
+    min-height: 48px;
+    max-height: 48px;
+    border-radius: 32px;
+    .format-type {
+      font-size: 11px;
+      margin-top: 3px;
+    }
+    .format-url {
+      max-width: 150px;
+      font-size: 11px;
+    }
+    .format-change {
+      font-size: 12px;
+    }
+  }
+}
+
+.service-list {
+  min-height: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  .in-format,
+  .out-format {
+    min-width: 120px;
+    max-width: 120px;
+    font-size: 11px;
+    .border-bottom {
+      border-width: 2px !important;
+    }
+  }
+  .info-width {
+    max-width: 412px;
+    .url {
+      max-width: 412px;
+      word-break: break-all;
+    }
+  }
+}

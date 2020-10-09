@@ -1,0 +1,24 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+path {
+  fill: $success;
+  stroke: none;
+}
+line {
+  stroke: rgba($success, 0.5);
+  stroke-width: 2;
+}
+circle {
+  fill: rgba($success, 0.5);
+  transition: 0.25s;
+}
+
+.circle {
+  &:hover:not(.disabled) {
+    cursor: pointer;
+    circle {
+      fill: rgba($success, 0.8);
+    }
+  }
+}

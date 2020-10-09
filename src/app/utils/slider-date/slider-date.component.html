@@ -1,0 +1,27 @@
+<div class="wrapper d-flex flex-column p-3">
+    <span class="text-dark font-weight-bold align-self-center mb-3">Select range for Dates</span>
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="input-wrapper position-relative w-100">
+            <input type="number" class="form-control" [(ngModel)]="fromVal" max="30" min="1">
+        </div>
+        <span class="mx-2">to</span>
+        <div class="input-wrapper position-relative w-100">
+            <input type="number" class="form-control" [(ngModel)]="toVal" max="31" min="2">
+        </div>
+    </div>
+    <svg class="align-self-center svg-slider">
+        <rect class="slider-base" x="8" y="6" width="226" height="4" />
+        <rect class="slider-active" x="8" y="6" height="4" [ngStyle]="activeStyle" />
+        <path class="slider-nob left" d="M8,0H8A0,0,0,0,1,8,0V16a0,0,0,0,1,0,0H8A8,8,0,0,1,0,8V8A8,8,0,0,1,8,0Z"
+            [ngStyle]="leftNobStyle" />
+        <path class="slider-nob right" d="M0,0H0A0,0,0,0,1,0,0V16a0,0,0,0,0,1,0H0A8,8,1,1,0,0,0V0A0,8,0,0,1,0,0Z"
+            [ngStyle]="rightNobStyle" />
+        <text class="marker-text no-select" x="0" y="30">01</text>
+        <text class="marker-text no-select" x="242" y="30" text-anchor="end">31</text>
+        <line *ngFor="let item of marks" class="marker" [attr.x1]="item" y1="20" [attr.x2]="item" y2="24" />
+    </svg>
+    <div class="d-flex align-items-center justify-content-between mt-3">
+        <button type="button" class="btn btn-light" (click)="reset()">Reset</button>
+        <button type="button" class="btn btn-primary" (click)="done()">Set</button>
+    </div>
+</div>

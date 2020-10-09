@@ -1,0 +1,77 @@
+.label-width {
+  min-width: 100px;
+}
+.headers-label-width {
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.delete-modal-body {
+  .info {
+    min-height: 150px;
+    max-height: 150px;
+  }
+  .info-msg {
+    min-height: 120px;
+    max-height: 120px;
+  }
+}
+
+.selected-format {
+  .req-format,
+  .res-format {
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    border-radius: 50%;
+    font-size: 8px;
+    font-weight: bold;
+  }
+  .req-link,
+  .res-link {
+    border-bottom: 3px solid transparent;
+    min-width: 24px;
+  }
+  .format-info {
+    min-width: 180px;
+    max-width: 180px;
+    min-height: 48px;
+    max-height: 48px;
+    border-radius: 32px;
+    .format-type {
+      font-size: 11px;
+      margin-top: 3px;
+    }
+    .format-url {
+      max-width: 150px;
+      font-size: 11px;
+    }
+    .format-change {
+      font-size: 12px;
+    }
+  }
+}
+
+.service-list {
+  min-height: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  .in-format,
+  .out-format {
+    min-width: 120px;
+    max-width: 120px;
+    font-size: 11px;
+    .border-bottom {
+      border-width: 2px !important;
+    }
+  }
+  .info-width {
+    max-width: 412px;
+    .url {
+      max-width: 412px;
+      word-break: break-all;
+    }
+  }
+}

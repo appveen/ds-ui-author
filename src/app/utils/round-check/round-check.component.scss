@@ -1,0 +1,19 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.round-check-wrapper {
+  border-radius: 50%;
+  border: 1px solid $border;
+  background: $data-grid-border;
+  .fa-check {
+    font-size: 8px;
+  }
+  &.checked {
+    border: 1px solid $accent;
+    background: $accent;
+    &.disabled {
+      border: 1px solid $secondary;
+      background: $secondary;
+    }
+  }
+}

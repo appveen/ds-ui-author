@@ -1,0 +1,112 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showSpinner">
+  <div class="align-self-center text-center">
+    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="text-secondary mt-2">Processing...</div>
+  </div>
+</div>
+<div class="d-flex">
+  <div class="userList pt-5">
+    <button type="button" class="btn btn-secondary" (click)="backToUserList()">
+      <span class="fa fa-angle-left mr-2"></span>
+      <span class="text">Back to List</span>
+    </button>
+  </div>
+  <div class="separator-border"></div>
+  <div class="userDetails d-flex flex-column pl-4 pr-5 py-4">
+    <div class="userDetails-name d-flex justify-content-between mb-3">
+      <div class="d-flex">
+        <div class="userDetails-icon mr-1">
+          <div
+            class="photo rounded-circle d-flex flex-column justify-content-center align-items-center mr-3 text-white">
+            <span class="far fa-user fa-2x text-secondary"></span>
+          </div>
+        </div>
+        <div class="d-flex-flex-column mt-3">
+          <div class="text-lg text-truncate user-name">
+            <strong class="mr-1">{{user.basicDetails.name}}</strong>
+            <span *ngIf="isThisUser(user)" class="text-accent">(You)</span>
+          </div>
+          <div class="text-muted text-lg">
+            {{user._id}}
+          </div>
+        </div>
+      </div>
+      <div class="d-flex mt-2 pt-1">
+        <div (click)="activeTab = 2">
+          <button type="button" class="btn btn-link mr-3">User Type</button>
+        </div>
+        <div *ngIf="authType && authType === 'local' ">
+          <button type="button" class="btn btn-link mr-3" (click)="openResetPassword()">Reset Password</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-link mr-3" (click)="deleteUser(user._id)"
+            [disabled]="user.isSuperAdmin">Delete
+            User</button>
+        </div>
+      </div>
+    </div>
+    <div class="userDetails-tabs ml-3 mb-3 border-bottom">
+      <div class="d-flex justify-content-between">
+        <div class="d-flex">
+          <div class="hover px-3 pb-2 tab-item" [ngClass]="{'active-tab': activeTab === 1}" (click)="activeTab = 1">User
+            info</div>
+          <div class="hover px-3 pb-2 tab-item" [ngClass]="{'active-tab': activeTab === 2}" (click)="activeTab = 2">Apps
+          </div>
+          <div class="hover px-3 pb-2 tab-item" [ngClass]="{'active-tab': activeTab === 3}" (click)="activeTab = 3">
+            Groups</div>
+        </div>
+        <div class="text-muted">
+          <span *ngIf="user.lastLogin">Last active on: {{user.lastLogin|date: 'dd-MMM-yyyy, hh:mm'}}</span>
+          <span *ngIf="!user.lastLogin">Last active on: N.A.</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activeTab === 1">
+      <odp-user-info [user]="user"></odp-user-info>
+    </div>
+    <div *ngIf="activeTab === 2">
+      <odp-user-apps [user]="user" [apps]="apps"></odp-user-apps>
+    </div>
+    <div *ngIf="activeTab === 3">
+      <odp-user-groups [user]="user"></odp-user-groups>
+    </div>
+  </div>
+</div>
+
+<ng-template #resetPasswordModel>
+  <div class="modal-body p-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div class="d-flex align-items-center align-self-start">
+        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+          <odp-user-icon [size]="18" color="202A36" class="mt-1"></odp-user-icon>
+        </span>
+        <span class="font-weight-bold">Reset Password</span>
+      </div>
+      <span class="fa fa-times hover" (click)="resetPasswordModelRef.close(false)"></span>
+    </div>
+    <form class="mt-2 ml-4" [formGroup]="resetPasswordForm" (keyup.enter)="resetPassword()">
+      <div class="d-flex w-100 mb-3 position-relative">
+        <label class="text-secondary modal-label" for="new-pwd">New Password</label>
+        <input id="new-pwd" class="form-control password-input" [type]="showPassword ? 'text' : 'password'"
+          formControlName="password" [ngClass]="{'is-invalid': invalidPassword}" odpAutoFocus>
+        <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidPassword"
+          ngbTooltip="This is a required field" placement="right"></span>
+        <span class="fas eye-icon position-absolute hover"
+          [ngClass]="{'fa-eye': !showPassword,'fa-eye-slash': showPassword }"
+          (click)="showPassword= !showPassword"></span>
+      </div>
+      <div class="d-flex w-100 mb-3 position-relative">
+        <label class="text-secondary modal-label" for="c-pwd">Confirm Password</label>
+        <input type="password" id="c-pwd" class="form-control" formControlName="cpassword"
+          [ngClass]="{'is-invalid': invalidCPassword || invalidMatch}">
+        <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidCPassword"
+          ngbTooltip="This is a required field" placement="right"></span>
+        <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidMatch"
+          ngbTooltip="Passwords do not match" placement="right"></span>
+      </div>
+    </form>
+    <div class="d-flex align-items-end justify-content-end mt-5">
+      <button type="button" class="btn btn-min-width btn-dark" (click)="resetPassword()">Save</button>
+    </div>
+  </div>
+</ng-template>

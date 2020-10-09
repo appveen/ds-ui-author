@@ -1,0 +1,159 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="d-flex">
+    <div class="d-flex mb-5">
+        <div class="bg-light overlay rounded d-flex flex-column">
+            <div class="ml-4 mt-3 text-secondary">
+                Start/Stop Switches
+            </div>
+            <div class="ml-auto mr-auto mt-2">
+                <div class="d-flex w-100">
+                    <div class="d-flex flex-column w-50">
+                        <div class="row manage-cards bg-white"
+                            [@cardAction]="confirmModalState['allflow']?'expand':'collapse'"
+                            (click)="toggleCard('allflow')">
+                            <div class="container">
+                                <div class="row p-3 service-card" [@stopping]="cardActionDisabled">
+                                    <span>
+                                        <odp-service-icon active="true" size="16" class="mt-1">
+                                        </odp-service-icon>
+                                    </span>
+                                    <span class="ml-2">
+                                        All Flows
+                                    </span>
+                                </div>
+                                <div class="row ml-2">
+                                    <span class="text-secondary">Total Flows</span>
+                                    <span class="text-secondary ml-auto pr-4">{{flowStatus.Total?flowStatus.Total:0}}</span>
+                                </div>
+                                <div class="row ml-2 mt-3">
+                                        <span class="text-success">Running</span>
+                                        <span
+                                            class="text-success ml-auto pr-4">{{flowStatus.Active?flowStatus.Active:0}}</span>
+                                    </div>
+                                    <div class="row ml-2 mt-3">
+                                        <span class="text-warning">Pending</span>
+                                        <span
+                                            class="text-warning ml-auto pr-4">{{flowStatus.Pending?flowStatus.Pending:0}}</span>
+                                    </div>
+                                    <div class="row ml-2 mt-3">
+                                        <span class="text-accent">Draft</span>
+                                        <span
+                                            class="text-accent ml-auto pr-4">{{flowStatus.Draft?flowStatus.Draft:0}}</span>
+                                    </div>
+                                    <div class="row ml-2 mt-3">
+                                        <span class="text-danger">Stopped</span>
+                                        <span
+                                            class="text-danger ml-auto pr-4">{{flowStatus.Stopped?flowStatus.Stopped:0}}</span>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2" [@stopping]="flowStatus.Stopped?'enable':'disabled'">
+                            <div class="container">
+                                <div class="row service-status-card bg-white"
+                                    [@cardAction]="startFlowAttributes['startCard']">
+                                    <div class="d-flex justify-content-between p-2" (click)="toggleCard('startAll')">
+                                        <div class="text-nowrap text-secondary">Start all Flows</div>
+                                        <div class="position-relative animate-wrap"
+                                            [@cardAction]="startFlowAttributes['animateItems']">
+                                            <div class="position-absolute play-icon"
+                                                [@cardAction]="startFlowAttributes['playIcon']">
+                                                <span class="fa fa-play"
+                                                    [ngClass]="{'text-secondary':startFlowAttributes['playLoader']==='loadingShow','text-success':startFlowAttributes['playLoader']==='loadingHide'}"></span>
+                                            </div>
+                                            <div class="position-absolute start-circle"
+                                                [@cardAction]="startFlowAttributes['playCircle']">
+                                            </div>
+                                            <div class="circle-loader"
+                                                [@cardAction]="startFlowAttributes['playLoader']">
+                                            </div>
+                                            <div class="fa fa-check text-info tick-action"
+                                                [@cardAction]="startFlowAttributes['tickAction']">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container start-action ml-2"
+                                        [@cardAction]="startFlowAttributes['startGroup']">
+                                        <h6 class="text-secondary text-nowrap position-relative align-text ml-2">
+                                            This
+                                            will start all flows,
+                                            Confirm?</h6>
+                                        <button class="btn btn-success start-all-btn" [disabled]="!flowStatus.Stopped" (click)="startAllFlows()">Start
+                                            All</button>
+                                    </div>
+                                    <div class="container starting-action"
+                                        [@cardAction]="startFlowAttributes['processing']" *ngIf="proccessing">
+                                        <h6 class="text-secondary">Starting all flows...</h6>
+                                    </div>
+                                    <div class="container success-action"
+                                        [@cardAction]="startFlowAttributes['complete']">
+                                        <strong> Start all Process</strong> Initiated
+                                        <div class="mt-2 ml-2">
+                                            <button class="btn btn-link" (click)="goTopartnerPage()">
+                                                Go to Partners
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2" [@stopping]="flowStatus.Active?'enable':'disabled'">
+                            <div class="container">
+                                <div class="row service-status-card bg-white"
+                                    [@cardAction]="startFlowAttributes['stopCard']">
+                                    <div class="d-flex justify-content-between p-2" (click)="toggleStopCard('stopAll')">
+                                        <div class="text-nowrap text-secondary">Stop all Flows</div>
+                                        <div class="position-relative animate-wrap"
+                                            [@cardAction]="startFlowAttributes['stopanimateItems']">
+                                            <div class="position-absolute play-icon"
+                                                [@cardAction]="startFlowAttributes['stopIcon']">
+                                                <span class="fa fa-stop"
+                                                    [ngClass]="{'text-danger':startFlowAttributes['stopLoader']==='loadingHide','text-secondary':startFlowAttributes['stopLoader']==='loadingShow'}"></span>
+                                            </div>
+                                            <div class="position-absolute start-circle"
+                                                [@cardAction]="startFlowAttributes['stopCircle']">
+                                            </div>
+                                            <div class="stop-circle-loader"
+                                                [@cardAction]="startFlowAttributes['stopLoader']">
+                                            </div>
+                                            <div class="fa fa-check text-info tick-action"
+                                                [@cardAction]="startFlowAttributes['stopTickAction']">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container start-action ml-2"
+                                        [@cardAction]="startFlowAttributes['stopGroup']">
+                                        <h6 class="text-secondary text-nowrap position-relative align-text ml-2">
+                                            This
+                                            will stop all flows,
+                                            Confirm?</h6>
+                                        <button class="btn btn-danger start-all-btn" (click)="stopAllFlows()" [disabled]="!flowStatus.Active">Stop
+                                            All</button>
+                                    </div>
+                                    <div class="container starting-action"
+                                        [@cardAction]="startFlowAttributes['processing']" *ngIf="proccessing">
+                                        <h6 class="text-secondary">Stopping all flows...</h6>
+                                    </div>
+                                    <div class="container success-action"
+                                        [@cardAction]="startFlowAttributes['complete']">
+                                        <strong> Stop all Process</strong> Initiated
+                                        <div class="mt-2 ml-2">
+                                            <button class="btn btn-link" (click)="goTopartnerPage()">
+                                                Go to Partners
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

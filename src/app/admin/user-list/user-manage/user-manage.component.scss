@@ -1,0 +1,63 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.userList {
+  min-width: 350px;
+  max-width: 350px;
+  text-align: center;
+}
+.user-name {
+    max-width: 250px;
+}
+.userDetails {
+  &-name {
+    width: calc(100vw - 500px);
+  }
+  &-tabs {
+    .tab-item {
+      width: 105px;
+      text-align: center;
+    }
+    .active-tab {
+      color: $accent;
+      font-weight: bold;
+      border-bottom: 3px solid $accent;
+    }
+  }
+  &-icon {
+    width: 80px;
+    .photo {
+      min-height: 70px;
+      max-height: 70px;
+      min-width: 70px;
+      max-width: 70px;
+      background: $border-color;
+    }
+  }
+}
+.separator-border {
+  width: 2px;
+  min-height: 90vh;
+  border-right: 1px solid $border-color;
+}
+
+.modal-label{
+  min-width: 130px;
+}
+.eye-icon{   
+  padding: 6px;
+  border-radius: 0.25rem;
+  right: -1px;
+  border-bottom: 1px solid #ccc !important;
+  border-right: 1px solid #ccc !important;
+  border-top: 1px solid #ccc !important;
+}
+.password-input{
+  width:52%;
+  border-radius: 0.25em 0em 0em 0.25em;
+}
+
+.error-icon-password {
+  right: 13%;
+  top: 7px;
+}

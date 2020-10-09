@@ -1,0 +1,64 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.key-row {
+  height: 40px;
+  &:hover {
+    .options {
+      display: flex !important;
+    }
+    background: #ececec 0% 0% no-repeat padding-box;
+  }
+}
+.options-cell {
+  overflow: hidden;
+}
+table {
+  width: calc(100vw - 735px);
+}
+.options {
+  max-width: 350px;
+  min-height: 38px;
+  max-height: 38px;
+  box-shadow: -1px 0px 3px rgba(0, 0, 0, 0.15);
+  right: 100px;
+  display: none;
+}
+
+.key-name {
+  max-width: 95px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
+.toolTip-msg {
+  min-width: 207px;
+  max-width: 228px;
+  min-height: 110px;
+  max-height: 97px;
+  right: 300px;
+  margin-top: -110px;
+  background: #0082c9 0% 0% no-repeat padding-box;
+}
+
+.toolTip-msg:after,
+.toolTip-msg:after {
+  z-index: -1;
+  position: absolute;
+  top: 98.1%;
+  left: 70%;
+  margin-left: -25%;
+  content: "";
+  width: 0;
+  height: 0;
+  border-top: solid 10px #0082c9;
+  border-left: solid 10px transparent;
+  border-right: solid 10px transparent;
+}
+.date-width {
+  width: 110px;
+}
+.label-width{
+  width: 120px;
+}

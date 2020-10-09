@@ -1,0 +1,11 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.streak {
+  min-width: 6px;
+  max-width: 6px;
+  min-height: 12px;
+  max-height: 12px;
+  display: inline-block;
+  border-radius: 6px;
+}

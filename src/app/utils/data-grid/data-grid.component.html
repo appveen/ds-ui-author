@@ -1,0 +1,58 @@
+<div class="data-grid-wrapper position-relative rounded d-flex flex-column w-100 h-100 align-flex-stretch">
+    <div class="data-grid-options d-flex align-items-center justify-content-between w-100 position-absolute">
+        <div class="d-flex align-items-center left">
+            <ng-container *ngIf="!hideSelectAll && docStartNo">
+                <odp-round-check class="mx-3" [checked]="checkAll" (checkedChange)="checkedChange($event)">
+                </odp-round-check>
+                <div ngbDropdown class="d-inline-block">
+                    <button type="button" class="btn btn-link text-accent" ngbDropdownToggle>
+                        <span class="text">Select</span>
+                        <span class="fa fa-angle-down ml-3"></span>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <!-- <button type="button" class="dropdown-item" (click)="selectRecords('alternate')">Alternate</button> -->
+                        <button type="button" class="dropdown-item" (click)="selectRecords('first')">First 10</button>
+                        <button type="button" class="dropdown-item" (click)="selectRecords('none')">De-select all</button>
+                    </div>
+                </div>
+                <button class="btn btn-link" *ngIf="enablebulkDelete" type="button" (click)="deleteAll()">Delete All</button>
+            </ng-container>
+            &nbsp;
+        </div>
+        <div class="d-flex align-items-center right">
+            <button type="button" class="btn btn-link text-accent" *ngIf="enableFilter">
+                <span class="text">Filter</span>
+                <span class="fa fa-angle-down ml-3"></span>
+            </button>
+            <ng-container *ngIf="docStartNo && docEndNo">
+                <div class="data-grid-page-info ml-3 text-secondary text-right">
+                    <span class="text">{{docStartNo}}-{{docEndNo}} of {{totalRecords}}</span>
+                </div>
+                <div class="data-grid-navigate mx-3">
+                    <button type="button" class="btn btn-link" [ngClass]="{'text-accent':!disablePrev}" (click)="prevPage()"
+                        [disabled]="disablePrev">
+                        <span class="fa fa-angle-left"></span>
+                    </button>
+                    <button type="button" class="btn btn-link ml-2" [ngClass]="{'text-accent':!disableNext}" (click)="nextPage()"
+                        [disabled]="disableNext">
+                        <span class="fa fa-angle-right"></span>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="data-grid-header d-flex align-items-center px-3 w-100 position-absolute">
+        <ng-content select="odp-data-grid-header"></ng-content>
+    </div>
+    <div *ngIf="!loading" class="data-grid-body w-100 h-100">
+        <ng-content select="odp-data-grid-row"></ng-content>
+    </div>
+    <div *ngIf="loading" class="data-grid-body w-100 h-100">
+        <div class="dummy-row d-flex align-items-center" *ngFor="let row of dummyRows">
+            <div class="dummy-cell d-flex align-items-center" *ngFor="let item of gridHeaders;let f=first;let l=last"
+                [ngStyle]="{'min-width':item.width+'px'}">
+                <odp-loading-placeholder *ngIf="!f"></odp-loading-placeholder>
+            </div>
+        </div>
+    </div>
+</div>

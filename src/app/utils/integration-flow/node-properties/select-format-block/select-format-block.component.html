@@ -1,0 +1,36 @@
+<div *ngIf="!soapBlock" class="form-group">
+    <label for="dataStructure"
+        [ngClass]="{'text-danger': errors && (errors.invalidInputDataStructure || errors.invalidOutputDataStructure)}">
+        Data Structure
+    </label>
+    <div *ngIf="!node.sourceFormat.type" class="text-center">
+        <odp-format-selector *ngIf="edit.status" [restrictToFormat]="restrictToFormat" [format]="node.sourceFormat"
+            (formatChange)="setDataStructure($event)" class="align-self-center ignore-outside">
+            <odp-partner-icon size="18" color="1CAD49" class="mt-1"></odp-partner-icon>
+            <div class="btn-label text-accent text-left">Select Data Structure</div>
+        </odp-format-selector>
+    </div>
+    <div *ngIf="node.sourceFormat.type" class="d-flex flex-column border rounded">
+        <div class="d-flex align-items-center justify-content-between">
+            <odp-format-type-badge [data]="node.sourceFormat">
+            </odp-format-type-badge>
+            <div class="d-flex align-items-center px-2">
+                <span *ngIf="node.sourceFormat.type == 'dataFormat'" class="text-muted">Data Format</span>
+                <span *ngIf="node.sourceFormat.type == 'dataService'" class="text-muted">Data Service</span>
+                <span *ngIf="node.sourceFormat.type == 'binary'" class="text-muted">Binary</span>
+                <button *ngIf="edit.status" type="button" class="btn btn-sm btn-link text-accent pr-0"
+                    (click)="removeDataStructure()">(Change)</button>
+            </div>
+        </div>
+        <div *ngIf="node.sourceFormat.type != 'binary'" class="d-flex flex-column p-2">
+            <div class="d-flex align-items-center mb-2">
+                <div class="label-width text-secondary">Name</div>
+                <div class="font-weight-bold">{{node.sourceFormat.name}}</div>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="label-width text-secondary">Attributes</div>
+                <div class="font-weight-bold">{{node.sourceFormat.attributeCount}}</div>
+            </div>
+        </div>
+    </div>
+</div>

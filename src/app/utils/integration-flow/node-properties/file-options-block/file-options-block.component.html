@@ -1,0 +1,88 @@
+<div *ngIf="showBlock && isInputBlock" class="node-properties-block file-block d-flex flex-column">
+    <div class="title d-flex align-items-center justify-content-between px-3">
+        <span class="font-weight-bold mr-2">File Options</span>
+    </div>
+    <div class="d-flex flex-column px-3">
+        <ng-container *ngIf="showExtensions">
+            <div class="form-group">
+                <label for="fileExtensions">Extensions</label>
+                <div class="d-flex flex-wrap mb-3 w-100">
+                    <div class="file-ext-block d-flex align-items-start mb-2" *ngFor="let ext of fileExtentionList">
+                        <odp-round-check class="mr-2" [edit]="edit" [checked]="getFileExtention(ext)"
+                            (checkedChange)="setFileExtention($event,ext)"></odp-round-check>
+                        <span class="text-secondary">{{ext}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="customExtensions">Custom Extensions</label>
+                <div class="d-flex position-relative floating-btn-group">
+                    <input #customExtentionEle type="text" class="form-control"
+                        (keyup.enter)="addCustomExtention(customExtentionEle)" [disabled]="!edit.status">
+                    <button *ngIf="edit.status" type="button" class="btn btn-sm btn-link text-accent position-absolute"
+                        (click)="addCustomExtention(customExtentionEle)">
+                        Add
+                    </button>
+                </div>
+                <div class="list-group">
+                    <div class="list-group-item d-flex align-items-center justify-content-between"
+                        *ngFor="let item of customExtensions;let i=index">
+                        <div class="text-dark">{{item.extension}}</div>
+                        <span *ngIf="edit.status" class="fa fa-times text-danger hover"
+                            (click)="removeCustomExtention(item.extension)"></span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <div *ngIf="node.meta.contentType === 'EXCEL'" class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" class="form-control" [(ngModel)]="node.meta.fileDetails.password"
+                [disabled]="!edit.status">
+        </div>
+        <ng-container *ngIf="showSkipRows">
+            <span class="font-weight-bold text-muted mb-1">Rows to Skip</span>
+            <div class="form-group ml-3">
+                <label for="startRows">Start Rows</label>
+                <input id="startRows" type="text" class="form-control" [(ngModel)]="node.meta.skipStartRows"
+                    [disabled]="!edit.status">
+            </div>
+            <div class="form-group ml-3">
+                <label for="endRows">End Rows</label>
+                <input id="endRows" type="text" class="form-control" [(ngModel)]="node.meta.skipEndRows"
+                    [disabled]="!edit.status">
+            </div>
+        </ng-container>
+        <div class="form-group">
+            <label for="filePattern">File Pattern</label>
+            <div class="d-flex position-relative floating-btn-group">
+                <input #filePattern id="filePattern" type="text" class="form-control"
+                    (keyup.enter)="addFilePattern(filePattern)" [disabled]="!edit.status">
+                <button *ngIf="edit.status" type="button" class="btn btn-sm btn-link text-accent position-absolute"
+                    (click)="addFilePattern(filePattern)">
+                    Add
+                </button>
+            </div>
+            <span class="form-text">Should be between /&lt;&lt;pattern&gt;&gt;/</span>
+            <div class="list-group mt-2">
+                <div *ngFor="let item of node.meta.fileNameRegexs;let i=index"
+                    class="list-group-item d-flex align-items-center justify-content-between p-2">
+                    <div class="d-flex align-items-center">
+                        <span class="text ml-3">{{item}}</span>
+                    </div>
+                    <button *ngIf="edit.status" type="button" class="btn btn-link text-danger btn-sm"
+                        (click)="removeFilePattern(i)">
+                        <span class="fa fa-times"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="size">Size in Bytes</label>
+            <input id="size" type="number" class="form-control" [(ngModel)]="node.meta.fileMaxSize"
+                [ngClass]="{'is-invalid':!validFileSize}" [disabled]="!edit.status">
+            <span class="form-text">Max. {{b2BAgentMaxFileSize}}</span>
+        </div>
+    </div>
+</div>
+
+<odp-delete-modal [open]="deleteFilePatternModal" (close)="onDeleteFilePattern($event)"></odp-delete-modal>

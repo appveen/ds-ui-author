@@ -1,0 +1,36 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.btn-container {
+    min-width: 120px;
+    max-width: 120px;
+    min-height: 40px;
+    max-height: 40px;
+    transition: .25s ease-in;
+    border:1px solid $border;
+    .radio-outer-circle {
+        min-width: 16px;
+        max-width: 16px;
+        min-height: 16px;
+        max-height: 16px;
+        border:1px solid $border;
+        .radio-inner-circle{
+            min-width: 8px;
+            max-width: 8px;
+            min-height: 8px;
+            max-height: 8px;
+            background: $white;
+        }
+    }
+    &.checked{
+        box-shadow: 0px 2px 5px rgba($accent, 0.4);
+        border:1px solid $accent;
+        color: $accent;
+        .radio-outer-circle{
+            background: $accent;
+            border:1px solid $accent;
+        }
+    }
+}
+
+

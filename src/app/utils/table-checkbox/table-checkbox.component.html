@@ -1,0 +1,4 @@
+<label class="check-circle-wrapper d-flex align-items-center justify-content-center border hover bg-white rounded-circle m-0">
+  <input #checkbox type="checkbox" class="d-none" [ngModel]="checked" (change)="onValueChange($event)" [disabled]="disabled">
+  <span *ngIf="checkbox.checked" class="fa fa-check text-accent"></span>
+</label>

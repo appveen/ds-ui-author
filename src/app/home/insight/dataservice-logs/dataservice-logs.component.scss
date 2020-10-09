@@ -1,0 +1,132 @@
+
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.req-container {
+    background-color: $white;
+    height: calc(100vh - 65px);
+    min-width: 360px;
+    max-width: 360px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.18);
+    top: 0;
+    right: 0;
+}
+.data-container{
+  
+  min-height: calc(100vh - 200px);
+  max-height: calc(100vh - 200px);
+}
+.grid-container{
+    overflow: auto;
+    height: calc(100vh - 244px);
+}
+.tabs {
+    div {
+      transition: 0.25s;
+      border-bottom: 4px solid transparent;
+      min-height: 40px;
+      &.active,
+      &:hover {
+        border-bottom: 4px solid $accent;
+      }
+      &.active {
+        color: $accent !important;
+        font-weight: bold;
+      }
+      .fa {
+        opacity: 0;
+        transition: 0.5s;
+        font-size: 8px;
+        &.show {
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+  .method{
+    min-width: 32px;
+    max-width: 40px;
+    height: 20px;
+    background: #202A36 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+  }
+  .req-details{
+    background: #00E5FF 0% 0% no-repeat padding-box;
+    border-radius: 4px 4px 0px 0px;
+    opacity: 1;
+  }
+  .detail-container{
+      height: calc(100vh - 164px);
+      overflow: auto;
+  }
+
+  .advance-options {
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.24);
+    min-width: 220px;
+    z-index: 4;
+    top: 164px;
+  }
+  .showLogOptions{
+    left:60px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 8px 16px #202A367A;
+    border-radius: 4px;
+    opacity: 1;
+  }
+  .showResponseOptions{
+    left: 260px;
+    min-width: 152px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 8px 16px #202A367A;
+  }
+
+  .showOperationOptions{
+    left:150px;
+    min-width: 152px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 8px 16px #202A367A;
+    border-radius: 4px;
+    opacity: 1
+  }
+
+  .option{
+    min-width: 96px;
+    height: 32px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #D6D8DA;
+    border-radius: 4px;
+    opacity: 1;
+  }
+  .text-gray-medium {
+    color: #747e8d!important;
+  }
+  .btn-rn{
+    border-radius: inherit;
+  }
+  .url{
+    width: 240px;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .dot-link{
+      /* left: 1031px; */
+      width: 21px;
+      height: 16px;
+      /* transform: matrix(0, 1, -1, 0, 0, 0); */
+      border-left: 1px dashed #202A36;
+      /* border-top: 1px dashed #202A36; */
+      border-bottom: 1px dashed #202A36;
+      opacity: 1;
+  }
+  .value-div{
+    max-width: 230px;
+    max-height: 200px;
+    overflow: auto;
+  }
+  .dsContainer{
+    height: 200px;
+    overflow: auto;
+  }

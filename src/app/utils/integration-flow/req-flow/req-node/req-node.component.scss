@@ -1,0 +1,155 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+$line-color: #7fc0e4;
+
+svg {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+polygon,
+rect,
+line,
+text,
+.circle-color,
+.polygon-node {
+  transition: 0.25s;
+}
+
+.diamond {
+  transform: rotate("45deg");
+}
+
+.error-circle {
+  fill: $danger;
+}
+
+.error-line {
+  stroke: $danger;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.symbol {
+  line {
+    stroke: #fff;
+    stroke-width: 2;
+  }
+  circle {
+    fill: #fff;
+  }
+}
+rect,
+.circle-color,
+.polygon-node {
+  fill: #fff;
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.rect-color,
+.circle-color,
+.polygon-node {
+  stroke: $accent;
+}
+
+.line-color {
+  stroke: $line-color;
+  stroke-width: 1;
+}
+.polygon-color {
+  stroke: $line-color;
+  fill: $line-color;
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.node {
+  &:not(.active):hover {
+    rect,
+    .circle-color,
+    .polygon-node {
+      stroke-width: 2;
+      // fill: $line-color;
+      fill: $light;
+    }
+    .node-icon {
+      .icon-bg {
+        // fill: $line-color;
+        fill: $light;
+      }
+      rect {
+        stroke-width: 1;
+      }
+    }
+  }
+}
+
+text {
+  font-size: 11px;
+}
+
+.node-type {
+  rect {
+    fill: $light;
+  }
+  text {
+    fill: $border;
+    font-size: 10px;
+    font-family: monospace;
+  }
+}
+
+.node-icon {
+  path {
+    fill: $heading-highlight;
+    stroke-width: 0;
+  }
+  transform: translate(49px, 45px);
+}
+
+.active {
+  rect,
+  .circle-color,
+  .polygon-node {
+    fill: $accent;
+    stroke-width: 3;
+  }
+  polygon:not(.polygon-node) {
+    transform: translateX(-12px);
+  }
+  .node-type {
+    text,
+    rect,
+    .circle-color,
+    .polygon-node {
+      font-size: 10px;
+      transform: translateY(11px);
+    }
+    rect,
+    .circle-color,
+    .polygon-node {
+      fill: $light;
+    }
+  }
+  text {
+    font-size: 14px;
+    transform: translateY(13px);
+  }
+  .node-icon {
+    path {
+      fill: $white;
+      stroke-width: 0;
+    }
+  }
+}
+
+.error {
+  transition: 0.25s;
+  transform: translateY(40px);
+  &.show {
+    transform: translateY(0px);
+  }
+}

@@ -1,0 +1,109 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.overlay {
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.75);
+  top: 0;
+  left: 0;
+}
+
+.formula-builder {
+  width: calc(100vw - 96px);
+  height: calc(100vh - 96px);
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: #ebebeb;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #6d6d6d;
+  }
+  ul {
+    list-style: none;
+  }
+  .cp {
+    cursor: pointer;
+  }
+  .small-font {
+    font-size: 14px;
+  }
+  .green-text {
+    color: $green;
+  }
+  .cLine {
+    width: 2.2rem;
+    border-bottom: 1px solid $black;
+  }
+  .formula-holder {
+    overflow-y: auto;
+    .run-test {
+      background: $light;
+      width: 10vw;
+      border-radius: 6px;
+    }
+    .run-test span {
+      color: $light;
+    }
+    .small-verticle-line {
+      border-right: 1px solid $black;
+      height: 15px;
+    }
+    .horizonatal-line {
+      border-bottom: 1px solid $black;
+    }
+    .decorater-line-left,
+    .decorater-line-right {
+      width: 48%;
+      border-bottom: 1px solid $border;
+    }
+    .decorater-div {
+      width: 4%;
+      border-radius: 6px;
+      border: 1px solid $border;
+      height: 15px;
+    }
+  }
+  .formula-editor {
+    width: 35vw;
+    padding: 2em;
+    text-indent: 1em;
+    border: 1px solid $black;
+    border-radius: 5px;
+    font-family: "courier new";
+    font-weight: 600;
+    font-size: 14px;
+    color: #666;
+  }
+  .to-cloud {
+    color: $capiot;
+  }
+  .formulae-container {
+    width: 30%;
+    background: $light;
+    max-height: calc(100vh - 225px);
+    overflow-y: auto;
+    .fx-header {
+      background: $accordion-bg;
+    }
+    .formulee-accordion {
+      .accordion-arrow {
+        color: $border;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.selected-arg {
+  background: $accent;
+  color: $white;
+}
+.params {
+  word-break: break-all;
+}

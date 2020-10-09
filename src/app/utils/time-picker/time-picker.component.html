@@ -1,0 +1,78 @@
+<div class="wrapper d-flex flex-column p-3">
+    <span class="text-dark font-weight-bold align-self-center mb-3">Select range for Hours</span>
+    <div class="d-flex align-items-center justify-content-between mb-3 position-relative">
+        <span class="label text-secondary">From</span>
+        <div class="input-wrapper position-relative">
+            <span class="text position-absolute">hh</span>
+            <input type="number" class="form-control" [(ngModel)]="fromHour"
+                (ngModelChange)="changeHour('from',$event)">
+            <div class="arrows d-flex flex-column position-absolute">
+                <button type="button" class="btn btn-link btn-sm text-accent p-0"
+                    (click)="changeHour('from',fromHour+1)">
+                    <span class="fa fa-angle-up"></span>
+                </button>
+                <button type="button" class="btn btn-link btn-sm text-accent p-0"
+                    (click)="changeHour('from',fromHour-1)">
+                    <span class="fa fa-angle-down"></span>
+                </button>
+            </div>
+        </div>
+        <span class="mx-2">:</span>
+        <div class="input-wrapper position-relative">
+            <span class="text position-absolute">mm</span>
+            <input type="number" class="form-control" [(ngModel)]="fromMinute"
+                (ngModelChange)="changeMinute('from',$event)">
+            <div class="arrows d-flex flex-column align-items-center position-absolute">
+                <button type="button" class="btn btn-link btn-sm text-accent p-0"
+                    (click)="changeMinute('from',fromMinute+1)">
+                    <span class="fa fa-angle-up"></span>
+                </button>
+                <button type="button" class="btn btn-link btn-sm text-accent p-0"
+                    (click)="changeMinute('from',fromMinute-1)">
+                    <span class="fa fa-angle-down"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-3 position-relative">
+        <span class="label text-secondary">To</span>
+        <div class="input-wrapper position-relative">
+            <span class="text position-absolute">hh</span>
+            <input type="number" class="form-control" [(ngModel)]="toHour" (ngModelChange)="changeHour('to',$event)">
+            <div class="arrows d-flex flex-column position-absolute">
+                <button type="button" class="btn btn-link btn-sm text-accent p-0" (click)="changeHour('to',toHour+1)">
+                    <span class="fa fa-angle-up"></span>
+                </button>
+                <button type="button" class="btn btn-link btn-sm text-accent p-0" (click)="changeHour('to',toHour-1)">
+                    <span class="fa fa-angle-down"></span>
+                </button>
+            </div>
+        </div>
+        <span class="mx-2">:</span>
+        <div class="input-wrapper position-relative">
+            <span class="text position-absolute">mm</span>
+            <input type="number" class="form-control" [(ngModel)]="toMinute"
+                (ngModelChange)="changeMinute('to',$event)">
+            <div class="arrows d-flex flex-column align-items-center position-absolute">
+                <button type="button" class="btn btn-link btn-sm text-accent p-0"
+                    (click)="changeMinute('to',toMinute+1)">
+                    <span class="fa fa-angle-up"></span>
+                </button>
+                <button type="button" class="btn btn-link btn-sm text-accent p-0"
+                    (click)="changeMinute('to',toMinute-1)">
+                    <span class="fa fa-angle-down"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <span class="text-danger">
+        <ng-container *ngIf="isInvalid">
+            From and To time must have 15 min diffrence
+        </ng-container>
+        &nbsp;
+    </span>
+    <div class="d-flex align-items-center justify-content-between mt-auto">
+        <button type="button" class="btn btn-min-width btn-light" (click)="reset()">Reset</button>
+        <button type="button" class="btn btn-min-width btn-primary" (click)="done()"  [disabled]="isInvalid">Set</button>
+    </div>
+</div>

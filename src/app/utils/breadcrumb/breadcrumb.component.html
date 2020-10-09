@@ -1,0 +1,14 @@
+<nav>
+  <ol class="breadcrumb bg-white m-0">
+    <li class="breadcrumb-item">
+      <span class="fa fa-home text-border"></span>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="#" (click)="openAppSwitcher($event)">{{currentApp}}</a>
+    </li>
+    <li class="breadcrumb-item" [ngClass]="{'active':item.active}" *ngFor="let item of paths">
+      <ng-container *ngIf="item.active">{{item.label}}</ng-container>
+      <a *ngIf="!item.active && item.url" [routerLink]="item.url">{{item.label}}</a>
+    </li>
+  </ol>
+</nav>

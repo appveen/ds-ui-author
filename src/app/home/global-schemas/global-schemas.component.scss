@@ -1,0 +1,43 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.action {
+  .name-label {
+    min-width: 100px;
+  }
+  input {
+    min-width: 400px;
+  }
+}
+
+.builder-body {
+  min-height: calc(100vh - 163px);
+  max-height: calc(100vh - 163px);
+  .schema-creator {
+    min-height: calc(100vh - 203px);
+    max-height: calc(100vh - 203px);
+    padding-bottom: 10px !important;
+  }
+}
+.scroll {
+  overflow-y: auto;
+}
+.builder {
+  .options {
+    min-height: 40px;
+    max-height: 40px;
+  }
+}
+
+.add-attribute {
+  min-height: 36px;
+  max-height: 36px;
+  margin-left: 65px;
+}
+
+.field-error-symbol {
+    top: 9px;
+    right: 7px;
+    opacity: 0.7;
+    transition: 0.5s;
+}

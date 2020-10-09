@@ -1,0 +1,26 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.key-row {
+    height: 40px;
+  }
+  .options-cell {
+    overflow: hidden;
+    min-width: 30px;
+    .options {
+        max-width: 350px;
+        min-height: 38px;
+        max-height: 38px;
+        box-shadow: -1px 0px 3px rgba(0, 0, 0, 0.15);
+        z-index: 3;
+        right: -330px;
+        top: 0;
+        transition: 0.25s;
+        &.show {
+            right: 0;
+          }
+    }
+  }
+  table{
+    width: calc(100vw - 720px);
+  }

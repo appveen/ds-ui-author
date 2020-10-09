@@ -1,0 +1,42 @@
+<div class="wrapper d-flex flex-column align-items-center p-3">
+    <div class="pick-month"></div>
+    <div class="text mt-1">Pick Month(s)</div>
+    <div class="d-flex align-items-center justify-content-between w-100 my-2">
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border" (click)="onClick('1')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('1'),'text-dark':!isSelected('1')}">Jan
+        </div>
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border" (click)="onClick('2')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('2'),'text-dark':!isSelected('2')}">Feb</div>
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border" (click)="onClick('3')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('3'),'text-dark':!isSelected('3')}">Mar</div>
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border" (click)="onClick('4')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('4'),'text-dark':!isSelected('4')}">Apr</div>
+    </div>
+    <div class="d-flex align-items-center justify-content-between w-100 my-2">
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border" (click)="onClick('5')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('5'),'text-dark':!isSelected('5')}">May</div>
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border" (click)="onClick('6')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('6'),'text-dark':!isSelected('6')}">Jun</div>
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border" (click)="onClick('7')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('7'),'text-dark':!isSelected('7')}">Jul</div>
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border" (click)="onClick('8')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('8'),'text-dark':!isSelected('8')}">Aug</div>
+    </div>
+    <div class="d-flex align-items-center justify-content-between w-100 my-2">
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border" (click)="onClick('9')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('9'),'text-dark':!isSelected('9')}">Sep</div>
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+            (click)="onClick('10')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('10'),'text-dark':!isSelected('10')}">Oct
+        </div>
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+            (click)="onClick('11')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('11'),'text-dark':!isSelected('11')}">Nov
+        </div>
+        <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+            (click)="onClick('12')"
+            [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('12'),'text-dark':!isSelected('12')}">Dec
+        </div>
+    </div>
+    <!-- <button type="button" class="btn btn-primary w-100 mt-2" [disabled]="isInvalid" (click)="onDone()">Set</button> -->
+</div>

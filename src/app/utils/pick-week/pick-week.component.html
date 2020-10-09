@@ -1,0 +1,81 @@
+<div class="wrapper d-flex flex-column align-items-center p-3">
+    <div class="pick-week"></div>
+    <ng-container *ngIf="!hasStep">
+        <div class="text mt-1">Pick Weekday(s)</div>
+        <div class="d-flex align-items-center justify-content-between w-100 my-2">
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (click)="onClick('0')"
+                [ngClass]="{'disabled':disabled,'text-primary bg-accent':isSelected('0'),'text-primary':!isSelected('0')}">
+                Su
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (click)="onClick('1')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('1'),'text-dark':!isSelected('1')}">M
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (click)="onClick('2')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('2'),'text-dark':!isSelected('2')}">T
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (click)="onClick('3')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('3'),'text-dark':!isSelected('3')}">W
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (click)="onClick('4')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('4'),'text-dark':!isSelected('4')}">T
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (click)="onClick('5')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('5'),'text-dark':!isSelected('5')}">F
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (click)="onClick('6')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('6'),'text-dark':!isSelected('6')}">S
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="hasStep">
+        <div class="text mt-1">Select Weekday(s) Range</div>
+        <div class="d-flex align-items-center justify-content-between w-100 my-2">
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (mouseover)="mouseOverItem='0'" (mouseout)="mouseOverItem=null" (click)="onClick('0')"
+                [ngClass]="{'disabled':disabled,'text-primary bg-accent':isSelected('0') || isMouseOver('0') || inRange('0'),'text-primary':!(isSelected('0') || isMouseOver('0') || inRange('0'))}">
+                Su
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (mouseover)="mouseOverItem='1'" (mouseout)="mouseOverItem=null" (click)="onClick('1')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('1') || isMouseOver('1') || inRange('1'),'text-dark':!(isSelected('1') || isMouseOver('1') || inRange('1'))}">
+                M
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (mouseover)="mouseOverItem='2'" (mouseout)="mouseOverItem=null" (click)="onClick('2')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('2') || isMouseOver('2') || inRange('2'),'text-dark':!(isSelected('2') || isMouseOver('2') || inRange('2'))}">
+                T
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (mouseover)="mouseOverItem='3'" (mouseout)="mouseOverItem=null" (click)="onClick('3')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('3') || isMouseOver('3') || inRange('3'),'text-dark':!(isSelected('3') || isMouseOver('3') || inRange('3'))}">
+                W
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (mouseover)="mouseOverItem='4'" (mouseout)="mouseOverItem=null" (click)="onClick('4')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('4') || isMouseOver('4') || inRange('4'),'text-dark':!(isSelected('4') || isMouseOver('4') || inRange('4'))}">
+                T
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (mouseover)="mouseOverItem='5'" (mouseout)="mouseOverItem=null" (click)="onClick('5')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('5') || isMouseOver('5') || inRange('5'),'text-dark':!(isSelected('5') || isMouseOver('5') || inRange('5'))}">
+                F
+            </div>
+            <div class="rounded selector-block d-flex align-items-center justify-content-center border"
+                (mouseover)="mouseOverItem='6'" (mouseout)="mouseOverItem=null" (click)="onClick('6')"
+                [ngClass]="{'disabled':disabled,'text-white bg-accent':isSelected('6') || isMouseOver('6') || inRange('6'),'text-dark':!(isSelected('6') || isMouseOver('6') || inRange('6'))}">
+                S
+            </div>
+        </div>
+    </ng-container>
+    <!-- <div class="d-flex align-items-center w-100 mt-2">
+        <button type="button" class="btn btn-dark w-50 mr-3" (click)="onClear()">Clear</button>
+        <button type="button" class="btn btn-primary w-50" [disabled]="isInvalid" (click)="onDone()">Set</button>
+    </div> -->
+</div>

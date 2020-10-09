@@ -1,0 +1,38 @@
+<div class="d-flex align-items-center position-relative">
+    <div class="d-flex align-items-center px-2" *ngFor="let def of fields;let i=index;let f=first;let l=last">
+        <div class="data-key-path d-flex align-items-center ignore-outside" [ngClass]="{'hover':edit.status}"
+            [ngbTooltip]="edit.status ? 'Change' : ''" (click)="changeField($event,def,i)">
+            <odp-field-type [field]="def"></odp-field-type>
+            <span class="data-key-name ml-2">{{def.properties.name}}</span>
+        </div>
+        <div *ngIf="!l || canAddMore" class="angle-block">
+            <div class="angle-box"></div>
+        </div>
+    </div>
+    <div *ngIf="canAddMore && !enableManual" class="add-field d-flex align-items-center ignore-outside px-2"
+        [ngClass]="{'hover':edit.status}" (click)="level=fields.length;openKeysDropdown($event);">
+        <div class="bg-light px-2 rounded">
+            <span class="fa fa-plus fa-xs text-accent"></span>
+        </div>
+        <span class="ml-2">Add</span>
+    </div>
+    <div *ngIf="canAddMore && enableManual" class="add-field d-flex align-items-center ignore-outside hover pl-2">
+        <input type="text" class="form-control custom-value" odpAutoFocus (keyup.enter)="setField($event)"
+            placeholder="Type and Press Enter to Create">
+    </div>
+    <div *ngIf="showkeys" #selectorDropdown
+        class="selector-dropdown d-flex flex-column border rounded bg-white position-absolute" [ngStyle]="dropdownPos"
+        odpClickOutside (outside)="showkeys=false;searchTerm=null">
+        <div class="p-2">
+            <input type="text" class="form-control" odpAutoFocus (odpSearchTerm)="searchTerm = $event"
+                placeholder="Search Field">
+        </div>
+        <div class="selector-list">
+            <div class="selector-list-item d-flex align-items-center p-2 hover"
+                *ngFor="let def of (definitionList | filterDefinition:searchTerm)" (click)="selectField(def)">
+                <odp-field-type [field]="def"></odp-field-type>
+                <span class="ml-2">{{def.properties.name}}</span>
+            </div>
+        </div>
+    </div>
+</div>

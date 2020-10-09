@@ -1,0 +1,131 @@
+<div class="wrapper d-flex flex-column">
+    <ng-container *ngIf="propertyType!='timer'">
+        <div class="node-properties-block header d-flex flex-column">
+            <div class="node-properties-titlebar title px-3">
+                <div class="node-properties-title" odpClickOutside (outside)="editNodeName=false">
+                    <ng-container *ngIf="!editNodeName">
+                        <span *ngIf="node.name" class="ellipsis font-weight-bold mr-2" [ngbTooltip]="node.name"
+                            placement="left">
+                            {{node.name}}
+                        </span>
+                        <span *ngIf="!node.name" class="text-muted mr-2">Untitled Node</span>
+                        <span *ngIf="edit.status" class="fa fa-pen fa-xs text-muted"
+                            (click)="editNodeName=true;$event.stopPropagation()"></span>
+                    </ng-container>
+                    <ng-container *ngIf="editNodeName">
+                        <div></div>
+                        <input type="text" class="form-control" [(ngModel)]="node.name" odpAutoFocus>
+                    </ng-container>
+                </div>
+                <button *ngIf="edit.status" type="button" class="btn btn-link btn-sm text-danger"
+                    [disabled]="(index==0 && propertyType=='request') || propertyType=='timer'"
+                    (click)="triggerDeleteNode()">
+                    <span class="fa fa-sm fa-trash"></span>
+                </button>
+            </div>
+            <div class="tabs d-flex align-items-center justify-content-start px-3">
+                <div class="tab tab-setup px-2 d-flex align-items-center active">Setup</div>
+                <div class="tab tab-datamapping px-2 d-flex align-items-center" (click)="scrollIntoView()"
+                    [ngClass]="{'text-danger': errors && (errors.invalidMapping)}" [ngbTooltip]="'Auto Mapping Done!'"
+                    [placement]="'top'" [triggers]="'manual'" [autoClose]="true" #mapperToolTip="ngbTooltip">
+                    Data Mapping
+                </div>
+                <!-- <div class="tab tab-others px-2 d-flex align-items-center">Others</div> -->
+            </div>
+        </div>
+        <odp-node-type-block [edit]="edit" [node]="node" [nodeList]="nodeList" [flowData]="flowData" [index]="index">
+        </odp-node-type-block>
+        <div #dataMapping *ngIf="node.meta.blockType !== 'INPUT'"
+            class="node-properties-block mapping-block d-flex flex-column">
+            <div class="title d-flex align-items-center justify-content-between px-3">
+                <span class="font-weight-bold mr-2">Data Mapping</span>
+            </div>
+            <div class="d-flex flex-column px-3">
+                <div class="form-group d-flex align-items-center justify-content-between">
+                    <label for=""
+                        [ngClass]="{'text-danger': errors && (errors.invalidMapping || errors.invalidBinaryMapping)}">Attributes
+                        Used</label>
+                    <div class="d-flex align-items-center">
+                        <div class="font-weight-bold text-dark mr-2">{{mappedAttributes}}/{{attributesAvailable}}</div>
+                        <div tabindex="0"
+                            class="mapping-btn d-flex align-items-center justify-content-center rounded-circle bg-dark text-white"
+                            (keyup.enter)="openMapper=true" (click)="openMapper=!openMapper">
+                            <span class="odp-mapper"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <odp-agent-block [edit]="edit" [node]="node" [flowData]="flowData"></odp-agent-block>
+        <odp-file-options-block [edit]="edit" [node]="node"></odp-file-options-block>
+        <odp-security-block [edit]="edit" [node]="node" [partner]="partner"></odp-security-block>
+        <ng-container *ngIf="propertyType=='request' && timeboundFeatureActive">
+            <odp-timebound-block [edit]="edit" [flowData]="flowData" [node]="node"></odp-timebound-block>
+        </ng-container>
+        <div *ngIf="node?.meta?.blockType === 'INPUT' && node?.meta?.sourceType === 'FILE'"
+            class="node-properties-block others-block d-flex flex-column">
+            <div class="title d-flex align-items-center justify-content-between px-3">
+                <span class="font-weight-bold mr-2">Throttling</span>
+            </div>
+            <div class="d-flex flex-column px-3">
+                <div class="form-group">
+                    <odp-checkbox [edit]="edit" [(checked)]="enableThrottling">
+                        <span>Enable Throttling</span>
+                    </odp-checkbox>
+                </div>
+                <div class="form-group">
+                    <label for="b2BFlowMaxConcurrentFiles">Max. Concurrent Files</label>
+                    <input id="b2BFlowMaxConcurrentFiles" type="number" class="form-control"
+                        [(ngModel)]="node.meta.b2BFlowMaxConcurrentFiles.value"
+                        [disabled]="!edit.status || !enableThrottling">
+                    <span class="form-text">Value less-than 1 will disable throttling</span>
+                </div>
+            </div>
+        </div>
+        <div class="node-properties-block others-block d-flex flex-column">
+            <div class="title d-flex align-items-center justify-content-between px-3">
+                <span class="font-weight-bold mr-2">Others</span>
+            </div>
+            <div class="d-flex flex-column px-3">
+                <div class="form-group" *ngIf="node?.meta?.blockType === 'INPUT'">
+                    <odp-checkbox [edit]="edit" [(checked)]="node.meta.uniqueRemoteTransaction">Unique Remote
+                        Transaction ID
+                    </odp-checkbox>
+                </div>
+                <ng-container *ngIf="node?.meta?.uniqueRemoteTransaction && node?.meta?.sourceType === 'FILE'">
+                    <div class="form-group ml-3"
+                        [ngClass]="{'text-danger': errors && (errors.invalidTransactionOptions)}">
+                        <odp-checkbox [edit]="edit" [(checked)]="node.meta.uniqueRemoteTransactionOptions.fileName">
+                            <span
+                                [ngClass]="{'text-danger': errors && (errors.invalidTransactionOptions)}">Filename</span>
+                        </odp-checkbox>
+                    </div>
+                    <div class="form-group ml-3">
+                        <odp-checkbox [edit]="edit" [(checked)]="node.meta.uniqueRemoteTransactionOptions.checksum">
+                            <span
+                                [ngClass]="{'text-danger': errors && (errors.invalidTransactionOptions)}">Checksum</span>
+                        </odp-checkbox>
+                    </div>
+                </ng-container>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" cols="30" rows="4" class="form-control"
+                        [(ngModel)]="node.description" maxlength="240" [disabled]="!edit.status"></textarea>
+                    <span class="text-muted">Description should not be more than 240 characters.</span>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="propertyType=='timer'">
+        <odp-timer-block [edit]="edit" [flowData]="flowData"></odp-timer-block>
+    </ng-container>
+</div>
+
+<odp-delete-modal [open]="deleteNodeModal" (close)="onDeleteNode($event)"></odp-delete-modal>
+
+<odp-mapper class="ignore-outside" *ngIf="openMapper" [edit]="edit" [(toggleMapper)]="openMapper"
+    [commonSourceTarget]="mapperLeft?.targetFormat?.id===mapperRight?.sourceFormat?.id"
+    [source]="mapperLeft?.targetFormat?.definition" [sourceType]="mapperLeft?.targetFormat?.formatType"
+    [destination]="mapperRight?.sourceFormat?.definition" [destinationType]="mapperRight?.sourceFormat?.formatType"
+    [(xslt)]="node.meta.xslt" (mappingChange)="node.mapping = $event">
+</odp-mapper>

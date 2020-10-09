@@ -1,0 +1,33 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+path {
+  fill: $accent;
+  stroke: none;
+}
+line {
+  stroke: rgba($accent, 0.5);
+  stroke-width: 2;
+}
+circle {
+  fill: rgba($accent, 0.5);
+  transition: 0.25s;
+}
+
+.circle {
+  &:hover {
+    cursor: pointer;
+    circle {
+      fill: rgba($accent, 0.8);
+    }
+  }
+}
+
+.timer {
+  circle {
+    fill: rgba($accent, 1);
+  }
+  path {
+    fill: $white;
+  }
+}

@@ -1,0 +1,64 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.selector-options {
+  .btn{
+    text-decoration: none;
+  }
+}
+.modal-body {
+  .upper-wrapper{
+    min-height: 176px;
+    max-height: 176px;
+  }
+  .lower-wrapper{
+    min-height: 302px;
+    max-height: 302px;
+  }
+  .data-structure-preview{
+    min-width: 592px;
+    max-width: 592px;
+    min-height: 480px;
+    max-height: 480px;
+  }
+  .rounded-circle {
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+  }
+  .data-list {
+    min-height: 184px;
+    max-height: 184px;
+    overflow-y: auto;
+  }
+  .options {
+    min-height: 40px;
+    max-height: 40px;
+  }
+  .builder {
+    min-height: calc(100vh - 198px);
+    max-height: calc(100vh - 198px);
+    overflow: hidden;
+  }
+  .schema-creator {
+    min-height: calc(100vh - 240px);
+    max-height: calc(100vh - 240px);
+    overflow: auto;
+  }
+  .properties-wrapper{
+    min-width: 430px;
+    max-width: 430px;
+  }
+  .table{
+    tr{
+      td,th{
+        height: 40px;
+        min-height: 40px;
+        max-width: 40px;
+        padding: 0;
+        vertical-align: middle;
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+<svg>
+    <g class="error" [ngClass]="{'show': hasErrors}">
+        <line class="error-line" x1="57" y1="16" x2="57" y2="22" />
+        <circle class="error-circle" cx="57" cy="8" r="8"></circle>
+        <g class="symbol">
+            <line x1="57" y1="4" x2="57" y2="10" />
+            <circle cx="57" cy="12" r="1"></circle>
+        </g>
+    </g>
+    <g [ngClass]="{'active': isActive}">
+        <line *ngIf="index>0" x1="0" y1="53" x2="36" y2="53" class="line-color" />
+        <line x1="36" y1="53" x2="114" y2="53" class="line-color" />
+        <polygon *ngIf="index>0" points="31,49 36,53 31,57" class="polygon-color" />
+        <g class="node" [ngClass]="{'active': isActive}">
+            <rect *ngIf="index>0" [attr.x]="rectX" [attr.y]="rectY" rx="4" ry="4" [attr.width]="rectSize"
+                [attr.height]="rectSize" class="rect-color" />
+            <polygon *ngIf="index==0 && flowData.timer.enabled" [attr.points]="polygonPoints" class="polygon-node" />
+            <!-- <rect *ngIf="index==0 && flowData.timer.enabled" [attr.x]="rectX" [attr.y]="rectY" rx="4" ry="4"
+                [attr.width]="rectSize" [attr.height]="rectSize" class="rect-color diamond" /> -->
+            <circle *ngIf="index==0 && !flowData.timer.enabled" [attr.cx]="circleX" [attr.cy]="circleY"
+                [attr.r]="circleSize" class="circle-color" />
+            <g *ngIf="nodeType === 'dataService'" class="node-icon">
+                <path
+                    d="M3,19a3,3,0,0,1-3-3V6A3,3,0,0,1,3,3H13a3,3,0,0,1,3,3V16a3,3,0,0,1-3,3ZM2,9v7a1,1,0,0,0,1,1H13a1,1,0,0,0,1-1V9a1,1,0,0,0-1-1H3A1,1,0,0,0,2,9ZM2,6A1,1,0,0,0,3,7H6A1,1,0,1,0,6,5H3A1,1,0,0,0,2,6Zm2,9a1,1,0,0,1,0-2H7a1,1,0,1,1,0,2Zm0-3a1,1,0,0,1,0-2h6a1,1,0,0,1,0,2Z"
+                    transform="translate(-0.003 -3)" />
+            </g>
+            <g *ngIf="nodeType === 'nanoService'" class="node-icon">
+                <path
+                    d="M-5736.06,16l-7.057-4,0-8,7.063-4L-5729,4v8l-7.057,4Zm-5.093-11v6l5.075,3,5.079-3V5l-5.079-3h0Zm3.15,3a2,2,0,0,1,2-2,2,2,0,0,1,2,2,2,2,0,0,1-2,2A2,2,0,0,1-5738,8Z"
+                    transform="translate(5744.119 0.001)" />
+            </g>
+            <g *ngIf="nodeType === 'file'" class="node-icon">
+                <path d="M-4300-34.758h-11v-14h6.343L-4300-44.1v9.342Zm-9-12v10h7v-6h-4v-4Z"
+                    transform="translate(4314 49.758)" />
+            </g>
+            <g *ngIf="nodeType === 'api'" class="node-icon">
+                <path
+                    d="M2270.792-60.218,2276.285-72l1.813.845L2272.6-59.373Zm6.037-.022h0l-1.414-1.415,4.242-4.242-2.123-2.124.9-1.929,4.053,4.053-5.656,5.657ZM2270.5-62.4l-3.5-3.5,1.414-1.415,4.243-4.242,1.414,1.414-4.243,4.243,1.569,1.57-.9,1.927v0Z"
+                    transform="translate(-2267 74)" class="" />
+            </g>
+        </g>
+        <g class="node-type">
+            <g *ngIf="nodeType === 'api'">
+                <rect x="42px" y="88px" rx="4" ry="4" width="30px" height="14px" />
+                <text text-anchor="middle" x="57px" y="98px">API</text>
+            </g>
+            <g *ngIf="nodeType === 'file'">
+                <rect x="40px" y="88px" rx="4" ry="4" width="34px" height="14px" />
+                <text text-anchor="middle" x="57px" y="98px">FILE</text>
+            </g>
+            <g *ngIf="nodeType === 'dataService'">
+                <rect x="20px" y="88px" rx="4" ry="4" width="75px" height="14px" />
+                <text text-anchor="middle" x="57px" y="98px">DATASERVICE</text>
+            </g>
+            <g *ngIf="nodeType === 'nanoService'">
+                <rect x="20px" y="88px" rx="4" ry="4" width="75px" height="14px" />
+                <text text-anchor="middle" x="57px" y="98px">NANOSERVICE</text>
+            </g>
+        </g>
+        <text *ngIf="node.name" text-anchor="middle" x="57px" y="116px">
+            <title>{{ node.name }}</title>
+            {{ node.name | ellipsis:10 }}
+        </text>
+        <text *ngIf="!node.name" fill="#ccc" text-anchor="middle" x="57px" y="116px">
+            <title>{{ nodeAlternateName }}</title>
+            {{ nodeAlternateName | ellipsis:10 }}
+        </text>
+    </g>
+</svg>

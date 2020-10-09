@@ -1,0 +1,134 @@
+<!-- <div class="d-flex flex-column w-100 h-100">
+    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+    <div class="options p-3 d-flex justify-content-between">
+        <div class="buttons d-flex">
+            <div class="btn-group">
+                <span class="btn btn-outline-accent" (click)="activateTab(0)" [ngClass]="{'active':activeTab==0}">Data
+                    Service</span>
+                <span class="btn btn-outline-accent" (click)="activateTab(1)"
+                    [ngClass]="{'active':activeTab==1}">Agents</span>
+                <span class="btn btn-outline-accent" (click)="activateTab(2)"
+                    [ngClass]="{'active':activeTab==2}">Users</span>
+                <span class="btn btn-outline-accent" (click)="activateTab(3)"
+                    [ngClass]="{'active':activeTab==3}">Groups</span>
+
+            </div>
+        </div>
+        <div class="filters d-flex w-75 justify-content-end">
+            <span class="btn btn-link text-accent" (click)="showFilters = !showFilters">
+                <span class="fa fa-filter mr-2"></span>
+                <span class="text">Filter</span>
+            </span>
+            <div class="mx-3 position-relative w-50">
+                <input type="text" class="form-control" [(ngModel)]="searchModel.term" (keyup)="checkSearch($event)"
+                    placeholder="Search">
+                <div class="position-absolute d-flex select-search-field">
+                    <span class="text-accent mr-2">in</span>
+
+                    <select id="" class="bg-white border-0" [(ngModel)]="searchModel.field">
+                        <option [value]="opt.searchField" *ngFor="let opt of searchOptions">{{opt.label}}</option>
+                    </select>
+                </div>
+                <span class="clear-btn fa fa-times position-absolute text-danger hover" *ngIf="filters"
+                    (click)="clearSearch()"></span>
+            </div>
+            <span class="btn btn-secondary btn-min-width" (click)="search()">
+                Search
+            </span>
+        </div>
+    </div>
+    <div class="d-flex flex-column h-100 w-100 px-3">
+        <odp-dataservice-logs *ngIf="activeTab==0"></odp-dataservice-logs>
+
+        <odp-user-logs *ngIf="activeTab==2" [(columns)]="columns" [(filters)]="filters"></odp-user-logs>
+        <odp-group-logs *ngIf="activeTab==3" [(columns)]="columns" [(filters)]="filters"></odp-group-logs>
+    </div>
+</div>
+
+<div class="columns-selector card position-fixed" [ngClass]="{'show':showColumns}" *ngIf="columns">
+    <div class="card-header d-flex bg-dark text-white align-items-center">
+        <h5 class="m-0 w-100">Columns</h5>
+        <span class="fa fa-times hover" (click)="showColumns=false"></span>
+    </div>
+    <div class="card-body">
+        <ng-container *ngFor="let key of getKeys(columns)">
+            <div class="custom-control custom-checkbox">
+                <input [attr.id]="key" type="checkbox" class="custom-control-input" value="true"
+                    [(ngModel)]="columns[key].show" [ngModelOptions]="{standalone: true}">
+                <label class="custom-control-label text-primary-dark hover"
+                    [attr.for]="key">{{columns[key].label}}</label>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<div class="filter-selector card position-fixed" [ngClass]="{'show':showFilters}" odpClickOutside
+    (outside)="showFilters = false">
+    <div class="card-header d-flex bg-dark text-white align-items-center">
+        <h5 class="m-0 w-100">Filters</h5>
+        <span class="fa fa-times hover" (click)="showFilters = false"></span>
+    </div>
+    <div class="card-body py-2">
+        <select id="" class="form-control" *ngIf="dateFields.length>1" [(ngModel)]="filterModel.field">
+            <option *ngFor="let field of dateFields" [value]="field.label">{{field.label}}</option>
+        </select>
+        <div class="d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center selected-date">
+                <span>From</span>
+                <span class="d-flex justify-content-end align-items-center pr-4">
+                    <span *ngIf="dateFrom">{{dateFrom|date:'dd-MMM-yyyy hh:mm:ss a'}}</span>
+                    <span *ngIf="!dateFrom">Select date</span>
+                    <button type="button" *ngIf="dateFrom" class="btn btn-sm btn-link pr-0"
+                        (click)="dateFrom=null">clear</button>
+                </span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center selected-date">
+                <span>To</span>
+                <span class="d-flex justify-content-end align-items-center pr-4">
+                    <span *ngIf="dateTo">{{dateTo|date:'dd-MMM-yyyy hh:mm:ss a'}}</span>
+                    <span *ngIf="!dateTo">Select date</span>
+                    <button type="button" *ngIf="dateTo" class="btn btn-sm btn-link pr-0"
+                        (click)="dateTo=null">clear</button>
+                </span>
+            </div>
+        </div>
+        <odp-date-picker *ngIf="showFilters" [(togglePicker)]="showFilters" [options]="{range:true}" [(from)]="dateFrom"
+            [(to)]="dateTo"></odp-date-picker>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-icon" (click)="clearSearchWithDate()">Clear</button>
+            <button type="button" class="btn btn-primary ml-3" (click)="searchWithDate()">Search</button>
+        </div>
+    </div>
+</div> -->
+
+<div class="d-flex flex-column w-100 h-100 position-relative">
+    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+    <div class="d-felx justify-content-between mx-3">
+        <h4>Audit Logs</h4>
+    </div>
+    <div class="tabs d-flex align-items-center border-bottom mx-3" id="sbTabs">
+        <div class="text-dark px-3 py-2 hover" (click)="activateTab(0)" [ngClass]="{'active':activeTab==0}">
+            <span>Data Services</span>
+
+        </div>
+        <!-- <div class="text-dark px-3 py-2 hover" (click)="activateTab(1)" [ngClass]="{'active':activeTab==1}">
+            <span>Agents</span>
+
+        </div> -->
+        <div class="text-dark px-3 py-2 hover" (click)="activateTab(1)" [ngClass]="{'active':activeTab==1}">
+            <span>Users</span>
+
+        </div>
+        <div class="text-dark px-3 py-2 hover" (click)="activateTab(2)" [ngClass]="{'active':activeTab==2}">
+            <span>Groups</span>
+        </div>
+
+
+    </div>
+    <div class="d-flex flex-column h-100 w-100 px-3">
+        <odp-dataservice-logs *ngIf="activeTab==0"></odp-dataservice-logs>
+
+        <odp-user-logs *ngIf="activeTab==1"></odp-user-logs>
+        <odp-group-logs *ngIf="activeTab==2"></odp-group-logs>
+    </div>
+</div>

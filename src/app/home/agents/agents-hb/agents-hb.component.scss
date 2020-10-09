@@ -1,0 +1,44 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.strength-tower {
+  .strength-high,
+  .strength-medium,
+  .strength-low {
+    min-height: 4px;
+    max-height: 4px;
+    border-radius: 4px;
+    background: $border;
+    margin-top: 2px;
+  }
+  .strength-high {
+    min-width: 12px;
+    max-width: 12px;
+  }
+  .strength-medium {
+    min-width: 8px;
+    max-width: 8px;
+  }
+  .strength-low {
+    min-width: 4px;
+    max-width: 4px;
+  }
+  &.high {
+    .strength-high,
+    .strength-medium,
+    .strength-low {
+      background: $success;
+    }
+  }
+  &.medium {
+    .strength-medium,
+    .strength-low {
+      background: $primary;
+    }
+  }
+  &.low {
+    .strength-low {
+      background: $danger;
+    }
+  }
+}
