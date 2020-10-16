@@ -458,7 +458,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
     _getNoOfRecords(service) {
         const self = this;
-        const url = service.api + '/count';
+        const url = service.api + '/utils/count';
         self.subscriptions['getnoofrecord'] = self.commonService.get('apis', url).subscribe(res => {
             service._records = res;
         }, err => {
