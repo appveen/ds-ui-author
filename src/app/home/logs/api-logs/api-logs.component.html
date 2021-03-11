@@ -1,0 +1,116 @@
+<div class="d-flex flex-column w-100">
+  <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+      <span class="fa fa-spinner fa-pulse fa-3x"></span>
+      <div class="text-secondary mt-2">Processing...</div>
+    </div>
+  </div>
+
+  <div class="card-container bg-white ">
+    <div class="data-grid-options d-flex align-items-center justify-content-between px-2">
+      <div class="d-flex align-items-center">
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="page-info">
+          {{startNo}}-{{endNo}} of {{totalRecords}}
+        </span>
+        <button type="button" class="btn btn-link ml-2" [disabled]="disablePrev" (click)="prevPage()">
+          <span class="fa fa-angle-left"></span>
+        </button>
+        <button type="button" class="btn btn-link ml-2" [disabled]="disableNext" (click)="nextPage()">
+          <span class="fa fa-angle-right"></span>
+        </button>
+      </div>
+    </div>
+    <div class="table-height">
+      <div class="data-grid border" odpDataGrid [columns]="tableColumns">
+        <div class="data-grid-header">
+          <div class="data-grid-row">
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort no-grip" id="sno">S.No</div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="url" *ngIf="_columns.url.show">URL</div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="method" *ngIf="_columns.method.show">Method</div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="userId" *ngIf="_columns.user.show">User</div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="Diagnostics" *ngIf="_columns.dia.show">Diagnostics</div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="txnd" *ngIf="_columns.txind.show">Transaction
+              ID</div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="source" *ngIf="_columns.ip.show">IP</div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="resCode" *ngIf="_columns.rescode.show">Response
+              Code</div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="timestamp" *ngIf="_columns.timestamp.show">TimeStamp</div>
+          </div>
+        </div>
+        <div class="data-grid-body">
+          <div class="data-grid-row" *ngFor="let log of logs; let i = index">
+            <div class="data-grid-cell d-flex align-items-center">
+              <span>{{(i + (currentPage-1)*pageSize) + 1}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center" *ngIf="_columns.url.show">
+              <span>{{log.url}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center" *ngIf="_columns.method.show">
+              <span>{{log.method}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center" *ngIf="_columns.user.show">
+              <span>{{getUserName(log.userId)}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center text-primary hover" *ngIf="_columns.dia.show" (click)="showObject(i)">
+              <span>{{log.reqBody|objectpipecount}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center text-primary" *ngIf="_columns.txind.show" (click)="searchTransactionId(log.txnid)">
+              <span> {{log.txnid?log.txnid:'N.A'}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center" *ngIf="_columns.ip.show">
+              <span>{{log.source?log.source:'N.A'}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center" *ngIf="_columns.rescode.show">
+              <span>{{log.resStatusCode?log.resStatusCode:'N.A'}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center" *ngIf="_columns.timestamp.show">
+              <span>{{log.timestamp | date:'dd-MMM-yyyy hh:mm:ss a'}}</span>
+            </div>
+          </div>
+          <div class="data-grid-row justify-content-center full-row" *ngIf="!showLazyLoader && logs.length === 0">
+            <div class="data-grid-cell d-flex align-items-center w-100 justify-content-center">
+              <div class="no-users font-normal text-secondary">No Logs Found</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="empty-log w-100 text-center p-3" *ngIf="totalCount==0&&showLazyLoader==false">No logs present</div>
+  <!-- <div class="records w-100 text-center p-3 border-top" *ngIf="currentCount>0">{{logs.length}} of {{currentCount}} &nbsp;loaded</div> -->
+</div>
+
+<ng-template #logModal>
+  <div class="modal-header bg-secondary d-block">
+    <h5 class="text-dark">Logs:&nbsp;
+      <span class="font-weight-bold">{{selectedLog?.txnid}}</span>
+      <small class="text-secondary pl-1">(Transaction ID)</small>
+    </h5>
+    <div class="row">
+      <div class="col">
+        <div class="font-weight-bold">Diagnostics</div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="row" class="audit-log-table">
+      <table class="table">
+        <thead>
+          <th style="width: 13%;">SI No</th>
+          <th>Diagnostics</th>
+          <th>Value</th>
+        </thead>
+        <tbody *ngFor="let req of getKeys(selectedLog?.reqBody) ; let i =index">
+          <td>{{i+1}}</td>
+          <td>{{req}}</td>
+          <td>{{selectedLog?.reqBody[req]?selectedLog?.reqBody[req]:'N.A'}}</td>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer p-3 bg-light">
+    <button type="button" class="btn btn-min-width btn-light mx-3 float-right" (click)="logModalRef.close(false)">Close</button>
+  </div>
+</ng-template>
