@@ -80,8 +80,12 @@ export class SchemaBuilderComponent implements
     exampleJSON: any;
     exampleSchema: any;
     roleData: any;
+    oldRoleData: any;
+    blockInvalidRole: any = {};
+    manageRolesFirstInit = true;
+
     sortableOnMove = (event: any) => {
-      return !event.related.classList.contains('disabled');
+        return !event.related.classList.contains('disabled');
     }
 
     @HostListener('window:beforeunload', ['$event'])
@@ -134,14 +138,16 @@ export class SchemaBuilderComponent implements
                 usedFields: self.fb.array([])
             }),
             definition: self.fb.array([
-                self.fb.group({
-                    _id: self.fb.group({
+                self.fb.group(
+                    {
+                        key: ['_id'],
+                        type: ['id'],
                         prefix: [null],
                         suffix: [null],
                         padding: [null],
                         counter: [null]
-                    })
-                }),
+                    }
+                ),
                 self.schemaService.getDefinitionStructure()
             ]),
             webHooks: [[]],
@@ -164,7 +170,7 @@ export class SchemaBuilderComponent implements
             headers: [],
             enableSearchIndex: ''
         });
-       
+
         self.versionConfig = {
             type: 'count',
             value: '-1',
@@ -181,7 +187,7 @@ export class SchemaBuilderComponent implements
         self.commonService.apiCalls.componentLoading = false;
         self.form.get('enableSearchIndex').patchValue(self.commonService.userDetails['enableSearchIndex']);
         self.form.get('definition').setValidators([sameName]);
-        self.form.get(['definition', 0, '_id']).setValidators([counterPaddingValidator]);
+        self.form.get(['definition', 0]).setValidators([counterPaddingValidator]);
         self.breadcrumbPaths.push({
             active: false,
             label: 'Data Services',
@@ -199,7 +205,7 @@ export class SchemaBuilderComponent implements
                 }
                 self.commonService.apiCalls.componentLoading = true;
                 self.edit.id = param.id;
-                self.form.get(['definition', 0, '_id', 'counter'])
+                self.form.get(['definition', 0, 'counter'])
                     .setAsyncValidators([counterValidator(self.commonService, self.edit.id)]);
                 self.fillDetails(param.id);
             } else {
@@ -227,8 +233,8 @@ export class SchemaBuilderComponent implements
         self.form.controls.name.valueChanges.subscribe(val => {
             if (!self.edit.id && val) {
                 self.form.controls.api.patchValue('/' + _.camelCase(val));
-                self.form.get(['definition', 0, '_id', 'prefix']).patchValue(_.toUpper(_.camelCase(val.substring(0, 3))));
-                self.form.get(['definition', 0, '_id', 'counter']).patchValue(1001);
+                self.form.get(['definition', 0, 'prefix']).patchValue(_.toUpper(_.camelCase(val.substring(0, 3))));
+                self.form.get(['definition', 0, 'counter']).patchValue(1001);
                 self.nameChange.emit(val);
             }
             self.action.message = null;
@@ -318,10 +324,12 @@ export class SchemaBuilderComponent implements
         };
         if (self.serviceObj.role) {
             self.roleData = self.serviceObj.role;
+            self.oldRoleData = self.appService.cloneObject(self.serviceObj.role);
         } else {
             self.subscriptions['fetchPermissions'] = self.commonService.get('user', '/role', options).subscribe(res => {
                 self.serviceObj.role = res[0];
                 self.roleData = res[0];
+                self.oldRoleData = self.appService.cloneObject(self.role);
             }, err => {
                 self.commonService.errorToast(err, 'Unable to fetch permissions');
             });
@@ -337,7 +345,6 @@ export class SchemaBuilderComponent implements
         let payload;
         if (self.hasAnyTabPermission) {
             payload = self.schemaStructurePipe.transform(value);
-            payload.attributeList = self.schemaAttributesPipe.transform(value, true);
             if (!self.roleData.roles || self.roleData.roles.length === 0) {
                 self.roleData.roles = self.appService.getDefaultRoles();
             }
@@ -351,19 +358,17 @@ export class SchemaBuilderComponent implements
             } else {
                 self.roleData.fields = self.appService.getDefaultFields(roleIds, [
                     {
-                        _id: {
-                            type: 'String'
-                        }
+                        key: '_id',
+                        type: 'String'
                     }
                 ], self.roleData.fields);
-
             }
             payload.role = self.roleData;
-            Object.keys(payload.definition).forEach(e => {
-                if (payload.definition[e]['type'] && payload.definition[e]['type'] === 'Relation') {
-                    const temp = payload.role.fields[e];
-                    payload.role.fields[e] = {};
-                    payload.role.fields[e]._id = temp;
+            payload.definition.forEach(def => {
+                if (def['type'] && def['type'] === 'Relation') {
+                    const temp = payload.role.fields[def.key];
+                    payload.role.fields[def.key] = {};
+                    payload.role.fields[def.key]._id = temp;
                 }
             });
         } else {
@@ -377,6 +382,9 @@ export class SchemaBuilderComponent implements
         delete payload.port;
         delete payload.tags;
         const list = self.commonService.getEntityPermissions('SM_' + self.serviceObj._id);
+        if (!(self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin)) {
+            delete payload.disableInsights;
+        }
         if (!self.hasPermissionForTab('D')) {
             delete payload.attributeList;
             delete payload.definition;
@@ -412,7 +420,7 @@ export class SchemaBuilderComponent implements
         } else if (list.length > 0 && !list.find(e => e.id === 'PMDSSPD')) {
             delete payload.permanentDeleteData;
         }
-      
+
         if (list.length === 0 && !self.hasPermission('PMDSIDPO', 'SM')) {
             delete payload.webHooks;
         } else if (list.length > 0 && !list.find(e => e.id === 'PMDSIDPO')) {
@@ -479,17 +487,17 @@ export class SchemaBuilderComponent implements
 
     checkAndSave() {
         const self = this;
-       
+
         self.save();
     }
 
     checkSaveAndDeploy() {
         const self = this;
-        if (self.form.get(['definition', 0, '_id', 'counter']).dirty && self.edit.id) {
+        if (self.form.get(['definition', 0, 'counter']).dirty && self.edit.id) {
             const payload = self.schemaStructurePipe.transform(self.form.value);
             self.commonService.get('serviceManager', '/' + self.edit.id + '/' + self.commonService.app._id +
                 '/idCount').subscribe(res => {
-                    if (payload.definition._id.counter <= res) {
+                    if (payload.definition.find(d => d.key === '_id').counter <= res) {
                         self.commonService.errorToast(
                             { status: 400 }, 'Invalid value for counter because the current counter value is  ' + res);
                         self.enableEdit(true);
@@ -532,7 +540,7 @@ export class SchemaBuilderComponent implements
             const tempArr = self.form.controls.definition as FormArray;
             const temp = self.schemaService.getDefinitionStructure({ _newField: true });
             tempArr.push(temp);
-           
+
         }
     }
 
@@ -557,7 +565,7 @@ export class SchemaBuilderComponent implements
                 const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
                 tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
                 if (self.form.get(['definition', 0])) {
-                    self.form.get(['definition', 0, '_id']).patchValue(tempDef.definition[0]._id);
+                    self.form.get(['definition', 0]).patchValue(tempDef.definition.find(d => d.key === '_id'));
                 }
                 const temp = self.schemaService.getDefinitionStructure();
                 (self.form.controls.definition as FormArray).push(temp);
@@ -648,8 +656,7 @@ export class SchemaBuilderComponent implements
                     self.enableEdit(true);
                 }
                 self.nameChange.emit(res.name);
-                self.serviceObj['docapi'] = environment.url.doc + '/?q=/api/a/sm/service/' +
-                    self.serviceObj._id + '/swagger/' + self.serviceObj.app + self.serviceObj.api;
+                self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${self.serviceObj._id}/swagger/${self.serviceObj.app}${self.serviceObj.api}`;
                 self.edit.loading = false;
                 const temp = JSON.parse(JSON.stringify(res));
                 delete temp.wizard;
@@ -658,25 +665,23 @@ export class SchemaBuilderComponent implements
                 self.form.patchValue(temp);
                 if (!self.form.get(['definition', 0])) {
                     (self.form.get(['definition']) as FormArray).push(self.fb.group({
-                        _id: self.fb.group({
-                            prefix: [null],
-                            suffix: [null],
-                            padding: [null],
-                            counter: [null],
-                            properties: self.schemaService.getPropertiesStructure(temp.definition[0]._id)
-                        })
+                        key: ['_id'],
+                        type: ['id'],
+                        prefix: [null],
+                        suffix: [null],
+                        padding: [null],
+                        counter: [null],
+                        properties: self.schemaService.getPropertiesStructure(temp.definition.find(d => d.key === '_id'))
                     }));
                 }
                 if (self.form.get(['definition', 0])) {
-                    self.form.get(['definition', 0, '_id']).patchValue(temp.definition[0]._id);
+                    self.form.get(['definition', 0]).patchValue(temp.definition.find(d => d.key === '_id'));
                 }
-                
-                temp.definition.forEach(def => {
-                    if (!def._id) {
-                        const tempDef = self.schemaService.getDefinitionStructure(self.appService.cloneObject(def));
-                        tempDef.get('properties.name').patchValue(def.properties.name);
-                        (self.form.get('definition') as FormArray).push(tempDef);
-                    }
+
+                temp.definition.filter(def => def.key !== '_id').forEach(def => {
+                    const tempDef = self.schemaService.getDefinitionStructure(self.appService.cloneObject(def));
+                    tempDef.get('properties.name').patchValue(def.properties.name);
+                    (self.form.get('definition') as FormArray).push(tempDef);
                 });
                 temp.tags.forEach(tag => {
                     (self.form.get('tags') as FormArray).push(new FormControl(tag));
@@ -706,7 +711,7 @@ export class SchemaBuilderComponent implements
                                     if (e.value.key === field) {
                                         (self.form.get('wizard.usedFields') as FormArray).push(e);
                                         (self.form.get(['wizard', 'steps', +i, 'fields']) as FormArray).push(e);
-                                      
+
                                     }
                                 } else {
                                     if ('_id' === field) {
@@ -719,7 +724,7 @@ export class SchemaBuilderComponent implements
                                         });
                                         (self.form.get('wizard.usedFields') as FormArray).push(temp2);
                                         (self.form.get(['wizard', 'steps', +i, 'fields']) as FormArray).push(temp2);
-                                        
+
                                     }
                                 }
                             });
@@ -784,9 +789,11 @@ export class SchemaBuilderComponent implements
         const self = this;
         const flag = self.form.get('name').dirty ||
             self.form.get('description').dirty ||
-            self.form.get('webHooks').dirty ||
-            self.form.get('preHooks').dirty ||
+            self.form.get('permanentDeleteData').dirty ||
+            self.form.get('disableInsights').dirty ||
+            self.form.get('api').dirty ||
             self.form.get('tags').dirty ||
+            self.form.get('headers').dirty ||
             self.form.get('versionValidity').dirty || (
                 self.form.get(['definition', 0]) &&
                 self.form.get(['definition', 0]).dirty
@@ -798,9 +805,11 @@ export class SchemaBuilderComponent implements
         const self = this;
         const flag = self.form.get('name').invalid ||
             self.form.get('description').invalid ||
-            self.form.get('webHooks').invalid ||
-            self.form.get('preHooks').invalid ||
+            self.form.get('permanentDeleteData').invalid ||
+            self.form.get('disableInsights').invalid ||
+            self.form.get('api').invalid ||
             self.form.get('tags').invalid ||
+            self.form.get('headers').invalid ||
             self.form.get('versionValidity').invalid || (
                 self.form.get(['definition', 0]) &&
                 self.form.get(['definition', 0]).invalid
@@ -850,18 +859,35 @@ export class SchemaBuilderComponent implements
 
     get changesDoneInRoles() {
         const self = this;
-        if (self.permissionsComponent) {
-            return self.permissionsComponent.changesDone;
-        }
-        return false;
+        return JSON.stringify(self.oldRoleData) !== JSON.stringify(self.role);
     }
 
     get errorInRoles() {
         const self = this;
-        if (self.permissionsComponent) {
-            return !self.permissionsComponent.isValid;
+        if (!self.roleData || !self.roleData.roles || !self.roleData.roles.length) {
+            return false;
         }
-        return false;
+        let notValid = (self.roleData.roles as any[]).some(element => !element.name);
+        return notValid || !self.ruleBlocksValid;
+    }
+
+    get ruleBlocksValid() {
+        const self = this;
+        let isValid = true;
+        let count = 0;
+        if (Object.keys(self.blockInvalidRole).length > 0) {
+            Object.keys(self.blockInvalidRole).forEach(key => {
+                if (self.blockInvalidRole[key]) {
+                    count++;
+                }
+            });
+            if (count > 0) {
+                isValid = false;
+            } else {
+                isValid = true;
+            }
+        }
+        return isValid;
     }
 
     get isValidSchema() {
@@ -875,7 +901,7 @@ export class SchemaBuilderComponent implements
         if (self.errorInRoles) {
             return false;
         }
-      
+
         return true;
     }
 
@@ -1017,27 +1043,33 @@ export class SchemaBuilderComponent implements
 
     get canSaveAndDeploy() {
         const self = this;
-        if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
+        if (self.commonService.userDetails.isSuperAdmin) {
             return true;
         }
-        const list = self.commonService.getEntityPermissions('SM_' + self.serviceObj._id);
-        if (list.length === 0 && self.hasPermission('PMDSPD', 'SM')) {
-            const list2 = self.commonService.getEntityPermissions('SM');
-            return Boolean(list2.find(e => e.id.startsWith('PMDS')
-                && e.id !== 'PMDSBD'
-                && e.id !== 'PMDSBC'
-                && e.id !== 'PMDSPD'
-                && e.id !== 'PMDSPS'));
-        } else if (list.length > 0 && (list.find(e => e.id === 'PMDSPD')
-            && list.find(e => e.id.startsWith('PMDS')
-                && e.id !== 'PMDSBD'
-                && e.id !== 'PMDSBC'
-                && e.id !== 'PMDSPD'
-                && e.id !== 'PMDSPS'))) {
+        else if (self.commonService.isAppAdmin && !self.commonService.userDetails.verifyDeploymentUser) {
             return true;
-        } else {
+        }
+        else if (self.commonService.userDetails.verifyDeploymentUser && self.commonService.userDetails._id === self.serviceObj._metadata.lastUpdatedBy) {
             return false;
+        } else {
+            const list = self.commonService.getEntityPermissions('SM_' + self.serviceObj._id);
+            if (list.length === 0 && self.hasPermission('PMDSPD', 'SM')) {
+                const list2 = self.commonService.getEntityPermissions('SM');
+                return Boolean(list2.find(e => e.id.startsWith('PMDS')
+                    && e.id !== 'PMDSBD'
+                    && e.id !== 'PMDSBC'
+                    && e.id !== 'PMDSPD'
+                    && e.id !== 'PMDSPS'));
+            } else if (list.length > 0 && (list.find(e => e.id === 'PMDSPD')
+                && list.find(e => e.id.startsWith('PMDS')
+                    && e.id !== 'PMDSBD'
+                    && e.id !== 'PMDSBC'
+                    && e.id !== 'PMDSPD'
+                    && e.id !== 'PMDSPS'))) {
+                return true;
+            }
         }
+
     }
 
     get canEditService() {
@@ -1058,10 +1090,9 @@ export class SchemaBuilderComponent implements
 
     get hasAnyTabPermission() {
         const self = this;
-        
         if (self.hasPermissionForTab('D') || self.hasPermissionForTab('I') || self.hasPermissionForTab('E') ||
             self.hasPermissionForTab('R') ||
-            self.hasPermissionForTab('S')) {
+            self.hasPermissionForTab('S') || self.hasPermissionForTab('A')) {
             return true;
         } else {
             return false;
@@ -1094,5 +1125,9 @@ export class SchemaBuilderComponent implements
             return true;
         }
         return false;
+    }
+
+    onOldRoleReset(data) {
+        this.oldRoleData = this.appService.cloneObject(data);
     }
 }

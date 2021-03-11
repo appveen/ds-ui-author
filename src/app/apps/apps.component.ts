@@ -19,47 +19,36 @@ import { AppService } from 'src/app/utils/services/app.service';
                 query('.profile-data,.profile-thumbnail,.app-version,.last-login', style({ opacity: '0' })),
                 style({ height: '0px', position: 'fixed', opacity: '0.5' }),
                 group([
-                    query('.user-icon', animate('200ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([
-                        style({ position: 'fixed', top: '11.5px', right: '16px' }),
-                        style({ top: '33px', right: '16px' })
-                    ]))),
-                    animate('200ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([
-                        style({ height: '40px', opacity: '0.5' }),
-                        style({ height: '120px', opacity: '1' }),
-                    ])),
+                    animate(
+                        '200ms cubic-bezier(0.23, 1, 0.32, 1)',
+                        keyframes([style({ height: '40px', opacity: '0.5' }), style({ height: '120px', opacity: '1' })])
+                    )
                 ]),
-                query('.profile-data,.profile-thumbnail,.app-version,.last-login', style({ opacity: '1' })),
+                query('.profile-data,.profile-thumbnail,.app-version,.last-login', style({ opacity: '1' }))
             ]),
             transition('*=>void', [
                 group([
-                    query('.profile-data,.profile-thumbnail,.app-version,.last-login',
-                        animate('300ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([
-                            style({ opacity: '0.3' }),
-                            style({ opacity: '0' })
-                        ]))),
-                    query('.user-icon', animate('300ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([
-                        style({ position: 'fixed', top: '33px', right: '16px' }),
-                        style({ position: 'fixed', top: '11.5px', right: '16px' })
-                    ]))),
-                    animate('300ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([
-                        style({ height: '60px', border: '0' }),
-                        style({ height: '0px' })
-                    ]))
-                ]),
+                    query(
+                        '.profile-data,.profile-thumbnail,.app-version,.last-login',
+                        animate('300ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([style({ opacity: '0.3' }), style({ opacity: '0' })]))
+                    ),
+                    animate(
+                        '300ms cubic-bezier(0.23, 1, 0.32, 1)',
+                        keyframes([style({ height: '60px', border: '0' }), style({ height: '0px' })])
+                    )
+                ])
             ])
         ]),
         trigger('userProfileIcon', [
             state('true', style({ opacity: '0' })),
             state('false', style({ opacity: '1' })),
-            transition('true=>false', [
-                animate('500ms cubic-bezier(0.23, 1, 0.32, 1)')
-            ])
+            transition('true=>false', [animate('500ms cubic-bezier(0.23, 1, 0.32, 1)')])
         ])
     ]
 })
 export class AppsComponent implements OnInit, OnDestroy {
-
-    @ViewChild('downloadAgentModalTemplate', { static: false }) downloadAgentModalTemplate: TemplateRef<HTMLElement>;
+    @ViewChild('downloadAgentModalTemplate', { static: false })
+    downloadAgentModalTemplate: TemplateRef<HTMLElement>;
     @ViewChild('searchAppInput', { static: false }) searchAppInput: ElementRef;
     username: string;
     name: string;
@@ -86,7 +75,8 @@ export class AppsComponent implements OnInit, OnDestroy {
         private router: Router,
         private ts: ToastrService,
         public commonService: CommonService,
-        private appService: AppService) {
+        private appService: AppService
+    ) {
         const self = this;
         self.redirectLink = window.location.protocol + '//' + window.location.hostname + '/bc';
         self.version = environment.version;
@@ -153,12 +143,15 @@ export class AppsComponent implements OnInit, OnDestroy {
         self.searchAppInput.nativeElement.focus();
         self.apps = [];
         self.loadingApps = true;
-        self.commonService.isAuthenticated().then(res => {
-            self.loadingApps = false;
-            self.apps = res.apps;
-        }).catch(err => {
-            self.loadingApps = false;
-        });
+        self.commonService
+            .isAuthenticated()
+            .then(res => {
+                self.loadingApps = false;
+                self.apps = res.apps;
+            })
+            .catch(err => {
+                self.loadingApps = false;
+            });
     }
 
     changeApp(name) {
@@ -220,17 +213,20 @@ export class AppsComponent implements OnInit, OnDestroy {
             windowClass: 'download-agent-modal'
         });
         self.agentConfig.showPassword = false;
-        self.downloadAgentModalTemplateRef.result.then(close => {
-            if (close) {
-                self.agentConfig.os = close;
-                if (close === 'k8s') {
-                    self.agentConfig.type = 'k8s';
-                } else {
-                    self.agentConfig.type = 'others';
+        self.downloadAgentModalTemplateRef.result.then(
+            close => {
+                if (close) {
+                    self.agentConfig.os = close;
+                    if (close === 'k8s') {
+                        self.agentConfig.type = 'k8s';
+                    } else {
+                        self.agentConfig.type = 'others';
+                    }
+                    self.triggerAgentDownload();
                 }
-                self.triggerAgentDownload();
-            }
-        }, dismiss => { });
+            },
+            dismiss => { }
+        );
     }
 
     triggerAgentDownload() {
@@ -239,8 +235,7 @@ export class AppsComponent implements OnInit, OnDestroy {
         ele.target = '_blank';
         let queryParams;
         if (self.agentConfig.type !== 'k8s') {
-            queryParams = `ieg/download/exec?` +
-                `os=${self.agentConfig.os}&arch=${self.agentConfig.arch}`;
+            queryParams = `ieg/download/exec?` + `os=${self.agentConfig.os}&arch=${self.agentConfig.arch}`;
         } else {
             queryParams = `ieg/download/k8s`;
         }
@@ -256,9 +251,12 @@ export class AppsComponent implements OnInit, OnDestroy {
     getAgentPassword() {
         const self = this;
         if (!self.agentConfig.password) {
-            self.commonService.get('partnerManager', '/agentRegistry/IEG/password').subscribe(res => {
-                self.agentConfig.password = res.password;
-            }, err => { });
+            self.commonService.get('partnerManager', '/agentRegistry/IEG/password').subscribe(
+                res => {
+                    self.agentConfig.password = res.password;
+                },
+                err => { }
+            );
         }
     }
 
@@ -273,60 +271,59 @@ export class AppsComponent implements OnInit, OnDestroy {
 
     get hasDataServicePermission() {
         const self = this;
-        return self.commonService.hasPermissionStartsWith('PMDS')
-            || self.commonService.hasPermissionStartsWith('PVDS');
+        return self.commonService.hasPermissionStartsWith('PMDS') || self.commonService.hasPermissionStartsWith('PVDS');
     }
 
     get hasPartnerPermission() {
         const self = this;
-        return this.commonService.hasPermissionStartsWith('PMP')
-            || this.commonService.hasPermissionStartsWith('PVP');
+        return this.commonService.hasPermissionStartsWith('PMP') || this.commonService.hasPermissionStartsWith('PVP');
     }
 
     get hasDataLibraryPermission() {
         const self = this;
-        return self.commonService.hasPermission('PML')
-            || self.commonService.hasPermission('PVL');
+        return self.commonService.hasPermission('PML') || self.commonService.hasPermission('PVL');
     }
 
     get hasUsersPermission() {
         const self = this;
-        return self.commonService.hasPermissionStartsWith('PVU')
-            || self.commonService.hasPermissionStartsWith('PMU');
+        return self.commonService.hasPermissionStartsWith('PVU') || self.commonService.hasPermissionStartsWith('PMU');
     }
 
     get hasBotPermission() {
         const self = this;
-        return self.commonService.hasPermissionStartsWith('PVBB')
-            || self.commonService.hasPermissionStartsWith('PMBB');
+        return self.commonService.hasPermissionStartsWith('PVBB') || self.commonService.hasPermissionStartsWith('PMBB');
     }
 
     get hasGroupsPermission() {
         const self = this;
-        return self.commonService.hasPermissionStartsWith('PMG')
-            || self.commonService.hasPermissionStartsWith('PVG');
+        return self.commonService.hasPermissionStartsWith('PMG') || self.commonService.hasPermissionStartsWith('PVG');
     }
 
     get hasDataFormatPermission() {
         const self = this;
-        return self.commonService.hasPermission('PMDF')
-            || self.commonService.hasPermission('PVDF');
+        return self.commonService.hasPermission('PMDF') || self.commonService.hasPermission('PVDF');
     }
     get hasBookmarkPermission() {
         const self = this;
-        return self.commonService.hasPermission('PMBM')
-            || self.commonService.hasPermission('PVBM');
+        return self.commonService.hasPermission('PMBM') || self.commonService.hasPermission('PVBM');
     }
     get hasAgentsPermission() {
         const self = this;
-        return self.commonService.hasPermissionStartsWith('PMA')
-            || self.commonService.hasPermissionStartsWith('PVA');
+        return self.commonService.hasPermissionStartsWith('PMA') || self.commonService.hasPermissionStartsWith('PVA');
     }
     get hasNanoServicePermission() {
         const self = this;
-        return self.commonService.hasPermissionStartsWith('PMNS')
-            || self.commonService.hasPermissionStartsWith('PVNS');
+        return self.commonService.hasPermissionStartsWith('PMNS') || self.commonService.hasPermissionStartsWith('PVNS');
     }
+    get hasInsightsPermission() {
+        const self = this;
+        return (
+            self.commonService.hasPermission('PVISDS') ||
+            self.commonService.hasPermission('PVISU') ||
+            self.commonService.hasPermission('PVISG')
+        );
+    }
+
     get authType() {
         const self = this;
         if (self.commonService.userDetails && self.commonService.userDetails.auth) {
@@ -341,8 +338,8 @@ export class AppsComponent implements OnInit, OnDestroy {
     }
 
     get enableB2b() {
-        // return environment.distribution;
-        return true;
+        return this.commonService.userDetails.b2BEnable;
+        // return true;
     }
 
     get lastLogin() {

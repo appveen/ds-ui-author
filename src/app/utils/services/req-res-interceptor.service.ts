@@ -10,6 +10,7 @@ import {
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+
 import { CommonService } from './common.service';
 import { SessionService } from './session.service';
 
@@ -21,9 +22,13 @@ export class ReqResInterceptorService implements HttpInterceptor {
   constructor(private sessionService: SessionService,
     private commonService: CommonService) { }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = this.sessionService.getToken();
     request = request.clone({
       setHeaders: {
-        Authorization: `JWT ${this.sessionService.getToken()}`
+        ...(!!token ? {Authorization: `JWT ${token}`} : {}),
+        'Cache-Control': 'no-cache, no-store, must-revalidate, post-check=0, pre-check=0',
+        Pragma: 'no-cache',
+        Expires: '0'
       }
     });
     return next.handle(request)

@@ -52,7 +52,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
             theme: 'light',
             textColor: 'FFFFFF'
         };
-        self.appData.agentIPWhitelisting = {
+        self.appData.agentTrustedIP = {
             enabled: false,
             list: []
         };

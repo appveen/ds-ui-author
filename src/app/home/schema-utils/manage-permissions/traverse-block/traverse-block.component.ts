@@ -148,13 +148,7 @@ export class TraverseBlockComponent implements OnInit, AfterContentChecked {
 
   get serviceDefinition() {
     const self = this;
-    if (self.dataService && self.dataService.definition) {
-      if (typeof self.dataService.definition === 'string') {
-        self.dataService.definition = JSON.parse(self.dataService.definition);
-      }
-      return self.dataService.definition;
-    }
-    return {};
+    return self.dataService?.definition || {};
   }
 
   get loading() {

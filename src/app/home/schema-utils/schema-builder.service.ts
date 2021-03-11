@@ -41,7 +41,7 @@ export class SchemaBuilderService {
             errorMessage: [value.properties && value.properties.errorMessage ? value.properties.errorMessage : null],
             name: [value.properties && value.properties.name ? value.properties.name : null, [maxLenValidator(40)]],
             required: [value.properties && value.properties.required ? value.properties.required : false],
-            fieldLength: [value.properties && value.properties.fieldLength ? value.properties.fieldLength : 0],
+            fieldLength: [value.properties && value.properties.fieldLength ? value.properties.fieldLength : 10],
             _description: [value.properties && value.properties._description ? value.properties._description : null, [Validators.maxLength(240)]],
             _typeChanged: [value.type],
             _isParrentArray: [value.properties && value.properties._isParrentArray ? value.properties._isParrentArray : null],
@@ -153,7 +153,19 @@ export class SchemaBuilderService {
         if (value.type === 'Date') {
             temp.addControl('dateType', new FormControl(value.properties
                 && value.properties.dateType ? value.properties.dateType : 'date'));
-            
+            temp.addControl('defaultTimezone', new FormControl(value.properties
+                && value.properties.defaultTimezone ? value.properties.defaultTimezone :
+                (this.commonService.app.defaultTimezone || this.commonService.userDetails.defaultTimezone)));
+            temp.addControl('_listInput', new FormControl(null));
+            const arr = [];
+            if (value.properties && value.properties.supportedTimezones) {
+                for (const i of value.properties.supportedTimezones) {
+                    arr.push(new FormControl(i));
+                }
+            }
+            temp.addControl('supportedTimezones', new FormArray(arr));
+            // temp.addControl('min', new FormControl(value.properties && value.properties.min ? value.properties.min : null));
+            // temp.addControl('max', new FormControl(value.properties && value.properties.max ? value.properties.max : null));
         }
         if (value.type === 'Object') {
             temp.removeControl('required');
@@ -212,8 +224,6 @@ export class SchemaBuilderService {
                 && value.properties.schema ? value.properties.schema : '', [Validators.required]));
             temp.addControl('schemaName', new FormControl(value.properties
                 && value.properties.schemaName ? value.properties.schemaName : ''));
-            temp.addControl('attributeList', new FormControl(value.properties
-                && value.properties.attributeList ? value.properties.attributeList : ''));
             if (value.properties && value.properties.schema) {
                 self.commonService
                     .get('serviceManager', '/globalSchema/' + value.properties.schema, { select: 'name' })
@@ -229,6 +239,7 @@ export class SchemaBuilderService {
         if (value.type === 'File') {
             temp.addControl('fileType', new FormControl(value.properties
                 && value.properties.fileType ? value.properties.fileType : 'All'));
+            // temp.removeControl('required');
         }
 
         if (value && value.properties && value.properties._isParrentArray) {
@@ -237,16 +248,15 @@ export class SchemaBuilderService {
         if (value && value.properties && value.properties._isGrpParentArray) {
             temp.removeControl('createOnly');
             temp.removeControl('unique');
-            temp.removeControl('required');
         }
 
         temp.setValidators([minMax, minMaxLength]);
         return temp;
     }
 
-   
-    getDefinitionStructure(value?: any ,_isGrpParentArray?:boolean): FormGroup {
-        const key = value && value.key ? value.key === '_self' ? '_self' : value.key : '';
+
+    getDefinitionStructure(value?: any, _isGrpParentArray?: boolean): FormGroup {
+        const key = value && value.key ? value.key : '';
         const type = value && value.type ? value.type : 'String';
         const tempForm = this.fb.group({
             _fieldId: [uuid()],
@@ -285,7 +295,10 @@ export class SchemaBuilderService {
         }
         if (value && value.definition) {
             const tempArr = this.fb.array([]);
-            value.definition.forEach((element, i) => {
+            value.definition.filter(d => d.key !== '_id').forEach((element, i) => {
+                if (value.properties && value.properties.readonly) {
+                    value.definition[i].properties.readonly = true;
+                }
                 if (value.type === 'Array') {
                     value.definition[i].properties._isParrentArray = true;
                 }
@@ -300,6 +313,13 @@ export class SchemaBuilderService {
                 }
                 tempArr.push(tempDef);
             });
+
+            if (tempForm.get('type').value === 'Array' && tempForm.get('properties.readonly').value && value.definition[0].type === 'Object') {
+                tempForm.get('properties.readonly').patchValue(false)
+            }
+            if (tempForm.get('type').value === 'Object' && tempForm.get('properties.readonly').value) {
+                tempForm.get('properties.readonly').patchValue(false)
+            }
             tempForm.addControl('definition', tempArr);
         }
         tempForm.get('properties.name').valueChanges.subscribe(val => {
@@ -311,27 +331,25 @@ export class SchemaBuilderService {
         return tempForm;
     }
 
-    generateStructure(definition) {
-        const temp = [];
-        for (const i in definition) {
-            if (i === '_id') {
-                temp.unshift({
-                    _id: definition[i]
-                });
-            } else {
-                definition[i].key = i;
-                definition[i]._newField = false;
-                if (definition[i].definition) {
-                    definition[i].definition = this.generateStructure(definition[i].definition);
-                }
-                temp.push(definition[i]);
-            }
+    generateStructure(definitions) {
+        if (!definitions) {
+            return [];
         }
-        return temp;
+        return definitions.map(def => {
+            const tempDef = JSON.parse(JSON.stringify(def));
+            if (tempDef.key !== '_id') {
+                tempDef._newField = false;
+                if (tempDef.definition) {
+                    tempDef.definition = this.generateStructure(tempDef.definition);
+                }
+            }
+            return tempDef;
+        });
     }
 
     createSchema(json, noCaseChange?: boolean) {
         let arr = [];
+        // tslint:disable-next-line:max-line-length
         const dateRegex = new RegExp(/^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]+)?(Z)?$/g);
         try {
             if (Array.isArray(json)) {
@@ -376,11 +394,10 @@ export class SchemaBuilderService {
     }
 
     createDefiniition(json) {
-        let def = {};
         if (Array.isArray(json)) {
-            def = this.createDefiniition({ _self: json[0] });
+            return this.createDefiniition({ _self: json[0] });
         } else {
-            Object.keys(json).forEach(i => {
+            return Object.keys(json).map(i => {
                 const temp: any = {};
                 temp.key = i;
                 temp.properties = {
@@ -403,10 +420,9 @@ export class SchemaBuilderService {
                         temp.definition = this.createDefiniition(json[i]);
                     }
                 }
-                def[i] = temp;
+                return temp;
             });
         }
-        return def;
     }
 
     getSchemaTypes(): Array<FieldType> {
@@ -421,7 +437,7 @@ export class SchemaBuilderService {
             { class: 'odp-location', value: 'Geojson', label: 'Location' },
             { class: 'odp-attach', value: 'File', label: 'File' },
             { class: 'odp-references', value: 'Relation', label: 'Relation' },
-            { class: 'odp-library', value: 'Global', label: 'Schema' },
+            { class: 'odp-library', value: 'Global', label: 'Library' },
             { class: 'far fa-user-circle', value: 'User', label: 'User' }
         ];
     }
@@ -443,19 +459,20 @@ export class SchemaBuilderService {
 
     initialState(res: any) {
         if (!res.definition) {
-            res.definition = `{
-                "_id": {
-                "prefix": "${_.toUpper(_.camelCase(res.name.substring(0, 3)))}",
-                "suffix": null,
-                "padding": null,
-                "counter": 1001,
-                "properties": {
-                  "name": "ID",
-                  "dataKey": "_id",
-                  "dataPath": "_id"
+            res.definition = [
+                {
+                    key: '_id',
+                    prefix: _.toUpper(_.camelCase(res.name.substring(0, 3))),
+                    suffix: null,
+                    padding: null,
+                    counter: 1001,
+                    properties: {
+                        name: 'ID',
+                        dataKey: '_id',
+                        dataPath: '_id'
+                    }
                 }
-              }
-            }`;
+            ];
         }
         if (!res.tags) {
             res.tags = [];
@@ -466,13 +483,9 @@ export class SchemaBuilderService {
     }
 
     patchType(definition: any) {
-        if (definition) {
-            if (typeof definition === 'string') {
-                definition = JSON.parse(definition);
-            }
-            Object.keys(definition).forEach(key => {
-                if (key !== '_id') {
-                    const def = definition[key];
+        if (definition && !!definition.length) {
+            definition.forEach(def => {
+                if (def.key !== '_id') {
                     if (def.type === 'Object') {
                         if (def.properties.relatedTo) {
                             def.type = 'Relation';
@@ -489,14 +502,16 @@ export class SchemaBuilderService {
                     } else if (def.type === 'User') {
                         delete def.definition;
                     } else if (def.type === 'Array') {
-                        if (def.definition._self.properties.password) {
+                        if (def.definition.find(d => d.key === '_self').properties.password) {
                             this.patchType(def.definition);
-                        } else if (def.definition._self.type === 'Object') {
-                            this.patchType(def.definition._self.definition);
+                        } else if (def.definition.find(d => d.key === '_self').type === 'Object') {
+                            this.patchType(def.definition.find(d => d.key === '_self').definition);
                         } else {
                             this.patchType(def.definition);
                         }
                     }
+                } else {
+                    def.type = 'id';
                 }
             });
         }

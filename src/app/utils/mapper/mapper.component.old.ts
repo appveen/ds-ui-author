@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as Fuse from 'fuse.js';
 
 import { AppService } from '../services/app.service';
@@ -10,8 +10,7 @@ import { EditConfig } from '../integration-flow/integration-flow.model';
     templateUrl: './mapper.component.html',
     styleUrls: ['./mapper.component.scss']
 })
-export class MapperComponent implements OnInit, AfterViewInit {
-
+export class MapperComponent implements OnInit {
     @Input() edit: EditConfig;
     @Input() toggleMapper: boolean;
     @Output() toggleMapperChange: EventEmitter<boolean>;
@@ -66,12 +65,10 @@ export class MapperComponent implements OnInit, AfterViewInit {
         }
         if (self.source) {
             const keys = Object.keys(self.source);
-            if ((keys.length === 1
-                && keys.find(e => self.source[e].type === 'Object')
-                && keys.indexOf('$headers') === -1)
-                || (keys.length === 2
-                    && keys.indexOf('$headers') > -1
-                    && keys.find(e => self.source[e].type === 'Object'))) {
+            if (
+                (keys.length === 1 && keys.find(e => self.source[e].type === 'Object') && keys.indexOf('$headers') === -1) ||
+                (keys.length === 2 && keys.indexOf('$headers') > -1 && keys.find(e => self.source[e].type === 'Object'))
+            ) {
                 if (self.sourceType === 'XML' || self.sourceType === 'JSON') {
                     self.rootDataKey = keys.filter(e => e.indexOf('$headers') === -1)[0];
                     self.sourceHasRoot = true;
@@ -83,10 +80,13 @@ export class MapperComponent implements OnInit, AfterViewInit {
         }
         if (self.destination) {
             const tempArr = Object.keys(self.destination).filter(e => self.destination[e].type === 'Object');
-            if ((Object.keys(self.destination).length === 1 && tempArr && tempArr.length === 1)
-                || (Object.keys(self.destination).length === 2
-                    && Object.keys(self.destination).indexOf('$headers') > -1
-                    && tempArr && tempArr.length === 2)) {
+            if (
+                (Object.keys(self.destination).length === 1 && tempArr && tempArr.length === 1) ||
+                (Object.keys(self.destination).length === 2 &&
+                    Object.keys(self.destination).indexOf('$headers') > -1 &&
+                    tempArr &&
+                    tempArr.length === 2)
+            ) {
                 if (self.destinationType === 'XML' || self.destinationType === 'JSON') {
                     self.destinationHasRoot = true;
                 } else {
@@ -101,21 +101,19 @@ export class MapperComponent implements OnInit, AfterViewInit {
                     e.source = [];
                 }
                 if (self.xslt) {
-                    const f = self.appService.getValue(e.target.path, self.xslt);
+                    const f = self.appService.getValue(e.target.dataKey, self.xslt);
                     if (f) {
                         e.target.properties.operation = f.properties.operation;
                         e.target.properties._args = f.properties._args;
                     }
                 }
-                const temp = self.mapping.find(x => x.target.path === e.target.path);
+                const temp = self.mapping.find(x => x.target.dataKey === e.target.dataKey);
                 if (temp && temp.source && temp.source.length > 0) {
                     if (e.source.length > 0) {
                         e.source.pop();
                     }
                     temp.source.forEach(r => {
-                        const t = Definition.getInstance();
-                        t.patch(r);
-                        e.source.push(t);
+                        e.source.push(new Definition(r));
                     });
                 }
             });
@@ -124,65 +122,6 @@ export class MapperComponent implements OnInit, AfterViewInit {
             self.flatdestination = self.appService.flattenObject(self.destination);
             if (self.destination._id) {
                 self.flatdestination['_id.type'] = 'String';
-            }
-        }
-    }
-
-    ngAfterViewInit() {
-        const self = this;
-    }
-
-    dragEvent(event, def) {
-        const self = this;
-        event.dataTransfer.effectAllowed = 'move';
-        self.draggedItem = def;
-    }
-
-    /**
-     *
-     * @param event Drop Event
-     * @param droppedDef Dropped Definition
-     * @param mapping Mapping Object
-     * @description After a drop we copy the content of selected definition to the source element of dropped mapping
-     */
-    dropEvent(event, droppedDef: Definition, mapping: Mapping, mappingIndex: number) {
-        const self = this;
-        if (event.target.classList.contains('field-placeholder')) {
-            event.target.classList.remove('over');
-        }
-        if (self.draggedItem) {
-            if (!droppedDef.valid) {
-                droppedDef.patch(self.draggedItem);
-            } else {
-                const temp = Definition.getInstance();
-                temp.patch(self.draggedItem);
-                mapping.source.pop();
-                mapping.source.push(temp);
-            }
-            self.draggedItem = null;
-        }
-    }
-
-    dragOverEvent(event) {
-        event.preventDefault();
-    }
-
-    dragEnterEvent(event, mapping: Mapping) {
-        if (event.target.classList.contains('field-placeholder') && !event.target.classList.contains('disabled')) {
-            if (!event.target.classList.contains('mapped')) {
-                event.target.classList.add('over');
-            } else {
-                mapping.source.push(Definition.getInstance());
-            }
-        }
-    }
-
-    dragLeaveEvent(event, mapping: Mapping) {
-        if (event.target.classList.contains('field-placeholder') && !event.target.classList.contains('disabled')) {
-            if (!event.target.classList.contains('mapped')) {
-                event.target.classList.remove('over');
-            } else {
-                mapping.source.pop();
             }
         }
     }
@@ -200,7 +139,7 @@ export class MapperComponent implements OnInit, AfterViewInit {
         mapping.target.properties.operation = '';
         delete mapping.target.properties._args;
         if (mapping.source.length === 0) {
-            mapping.source.push(Definition.getInstance());
+            mapping.source.push(new Definition());
         }
     }
     /**
@@ -235,52 +174,52 @@ export class MapperComponent implements OnInit, AfterViewInit {
     done(flag: boolean) {
         const self = this;
         if (self.source && self.destination && flag) {
-            const xslt = self.getXSLT();
-            self.xsltChange.emit(xslt);
+            // const xslt = self.getXSLT();
+            // self.xsltChange.emit(xslt);
             self.mappingChange.emit(self.destMappings);
         }
         self.toggleMapperChange.emit(false);
     }
 
-    findRootAndPatchPath(index: number, sourceDef: Definition) {
-        const self = this;
-        const currMapping = self.destMappings[index];
-        if (index > 0 && currMapping.target.parent) {
-            const rootMapping = self.destMappings.find(e => e.target.id === currMapping.target.parent);
-            let tempIndex = index - 1;
-            let targetParent = self.destMappings[tempIndex];
-            while (tempIndex > 0 && targetParent.target.type !== 'Array') {
-                tempIndex--;
-                targetParent = self.destMappings[tempIndex];
-            }
-            let sourceParent = self.appService.findDefinition(self.sourceDefArray, sourceDef.parent);
-            while (sourceParent && sourceParent.parent && sourceParent.name !== '_self') {
-                sourceParent = self.appService.findDefinition(self.sourceDefArray, sourceParent.parent);
-            }
-            if (sourceParent && targetParent) {
-                targetParent.target.properties.innerType = sourceDef.name === '_self' ? sourceDef.type : sourceParent.type;
-                targetParent.target.properties.XPath = sourceParent.xpath;
-            }
-        }
-    }
+    // findRootAndPatchPath(index: number, sourceDef: Definition) {
+    //     const self = this;
+    //     const currMapping = self.destMappings[index];
+    //     if (index > 0 && currMapping.target) {
+    //         const rootMapping = self.destMappings.find(e => e.target.id === currMapping.target);
+    //         let tempIndex = index - 1;
+    //         let targetParent = self.destMappings[tempIndex];
+    //         while (tempIndex > 0 && targetParent.target.type !== 'Array') {
+    //             tempIndex--;
+    //             targetParent = self.destMappings[tempIndex];
+    //         }
+    //         let sourceParent = self.appService.findDefinition(self.sourceDefArray, sourceDef);
+    //         while (sourceParent && sourceParent && sourceParent.name !== '_self') {
+    //             sourceParent = self.appService.findDefinition(self.sourceDefArray, sourceParent);
+    //         }
+    //         if (sourceParent && targetParent) {
+    //             targetParent.target.properties.innerType = sourceDef.name === '_self' ? sourceDef.type : sourceParent.type;
+    //             targetParent.target.properties.dataPath = sourceParent.dataPath;
+    //         }
+    //     }
+    // }
 
-    findRootAndRemovePath(index: number) {
-        const self = this;
-        const currMapping = self.destMappings[index];
-        if (index > 0 && currMapping.target.parent) {
-            const rootMapping = self.destMappings.find(e => e.target.id === currMapping.target.parent);
-            let tempIndex = index - 1;
-            let targetParent = self.destMappings[tempIndex];
-            while (tempIndex > 0 && targetParent.target.type !== 'Array') {
-                tempIndex--;
-                targetParent = self.destMappings[tempIndex];
-            }
-            if (targetParent) {
-                delete targetParent.target.properties.innerType;
-                delete targetParent.target.properties.XPath;
-            }
-        }
-    }
+    // findRootAndRemovePath(index: number) {
+    //     const self = this;
+    //     const currMapping = self.destMappings[index];
+    //     if (index > 0 && currMapping.target) {
+    //         const rootMapping = self.destMappings.find(e => e.target.id === currMapping.target);
+    //         let tempIndex = index - 1;
+    //         let targetParent = self.destMappings[tempIndex];
+    //         while (tempIndex > 0 && targetParent.target.type !== 'Array') {
+    //             tempIndex--;
+    //             targetParent = self.destMappings[tempIndex];
+    //         }
+    //         if (targetParent) {
+    //             delete targetParent.target.properties.innerType;
+    //             delete targetParent.target.properties.dataPath;
+    //         }
+    //     }
+    // }
 
     parseDefinition(definition: any, type: string, options?: any): Definition[] {
         if (typeof definition === 'string') {
@@ -297,14 +236,14 @@ export class MapperComponent implements OnInit, AfterViewInit {
         if (!definition) {
             return json;
         }
-        const len = Object.keys(definition).length;
-        Object.keys(definition).forEach((key, i) => {
-            const tempDef: Definition = Definition.getInstance();
-            const tempMap: Mapping = Mapping.getInstance();
-            if (key === '_self') {
+        const len = definition.length;
+        definition.forEach((def, i) => {
+            const tempDef: Definition = new Definition(def);
+            const tempMap: Mapping = new Mapping();
+            if (def.key === '_self') {
                 tempDef.lastChild = options.lastChild;
             } else {
-                tempDef.lastChild = len === (i + 1);
+                tempDef.lastChild = len === i + 1;
             }
             if (type === 'source') {
                 tempDef.hasRoot = self.sourceHasRoot;
@@ -322,22 +261,9 @@ export class MapperComponent implements OnInit, AfterViewInit {
                     self.destMappings.push(tempMap);
                 }
             }
-            if (!definition[key].properties.name) {
-                definition[key].properties.name = key;
-            }
-            if (!definition[key].properties.dataKey) {
-                definition[key].properties.dataKey = key;
-            }
-            tempDef.id = self.appService.getUUID();
-            tempDef.objKey = key;
-            tempDef.key = options.prevKey ? options.prevKey + '.' + key : key;
-            tempDef.path = options.path ? options.path + '.definition.' + key : key;
-            tempDef.fullPath = options.fullPath ?
-                (options.fullPath + '.definition.' + definition[key].properties.dataKey) : definition[key].properties.dataKey;
             tempDef.depth = options.prevKey ? options.prevKey.split('.') : [];
             const tempIndex = tempDef.depth.indexOf('_self');
             tempDef.depth = tempDef.depth.map(e => true);
-            tempDef.parent = options.parent;
             if (type === 'source') {
                 self.sourceDefArray.push(tempDef);
             }
@@ -347,29 +273,10 @@ export class MapperComponent implements OnInit, AfterViewInit {
                     tempDef.depth[0] = false;
                 }
             }
-            if (key === '_id') {
-                tempDef.name = 'ID';
-                tempDef.type = 'String';
-                tempDef.properties = { name: 'ID' };
-                tempDef.definition = [];
-                tempDef.xpath = self.appService.getXPath(tempDef.fullPath, tempDef.type, tempDef.hasRoot, self.rootDataKey);
-            } else {
-                tempDef.name = definition[key].properties.name;
-                tempDef.type = definition[key].type;
-                tempDef.xpath = self.appService.getXPath(tempDef.fullPath, tempDef.type, tempDef.hasRoot, self.rootDataKey);
-                tempDef.properties = self.appService.cloneObject(definition[key].properties);
-                tempDef.definition = self.parseDefinition(definition[key].definition, type, {
-                    prevKey: tempDef.key,
-                    lastChild: tempDef.lastChild,
-                    path: tempDef.path,
-                    fullPath: tempDef.fullPath,
-                    parentDefinition: tempDef,
-                    parent: tempDef.id
-                });
-            }
+            tempDef.definition = self.parseDefinition(def.definition, type, tempDef);
             tempMap.target = tempDef;
-            if (self.commonSourceTarget && !tempDef.isObject && !tempDef.isArray && tempDef.xpath.indexOf('$headers') === -1) {
-                const sourceDef = self.sourceDefArray.find(e => e.path === tempDef.path);
+            if (self.commonSourceTarget && !tempDef.isObject && !tempDef.isArray && tempDef.dataKey.indexOf('$headers') === -1) {
+                const sourceDef = self.sourceDefArray.find(e => e.dataKey === tempDef.dataKey);
                 tempMap.source.push(sourceDef);
             } else {
                 const fuse = new Fuse(self.sourceDefArray, {
@@ -382,7 +289,7 @@ export class MapperComponent implements OnInit, AfterViewInit {
                         tempMap.source.push(item);
                     });
                 } else {
-                    tempMap.source.push(Definition.getInstance());
+                    tempMap.source.push(new Definition());
                 }
             }
             json.push(tempDef);
@@ -390,48 +297,50 @@ export class MapperComponent implements OnInit, AfterViewInit {
         return json;
     }
 
-    getXSLT() {
-        const self = this;
-        self.destMappings.forEach((e, ei, ea) => {
-            if (!e.target.isArray) {
-                if (e.target.properties.operation) {
-                    self.flatdestination[e.target.path + '.properties.operation'] = e.target.properties.operation;
-                }
-                if (!self.flatdestination[e.target.path + '.properties.operation'] && e.target.type !== 'Object') {
-                    self.flatdestination[e.target.path + '.properties.operation'] = '';
-                }
-                if (e.target.properties._args && e.target.properties._args.length > 0) {
-                    self.flatdestination[e.target.path + '.properties._args'] = e.target.properties._args;
-                }
-                e.source.forEach((s, si) => {
-                    if (s.xpath && !self.flatdestination[e.target.path + '.properties.operation']) {
-                        let tempIndex = ei - 1;
-                        let targetParent = ea[tempIndex];
-                        while (tempIndex > 0 && targetParent.target.type !== 'Array') {
-                            tempIndex--;
-                            targetParent = ea[tempIndex];
-                        }
-                        let sourceParent = self.appService.findDefinition(self.sourceDefArray, s.parent);
-                        while (sourceParent && sourceParent.parent && sourceParent.name !== '_self') {
-                            sourceParent = self.appService.findDefinition(self.sourceDefArray, sourceParent.parent);
-                        }
-                        if (sourceParent && targetParent) {
-                            self.flatdestination[targetParent.target.path + '.properties.innerType']
-                                = s.name === '_self' ? s.type : sourceParent.type;
-                            self.flatdestination[targetParent.target.path + '.properties.XPath'] = sourceParent.xpath;
-                        }
-                        self.flatdestination[e.target.path + '.properties.innerType'] = s.type;
-                        self.flatdestination[e.target.path + '.properties._args'] = [{
-                            type: 'FIXED',
-                            XPath: s.xpath,
-                            innerType: s.type
-                        }];
-                    }
-                });
-            }
-        });
-        return self.appService.unFlattenObject(self.flatdestination);
-    }
+    // getXSLT() {
+    //     const self = this;
+    //     self.destMappings.forEach((e, ei, ea) => {
+    //         if (!e.target.isArray) {
+    //             if (e.target.properties.operation) {
+    //                 self.flatdestination[e.target.dataKey + '.properties.operation'] = e.target.properties.operation;
+    //             }
+    //             if (!self.flatdestination[e.target.dataKey + '.properties.operation'] && e.target.type !== 'Object') {
+    //                 self.flatdestination[e.target.dataKey + '.properties.operation'] = '';
+    //             }
+    //             if (e.target.properties._args && e.target.properties._args.length > 0) {
+    //                 self.flatdestination[e.target.dataKey + '.properties._args'] = e.target.properties._args;
+    //             }
+    //             e.source.forEach((s, si) => {
+    //                 if (s.dataPath && !self.flatdestination[e.target.dataKey + '.properties.operation']) {
+    //                     let tempIndex = ei - 1;
+    //                     let targetParent = ea[tempIndex];
+    //                     while (tempIndex > 0 && targetParent.target.type !== 'Array') {
+    //                         tempIndex--;
+    //                         targetParent = ea[tempIndex];
+    //                     }
+    //                     let sourceParent = self.appService.findDefinition(self.sourceDefArray, s.parent);
+    //                     while (sourceParent && sourceParent.parent && sourceParent.name !== '_self') {
+    //                         sourceParent = self.appService.findDefinition(self.sourceDefArray, sourceParent.parent);
+    //                     }
+    //                     if (sourceParent && targetParent) {
+    //                         self.flatdestination[targetParent.target.dataKey + '.properties.innerType'] =
+    //                             s.name === '_self' ? s.type : sourceParent.type;
+    //                         self.flatdestination[targetParent.target.dataKey + '.properties.dataPath'] = sourceParent.dataPath;
+    //                     }
+    //                     self.flatdestination[e.target.dataKey + '.properties.innerType'] = s.type;
+    //                     self.flatdestination[e.target.dataKey + '.properties._args'] = [
+    //                         {
+    //                             type: 'FIXED',
+    //                             dataPath: s.dataPath,
+    //                             innerType: s.type
+    //                         }
+    //                     ];
+    //                 }
+    //             });
+    //         }
+    //     });
+    //     return self.appService.unFlattenObject(self.flatdestination);
+    // }
 
     openFormulaBuilder(mapping: Mapping) {
         const self = this;

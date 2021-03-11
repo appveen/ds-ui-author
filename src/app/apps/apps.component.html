@@ -27,7 +27,7 @@
                     <odp-app-icon class="pt-1" *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail" color="aaa"
                         size="24"></odp-app-icon>
                 </div>
-                <div class="current-app-name text-dark" ngbTooltip="Current App" placement="bottom">
+                <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" placement="bottom">
                     {{selectedApp._id}}
                 </div>
                 <div class="text-primary "></div>
@@ -39,7 +39,7 @@
                     <span class="fas fa-angle-down text-accent"></span>
                 </div>
             </div>
-            <div [@userProfileIcon]="showProfileOptions"
+            <div
                 class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle bg-light border border-border hover"
                 (click)="showProfileOptions=!showProfileOptions">
                 <span class="far fa-user fa-lg text-secondary"></span>
@@ -49,15 +49,11 @@
                 (outside)="showProfileOptions=false">
                 <div class="profile-container position-relative d-flex align-items-center h-100 w-100">
                     <div
-                        class="user-icon d-flex align-items-center justify-content-center position-absolute rounded-circle bg-light border border-border">
-                        <span class="far fa-user fa-lg text-secondary"></span>
-                    </div>
-                    <div
                         class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-border mx-4">
                         <span class="far fa-user fa-2x text-secondary"></span>
                     </div>
-                    <div class="profile-data d-flex flex-column">
-                        <h4 class="profile-data-name font-weight-bold">{{name}}</h4>
+                    <div class="profile-data  d-flex flex-column">
+                        <h4 class="profile-data-name text-truncate font-weight-bold">{{name}}</h4>
                         <div class="profile-data-more d-flex align-items-center">
                             <div class="text-secondary profile-data-more-item pr-3 username-holder text-truncate"
                                 [ngbTooltip]="username">{{username}}</div>
@@ -75,7 +71,8 @@
                         </div>
                     </div>
                     <small class="position-absolute text-border app-version">v{{version}}</small>
-                    <small class="last-login text-muted">Last Login: {{lastLogin | date:'yyyy MMM dd, HH:mm:ss' }}</small>
+                    <small class="last-login text-muted">Last Login:
+                        {{lastLogin | dateFormat :'YYYY MMM DD, HH:mm:ss, z' : 'Etc/Zulu' }}</small>
                 </div>
             </div>
         </div>
@@ -160,7 +157,7 @@
                 </div>
             </ng-container>
             <ng-container
-                *ngIf="hasGroupsPermission || hasUsersPermission || hasBotPermission || hasBookmarkPermission">
+                *ngIf="hasGroupsPermission || hasUsersPermission || hasBotPermission || hasBookmarkPermission || hasInsightsPermission">
                 <div class="icon-block-group text-secondary border-top border-border pt-3 pl-2 mt-1">
                     Management
                 </div>
@@ -220,7 +217,7 @@
                     </div>
                     <span *ngIf="botRoute.isActive" class="fa fa-angle-right mr-3"></span>
                 </div>
-                <div *ngIf="hasBotPermission && authType=='local'" #botRoute="routerLinkActive"
+                <div *ngIf="hasBotPermission && authType !='azure'" #botRoute="routerLinkActive"
                     class="icon-block hover d-flex align-items-center justify-content-between my-2"
                     routerLinkActive="text-accent bg-white active" [routerLink]="['local-bots']"
                     (mouseover)="hover.bot = true" (mouseleave)="hover.bot = false">
@@ -242,8 +239,7 @@
                     </div>
                     <span *ngIf="groupRoute.isActive" class="fa fa-angle-right mr-3"></span>
                 </div>
-                <div *ngIf="hasGroupsPermission || hasUsersPermission || hasBotPermission"
-                    #insightRoute="routerLinkActive"
+                <div *ngIf="hasInsightsPermission" #insightRoute="routerLinkActive"
                     class="icon-block hover d-flex align-items-center justify-content-between my-2"
                     routerLinkActive="text-accent bg-white active" [routerLink]="['insight']" id="insights"
                     (mouseover)="hover.insight = true" (mouseleave)="hover.insight = false">

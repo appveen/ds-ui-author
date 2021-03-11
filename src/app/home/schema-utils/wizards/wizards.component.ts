@@ -132,6 +132,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
             fields: self.fb.array([]),
             actions: self.fb.array([])
         }));
+        self.form.get('wizard').markAsDirty();
         self.form.markAsDirty();
         self.form.get('wizard.selectedStep').patchValue(i + 1);
         setTimeout(() => {
@@ -151,6 +152,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         // (<FormArray>(<FormGroup>(<FormArray>self.form.get('wizard.steps'))
         //     .at(self.form.get('wizard.selectedStep').value)).get('fields')).push(field);
         (self.form.get('wizard.usedFields') as FormArray).push(field);
+        self.form.get('wizard').markAsDirty();
         self.form.markAsDirty();
         self.remainingFields = self.getRemainingFields();
     }
@@ -213,7 +215,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
                 for (let i = 0; i <= index; i++) {
                     self.tempSteps.push(i);
                 }
-              
+
             } else {
                 for (let i = index - (this.stepLevel - 1); i <= index; i++) {
                     self.tempSteps.push(i);
@@ -279,6 +281,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
                     });
                 }
                 (self.form.get('wizard.steps') as FormArray).removeAt(selectedStep);
+                self.form.get('wizard').markAsDirty();
                 self.form.markAsDirty();
                 if (selectedStep !== 0) {
                     self.form.get('wizard.selectedStep').patchValue(selectedStep - 1);
@@ -298,11 +301,12 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         self.deleteModal.title = 'Delete hook';
         self.deleteModal.message = 'Are you sure you want to delete hook ' + hookName + ' ?';
         const formArr = self.form.get(['wizard', 'steps', selectedStep, 'actions']) as FormArray;
-        
+
         self.deleteModalTemplateRef = self.commonService.modal(self.deleteModalTemplate);
         self.deleteModalTemplateRef.result.then((close) => {
             if (close) {
                 formArr.removeAt(idx);
+                self.form.get('wizard').markAsDirty();
             }
         }, (dismiss) => { });
     }
@@ -313,6 +317,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         const temp = (self.form.get(['wizard', 'steps', selectedStep, 'fields']) as FormArray).at(index);
         self.removeFromUsed(temp);
         (self.form.get(['wizard', 'steps', selectedStep, 'fields']) as FormArray).removeAt(index);
+        self.form.get('wizard').markAsDirty();
         self.form.markAsDirty();
         self.remainingFields = self.getRemainingFields();
     }
@@ -372,34 +377,17 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         if ((self.form.get('wizard.usedFields') as FormArray).controls.length === 0) {
             temp = self.definitions.slice();
             self.formArrLen = 0;
-            temp.unshift(self.schemaService.getDefinitionStructure({
-                key: '_id',
-                type: 'id',
-                properties: {
-                    name: temp[0].value._id.properties.name
-                }
-            }));
         } else {
             self.formArrLen = (self.form.get('wizard.usedFields') as FormArray).controls.length;
             self.definitions.forEach(e => {
-                const index = (self.form.get('wizard.usedFields') as FormArray).controls.findIndex(f => {
-                    if (e.get('_id')) {
-                        if (f.value.key === '_id') {
-                            return true;
-                        }
-                    } else {
-                        if (f.value.key === e.value.key) {
-                            return true;
-                        }
-                    }
-                });
-                if (e.get('_id')) {
+                const index = (self.form.get('wizard.usedFields') as FormArray).controls.findIndex(f => f.value.key === e.value.key);
+                if (e.get('key').value === '_id') {
                     if (index === -1) {
                         temp.push(self.schemaService.getDefinitionStructure({
                             key: '_id',
                             type: 'id',
                             properties: {
-                                name: self.definitions[0].value._id.properties.name
+                                name: self.definitions.find(fg => fg.value.key === '_id').value.properties.name
                             }
                         }));
                     }
@@ -527,6 +515,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         self.expHookModalRef.result.then((close) => {
             if (close && self.actionHookForm.valid) {
                 (self.form.get(['wizard', 'steps', selectedStep, 'actions']) as FormArray).push(self.actionHookForm);
+                self.form.get('wizard').markAsDirty();
                 self.form.markAsDirty();
                 self.activeTab = 2;
             } else {
@@ -597,6 +586,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             self.resetHookForm(hook);
             (self.form.get(['wizard', 'steps', selectedStep, 'actions']) as FormArray).push(self.actionHookForm);
+            self.form.get('wizard').markAsDirty();
             self.form.markAsDirty();
             self.activeTab = 2;
             self.ts.success(hook.name + ' is added successfully');

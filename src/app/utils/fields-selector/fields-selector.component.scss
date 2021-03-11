@@ -1,0 +1,48 @@
+.first {
+  position: absolute;
+  z-index: 9;
+  top: 32px;
+  left: 32px;
+  display: block !important;
+}
+
+ul {
+  list-style: none;
+  display: none !important;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.14);
+  border-bottom: 1px solid #ccc;
+  margin: 0px;
+  padding: 0px;
+  li {
+    display: block;
+    position: relative;
+    float: left;
+    min-height: 24px;
+    border-bottom: 1px solid #ccc;
+    background: #fefefe;
+    padding: 10px;
+    min-width: 260px;
+    width: 100%;
+    &:hover {
+      background: #efefef;
+      cursor: pointer;
+      & > ul {
+        display: block !important;
+        position: absolute;
+        // left: 260px;
+        left: 100%;
+        top: 0px;
+        z-index: 10;
+      }
+    }
+  }
+}
+ul:before,
+ul:after {
+  content: " "; /* 1 */
+  display: table; /* 2 */
+}
+
+ul:after {
+  clear: both;
+}

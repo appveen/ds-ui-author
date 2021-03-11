@@ -44,7 +44,6 @@ export class SelectFormatBlockComponent implements OnInit {
         const sourceDefArray = self.mapperService.getSourceDefArray(sourceFormat.definition, sourceFormat.formatType);
         const mappings = self.mapperService.getMappings(sourceDefArray, targetFormat.definition, self.node.meta.xslt);
         self.node.mapping = mappings;
-       
       }
     }
   }

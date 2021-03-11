@@ -65,7 +65,7 @@ export class PartnerOnboardComponent implements OnInit, OnDestroy, CanComponentD
             flows: [],
             headers: [null],
             deletedSecrets: [],
-            agentIPWhitelisting: self.fb.group({
+            agentTrustedIP: self.fb.group({
                 list: self.fb.array([]),
                 enabled: [false]
             })
@@ -112,9 +112,9 @@ export class PartnerOnboardComponent implements OnInit, OnDestroy, CanComponentD
         self.subscriptions['getPartner'] = self.commonService.get('partnerManager', '/partner/' + id).subscribe(res => {
             self.showLazyLoader = false;
             self.value = res;
-            if (res.agentIPWhitelisting && res.agentIPWhitelisting.list) {
-                res.agentIPWhitelisting.list.forEach(item => {
-                    (self.form.get('agentIPWhitelisting.list') as FormArray).push(self.appService.getIpFormControl(item));
+            if (res.agentTrustedIP && res.agentTrustedIP.list) {
+                res.agentTrustedIP.list.forEach(item => {
+                    (self.form.get('agentTrustedIP.list') as FormArray).push(self.appService.getIpFormControl(item));
                 });
             }
             self.form.patchValue(res);
@@ -196,7 +196,7 @@ export class PartnerOnboardComponent implements OnInit, OnDestroy, CanComponentD
             }
             if (!self.hasPermissionForTab('H')) {
                 delete newPayload.headers;
-                delete newPayload.agentIPWhitelisting;
+                delete newPayload.agentTrustedIP;
                 delete newPayload.agentID;
             }
            

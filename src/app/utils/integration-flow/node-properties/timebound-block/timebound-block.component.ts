@@ -50,12 +50,12 @@ export class TimeboundBlockComponent implements OnInit {
     this.commonService.get('serviceManager', '/service', {
       filter: { name: `${this.commonService.app._id} Calendar`, app: this.commonService.app._id, status: 'Active' },
       count: 1,
-      select: 'attributeList'
+      select: 'definition'
     }).subscribe((res: Array<any>) => {
       if (res && res.length > 0) {
         this.enableCalendars = true;
         try {
-          this.calendarList = res[0].attributeList.find(e => e.key === 'name').properties.enum || [];
+          this.calendarList = res[0].definition.find(e => e.key === 'name').properties.enum || [];
         } catch (e) {
           this.calendarList = [];
         }

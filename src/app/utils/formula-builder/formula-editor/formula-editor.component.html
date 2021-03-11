@@ -1,0 +1,46 @@
+<div class="d-flex align-items-center">
+    <span *ngIf="function.operationType=='function'" class="function mr-2" odpClickOutside (outside)="hideSelector()">
+        <span class="function-name">{{function.label}}</span>
+        <span class="bracket-open">(</span>
+        <div class="ml-2 border rounded mt-1"
+            *ngFor="let arg of function.args;let pi = index;let fp = first;let lp = last">
+            <span *ngIf="!arg.operation" class="params ignore"
+                (click)="hideSelector();toggleSelector[pi]=!toggleSelector[pi]">
+                <ng-container *ngIf="arg.type=='VALUE'">{{arg.value}}</ng-container>
+                <ng-container *ngIf="arg.type=='FIXED'">{{getSourceName(arg)}}</ng-container>
+                <ng-container *ngIf="arg.type!='VALUE' && arg.type!='FIXED' && arg.type!='DEDUCED'"
+                    [ngbTooltip]="arg.description">
+                    &lt;&lt;param {{pi+1}}&gt;&gt;
+                </ng-container>
+            </span>
+            <odp-formula-editor *ngIf="arg.type=='DEDUCED'" [function]="arg" [sources]="sources">
+            </odp-formula-editor>
+            <odp-param-selector *ngIf="toggleSelector[pi]" [sources]="sources" (selected)="selectedParam($event, arg)">
+            </odp-param-selector>
+            <span *ngIf="!lp" class="comma ml-1">,</span>
+            <span *ngIf="arg.type || arg.operation" class="fa fa-times-circle text-danger ml-2"
+                (click)="removeArg(pi)"></span>
+        </div>
+        <span class="bracket-close">)</span>
+    </span>
+    <span *ngIf="function.operationType=='operator'" class="operator mr-2" odpClickOutside (outside)="hideSelector()">
+        <div class="border rounded mt-1" *ngFor="let arg of function.args;let pi = index;let fp = first;let lp = last">
+            <span *ngIf="!arg.operation" class="params ignore"
+                (click)="hideSelector();toggleSelector[pi]=!toggleSelector[pi]">
+                <ng-container *ngIf="arg.type==='VALUE'">{{arg.value}}</ng-container>
+                <ng-container *ngIf="arg.type==='FIXED'">{{getSourceName(arg)}}</ng-container>
+                <ng-container *ngIf="arg.type!='VALUE' && arg.type!='FIXED' && arg.type!='DEDUCED'"
+                    [ngbTooltip]="arg.description">
+                    &lt;&lt;param {{pi+1}}&gt;&gt;
+                </ng-container>
+            </span>
+            <odp-formula-editor *ngIf="arg.type==='DEDUCED'" [function]="arg" [sources]="sources">
+            </odp-formula-editor>
+            <odp-param-selector *ngIf="toggleSelector[pi]" [sources]="sources" (selected)="selectedParam($event, arg)">
+            </odp-param-selector>
+            <span *ngIf="fp" class="operator-name mx-2">{{function.label}}</span>
+            <span *ngIf="arg.type || arg.operation" class="fa fa-times-circle text-danger ml-2"
+                (click)="removeArg(pi)"></span>
+        </div>
+    </span>
+</div>

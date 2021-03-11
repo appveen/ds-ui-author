@@ -82,7 +82,7 @@
             <div class="list-group mt-2">
                 <div *ngFor="let item of node.meta.outputDirectories;let i=index"
                     class="list-group-item d-flex align-items-center justify-content-between p-2">
-                    <span class="text">{{item.path}}</span>
+                    <div class="path text text-truncate" [ngbTooltip]="item.path">{{item.path}}</div>
                     <button *ngIf="edit.status" type="button" class="btn btn-link text-danger btn-sm"
                         (click)="removeOutputDirectory(i)">
                         <span class="fa fa-times"></span>
@@ -90,7 +90,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="!isInputBlock" class="form-group">
+        <div *ngIf="showGenerateHeaders" class="form-group">
             <!-- <label for="generateHeaders">Generate Headers</label>
             <div class="input-group">
                 <odp-switch id="generateHeaders" [edit]="edit" [(checked)]="node.meta.generateHeaders">

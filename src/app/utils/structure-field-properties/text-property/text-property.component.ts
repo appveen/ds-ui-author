@@ -21,6 +21,9 @@ export class TextPropertyComponent implements OnDestroy {
   deleteModal: any;
   deleteModalTemplateRef: NgbModalRef;
   @Input() type;
+  @Input() formatType: string;
+  editStateListOfValues: number = null;
+
   constructor(private commonService: CommonService,
     private fb: FormBuilder) {
     const self = this;
@@ -33,6 +36,19 @@ export class TextPropertyComponent implements OnDestroy {
     const self = this;
     if (self.deleteModalTemplateRef) {
       self.deleteModalTemplateRef.close(false);
+    }
+  }
+
+  sortableOnMove = (event: any) => {
+    return !event.related.classList.contains('disabled');
+  }
+
+  sortableOnUpdate = (event: any) => {
+    if (this.editStateListOfValues === event.oldIndex) {
+      this.editStateListOfValues = event.newIndex;
+    } else if (this.editStateListOfValues === event.newIndex) {
+      const diff = event.newIndex - (event.oldIndex || 0);
+      this.editStateListOfValues = event.newIndex + (diff > 0 ? -1 : 1);
     }
   }
 
@@ -112,6 +128,7 @@ export class TextPropertyComponent implements OnDestroy {
 
   clearList(control, flag?: boolean) {
     const self = this;
+    this.editStateListOfValues = null;
     if (!flag) {
       self.deleteModal.title = 'Clear List';
       self.deleteModal.message = 'Are you sure you want to clear list?';
@@ -197,19 +214,21 @@ export class TextPropertyComponent implements OnDestroy {
 
   removeFromList(control, index) {
     const self = this;
-    const list = (self.form.get('properties')).get(control) as FormArray;
-    const tempValue = list.get(index.toString()).value;
-    self.deleteModal.title = 'Remove ' + list.value[index];
-    self.deleteModal.message = 'Are you sure you want to remove ' + list.value[index] + '?';
-    if (typeof list.value[index] === 'object') {
-      self.deleteModal.title = 'Remove ' + list.value[index].name;
-      self.deleteModal.message = 'Are you sure you want to remove ' + list.value[index].name + '?';
+    this.editStateListOfValues = null;
+    // const list = (self.form.get('properties')).get(control) as FormArray;
+    const list = self.form.getRawValue()['properties'][control];
+    const tempValue = list[index];
+    self.deleteModal.title = 'Remove ' + list[index];
+    self.deleteModal.message = 'Are you sure you want to remove ' + list[index] + '?';
+    if (typeof list[index] === 'object') {
+      self.deleteModal.title = 'Remove ' + list[index].name;
+      self.deleteModal.message = 'Are you sure you want to remove ' + list[index].name + '?';
     }
     self.deleteModal.showButtons = true;
     self.deleteModalTemplateRef = self.commonService.modal(self.deleteModalTemplate);
     self.deleteModalTemplateRef.result.then(close => {
       if (close) {
-        list.removeAt(index);
+        ((self.form.get('properties')).get(control) as FormArray).removeAt(index);
         if ((self.form.get('properties') as FormGroup).get('default').value
           && tempValue === (self.form.get('properties') as FormGroup).get('default').value) {
           (self.form.get('properties') as FormGroup).get('default').patchValue('');

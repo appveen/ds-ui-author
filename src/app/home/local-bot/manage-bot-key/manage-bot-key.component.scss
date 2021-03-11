@@ -59,6 +59,30 @@ table {
 .date-width {
   width: 110px;
 }
-.label-width{
+.label-width {
   width: 120px;
+}
+
+.error-icon {
+  top: 7px;
+  right: 5px;
+}
+
+.expiry-container {
+  &::after {
+    content: 'days';
+    position: absolute;
+    color: $gray-500;
+    right: 20px;
+    top: 6px;
+    font-weight: bold;
+  }
+  input {
+    padding-right: 50px;
+  }
+}
+
+.grid-container {
+  height: calc(100vh - 322px);
+  display: grid;
 }

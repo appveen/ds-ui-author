@@ -36,6 +36,8 @@ echo "odp-ui-author :: Building Image :: "$TAG
 echo "****************************************************"
 cd $WORKSPACE
 
+# ng build --prod
+
 docker build -t odp:ui-author.$TAG .
 
 echo $TAG > $WORKSPACE/../LATEST_AUTHOR

@@ -28,6 +28,7 @@ export class ManageBookmarksComponent implements OnInit {
   _edit: EditConfig;
   cancelClicked: boolean;
   pageChangeModalTemplateRef: NgbModalRef;
+  isPageChangeModalOpen = false;
 
 
   get toggleBookmarkMng(): boolean {
@@ -82,7 +83,8 @@ export class ManageBookmarksComponent implements OnInit {
   hideToggleManage() {
     const self = this;
     if (self.bookmarkForm.dirty) {
-      if (!self.cancelClicked) {
+      if (!self.cancelClicked && !self.isPageChangeModalOpen) {
+        self.isPageChangeModalOpen = true;
         self.pageChangeModalTemplateRef = self.commonService.modal(self.pageChangeModalTemplate);
         self.pageChangeModalTemplateRef.result.then(close => {
           if (close) {
@@ -91,8 +93,10 @@ export class ManageBookmarksComponent implements OnInit {
           } else {
             self.cancelClicked = true;
           }
+          self.isPageChangeModalOpen = false;
         }, dismiss => {
           self.cancelClicked = true;
+          self.isPageChangeModalOpen = false;
         });
       }
     } else {

@@ -13,37 +13,34 @@ export class ErrorService implements ErrorHandler {
     private sessionService: SessionService) { }
 
   handleError(error: Error) {
-    const self = this;
     if (error.message.startsWith('ExpressionChangedAfterItHasBeenCheckedError')
       || error.message.startsWith('Http failure response')) {
       return;
     }
-    const payload: LogsPayload = {};
-    const temp = self.sessionService.getUser();
-    let user: UserDetails = {};
-    if (temp) {
-      user = JSON.parse(temp);
-    }
-    payload.message = error.message;
-    payload.stackTrace = error.stack;
-    payload.name = error.name;
-    payload.message = error.message;
-    payload.userId = user._id;
-    payload.type = 'author';
-    const URL = environment.url.log + '/mon/ui/logs';
-    const httpHeaders: HttpHeaders = new HttpHeaders()
-      .set('Content-Type', 'application/json; version=2')
-      .set('Authorization', 'JWT ' + self.sessionService.getToken());
-    self.http
-      .post(URL, payload, { headers: httpHeaders })
-      .subscribe(res => {
+    // const payload: LogsPayload = {};
+    // const temp = this.sessionService.getUser();
+    // let user: UserDetails = {};
+    // if (temp) {
+    //   user = JSON.parse(temp);
+    // }
+    // payload.message = error.message;
+    // payload.stackTrace = error.stack;
+    // payload.name = error.name;
+    // payload.message = error.message;
+    // payload.userId = user._id;
+    // payload.type = 'author';
+    // const URL = environment.url.log + '/mon/ui/logs';
+    // const httpHeaders: HttpHeaders = new HttpHeaders()
+    //   .set('Content-Type', 'application/json; version=2')
+    //   .set('Authorization', 'JWT ' + this.sessionService.getToken());
+    // this.http
+    //   .post(URL, payload, { headers: httpHeaders })
+    //   .subscribe(res => {
 
-      }, err => {
+    //   }, err => {
 
-      });
-    if (!environment.production) {
-      throw error;
-    }
+    //   });
+    console.log(error);
   }
 }
 

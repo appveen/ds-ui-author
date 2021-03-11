@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NodeData } from '../../../microflow/microflow.component';
+import { NodeData } from '../../integration-flow.model';
 
 @Component({
   selector: '[odp-req-start]',

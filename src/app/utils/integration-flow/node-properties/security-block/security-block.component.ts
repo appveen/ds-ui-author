@@ -235,18 +235,18 @@ export class SecurityBlockComponent implements OnInit {
     }
   }
 
-  get enableIPWhitelist() {
+  get enableTrustedIP() {
     const self = this;
-    if (self.node.meta.ipWhitelistEnabled) {
+    if (self.node.meta.trustedIPEnabled) {
       return true;
     } else {
       return false;
     }
   }
-  set enableIPWhitelist(val) {
+  set enableTrustedIP(val) {
     const self = this;
     if (self.node) {
-      self.node.meta.ipWhitelistEnabled = val;
+      self.node.meta.trustedIPEnabled = val;
       if (!val) {
         self.node.meta.ipList = [];
       }

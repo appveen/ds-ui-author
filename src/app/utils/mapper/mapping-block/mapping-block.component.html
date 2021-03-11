@@ -8,16 +8,15 @@
       </div>
       <div [id]="sourceField.path" class="field-placeholder h-100 d-flex align-items-center pl-3" [ngClass]="{'disabled':mapping.disabled,
              'text-muted':!sourceField.valid,
-             'mapped':sourceField.valid}" (drop)="dropEvent($event,sourceField,mapping)"
-        (dragleave)="dragLeaveEvent($event,mapping)" (dragenter)="dragEnterEvent($event,mapping)">
+             'mapped':sourceField.valid}" odpClickOutside (outside)="closeAllSelector()">
         <odp-field-type *ngIf="sourceField.valid && !sourceField.isHeader" [field]="sourceField" class="mr-2">
         </odp-field-type>
-        <div class="add-attribute-label w-100 text-truncate" [odpTruncated]="sourceField.name">
-          {{mapping.disabled?'':(sourceField.valid?sourceField.name:'Add attribute')}}
+        <div class="add-attribute-label w-100 text-truncate" [odpTruncated]="sourceField.name"
+          (click)="$event.stopPropagation();toggleFieldSelector[sourceIndex+index]=!toggleFieldSelector[sourceIndex+index]">
+          {{mapping.disabled?'':(sourceField.valid?sourceField.name:'+ Add attribute')}}
         </div>
-        <span class="drop-here-label">
-          Drop Here
-        </span>
+        <odp-fields-selector *ngIf="toggleFieldSelector[sourceIndex+index]" class="text-dark"
+          [definitionList]="sourceList" (selectedField)="onFieldSelect($event,mapping)"></odp-fields-selector>
       </div>
       <div class="vertical-bar ml-1" [ngClass]="{'border-secondary':mapping.disabled}">
       </div>
@@ -30,8 +29,9 @@
         </div>
       </div>
       <div class="function d-flex align-items-center">
-        <div class="function-circle bg-success text-white align-items-center justify-content-center hover"
-          [ngClass]="{'d-none':!sourceFirst,'d-flex':sourceFirst}" (click)="openFormulaBuilder(mapping)">
+        <div class="function-circle text-white align-items-center justify-content-center hover"
+          [ngClass]="{'d-none':!sourceFirst,'d-flex':sourceFirst,'bg-success':mapping.valid,'bg-danger':!mapping.valid}"
+          (click)="openFormulaBuilder(mapping)">
           <span class="fa fa-cubes"></span>
         </div>
         <div class="line"
@@ -41,7 +41,7 @@
     </div>
   </div>
   <div class="destination-field-wrapper d-flex">
-    <div class="destination-field d-flex align-items-center pr-4 position-relative">
+    <div class="destination-field d-flex align-items-start pr-4 position-relative">
       <div class="field-toggle-state d-flex align-items-center mr-2">
         <span class="fa fa-caret-right"
           [ngClass]="{'text-secondary':mapping.disabled,'text-dark':!mapping.disabled}"></span>
@@ -60,16 +60,20 @@
           <div class="horizonal-line border-bottom" [ngClass]="{'border-0':!dl}">
           </div>
         </ng-container>
-        <odp-field-type [field]="mapping.target" class="mr-2"></odp-field-type>
-        <div class="field-name w-100 text-truncate" [odpTruncated]="mapping.target.name">
-          {{mapping.target.name}}</div>
+        <div class="d-flex align-items-center mt-2 pt-1">
+          <odp-field-type [field]="mapping.target" class="mr-2"></odp-field-type>
+          <div class="field-name w-100 text-truncate" [odpTruncated]="mapping.target.name">
+            {{mapping.target.name}}
+          </div>
+        </div>
       </ng-container>
-      <ng-container *ngIf="mapping.target.isHeader">
+      <div class="d-flex align-items-center mt-2 pt-1" *ngIf="mapping.target.isHeader">
         <span
           class="border text-accent bg-white rounded d-flex align-items-center justify-content-center field-type-badge mr-2">H</span>
         <div class="field-name w-100 text-truncate" [odpTruncated]="mapping.target.name">
-          {{mapping.target.properties.dataKey}}</div>
-      </ng-container>
+          {{mapping.target.properties.dataKey}}
+        </div>
+      </div>
     </div>
   </div>
 </div>

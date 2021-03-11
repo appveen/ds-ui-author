@@ -3,8 +3,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { IntegrationFlowService } from '../../integration-flow.service';
 import { EditConfig } from 'src/app/utils/interfaces/schemaBuilder';
-import { NodeData } from 'src/app/utils/microflow/microflow.component';
-import { ActivateProperties, FlowData } from '../../integration-flow.model';
+import { ActivateProperties, FlowData, NodeData } from '../../integration-flow.model';
 import { CommonService } from 'src/app/utils/services/common.service';
 
 @Component({

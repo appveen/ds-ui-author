@@ -1,14 +1,13 @@
 <div class="wrapper">
   <div class="d-flex flex-column">
-    <div class="d-flex justify-content-between p-2">
-      <div class="d-flex align-items-center">
-        <span class="fa fa-robot mr-2"></span>
+    <div class="d-flex justify-content-between px-3 py-2">
+      <div class="d-flex align-items-center bots-title">
+        <span class="odp-bots font-xl mr-2"></span>
         <span class="font-weight-bold">Bots</span>
       </div>
       <odp-search-box (enteredText)="searchTable = $event" (reset)="searchTable = null"></odp-search-box>
       <ng-container *ngIf="hasPermission('PMGMBC')">
-        <span>&nbsp;</span>
-        <button type="button" class="btn btn-link" id="addNewMember" (click)="showBrowseTab()">
+        <button type="button" class="btn btn-link px-0" id="addNewMember" (click)="showBrowseTab()">
           <span class="fa fa-plus mr-2"></span>
           <span class="text">Add Bot(s)</span>
         </button>
@@ -19,7 +18,7 @@
         <div class="data-grid-options d-flex align-items-center justify-content-between px-2">
           <div class="d-flex align-items-center">
             <ng-container *ngIf="hasPermission('PMGMBD')">
-              <odp-round-check [(checked)]="checkAll"></odp-round-check>
+              <odp-round-check [(checked)]="checkAll" [edit]="{status:true}"></odp-round-check>
               <span class="text-accent ml-2 font-sm hover" (click)="checkAll=!checkAll">Select All</span>
             </ng-container>
           </div>
@@ -52,7 +51,7 @@
           <div class="data-grid-body">
             <div class="data-grid-row" *ngFor="let usr of userList | filterUser:searchTable;let usrIndex=index">
               <div *ngIf="hasPermission('PMGMBD')" class="data-grid-cell d-flex align-items-center">
-                <odp-round-check [(checked)]="usr.selected"></odp-round-check>
+                <odp-round-check [(checked)]="usr.selected" [edit]="{status:true}"></odp-round-check>
               </div>
               <div class="data-grid-cell d-flex align-items-center">
                 <ng-container *ngIf="usr.basicDetails;else noName">

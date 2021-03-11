@@ -41,7 +41,7 @@
         </span>
         <span class="text-danger" *ngIf="form.get('properties.default').hasError('pattern')"><span
             class="fa fa-times mr-1"></span>
-            Invalid regex pattern</span>
+          Invalid regex pattern</span>
         <span class="text-danger" *ngIf="form.get('properties.default').hasError('DefaultEmail')"><span
             class="fa fa-times mr-1"></span>
           {{form.get('properties.name').value}} should be a valid email</span>
@@ -94,19 +94,27 @@
       </ng-container>
     </div>
   </div>
-  <div class="d-flex flex-column w-100 mb-4" *ngIf="form.get('properties.enum') &&
-                  form.get('properties._detailedType').value === 'enum'">
-    <div class="border-left" formArrayName="enum" *ngFor="let en of enumList; let i=index;">
-      <div class="d-flex w-100 justify-content-between ml-2">
-        <span class="text-secondary mb-2 w-25">{{i + 1}}</span>
-        <div class="d-flex justify-content-start value-width">
-          <span class="text-truncate" placement="top" [ngbTooltip]="en.value">{{en.value}}</span>
+  <div class="d-flex flex-column w-100 mb-4"
+    *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
+    <div class="border-left" formArrayName="enum" [sortablejs]="enumList"
+      [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
+      <ng-container *ngFor="let en of enumList; let i=index;">
+        <div class="enum-list-item mx-2 px-2 py-1" [class.disabled]="!edit || !edit.status">
+          <span class="icon" *ngIf="!!edit && !!edit.status">
+            <span class="fa fa-bars text-muted hover"></span>
+          </span>
+          <div class="enum-mid-section">
+            <span *ngIf="editStateListOfValues !== i" (click)="editStateListOfValues = i" class="text-truncate"
+              placement="top" [ngbTooltip]="en.value">{{en.value}}</span>
+            <input *ngIf="editStateListOfValues === i" type="text" [formControl]="en" class="field form-control"
+              [id]="en.value" (keyup.enter)="editStateListOfValues = null" odpAutoFocus>
+          </div>
+          <span *ngIf="edit.status" class="enum-icons-section text-primary">
+            <span class="fa fa-times" (click)="removeFromList('enum',i)" placement="top" [ngbTooltip]="'Remove'"></span>
+          </span>
         </div>
-        <span *ngIf="edit.status" class="hover float-right text-primary d-flex justify-content-end w-25"
-          (click)="removeFromList('enum',i)">
-          <span class="fa fa-times"></span>
-        </span>
-      </div>
+
+      </ng-container>
     </div>
     <button type="button" class="btn btn-primary my-1 w-100" *ngIf="enumList.length>2 && edit.status"
       (click)="clearList('enum')">Clear
@@ -145,55 +153,56 @@
       All
     </button>
   </div>
-
-  <div class="d-flex flex-column w-100 mb-4"
-    *ngIf="form.get('properties.minlength') && form.get('properties._detailedType').value==''">
-    <div class="d-flex flex-row mb-4">
-      <div class="label-width text-secondary">Length</div>
-      <div class="value-width text-accent">Min and max lengths of the value</div>
-    </div>
-    <div class="border-left d-flex flex-column">
-      <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-column position-relative">
-        <div class="d-flex">
-          <div class="sub-level-width text-secondary">Min.</div>
-          <input *ngIf="canEdit" class="value-width form-control short" placeholder="Minimum length"
-            [ngClass]="{'is-invalid':form.get('properties.minlength').dirty && form.hasError('minMaxLength')}"
-            type="text" min="0" #minlengthEle formControlName="minlength" id="_minLength"
-            (blur)="reCalibrateTextDefaultValue('minlength', form.get('properties.minlength').value, form.get('properties'))">
-          <span
-            *ngIf="!canEdit && form.get('properties.minlength') && form.get('properties.minlength').value">{{form.get('properties.minlength').value}}</span>
-          <span class="text-muted" *ngIf="!canEdit && !form.get('properties.minlength').value">-</span>
+  <ng-container *ngIf="formatType!='FLATFILE'">
+    <div class="d-flex flex-column w-100 mb-4"
+      *ngIf="form.get('properties.minlength') && form.get('properties._detailedType').value==''">
+      <div class="d-flex flex-row mb-4">
+        <div class="label-width text-secondary">Length</div>
+        <div class="value-width text-accent">Min and max lengths of the value</div>
+      </div>
+      <div class="border-left d-flex flex-column">
+        <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-column position-relative">
+          <div class="d-flex">
+            <div class="sub-level-width text-secondary">Min.</div>
+            <input *ngIf="canEdit" class="value-width form-control short" placeholder="Minimum length"
+              [ngClass]="{'is-invalid':form.get('properties.minlength').dirty && form.hasError('minMaxLength')}"
+              type="text" min="0" #minlengthEle formControlName="minlength" id="_minLength"
+              (blur)="reCalibrateTextDefaultValue('minlength', form.get('properties.minlength').value, form.get('properties'))">
+            <span
+              *ngIf="!canEdit && form.get('properties.minlength') && form.get('properties.minlength').value">{{form.get('properties.minlength').value}}</span>
+            <span class="text-muted" *ngIf="!canEdit && !form.get('properties.minlength').value">-</span>
+          </div>
+          <div class="d-flex ml-2">
+            <div class="sub-level-width"></div>
+            <span class="value-width text-danger"
+              *ngIf="form.get('properties.minlength').dirty && form.get('properties').hasError('minMaxLength')"><span
+                class="fa fa-times mr-1"></span>Min
+              Length value cannot be greater then Max Length value</span>
+          </div>
         </div>
-        <div class="d-flex ml-2">
-          <div class="sub-level-width"></div>
-          <span class="value-width text-danger"
-            *ngIf="form.get('properties.minlength').dirty && form.get('properties').hasError('minMaxLength')"><span
-              class="fa fa-times mr-1"></span>Min
-            Length value cannot be greater then Max Length value</span>
+        <div class="d-flex w-10 ml-2 pl-2 d-flex flex-column position-relative"
+          *ngIf="form.get('properties.maxlength') && form.get('properties._detailedType').value==''">
+          <div class="d-flex">
+            <div class="sub-level-width text-secondary">Max.</div>
+            <input *ngIf="canEdit" class="value-width form-control short mb-2" placeholder="Maximum length"
+              [ngClass]="{'is-invalid':form.get('properties.maxlength').dirty && form.hasError('minMaxLength')}"
+              type="text" min="0" #maxlengthEle formControlName="maxlength" id="_maxLength"
+              (blur)="reCalibrateTextDefaultValue('maxlength', form.get('properties.maxlength').value, form.get('properties'))">
+            <span
+              *ngIf="!canEdit && form.get('properties.maxlength') && form.get('properties.maxlength').value">{{form.get('properties.maxlength').value}}</span>
+            <span class="text-muted" *ngIf="!canEdit && !form.get('properties.maxlength').value">-</span>
+          </div>
+          <div class="d-flex ml-2">
+            <div class="sub-level-width"></div>
+            <span class="value-width text-danger"
+              *ngIf="form.get('properties.maxlength').dirty && form.get('properties').hasError('minMaxLength')"><span
+                class="fa fa-times mr-1"></span>Max
+              Length value cannot be lesser then Min Length value</span>
+          </div>
         </div>
       </div>
-      <div class="d-flex w-10 ml-2 pl-2 d-flex flex-column position-relative"
-        *ngIf="form.get('properties.maxlength') && form.get('properties._detailedType').value==''">
-        <div class="d-flex">
-          <div class="sub-level-width text-secondary">Max.</div>
-          <input *ngIf="canEdit" class="value-width form-control short mb-2" placeholder="Maximum length"
-            [ngClass]="{'is-invalid':form.get('properties.maxlength').dirty && form.hasError('minMaxLength')}"
-            type="text" min="0" #maxlengthEle formControlName="maxlength" id="_maxLength"
-            (blur)="reCalibrateTextDefaultValue('maxlength', form.get('properties.maxlength').value, form.get('properties'))">
-          <span
-            *ngIf="!canEdit && form.get('properties.maxlength') && form.get('properties.maxlength').value">{{form.get('properties.maxlength').value}}</span>
-          <span class="text-muted" *ngIf="!canEdit && !form.get('properties.maxlength').value">-</span>
-        </div>
-        <div class="d-flex ml-2">
-          <div class="sub-level-width"></div>
-          <span class="value-width text-danger"
-            *ngIf="form.get('properties.maxlength').dirty && form.get('properties').hasError('minMaxLength')"><span
-              class="fa fa-times mr-1"></span>Max
-            Length value cannot be lesser then Min Length value</span>
-        </div>
-      </div>
     </div>
-  </div>
+  </ng-container>
 </div>
 
 <ng-template #deleteModalTemplate>

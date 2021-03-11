@@ -151,7 +151,7 @@
                 <span class="text" *ngIf="serviceList[i].status=='Stopped'">Start</span>
                 <span class="text" *ngIf="serviceList[i].status=='Active'">Stop</span>
               </div>
-              <div *ngIf="showDeploy(i) && canDeployService(serviceList[i]._id) && serviceList[i].type!='internal'"
+              <div *ngIf="showDeploy(i) && canDeployService(serviceList[i]) && serviceList[i].type!='internal'"
                 class="button float-left text-center w-100 py-2 text-secondary hover border-top" id="deployEntity">
                 <a (click)="deployService(i);showCardMenu[i]=false">
                   <span class="fa fa-play icon mr-2"></span>
@@ -180,7 +180,7 @@
             <p class="font-13 mt-2 text-center">Changes made are saved as draft but are not deployed. To run the
               dataservice with the new version, deploy
               them first.</p>
-            <button type="button" class="btn btn-dark my-2" *ngIf="canDeployService(service._id)"
+            <button type="button" class="btn btn-dark my-2" *ngIf="canDeployService(service)"
               (click)="deployService(i);showCardDraft[i]=false">Deploy
               v{{service.draftVersion?service.draftVersion:1}}</button>
             <button type="button" class="btn btn-link text-danger" (click)="discardDraft(service._id)">Discard new

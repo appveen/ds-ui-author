@@ -143,10 +143,6 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     const self = this;
     const payload = self.cloneForm.value;
     payload.app = self.commonService.app._id;
-    payload.attributeList = self.cloneData.attributeList;
-    if (typeof (self.cloneData.definition) === 'string') {
-      self.cloneData.definition = JSON.parse(self.cloneData.definition);
-    }
     payload.definition = self.cloneData.definition;
     payload.formatType = self.cloneData.formatType;
     payload.character = self.cloneData.character;

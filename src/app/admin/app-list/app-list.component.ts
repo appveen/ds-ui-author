@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { App } from 'src/app/utils/interfaces/app';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
+import { FilterPipe } from 'src/app/utils/pipes/filter.pipe';
+import { AppService } from 'src/app/utils/services/app.service';
 
 @Component({
   selector: 'odp-app-list',
@@ -34,7 +36,8 @@ import { CommonService, GetOptions } from 'src/app/utils/services/common.service
         ], { optional: true })
       ])
     ])
-  ]
+  ],
+  providers: [FilterPipe]
 })
 export class AppListComponent implements OnInit, OnDestroy {
 
@@ -59,10 +62,13 @@ export class AppListComponent implements OnInit, OnDestroy {
   };
   showLazyLoader: boolean;
   form: FormGroup;
+  timezones: Array<any>;
   constructor(private commonService: CommonService,
+    private appService: AppService,
     private router: Router,
     private fb: FormBuilder,
     private ts: ToastrService,
+    private appFilter: FilterPipe
   ) {
     const self = this;
     self.subscriptions = {};
@@ -78,12 +84,14 @@ export class AppListComponent implements OnInit, OnDestroy {
     };
     self.form = self.fb.group({
       _id: [null, [Validators.required, Validators.maxLength(40), Validators.pattern('[a-zA-z0-9_-]+')]],
+      defaultTimezone: [this.commonService.userDetails.defaultTimezone],
       description: [null],
       serviceVersionValidity: self.fb.group({
         validityType: ['count', [Validators.required]],
         validityValue: [-1, [Validators.required]]
       }),
     });
+    this.timezones = this.appService.getTimezones();
   }
 
   ngOnInit() {
@@ -200,7 +208,12 @@ export class AppListComponent implements OnInit, OnDestroy {
 
   enterToSelect(event: KeyboardEvent) {
     const self = this;
-    if (self.appList.length > 0) {
+    if (self.searchTerm) {
+      const returnedApps = self.appFilter.transform(self.appList, self.searchTerm);
+      if (returnedApps.length > 0) {
+        self.useApp(returnedApps[0]._id);
+      }
+    } else if (self.appList.length > 0) {
       self.useApp(self.appList[0]._id);
     }
   }

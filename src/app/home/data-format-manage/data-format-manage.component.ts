@@ -58,7 +58,9 @@ export class DataFormatManageComponent implements
     microflows: Array<any>;
     deleteModal: any;
     showAdvance: boolean;
-
+    sortableOnMove = (event: any) => {
+        return !event.related.classList.contains('disabled');
+    }
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -201,7 +203,6 @@ export class DataFormatManageComponent implements
                 self.showLazyLoader = false;
                 let temp;
                 if (res.definition) {
-                    res.definition = JSON.parse(res.definition);
                     temp = {
                         name: res.name,
                         type: res.definition.type,
@@ -211,7 +212,8 @@ export class DataFormatManageComponent implements
                     };
                     delete res.definition.type;
                     self.form.patchValue(temp);
-                    temp.definition = self.schemaService.generateStructure(res.definition.definition);
+                    self.form.get('type').patchValue('Object');
+                    temp.definition = self.schemaService.generateStructure(res.definition[0].definition);
                     (self.form.get('definition') as FormArray).controls.splice(0);
                     temp.definition.forEach((element, i) => {
                         const tempDef = self.schemaService.getDefinitionStructure(temp.definition[i]);
@@ -336,9 +338,9 @@ export class DataFormatManageComponent implements
     saveSchema() {
         const self = this;
         let response;
-        const payload = self.globalSchemaStructurePipe.transform(self.form.value);
-        payload.attributeList = self.schemaAttributesPipe.transform(self.form.value, true);
-        self.appService.addKeyForDataStructure(payload.definition.definition, 'normal');
+        const value = self.form.getRawValue();
+        const payload = self.globalSchemaStructurePipe.transform(value);
+        self.appService.addKeyForDataStructure(payload.definition[0].definition, 'normal');
         self.commonService.commonSpinner = true;
         payload.app = self.commonService.app._id;
         payload.formatType = self.form.value.formatType;
@@ -658,5 +660,12 @@ export class DataFormatManageComponent implements
     get strictValidation() {
         const self = this;
         return self.form.get('strictValidation').value;
+    }
+    get editable() {
+        const self = this;
+        if (self.edit && self.edit.status) {
+            return true;
+        }
+        return false;
     }
 }

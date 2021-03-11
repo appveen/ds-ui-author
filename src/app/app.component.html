@@ -6,6 +6,12 @@
     <p class="text-secondary">Hang on, please, we're brewing something for you.</p>
     <p class="text-bottom">Appveen © {{year}}. All rights reserved.</p>
 </div>
+<div class="session-refresh overlay align-items-center justify-content-center" [class.show]="showStallLoader">
+    <div class="message-box">
+        <div class="fa fa-spinner fa-pulse fa-3x"></div>
+        <div>Your session is being refreshed, please wait.</div>
+    </div>
+</div>
 <div class="session-expire overlay align-items-center justify-content-center" [ngClass]="{'show':sessionExpired}">
 </div>
 <div class="session-expire align-items-center justify-content-center" [ngClass]="{'show':sessionExpired}">
@@ -19,7 +25,7 @@
                 <p class="text-secondary text-center fs-16 px-3">Your session has expired, please login again.</p>
                 <div class="d-flex align-items-center justify-content-center">
                     <button class="btn btn-min-width btn-primary w-50 mx-3" id="sbDeleteModalYes" type="button"
-                        (click)="logoutUser() " autofocus>Ok</button>
+                        (click)="logoutUser()" odpAutoFocus [timeout]="1200">Ok</button>
                 </div>
             </div>
         </div>

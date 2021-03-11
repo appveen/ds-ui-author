@@ -211,6 +211,9 @@
                             odpAutoFocus (blur)="checkForDuplicate()" [ngClass]="{'is-invalid': invalidBotname}">
                         <span class="fas fa-question-circle text-danger error-icon position-absolute"
                             *ngIf="invalidBotname" ngbTooltip="This is a required field" placement="right"></span>
+                        <span *ngIf="userForm.get('userData.username').hasError('pattern')"
+                            class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
+                            ngbTooltip="Name can contain alphanumeric and _, - , @ , # and . characters only"></span>
                     </div>
                 </div>
                 <div class="d-flex w-100 mb-3">
@@ -220,6 +223,12 @@
                             formControlName="name" [ngClass]="{'is-invalid': invalidName}">
                         <span class="fas fa-question-circle text-danger error-icon position-absolute"
                             *ngIf="invalidName" ngbTooltip="This is a required field" placement="right"></span>
+                        <span *ngIf="userForm.get('userData.basicDetails.name').hasError('pattern')"
+                            class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
+                            ngbTooltip="Name can contain alphanumeric and _, - , @ , # and . characters only"></span>
+                        <span *ngIf="userForm.get('userData.basicDetails.name').hasError('maxlength')"
+                            class="text-danger position-absolute fa  error-icon fa-exclamation-circle" container="body"
+                            ngbTooltip="Name should be within 30 characters"></span>
                     </div>
                 </div>
                 <div *ngIf="!userExist" class="d-flex w-100 mb-3">

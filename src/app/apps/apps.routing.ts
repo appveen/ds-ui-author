@@ -12,6 +12,7 @@ import { AgentGuard } from '../utils/guards/agent.guard';
 import { NanoServiceGuard } from '../utils/guards/nano-service.guard';
 import { AppPanelGuard } from '../utils/guards/app-panel.guard';
 import { BotGuard } from '../utils/guards/bot.guard';
+import { InsightsGuard } from '../utils/guards/insights.guard';
 
 const routes: Routes = [
     { path: '', pathMatch: 'full', component: AppsComponent },
@@ -86,7 +87,8 @@ const routes: Routes = [
             },
             {
                 path: 'insight',
-                loadChildren: () => import('../home/insight/insight.module').then(m => m.InsightModule)
+                loadChildren: () => import('../home/insight/insight.module').then(m => m.InsightModule),
+                canActivate: [InsightsGuard]
             },
             {
                 path: 'profile',

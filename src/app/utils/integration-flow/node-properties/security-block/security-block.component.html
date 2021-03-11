@@ -4,38 +4,6 @@
         <span class="font-weight-bold mr-2">Security Settings</span>
     </div>
     <div class="d-flex flex-column px-3">
-        <!-- <div *ngIf="node.meta.blockType === 'INPUT' && node.meta.sourceType === 'REST'" class="form-group">
-            <odp-checkbox [edit]="edit" [(checked)]="enableIPWhitelist">
-                Enable IP Whitelist
-            </odp-checkbox>
-        </div>
-        <div class="form-group" *ngIf="enableIPWhitelist">
-            <label for="ipWhitelist">IP Whitelist</label>
-            <div class="d-flex position-relative floating-btn-group">
-                <input #ipWhitelist id="ipWhitelist" type="text" class="form-control" (keyup.enter)="addIP(ipWhitelist)"
-                    [disabled]="!edit.status" [ngClass]="{'is-invalid': invalidIP(ipWhitelist.value)}"
-                    (paste)="pasteIP($event)">
-                <button *ngIf="edit.status" type="button" class="btn btn-sm btn-link text-accent position-absolute"
-                    (click)="addIP(ipWhitelist)" [disabled]="invalidIP(ipWhitelist.value)">
-                    Add
-                </button>
-            </div>
-            <div class="list-group mt-2">
-                <div *ngFor="let item of ipList;let i=index"
-                    class="list-group-item d-flex align-items-center justify-content-between p-2">
-                    <span class="text">{{item}}</span>
-                    <button *ngIf="edit.status" type="button" class="btn btn-link text-danger btn-sm"
-                        (click)="removeIP(i)">
-                        <span class="fa fa-times"></span>
-                    </button>
-                </div>
-                <button *ngIf="edit.status && ipList.length > 4" type="button" class="btn btn-danger btn-sm"
-                    (click)="removeAllIP()">
-                    <span class="fa fa-times mr-2"></span>
-                    <span class="text">Remove All</span>
-                </button>
-            </div>
-        </div> -->
         <div *ngIf="hasHttps" class="form-group">
             <odp-checkbox [edit]="edit" [(checked)]="trustAllCerts" [disabled]="validateServerIdentity">
                 Allow Untrusted Connections

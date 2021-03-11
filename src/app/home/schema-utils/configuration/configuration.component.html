@@ -140,14 +140,14 @@
           </div>
         </div>
       </div>
-      <div class="d-flex flex-column w-100 mt-2 mb-1" *ngIf="canView('SDH') || canView('SPD')">
+      <div class="d-flex flex-column w-100 mt-2 mb-1" >
           <span class="font-weight-bold">Insights Settings</span>
-          <div class="d-flex  mt-2" *ngIf="canView('SDH')">
+          <div class="d-flex  mt-2" *ngIf="isAdmin">
               <div class="text-secondary option-label">
                Disable Insights
               </div>
               <div class="switch-container d-flex align-items-center justify-content-center">
-                <ng-container *ngIf="edit.status && canEdit('SPD')">
+                <ng-container *ngIf="edit.status ">
                   <label class="switch accent mb-0 mr-2">
                     <input type="checkbox" formControlName="disableInsights">
                     <span class="slider"></span>
@@ -155,7 +155,7 @@
                   </label>
                   <span class="text">{{ form.get('disableInsights').value ? 'Yes' : 'No'}}</span>
                 </ng-container>
-                <ng-container *ngIf="!edit.status || !canEdit('SPD')">
+                <ng-container *ngIf="!edit.status">
                   <span class="text d-flex" *ngIf="form && form.get('disableInsights').value">
                     <span
                       class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">

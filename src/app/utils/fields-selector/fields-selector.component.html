@@ -1,0 +1,21 @@
+<ng-container *ngTemplateOutlet="fields; context: {definitionList:definitionList,first:true}"></ng-container>
+
+<ng-template #fields let-definitionList="definitionList" let-first="first">
+    <ul class="d-flex" [ngClass]="{'first':first}">
+        <li class="field" *ngFor="let def of definitionList" (click)="selectField(def)">
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <div class="d-flex align-items-center">
+                    <odp-field-type [field]="def" class="mr-2"></odp-field-type>
+                    <span class="text mr-2">{{def.properties.name}}</span>
+                </div>
+                <span *ngIf="def.type=='Object' || (def.type=='Array' && def.definition[0].type === 'Object')" class="fa fa-chevron-right"></span>
+            </div>
+            <ng-container *ngIf="def.type=='Object'">
+                <ng-container *ngTemplateOutlet="fields; context: {definitionList:def.definition}"></ng-container>
+            </ng-container>
+            <ng-container *ngIf="def.type=='Array' && def.definition[0].type === 'Object'">
+                <ng-container *ngTemplateOutlet="fields; context: {definitionList:def.definition[0].definition}"></ng-container>
+            </ng-container>
+        </li>
+    </ul>
+</ng-template>

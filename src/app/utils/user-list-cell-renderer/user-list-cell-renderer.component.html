@@ -1,0 +1,50 @@
+<ng-template #notAvailable>
+    <span class="text-muted">
+        N.A.
+    </span>
+</ng-template>
+<ng-container *ngIf="field === 'basicDetails.name'">
+    <ng-container *ngIf="!!data?.basicDetails?.name; else notAvailable">
+        <span *ngIf="sameUser">
+            {{data?.basicDetails?.name}} <span class="text-accent">(You)</span>
+        </span>
+        <span *ngIf="!sameUser">
+            {{ data?.basicDetails?.name || 'N.A.'}}
+        </span>
+    </ng-container>
+</ng-container>
+<ng-container *ngIf="field === 'username'">
+    <ng-container *ngIf="data?.username;else notAvailable">
+        {{data.username}}
+    </ng-container>
+</ng-container>
+<ng-container *ngIf="field === 'phone'">
+    <ng-container *ngIf="data?.phone;else notAvailable">
+        {{data.phone}}
+    </ng-container>
+</ng-container>
+<ng-container *ngIf="field === 'accessControl.apps._id'">
+    <span *ngIf="data.isSuperAdmin" class="text-accent">
+        SuperAdmin
+    </span>
+    <span *ngIf="!data.isSuperAdmin && !!appsHtml" class="d-flex v-middle" [innerHTML]="appsHtml">
+    </span>
+    <span *ngIf="!data.isSuperAdmin && !appsHtml" class="text-muted fa fa-ban">
+    </span>
+</ng-container>
+<ng-container *ngIf="field === 'bot'">
+    <span *ngIf="data?.bot">Bot</span>
+    <span *ngIf="!data?.bot">User</span>
+</ng-container>
+<ng-container *ngIf="field === 'auth.authType'">
+    <ng-container *ngIf="!!data?.auth?.authType; else notAvailable">
+        <span *ngIf="data.auth.authType === 'local'">Local</span>
+        <span *ngIf="data.auth.authType === 'azure'">Azure</span>
+        <span *ngIf="data.auth.authType === 'ldap'">LDAP</span>
+    </ng-container>
+</ng-container>
+<ng-container *ngIf="field === 'lastLogin'">
+    <span *ngIf="!!data.lastLogin; else notAvailable">
+        {{ data.lastLogin | dateFormat : 'DD-MMM-YYYY, hh:mm:ss A, z' : 'Etc/Zulu' }}
+    </span>
+</ng-container>

@@ -32,7 +32,7 @@ export class GroupAuthorDataFormatsComponent implements OnInit {
   }
   static DataFormatAttrCount(dsDefinition): number {
     // Parse lib definition and return attribute count
-    return Object.keys(JSON.parse(dsDefinition).definition).length;
+    return dsDefinition?.definition?.length || 0;
   }
 
   ngOnInit() {

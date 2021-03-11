@@ -52,6 +52,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
     flowDeployAlertModalRef: NgbModalRef;
     oldKey: string;
     invalidFieldName: boolean;
+    isInvalidKey: boolean;
     private autoLink: any;
     private relatedTo: string;
     private subscriptions: any;
@@ -80,11 +81,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         self.nameChange.title = 'Change attribute name?';
         self.nameChange.message = 'Data under old attribute name wont be accessible. Are you sure you want to continue?';
         self.form = self.all.at(self.index) as FormGroup;
-        if (self.form.get('_id')) {
+        if (self.form.get('key').value === '_id') {
             const tempUuid = uuid();
             self.schemaService.idFieldId = tempUuid;
-            self.form.addControl('_fieldId', new FormControl(tempUuid));
-            self.form = self.form.get('_id') as FormGroup;
             self.form.addControl('_fieldId', new FormControl(tempUuid));
             self.form.addControl('_placeholder', new FormControl('Untitled Identifier'));
             self.form.addControl('key', new FormControl('_id'));
@@ -267,10 +266,8 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             }
         }
         if (self.isDataFormat) {
-            if (self.oldName && self.oldName !== val && self.isOldField && !self.isNewField) {
-                if (self.isDataFormat) {
-                    self.nameChange.message = 'Running flows would require remapping and re-deployment, Are you sure you want to continue?';
-                }
+            if (self.oldName !== val && self.isDataFormatUsed) {
+                self.nameChange.message = 'Running flows would require remapping and re-deployment. Please check the Integration Flows tab to know which flows might get affected. Are you sure you want to continue?';
                 self.nameChangeModalRef = self.commonService.modal(self.nameChangeModal);
                 self.nameChangeModalRef.result.then((close) => {
                     if (close) {
@@ -294,6 +291,11 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                     }
                 }, dismiss => { });
             }
+        }
+        if (val && !val.match("^.*[a-zA-Z0-9]+.*$")) {
+            this.isInvalidKey = true;
+        } else {
+            this.isInvalidKey = false;
         }
     }
 
@@ -326,7 +328,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 }
                 self.searchingRelation = true;
                 const options: GetOptions = {
-                    select: 'name,version,attributeList',
+                    select: 'name,version,definition',
                     filter: { name: value }
                 };
                 self.subscriptions['service'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
@@ -336,7 +338,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                         self.relatedTo = res[0].name;
                         (self.form.get('properties.relatedTo')).patchValue(res[0]._id);
                         (self.form.get('properties.relatedToName')).patchValue(res[0].name);
-                        (self.form.get('properties.relatedSearchField')).patchValue(res[0].attributeList[0].key);
+                        (self.form.get('properties.relatedSearchField')).patchValue(res[0].definition[0].key);
                         self.tooltip.open({ message: 'Relationship created with the schema' });
                         setTimeout(() => {
                             self.closeTooltip();
@@ -390,7 +392,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             return;
         }
         if (self.isOldField) {
-            if (self.isDataFormat) {
+            if (self.isDataFormat && this.isDataFormatUsed) {
                 self.flowDeployAlertModalRef = self.commonService.modal(self.flowDeployAlertModal);
                 self.flowDeployAlertModalRef.result.then(close => {
                     if (close) {

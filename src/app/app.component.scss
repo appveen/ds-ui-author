@@ -1,4 +1,4 @@
-.session-expire{
+.session-refresh, .session-expire{
     width: 100vw;
     height: 100vh;
     position: fixed;
@@ -10,12 +10,14 @@
         display: flex;
     }
     &.overlay{
-        background: #ccc;
-        opacity: 0.75;
+        background: rgba(#ccc, 0.75);
     }
     .message-box{
-        opacity: 1;
-        display: none;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        align-items: center;
+        justify-items: center;
+        row-gap:20px;
     }
 }
 .modal-footer {

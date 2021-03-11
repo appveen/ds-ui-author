@@ -18,6 +18,7 @@ export class GroupAuthorGroupsComponent implements OnInit {
   constructor(private commonService: CommonService) {
     const self = this;
     self.rolesChange = new EventEmitter();
+    self.roles = [];
     self.dropdownToggle = {};
     self.authorModulesList = [
       {
@@ -68,6 +69,11 @@ export class GroupAuthorGroupsComponent implements OnInit {
       {
         label: 'Groups',
         segment: 'GAG',
+        entity: 'GROUP'
+      },
+      {
+        label: 'Insignts',
+        segment: 'GAIS',
         entity: 'GROUP'
       }
     ];

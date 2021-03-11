@@ -5,11 +5,13 @@
   min-height: 60px;
   max-height: 60px;
   .logo {
-    min-height: 57px;
-    max-height: 57px;
-    min-width: 200px;
-    max-width: 200px;
+    min-height: 42px;
+    max-height: 42px;
+    min-width: 142px;
+    max-width: 142px;
     background-repeat: no-repeat;
+    background-size: 186px;
+    background-position: center;
   }
   .text {
     min-height: 50px;
@@ -79,7 +81,7 @@
       min-height: 30px;
       max-height: 30px;
     }
-    .text{
+    .text {
       font-size: 14px;
     }
     a {
@@ -123,7 +125,7 @@
       max-width: 36px;
       min-height: 36px;
       max-height: 36px;
-      top: -18px;
+      top: -40px;
       right: 9px;
     }
     .profile-thumbnail {
@@ -138,26 +140,29 @@
         border-right: 0;
       }
     }
+    .profile-data {
+      width: 290px;
+    }
   }
 }
-.img-app{
-  border: 0px !important
+.img-app {
+  border: 0px !important;
 }
 
-.username-holder{
+.username-holder {
   max-width: 90px;
 }
 .platform {
   min-width: 90px;
   min-height: 90px;
-  .k8s-icon{
+  .k8s-icon {
     width: 30px;
     height: 30px;
     background-position: center;
     background-size: cover;
   }
 }
-.ic-name{
+.ic-name {
   min-width: 8px;
   max-width: 8px;
   min-height: 15px;

@@ -25,7 +25,7 @@ export class CustomHeadersBlockComponent implements OnInit {
 
   ngOnInit() {
     const self = this;
-  
+
   }
 
   addNewHeader() {
@@ -45,7 +45,7 @@ export class CustomHeadersBlockComponent implements OnInit {
   removeHeader(index: number) {
     const self = this;
     self.node.meta.customHeadersList.splice(index, 1);
-    
+
     self.headerToggle();
   }
 
@@ -56,11 +56,11 @@ export class CustomHeadersBlockComponent implements OnInit {
     }
     item.key = value;
     if (self.node.meta.blockType === 'INPUT' || self.node.meta.blockType === 'OUTPUT') {
-      item.header = self.flowService.convertHeader('ODP-F-', item.key);
+      item.header = self.flowService.convertHeader('Data-Stack-F-', item.key);
     } else if (self.node.meta.formatType === 'nanoService') {
-      item.header = self.flowService.convertHeader('ODP-NS-', item.key);
+      item.header = self.flowService.convertHeader('Data-Stack-NS-', item.key);
     } else {
-      item.header = self.flowService.convertHeader('ODP-DS-', item.key);
+      item.header = self.flowService.convertHeader('Data-Stack-DS-', item.key);
     }
     self.headerToggle();
   }
@@ -97,11 +97,11 @@ export class CustomHeadersBlockComponent implements OnInit {
       if (temp.meta.xslt && temp.meta.xslt['$headers']) {
         temp.meta.xslt['$headers'] = self.flowService.convertHeadersToDefinition(temp.meta.customHeadersList);
       }
-     
+
       temp.mapping.filter(e => e.target.path.startsWith('$headers'))
         .forEach(e => {
           e.source.splice(0);
-          e.source.push(Definition.getInstance());
+          e.source.push(new Definition());
         });
     }
     if (self.rightXSLT) {
@@ -109,11 +109,11 @@ export class CustomHeadersBlockComponent implements OnInit {
       if (temp.meta.xslt && temp.meta.xslt['$headers']) {
         temp.meta.xslt['$headers'] = self.flowService.convertHeadersToDefinition(temp.meta.customHeadersList);
       }
-      
+
       temp.mapping.filter(e => e.target.path.startsWith('$headers'))
         .forEach(e => {
           e.source.splice(0);
-          e.source.push(Definition.getInstance());
+          e.source.push(new Definition());
         });
     }
   }

@@ -47,7 +47,7 @@
                         <div class="d-flex min-width-align">
                             <span class="text-secondary mr-2" id="lastActive">Last active on:</span>
                             <span
-                                class="text-secondary">{{ user._metadata.lastUpdated|date: 'dd-MMM-yyyy, hh:mm' }}</span>
+                                class="text-secondary">{{ user._metadata.lastUpdated|dateFormat: 'DD-MMM-YYYY, hh:mm:ss A, z': 'Etc/Zulu' }}</span>
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                 <div *ngIf="!extraInfo" class="font-normal no-cd">No attributes have been configured</div>
                 <div *ngIf="extraInfo" class="no-cd"></div>
                 <div (click)="addAdditionInfo()" *ngIf="manageUser" class="d-flex justify-content-end cd-action">
-                    <button class="btn btn-link pt-0">+ New Attribute</button>
+                    <button class="btn btn-link pt-0">+ Update Attributes</button>
                 </div>
             </div>
             <!-- <div class="d-flex flex-wrap properties px-4" *ngIf="extraInfo;" [ngClass]="{'maxH-auto': showMoreInfo}">
@@ -108,8 +108,8 @@
                 </div>
             </div> -->
             <div class="d-flex flex-wrap properties px-4" *ngIf="extraInfo;" [ngClass]="{'maxH-auto': showMoreInfo}">
-                <div *ngFor="let attr of userAttributeList"   class="mb-4 props p-2">
-                    <div class="d-flex mr-3" >
+                <div *ngFor="let attr of userAttributeList" class="mb-4 props p-2">
+                    <div class="d-flex mr-3">
                         <div class="text-secondary mr-2 key-ellipsis" [ngbTooltip]="attr?.label">{{attr?.label}}</div>
                         <div class="mr-2">
                             <odp-field-type [field]="{type:attr.type,properties:{}}">
@@ -156,26 +156,6 @@
                     <span>{{team.name}}</span>
                 </div>
             </div>
-            <div class="user-apps px-4 py-4">
-                <div class="mb-3 d-flex">
-                    <div class="user-apps-overview mr-1">
-                        <odp-app-icon [size]="22" color="{{ isAppAdmin ? '0082C9' : 'bdbdbd' }}"></odp-app-icon>
-                    </div>
-                    <strong class="pt-1">Other Apps for this user</strong>
-                </div>
-                <div class="d-flex flex-wrap app-container mb-4">
-                    <div *ngFor="let app of userAppList" class="d-flex mb-3 mr-auto app-overview">
-                        <div class="d-flex">
-                            <div class="border app-icon mr-2 bg-gray">
-                                <!-- <odp-app-icon [size]="28"></odp-app-icon> -->
-                                <img *ngIf="app.logo && app.logo.thumbnail" [src]="app.logo.thumbnail" alt="Logo">
-                                <odp-app-icon *ngIf="!app.logo || !app.logo.thumbnail" [size]="28"></odp-app-icon>
-                            </div>
-                            <span class="d-flex align-items-center app-name">{{app._id}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <div class="popup-overlay ignore-outside" *ngIf="editDetails" (click)="editDetails = false"></div>
@@ -197,6 +177,12 @@
                              userDetails.get('name').dirty &&
                              userDetails.get('name').hasError('required')" ngbTooltip="This is a required field"
                     placement="right"></span>
+                <span *ngIf="userDetails.get('name').hasError('pattern')"
+                    class="text-danger position-absolute fa fa-question-circle error-icon" container="body"
+                    ngbTooltip="Name can contain alphanumeric and _, - , @ , # and . characters only"></span>
+                <span *ngIf="userDetails.get('name').hasError('maxlength')"
+                    class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
+                    ngbTooltip="Name should be within 30 characters"></span>
             </div>
             <div class="d-flex w-100 mb-3 position-relative">
                 <label class="text-secondary" for="bd-email">Email ID</label>
@@ -266,7 +252,7 @@
         </div>
     </div>
 
-    
+
 </div>
 
 <ng-template #assignTeamModal>
@@ -359,7 +345,7 @@
     <div class="modal-body new-attribute-modal ignore-outside d-flex flex-column">
         <div class="d-flex justify-content-between">
             <div class="font-lg ">
-                <strong class="">New Attribute</strong>
+                <strong class="">User Attribute</strong>
             </div>
             <button type="button" class="btn btn-link " (click)="addNewDetail()">+ Add New</button>
         </div>
@@ -381,14 +367,15 @@
                                 <input type="text" id="new-label" (keypress)="newField($event)" class="form-control"
                                     formControlName="label" #newLabel [ngClass]="{'is-invalid': getLabelError(i)}"
                                     odpAutoFocus (change)="setKey(i)">
-                                <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                                <span class="fas fa-question-circle text-danger error-icon-attr position-absolute"
                                     *ngIf="getLabelError(i)" ngbTooltip="This is a required field" placement="right">
                                 </span>
                             </div>
                         </td>
                         <td>
                             <div class="mr-3 position-relative">
-                                <span class="">{{control.get('key').value}}</span>
+                                <input type="text" id="new-key" class="form-control" [readonly]="true"
+                                    formControlName="key">
                             </div>
                         </td>
                         <td>
@@ -424,14 +411,14 @@
                                 <odp-switch *ngIf="control.get('type').value === 'Boolean'" [edit]="{status:true}"
                                     [checked]="getUserAttributeValue(i)"
                                     (checkedChange)="setUserAttributeValue($event,i)"></odp-switch>
-                                <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                                <span class="fas fa-question-circle text-danger error-icon-attr position-absolute"
                                     *ngIf="control.get('type').value !== 'Boolean' && getValError(i)"
-                                    ngbTooltip="This is a required field" placement="right"></span>
+                                    ngbTooltip="This is a required field" placement="top"></span>
                             </div>
                         </td>
                         <td>
-                            <div class="del-field ml-auto pt-2 hover" (click)="removeField(i);$event.stopPropagation();"
-                                *ngIf="i > 0">
+                            <div class="del-field ml-auto pt-2 hover"
+                                (click)="removeField(i);$event.stopPropagation();">
                                 <span class="fas fa-times-circle fa-lg text-secondary"></span>
                             </div>
                         </td>

@@ -24,3 +24,22 @@
   table{
     width: calc(100vw - 720px);
   }
+
+  .error-icon-attr {
+    top: 33px;
+    right: 7px;
+  }
+
+  .grid-container {
+    height: calc(100vh - 322px);
+    display: grid;
+  }
+
+  .dropdown-itm {
+    cursor: pointer;
+    user-select: none;
+  
+    &:hover {
+      background: $light;
+    }
+  }

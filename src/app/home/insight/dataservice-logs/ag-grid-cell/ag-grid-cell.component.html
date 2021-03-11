@@ -1,29 +1,29 @@
 <!-- <div>{{value}}</div> -->
 <ng-container *ngIf="value">
     <div class="d-flex align-items-center" *ngIf="definition.field ==='statusCode'">
-        <span class="status high-zIndex" [ngClass]="{
-      'active':value === 200,
-      'stopped':value === 400}" container="body" placement="top">
+        <span class="status high-zIndex" [ngClass]="statusCodeClass" container="body" placement="top">
             <span class="symbol fa fa-circle"></span>
         </span>
         <span class="name d-inline-block font-weight-bold" id="">{{value}}</span>
     </div>
     <div class="d-flex align-items-center" *ngIf="definition?.field ==='_metadata.createdAt'">
-        {{value | date:'dd-MMM-yyyy hh:mm:ss a'}}
+        {{ value | dateFormat : 'DD-MMM-YYYY, hh:mm:ss A, z' : 'Etc/Zulu' }}
     </div>
     <div class="text-accent" *ngIf="definition?.field ==='txnId'">
+        <code>
+            <button class="btn btn-link text-accent p-0" (click)="filterOnTxnId($event)" (dblclick)="onDoubleClick($event)">{{ value }}</button>
+        </code>
+    </div>
+    <div class="text-accent" *ngIf="['retry', 'reqBody._id', 'docId'].includes(definition?.field)">
         {{value}}
     </div>
-    <div class="text-accent" *ngIf="definition?.field ==='docId'">
-        {{value}}
-    </div>
-
-    <div class="text-accent" *ngIf="definition?.field ==='retry'">
-        {{value}}
+    <div
+        *ngIf="['serviceId', 'service.name', 'type', 'operation', 'user', 'userId', 'source', 'url'].includes(definition?.field)">
+        {{ value }}
     </div>
 </ng-container>
 <ng-container *ngIf="!value && value===0">
-    <span >{{value}}</span>
+    <span>{{value}}</span>
 </ng-container>
 <ng-container *ngIf="!value && value!==0">
     <span class="text-muted">N.A</span>

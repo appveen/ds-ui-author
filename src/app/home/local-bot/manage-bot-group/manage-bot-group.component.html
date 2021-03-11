@@ -7,8 +7,8 @@
 <div class="d-flex flex-wrap team-container">
     <div *ngFor="let team of userTeams"
         class="d-flex flex-column align-items-center mb-3 py-2 team-overview position-relative">
-        <div *ngIf="hasPermission('PMBG')" class="position-absolute text-secondary remove-group" ngbTooltip="Remove this group" placement="top" (click)="removeGroupForUser(team.name, team._id)">
-            <span class="fas fa-ellipsis-v"></span>
+        <div *ngIf="hasPermission('PMBG')" class="position-absolute text-secondary remove-group" placement="left" ngbTooltip="Remove this group"  (click)="removeGroupForUser(team.name, team._id)">
+            <span class="fas fa-times"></span>
         </div>
         <div class="team bg-white d-flex flex-column justify-content-center align-items-center mb-2">
             <span class="fas fa-users fa-lg mb-2 text-muted"></span>

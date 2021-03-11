@@ -85,7 +85,7 @@
                                     <div class="form-group d-flex align-items-center"
                                         *ngIf="form.get('formatType').value">
                                         <label class="text-secondary mr-2 mb-0">
-                                            Strict Validation 
+                                            Strict Validation
                                         </label>
                                         <odp-checkbox [edit]="edit" [(checked)]="strictValidation"></odp-checkbox>
                                     </div>
@@ -136,12 +136,17 @@
                         </div>
                     </div>
                     <div class="schema-creator scroll position-relative" id="schema-creator">
+                        
                         <ng-container formArrayName="definition">
-                            <ng-container *ngFor="let def of definitions;let i = index;let first = first;">
-                                <odp-structure-field [formGroupName]="i" [all]="form.get('definition')" [index]="i"
-                                    [first]="first" [edit]="edit" [isDataFormat]="true" [formatType]="form.get('formatType').value"
-                                    [isDataFormatUsed]="microflows.length>0"></odp-structure-field>
-                            </ng-container>
+                            <div [sortablejs]="definitions"
+                                [sortablejsOptions]="{sort: editable, filter: '.disabled', onMove: sortableOnMove }">
+                                <div *ngFor="let def of definitions;let i = index;let first = first;">
+                                    <odp-structure-field [formGroupName]="i" [all]="form.get('definition')" [index]="i"
+                                        [first]="first" [edit]="edit" [isDataFormat]="true"
+                                        [formatType]="form.get('formatType').value"
+                                        [isDataFormatUsed]="microflows.length>0"></odp-structure-field>
+                                </div>
+                            </div>
                             <div class="add-attribute d-flex align-items-center text-muted" *ngIf="edit.status">
                                 <span class="d-flex align-items-center hover" (click)="addField()"
                                     id="schemaFieldObjectAddField">

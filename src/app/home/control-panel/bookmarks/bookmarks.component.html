@@ -22,7 +22,7 @@
         <div class="d-flex align-items-center">
           <div class="d-flex align-items-center">
             <odp-round-check [(checked)]="checkAllBookmark" [edit]={status:true}></odp-round-check>
-            <span class="text-primary font-sm ml-2" (click)="checkAllBookmark=!checkAllBookmark">Select All</span>
+            <span class="text-accent font-sm ml-2" (click)="checkAllBookmark=!checkAllBookmark">Select All</span>
           </div>
           <div class="d-flex align-items-center ml-4 hover" *ngIf="enableBulkDelete" (click)="bulkDelete()">
            <span class="fa fa-trash text-danger font-sm"></span>

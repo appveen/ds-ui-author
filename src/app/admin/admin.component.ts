@@ -8,8 +8,6 @@ import { CommonService, GetOptions } from 'src/app/utils/services/common.service
 import { AppService } from 'src/app/utils/services/app.service';
 import { App } from 'src/app/utils/interfaces/app';
 
-
-
 @Component({
   selector: 'odp-admin',
   templateUrl: './admin.component.html',
@@ -20,46 +18,51 @@ import { App } from 'src/app/utils/interfaces/app';
         query('.profile-data,.profile-thumbnail,.app-version,.last-login', style({ opacity: '0' })),
         style({ height: '0px', position: 'fixed', opacity: '0.5' }),
         group([
-          query('.user-icon', animate('200ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([
-            style({ position: 'fixed', top: '11.5px', right: '16px' }),
-            style({ top: '33px', right: '16px' })
-          ]))),
-          animate('200ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([
-            style({ height: '40px', opacity: '0.5' }),
-            style({ height: '120px', opacity: '1' }),
-          ])),
+          query(
+            '.user-icon',
+            animate(
+              '200ms cubic-bezier(0.23, 1, 0.32, 1)',
+              keyframes([style({ position: 'fixed', top: '11.5px', right: '16px' }), style({ top: '33px', right: '16px' })])
+            )
+          ),
+          animate(
+            '200ms cubic-bezier(0.23, 1, 0.32, 1)',
+            keyframes([style({ height: '40px', opacity: '0.5' }), style({ height: '120px', opacity: '1' })])
+          )
         ]),
-        query('.profile-data,.profile-thumbnail,.app-version,.last-login', style({ opacity: '1' })),
+        query('.profile-data,.profile-thumbnail,.app-version,.last-login', style({ opacity: '1' }))
       ]),
       transition('*=>void', [
         group([
-          query('.profile-data,.profile-thumbnail,.app-version,.last-login', animate('300ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([
-            style({ opacity: '0.3' }),
-            style({ opacity: '0' })
-          ]))),
-          query('.user-icon', animate('300ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([
-            style({ position: 'fixed', top: '33px', right: '16px' }),
-            style({ position: 'fixed', top: '11.5px', right: '16px' })
-          ]))),
-          animate('300ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([
-            style({ height: '60px', border: '0' }),
-            style({ height: '0px' })
-          ]))
-        ]),
+          query(
+            '.profile-data,.profile-thumbnail,.app-version,.last-login',
+            animate('300ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([style({ opacity: '0.3' }), style({ opacity: '0' })]))
+          ),
+          query(
+            '.user-icon',
+            animate(
+              '300ms cubic-bezier(0.23, 1, 0.32, 1)',
+              keyframes([
+                style({ position: 'fixed', top: '33px', right: '16px' }),
+                style({ position: 'fixed', top: '11.5px', right: '16px' })
+              ])
+            )
+          ),
+          animate('300ms cubic-bezier(0.23, 1, 0.32, 1)', keyframes([style({ height: '60px', border: '0' }), style({ height: '0px' })]))
+        ])
       ])
     ]),
     trigger('userProfileIcon', [
       state('true', style({ opacity: '0' })),
       state('false', style({ opacity: '1' })),
-      transition('true=>false', [
-        animate('500ms cubic-bezier(0.23, 1, 0.32, 1)')
-      ])
+      transition('true=>false', [animate('500ms cubic-bezier(0.23, 1, 0.32, 1)')])
     ])
   ]
 })
 export class AdminComponent implements OnInit, OnDestroy {
   @ViewChild('searchAppInput', { static: false }) searchAppInput: ElementRef;
-  @ViewChild('downloadAgentModalTemplate', { static: false }) downloadAgentModalTemplate: TemplateRef<HTMLElement>;
+  @ViewChild('downloadAgentModalTemplate', { static: false })
+  downloadAgentModalTemplate: TemplateRef<HTMLElement>;
   username: string;
   name: string;
   redirectLink: string;
@@ -79,11 +82,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   addBlur: boolean;
   toggleChangePassword: boolean;
   agentConfig: any;
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    public commonService: CommonService,
-    private appService: AppService) {
+  constructor(private route: ActivatedRoute, private router: Router, public commonService: CommonService, private appService: AppService) {
     const self = this;
     self.redirectLink = window.location.protocol + '//' + window.location.hostname + '/bc';
     self.version = environment.version;
@@ -142,12 +141,15 @@ export class AdminComponent implements OnInit, OnDestroy {
     self.searchAppInput.nativeElement.focus();
     self.apps = [];
     self.loadingApps = true;
-    self.commonService.isAuthenticated().then(res => {
-      self.loadingApps = false;
-      self.apps = res.apps;
-    }).catch(err => {
-      self.loadingApps = false;
-    });
+    self.commonService
+      .isAuthenticated()
+      .then(res => {
+        self.loadingApps = false;
+        self.apps = res.apps;
+      })
+      .catch(err => {
+        self.loadingApps = false;
+      });
   }
 
   changeApp(name) {
@@ -195,17 +197,20 @@ export class AdminComponent implements OnInit, OnDestroy {
   downloadIEG() {
     const self = this;
     self.downloadAgentModalTemplateRef = self.commonService.modal(self.downloadAgentModalTemplate);
-    self.downloadAgentModalTemplateRef.result.then(close => {
-      if (close) {
-        self.agentConfig.os = close;
-        if (close === 'k8s') {
-          self.agentConfig.type = 'k8s';
-        } else {
-          self.agentConfig.type = 'others';
+    self.downloadAgentModalTemplateRef.result.then(
+      close => {
+        if (close) {
+          self.agentConfig.os = close;
+          if (close === 'k8s') {
+            self.agentConfig.type = 'k8s';
+          } else {
+            self.agentConfig.type = 'others';
+          }
+          self.triggerAgentDownload();
         }
-        self.triggerAgentDownload();
-      }
-    }, dismiss => { });
+      },
+      dismiss => {}
+    );
   }
 
   triggerAgentDownload() {
@@ -214,8 +219,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     ele.target = '_blank';
     let queryParams;
     if (self.agentConfig.type !== 'k8s') {
-      queryParams = `ieg/download/exec?` +
-        `os=${self.agentConfig.os}&arch=${self.agentConfig.arch}`;
+      queryParams = `ieg/download/exec?` + `os=${self.agentConfig.os}&arch=${self.agentConfig.arch}`;
     } else {
       queryParams = `ieg/download/k8s`;
     }
@@ -231,9 +235,12 @@ export class AdminComponent implements OnInit, OnDestroy {
   getAgentPassword() {
     const self = this;
     if (!self.agentConfig.password) {
-      self.commonService.get('partnerManager', '/agentRegistry/IEG/password').subscribe(res => {
-        self.agentConfig.password = res.password;
-      }, err => { });
+      self.commonService.get('partnerManager', '/agentRegistry/IEG/password').subscribe(
+        res => {
+          self.agentConfig.password = res.password;
+        },
+        err => {}
+      );
     }
   }
 

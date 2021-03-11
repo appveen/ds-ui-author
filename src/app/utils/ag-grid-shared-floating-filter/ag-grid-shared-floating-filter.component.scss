@@ -1,0 +1,45 @@
+:host {
+    width: 100%;
+    display: grid;
+    align-items: center;
+    justify-items: stretch;
+    max-height: 24px;
+    overflow: hidden;
+}
+
+.form-control {
+    height: 22px;
+    padding: 0;
+    margin: 0;
+}
+
+.btn-sm {
+    height: 22px;
+}
+
+.dropdown-container {
+    display: grid;
+    height: fit-content;
+    max-height: 200px;
+    min-width: 170px;
+    grid-template-rows: 1fr auto;
+
+    .dropdown-list {
+        overflow: auto;
+        
+        .dropdown-itm {
+            display: grid;
+            align-items: center;
+            grid-template-columns: auto 1fr;
+            padding: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+    }
+
+    .dropdown-buttons {
+        display: grid;
+        padding: 0 10px;
+        grid-template-columns: 1fr auto;
+    }
+}

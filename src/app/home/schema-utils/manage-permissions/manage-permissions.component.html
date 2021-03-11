@@ -88,7 +88,7 @@
                             <odp-switch [(checked)]="canApprove" [edit]="edit"></odp-switch>
                             <small class="text-muted role-control-right mb-3 mt-2">
                                 This role is entitled to enable review system for this Data Service and Grants
-                                persmission to a user to Review the documents created in this Data Service.
+                                permission to a user to Review the documents created in this Data Service.
                             </small>
                         </div>
                     </div>
@@ -211,16 +211,16 @@
                                         <div class="rule-block-gutter d-flex flex-column align-items-center">
                                             <div class="border-border gutter-16" [ngClass]="{'border-right':i>0}"></div>
                                             <div class="badge p-2"
-                                                [ngClass]="{'badge-danger':blockInvalid[i],'badge-light':!blockInvalid[i]}">
+                                                [ngClass]="{'badge-danger':blockInvalidRole[i],'badge-light':!blockInvalidRole[i]}">
                                                 ANS=</div>
                                             <div class="border-border border-right h-100"></div>
                                         </div>
                                         <div class="rule-block-query d-flex flex-column align-items-start ml-2 py-3">
                                             <odp-select-block *ngIf="item.type==='Condition'" [edit]="edit"
-                                                [(rules)]="rule" (isInvalid)="blockInvalid[i]=$event" [index]="i">
+                                                [(rules)]="rule" (isInvalid)="onInvalidRole($event, i)" [index]="i">
                                             </odp-select-block>
                                             <odp-traverse-block *ngIf="item.type==='Traverse'" [edit]="edit"
-                                                [(rules)]="rule" (isInvalid)="blockInvalid[i]=$event" [index]="i">
+                                                [(rules)]="rule" (isInvalid)="onInvalidRole($event, i)" [index]="i">
                                             </odp-traverse-block>
                                         </div>
                                     </div>

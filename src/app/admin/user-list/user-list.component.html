@@ -4,270 +4,47 @@
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
-<div [ngClass]="{'container': !showUserDetails}" class="position-relative">
-    <div *ngIf="!showUserDetails && !bulkUserUpload" [ngClass]="{'mt-4': !showUserDetails}">
-        <div class="d-flex justify-content-between users mb-4">
-            <div class="d-flex  position-relative">
-                <div class="d-flex align-items-center hover user-option-class" [ngClass]="{'open':showSelectAppUsers}"
-                    (click)="showSelectAppUsers = !showSelectAppUsers" odpClickOutside
-                    (outside)="showSelectAppUsers = false;">
-                    <strong class="pr-2 text-accent">{{ ' Users from ' + selectedApp }}</strong>
-                    <span class="fas fa-angle-down text-accent"></span>
-                </div>
-                <div *ngIf="showSelectAppUsers" [@moveDown] class="appList border mt-2 position-absolute">
-                    <ul class="p-0 mb-0">
-                        <li class="p-2 hover" (click)="filterUsers()">All Apps</li>
-                        <li *ngFor="let app of appList" (click)="filterUsers(app._id)" class="p-2 hover">{{ app._id }}
-                        </li>
-                    </ul>
-                </div>
-                <div class="d-flex pl-4 align-items-center">
-                    <span class="text-secondary mr-2 ">Mode:</span>
-                    <div class="border px-1 bg-light rounded font-weight-bold hover text-secondary font-sm">
-                        <span *ngIf="authType==='local'">Local</span>
-                        <span *ngIf="authType==='ldap'" class="ldapCon" [ngbTooltip]="ldapUrl"
-                            (click)="ldapConnection()">LDAP</span>
-                        <span *ngIf="authType==='azure'" [ngbTooltip]="tenant">Azure</span>
-                    </div>
-                    <span class="fa fa-cog text-secondary ml-1 hover" (click)="changeAuthentication()"></span>
-                    <div odpClickOutside (outside)="viewLdapCon=false" [ignore]="['.ldapCon']">
-                        <div *ngIf="viewLdapCon"
-                            class="position-absolute ldap-view-block bg-white  border border-border">
-                            <!-- <div class="arrowlist-up">
-                            </div> -->
-                            <div class="ml-3 pt-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="form-icon text-muted mr-2"></span>
-                                    <span class="font-weight-bold">LDAP Connection</span>
-                                </div>
-                                <div class="d-flex flex-column pl-4 ml-2 p-2">
-                                    <div class="d-flex align-items-center mb-4">
-                                        <span class="text-secondary w-100">URL</span>
-                                        <!-- <input type="text" class="w-100 form-control" formControlName="url" placeholder="ldap://<hostname>:<port>"> -->
-                                        <span class="text-dark ldap-box">{{ldapConfig.connectionDetails.url}}</span>
-                                        <!-- <input type="text" class="w-100 form-control ldap-box text-dark" disabled [value]=ldapConfig.connectionDetails.url> -->
-                                    </div>
-                                    <div class="d-flex align-items-center mb-4">
-                                        <span class="text-secondary w-100">Bind User</span>
-                                        <!-- <input type="text" class="w-100 form-control" formControlName="bindDN" placeholder="cn=admin,dc=example,dc=org"> -->
-                                        <span class="text-dark ldap-box">{{ldapConfig.connectionDetails.bindDN}}</span>
-                                        <!-- <input type="text" class="w-100 form-control ldap-box text-dark" disabled [value]=ldapConfig.connectionDetails.bindDN> -->
-                                    </div>
-                                    <div class="d-flex align-items-center mb-4">
-                                        <span class="text-secondary w-100">Base DN</span>
-                                        <!-- <input type="text" class="w-100 form-control" formControlName="bindDN" placeholder="cn=admin,dc=example,dc=org"> -->
-                                        <span class="text-dark ldap-box">{{ldapConfig.connectionDetails.baseDN}}</span>
-                                        <!-- <input type="text" class="w-100 form-control ldap-box text-dark" disabled [value]=ldapConfig.connectionDetails.baseDN> -->
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <div class="d-flex align-items-center mb-4">
-                                        <span class="form-icon text-muted mr-2"></span>
-                                        <span class="font-weight-bold">Attributes</span>
-                                    </div>
-                                    <div class="d-flex flex-column pl-4 ml-2">
-                                        <div class="d-flex align-items-center mb-4">
-                                            <span class="text-secondary w-100">User Attribute</span>
-                                            <span
-                                                class="text-dark ldap-box">{{ldapConfig.connectionDetails.mapping.username}}</span>
-                                            <!-- <input type="text" class="w-100 form-control ldap-box text-dark" disabled [value]=ldapConfig.connectionDetails.mapping.username> -->
-                                        </div>
-                                        <div class="d-flex align-items-center mb-4">
-                                            <span class="text-secondary w-100">Name Attribute</span>
-                                            <span
-                                                class="text-dark ldap-box">{{ldapConfig.connectionDetails.mapping.name}}</span>
-                                            <!-- <input type="text" class="w-100 form-control ldap-box text-dark" disabled [value]=ldapConfig.connectionDetails.mapping.name> -->
-                                        </div>
-                                        <div class="d-flex align-items-center mb-4">
-                                            <span class="text-secondary w-100">Email Attribute</span>
-                                            <span
-                                                class="text-dark ldap-box">{{ldapConfig.connectionDetails.mapping.email}}</span>
-                                            <!-- <input type="text" class="w-100 form-control ldap-box text-dark" disabled [value]=ldapConfig.connectionDetails.mapping.email> -->
-                                        </div>
-                                        <div class="d-flex align-items-center mb-4">
-                                            <span class="text-secondary w-100">Filter</span>
-                                            <span
-                                                class="text-dark ldap-box">{{ldapConfig.connectionDetails.baseFilter}}</span>
-                                            <!-- <input type="text" class="w-100 form-control ldap-box text-dark" disabled [value]=ldapConfig.connectionDetails.baseFilter> -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <odp-search-box (enteredText)="searchUsers($event)" (reset)="clearSearch()" [selectOnEnter]="true"
-                (enteredPressed)="enterToSelect($event)"></odp-search-box>
-            <div class="d-flex align-items-center">
-                <!-- <div class="pr-4">
-                    <span class="text-secondary mr-2">Authentication Mode:</span>
-                    <button class="btn btn-primary" (click)="changeAuthentication()">
-                        <span *ngIf="authType==='local'">Local</span>
-                        <span *ngIf="authType==='ldap'" [ngbTooltip]="ldapUrl">LDAP</span>
-                        <span *ngIf="authType==='azure'" [ngbTooltip]="tenant">Azure</span>
+<div class="position-relative px-2">
+    <div *ngIf="!showUserDetails && !bulkUserUpload">
+        <div class="grid-header mt-4 mb-2">
+            <div class="button-group">
+                <div class="d-flex align-items-center" (click)="!isSelectAllDisabled && checkAllUser(!isAllUserChecked)">
+                    <odp-round-check [edit]="{status:!isSelectAllDisabled}" class="mx-2 pl-1" [checked]="isAllUserChecked"
+                        (checkedChange)="!isSelectAllDisabled && checkAllUser($event)">
+                    </odp-round-check>
+                    <button type="button" class="btn btn-link text-accent px-0" [class.text-secondary]="isSelectAllDisabled" [disabled]="isSelectAllDisabled">
+                        Select All
                     </button>
-                </div> -->
-                <button *ngIf="authType==='azure'" type="button" class="btn btn-link text-danger mr-3"
-                    (click)="openUserConfigModal()">
-                    <span class="fa fa-users-cog"></span>
+                </div>
+                <button *ngIf="selectedUsers.length>0" type="button" class="btn btn-link text-delete" (click)="deleteSelected()">
+                    <span class="fa fa-trash mr-2"></span>
+                    <span class="text">Delete Users ({{selectedUsers.length}})</span>
                 </button>
-                <span *ngIf="authType==='local'" class="fa fa-lg fa-cloud-upload-alt text-primary mr-4 hover"
-                    (click)="bulkUserUpload=true"></span>
-                <div *ngIf="selectedUsers.length==0">
-                    <button *ngIf="authType==='local'" type="button" class="add-new btn-min-width btn btn-primary"
-                        (click)="newUser()">
-                        <span class="fa fa-plus mr-2"></span>
-                        <span class="text">Add New User</span>
+            </div>
+            <div class="d-flex align-items-center ">
+                <div class="count-text mr-3">Showing {{ loadedCount }} of {{ totalCount }}</div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary active" (click)="bulkUserUpload=true">
+                        <span class="fa fa-cloud-upload-alt"></span>
                     </button>
-                    <button *ngIf="authType==='ldap'" type="button" class="add-new btn-min-width btn btn-primary"
-                        (click)="addLdapUser()">
-                        <span class="fa fa-plus mr-2"></span>
+                    <button type="button" class="add-new btn-min-width btn btn-primary" (click)="newUser()">
+                        <span class="fa fa-plus-circle mr-2"></span>
                         <span class="text">Add New User</span>
-                    </button>
-                    <button *ngIf="authType==='azure'" type="button" class="add-new btn-min-width btn btn-primary"
-                        (click)="addAzureUser()">
-                        <span class="fa fa-plus mr-2"></span>
-                        <span class="text">Add New User</span>
-                    </button>
-                </div>
-                <div *ngIf="selectedUsers.length>0">
-                    <button type="button" class="btn btn-link text-danger font-weight-bold" (click)="deleteSelected()">
-                        <span class="fa fa-trash mr-2"></span>
-                        <span class="text">Delete Users ({{selectedUsers.length}})</span>
                     </button>
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column w-100">
-            <div class="card-container bg-white ">
-                <div class="data-grid-options d-flex align-items-center justify-content-between py-2">
-                    <div class="d-flex align-items-center">
-                        <div class="d-flex align-items-center mr-3">
-                            <odp-round-check [edit]="{status:true}" class="mr-3 ml-2" [checked]="isAllUserChecked"
-                                (checkedChange)="checkAllUser($event)">
-                            </odp-round-check>
-                            <button type="button" class="btn btn-link text-accent"
-                                (click)="checkAllUser(!isAllUserChecked)">
-                                <span class="text">Select All</span>
-                            </button>
-                        </div>
-                        <div class="d-flex align-items-center mr-3">
-                            <button *ngIf="currUserType=='bot'" type="button" class="btn btn-link text-accent mr-3"
-                                (click)="currUserType='user';clearSearch()">Show Users</button>
-                            <button *ngIf="currUserType=='user'" type="button" class="btn btn-link text-accent"
-                                (click)="currUserType='bot';clearSearch()">Show Bots</button>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center" *ngIf="totalRecords">
-                        <span class="page-info">
-                            {{startNo}}-{{endNo}} of {{totalRecords}}
-                        </span>
-                        <button type="button" class="btn btn-link ml-2" [disabled]="disablePrev" (click)="prevPage()">
-                            <span class="fa fa-angle-left"></span>
-                        </button>
-                        <button type="button" class="btn btn-link ml-2" [disabled]="disableNext" (click)="nextPage()">
-                            <span class="fa fa-angle-right"></span>
-                        </button>
-                    </div>
-                </div>
-                <div class="table-height">
-                    <div class="data-grid border" odpDataGrid [columns]="tableColumns">
-                        <div class="data-grid-header">
-                            <div class="data-grid-row">
-                                <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort"
-                                    id="checkbox"></div>
-                                <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort"
-                                    id="name">Name</div>
-                                <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort"
-                                    id="username">Username</div>
-                                <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort"
-                                    id="apps">Apps</div>
-                                <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort"
-                                    id="lastLogin">Last
-                                    Login</div>
-                                <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort"
-                                    id='btn'></div>
-
-                            </div>
-                        </div>
-                        <div class="data-grid-body">
-                            <div class="data-grid-row" *ngFor="let usr of userList; let usrIndex = index">
-                                <div class="data-grid-cell d-flex align-items-center">
-                                    <odp-round-check [edit]="{status:true}" [(checked)]="usr.checked"></odp-round-check>
-                                </div>
-                                <div class="data-grid-cell d-flex align-items-center"
-                                    (click)="viewUser(usr._id, null, usrIndex)">
-                                    <ng-container *ngIf="usr.basicDetails;else noName">
-                                        <ng-container
-                                            *ngIf="usr.basicDetails.name && usr.basicDetails.name.trim();else noName">
-                                            <span *ngIf="usr.basicDetails.name.length > 50" class="text-truncate"
-                                                [ngbTooltip]="usr.basicDetails.name"
-                                                placement="top">{{usr.basicDetails.name}}</span>
-                                            <span
-                                                *ngIf="usr.basicDetails.name.length <= 50">{{usr.basicDetails.name}}</span>
-                                            <span *ngIf="isThisUser(usr)" class="text-accent ml-2">(You)</span>
-                                        </ng-container>
-                                    </ng-container>
-                                    <ng-template #noName> <button
-                                            *ngIf="authType==='azure' && usr.auth?.adAttribute && usr.auth?.adAttribute !== adAttribute && usr.errorMessage"
-                                            type="button" class="btn btn-dark btn-sm" (click)="fixUser(usr)">Fix
-                                            User</button>
-                                        <span class="text-muted">N.A.</span>
-                                    </ng-template>
-                                </div>
-                                <div class="data-grid-cell d-flex align-items-center"
-                                    (click)="viewUser(usr._id, null, usrIndex)">
-                                    <ng-container *ngIf="usr.username;else noName">
-                                        <span *ngIf="usr.username.length > 50" [ngbTooltip]="usr.username"
-                                            class="min-span" placement="top">{{usr.username}}</span>
-                                        <span *ngIf="usr.username.length <= 50">{{usr.username}}</span>
-                                    </ng-container>
-                                </div>
-                                <div class="data-grid-cell d-flex align-items-center"
-                                    (click)="viewUser(usr._id, null, usrIndex)">
-                                    <div *ngIf="usr.isSuperAdmin" class="text-accent">SuperAdmin</div>
-                                    <div *ngIf="!usr.isSuperAdmin && usr.accessControl?.apps" class="d-flex v-middle"
-                                        [innerHTML]="getAdminApps(usr)">
-                                    </div>
-                                    <div *ngIf="!usr.isSuperAdmin && (!usr.accessControl?.apps || usr.accessControl?.apps.length==0)"
-                                        class="text-muted fa fa-ban"></div>
-                                </div>
-                                <div class="data-grid-cell d-flex align-items-center"
-                                    (click)="viewUser(usr._id, null, usrIndex)">
-
-                                    <span class="text-secondary"
-                                        *ngIf="usr.lastLogin">{{getLastActiveTime(usr.lastLogin)}}</span>
-                                    <span class="text-secondary" *ngIf="!usr.lastLogin">N.A.</span>
-                                </div>
-                                <div class="data-grid-cell d-flex align-items-center"
-                                    (click)="viewUser(usr._id, null, usrIndex)">
-                                    <button
-                                        *ngIf="authType==='azure' && usr.auth?.adAttribute && usr.auth?.adAttribute !== adAttribute && usr.errorMessage"
-                                        type="button" class="btn btn-dark btn-sm" (click)="fixUser(usr)">Fix
-                                        User</button>
-                                </div>
-                            </div>
-                            <div class="data-grid-row justify-content-center full-row"
-                                *ngIf="!showLazyLoader && userList.length === 0">
-                                <div class="data-grid-cell d-flex align-items-center">
-                                    <div class="no-users font-normal text-secondary">No Users Found</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="d-flex flex-column w-100 h-100 grid-container">
+            <ag-grid-angular #agGrid *ngIf="dataSource" class="card-container ag-theme-balham ag-grid-container"
+                [gridOptions]="gridOptions" [datasource]="dataSource" [frameworkComponents]="frameworkComponents"
+                rowModelType="infinite" [rowHeight]="32" cacheBlockSize="30">
+            </ag-grid-angular>
         </div>
     </div>
     <div *ngIf="showUserDetails && !bulkUserUpload" [ngClass]="{'mt-5': !showUserDetails}">
-        <odp-user-manage (backToList)="showuserList($event)" (deleteUsr)="deleteUser($event)" [user]="selectedUser"
-            [apps]="appList"></odp-user-manage>
+        <odp-user-manage *ngIf="selectedUser" (backToList)="backToList()" (deleteUsr)="deleteUser($event)"
+            [user]="selectedUser" [apps]="appList"></odp-user-manage>
     </div>
-    <div *ngIf="toggleImportUsers && !bulkUserUpload" [ngClass]="{'mt-5': !showUserDetails}" class="user-import">
-        <odp-auth-users [(toggle)]="toggleImportUsers" (toggleChange)="toggleUsers($event)" [authType]="authType" [admin]="true"></odp-auth-users>
-    </div>
-
     <div *ngIf="bulkUserUpload">
         <odp-user-bulk-upload (emitData)="hideBulkUserUpload($event)"></odp-user-bulk-upload>
     </div>
@@ -289,13 +66,12 @@
             <span class="fa fa-times text-muted hover ignore-click"
                 (click)="deleteSelectedModalRef.close(false)"></span>
         </div>
-        <!-- <p class="text-dark font-weight-bold text-center">Delete user(s)</p> -->
         <ul class="font-weight-bold ml-4">
-            <li *ngFor="let usr of selectedUsers">{{usr.username}}</li>
+            <li *ngFor="let usr of (usersToDelete || selectedUsers)">{{usr.username}}</li>
         </ul>
         <div class="d-flex align-items-center justify-content-end mt-4">
             <button type="button" class="btn btn-min-width btn-delete"
-                (click)="deleteSelectedModalRef.close(true)">Yes</button>
+                (click)="deleteSelectedModalRef.close(true)">Delete</button>
         </div>
     </div>
 </ng-template>
@@ -307,24 +83,29 @@
                 <span class="icon-wrapper create rounded-circle d-flex align-items-center justify-content-center mr-2">
                     <odp-user-icon [size]="18" color="1CAD49" class="mt-1"></odp-user-icon>
                 </span>
-                <span class="font-weight-bold">Create new User</span>
+                <span class="font-weight-bold">Create User</span>
             </div>
             <span class="fa fa-times text-secondary hover" (click)="newUserModalRef.close(false)"></span>
         </div>
-        <div class="d-flex align-items-center ml-2">
-            <div class="basic-detail-icon mr-2">
-                <span class="far fa-user fa-sm text-secondary"></span>
-            </div>
-            <strong>Basic Details</strong>
-        </div>
-        <!-- <form autocomplete="off"> -->
-        <div class="d-flex flex-column p-4" [formGroup]="userForm">
+        <form class="d-flex flex-column p-4" [formGroup]="userForm" autocomplete="off">
             <div>
                 <div class="d-flex w-100 mb-3">
-                    <div class="label-width text-secondary">Username</div>
+                    <div class="label-width text-secondary">Authentication Type</div>
+                    <div class="value-width position-relative w-100" formGroupName="auth">
+                        <select class="form-control" formControlName="authType">
+                            <option *ngFor="let item of validAuthTypes" [value]="item.value">{{item.label}}</option>
+                        </select>
+                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                            *ngIf="invalidAuthType" ngbTooltip="This is a required field" placement="right"></span>
+                    </div>
+                </div>
+                <div class="d-flex w-100 mb-3">
+                    <div class="label-width text-secondary">Username
+                        <sup class="text-danger">*</sup>
+                    </div>
                     <div class="value-width position-relative w-100">
                         <input class="form-control" type="text" placeholder="Enter Username" formControlName="username"
-                            odpAutoFocus (blur)="checkForDuplicate()" (keyup.enter)="newUserName.focus()"
+                            odpAutoFocus (blur)="checkForDuplicate()"
                             [ngClass]="{'is-invalid': invalidUsername || invalidUsernamePattern || userForm.get('username').value && invalidUniqueUsername}">
                         <span class="fas fa-question-circle text-danger error-icon position-absolute"
                             *ngIf="invalidUsername" ngbTooltip="This is a required field" placement="right"></span>
@@ -340,45 +121,62 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="d-flex w-100 mb-3">
-                    <div class="label-width text-secondary">Name</div>
+                    <div class="label-width text-secondary">Name
+                        <sup *ngIf="userForm.get('auth.authType').value === 'local'" class="text-danger">*</sup>
+                    </div>
                     <div class="value-width position-relative w-100" formGroupName="basicDetails">
                         <input #newUserName class="form-control pr-4" type="text" placeholder="Enter Name"
-                            formControlName="name" [ngClass]="{'is-invalid': invalidName}"
-                            (keyup.enter)="newUserPassword?newUserPassword.focus():newUserCreate.click()">
+                            formControlName="name" [ngClass]="{'is-invalid': invalidName}">
                         <span class="fas fa-question-circle text-danger error-icon position-absolute"
                             *ngIf="invalidName" ngbTooltip="This is a required field" placement="right"></span>
+                        <span *ngIf="userForm.get('basicDetails.name').hasError('pattern')"
+                            class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
+                            ngbTooltip="Name can contain alphanumeric and  - , @ , # and . characters only"></span>
                     </div>
                 </div>
-                <div class="d-flex w-100 mb-3  position-relative">
-                    <div class="label-width text-secondary">Password</div>
-                    <div class="value-width position-relative w-100">
-                        <input #newUserPassword class="form-control password-input" [type]="showPassword ? 'text' : 'password'" placeholder="Password"
-                            formControlName="password" autocomplete="new-password"
-                            [ngClass]="{'is-invalid': invalidPassword || invalidPasswordLength}"
-                            (keyup.enter)="newUserCPassword.focus()">
-                        <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
-                            *ngIf="invalidPassword" ngbTooltip="This is a required field" placement="right"></span>
-                        <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
-                            *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"
-                            placement="right"></span>
+                <ng-container *ngIf="userForm.get('auth.authType').value === 'local'">
+                    <div class="d-flex w-100 mb-3  position-relative">
+                        <div class="label-width text-secondary">Password
+                            <sup class="text-danger">*</sup>
+                        </div>
+                        <div class="value-width position-relative w-100">
+                            <input #newUserPassword class="form-control password-input"
+                                [type]="showPassword['new'] ? 'text' : 'password'" placeholder="Password"
+                                formControlName="password" autocomplete="new-password"
+                                [ngClass]="{'is-invalid': invalidPassword || invalidPasswordLength}"
+                                (keyup.enter)="newUserCPassword.focus()">
+                            <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
+                                *ngIf="invalidPassword" ngbTooltip="This is a required field" placement="right"></span>
+                            <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
+                                *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"
+                                placement="right"></span>
+                        </div>
+                        <span class="fas eye-icon position-absolute hover"
+                            [ngClass]="{'fa-eye': !showPassword['new'],'fa-eye-slash': showPassword['new'] }"
+                            (click)="showPassword['new']= !showPassword['new']"></span>
                     </div>
-                    <span class="fas eye-icon position-absolute hover"
-                        [ngClass]="{'fa-eye': !showPassword,'fa-eye-slash': showPassword }"
-                        (click)="showPassword= !showPassword"></span>
-                </div>
-                <div class="d-flex w-100 mb-3">
-                    <div class="label-width text-secondary">Confirm Password</div>
-                    <div class="value-width position-relative w-100">
-                        <input #newUserCPassword class="form-control" type="password" placeholder="Confirm Password"
-                            formControlName="cpassword" (keyup.enter)="newUserPhone.focus()"
-                            [ngClass]="{'is-invalid': invalidCPassword || invalidPasswordMatch}">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                            *ngIf="invalidCPassword" ngbTooltip="This is a required field" placement="right"></span>
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                            *ngIf="invalidPasswordMatch" ngbTooltip="Passwords do not match" placement="right"></span>
+                    <div class="d-flex w-100 mb-3 position-relative">
+                        <div class="label-width text-secondary">Confirm Password
+                            <sup class="text-danger">*</sup>
+                        </div>
+                        <div class="value-width position-relative w-100">
+                            <input #newUserCPassword class="form-control password-input"
+                                [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"
+                                formControlName="cpassword" (keyup.enter)="newUserPhone.focus()"
+                                [ngClass]="{'is-invalid': invalidCPassword || invalidPasswordMatch}">
+                            <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                                *ngIf="invalidCPassword" ngbTooltip="This is a required field" placement="right"></span>
+                            <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                                *ngIf="invalidPasswordMatch" ngbTooltip="Passwords do not match"
+                                placement="right"></span>
+                        </div>
+                        <span class="fas eye-icon position-absolute hover"
+                            [ngClass]="{'fa-eye': !showPassword['confirm'],'fa-eye-slash': showPassword['confirm'] }"
+                            (click)="showPassword['confirm']= !showPassword['confirm']"></span>
                     </div>
-                </div>
+                </ng-container>
                 <div class="d-flex w-100 mb-3">
                     <div class="label-width text-secondary">Phone</div>
                     <div class="value-width position-relative w-100" formGroupName="basicDetails">
@@ -399,255 +197,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- </form> -->
+        </form>
         <div class="d-flex align-items-center justify-content-end mt-4">
-            <button #newUserCreate type="button" class="btn btn-min-width btn-create" [disabled]="userForm.invalid"
+            <button #newUserCreate type="button" class="btn btn-min-width btn-create" [disabled]="invalidUserForm"
                 (click)="addUser()">Create</button>
-        </div>
-    </div>
-</ng-template>
-
-
-<ng-template #reAuthenticateModal>
-    <div class="modal-body p-4">
-        <div class="d-flex align-items-center justify-content-center my-3">
-            <div class="super-admin-icon"></div>
-        </div>
-        <div class="d-flex flex-column w-100 align-items-center justify-content-between">
-            <p class="text-dark font-weight-bold text-center m-0 font-large">Please enter your password to continue</p>
-            <p class="text-secondary text-center p-3 m-0">
-                Logged in as:&nbsp;{{username}}
-            </p>
-            <input type="password" class="form-control text-center w-75 mb-3 border-dark"
-                [(ngModel)]="reAuthenticatePassword" placeholder="Password" (keyup.enter)="reAuthnticate()"
-                odpAutoFocus>
-            <p class="text-danger">{{errorMessage}}&nbsp;<span class="fa fa-spinner fa-pulse text-dark"
-                    *ngIf="reAuthnticateLoader"></span></p>
-            <div class="d-flex justify-content-between w-75 mb-3">
-                <button class="btn btn-link" (click)="reAuthenticateModalRef.close(false)">Cancel</button>
-                <button class="btn btn-primary btn-min-width" (click)="reAuthnticate()">Authenticate</button>
-            </div>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #changeAuthenticationModal>
-    <div *ngIf="authType != 'ldap'" class="modal-body p-4">
-        <div class="d-flex align-items-center justify-content-center my-3">
-            <div class="users-icon"></div>
-            <div class="line border-bottom border-dark"></div>
-            <div class="fingerprint-icon"></div>
-        </div>
-        <div class="d-flex flex-column w-100 align-items-center justify-content-between">
-            <p class="text-dark font-weight-bold text-center m-0 font-large">Change to Directory Authentication?</p>
-            <p class="text-secondary text-center p-3">
-                <span class="text-danger font-weight-bold">Important:&nbsp;</span>
-                At the end of this wizard, all existing local users will be removed, and only authorized directory
-                users will be allowed
-                to login.
-            </p>
-            <div class="d-flex justify-content-center mb-3 w-75">
-                <div class="auth-option d-flex flex-column align-items-center mr-2 hover"
-                    (click)="changeAuthModeTo = 'local'">
-                    <div
-                        class="auth-option-thumbnail d-flex flex-column align-items-center border border-border rounded">
-                        <div class="align-self-end m-1" [ngClass]="{'fa fa-check-circle text-accent':changeAuthModeTo ==='local',
-                                         'far fa-circle text-border':changeAuthModeTo !== 'local'}"></div>
-                        <div class="logo"></div>
-                    </div>
-                    <div class="text-dark mt-1">
-                        data.stack
-                    </div>
-                </div>
-                <div class="auth-option d-flex flex-column align-items-center mr-2 hover"
-                    (click)="changeAuthModeTo='ldap'">
-                    <div
-                        class="auth-option-thumbnail d-flex flex-column align-items-center border border-border rounded">
-                        <div class="align-self-end m-1" [ngClass]="{'fa fa-check-circle text-accent':changeAuthModeTo =='ldap',
-                                         'far fa-circle text-border':changeAuthModeTo!='ldap'}"></div>
-                        <div class="ldap-logo text-center pt-4">
-                            <span class="font-weight-bold">LDAP</span>
-                        </div>
-                    </div>
-                    <div class="text-dark mt-1">
-                        LDAP
-                    </div>
-                </div>
-                <div class="auth-option d-flex flex-column align-items-center hover" (click)="changeAuthModeTo='azure'">
-                    <div
-                        class="auth-option-thumbnail d-flex flex-column align-items-center border border-border rounded">
-                        <div class="align-self-end m-1" [ngClass]="{'fa fa-check-circle text-accent':changeAuthModeTo == 'azure',
-                                         'far fa-circle text-border':changeAuthModeTo != 'azure'}"></div>
-                        <div class="azure-logo"></div>
-                    </div>
-                    <div class="text-dark mt-1">
-                        Azure AD
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex justify-content-between mb-3 w-75">
-                <button class="btn btn-link" (click)="changeAuthenticationModalRef.close(false)">Go Back</button>
-                <button class="btn btn-primary btn-min-width" [disabled]="changeAuthModeTo == authType"
-                    (click)="changeAuthenticationModalRef.close(true)">Proceed</button>
-            </div>
-        </div>
-    </div>
-    <div *ngIf="authType == 'ldap'" class="modal-body p-4">
-        <div class="d-flex align-items-center justify-content-center my-3">
-            <div class="users-icon"></div>
-            <div class="line border-bottom border-dark"></div>
-            <div class="fingerprint-icon"></div>
-        </div>
-        <div class="d-flex flex-column w-100 align-items-center justify-content-between">
-            <p class="text-dark font-weight-bold text-center m-0 font-large">Change from LDAP Auth. Mode</p>
-            <p class="text-secondary text-center p-3">
-                <span class="text-danger font-weight-bold">Important:&nbsp;</span>
-                All your existing users will be deleted at the end of this process.
-            </p>
-            <div class="d-flex justify-content-between mb-3 w-75">
-                <button class="btn btn-link" (click)="changeAuthenticationModalRef.close(false)">Go Back</button>
-                <button class="btn btn-primary btn-min-width"
-                    (click)="changeAuthModeTo='local';changeAuthenticationModalRef.close(true)">Proceed</button>
-            </div>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #createSuperAdminModal>
-    <div class="modal-body d-flex flex-column justify-content-center align-items-center p-3"
-        [formGroup]="superAdminForm">
-        <p class="font-large font-weight-bold mt-3">Create Local SuperAdmin</p>
-        <p class="text-secondary text-center"><span class="text-danger font-weight-bold">Important:&nbsp;</span>By
-            doing
-            this, your directory settings and all connected users will be deleted.<br>You may login with the Local
-            SuperAdmin
-            credentials you've defined below.</p>
-        <div class="details-block w-50" formGroupName="user">
-            <div class="d-flex flex-column block">
-                <div class="d-flex align-items-center mb-2">
-                    <span class="form-icon text-muted mr-2"></span>
-                    <span class="font-weight-bold">Basic Details</span>
-                </div>
-                <div class="d-flex flex-column pl-4 ml-2" formGroupName="basicDetails">
-                    <div class="d-flex align-items-center mb-3">
-                        <span class="text-secondary w-100">Name</span>
-                        <input type="text" class="w-100 form-control" formControlName="name" odpAutoFocus>
-                    </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <span class="text-secondary w-100">Phone</span>
-                        <input type="text" class="w-100 form-control" formControlName="phone">
-                    </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <span class="text-secondary w-100">Alternate Email</span>
-                        <input type="text" class="w-100 form-control" formControlName="alternateEmail">
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex flex-column block">
-                <div class="d-flex align-items-center mb-2">
-                    <span class="form-icon text-muted mr-2"></span>
-                    <span class="font-weight-bold">User Credentials</span>
-                </div>
-                <div class="d-flex flex-column pl-4 ml-2">
-                    <div class="d-flex align-items-center mb-3">
-                        <span class="text-secondary w-100">Username</span>
-                        <input type="text" class="w-100 form-control" formControlName="username" readonly>
-                    </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <span class="text-secondary w-100">Password</span>
-                        <input type="password" class="w-100 form-control" formControlName="password">
-                    </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <span class="text-secondary w-100">Re-enter Password</span>
-                        <input type="password" class="w-100 form-control" formControlName="cpassword">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex align-self-end mt-5">
-            <button class="btn btn-link text-dark mr-3" (click)="createSuperAdminModalRef.close(false)">Cancel and Go
-                Back</button>
-            <button class="btn btn-create btn-min-width" [disabled]="superAdminForm.invalid"
-                (click)="createSuperAdminModalRef.close(true)">Create
-            </button>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #applyingChangesModal>
-    <div class="modal-body p-4">
-        <div *ngIf="completed.pending" class="d-flex flex-column w-100 align-items-center justify-content-between">
-            <div class="d-flex align-items-center justify-content-center position-relative py-4">
-                <span class="spinner-big-icon fa-pulse my-4 d-flex align-items-center justify-content-center"></span>
-                <span class="odp-delete text-danger position-absolute"></span>
-            </div>
-            <p class="text-dark font-weight-bold text-center m-0">Applying Changes</p>
-            <p class="text-secondary text-center p-3">
-                This may take few minutes. Please do not navigate away, refresh or close this window.
-            </p>
-        </div>
-        <ng-container *ngIf="!completed.pending">
-            <div *ngIf="completed.status" class="d-flex flex-column w-100 align-items-center justify-content-between">
-                <div class="circle bg-success">
-                    <span class="fa text-white fa-check"></span>
-                </div>
-                <p class="text-dark font-weight-bold text-center m-0">Completed</p>
-                <p class="text-secondary text-center p-3">
-                    Logging out in <span class="text-primary" odpTimeoutTrigger="20" (trigger)="logout()"></span>
-                </p>
-                <button class="btn btn-link mt-3 mb-3" (click)="logout()">Log out now</button>
-            </div>
-            <div *ngIf="!completed.status" class="d-flex flex-column w-100 align-items-center justify-content-between">
-                <div class="circle bg-danger">
-                    <span class="fa text-white fa-exclamation"></span>
-                </div>
-                <p class="text-dark font-weight-bold text-center m-0">Failed</p>
-                <p class="text-secondary text-center p-3">
-                    {{completed.message}}
-                </p>
-                <button class="btn btn-link mt-3 mb-3" (click)="goBack()">Go Back</button>
-            </div>
-        </ng-container>
-    </div>
-</ng-template>
-
-
-<ng-template #userConfigModal>
-    <div class="modal-body p-4 user-config-modal">
-        <div class="d-flex align-items-center">
-            <span class="fa fa-users-cog mr-2"></span>
-            <span class="text font-weight-bold">Fix User Data</span>
-        </div>
-        <div class="d-flex flex-column w-100 align-items-center justify-content-between mt-5">
-            <div class="form-group">
-                <label for="azureUsernameKey">Username attribute of Azure AD</label>
-                <div class="input-group">
-                    <select name="azureUsernameKey" id="azureUsernameKey" class="custom-select"
-                        [(ngModel)]="azureUsernameKey" (keyup.enter)="changeUsernameAttribute()" odpAutoFocus>
-                        <option value="userPrincipalName">userPrincipalName</option>
-                        <option value="mail">mail</option>
-                    </select>
-                    <div class="input-group-append">
-                        <button type="button" class="btn btn-dark" (click)="changeUsernameAttribute()">Change</button>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex align-items-center w-100 my-3">
-                <span class="border-top w-100"></span>
-                <!-- <span class="text-secondary mx-2">OR</span>
-                <span class="border-top w-100"></span> -->
-            </div>
-            <div class="form-group mt-3">
-                <button type="button" class="btn btn-dark" (click)="fixUserEmail()">
-                    Fix Alternate Email
-                </button>
-            </div>
-            <p class="text-danger mt-3">{{errorMessage}}&nbsp;<span class="fa fa-spinner fa-pulse text-dark"
-                    *ngIf="changingUsernameKey"></span></p>
-        </div>
-        <div class="d-flex align-items-center justify-content-end w-100">
-            <button type="button" class="btn btn-link" (click)="userConfigModalRef.close(false)">Close</button>
         </div>
     </div>
 </ng-template>

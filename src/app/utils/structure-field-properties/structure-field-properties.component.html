@@ -32,8 +32,7 @@
             <div class="text-dark">Required</div>
             <label for="reqAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
               <input type="checkbox" id="reqAttr" [checked]="formItem.get('properties.required').value" class="d-none"
-                formControlName="required" *ngIf="canEdit"
-                (click)="toggleCheck(formItem.get('properties.required'))">
+                formControlName="required" *ngIf="canEdit" (click)="toggleCheck(formItem.get('properties.required'))">
               <input type="checkbox" class="d-none" formControlName="required" *ngIf="!canEdit">
               <span class="checkmark"></span>
             </label>
@@ -54,7 +53,7 @@
           </div>
           <div class=" d-flex align-items-center font-13 checkbox p-2 "
             [ngClass]="{'selected-checkbox':formItem.get('properties.unique').value,'hover':canEdit}"
-            *ngIf="formItem.get('properties.unique') && formItem.get('key').value !== '_self' && !formItem.get('properties.password')?.value"
+            *ngIf="formItem.get('properties.unique') && formItem.get('key').value !== '_self'"
             (click)="toggleCheckUnique(formItem.get('properties.unique'))">
             <div class="text-dark">Unique</div>
             <label for="UniqAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
@@ -88,10 +87,12 @@
         formItem.get('type').value!='Relation' && formItem.get('type').value!='User'">Advanced
           Properties</div>
         <div class="d-flex w-100 mb-4" *ngIf="isDataFormat && formatType=='FLATFILE'">
-          <div class="label-width text-secondary">Field Length</div>
+          <div class="label-width text-secondary">Field Length
+            <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
+          </div>
+
           <div class="value-width">
-            <input *ngIf="canEdit" class="form-control" type="number" formControlName="fieldLength"
-              id="fieldLength">
+            <input *ngIf="canEdit" class="form-control" type="number" formControlName="fieldLength" id="fieldLength">
             <span *ngIf="!canEdit">{{formItem.get('properties.fieldLength').value}}</span>
           </div>
         </div>
@@ -112,8 +113,7 @@
           <div *ngIf="!idField" class="d-flex w-100 my-4">
             <div class="label-width text-secondary">Custom Error</div>
             <div class="value-width">
-              <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage"
-                id="errorMessage">
+              <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage">
               <span *ngIf="!canEdit">{{formItem.get('properties.errorMessage').value}}</span>
             </div>
           </div>
@@ -122,19 +122,20 @@
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [type]='type'>
         </odp-relation-property>
         <odp-text-property *ngIf="formItem.get('type').value=='String'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [type]='type'>
+          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType" [type]='type'>
         </odp-text-property>
         <odp-number-property *ngIf="formItem.get('type').value=='Number'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [type]='type'>
+          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat"  [formatType]="formatType"  [type]='type'>
         </odp-number-property>
         <odp-library-property *ngIf="formItem.get('type').value=='Global'" [form]="formItem" [edit]="edit"
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
         </odp-library-property>
-
         <odp-user-property *ngIf="formItem.get('type').value=='User'" [form]="formItem" [edit]="edit"
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
-
         </odp-user-property>
+        <odp-date-property *ngIf="formItem.get('type').value=='Date'" [form]="formItem" [edit]="edit"
+          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
+        </odp-date-property>
         <div class="d-flex mb-4" *ngIf="formItem.get('type').value=='Boolean' && !isDataFormat && !isLibrary ">
           <div class="label-width text-secondary">Default Value
           </div>
@@ -169,17 +170,22 @@
           <div class="label-width text-secondary">Default Value</div>
           <div class="value-width position-relative">
             <ng-container *ngIf="canEdit">
-              <button type="button" class="btn btn-link" *ngIf="form.get('properties.default').value"
-                (click)="showDatePicker=true">{{form.get('properties.default').value
+              <button type="button" class="btn btn-link" *ngIf="form.get('properties.default')?.value"
+                (click)="showDatePicker=true">{{form.get('properties.default')?.value
                 | date:'dd-MMM-yyyy' }}</button>
-              <button type="button" class="btn btn-link" *ngIf="!form.get('properties.default').value"
+              <button type="button" class="btn btn-link" *ngIf="!form.get('properties.default')?.value"
                 (click)="showDatePicker=true">Select
                 Date</button>
               <odp-date-picker [(togglePicker)]="showDatePicker" [options]="{floating:true,buttons:true}"
                 *ngIf="showDatePicker" [(from)]="dateFrom"></odp-date-picker>
+                <button  class="btn btn-link text-muted p-0" *ngIf="form.get('properties.default')?.value"
+                (click)="clearValue()" >
+                <span class="fas fa-times-circle"></span>
+            </button>
+
             </ng-container>
             <ng-container *ngIf="!canEdit">
-              <span>{{form.get('properties.default').value | date:'dd-MMM-yyyy'}}</span>
+              <span>{{form.get('properties.default')?.value | date:'dd-MMM-yyyy'}}</span>
             </ng-container>
           </div>
         </div>

@@ -11,14 +11,11 @@
     top: 0;
     right: 0;
 }
-.data-container{
-  
-  min-height: calc(100vh - 200px);
-  max-height: calc(100vh - 200px);
-}
+
 .grid-container{
     overflow: auto;
-    height: calc(100vh - 244px);
+    height: calc(100vh - 212px);
+    display: grid;
 }
 .tabs {
     div {
@@ -44,8 +41,8 @@
     }
   }
   .method{
-    min-width: 32px;
-    max-width: 40px;
+    min-width: 43px;
+    max-width: 43px;
     height: 20px;
     background: #202A36 0% 0% no-repeat padding-box;
     border-radius: 4px;
@@ -59,6 +56,7 @@
   .detail-container{
       height: calc(100vh - 164px);
       overflow: auto;
+      scroll-behavior: smooth;
   }
 
   .advance-options {
@@ -75,7 +73,7 @@
     opacity: 1;
   }
   .showResponseOptions{
-    left: 260px;
+    left: 150px;
     min-width: 152px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 8px 16px #202A367A;
@@ -129,4 +127,12 @@
   .dsContainer{
     height: 200px;
     overflow: auto;
+  }
+
+  .status{
+    min-width: 50px;
+    max-width: 50px;
+    height: 20px;
+    border-radius: 4px;
+    opacity: 1;
   }

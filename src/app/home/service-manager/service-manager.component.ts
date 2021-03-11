@@ -301,10 +301,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         const payload = self.cloneForm.value;
         payload.app = self.commonService.app._id;
         if (payload.desTab) {
-            payload.attributeList = self.cloneData.attributeList;
-            if (typeof (self.cloneData.definition) === 'string') {
-                self.cloneData.definition = JSON.parse(self.cloneData.definition);
-            }
             payload.definition = self.cloneData.definition;
         }
         if (payload.rolTab) {
@@ -379,12 +375,14 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                         self.showCardMenu[len + i] = false;
                         // if (service.definition || service.webHook || service.status === 'Draft') {
                         self.setServiceDetails(service);
-                        service['docapi'] = environment.url.doc + '/?q=/api/a/sm/service/' +
-                            service._id + '/swagger/' + service.app;
+                        service['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}`;
                         service._records = 0;
                         self.serviceList.push(service);
                         // }
                     });
+                    if (self.commonService.userDetails.verifyDeploymentUser) {
+                        self.getServicesWithDraftData();
+                    }
                     self._getAllServiceRecords(res.map(e => e._id)).subscribe((counts: any) => {
                         if (counts && counts.length > 0) {
                             counts.forEach(item => {
@@ -403,6 +401,23 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             });
     }
 
+
+    getServicesWithDraftData() {
+        const self = this;
+        if (self.subscriptions['getDraftservice']) {
+            self.subscriptions['getDraftservice'].unsubscribe();
+        }
+        self.showLazyLoader = true;
+        self.subscriptions['getDraftservice'] = self.commonService.get('serviceManager', '/service' + '?draft=true', self.service)
+            .subscribe(res => {
+                self.showLazyLoader = false;
+                res.forEach(item => {
+                    const index = self.serviceList.findIndex(e => e._id === item._id);
+                    self.serviceList[index]._metadata.lastUpdatedBy = item._metadata.lastUpdatedBy
+                });
+            })
+
+    }
     openDocs(index) {
         const self = this;
         const docsAPI = self.serviceList[index].docapi;
@@ -415,22 +430,20 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             service.status = 'Stopped';
         }
         if (service.definition) {
-            service._attributes = Object.keys(JSON.parse(service.definition)).length - 1;
+            service._attributes = service.definition.length - 1;
         } else {
             service._attributes = service.attributeCount;
         }
         service._references = service.relatedSchemas && service.relatedSchemas.incoming ? service.relatedSchemas.incoming.length : 0;
         service._preHooks = service.preHooks ? service.preHooks.length : 0;
         service._webHooks = service.webHooks ? service.webHooks.length + service._preHooks : 0 + service._preHooks;
-        service.docapi = environment.url.doc + '/?q=/api/a/sm/service/' +
-            service._id + '/swagger/' + service.app;
-        // self._getServiceRecords(service);
+        service.docapi = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}`;
     }
 
     _getServiceRecords(service) {
         const self = this;
         self.subscriptions['getservicerecord_' + service._id] =
-            self.commonService.get('serviceManager', '/' + service._id + '/count').subscribe(res => {
+            self.commonService.get('serviceManager', '/' + service._id + '/utils/count').subscribe(res => {
                 service._records = res;
             }, err => {
                 service._records = 0;
@@ -661,18 +674,27 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         }
     }
 
-    canDeployService(id: string) {
+    canDeployService(service) {
         const self = this;
-        if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
+        if (self.commonService.userDetails.isSuperAdmin) {
             return true;
-        } else {
-            const list = self.commonService.getEntityPermissions('SM_' + id);
+        }
+        else if (self.commonService.isAppAdmin && !self.commonService.userDetails.verifyDeploymentUser) {
+            return true;
+        }
+
+        else if (self.commonService.userDetails.verifyDeploymentUser && self.commonService.userDetails._id === service._metadata.lastUpdatedBy) {
+            return false;
+        }
+        else {
+            const list = self.commonService.getEntityPermissions('SM_' + service._id);
             if (list.length > 0) {
                 return Boolean(list.find(e => e.id === 'PMDSPD'));
             } else {
                 return self.commonService.hasPermission('PMDSPD', 'SM');
             }
         }
+     
     }
 
     canStartStopService(id: string) {
@@ -700,19 +722,19 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
     getTooltipText(status: string) {
         if (status === 'Active') {
-            return 'Service is Running';
+            return 'Running';
         }
         if (status === 'Stopped') {
-            return 'Service is Stopped';
+            return 'Stopped';
         }
         if (status === 'Maintenance') {
-            return 'Service is under Maintenance';
+            return 'Under maintenance';
         }
         if (status === 'Pending') {
-            return 'Working on it';
+            return 'Pending';
         }
         if (status === 'Draft') {
-            return 'Service is in Draft State';
+            return 'Draft';
         }
     }
 

@@ -50,8 +50,9 @@ export class MapperComponent implements OnInit {
         if (typeof self.destination === 'string') {
             self.destination = JSON.parse(self.destination);
         }
+        this.appService.fixSchema(self.source);
+        this.appService.fixSchema(self.destination);
         if (self.source) {
-            
             self.sourceDefinition = self.mapperService.getSourceDefArray(self.source, self.sourceType, true);
             self.sourceDefinitionFlat = self.mapperService.getSourceDefArray(self.source, self.sourceType);
             if (self.xslt) {
@@ -60,19 +61,6 @@ export class MapperComponent implements OnInit {
                 self.mapping = self.mapperService.getMappings(self.sourceDefinitionFlat, self.destination);
             }
         }
-
-       
-    }
-
-
-    dragEvent(event, def) {
-        const self = this;
-        event.dataTransfer.effectAllowed = 'move';
-        self.mapperService.selectedEle = def;
-    }
-
-    dragOverEvent(event) {
-        event.preventDefault();
     }
 
     verticalLineClass(definition: Definition, depth: boolean, depthFirst: boolean, depthLast: boolean) {
@@ -94,17 +82,6 @@ export class MapperComponent implements OnInit {
         }
         return style.join(' ');
     }
-
-    removeMapping(mapping: Mapping, index: number, mappingIndex: number) {
-        const self = this;
-        mapping.source.splice(index, 1);
-        mapping.target.properties.operation = '';
-        delete mapping.target.properties._args;
-        if (mapping.source.length === 0) {
-            mapping.source.push(Definition.getInstance());
-        }
-    }
-
 
     done(flag: boolean) {
         const self = this;

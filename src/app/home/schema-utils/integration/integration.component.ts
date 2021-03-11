@@ -18,10 +18,12 @@ export class IntegrationComponent implements OnInit, OnDestroy {
 
     @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
     @ViewChild('hookModalTemplate', { static: false }) hookModalTemplate: TemplateRef<HTMLElement>;
+    @ViewChild('hookPreviewTemplate', { static: false }) hookPreviewTemplate: TemplateRef<HTMLElement>;
     @ViewChild('tooltip', { static: false }) tooltip: NgbTooltip;
     @Input() form: FormGroup;
     @Input() edit: any;
     hookModalTemplateRef: NgbModalRef;
+    hookPreviewTemplateRef:NgbModalRef;
     deleteModalTemplateRef: NgbModalRef;
     deleteModal: DeleteModalConfig;
     hookForm: FormGroup;
@@ -193,14 +195,35 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         });
     }
 
+    previewHook(){
+        this.prettyPrint()
+        this.hookPreviewTemplateRef = this.commonService.modal(this.hookPreviewTemplate, { windowClass: 'preHook-preview-modal' });
+    }
+
     changesDone() {
         const self = this;
-        return self.hookForm.touched && self.hookForm.dirty;
+        if (!self.form || !self.hooks) {
+            return false;
+        }
+
+        const changeInPreHooks = (self.form.get('preHooks') && self.form.get('preHooks').touched && self.form.get('preHooks').dirty);
+        const changeInPostHooks = (self.form.get('postHooks') && self.form.get('postHooks').touched && self.form.get('postHooks').dirty);
+        const changeInWfHooks = (self.form.get('workflowHooks.postHooks') && self.form.get('workflowHooks.postHooks').touched && self.form.get('workflowHooks.postHooks').dirty);
+
+        return changeInPreHooks || changeInPostHooks || changeInWfHooks;
     }
 
     invalidForm() {
         const self = this;
-        return self.hookForm.invalid;
+        if (!self.form || !self.hooks) {
+            return false;
+        }
+
+        const errorInPreHooks = (self.form.get('preHooks') && self.form.get('preHooks').invalid);
+        const errorInPostHooks = (self.form.get('postHooks') && self.form.get('postHooks').invalid);
+        const errorInWfHooks = (self.form.get('workflowHooks.postHooks') && self.form.get('workflowHooks.postHooks').invalid);
+
+        return errorInPreHooks || errorInPostHooks || errorInWfHooks;
     }
 
     addHook() {
@@ -211,7 +234,9 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         if (self.hooks.preHook || self.hooks.postHook) {
             hookpath = self.hooks.hookType;
         } else {
-            hookpath = 'workflowHooks.' + 'postHooks.' + self.hooks.hookType;
+            hookpath = 'workflowHooks.postHooks.' + self.hooks.hookType;
+            self.form.get('workflowHooks.postHooks').markAsTouched();
+            self.form.get('workflowHooks.postHooks').markAsDirty();
         }
         hooks = self.form.get(hookpath).value;
         if (!hooks) {
@@ -219,9 +244,11 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         }
         hooks.push(self.hookForm.value);
         self.form.get(hookpath).patchValue(hooks);
+        self.form.get(hookpath).markAsTouched();
+        self.form.get(hookpath).markAsDirty();
+        self.form.get(hookpath).updateValueAndValidity();
         self.editIndex = -1;
         self.hookForm.reset();
-        self.form.markAsDirty();
     }
 
 
@@ -274,8 +301,12 @@ export class IntegrationComponent implements OnInit, OnDestroy {
             if (close) {
                 if (self.hooks.postHook || self.hooks.preHook) {
                     (self.form.get(self.hooks.hookType).value).splice(index, 1);
+                    self.form.get(self.hooks.hookType).markAsTouched();
+                    self.form.get(self.hooks.hookType).markAsDirty();
                 } else {
                     (self.form.get(['workflowHooks', 'postHooks', self.hooks.hookType]).value).splice(index, 1);
+                    self.form.get(['workflowHooks', 'postHooks', self.hooks.hookType]).markAsTouched();
+                    self.form.get(['workflowHooks', 'postHooks', self.hooks.hookType]).markAsDirty();
                 }
                 self.form.markAsDirty();
             }
@@ -319,7 +350,7 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         }
     }
 
-    copyFormat(tooltip) {
+    copyFormat() {
         const self = this;
         const copyText = document.getElementById('hookFormat') as HTMLInputElement;
         const textArea = document.createElement('textarea');
@@ -328,7 +359,7 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         textArea.select();
         document.execCommand('copy');
         setTimeout(() => {
-            tooltip.close();
+            this.tooltip.close();
         }, 1500);
     }
 
@@ -340,6 +371,10 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         if (self.hookModalTemplateRef) {
             self.hookModalTemplateRef.close();
         }
+        if (self.hookPreviewTemplateRef) {
+            self.hookPreviewTemplateRef.close();
+        }
+        
     }
 
     hasPermission(type: string, entity?: string) {
@@ -428,5 +463,12 @@ export class IntegrationComponent implements OnInit, OnDestroy {
             return (self.form.get('workflowHooks.postHooks.submit').value);
         }
         return [];
+    }
+    get editable() {
+        const self = this;
+        if (self.edit && self.edit.status) {
+            return true;
+        }
+        return false;
     }
 }

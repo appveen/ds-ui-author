@@ -15,6 +15,7 @@ import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.modul
 import { AppPanelGuard } from 'src/app/utils/guards/app-panel.guard';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { UploadImageModule } from 'src/app/utils/upload-image/upload-image.module';
+import { TimezonePickerModule } from 'src/app/utils/timezone-picker/timezone-picker.module';
 const routes: Routes = [
   { path: '', component: AppManageComponent, canActivate: [AppPanelGuard] },
 ];
@@ -35,7 +36,8 @@ const routes: Routes = [
     BasicInfoModule,
     DeleteModalModule,
     CheckboxModule,
-    UploadImageModule
+    UploadImageModule,
+    TimezonePickerModule
   ],
   exports: [
     RouterModule

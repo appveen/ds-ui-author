@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
 import { AgGridCellComponent } from './ag-grid-cell/ag-grid-cell.component';
 import { IconsModule } from 'src/app/utils/icons/icons.module';
+import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 
 
 
@@ -18,7 +19,6 @@ import { IconsModule } from 'src/app/utils/icons/icons.module';
         DataserviceLogsComponent,
         AgGridFiltersComponent,
         AgGridCellComponent,
-
     ],
     imports: [
         CommonModule,
@@ -29,6 +29,7 @@ import { IconsModule } from 'src/app/utils/icons/icons.module';
         ClickOutsideModule,
         OnChangeModule,
         IconsModule,
+        DateFormatModule,
         AgGridModule.withComponents([
             AgGridFiltersComponent,
         ])],

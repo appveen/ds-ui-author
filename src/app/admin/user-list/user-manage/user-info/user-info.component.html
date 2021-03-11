@@ -25,20 +25,25 @@
             <div class="mt-2 pl-3">
                 <div class="d-flex w-100 mb-3">
                     <label class="text-secondary label-width">Name</label>
-                    <span class="col-sm-2 col-md-4 px-0 text-truncate" *ngIf="user.basicDetails.name.length > 50"
-                        [ngbTooltip]="user.basicDetails.name" placement="top">{{ user.basicDetails.name }}</span>
-                    <span class="col-sm-2 col-md-4 px-0 text-truncate"
-                        *ngIf="user.basicDetails.name.length <= 50">{{ user.basicDetails.name }}</span>
+                    <ng-container *ngIf="!!user?.basicDetails?.name;else noName">
+                        <span class="col-sm-2 col-md-4 px-0 text-truncate" *ngIf="user?.basicDetails?.name.length > 50"
+                            [ngbTooltip]="user?.basicDetails?.name" placement="top">{{ user?.basicDetails?.name }}</span>
+                        <span class="col-sm-2 col-md-4 px-0 text-truncate"
+                            *ngIf="user?.basicDetails?.name.length <= 50">{{ user?.basicDetails?.name }}</span>
+                    </ng-container>
+                    <ng-template #noName>
+                        <span>Not Available</span>
+                    </ng-template>
                 </div>
                 <div class="d-flex w-100 mb-3">
                     <label class="text-secondary label-width">Phone</label>
                     <span
-                        class="col-sm-2 col-md-4 px-0 text-truncate">{{ user.basicDetails.phone ? user.basicDetails.phone : 'Not Available' }}</span>
+                        class="col-sm-2 col-md-4 px-0 text-truncate">{{ user?.basicDetails?.phone ? user?.basicDetails.phone : 'Not Available' }}</span>
                 </div>
                 <div class="d-flex w-100 mb-3">
                     <label class="text-secondary label-width">Alternate Email</label>
-                    <span
-                        class="col-sm-2 col-md-4 px-0 text-truncate">{{ user.basicDetails?.alternateEmail ? user.basicDetails?.alternateEmail : 'Not Available' }}</span>
+                    <span class="col-sm-2 col-md-4 px-0 text-truncate">{{ user?.basicDetails?.alternateEmail ?
+                        user?.basicDetails?.alternateEmail : 'Not Available' }}</span>
                 </div>
             </div>
         </div>
@@ -52,10 +57,10 @@
                         </strong>
                     </label>
                 </div>
-                <div *ngIf="authType && authType ==='local'"
+                <!-- <div *ngIf="authType && authType ==='local'"
                     class="d-flex justify-content-center w-50 text-primary hover" (click)="editCreds()">
                     <span>Edit</span>
-                </div>
+                </div> -->
             </div>
             <div class="mt-2 pl-3">
                 <div class="d-flex w-100 mb-3">
@@ -65,6 +70,19 @@
                 <div class="d-flex w-100 mb-3" *ngIf="authType && authType=='local'">
                     <label class="text-secondary label-width">Password</label>
                     <button class="btn btn-link p-0" (click)="openResetPassword()">Reset</button>
+                </div>
+                <div class="d-flex w-100 mb-3">
+                    <label class="text-secondary label-width">Authentication Type</label>
+                    <span>
+                        {{ 
+                            user?.auth?.authType === 'local' 
+                            ? 'Local' :(user?.auth?.authType === 'ldap' 
+                                ? 'LDAP' : (user?.auth?.authType === 'azure' 
+                                    ? 'Azure' : 'Not Available'
+                                )
+                            )
+                        }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -140,9 +158,13 @@
                 <label class="text-secondary modal-label" for="bd-phone">Phone</label>
                 <input type="text" id="bd-phone" class="form-control" formControlName="phone">
             </div>
-            <div class="d-flex w-100 mb-3">
+            <div class="d-flex w-100 mb-3 position-relative">
                 <label class="text-secondary modal-label" for="bd-email">Alternate Email</label>
                 <input type="email" id="bd-email" class="form-control" formControlName="alternateEmail">
+                <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                    *ngIf="userBasicDetail.get('alternateEmail').dirty && userBasicDetail.get('alternateEmail').hasError('pattern')"
+                    ngbTooltip="Invalid Alternate Email" placement="right">
+                </span>
             </div>
         </div>
         <div class="d-flex align-items-center justify-content-end mt-3">
@@ -213,10 +235,18 @@
             (keyup.enter)="manageAttributeModalRef.close(true)">
             <div class="form-group d-flex align-items-center">
                 <label class="text-secondary modal-label m-0" for="key">Label</label>
-                <div class="input-wrapper w-100">
-                    <input type="text" id="key" class="form-control" placeholder="Enter Key" formControlName="label"
-                        (change)="setKey()">
-                    <!-- <input type="text" id="key" class="form-control" placeholder="Enter Key" formControlName="label" (change)="setKey()"> -->
+                <div class="input-wrapper w-100 position-relative">
+                    <input type="text" id="key" class="form-control" placeholder="Enter Key" formControlName="label" (change)="setKey()">
+                    <ng-container *ngIf="userAttributeForm.get('label').dirty">
+                        <span *ngIf="userAttributeForm.get('label').hasError('required')"
+                            class="error-icon text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
+                            ngbTooltip="Label is required">
+                        </span>
+                        <span *ngIf="attributeAlreadyExists"
+                            class="error-icon text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
+                            ngbTooltip="Attribute already exists">
+                        </span>
+                    </ng-container>
                 </div>
             </div>
             <div class="form-group d-flex align-items-center">
@@ -240,7 +270,7 @@
             </div>
             <div class="form-group d-flex align-items-center">
                 <label class="text-secondary modal-label m-0" for="value">Value</label>
-                <div class="input-wrapper w-100">
+                <div class="input-wrapper w-100 position-relative">
                     <div class="input-group">
                         <ng-container *ngIf="userAttributeForm.get('type').value === 'String'">
                             <input type="text" id="value" class="form-control" placeholder="Enter Value"
@@ -259,16 +289,21 @@
                             <input type="date" id="value" class="form-control" formControlName="value">
                         </ng-container>
                     </div>
+                    <ng-container *ngIf="userAttributeForm.get('value').dirty">
+                        <span *ngIf="userAttributeForm.get('value').hasError('required')"
+                            class="error-icon text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
+                            ngbTooltip="Value is required">
+                        </span>
+                    </ng-container>
                 </div>
             </div>
         </div>
         <div class="d-flex justify-content-end align-items-center">
-            <button type="button" class="btn btn-min-width btn-dark" [disabled]="userAttributeForm.invalid"
+            <button type="button" class="btn btn-min-width btn-dark" [disabled]="userAttributeForm.invalid || attributeAlreadyExists"
                 (click)="manageAttributeModalRef.close(true)" id="attrManageModalYes">Save</button>
         </div>
     </div>
 </ng-template>
-
 <ng-template #resetPasswordModel>
     <div class="modal-body p-4">
         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -283,26 +318,34 @@
         <form class="mt-2 ml-4" [formGroup]="resetPasswordForm" (keyup.enter)="resetPassword()">
             <div class="d-flex w-100 mb-3 position-relative">
                 <label class="text-secondary modal-label-pwd" for="new-pwd">New Password</label>
-                <input  id="new-pwd" class="form-control password-input" formControlName="password"   [type]="showPassword ? 'text' : 'password'"
-                    [ngClass]="{'is-invalid': invalidPassword || invalidMatch}">
-                <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="invalidPassword"
-                    ngbTooltip="This is a required field" placement="right"></span>
+                <input id="new-pwd" class="form-control password-input"
+                    [type]="showPassword['new'] ? 'text' : 'password'" formControlName="password"
+                    [ngClass]="{'is-invalid': invalidPassword}" odpAutoFocus>
+                <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                    *ngIf="invalidPassword" ngbTooltip="This is a required field" placement="right"></span>
                 <span class="fas eye-icon position-absolute hover"
-                    [ngClass]="{'fa-eye': !showPassword,'fa-eye-slash': showPassword }"
-                    (click)="showPassword= !showPassword"></span>
+                    [ngClass]="{'fa-eye': !showPassword['new'],'fa-eye-slash': showPassword['new'] }"
+                    (click)="showPassword['new']= !showPassword['new']"></span>
+                <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                    *ngIf="resetPasswordForm.get('password').dirty && resetPasswordForm.get('password').hasError('minlength')"
+                    [ngbTooltip]="'Password should be minimum 8 chars long'" ccontainer="body" placement="right"></span>
             </div>
             <div class="d-flex w-100 mb-3 position-relative">
                 <label class="text-secondary modal-label-pwd" for="c-pwd">Confirm Password</label>
-                <input type="password" id="c-pwd" class="form-control" formControlName="cpassword"
+                <input [type]="showPassword['confirm'] ? 'text' : 'password'" id="c-pwd"
+                    class="form-control password-input" formControlName="cpassword"
                     [ngClass]="{'is-invalid': invalidCPassword || invalidMatch}">
-                <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidCPassword"
-                    ngbTooltip="This is a required field" placement="right"></span>
-                <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidMatch"
-                    ngbTooltip="Passwords do not match" placement="right"></span>
+                <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                    *ngIf="invalidCPassword" ngbTooltip="This is a required field" placement="right"></span>
+                <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                    *ngIf="invalidMatch" ngbTooltip="Passwords do not match" placement="right"></span>
+                <span class="fas eye-icon position-absolute hover"
+                    [ngClass]="{'fa-eye': !showPassword['confirm'],'fa-eye-slash': showPassword['confirm'] }"
+                    (click)="showPassword['confirm']= !showPassword['confirm']"></span>
             </div>
         </form>
         <div class="d-flex align-items-end justify-content-end mt-5">
-            <button type="button" class="btn btn-min-width btn-dark ml-5" (click)="resetPassword()">Save</button>
+            <button type="button" class="btn btn-min-width btn-dark" (click)="resetPassword()">Save</button>
         </div>
     </div>
 </ng-template>

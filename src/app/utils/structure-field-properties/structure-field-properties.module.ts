@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule} from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SortablejsModule } from 'ngx-sortablejs';
 
 import { StructureFieldPropertiesComponent } from './structure-field-properties.component';
 import { RelationPropertyComponent } from './relation-property/relation-property.component';
@@ -17,6 +18,8 @@ import { DatePropertyComponent } from './date-property/date-property.component';
 import { LibraryPropertyComponent } from './library-property/library-property.component';
 import { SwitchModule } from '../switch/switch.module';
 import { UserPropertyComponent } from './user-property/user-property.component';
+import { AutoFocusModule } from '../directives/auto-focus/auto-focus.module';
+import { TimezonePickerModule } from '../timezone-picker/timezone-picker.module';
 
 @NgModule({
   imports: [
@@ -29,7 +32,10 @@ import { UserPropertyComponent } from './user-property/user-property.component';
     DatePickerModule,
     FieldTypeModule,
     ClickOutsideModule,
-    SwitchModule
+    SwitchModule,
+    SortablejsModule,
+    AutoFocusModule,
+    TimezonePickerModule
   ],
   declarations: [
     StructureFieldPropertiesComponent,

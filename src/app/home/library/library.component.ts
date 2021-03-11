@@ -162,7 +162,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
             if (res.length > 0) {
                 res.forEach(_library => {
                     if (_library.definition) {
-                        _library._attributes = Object.keys(JSON.parse(_library.definition).definition).length;
+                        _library._attributes = _library.definition[0].definition.length;
                         _library._references = _library.services.length;
                     } else {
                         _library._attributes = 0;

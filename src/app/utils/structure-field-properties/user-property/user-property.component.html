@@ -48,12 +48,12 @@
       <span *ngIf="!edit.status && !default" class="text-muted">Not Defined</span>
     </div>
   </div>
-  <!-- <div class="d-flex w-100 mb-4" *ngIf="!required">
-    <div class="label-width text-secondary">Allow deletion of related records</div>
+  <div class="d-flex w-100 mb-4" *ngIf="!required">
+    <div class="label-width text-secondary">Allow deletion of related users</div>
     <div class="value-width">
       <odp-switch [edit]="edit" [(checked)]="allowDeletion"></odp-switch>
     </div>
-  </div> -->
+  </div>
 </div>
 <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
   <odp-service-icon [size]="18" color="DD5151" class="mt-1"></odp-service-icon>

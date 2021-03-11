@@ -32,7 +32,7 @@ export class GroupAuthorLibraryComponent implements OnInit, OnDestroy {
 
   static libAttrCount(libDefinition): number {
     // Parse lib definition and return attribute count
-    return Object.keys(JSON.parse(libDefinition).definition).length;
+    return libDefinition?.definition?.length || 0;
   }
 
   ngOnInit() {

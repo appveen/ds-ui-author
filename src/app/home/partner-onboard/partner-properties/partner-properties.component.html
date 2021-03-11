@@ -4,13 +4,13 @@
     <div class="sub-heading text-dark font-weight-bold mb-3 d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
         <span class="fa fa-exchange-alt mr-2 text-accent"></span>
-        <span class="text">Properties</span>
+        <span class="text">Headers</span>
       </div>
       <!-- <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box> -->
       <button type="button" class="btn btn-sm btn-link" (click)="openPropertiesModal()"
         *ngIf="edit.status && edit.id && canCreateHeaders()">
         <span class="fa fa-plus-circle mr-2"></span>
-        <span class="text">New Property</span>
+        <span class="text">New Header</span>
       </button>
     </div>
     <div class="d-flex">
@@ -43,7 +43,7 @@
               <td colspan="3">
                 <div class="d-flex py-3 w-100">
                   <div class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
-                    <div class="text">No Properties has been created.</div>
+                    <div class="text">No Headers has been created.</div>
                     <button type="button" class="btn btn-create mt-2" (click)="openPropertiesModal()"
                       *ngIf="edit.status && edit.id && canCreateHeaders()">
                       <span class="fa fa-plus-circle mr-2"></span>
@@ -66,14 +66,14 @@
       </div>
       <div class="d-flex align-items-center">
         <!-- <span class="text-dark mx-2">Enable</span>
-        <odp-switch [(checked)]="enabledIpWhitelist" [edit]="edit"></odp-switch> -->
-        <odp-checkbox [(checked)]="enabledIpWhitelist" [edit]="edit">Enable</odp-checkbox>
+        <odp-switch [(checked)]="enabledTrustedIP" [edit]="edit"></odp-switch> -->
+        <odp-checkbox [(checked)]="enabledTrustedIP" [edit]="edit">Enable</odp-checkbox>
       </div>
     </div>
     <div class="property-list" [formGroup]="partner">
-      <p *ngIf="!enabledIpWhitelist" class="text-secondary font-weight-bold">Please enable trusted IP to start adding
+      <p *ngIf="!enabledTrustedIP" class="text-secondary font-weight-bold">Please enable trusted IP to start adding
         IP Addresses </p>
-      <table *ngIf="enabledIpWhitelist" class="table" formGroupName="agentIPWhitelisting">
+      <table *ngIf="enabledTrustedIP" class="table" formGroupName="agentTrustedIP">
         <thead>
           <tr class="bg-secondary text-white">
             <th>IP Address</th>
@@ -88,7 +88,7 @@
                 <span *ngIf="ipList.controls[i].hasError('ip')"
                   class="ip-error-icon fa fa-exclamation-circle text-danger position-absolute"
                   ngbTooltip="Please enter a vaid IP Address"></span>
-                <span *ngIf="ipList.controls[i].hasError('required')"
+                <span *ngIf="ipList.controls[i].touched && ipList.controls[i].hasError('required')"
                   class="ip-error-icon fa fa-exclamation-circle text-danger position-absolute"
                   ngbTooltip="IP Address is required"></span>
               </div>
@@ -121,7 +121,7 @@
           <tr *ngIf="ipList.length!=0">
             <td colspan="2">
               <button type="button" class="btn btn-sm btn-link" (click)="addIP()"
-                *ngIf="edit.status && edit.id && enabledIpWhitelist && canUpdateHeaders()">
+                *ngIf="edit.status && edit.id && enabledTrustedIP && canUpdateHeaders()">
                 <span class="fa fa-plus-circle mr-2"></span>
                 <span class="text">New IP Address</span>
               </button>

@@ -16,7 +16,6 @@ import { environment } from 'src/environments/environment';
     templateUrl: './app-manage.component.html',
     styleUrls: ['./app-manage.component.scss'],
     animations: [
-
         trigger('stopping', [
             state('disabled', style({
                 opacity: '0.5',
@@ -155,6 +154,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
     defaultVersionValues: Array<any> = [null, '', '-1', '10', '25', '50', '100', '1 months', '3 months', '6 months', '1 years'];
     authType: string;
     isCalenderEnabled: boolean;
+    timezones: Array<string>;
     constructor(private renderer: Renderer2,
         private commonService: CommonService,
         private appService: AppService,
@@ -220,6 +220,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.data = {};
         self.versionConfig = {};
         self.authType = self.commonService.userDetails.auth.authType;
+        this.timezones = this.appService.getTimezones();
     }
 
     ngOnInit() {
@@ -408,7 +409,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    
+
 
     imageUpload(data: { message?: string, image?: string }, type: string) {
         const self = this;
@@ -661,7 +662,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         if (self.startServiceAttributes['tickAction'] === 'playIcon' && name === 'startAll') {
             return false;
         }
-        if (!self.serviceStatus.Undeployed  && name === 'startAll') {
+        if (!self.serviceStatus.Undeployed && name === 'startAll') {
             return false;
         }
         Object.keys(self.confirmModalState).forEach(key => {
@@ -813,7 +814,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
 
     convertHeader(key: string) {
         if (key) {
-            return 'ODP-A-' + key.split(' ')
+            return 'Data-Stack-A-' + key.split(' ')
                 .filter(e => e)
                 .map(e => e.charAt(0).toUpperCase() + e.substr(1, e.length))
                 .join('-');
@@ -893,11 +894,12 @@ export class AppManageComponent implements OnInit, OnDestroy {
             self.showLazyLoader = false;
 
         }, err => {
+            self.showLazyLoader = false;
             self.commonService.errorToast(err);
         });
     }
 
-  
+
 
     startAllFlows() {
         const self = this;
@@ -1044,33 +1046,36 @@ export class AppManageComponent implements OnInit, OnDestroy {
         });
     }
 
-    changeTab(){
-        const self =this;
-        self.activeTab =3;
+    changeTab() {
+        const self = this;
+        self.activeTab = 3;
         self.getFlowCount();
         self.getManagementDetails();
     }
-    
-    set enabledIpWhitelist(val) {
+
+    set enabledTrustedIP(val) {
         const self = this;
-        if (!self.appData.agentIPWhitelisting) {
-            self.appData.agentIPWhitelisting = {};
+        if (!self.appData.agentTrustedIP) {
+            self.appData.agentTrustedIP = {
+                list: [],
+                enabled: false
+            };
         }
-        self.appData.agentIPWhitelisting.enabled = val;
+        self.appData.agentTrustedIP.enabled = val;
     }
 
-    get enabledIpWhitelist() {
+    get enabledTrustedIP() {
         const self = this;
-        if (self.appData.agentIPWhitelisting) {
-            return self.appData.agentIPWhitelisting.enabled;
+        if (self.appData.agentTrustedIP) {
+            return self.appData.agentTrustedIP.enabled;
         }
         return false;
     }
 
     get ipList() {
         const self = this;
-        if (self.appData.agentIPWhitelisting) {
-            return self.appData.agentIPWhitelisting.list;
+        if (self.appData.agentTrustedIP && self.appData.agentTrustedIP.list) {
+            return self.appData.agentTrustedIP.list;
         }
         return [];
     }

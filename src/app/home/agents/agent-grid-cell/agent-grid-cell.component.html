@@ -22,7 +22,7 @@
             <span *ngIf="data.status=='DISABLED'" class="badge badge-dark">{{data.status}}</span>
             <span *ngIf="data.status!=='RUNNING' &&  data.status!=='DISABLED'" class="badge badge-danger">STOPPED</span>
         </span>
-        <span *ngIf="field == 'lastInvokedAt'">{{value | date:'yyyy MMM dd, HH:mm:ss'}}</span>
+        <span *ngIf="field == 'lastInvokedAt'">{{value | dateFormat:'YYYY MMM DD, HH:mm:ss, z':'Etc/Zulu'}}</span>
         <span *ngIf="field == 'release'">{{value}}</span>
         <span *ngIf="field == 'pendingFiles'">{{value}}</span>
         <span *ngIf="field == '_options'">

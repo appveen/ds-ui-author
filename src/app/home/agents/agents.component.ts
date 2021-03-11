@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ToastrService } from 'ngx-toastr';
 import { AgGridColumn, AgGridAngular } from 'ag-grid-angular';
-import { IDatasource, IGetRowsParams } from 'ag-grid-community';
+import { GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
+import { of, Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -11,15 +11,12 @@ import { environment } from 'src/environments/environment';
 import { AgentGridFilterComponent } from './agent-grid-filter/agent-grid-filter.component';
 import { AgentGridCellComponent } from './agent-grid-cell/agent-grid-cell.component';
 
-
-
 @Component({
     selector: 'odp-agents',
     templateUrl: './agents.component.html',
     styleUrls: ['./agents.component.scss']
 })
 export class AgentsComponent implements OnInit, OnDestroy {
-
     @ViewChild('agGrid') agGrid: AgGridAngular;
     @ViewChild('newAgentModalTemplate', { static: false }) newAgentModalTemplate: TemplateRef<HTMLElement>;
     newAgentModalTemplateRef: NgbModalRef;
@@ -38,10 +35,14 @@ export class AgentsComponent implements OnInit, OnDestroy {
     selectedAgent: any;
     sendOption: EventEmitter<any>;
     noRowsTemplate;
-    constructor(public commonService: CommonService,
-        private appService: AppService,
-        private ts: ToastrService,
-        private router: Router) {
+    colWidthMap: any;
+    processingRequest: boolean;
+    canceller = new Subject();
+
+    constructor(
+        public commonService: CommonService,
+        private appService: AppService
+    ) {
         const self = this;
         self.apiConfig = {};
         self.apiConfig.page = 1;
@@ -59,7 +60,11 @@ export class AgentsComponent implements OnInit, OnDestroy {
         const self = this;
         self.configureColumns();
         self.dataSource = {
-            getRows: async (params: IGetRowsParams) => {
+            getRows: (params: IGetRowsParams) => {
+                if (this.processingRequest) {
+                    this.canceller.next(1);
+                }
+                this.processingRequest = true;
                 self.agGrid.api.showLoadingOverlay();
                 self.apiConfig.page = Math.ceil((params.endRow / 30));
                 if (self.apiConfig.page === 1) {
@@ -70,29 +75,44 @@ export class AgentsComponent implements OnInit, OnDestroy {
                 }
                 self.apiConfig.filter['type'] = self.agentType;
                 self.apiConfig.sort = self.appService.getSortFromModel(self.agGrid.api.getSortModel());
-                self.totalCount = await self.getAgentCount();
-                if (self.totalCount > 0) {
-                    if (self.subscriptions['getRows_' + self.apiConfig.page]) {
-                        self.subscriptions['getRows_' + self.apiConfig.page].unsubscribe();
-                    }
-                    self.subscriptions['getRows_' + self.apiConfig.page] = self.getAgentList().subscribe((docs: Array<any>) => {
-                        self.loadedCount += docs.length;
-                        self.agGrid.api.hideOverlay();
-                        if (self.loadedCount < self.totalCount) {
-                            params.successCallback(docs);
-                        } else {
-                            self.totalCount = self.loadedCount;
-                            params.successCallback(docs, self.totalCount);
-                        }
-                    }, err => {
-                        self.agGrid.api.hideOverlay();
-                        console.error(err);
-                        params.failCallback();
-                    });
-                } else {
-                    self.agGrid.api.hideOverlay();
-                    self.agGrid.api.showNoRowsOverlay();
+                if (!!this.subscriptions['data_' + this.apiConfig.page]) {
+                    this.subscriptions['data_' + this.apiConfig.page].unsubscribe();
                 }
+                this.subscriptions['data_' + this.apiConfig.page] = this.getAgentCount()
+                    .pipe(
+                        takeUntil(this.canceller),
+                        switchMap(count => {
+                            this.totalCount = count;
+                            if (self.totalCount > 0) {
+                                return self.getAgentList().pipe(takeUntil(this.canceller))
+                            } else {
+                                self.agGrid.api.hideOverlay();
+                                self.agGrid.api.showNoRowsOverlay();
+                                this.processingRequest = false;
+                                return of(null);
+                            }
+                        })
+                    ).subscribe(
+                        docs => {
+                            if (!!docs) {
+                                self.loadedCount += docs.length;
+                                self.agGrid.api.hideOverlay();
+                                if (self.loadedCount < self.totalCount) {
+                                    params.successCallback(docs);
+                                } else {
+                                    self.totalCount = self.loadedCount;
+                                    params.successCallback(docs, self.totalCount);
+                                }
+                                this.processingRequest = false;
+                            }
+                        },
+                        err => {
+                            self.agGrid.api.hideOverlay();
+                            console.error(err);
+                            params.failCallback();
+                            this.processingRequest = false;
+                        }
+                    );
             }
         };
     }
@@ -184,18 +204,28 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
     selectAgentList() {
-        const self = this;
-        self.apiConfig.filter = {
-            type: self.agentType,
-            app: self.commonService.app._id
+        this.apiConfig.filter = {
+            type: this.agentType,
+            app: this.commonService.app._id
         };
-        self.filterModel = null;
-        self.agGrid.api.setFilterModel(null);
+        this.filterModel = null;
+        this.agGrid.api.setFilterModel(null);
+        const allColumns = this.agGrid.columnApi.getAllColumns();
+        this.colWidthMap[
+            this.agentType === 'APPAGENT' ? 'PARTNERAGENT' : 'APPAGENT'
+        ] = allColumns.map(col => col.getActualWidth());
+        if (!!this.colWidthMap[this.agentType] && !!this.colWidthMap[this.agentType].length) {
+            this.agGrid.api.setColumnDefs(null);
+            this.columnDefs.forEach((col, index) => {
+                col.width = this.colWidthMap[this.agentType][index];
+            });
+            this.agGrid.api.setColumnDefs(this.columnDefs);
+        }
     }
 
     getAgentCount() {
         const self = this;
-        return self.commonService.get('partnerManager', '/agentRegistry/count', self.apiConfig).toPromise();
+        return self.commonService.get('partnerManager', '/agentRegistry/count', self.apiConfig);
     }
 
     getAgentList() {
@@ -203,9 +233,13 @@ export class AgentsComponent implements OnInit, OnDestroy {
         return self.commonService.get('partnerManager', '/agentRegistry', self.apiConfig);
     }
 
-    gridReady(event) {
-        const self = this;
-        self.sortModel = self.agGrid.api.getSortModel();
+    gridReady(event: GridReadyEvent) {
+        this.sortModel = this.agGrid.api.getSortModel();
+        const allWidth = event.columnApi.getAllColumns().map(col => col.getActualWidth());
+        this.colWidthMap = {
+            'APPAGENT': allWidth,
+            'PARTNERAGENT': allWidth
+        };
     }
 
     filterModified(event) {
@@ -291,10 +325,13 @@ export class AgentsComponent implements OnInit, OnDestroy {
                     return;
                 }
                 delete self.agentData.isEdit;
+                self.agGrid.api.showLoadingOverlay();
                 self.commonService.post('partnerManager', '/agentRegistry', self.agentData).subscribe(res => {
                     self.agentType = 'APPAGENT';
                     self.selectAgentList();
+                    self.agGrid.api.hideOverlay();
                 }, err => {
+                    self.agGrid.api.hideOverlay();
                     self.commonService.errorToast(err);
                 });
             }

@@ -60,7 +60,7 @@ export class FieldTypeSelectorComponent {
       return false;
     }
 
-   
+
     return true;
   }
 
@@ -101,7 +101,7 @@ export class FieldTypeSelectorComponent {
           errorMessage: self.form.get('properties.errorMessage').value,
           _isGrpParentArray: self.form.get('properties._isGrpParentArray').value
         },
-       
+
         type: type.value
       });
     for (const i in (self.form.get('properties') as FormGroup).controls) {
@@ -120,13 +120,10 @@ export class FieldTypeSelectorComponent {
     if (type.value === 'Object') {
       let temp;
       if (self.form.get('key').value === '_self') {
-        temp = self.schemaService.getDefinitionStructure({ _newField: true, properties: { _isParrentArray: true ,_isGrpParentArray: true } },true);
-        
-      } 
-      else if(self.form.get('properties._isGrpParentArray').value  ){
-        temp = self.schemaService.getDefinitionStructure({ _newField: true,properties: { _isGrpParentArray: true } });
-      }
-      else {
+        temp = self.schemaService.getDefinitionStructure({ _newField: true, properties: { _isParrentArray: true, _isGrpParentArray: true } }, true);
+      } else if (self.form.get('properties._isGrpParentArray').value) {
+        temp = self.schemaService.getDefinitionStructure({ _newField: true, properties: { _isGrpParentArray: true } });
+      } else {
         temp = self.schemaService.getDefinitionStructure({ _newField: true });
       }
       self.form.addControl('definition', self.fb.array([temp]));
@@ -174,7 +171,9 @@ export class FieldTypeSelectorComponent {
     }
     if (value === 'password') {
       self.form.get('properties.password').patchValue(true);
-      self.form.get('properties.unique').patchValue(false);
+      if (self.form.get('properties.unique')) {
+        self.form.get('properties.unique').patchValue(false);
+      }
     }
     if (value === 'long') {
       self.form.get('properties.longText').patchValue(true);

@@ -134,7 +134,8 @@ export class UserGroupBotsComponent implements OnInit, OnDestroy {
         '$or': [
           { 'basicDetails.name': '/' + searchTerm + '/' },
           { 'username': '/' + searchTerm + '/' }
-        ]
+        ],
+        bot: true
       },
       select: 'username,basicDetails.name,accessControl.apps,bot',
       count: 30,

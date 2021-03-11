@@ -24,7 +24,7 @@
         <span class="odp-edit mr-2"></span>
         <span class="text">Edit</span>
       </button>
-      
+
       <button *ngIf="edit.status && hasWritePermission" (click)="checkAndSave();edit.status=false" type="button"
         class="edit-button btn btn-min-width btn-primary mr-3" id="sbButtonSave">
         <span class="fa fa-save mr-2"></span>
@@ -150,8 +150,9 @@
         </ng-container>
         <ng-container *ngIf="activeTab == 4">
           <div class="d-flex flex-column w-100">
-            <odp-manage-permissions #permissionsComponent [name]="name" [(role)]="role" [definitions]="definitions"
-              [edit]="edit" [ngClass]="{'d-none':activeTab != 4}">
+            <odp-manage-permissions #permissionsComponent [name]="name" [(role)]="role"
+              [(firstInit)]="manageRolesFirstInit" [(blockInvalidRole)]="blockInvalidRole" [definitions]="definitions"
+              [edit]="edit" (oldRoleReset)="onOldRoleReset($event)" [ngClass]="{'d-none':activeTab != 4}">
             </odp-manage-permissions>
           </div>
         </ng-container>

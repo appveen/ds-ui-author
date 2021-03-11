@@ -40,10 +40,9 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
       let stopPath = false;
       segments.forEach(key => {
         if (definition) {
-          const tempKey = Object.keys(definition).find(e => e === key || e === key + '.value');
-          if (tempKey) {
-            const tempDef = self.appService.cloneObject(definition[tempKey]);
-            tempDef.key = tempKey;
+          let tempDef = definition.find(d => d.key === key || d.key === key + '.value');
+          if (!!tempDef) {
+            tempDef = self.appService.cloneObject(tempDef);
             self.fields.push(tempDef);
             if (tempDef.type === 'User'
               || tempDef.type === 'Geojson'
@@ -51,19 +50,19 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
               || tempDef.type === 'File') {
               stopPath = true;
             } else if (tempDef.type === 'Array') {
-              if (tempDef.definition._self.type !== 'Object') {
+              if (tempDef.definition.find(d => d.key === '_self')?.type !== 'Object') {
                 stopPath = true;
               }
             }
             if (tempDef.type === 'Array') {
-              if (tempDef.definition._self.type === 'Object') {
-                definition = tempDef.definition._self.definition || {};
+              if (tempDef.definition.find(d => d.key === '_self')?.type === 'Object') {
+                definition = tempDef.definition.find(d => d.key === '_self')?.definition || {};
               }
             } else {
               definition = tempDef.definition || {};
             }
           } else {
-           
+
           }
         }
       });
@@ -137,7 +136,7 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
     }
     self.showkeys = true;
     self.clientX = event.layerX;
-   
+
   }
 
   makePath() {
@@ -167,7 +166,7 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
     }
     const field = self.fields[self.fields.length - 1];
     if (field) {
-      if (field.type === 'Object' && (!field.definition || Object.keys(field.definition).length === 0)) {
+      if (field.type === 'Object' && (!field.definition || !field.definition.length)) {
         return true;
       } else {
         return false;
@@ -195,7 +194,7 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
         || field.type === 'User') {
         return false;
       } else if (field.type === 'Array') {
-        if (field.definition._self.type === 'Object') {
+        if (field.definition.find(d => d.key === '_self')?.type === 'Object') {
           return true;
         } else {
           return false;
@@ -224,21 +223,17 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
     if (self.level && self.level > 0) {
       let field = self.fields[self.level - 1].definition;
       if (field) {
-        if (field._self && field._self.definition) {
-          field = field._self.definition;
+        if (field.find(d => d.key === '_self')?.definition) {
+          field = field.find(d => d.key === '_self').definition;
         }
-        Object.keys(field).forEach(key => {
-          const obj = field[key];
-          obj.key = key;
+        field.forEach(obj => {
           temp.push(obj);
         });
       }
       return temp;
     } else {
       if (self.definition) {
-        Object.keys(self.definition).forEach(key => {
-          const obj = self.definition[key];
-          obj.key = key;
+        self.definition.forEach(obj => {
           temp.push(obj);
         });
       }

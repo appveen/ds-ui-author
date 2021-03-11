@@ -12,7 +12,6 @@ import { CommonService, GetOptions } from '../../services/common.service';
   styleUrls: ['./relation-property.component.scss']
 })
 export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewInit {
-
   @Input() form: FormGroup;
   @Input() edit: any;
   @Input() isLibrary: boolean;
@@ -20,7 +19,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
   @Input() type;
   @ViewChild('defaultEle', { static: false }) defaultEle: NgbTypeahead;
   properties: FormGroup;
-  attributeList: Array<any>;
+  definition: Array<any>;
   services: Array<any>;
   documents: Array<any>;
   openDeleteModal: EventEmitter<any>;
@@ -35,11 +34,11 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     index: number;
     type: string;
   };
-  constructor(private commonService: CommonService,
-    private fb: FormBuilder) {
+  attributeList: Array<any>;
+  constructor(private commonService: CommonService, private fb: FormBuilder) {
     const self = this;
     self.subscriptions = {};
-    self.attributeList = [];
+    self.definition = [];
     self.services = [];
     self.documents = [];
     self.edit = {
@@ -52,13 +51,14 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
       type: ''
     };
     self.openDeleteModal = new EventEmitter();
+    this.attributeList = [];
   }
 
   ngOnInit() {
     const self = this;
     self.properties = self.form.get('properties') as FormGroup;
     self.getServices();
-    self.getAttributeList();
+    self.getDefinition();
   }
 
   ngAfterViewInit(): void {
@@ -79,19 +79,21 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
   getServices() {
     const self = this;
     const options: GetOptions = {
-      select: 'name,version,app,api,attributeList',
+      select: 'name,version,app,api,definition',
       count: 30
     };
     if (self.subscriptions['getServices']) {
       self.subscriptions['getServices'].unsubscribe();
     }
-    self.subscriptions['getServices'] = self.commonService
-      .get('serviceManager', '/service', options)
-      .subscribe(data => {
+    self.subscriptions['getServices'] = self.commonService.get('serviceManager', '/service', options).subscribe(
+      data => {
         self.services = data;
-      }, err => {
+
+      },
+      err => {
         self.services = [];
-      });
+      }
+    );
   }
 
   searchService = (text$: Observable<any>) =>
@@ -102,17 +104,20 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
         const self = this;
         const options: GetOptions = {
           count: 10,
-          select: 'name,version,app,api,attributeList',
+          select: 'name,version,app,api,definition',
           filter: {
             name: '/' + val + '/',
             app: self.commonService.app._id
           }
         };
-        return self.commonService.get('serviceManager', '/service', options).toPromise().then(res => {
-          return res;
-        });
+        return self.commonService
+          .get('serviceManager', '/service', options)
+          .toPromise()
+          .then(res => {
+            return res;
+          });
       })
-    )
+    );
 
   serviceFormatter = (x: any) => x.name;
 
@@ -129,13 +134,14 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
         self.defaultEle.writeValue(null);
       }
     }
-    self.attributeList = value.attributeList;
+    self.definition = value.definition;
+    this.getAllAttributeNames(this.definition);
     self.getDocuments(value);
   }
 
   selectServiceDropdown() {
     const self = this;
-    const item = self.services.find((service => service._id === self.properties.get('relatedTo').value));
+    const item = self.services.find(service => service._id === self.properties.get('relatedTo').value);
     self.selectService(item);
   }
 
@@ -151,14 +157,15 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     if (self.subscriptions['getDocuments']) {
       self.subscriptions['getDocuments'].unsubscribe();
     }
-    self.subscriptions['getDocuments'] = self.commonService
-      .get('api', url, options)
-      .subscribe(_data => {
+    self.subscriptions['getDocuments'] = self.commonService.get('api', url, options).subscribe(
+      _data => {
         self.documents = _data;
         self.properties.get('default').enable();
-      }, err => {
+      },
+      err => {
         self.properties.get('default').disable();
-      });
+      }
+    );
   }
 
   searchDocumments = (text$: Observable<any>) =>
@@ -183,31 +190,31 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
           noApp: true,
           select: '_id,' + self.relatedSearchField
         };
-        return self.commonService.get('api', self.documentAPI, options).toPromise().then(res => {
-          return res;
-        });
+        return self.commonService
+          .get('api', self.documentAPI, options)
+          .toPromise()
+          .then(res => {
+            return res;
+          });
       })
-    )
+    );
 
   documentFormatter = (x: any) => {
     let retValue = x[this.relatedSearchField];
     if (retValue && typeof retValue === 'object') {
       if (retValue.checksum) {
-        retValue = retValue.value
-      }
-      else if (retValue.metadata) {
-        retValue = retValue.metadata.file
-      }
-      else if (retValue.userInput || retValue.formattedAddress) {
-        retValue = retValue.userInput ? retValue.userInput : retValue.formattedAddress
-
+        retValue = retValue.value;
+      } else if (retValue.metadata) {
+        retValue = retValue.metadata.file;
+      } else if (retValue.userInput || retValue.formattedAddress) {
+        retValue = retValue.userInput ? retValue.userInput : retValue.formattedAddress;
       }
     }
     if (!retValue) {
-      retValue = 'N.A'
+      retValue = 'N.A';
     }
-    return retValue
-  }
+    return retValue;
+  };
 
   selectDocument(value) {
     const self = this;
@@ -216,11 +223,16 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     }
   }
 
-  getViewLabel(key: string): string {
+  get getViewLabel(){
     const self = this;
-    if (self.attributeList && self.attributeList.length) {
-      const val = self.attributeList.filter(e => e.key === key);
-      return val[0].name;
+    let key = self.form.get('properties.relatedSearchField').value
+    if (self.definition && self.definition.length) {
+      const val = self.definition.filter(e => e.properties.dataPath === key);
+      if (val && val[0]) {
+        return val[0].name;
+      }else {
+        return null
+      }
     } else {
       return null;
     }
@@ -229,9 +241,10 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
   removeViewField(index: number) {
     const self = this;
     self.alertModal.title = 'Remove Field';
-    self.alertModal.message = 'Are you sure you want to remove <span class="font-weight-bold text-delete">'
-      + self.relatedViewFields[index].name
-      + '</span> field from view field list?';
+    self.alertModal.message =
+      'Are you sure you want to remove <span class="font-weight-bold text-delete">' +
+      self.relatedViewFields[index].name +
+      '</span> field from view field list?';
     self.alertModal.type = 'one';
     self.alertModal.index = index;
     self.openDeleteModal.emit(self.alertModal);
@@ -252,26 +265,32 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
         self.properties.removeControl('relatedViewFields');
         self.properties.addControl('relatedViewFields', self.fb.array([]));
       } else {
-        const temp = (self.properties.get('relatedViewFields') as FormArray);
+        const temp = self.properties.get('relatedViewFields') as FormArray;
         temp.removeAt(data.index);
       }
     }
   }
 
-  getAttributeList() {
+  getDefinition() {
     const self = this;
     const options: GetOptions = {
-      select: 'attributeList name',
+      select: 'definition name'
     };
     if (self.subscriptions['getRelationAttributes']) {
       self.subscriptions['getRelationAttributes'].unsubscribe();
     }
     self.subscriptions['getRelationAttributes'] = self.commonService
-      .get('serviceManager', '/service/' + self.properties.get('relatedTo').value, options).subscribe(res => {
-        self.attributeList = res.attributeList;
-      }, err => {
-        self.commonService.errorToast(err);
-      });
+      .get('serviceManager', '/service/' + self.properties.get('relatedTo').value, options)
+      .subscribe(
+        res => {
+          self.definition = res.definition;
+          this.getAllAttributeNames(this.definition);
+
+        },
+        err => {
+          self.commonService.errorToast(err);
+        }
+      );
   }
 
   addToList(control, _value?) {
@@ -279,7 +298,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     if (!_value) {
       _value = self.properties.get('_listInput').value;
     }
-    if ((!_value || !_value.toString().trim()) && (typeof _value !== 'number')) {
+    if ((!_value || !_value.toString().trim()) && typeof _value !== 'number') {
       return;
     }
     let list: FormArray = <FormArray>self.properties.get(control);
@@ -308,33 +327,37 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     }
     self.subscriptions['getRelationData'] = self.commonService
       .get('api', url + '/' + self.properties.get('default').value, options)
-      .subscribe(_data => {
-        // self.relationValue = _data;
-        if (self.defaultEle) {
-          self.defaultEle.writeValue(_data);
+      .subscribe(
+        _data => {
+          // self.relationValue = _data;
+          if (self.defaultEle) {
+            self.defaultEle.writeValue(_data);
+          }
+        },
+        err => {
+          if (err.statusText === 'Forbidden') {
+            self.properties.get('default').disable();
+          }
+          // self.commonService.errorToast(err, 'Unable to fetch reference data');
         }
-
-      }, err => {
-        if (err.statusText === 'Forbidden') {
-          self.properties.get('default').disable();
-        }
-        // self.commonService.errorToast(err, 'Unable to fetch reference data');
-      });
-
+      );
   }
   getAPI(relatedTo) {
     const self = this;
-    self.subscriptions['getRelation'] = self.commonService
-      .get('serviceManager', '/service/' + relatedTo)
-      .subscribe(res => {
-        self.relatedDSDef = JSON.parse(res.definition);
-        if (self.relatedDSDef[self.relatedSearchField].properties.password) {
+    self.subscriptions['getRelation'] = self.commonService.get('serviceManager', '/service/' + relatedTo).subscribe(
+      res => {
+        self.relatedDSDef = res.definition;
+        if (self.relatedDSDef[self.relatedSearchField] && self.relatedDSDef[self.relatedSearchField].properties && self.relatedDSDef[self.relatedSearchField].properties.password) {
           self.isSerachFieldSecureTxt = true;
         }
         // self.docApi = res.api;
         self.getDocuments(res);
         self.writeData(res.api);
-      }, err => { self.commonService.errorToast(err, 'Unable to fetch reference'); });
+      },
+      err => {
+        self.commonService.errorToast(err, 'Unable to fetch reference');
+      }
+    );
   }
   changeDefault(event) {
     const self = this;
@@ -354,6 +377,25 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
   clearDefaultValue() {
     const self = this;
     self.form.get('properties.default').patchValue(null);
+  }
+
+  getAllAttributeNames(definition, parentKey?) {
+    definition.forEach(element => {
+      if (element.type === 'Object' && element.properties &&  !element.properties.relatedTo) {
+        let key = element.key;
+        if (parentKey) {
+          key = parentKey + '.' + element.key
+        }
+        this.getAllAttributeNames(element.definition, key)
+      } else if (element.type !== 'Array') {
+        if (parentKey) {
+          element.properties.name = parentKey + '.' + element.properties.name;
+          element.properties.dataPath = element.properties.name;
+        }
+        this.attributeList.push(element);
+      }
+    });
+    console.log(this.attributeList);
   }
 
   get relatedToName() {

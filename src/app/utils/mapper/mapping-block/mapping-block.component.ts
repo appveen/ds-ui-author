@@ -13,59 +13,22 @@ export class MappingBlockComponent implements OnInit {
   @Input() edit: any;
   @Input() index: number;
   @Input() mappings: Mapping[];
+  @Input() sourceList: any[];
   mapping: Mapping;
   selectedMapping: Mapping;
   toggleFormulaBuilder: boolean;
+  toggleFieldSelector: any;
   constructor(private mapperService: MapperService) {
-    const self = this;
-    self.edit = {
+    this.edit = {
       status: false
     };
-    self.mappings = [];
-    self.mapping = Mapping.getInstance();
+    this.mappings = [];
+    this.mapping = Mapping.getInstance();
+    this.toggleFieldSelector = {};
   }
 
   ngOnInit() {
-    const self = this;
-    self.mapping = self.mappings[self.index];
-  }
-
-  dropEvent(event, droppedDef: Definition, mapping: Mapping) {
-    const self = this;
-    if (event.target.classList.contains('field-placeholder')) {
-      event.target.classList.remove('over');
-    }
-    if (self.mapperService.selectedEle) {
-      if (!droppedDef.valid) {
-        droppedDef.patch(self.mapperService.selectedEle);
-      } else {
-        const temp = Definition.getInstance();
-        temp.patch(self.mapperService.selectedEle);
-        mapping.source.pop();
-        mapping.source.push(temp);
-      }
-      self.mapperService.selectedEle = null;
-    }
-  }
-
-  dragEnterEvent(event, mapping: Mapping) {
-    if (event.target.classList.contains('field-placeholder') && !event.target.classList.contains('disabled')) {
-      if (!event.target.classList.contains('mapped')) {
-        event.target.classList.add('over');
-      } else {
-        mapping.source.push(Definition.getInstance());
-      }
-    }
-  }
-
-  dragLeaveEvent(event, mapping: Mapping) {
-    if (event.target.classList.contains('field-placeholder') && !event.target.classList.contains('disabled')) {
-      if (!event.target.classList.contains('mapped')) {
-        event.target.classList.remove('over');
-      } else {
-        mapping.source.pop();
-      }
-    }
+    this.mapping = this.mappings[this.index];
   }
 
   removeMapping(mapping: Mapping, index: number) {
@@ -99,15 +62,26 @@ export class MappingBlockComponent implements OnInit {
   }
 
   openFormulaBuilder(mapping: Mapping) {
-    const self = this;
-    self.toggleFormulaBuilder = true;
-    self.selectedMapping = mapping;
+    this.toggleFormulaBuilder = true;
+    this.selectedMapping = mapping;
+  }
+
+  onFieldSelect(def, mapping) {
+    const temp = Definition.getInstance();
+    temp.patch(def);
+    mapping.source.unshift(temp);
+    this.closeAllSelector();
+  }
+
+  closeAllSelector() {
+    Object.keys(this.toggleFieldSelector).map(key => {
+      this.toggleFieldSelector[key] = false;
+    });
   }
 
   get targetDef() {
-    const self = this;
-    if (self.mapping && self.mapping.target) {
-      return self.mapping.target;
+    if (this.mapping && this.mapping.target) {
+      return this.mapping.target;
     }
   }
 }

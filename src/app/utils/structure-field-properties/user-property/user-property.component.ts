@@ -252,4 +252,21 @@ export class UserPropertyComponent implements OnInit {
     }
     return false;
   }
+  set allowDeletion(val: boolean) {
+    const self = this;
+    if (val) {
+      self.properties.get('deleteAction').patchValue('setnull');
+    } else {
+      self.properties.get('deleteAction').patchValue('restrict');
+    }
+  }
+
+  get allowDeletion() {
+    const self = this;
+    const val = self.properties.get('deleteAction').value;
+    if (val === 'restrict') {
+      return false;
+    }
+    return true;
+  }
 }

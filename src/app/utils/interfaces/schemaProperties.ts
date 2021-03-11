@@ -28,7 +28,6 @@ export interface Properties {
     relatedSearchField?: string;
     relatedViewFields?: Array<any>;
     schema?: string;
-    attributeList?: Array<any>;
     geoType?: string;
     createOnly?: boolean;
     unique?: boolean;

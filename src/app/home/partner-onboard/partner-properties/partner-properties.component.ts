@@ -87,7 +87,7 @@ export class PartnerPropertiesComponent implements OnInit {
 
   convertHeader(key: string) {
     if (key) {
-      return 'ODP-P-' + key.split(' ')
+      return 'Data-Stack-P-' + key.split(' ')
         .filter(e => e)
         .map(e => e.charAt(0).toUpperCase() + e.substr(1, e.length))
         .join('-');
@@ -231,22 +231,22 @@ export class PartnerPropertiesComponent implements OnInit {
     return false;
   }
 
-  set enabledIpWhitelist(val) {
+  set enabledTrustedIP(val) {
     const self = this;
     if (!val) {
       self.removeInvalidIp();
     }
-    self.partner.get('agentIPWhitelisting.enabled').patchValue(val);
+    self.partner.get('agentTrustedIP.enabled').patchValue(val);
   }
 
-  get enabledIpWhitelist() {
+  get enabledTrustedIP() {
     const self = this;
-    return Boolean(self.partner.get('agentIPWhitelisting.enabled').value);
+    return Boolean(self.partner.get('agentTrustedIP.enabled').value);
   }
 
   get ipList(): FormArray {
     const self = this;
-    return self.partner.get('agentIPWhitelisting.list') as FormArray;
+    return self.partner.get('agentTrustedIP.list') as FormArray;
   }
 
   get keyValueList() {

@@ -240,9 +240,9 @@ export class IntegrationFlowService {
         _.assign(data, res);
         data.lineSeparator = res.lineSeparator;
         if (data.type === 'dataService') {
-          data.definition = JSON.parse(res.definition);
+          data.definition = typeof res.definition === 'string' ? JSON.parse(res.definition) : res.definition;
         } else {
-          data.definition = JSON.parse(res.definition).definition;
+          data.definition = typeof res.definition === 'string' ? JSON.parse(res.definition)[0].definition : res.definition[0].definition;
         }
         resolve(data);
       }).catch(err => {
@@ -272,9 +272,9 @@ export class IntegrationFlowService {
       self.subscriptions['getServiceDetails_' + data.id] = self.apiCache[data.meta.formatId].then(res => {
         data.meta.formatName = res.name;
         if (data.meta.formatType === 'dataService') {
-          data.sourceFormat.definition = JSON.parse(res.definition);
+          data.sourceFormat.definition = typeof res.definition === 'string' ? JSON.parse(res.definition) : res.definition;
           data.sourceFormat.attributeCount = res.attributeCount;
-          data.targetFormat.definition = JSON.parse(res.definition);
+          data.targetFormat.definition = typeof res.definition === 'string' ? JSON.parse(res.definition) : res.definition;
           data.targetFormat.attributeCount = res.attributeCount;
         } else {
           if (data.sourceFormat.id !== res.in.id) {
@@ -346,16 +346,17 @@ export class IntegrationFlowService {
           name: 'Headers',
           dataKey: '$headers'
         },
-        definition: {}
+        definition: []
       };
       headersList.filter(e => e.checked).forEach(item => {
-        definition.definition[self.appService.toCamelCase(item.header)] = {
+        definition.definition.push({
+          key: self.appService.toCamelCase(item.header),
           type: 'String',
           properties: {
             name: item.header,
             dataKey: item.header
           }
-        };
+        });
       });
       return definition;
     }
@@ -377,7 +378,7 @@ export class IntegrationFlowService {
     const headers = {};
     headerList.forEach(e => {
       if (!e.header) {
-        e.header = self.convertHeader('ODP-NS-', e.key);
+        e.header = self.convertHeader('Data-Stack-NS-', e.key);
       }
     });
     const selectedHeaders = headerList.filter(e => e.checked);
@@ -437,7 +438,7 @@ export class IntegrationFlowService {
     if (!flowData) {
       flowData = {};
     }
-   
+
     if (flowData && flowData.timer && flowData.timer.enabled && flowData.timer.startDate && flowData.timer.endDate) {
       const startDate = new Date(flowData.timer.startDate);
       const endDate = new Date(flowData.timer.endDate);
@@ -624,7 +625,7 @@ export class IntegrationFlowService {
     const self = this;
     const transformPhase = [];
     blocks.forEach((e, i, a) => {
-     
+
       delete e.active;
       e.sequenceNo = (i + 1);
       if (e.sourceFormat && e.sourceFormat.definition && typeof e.sourceFormat.definition === 'object') {
@@ -654,7 +655,7 @@ export class IntegrationFlowService {
           temp.targetFormat = JSON.parse(JSON.stringify(e.sourceFormat));
           temp.target = e.source;
           if (!temp.meta.xslt) {
-            temp.meta.xslt = '{}';
+            temp.meta.xslt = '[]';
           }
           if (typeof temp.meta.xslt === 'object') {
             temp.meta.xslt = JSON.stringify(temp.meta.xslt);
@@ -694,11 +695,14 @@ export class IntegrationFlowService {
       if (node.targetFormat.definition && typeof node.targetFormat.definition === 'string') {
         t.definition = JSON.parse(node.targetFormat.definition);
       }
-      if (t.definition && t.definition._id) {
-        t.definition._id.type = 'String';
-        delete t.definition._id.counter;
-        delete t.definition._id.suffix;
-        delete t.definition._id.padding;
+      if (t.definition && t.definition.length > 0) {
+        const idField = t.definition.find(e => e.key === '_id');
+        if (idField) {
+          idField.type = 'String';
+          delete idField.counter;
+          delete idField.suffix;
+          delete idField.padding;
+        }
       }
       if (t.definition && typeof t.definition === 'object') {
         t.definition = JSON.stringify(t.definition);
@@ -718,7 +722,7 @@ export class IntegrationFlowService {
         t.meta.fileDetails = node.meta.fileDetails;
       }
     } else {
-      t.definition = '{}';
+      t.definition = '[]';
       t.meta = {
         contentType: (node.targetFormat ? node.targetFormat.formatType : null) || 'JSON'
       };
@@ -745,8 +749,9 @@ export class IntegrationFlowService {
       name: 'ERROR',
       formatType: 'JSON',
       type: 'dataFormat',
-      definition: JSON.stringify({
-        appName: {
+      definition: JSON.stringify([
+        {
+          key: 'appName',
           type: 'String',
           properties: {
             name: 'App Name',
@@ -754,7 +759,8 @@ export class IntegrationFlowService {
             dataPath: 'appName'
           }
         },
-        partnerName: {
+        {
+          key: 'partnerName',
           type: 'String',
           properties: {
             name: 'Partner Name',
@@ -762,7 +768,8 @@ export class IntegrationFlowService {
             dataPath: 'partnerName'
           }
         },
-        partnerId: {
+        {
+          key: 'partnerId',
           type: 'String',
           properties: {
             name: 'Partner ID',
@@ -770,7 +777,8 @@ export class IntegrationFlowService {
             dataPath: 'partnerId'
           }
         },
-        flowName: {
+        {
+          key: 'flowName',
           type: 'String',
           properties: {
             name: 'Flow Name',
@@ -778,7 +786,8 @@ export class IntegrationFlowService {
             dataPath: 'flowName'
           }
         },
-        flowId: {
+        {
+          key: 'flowId',
           type: 'String',
           properties: {
             name: 'Flow ID',
@@ -786,7 +795,8 @@ export class IntegrationFlowService {
             dataPath: 'flowId'
           }
         },
-        message: {
+        {
+          key: 'message',
           type: 'String',
           properties: {
             name: 'Message',
@@ -794,7 +804,8 @@ export class IntegrationFlowService {
             dataPath: 'message'
           }
         },
-        stackTrace: {
+        {
+          key: 'stackTrace',
           type: 'String',
           properties: {
             name: 'Stack Trace',
@@ -802,7 +813,8 @@ export class IntegrationFlowService {
             dataPath: 'stackTrace'
           }
         },
-        statusCode: {
+        {
+          key: 'statusCode',
           type: 'String',
           properties: {
             name: 'Status Code',
@@ -810,7 +822,8 @@ export class IntegrationFlowService {
             dataPath: 'statusCode'
           }
         },
-        flowType: {
+        {
+          key: 'flowType',
           type: 'String',
           properties: {
             name: 'Flow Type',
@@ -818,7 +831,8 @@ export class IntegrationFlowService {
             dataPath: 'flowType'
           }
         },
-        nodeType: {
+        {
+          key: 'nodeType',
           type: 'String',
           properties: {
             name: 'Node Type',
@@ -826,7 +840,8 @@ export class IntegrationFlowService {
             dataPath: 'nodeType'
           }
         },
-        nodeId: {
+        {
+          key: 'nodeId',
           type: 'String',
           properties: {
             name: 'Node ID',
@@ -834,7 +849,7 @@ export class IntegrationFlowService {
             dataPath: 'nodeId'
           }
         }
-      })
+      ])
     };
     return temp;
   }

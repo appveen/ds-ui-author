@@ -5,17 +5,21 @@
       </div>
       <div class="value-width position-relative">
         <ng-container *ngIf="edit.status">
-          <input class="form-control" *ngIf="isNumber(form.get('properties'))" type="number" [ngClass]="{'is-invalid':form.get('properties.default').errors}"
-            (blur)="validateNumbDefaultValue(form.get('properties.default').value,form.get('properties'))" formControlName="default" id="_default"
-            placeholder="Default Value">
+          <input class="form-control" *ngIf="isNumber(form.get('properties'))" type="number"
+            [ngClass]="{'is-invalid':form.get('properties.default').errors}"
+            (blur)="validateNumbDefaultValue(form.get('properties.default').value,form.get('properties'))"
+            formControlName="default" id="_default" placeholder="Default Value">
           <!-- <p>{{test(form.get('properties.default').value)}}</p> -->
           <div class="value-width" *ngIf=" form.get('properties._detailedType').value === 'enum'">
-            <select class="form-control" formControlName="default" id="_currency" (change)="setEnumValue(form.get('properties'))">
-              <option id="_relationAttr" *ngFor="let attr of form.get('properties.enum').value" [value]="attr">{{attr}}</option>
+            <select class="form-control" formControlName="default" id="_currency"
+              (change)="setEnumValue(form.get('properties'))">
+              <option id="_relationAttr" *ngFor="let attr of form.get('properties.enum').value" [value]="attr">{{attr}}
+              </option>
             </select>
           </div>
           <input class="form-control" *ngIf=" form.get('properties._detailedType').value === 'currency'" type="number"
-            formControlName="default" id="_default" placeholder="Default Value" [ngClass]="{'is-invalid':form.get('properties.default').errors}"
+            formControlName="default" id="_default" placeholder="Default Value"
+            [ngClass]="{'is-invalid':form.get('properties.default').errors}"
             (blur)="validateNumbDefaultValue(form.get('properties.default').value,form.get('properties'))">
         </ng-container>
         <ng-container *ngIf="!edit.status">
@@ -25,18 +29,22 @@
     </div>
     <div class="d-flex">
       <div class="label-width"></div>
-      <span class="text-danger" *ngIf="form.get('properties.default').hasError('min')"><span class="fa fa-times mr-1"></span>
+      <span class="text-danger" *ngIf="form.get('properties.default').hasError('min')"><span
+          class="fa fa-times mr-1"></span>
         {{form.get('properties.name').value}} should have min {{form.get('properties.min').value}}
       </span>
-      <span class="text-danger" *ngIf="form.get('properties.default').hasError('max')"><span class="fa fa-times mr-1"></span>
+      <span class="text-danger" *ngIf="form.get('properties.default').hasError('max')"><span
+          class="fa fa-times mr-1"></span>
         {{form.get('properties.name').value}} should have max {{form.get('properties.max').value}}
       </span>
-      <span class="text-danger" *ngIf="form.get('properties.default').hasError('precision')"><span class="fa fa-times mr-1"></span>
+      <span class="text-danger" *ngIf="form.get('properties.default').hasError('precision')"><span
+          class="fa fa-times mr-1"></span>
         {{form.get('properties.name').value}} should have max {{form.get('properties.precision').value}} precision
       </span>
     </div>
   </div>
-  <div class="d-flex w-100 mb-4" *ngIf="form.get('properties.currency') && form.get('properties._detailedType').value === 'currency'">
+  <div class="d-flex w-100 mb-4"
+    *ngIf="form.get('properties.currency') && form.get('properties._detailedType').value === 'currency'">
     <div class="label-width text-secondary">Currency</div>
     <div class="value-width">
       <select *ngIf="edit.status" class="form-control" formControlName="currency" id="_currency">
@@ -46,44 +54,56 @@
       </select>
     </div>
   </div>
-  <div class="d-flex w-100 mb-4" *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
+  <div class="d-flex w-100 mb-4"
+    *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
     <div class="label-width text-secondary">Values</div>
     <div class="value-width position-relative">
       <ng-container *ngIf="edit.status">
-        <input class="form-control pr-4" (paste)="pasteOnList($event,'enum','number')" (keyup.enter)="listEnterKey($event,'enum')"
-          type="number" formControlName="_listInput" id="_numberLovInput">
-        <button type="button" class="list-add-button btn btn-link hover position-absolute" [disabled]="form.get('properties._listInput').value===''"
-          (click)="addToList('enum')">
+        <input class="form-control pr-4" (paste)="pasteOnList($event,'enum','number')"
+          (keyup.enter)="listEnterKey($event,'enum')" type="number" formControlName="_listInput" id="_numberLovInput">
+        <button type="button" class="list-add-button btn btn-link hover position-absolute p-0"
+          [disabled]="form.get('properties._listInput').value===''" (click)="addToList('enum')">
           <span class="fa fa-plus text-primary"></span>
         </button>
       </ng-container>
     </div>
   </div>
-  <div class="d-flex flex-column w-100 mb-4" *ngIf="form.get('properties.enum') &&
-                  form.get('properties._detailedType').value === 'enum'">
-    <div class="border-left" formArrayName="enum" *ngFor="let en of enumList; let i=index;">
-      <div class="d-flex w-100 justify-content-between ml-2">
-        <span class="text-secondary mb-2 w-25">{{i + 1}}</span>
-        <div class="d-flex justify-content-start value-width">
-          <!-- <span class="text-truncate" *ngIf="type === 'Text'" placement="top" ngbTooltip={{en.value}}>{{en.value}}</span> -->
-          <span class="text-truncate">{{en.value}}</span>
+  <div class="d-flex flex-column w-100 mb-4"
+    *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
+    <div class="border-left" formArrayName="enum" [sortablejs]="enumList"
+      [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
+      <ng-container *ngFor="let en of enumList; let i=index;">
+        <div class="enum-list-item mx-2 px-2 py-1" [class.disabled]="!edit || !edit.status">
+          <span class="icon" *ngIf="!!edit && !!edit.status">
+            <span class="fa fa-bars text-muted hover"></span>
+          </span>
+          <div class="enum-mid-section">
+            <span *ngIf="editStateListOfValues !== i" (click)="editStateListOfValues = i" class="text-truncate"
+              placement="top" [ngbTooltip]="en.value">{{en.value}}</span>
+            <input *ngIf="editStateListOfValues === i" type="number" [formControl]="en" class="field form-control"
+              [id]="en.value" (keyup.enter)="editStateListOfValues = null" odpAutoFocus>
+          </div>
+          <span *ngIf="edit.status" class="enum-icons-section text-primary">
+            <span class="fa fa-times" (click)="removeFromList('enum',i,form)" placement="top"
+              [ngbTooltip]="'Remove'"></span>
+          </span>
         </div>
-        <span *ngIf="edit.status" class="hover float-right text-primary d-flex justify-content-end w-25" (click)="removeFromList('enum',i,form)">
-          <span class="fa fa-times"></span>
-        </span>
-      </div>
+      </ng-container>
     </div>
     <button type="button" class="btn btn-primary my-1 w-100" *ngIf="enumList.length>2 && edit.status"
       (click)="clearList('enum')">Clear All
     </button>
   </div>
-  <div class="d-flex flex-column w-100 mb-4" *ngIf="form.get('properties.precision') && (form.get('properties._detailedType').value === '' || form.get('properties._detailedType').value === 'currency')">
+  <div class="d-flex flex-column w-100 mb-4"
+    *ngIf="form.get('properties.precision') && (form.get('properties._detailedType').value === '' || form.get('properties._detailedType').value === 'currency')">
     <div class="d-flex flex-row align-items-center mb-2">
       <div class="label-width text-secondary">Precision</div>
       <div class="value-width d-flex align-items-center">
         <div class="d-flex align-items-center p-2 rounded" [ngClass]="{'border slidecontainer':edit.status}">
-          <span class="font-weight-bold mr-2" [ngClass]="{'text-accent':edit.status}">{{form.get('properties.precision').value}}</span>
-          <input *ngIf="edit.status" class="slider" type="range" min="0" max="5" formControlName="precision" (change)="reCalibrateDefaultValue('precision',form.get('properties.precision').value,form.get('properties'));checkMinMax(form.get('properties'))">
+          <span class="font-weight-bold mr-2"
+            [ngClass]="{'text-accent':edit.status}">{{form.get('properties.precision').value}}</span>
+          <input *ngIf="edit.status" class="slider" type="range" min="0" max="5" formControlName="precision"
+            (change)="reCalibrateDefaultValue('precision',form.get('properties.precision').value,form.get('properties'));checkMinMax(form.get('properties'))">
         </div>
         <div class="example ml-2 text-secondary">
           (Eg.&nbsp;{{getPrecisionExample(form.get('properties.precision').value)}})
@@ -93,7 +113,7 @@
   </div>
   <div class="d-flex flex-column w-100 mb-4" *ngIf="(form.get('properties.min') || form.get('properties.max'))
                    && (form.get('properties._detailedType').value === '' ||form.get('properties._detailedType').value === 'natural' ||
-                   form.get('properties._detailedType').value === 'currency')">
+                   form.get('properties._detailedType').value === 'currency') && formatType!='FLATFILE' ">
     <div class="d-flex flex-row mb-2">
       <div class="label-width text-secondary">Limit</div>
       <div class="value-width text-accent">Min and max limit of the value number</div>
@@ -102,8 +122,10 @@
       <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-column position-relative">
         <div class="d-flex">
           <div class="sub-level-width text-secondary">Min.</div>
-          <input *ngIf="edit.status" class="value-width form-control short" placeholder="Min" [ngClass]="{'is-invalid': minMaxErr('min')}"
-            type="number" #minEle min="0" formControlName="min" id="_minNumber" (blur)="setValue('min'); reCalibrateDefaultValue('min',form.get('properties.min').value,form.get('properties'))">
+          <input *ngIf="edit.status" class="value-width form-control short" placeholder="Min"
+            [ngClass]="{'is-invalid': minMaxErr('min')}" type="number" #minEle min="0" formControlName="min"
+            id="_minNumber"
+            (blur)="setValue('min'); reCalibrateDefaultValue('min',form.get('properties.min').value,form.get('properties'))">
           <span *ngIf="!edit.status && form.get('properties.min')">
             {{form.get('properties.min').value}}</span>
           <span *ngIf="!edit.status && !form.get('properties.min')" class="text-muted">Not defined</span>
@@ -115,7 +137,8 @@
             Max value</span>
         </div>
       </div>
-      <div class="d-flex w-10 ml-2 pl-2 d-flex flex-column position-relative" *ngIf="(form.get('properties.min') || form.get('properties.max')) && (form.get('properties._detailedType').value=='' ||
+      <div class="d-flex w-10 ml-2 pl-2 d-flex flex-column position-relative"
+        *ngIf="(form.get('properties.min') || form.get('properties.max')) && (form.get('properties._detailedType').value=='' ||
                             form.get('properties._detailedType').value=='natural'||form.get('properties._detailedType').value=='currency')">
         <div class="d-flex">
           <div class="sub-level-width text-secondary">Max.</div>
@@ -145,7 +168,7 @@
       <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
         <odp-service-icon *ngIf="!isDataFormat && !isLibrary" [size]="18" color="DD5151" class="mt-1">
         </odp-service-icon>
-        
+
         <odp-data-format-icon *ngIf="isDataFormat" [size]="18" color="DD5151" class="mt-1">
         </odp-data-format-icon>
         <odp-library-icon *ngIf="isLibrary" [size]="18" color="DD5151" class="mt-1"></odp-library-icon>
@@ -157,7 +180,8 @@
       {{deleteModal.message}}
     </p>
     <div class="d-flex align-items-center justify-content-end">
-      <button type="button" class="btn btn-min-width btn-delete" (click)="deleteModalTemplateRef.close(true)" id="sbDeleteModalYes">
+      <button type="button" class="btn btn-min-width btn-delete" (click)="deleteModalTemplateRef.close(true)"
+        id="sbDeleteModalYes">
         Yes
       </button>
     </div>

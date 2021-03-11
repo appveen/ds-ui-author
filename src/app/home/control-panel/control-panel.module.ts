@@ -37,46 +37,31 @@ import { UserGroupBotsComponent } from './user-group/user-group-manage/user-grou
 import { BookmarksComponent } from './bookmarks/bookmarks.component';
 import { ManageBookmarksComponent } from './bookmarks/manage-bookmarks/manage-bookmarks.component';
 import { FilterFlowPipeModule } from 'src/app/utils/pipes/filter-flow.module';
-import {
-    UserGroupAppcenterServicesComponent
-} from './user-group/user-group-manage/user-group-appcenter/user-group-appcenter-services/user-group-appcenter-services.component';
-import {
-    UserGroupAppcenterBokmarkComponent
-} from './user-group/user-group-manage/user-group-appcenter/user-group-appcenter-bokmark/user-group-appcenter-bokmark.component';
-import {
-    UserGroupAppcenterFlowsComponent
-} from './user-group/user-group-manage/user-group-appcenter/user-group-appcenter-flows/user-group-appcenter-flows.component';
+import { UserGroupAppcenterServicesComponent } from './user-group/user-group-manage/user-group-appcenter/user-group-appcenter-services/user-group-appcenter-services.component';
+import { UserGroupAppcenterBokmarkComponent } from './user-group/user-group-manage/user-group-appcenter/user-group-appcenter-bokmark/user-group-appcenter-bokmark.component';
+import { UserGroupAppcenterFlowsComponent } from './user-group/user-group-manage/user-group-appcenter/user-group-appcenter-flows/user-group-appcenter-flows.component';
 import { WorkitemsComponent } from './workitems/workitems.component';
 import { GroupAuthorBotsComponent } from './user-group/user-group-manage/user-group-author/group-author-bots/group-author-bots.component';
-import {
-    GroupAuthorGroupsComponent
-} from './user-group/user-group-manage/user-group-author/group-author-groups/group-author-groups.component';
-import {
-    GroupAuthorUsersComponent
-} from './user-group/user-group-manage/user-group-author/group-author-users/group-author-users.component';
-import {
-    GroupAuthorDataServicesComponent
-} from './user-group/user-group-manage/user-group-author/group-author-data-services/group-author-data-services.component';
-import {
-    GroupAuthorDataFormatsComponent
-} from './user-group/user-group-manage/user-group-author/group-author-data-formats/group-author-data-formats.component';
-import {
-    GroupAuthorAgentsComponent
-} from './user-group/user-group-manage/user-group-author/group-author-agents/group-author-agents.component';
-import {
-    GroupAuthorLibraryComponent
-} from './user-group/user-group-manage/user-group-author/group-author-library/group-author-library.component';
-import {
-    GroupAuthorPartnersComponent
-} from './user-group/user-group-manage/user-group-author/group-author-partners/group-author-partners.component';
-import {
-    GroupAuthorNanoServicesComponent
-} from './user-group/user-group-manage/user-group-author/group-author-nano-services/group-author-nano-services.component';
-import {
-    GroupAuthorBookmarksComponent
-} from './user-group/user-group-manage/user-group-author/group-author-bookmarks/group-author-bookmarks.component';
+import { GroupAuthorGroupsComponent } from './user-group/user-group-manage/user-group-author/group-author-groups/group-author-groups.component';
+import { GroupAuthorUsersComponent } from './user-group/user-group-manage/user-group-author/group-author-users/group-author-users.component';
+import { GroupAuthorDataServicesComponent } from './user-group/user-group-manage/user-group-author/group-author-data-services/group-author-data-services.component';
+import { GroupAuthorDataFormatsComponent } from './user-group/user-group-manage/user-group-author/group-author-data-formats/group-author-data-formats.component';
+import { GroupAuthorAgentsComponent } from './user-group/user-group-manage/user-group-author/group-author-agents/group-author-agents.component';
+import { GroupAuthorLibraryComponent } from './user-group/user-group-manage/user-group-author/group-author-library/group-author-library.component';
+import { GroupAuthorPartnersComponent } from './user-group/user-group-manage/user-group-author/group-author-partners/group-author-partners.component';
+import { GroupAuthorNanoServicesComponent } from './user-group/user-group-manage/user-group-author/group-author-nano-services/group-author-nano-services.component';
+import { GroupAuthorBookmarksComponent } from './user-group/user-group-manage/user-group-author/group-author-bookmarks/group-author-bookmarks.component';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
+import { GroupAuthorInsightsComponent } from './user-group/user-group-manage/user-group-author/group-author-insights/group-author-insights.component';
+import { AgGridModule } from 'ag-grid-angular';
+import { GridCheckboxModule } from 'src/app/utils/grid-checkbox/grid-checkbox.module';
+import { UserListCellRendererModule } from 'src/app/utils/user-list-cell-renderer/user-list-cell-renderer.module';
+import { AgGridSharedFloatingFilterModule } from 'src/app/utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.module';
+import { AgGridActionsRendererModule } from 'src/app/utils/ag-grid-actions-renderer/ag-grid-actions-renderer.module';
+import { AttributesCellRendererComponent } from './attributes-cell-renderer/attributes-cell-renderer.component';
+import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
+import { AgGridFilterModule } from 'src/app/utils/ag-grid-filter/ag-grid-filter.module';
 
 @NgModule({
     imports: [
@@ -107,7 +92,14 @@ import { SwitchModule } from 'src/app/utils/switch/switch.module';
         FocusNextModule,
         FilterFlowPipeModule,
         FieldTypeModule,
-        SwitchModule
+        SwitchModule,
+        AgGridModule,
+        GridCheckboxModule,
+        UserListCellRendererModule,
+        AgGridSharedFloatingFilterModule,
+        AgGridActionsRendererModule,
+        DateFormatModule,
+        AgGridFilterModule
     ],
     declarations: [
         ControlPanelComponent,
@@ -137,7 +129,9 @@ import { SwitchModule } from 'src/app/utils/switch/switch.module';
         GroupAuthorLibraryComponent,
         GroupAuthorPartnersComponent,
         GroupAuthorNanoServicesComponent,
-        GroupAuthorBookmarksComponent
+        GroupAuthorBookmarksComponent,
+        GroupAuthorInsightsComponent,
+        AttributesCellRendererComponent
     ]
 })
-export class ControlPanelModule { }
+export class ControlPanelModule {}

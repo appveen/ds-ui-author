@@ -20,7 +20,6 @@ export interface UserDetails {
 }
 
 export interface Auth {
-    isLdap?: boolean;
     dn?: string;
     authType?:string;
 }

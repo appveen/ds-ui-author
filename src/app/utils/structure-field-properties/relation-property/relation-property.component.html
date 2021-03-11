@@ -23,9 +23,9 @@
     <div class="value-width">
       <select *ngIf="edit.status" class="form-control" formControlName="relatedSearchField" id="searchOnField"
         (change)="onSelectSearchField()">
-        <option *ngFor="let attr of attributeList" [value]="attr.key" onchange="">{{attr.name}}</option>
+        <option *ngFor="let attr of attributeList" [value]="attr?.properties?.dataPath" onchange="">{{attr?.properties?.name}}</option>
       </select>
-      <span *ngIf="!edit.status && relatedSearchField">{{getViewLabel(relatedSearchField)}}</span>
+      <span *ngIf="!edit.status && relatedSearchField">{{getViewLabel}}</span>
       <span *ngIf="!edit.status && !relatedSearchField" class="text-muted">Not Defined</span>
     </div>
   </div>
@@ -35,14 +35,14 @@
       <select *ngIf="edit.status" class="form-control" #selectedField formControlName="_listInput"
         (change)="addToList('relatedViewFields',attributeList[selectedField.selectedIndex-1])">
         <option [value]="null">---select---</option>
-        <option *ngFor="let attr of attributeList" [value]="attr.key">{{attr.name}}</option>
+        <option *ngFor="let attr of attributeList" [value]="attr?.properties?.dataKeyPath">{{attr?.properties?.name}}</option>
       </select>
     </div>
   </div>
   <div class="d-flex flex-column w-100 mb-4" *ngIf="relatedViewFields.length">
     <div class="list-group-item d-flex align-items-center justify-content-between"
       *ngFor="let field of relatedViewFields; let i=index;">
-      <span>{{field.name}}</span>
+      <span>{{field?.properties?.name}}</span>
       <span *ngIf="edit.status" class="hover text-primary" (click)="removeViewField(i)">
         <span class="fa fa-times"></span>
       </span>

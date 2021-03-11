@@ -1,7 +1,6 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-
 .mapper-field-block {
   &.error {
     border: 1px solid $danger !important;
@@ -11,22 +10,22 @@
     .field {
       height: 46px;
       .field-clear {
-        min-width: 48px;
-        max-width: 48px;
+        min-width: 64px;
+        max-width: 64px;
+        &:hover {
+          color: $danger !important;
+        }
       }
       .field-placeholder {
-        min-width: 348px;
-        max-width: 348px;
+        min-width: 364px;
+        max-width: 364px;
         .drop-here-label {
           display: none;
         }
-        &.over {
-          background: $accent;
-          .add-attribute-label {
-            display: none;
-          }
-          .drop-here-label {
-            display: block;
+        .add-attribute-label {
+          &:hover {
+            color: $accent;
+            cursor: pointer;
           }
         }
         &.mapped {
@@ -45,7 +44,7 @@
   }
   .destination-field-wrapper {
     .destination-field {
-      height: 46px;
+      // height: 46px;
       min-width: 360px;
       max-width: 360px;
     }
@@ -60,12 +59,16 @@
   border-width: 2px !important;
   min-width: 15px;
 }
+.horizonal-line {
+  margin-top: 24px;
+}
 .function {
   .function-circle {
     width: 30px;
     height: 30px;
     margin-left: -30px;
     border-radius: 15px;
+    z-index: 2;
   }
   .function-line,
   .line {
@@ -83,7 +86,7 @@
 }
 .line-to-bottom,
 .line-to-top {
-  height: 24px;
+  height: 46px;
   border-right: 2px solid $dark;
   margin-right: 15px;
 }
@@ -91,6 +94,7 @@
   min-width: 20px;
   width: 20px;
   height: 20px;
+  margin-top: 13px;
 }
 .symbol {
   width: 6vmax;
@@ -107,4 +111,11 @@
   max-width: 26px;
   min-height: 20px;
   max-height: 20px;
+}
+
+.target-field {
+  margin-top: 14px;
+}
+.v-line-height {
+  height: 24px;
 }

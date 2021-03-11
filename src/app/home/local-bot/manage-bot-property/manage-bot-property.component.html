@@ -5,50 +5,12 @@
     </div>
 </div>
 
-<table>
-    <tbody>
-        <ng-container *ngFor="let attr of userAttributeList; let i=index">
-            <tr class="key-row border-bottom" [ngClass]="{'bg-light':attr.hovered}" (mouseover)="attr.hovered=true"
-                (mouseout)="attr.hovered=false">
+<div class="grid-container">
+    <ag-grid-angular #agGrid class="ag-theme-balham" [gridOptions]="gridOptions" [rowData]="userAttributeList | agGridFilter:filterModel"
+        [frameworkComponents]="frameworkComponents" (filterModified)="!filtering && onFilterChanged($event)">
+    </ag-grid-angular>
+</div>
 
-                <td>
-                    <div class="text-secondary mr-2 key-ellipsis" [ngbTooltip]="attr?.label">
-                        {{attr?.label}}</div>
-                </td>
-                <td>
-                    <div class="d-flex">
-                        <div class="mr-2">
-                            <odp-field-type [field]="{type:attr.type,properties:{}}">
-                            </odp-field-type>
-                        </div>
-                        <div class="mr-2 value-ellipsis" [ngbTooltip]="attr?.value">{{attr?.value}}
-                        </div>
-                    </div>
-                </td>
-                <td class="options-cell position-relative" *ngIf="hasPermission('PMBBU')">
-                    <div class="d-flex align-items-center justify-content-end w-100">
-                        <span class="fa fa-ellipsis-h text-secondary hover mr-3"></span>
-                    </div>
-                    <div [ngClass]="{'show':attr.hovered}" *ngIf="hasPermission('PMBBU')"
-                        class="options bg-white position-absolute d-flex align-items-center justify-content-end text-accent">
-
-                        <button type="button" class="btn btn-link" (click)="openEditAttributeModal(attr)">
-                            Edit
-                        </button>
-
-                    </div>
-                </td>
-                <td>
-                    <!-- <span class="fa fa-pen text-muted mt-1 delete-prop mr-2"
-                    (click)="openEditAttributeModal(attr);$event.stopPropagation()"></span> -->
-
-                    <button class="add-new btn-min-width btn btn-link"
-                        (click)="deleteAdditionInfo(attr?.key)" *ngIf="hasPermission('PMBBU')">Delete</button>
-                </td>
-            </tr>
-        </ng-container>
-    </tbody>
-</table>
 <ng-template #editAttributeModal>
     <div class="modal-body p-4 ignore-outside">
         <div class="d-flex justify-content-between">
@@ -56,47 +18,60 @@
                 <strong class="">Edit Attribute</strong>
             </div>
         </div>
-        <div class="form-group">
-            <label for="key">Label</label>
-            <input id="key" type="text" class="form-control" [(ngModel)]="editAttribute.label">
-        </div>
-        <div class="form-group">
-            <label for="key">Key</label>
-            <input id="key" type="text" class="form-control" [(ngModel)]="editAttribute.key" [disabled]="true">
-            <small class="form-text"></small>
-        </div>
-        <div class="form-group input-wrapper position-relative">
-            <label for="key">Type</label>
-            <div class="form-control hover ignore-click"
-                (click)="toggleFieldTypeSelector['edit']=!toggleFieldTypeSelector['edit']">
-                <odp-field-type [label]="true" [field]="{type:editAttribute.type,properties:{}}">
-                </odp-field-type>
+        <ng-container [formGroup]="editAttributeForm">
+            <div class="form-group position-relative">
+                <label for="key">Label<sup class="text-danger">*</sup></label>
+                <input id="key" type="text" class="form-control" formControlName="label">
+                <ng-container *ngIf="!editAttributeForm.get('label').pristine">
+                    <span *ngIf="editAttributeForm.get('label').hasError('required')"
+                        class="text-danger position-absolute fa fa-exclamation-circle error-icon-attr" container="body"
+                        ngbTooltip="This is a required field"></span>
+                    <span *ngIf="editAttributeForm.get('label').hasError('maxlength')"
+                        class="text-danger position-absolute fa fa-exclamation-circle error-icon-attr" container="body"
+                        ngbTooltip="Name should be within 30 characters"></span>
+                </ng-container>
             </div>
-            <div *ngIf="toggleFieldTypeSelector['edit']"
-                class="type-dropdown border p-2 rounded d-flex flex-wrap justify-content-center position-absolute bg-white">
-                <button type="button"
-                    class="btn btn-link type-width d-flex justify-content-center align-items-center text-accent ignore-click"
-                    *ngFor="let type of types; let typeIndex = index;"
-                    (click)="editAttribute.type=type;$event.stopPropagation();">
-                    <span class="{{type.class}}" placement="left"></span>
-                </button>
+            <div class="form-group">
+                <label for="key">Key</label>
+                <input id="key" type="text" class="form-control" formControlName="key">
+                <small class="form-text"></small>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="value">Value</label>
-            <input *ngIf="editAttribute.type === 'String'" id="value" type="text" class="form-control"
-                [(ngModel)]="editAttribute.value">
-            <input *ngIf="editAttribute.type === 'Number'" id="value" type="number" class="form-control"
-                [(ngModel)]="editAttribute.value">
-            <input *ngIf="editAttribute.type === 'Date'" id="value" type="date" class="form-control"
-                [(ngModel)]="editAttribute.value">
-            <odp-switch *ngIf="editAttribute.type === 'Boolean'" [edit]="{status:true}"
-                [(checked)]="editAttribute.value"></odp-switch>
-        </div>
+            <div class="form-group input-wrapper position-relative">
+                <label for="type">Type</label>
+                <div id="type" ngbDropdown #listDropdown="ngbDropdown" class="w-100" container="body">
+                    <button class="btn bg-white border rounded w-100 d-flex justify-content-between align-items-center" ngbDropdownToggle>
+                        <odp-field-type [label]="true" [field]="{type:editAttributeForm.get('type').value,properties:{}}">
+                        </odp-field-type>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <div class="dropdown-itm px-2 py-1" *ngFor="let type of types" (click)="editAttributeForm.get('type').setValue(type.value);editAttributeForm.get('value').setValue(null);listDropdown.close();">
+                            <odp-field-type [label]="true" [field]="{type:type.value,properties:{}}">
+                            </odp-field-type>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group position-relative">
+                <label for="value">Value</label>
+                <input *ngIf="editAttributeForm.get('type').value === 'String'" id="value" type="text" class="form-control"
+                    formControlName="value">
+                <input *ngIf="editAttributeForm.get('type').value === 'Number'" id="value" type="number" class="form-control"
+                    formControlName="value">
+                <input *ngIf="editAttributeForm.get('type').value === 'Date'" id="value" type="date" class="form-control"
+                    formControlName="value">
+                <odp-switch *ngIf="editAttributeForm.get('type').value === 'Boolean'" [edit]="{status:true}"
+                    [checked]="editAttributeForm.get('value').value" (checkedChange)="editAttributeForm.get('value').setValue($event)">
+                </odp-switch>
+                <span class="fas fa-question-circle text-danger error-icon-attr position-absolute"
+                    *ngIf="editAttributeForm.get('type').value !== 'Boolean' && getValError(editAttributeForm)"
+                    ngbTooltip="This is a required field" container="body" placement="top">
+                </span>
+            </div>
+        </ng-container>
         <div class="d-flex align-items-center justify-content-end mt-4">
             <button type="button" class="btn btn-min-width btn-dark ignore-click mr-3"
                 (click)="editAttributeModalRef.close(false)">Cancel</button>
-            <button type="button" class="btn btn-min-width btn-success ignore-click"
+            <button type="button" class="btn btn-min-width btn-success ignore-click" [disabled]="editAttributeForm.invalid"
                 (click)="editAttributeModalRef.close(true)">Save</button>
         </div>
     </div>

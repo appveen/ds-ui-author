@@ -6,7 +6,7 @@ export class GlobalSchemaStructurePipe implements PipeTransform {
 
     private properties(properties) {
         const temp = {};
-        Object.keys(properties).forEach(i => {
+        Object.keys(properties || {}).forEach(i => {
             if (typeof properties[i] === 'number' || properties[i]) {
                 if (i === 'hasTokens' && (properties['longText'] || properties['richText'])) {
                     if (properties[i] && properties[i].length > 0) {
@@ -44,7 +44,6 @@ export class GlobalSchemaStructurePipe implements PipeTransform {
                     || i === 'relatedViewFields'
                     || i === 'schema'
                     || i === 'geoType'
-                    || i === 'attributeList'
                     || i === 'fieldLength'
                     || i === '_description'
                     || i === '_typeChanged'
@@ -62,19 +61,20 @@ export class GlobalSchemaStructurePipe implements PipeTransform {
         return temp;
     }
 
-    private buildDefinition(definiiton) {
-        const tempDef = {};
-        for (const i of definiiton) {
-            if (i.key !== undefined) {
-                tempDef[i.key] = {};
-                tempDef[i.key]['type'] = i.type;
-                tempDef[i.key]['properties'] = this.properties(i.properties);
-                if (i.definition && i.definition.length > 0) {
-                    tempDef[i.key]['definition'] = this.buildDefinition(i.definition);
-                }
-            }
+    private buildDefinition(definition) {
+        if (!definition) {
+            return [];
         }
-        return tempDef;
+        return definition.filter(def => !!def.key).map(def => {
+            delete def._newField;
+            delete def._placeholder;
+            const tempDef = JSON.parse(JSON.stringify(def)) || {};
+            tempDef.properties = this.properties(tempDef.properties);
+            if (!!tempDef.definition && !!tempDef.definition.length) {
+                tempDef.definition = this.buildDefinition(tempDef.definition);
+            }
+            return tempDef;
+        });
     }
 
 
@@ -84,9 +84,10 @@ export class GlobalSchemaStructurePipe implements PipeTransform {
         temp['description'] = value.description;
         temp['character'] = value.character;
         temp['type'] = value.dataFormatType;
-        temp['definition'] = {};
-        temp['definition']['definition'] = this.buildDefinition(value.definition);
-        temp['definition']['type'] = value.type;
+        const def = {};
+        def['definition'] = this.buildDefinition(value.definition);
+        def['type'] = value.type;
+        temp['definition'] = [def];
         temp['description'] = value.description;
         return temp;
     }

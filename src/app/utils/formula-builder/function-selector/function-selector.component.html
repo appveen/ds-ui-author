@@ -1,0 +1,19 @@
+<ul class="d-flex first">
+    <li class="field" *ngFor="let funcGrp of functionList">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <span class="text mr-2">{{funcGrp.category}}</span>
+            </div>
+            <span class="fa fa-chevron-right"></span>
+        </div>
+        <ul class="d-flex">
+            <li class="field" *ngFor="let func of funcGrp.items" (click)="selectFunction(func)">
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <div class="d-flex align-items-center">
+                        <span class="text mr-2">{{func.label}}</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </li>
+</ul>

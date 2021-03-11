@@ -15,7 +15,6 @@ export class Definition {
     formatType: string;
     hasRoot: boolean;
     rootKey: string;
-    xpath: string;
     static getInstance() {
         return new Definition();
     }
@@ -39,7 +38,6 @@ export class Definition {
             this.lastChild = values.lastChild;
             this.hasRoot = values.hasRoot;
             this.rootKey = values.rootKey;
-            this.xpath = values.xpath;
             this.parent = values.parent;
             if (values.properties) {
                 this.properties = JSON.parse(JSON.stringify(values.properties));
@@ -106,7 +104,17 @@ export class Mapping {
      * @returns boolean
      */
     get hasFunction() {
-        return this.source.length > 1 || (Object.keys(this.formula).length !== 0);
+        return this.source.filter(e => e.key).length > 1 || (Object.keys(this.formula).length !== 0);
+    }
+    get valid() {
+        if (this.source.filter(e => e.key).length > 1) {
+            if (Object.keys(this.formula).length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
     static getInstance() {
         return new Mapping();

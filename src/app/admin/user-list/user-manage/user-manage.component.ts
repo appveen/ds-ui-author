@@ -50,103 +50,95 @@ export class UserManageComponent implements OnInit, OnDestroy {
     resetPasswordForm: FormGroup;
     resetPasswordModelRef: NgbModalRef;
     showSpinner: boolean;
-    showPassword: boolean;
+    showPassword: any;
     constructor(private commonService: CommonService,
         private fb: FormBuilder,
         private ts: ToastrService) {
-        const self = this;
-        self.backToList = new EventEmitter<boolean>();
-        self.deleteUsr = new EventEmitter<boolean>();
-        self.activeTab = 1;
-        self.showSerchbox = false;
-        self.resetPasswordForm = self.fb.group({
-            password: [null, [Validators.required]],
+        this.backToList = new EventEmitter();
+        this.deleteUsr = new EventEmitter();
+        this.activeTab = 1;
+        this.showSerchbox = false;
+        this.resetPasswordForm = this.fb.group({
+            password: [null, [Validators.required, Validators.minLength(8)]],
             cpassword: [null, [Validators.required]],
         });
+        this.showPassword = {};
+        this.user = {};
     }
 
     ngOnInit() {
-        const self = this;
+
     }
 
     ngOnDestroy() {
-        const self = this;
-        if (self.resetPasswordModelRef) {
-            self.resetPasswordModelRef.close();
+        if (this.resetPasswordModelRef) {
+            this.resetPasswordModelRef.close();
         }
     }
 
     backToUserList() {
-        const self = this;
-        self.backToList.emit(true);
+        this.backToList.emit(true);
     }
 
     get invalidPassword() {
-        const self = this;
-        return self.resetPasswordForm.get('password').dirty
-            && self.resetPasswordForm.get('password').hasError('required');
+        return this.resetPasswordForm.get('password').dirty
+            && this.resetPasswordForm.get('password').hasError('required');
     }
 
     get invalidCPassword() {
-        const self = this;
-        return (self.resetPasswordForm.get('cpassword').dirty
-            && self.resetPasswordForm.get('cpassword').hasError('required') ||
-            (self.resetPasswordForm.get('cpassword').dirty && self.invalidMatch));
+        return (this.resetPasswordForm.get('cpassword').dirty
+            && this.resetPasswordForm.get('cpassword').hasError('required') ||
+            (this.resetPasswordForm.get('cpassword').dirty && this.invalidMatch));
     }
 
     get invalidMatch() {
-        const self = this;
-        return (self.resetPasswordForm.get('cpassword').dirty
-            && self.resetPasswordForm.get('cpassword').dirty
-            && self.resetPasswordForm.get('password').value !== self.resetPasswordForm.get('cpassword').value);
+        return (this.resetPasswordForm.get('cpassword').dirty
+            && this.resetPasswordForm.get('cpassword').dirty
+            && this.resetPasswordForm.get('password').value !== this.resetPasswordForm.get('cpassword').value);
     }
 
-    deleteUser(userId) {
-        const self = this;
-        self.deleteUsr.emit(userId);
+    deleteUser() {
+        this.deleteUsr.emit(this.user);
     }
 
-    isThisUser(user) {
-        return this.commonService.isThisUser(user);
+    isThisUser() {
+        return this.commonService.isThisUser(this.user);
     }
 
     openResetPassword() {
-        const self = this;
-        self.resetPasswordModelRef = self.commonService.modal(self.resetPasswordModel);
-        self.resetPasswordModelRef.result.then(close => {
-            self.resetPasswordForm.reset();
+        this.resetPasswordModelRef = this.commonService.modal(this.resetPasswordModel);
+        this.resetPasswordModelRef.result.then(close => {
+            this.resetPasswordForm.reset();
         }, dismiss => {
-            self.resetPasswordForm.reset();
+            this.resetPasswordForm.reset();
         });
     }
 
     resetPassword() {
-        const self = this;
-        self.resetPasswordForm.get('password').markAsDirty();
-        self.resetPasswordForm.get('cpassword').markAsDirty();
-        if (self.resetPasswordForm.invalid) {
+        this.resetPasswordForm.get('password').markAsDirty();
+        this.resetPasswordForm.get('cpassword').markAsDirty();
+        if (this.resetPasswordForm.invalid) {
             return;
         } else {
-            self.showSpinner = true;
-            self.commonService.put('user', '/usr/' + self.user._id + '/reset', self.resetPasswordForm.value)
+            this.showSpinner = true;
+            this.commonService.put('user', '/usr/' + this.user._id + '/reset', this.resetPasswordForm.value)
                 .subscribe(() => {
-                    self.showSpinner = false;
-                    self.resetPasswordModelRef.close();
-                    self.ts.success('Password changed successfully');
-                    if (self.user._id === self.commonService.userDetails._id) {
-                        self.commonService.logout();
+                    this.showSpinner = false;
+                    this.resetPasswordModelRef.close();
+                    this.ts.success('Password changed successfully');
+                    if (this.user._id === this.commonService.userDetails._id) {
+                        this.commonService.logout();
                     }
                 }, err => {
-                    self.showSpinner = false;
-                    self.commonService.errorToast(err, 'Unable to process request');
+                    this.showSpinner = false;
+                    this.commonService.errorToast(err, 'Unable to process request');
                 });
         }
     }
 
     get authType() {
-        const self = this;
-        if (self.commonService.userDetails.auth && self.commonService.userDetails.auth.authType) {
-            return self.commonService.userDetails.auth.authType;
+        if (this.commonService.userDetails.auth && this.commonService.userDetails.auth.authType) {
+            return this.commonService.userDetails.auth.authType;
         } else {
             return null;
         }

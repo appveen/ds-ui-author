@@ -8,7 +8,6 @@ import * as deepmerge from 'deepmerge';
   providedIn: 'root'
 })
 export class MapperService {
-
   selectedEle: Definition;
   constructor() { }
 
@@ -40,15 +39,15 @@ export class MapperService {
     if (typeof source === 'string') {
       source = JSON.parse(source);
     }
-    const keys = Object.keys(source);
-    if ((keys.length === 1
-      && keys.find(e => source[e].type === 'Object')
-      && keys.indexOf('$headers') === -1)
-      || (keys.length === 2
-        && keys.indexOf('$headers') > -1
-        && keys.find(e => source[e].type === 'Object'))) {
+    // const keys = Object.keys(source);
+    if ((source.length === 1
+      && source.find(e => e.type === 'Object')
+      && source.indexOf('$headers') === -1)
+      || (source.length === 2
+        && source.indexOf('$headers') > -1
+        && source.find(e => e.type === 'Object'))) {
       if (formatType === 'XML' || formatType === 'JSON') {
-        rootKey = keys.filter(e => e.indexOf('$headers') === -1)[0];
+        rootKey = source.filter(e => e.key.indexOf('$headers') === -1)[0];
         hasRoot = true;
       } else {
         hasRoot = false;
@@ -69,8 +68,9 @@ export class MapperService {
       if (!definition) {
         return;
       }
-      const len = Object.keys(definition).length;
-      Object.keys(definition).forEach((key, i) => {
+      const len = definition.length;
+      definition.forEach((def, i) => {
+        const key = def.key;
         if (!parentDef) {
           parentDef = Definition.getInstance();
         }
@@ -79,15 +79,15 @@ export class MapperService {
         tempDef.hasRoot = hasRoot;
         tempDef.rootKey = rootKey;
         tempDef.formatType = formatType;
-        if (!definition[key].properties.dataKey) {
-          definition[key].properties.dataKey = key;
+        if (!def.properties.dataKey) {
+          def.properties.dataKey = key;
         }
         tempDef.id = self.getUUID();
         tempDef.key = key;
         tempDef.path = parentDef.path ? parentDef.path + '.' + key : key;
         tempDef.fullPath = parentDef.fullPath ? parentDef.fullPath + '.definition.' + key : key;
         tempDef.dataPath = parentDef.dataPath ?
-          (parentDef.dataPath + '.definition.' + definition[key].properties.dataKey) : definition[key].properties.dataKey;
+          (parentDef.dataPath + '.definition.' + def.properties.dataKey) : def.properties.dataKey;
         tempDef.depth = parentDef.path ? parentDef.path.split('.') : [];
         const tempIndex = tempDef.depth.indexOf('_self');
         tempDef.depth = tempDef.depth.map(e => true);
@@ -105,16 +105,16 @@ export class MapperService {
           tempDef.type = 'String';
           tempDef.properties = { name: 'ID' };
           tempDef.definition = [];
-          tempDef.xpath = self.getXPath(tempDef);
+          tempDef.dataPath = self.getDataPath(tempDef);
         } else {
-          tempDef.name = definition[key].properties.name;
-          tempDef.type = definition[key].type;
-          tempDef.xpath = self.getXPath(tempDef);
-          tempDef.properties = self.cloneObject(definition[key].properties);
+          tempDef.name = def.properties.name;
+          tempDef.type = def.type;
+          tempDef.dataPath = self.getDataPath(tempDef);
+          tempDef.properties = self.cloneObject(def.properties);
           if (returnNested) {
-            tempDef.definition = parse(definition[key].definition, tempDef);
+            tempDef.definition = parse(def.definition, tempDef);
           } else {
-            parse(definition[key].definition, tempDef);
+            parse(def.definition, tempDef);
           }
         }
       });
@@ -134,23 +134,24 @@ export class MapperService {
       if (!definition) {
         return;
       }
-      const len = Object.keys(definition).length;
-      Object.keys(definition).forEach((key, i) => {
+      const len = definition.length;
+      definition.forEach((def, i) => {
+        const key = def.key;
         if (!parentDef) {
           parentDef = Definition.getInstance();
         }
         const tempMap: Mapping = Mapping.getInstance();
         const tempDef: Definition = Definition.getInstance();
         tempDef.lastChild = len === (i + 1);
-        if (!definition[key].properties.dataKey) {
-          definition[key].properties.dataKey = key;
+        if (!def.properties.dataKey) {
+          def.properties.dataKey = key;
         }
         tempDef.id = self.getUUID();
         tempDef.key = key;
         tempDef.path = parentDef.path ? parentDef.path + '.' + key : key;
         tempDef.fullPath = parentDef.fullPath ? parentDef.fullPath + '.definition.' + key : key;
         tempDef.dataPath = parentDef.dataPath ?
-          (parentDef.dataPath + '.definition.' + definition[key].properties.dataKey) : definition[key].properties.dataKey;
+          (parentDef.dataPath + '.definition.' + def.properties.dataKey) : def.properties.dataKey;
         tempDef.depth = parentDef.path ? parentDef.path.split('.') : [];
         const tempIndex = tempDef.depth.indexOf('_self');
         tempDef.depth = tempDef.depth.map(e => true);
@@ -168,10 +169,10 @@ export class MapperService {
           tempDef.properties = { name: 'ID' };
           tempDef.definition = [];
         } else {
-          tempDef.name = definition[key].properties.name;
-          tempDef.type = definition[key].type;
-          tempDef.properties = self.cloneObject(definition[key].properties);
-          parse(definition[key].definition, tempDef);
+          tempDef.name = def.properties.name;
+          tempDef.type = def.type;
+          tempDef.properties = self.cloneObject(def.properties);
+          parse(def.definition, tempDef);
         }
         tempMap.target = tempDef;
         if (xslt) {
@@ -180,17 +181,30 @@ export class MapperService {
             tempDef.properties.operation = f.properties.operation;
             tempDef.properties._args = f.properties._args;
           }
-          if (tempDef.properties._args && tempDef.properties._args.length > 0) {
+          // if (tempDef.properties._args && tempDef.properties._args.length > 0) {
+          //   tempMap.source.pop();
+          //   tempDef.properties._args.forEach(arg => {
+          //     if (arg.type === 'FIXED') {
+          //       const temp = sourceDef.find(sd => sd.dataPath === arg.dataPath);
+          //       if (temp) {
+          //         const t = Definition.getInstance();
+          //         t.patch(temp);
+          //         tempMap.source.push(t);
+          //       }
+          //     } else if (arg.type === 'DEDUCED') {
+
+          //     } else {
+          //       const t = Definition.getInstance();
+          //       t.patch(f);
+          //       tempMap.source.push(tempDef);
+          //     }
+          //   });
+          // }
+          const sources = self.getSourcesFromXSLT(sourceDef, tempDef.properties._args);
+          if (sources && sources.length > 0) {
             tempMap.source.pop();
-            tempDef.properties._args.forEach(arg => {
-              if (arg.type === 'FIXED') {
-                const temp = sourceDef.find(sd => sd.xpath === arg.XPath);
-                if (temp) {
-                  const t = Definition.getInstance();
-                  t.patch(temp);
-                  tempMap.source.push(t);
-                }
-              }
+            sources.forEach(e => {
+              tempMap.source.push(e);
             });
           }
         } else {
@@ -201,7 +215,7 @@ export class MapperService {
           const temp = fuse.search(tempDef.path);
           if (temp && temp.length > 0 && tempDef.type !== 'Object'
             && tempDef.type !== 'Array' && temp[0].type !== 'Object' && temp[0].type !== 'Array') {
-          
+
             tempMap.source.push(temp[0]);
           }
         }
@@ -212,18 +226,37 @@ export class MapperService {
     }
   }
 
-  getXPath(definition: Definition) {
+  getSourcesFromXSLT(sourceDefArray, args) {
+    let arr = [];
+    if (args && args.length > 0) {
+      args.forEach(arg => {
+        if (arg.type === 'FIXED') {
+          const temp = sourceDefArray.find(sd => sd.dataPath === arg.dataPath);
+          if (temp) {
+            const t = Definition.getInstance();
+            t.patch(temp);
+            arr.push(t);
+          }
+        } else if (arg.type === 'DEDUCED') {
+          arr = this.getSourcesFromXSLT(sourceDefArray, arg._args);
+        }
+      });
+    }
+    return arr;
+  }
+
+  getDataPath(definition: Definition) {
     const segments = definition.dataPath.split('_self');
     let path;
     if (segments[segments.length - 1] === '' && definition.type !== 'Object') {
       path = '.';
     } else {
       path = (segments[segments.length - 1] ? segments[segments.length - 1] : segments[segments.length - 2])
-        .split('.definition.').join('/').replace(/^\/(.*)/, '$1');
+        .split('.definition.').join('.').replace(/^\/(.*)/, '$1');
       if (definition.type === 'Array') {
         path = path + '[]';
       }
-      if (path.charAt(path.length - 1) === '/') {
+      if (path.charAt(path.length - 1) === '.') {
         const arr = path.split('');
         arr.pop();
         arr.push('[]');
@@ -231,12 +264,12 @@ export class MapperService {
       }
     }
     if (!definition.hasRoot && (segments.length === 1 || definition.type === 'Object')) {
-      path = './_data/' + path;
+      path = path;
     } else if (path !== '.') {
       if (path.indexOf('$headers') > -1 && definition.hasRoot) {
-        path = './' + definition.rootKey + '/' + path;
+        path = definition.rootKey + '.' + path;
       } else {
-        path = './' + path;
+        path = path;
       }
     }
     return path;
@@ -246,7 +279,8 @@ export class MapperService {
     const self = this;
     let flatdestination;
     if (target) {
-      flatdestination = self.flattenObject(target);
+      flatdestination = Object.assign.apply({}, target.map(def => self.flattenObject(def, def.key)));
+      // flatdestination = self.flattenObject(target);
       if (target._id) {
         flatdestination['_id.type'] = 'String';
       }
@@ -263,10 +297,10 @@ export class MapperService {
           flatdestination[e.target.fullPath + '.properties._args'] = e.target.properties._args;
         }
         e.source.forEach((s, si) => {
-          if (s.xpath && !flatdestination[e.target.fullPath + '.properties.operation']) {
+          if (s.dataPath && !flatdestination[e.target.fullPath + '.properties.operation']) {
             let tempIndex = ei - 1;
             let targetParent = ea[tempIndex];
-            while (tempIndex > 0 && targetParent.target.type !== 'Array') {
+            while (tempIndex > 0 && targetParent.target.type !== 'Array' && targetParent.target.parent) {
               tempIndex--;
               targetParent = ea[tempIndex];
             }
@@ -277,12 +311,12 @@ export class MapperService {
             if (sourceParent && (sourceParent.type === 'Object' || sourceParent.type === 'Array') && targetParent) {
               flatdestination[targetParent.target.fullPath + '.properties.innerType']
                 = s.key === '_self' ? s.type : sourceParent.type;
-              flatdestination[targetParent.target.fullPath + '.properties.XPath'] = sourceParent.xpath;
+              flatdestination[targetParent.target.fullPath + '.properties.dataPath'] = sourceParent.dataPath;
             }
             flatdestination[e.target.fullPath + '.properties.innerType'] = s.type;
             flatdestination[e.target.fullPath + '.properties._args'] = [{
               type: 'FIXED',
-              XPath: s.xpath,
+              dataPath: s.dataPath,
               innerType: s.type
             }];
           }

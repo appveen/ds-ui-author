@@ -43,7 +43,6 @@ export class SchemaStructurePipe implements PipeTransform {
                     || i === 'relatedViewFields'
                     || i === 'schema'
                     || i === 'geoType'
-                    || i === 'attributeList'
                     || i === 'fieldLength'
                     || i === '_description'
                     || i === '_typeChanged'
@@ -54,7 +53,9 @@ export class SchemaStructurePipe implements PipeTransform {
                     || i === 'deleteAction'
                     || i === 'label'
                     || i === 'readonly'
-                    || i === 'errorMessage') {
+                    || i === 'errorMessage'
+                    || i === 'defaultTimezone'
+                    || i === 'supportedTimezones') {
                     temp[i] = properties[i];
                 }
             }
@@ -63,39 +64,24 @@ export class SchemaStructurePipe implements PipeTransform {
     }
 
     private buildDefinition(definition) {
-        const temp = {};
-        for (let i = 0; i < definition.length; i++) {
-            const tempDef = Object.assign({}, definition[i]);
-            if (tempDef._id) {
-                temp['_id'] = tempDef._id;
-                delete temp['_id']['_fieldId'];
-                delete temp['_id']['_placeholder'];
-                delete temp['_id']['key'];
-                delete temp['_id']['name'];
-                delete temp['_id']['type'];
-                if (temp['_id']['properties']) {
-                    delete temp['_id']['properties']['_type'];
+        return definition
+            .map(def => {
+                const tempDef = JSON.parse(JSON.stringify(def));
+                if (tempDef.key === '_id') {
+                    const { _fieldId, _placeholder, name, ...remaining } = tempDef;
+                    if (!!remaining.properties) {
+                        delete remaining.properties._type;
+                    }
+                    remaining.type = 'String';
+                    return remaining;
                 }
-            }
-            if (!definition[i].key) {
-                continue;
-            } else {
-                if (tempDef.definition) {
+                if (!!tempDef.definition) {
                     tempDef.definition = this.buildDefinition(tempDef.definition);
                 }
                 tempDef.properties = this.properties(tempDef.properties);
-                temp[tempDef.key] = tempDef;
-                delete temp[tempDef.key]._add;
-                delete temp[tempDef.key]._delete;
-                delete temp[tempDef.key]._disableType;
-                delete temp[tempDef.key]._placeholder;
-                delete temp[tempDef.key]._fieldId;
-                delete temp[tempDef.key]._newField;
-                delete temp[tempDef.key].name;
-                delete temp[tempDef.key].key;
-            }
-        }
-        return temp;
+                const { _add, _delete, _disableType, _placeholder, _fieldId, _newField, name, ...remaining } = tempDef;
+                return remaining;
+            });
     }
 
     private buildWizards(obj) {

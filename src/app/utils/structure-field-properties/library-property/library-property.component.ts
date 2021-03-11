@@ -17,7 +17,6 @@ export class LibraryPropertyComponent implements OnInit, OnDestroy {
   @Input() isDataFormat: boolean;
   @Input() type;
   properties: FormGroup;
-  attributeList: Array<any>;
   libraries: Array<any>;
   documents: Array<any>;
   openDeleteModal: EventEmitter<any>;
@@ -91,7 +90,7 @@ export class LibraryPropertyComponent implements OnInit, OnDestroy {
         const self = this;
         const options: GetOptions = {
           count: 10,
-          select: 'name attributeList app',
+          select: 'name definition app',
           filter: {
             name: '/' + val + '/',
             app: self.commonService.app._id
@@ -107,7 +106,7 @@ export class LibraryPropertyComponent implements OnInit, OnDestroy {
     const self = this;
     self.form.get('properties.schema').patchValue(val.item._id);
     self.form.get('properties.schemaName').patchValue(val.item.name);
-    self.form.get('properties.attributeList').patchValue(val.item.attributeList);
+    self.form.get('properties.definition').patchValue(val.item.definition);
   }
 
   formatter = (x: { _id: string, name: string, version: number }) => x.name;

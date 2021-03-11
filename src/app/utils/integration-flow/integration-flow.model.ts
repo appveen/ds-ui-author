@@ -134,7 +134,7 @@ export interface MetaData {
         fileName?: boolean;
         checksum?: boolean;
     };
-    ipWhitelistEnabled?: boolean;
+    trustedIPEnabled?: boolean;
     ipList?: Array<string>;
     b2BFlowMaxConcurrentFiles?: {
         status?: boolean;

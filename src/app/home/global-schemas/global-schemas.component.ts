@@ -250,10 +250,9 @@ export class GlobalSchemasComponent implements
         const self = this;
         let response;
         const payload = self.globalSchemaStructurePipe.transform(self.form.value);
-        payload.attributeList = self.schemaAttributesPipe.transform(self.form.value, true);
         self.commonService.commonSpinner = true;
         payload.app = self.commonService.app._id;
-        self.appService.addKeyForDataStructure(payload.definition.definition, 'camelCase');
+        self.appService.addKeyForDataStructure(payload.definition[0].definition, 'camelCase');
         if (self.edit.id) {
             response = self.commonService.put('serviceManager', '/globalSchema/' + self.edit.id, payload);
         } else {
@@ -330,10 +329,9 @@ export class GlobalSchemasComponent implements
                 self.showLazyLoader = false;
                 let temp: any;
                 if (res.definition) {
-                    res.definition = JSON.parse(res.definition);
                     temp = {
                         name: res.name,
-                        type: res.definition.type,
+                        type: res.definition[0].type,
                         description: res.description
                     };
                     delete res.definition.type;
@@ -343,12 +341,17 @@ export class GlobalSchemasComponent implements
                         description: res.description
                     };
                 }
-                if (res.definition && res.definition.definition) {
-                    temp.definition = self.schemaService.generateStructure(res.definition.definition);
+                if (res.definition && res.definition[0].definition) {
+                    temp.definition = self.schemaService.generateStructure(res.definition[0].definition);
                 } else {
                     temp.definition = [];
                 }
                 self.form.patchValue(temp);
+                const typeCtrl = self.form.get('type');
+                if(!typeCtrl.value && !!temp.definition?.length && !!temp.definition[0].type) {
+                    typeCtrl.setValue(temp.definition[0].type);
+                    typeCtrl.updateValueAndValidity();
+                }
                 (self.form.get('definition') as FormArray).controls.splice(0);
                 temp.definition.forEach((element, i) => {
                     const tempDef = self.schemaService.getDefinitionStructure(temp.definition[i]);

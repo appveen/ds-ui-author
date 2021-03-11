@@ -6,10 +6,12 @@ import { AppSwitcherComponent } from './app-switcher.component';
 import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { FilterPipeModule } from '../pipes/filter.module';
 import { OrderByModule } from '../pipes/order-by/order-by.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
     CommonModule,
+    NgbModule,
     FormsModule,
     RouterModule,
     IconsModule,

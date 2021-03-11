@@ -131,6 +131,7 @@ export class ConfigurationComponent implements OnInit {
     } else {
       value = self.versionConfig.value;
     }
+    self.form.get('versionValidity').markAsDirty();
     self.form.get('versionValidity.validityType').patchValue(self.versionConfig.type);
     self.form.get('versionValidity.validityValue').patchValue(value);
   }
@@ -216,6 +217,7 @@ export class ConfigurationComponent implements OnInit {
           value: self.headerData.value,
           header: self.convertHeader(self.headerData.key)
         });
+        self.form.get('headers').markAsDirty();
         self.form.get('headers').patchValue(temp);
       }
       self.headerData = {};
@@ -226,7 +228,7 @@ export class ConfigurationComponent implements OnInit {
 
   convertHeader(key: string) {
     if (key) {
-      return 'ODP-DS-' + key.split(' ')
+      return 'Data-Stack-DS-' + key.split(' ')
         .filter(e => e)
         .map(e => e.charAt(0).toUpperCase() + e.substr(1, e.length))
         .join('-');
@@ -241,6 +243,7 @@ export class ConfigurationComponent implements OnInit {
     if (tempIndex > -1) {
       temp.splice(tempIndex, 1);
     }
+    self.form.get('headers').markAsDirty();
     self.form.get('headers').patchValue(temp);
   }
 
@@ -275,6 +278,7 @@ export class ConfigurationComponent implements OnInit {
       self.patchVersionValue(true);
     } else {
       self.retainDataHistory = false;
+      self.form.get('versionValidity').markAsDirty();
       self.form.get('versionValidity.validityType').patchValue('count');
       self.form.get('versionValidity.validityValue').patchValue(0);
     }
@@ -306,6 +310,15 @@ export class ConfigurationComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  isAdmin() {
+
+    if (!this.commonService.userDetails.isSuperAdmin
+      && this.commonService.isAppAdmin) {
+      return true;
+    } else
+      return false
   }
 
   set fuzzySearch(val: boolean) {

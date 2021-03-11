@@ -275,7 +275,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
         }
       });
       self.rule.filter = JSON.stringify(filter['$where'][0]);
-       self.rulesChange.emit(self.rules);
+      self.rulesChange.emit(self.rules);
     }
   }
 
@@ -310,7 +310,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
       temp[newKey] = self.appService.cloneObject(def);
       delete temp[newKey].key;
       temp[newKey].type = self.appService.toCapitalize(temp[newKey].type);
-      if (temp[newKey].definition && Object.keys(temp[newKey].definition).length > 0) {
+      if (temp[newKey].definition && temp[newKey].definition.length > 0) {
         temp[newKey].definition = self.convertToObject(temp[newKey].definition);
       }
     });
@@ -319,13 +319,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
 
   get serviceDefinition() {
     const self = this;
-    if (self.dataService && self.dataService.definition) {
-      if (typeof self.dataService.definition === 'string') {
-        self.dataService.definition = JSON.parse(self.dataService.definition);
-      }
-      return self.dataService.definition;
-    }
-    return {};
+    return self.dataService?.definition || {};
   }
 
   get loading() {

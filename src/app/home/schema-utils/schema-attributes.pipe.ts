@@ -51,11 +51,11 @@ export class SchemaAttributesPipe implements PipeTransform {
     transform(value: any, flatten?: boolean): any {
         let temp = [];
         if (value && value.definition) {
-            temp = this._getAttribute(value.definition, flatten);
+            temp = this._getAttribute(value.definition.filter(d => d.key !== '_id'), flatten);
         }
         temp.unshift({
             key: '_id',
-            name: value.definition[0]['_id'] ? value.definition[0]['_id']['properties']['name'] : 'ID',
+            name: value.definition[0] ? value.definition[0]['properties']['name'] : 'ID',
             type: 'String'
         });
         return temp;

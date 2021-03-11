@@ -27,7 +27,7 @@ export class AgentBlockComponent implements OnInit {
 
   ngOnInit() {
     const self = this;
-    
+
     self.fetchingAgents = true;
     self.flowService.getAgents('APPAGENT').then((agentList: any) => {
       if (self.node.meta.target && !self.node.meta.source) {
@@ -59,7 +59,7 @@ export class AgentBlockComponent implements OnInit {
     if (!self.node.meta.outputDirectories) {
       self.node.meta.outputDirectories = [];
     }
-    
+
     if (!value.startsWith('./')
       && !value.startsWith('../')
       && !value.startsWith('/')
@@ -87,7 +87,7 @@ export class AgentBlockComponent implements OnInit {
     if (!self.node.meta.inputDirectories) {
       self.node.meta.inputDirectories = [];
     }
-  
+
     if (!value.startsWith('./')
       && !value.startsWith('../')
       && !value.startsWith('/')
@@ -198,6 +198,14 @@ export class AgentBlockComponent implements OnInit {
   get isInputBlock() {
     const self = this;
     if (self.node && self.node.meta.blockType === 'INPUT') {
+      return true;
+    }
+    return false;
+  }
+
+  get showGenerateHeaders() {
+    const self = this;
+    if (self.node && self.node.meta.blockType === 'OUTPUT' && self.node.sourceFormat.formatType !== 'FLATFILE') {
       return true;
     }
     return false;

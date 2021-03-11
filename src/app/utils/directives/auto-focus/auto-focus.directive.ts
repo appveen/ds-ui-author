@@ -1,20 +1,20 @@
-import { Directive, ElementRef, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Directive, ElementRef, AfterViewInit, Input } from '@angular/core';
 
 @Directive({
     selector: '[odpAutoFocus]'
 })
 export class AutoFocusDirective implements AfterViewInit {
 
-    @Output() hasFocus: EventEmitter<any>;
-
+    @Input() timeout: number;
     constructor(private element: ElementRef) {
-        this.hasFocus = new EventEmitter();
+        this.timeout = 1;
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         if (this.element.nativeElement) {
-            this.element.nativeElement.focus();
-            this.hasFocus.emit();
+            setTimeout(() => {
+                this.element.nativeElement.focus();
+            }, this.timeout);
         }
     }
 

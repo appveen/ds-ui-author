@@ -1,0 +1,37 @@
+<ng-container *ngIf="namespace === 'keys'">
+  <ng-container *ngIf="field === 'label'">
+    <span class="odp-key font-lg" [ngClass]="{ 'text-accent': data.isActive, 'text-muted': !data.isActive }"></span>
+    <span class="key-name" [ngClass]="{ 'text-accent': data.isActive, 'text-muted': !data.isActive }">{{ data.label }}</span>
+  </ng-container>
+  <ng-container *ngIf="field === 'createdAt'">
+    {{ params.value | dateFormat : 'DD-MMM-YYYY, z' : 'Etc/Zulu' }}
+  </ng-container>
+  <ng-container *ngIf="field === 'keyValue'">
+    <span *ngIf="!data.isNew">key****************</span>
+    <span
+      *ngIf="data.isNew"
+      (click)="copyKey(data)"
+      #tooltip="ngbTooltip"
+      [ngbTooltip]="
+        data.isLatest
+          ? 'This key is available to copy until you navigate away from this page. Click here to copy the key and store it somewhere safe.'
+          : ''
+      "
+      position="top"
+      container="body"
+      triggers="click"
+      [autoClose]="'inside'"
+    >
+      <span class="odp-copy text-muted"></span>
+      <span class="text-accent">{{ data.keyValue }}</span>
+    </span>
+  </ng-container>
+</ng-container>
+
+<ng-container *ngIf="namespace === 'properties'">
+  <ng-container *ngIf="['label', 'value'].includes(field)">
+    {{ params.value }}
+  </ng-container>
+  <odp-field-type *ngIf="field === 'type'" [label]="true" [field]="{type:params.value,properties:{}}">
+  </odp-field-type>
+</ng-container>

@@ -17,10 +17,12 @@ export interface App {
         bot: boolean,
         group: boolean
     };
-    agentIPWhitelisting?: {
+    agentTrustedIP?: {
         list?: Array<string>;
         enabled?: boolean;
     };
+    disableInsights?: boolean;
+    defaultTimezone?: string;
 }
 
 export interface AppCenterStyle {

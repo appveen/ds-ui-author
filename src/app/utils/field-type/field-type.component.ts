@@ -85,9 +85,8 @@ export class FieldTypeComponent {
       if (field.properties.dateType && field.properties.dateType === 'datetime-local') {
         return 'Date & Time';
       }
-    } else {
-      return temp ? temp.label : 'Text';
     }
+    return temp ? temp.label : 'Text';
   }
 
   get collectionType() {

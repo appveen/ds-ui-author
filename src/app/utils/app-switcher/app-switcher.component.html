@@ -3,7 +3,7 @@
   <div class="d-flex align-items-center p-3 position-relative">
     <div class="active-app d-flex align-items-center hover position-absolute" (click)="onCancel()">
       <odp-app-icon color="aaa" class="mr-2 pt-1" size="24"></odp-app-icon>
-      <span class="pl-1">{{ activeApp._id }}</span>
+      <span class="pl-1 text-truncate" [ngbTooltip]="activeApp._id">{{ activeApp._id }}</span>
       <span class="text-accent ml-auto fas fa-angle-down"></span>
     </div>
     <input #searchBox type="text" class="form-control search-box" placeholder="Search" (keyup.enter)="onEnter($event)" [(ngModel)]="searchTerm">
@@ -16,7 +16,7 @@
         <img *ngIf="app.logo && app.logo.thumbnail" [src]="app.logo.thumbnail" alt="Logo">
         <odp-app-icon *ngIf="!app.logo || !app.logo.thumbnail" class="pt-1" color="aaa"></odp-app-icon>
       </div>
-      <div class="app-name text-center mt-2">{{app._id}}</div>
+      <div class="app-name text-center text-truncate  mt-2" [ngbTooltip]="app._id">{{app._id}}</div>
     </div>
   </div>
 </div>

@@ -36,6 +36,12 @@ import { SwitchModule } from '../utils/switch/switch.module';
 import { AgentsComponent } from './agents/agents.component';
 import { BreadcrumbModule } from '../utils/breadcrumb/breadcrumb.module';
 import { LoadingModule } from '../utils/loading/loading.module';
+import { AgGridModule } from 'ag-grid-angular';
+import { GridCheckboxModule } from '../utils/grid-checkbox/grid-checkbox.module';
+import { UserListCellRendererModule } from '../utils/user-list-cell-renderer/user-list-cell-renderer.module';
+import { TimezonePickerModule } from '../utils/timezone-picker/timezone-picker.module';
+import { AgGridSharedFloatingFilterModule } from "../utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.module";
+import { DateFormatModule } from '../utils/date-format/date-format.module';
 
 @NgModule({
     imports: [
@@ -67,7 +73,13 @@ import { LoadingModule } from '../utils/loading/loading.module';
         FieldTypeModule,
         SwitchModule,
         BreadcrumbModule,
-        LoadingModule
+        LoadingModule,
+        AgGridModule,
+        GridCheckboxModule,
+        UserListCellRendererModule,
+        TimezonePickerModule,
+        AgGridSharedFloatingFilterModule,
+        DateFormatModule
     ],
     exports: [],
     declarations: [
@@ -83,4 +95,4 @@ import { LoadingModule } from '../utils/loading/loading.module';
         AgentsComponent
     ]
 })
-export class AdminModule { }
+export class AdminModule {}

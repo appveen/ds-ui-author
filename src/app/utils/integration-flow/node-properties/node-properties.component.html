@@ -1,8 +1,8 @@
 <div class="wrapper d-flex flex-column">
     <ng-container *ngIf="propertyType!='timer'">
         <div class="node-properties-block header d-flex flex-column">
-            <div class="node-properties-titlebar title px-3">
-                <div class="node-properties-title" odpClickOutside (outside)="editNodeName=false">
+            <div class="node-properties-titlebar title px-3 ">
+                <div class="node-properties-title position-relative" odpClickOutside (outside)="editNodeName=false">
                     <ng-container *ngIf="!editNodeName">
                         <span *ngIf="node.name" class="ellipsis font-weight-bold mr-2" [ngbTooltip]="node.name"
                             placement="left">
@@ -13,8 +13,9 @@
                             (click)="editNodeName=true;$event.stopPropagation()"></span>
                     </ng-container>
                     <ng-container *ngIf="editNodeName">
-                        <div></div>
-                        <input type="text" class="form-control" [(ngModel)]="node.name" odpAutoFocus>
+                        <input type="text" class="form-control" [(ngModel)]="node.name" maxlength="40" odpAutoFocus>
+                        <span class="text-warning position-absolute info-icon fa fa-exclamation-circle" container="body"
+                            ngbTooltip="Name should be within 40 characters"></span>
                     </ng-container>
                 </div>
                 <button *ngIf="edit.status" type="button" class="btn btn-link btn-sm text-danger"
@@ -123,7 +124,7 @@
 
 <odp-delete-modal [open]="deleteNodeModal" (close)="onDeleteNode($event)"></odp-delete-modal>
 
-<odp-mapper class="ignore-outside" *ngIf="openMapper" [edit]="edit" [(toggleMapper)]="openMapper"
+<odp-mapper *ngIf="openMapper" [edit]="edit" [(toggleMapper)]="openMapper"
     [commonSourceTarget]="mapperLeft?.targetFormat?.id===mapperRight?.sourceFormat?.id"
     [source]="mapperLeft?.targetFormat?.definition" [sourceType]="mapperLeft?.targetFormat?.formatType"
     [destination]="mapperRight?.sourceFormat?.definition" [destinationType]="mapperRight?.sourceFormat?.formatType"

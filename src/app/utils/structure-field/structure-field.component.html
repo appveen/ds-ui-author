@@ -35,14 +35,16 @@
         </div>
         <div class="d-flex field-options">
             <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 hover"
-            [ngClass]="{'active':form.get('properties.readonly')?.value}"  placement="top" ngbTooltip="Mark as read-only" (click)="setReadOnly(form.get('properties.readonly'))"
-            *ngIf="(!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
-            && form.get('type').value !== 'Object') && edit.status && type!=='internal'">
+                [ngClass]="{'active':form.get('properties.readonly')?.value}" placement="top"
+                ngbTooltip="Mark as read-only" (click)="setReadOnly(form.get('properties.readonly'))" *ngIf="  (!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
+            && form.get('type').value !== 'Object') &&  edit.status && type!=='internal' && !isDataFormat ">
                 <span class="odp-no-edit"></span>
             </div>
             <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 "
-            [ngClass]="{'active':form.get('properties.readonly')?.value}"  placement="top" ngbTooltip="Marked as read-only" 
-            *ngIf="form.get('properties.readonly')?.value &&  !edit.status && type!=='internal'">
+                [ngClass]="{'active':form.get('properties.readonly')?.value}" placement="top"
+                ngbTooltip="Marked as read-only"
+                *ngIf="(!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
+            && form.get('type').value !== 'Object') && form.get('properties.readonly')?.value &&  !edit.status && type!=='internal' && !isDataFormat">
                 <span class="odp-no-edit"></span>
             </div>
             <span *ngIf="canDelete && edit.status && type!=='internal'" class="fa hover"
@@ -92,8 +94,7 @@
 
 <ng-template #validationError>
     <div class="d-flex flex-column">
-        <div *ngIf="form.get('properties.name').touched && form.get('key').hasError('required')"
-            class="d-flex justify-content-start">
+        <div *ngIf="form.get('properties.name').touched && form.get('key').hasError('required') && !isInvalidKey" class="d-flex justify-content-start">
             <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
             <span>You cannot leave this blank</span>
         </div>
@@ -112,7 +113,11 @@
         </div>
         <div *ngIf="invalidFieldName" class="d-flex justify-content-start">
             <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
-            <span>Field name can only be alphanumeric and can contain underscore(_), dot(.), hyphen(-), dollar($)</span>
+            <span>Attribute name can contain only alphanumeric, underscore(_), dot(.), hyphen(-) and dollar($)</span>
+        </div>
+        <div *ngIf="isInvalidKey && !invalidFieldName" class="d-flex justify-content-start">
+            <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+            <span>Attribute name cannot be only special characters</span>
         </div>
     </div>
 </ng-template>
@@ -154,13 +159,14 @@
             </span>
             <span class="font-weight-bold mb-1">Structure Changed</span>
         </div>
-        <p class="text-dark text-center my-5">You might have to redeployed all the flow(s) which is using this data
-            format.</p>
+        <p class="text-dark text-center my-5">Running flows would require remapping and re-deployment. Please check the
+            Integration Flows tab to know which flows
+            might get affected. Are you sure you want to continue?</p>
         <div class="d-flex align-items-center justify-content-end">
             <button type="button" class="btn btn-min-width btn-dark mr-3"
-                (click)="flowDeployAlertModalRef.close(false)">Cancel</button>
+                (click)="flowDeployAlertModalRef.close(false)">No</button>
             <button type="button" class="btn btn-min-width btn-dark"
-                (click)="flowDeployAlertModalRef.close(true)">Ok</button>
+                (click)="flowDeployAlertModalRef.close(true)">Yes</button>
         </div>
     </div>
 </ng-template>

@@ -58,7 +58,7 @@
             </div>
           </div>
           <small class="position-absolute text-border app-version">v{{version}}</small>
-          <small class="last-login text-muted">Last Login: {{lastLogin | date:'yyyy MMM dd, HH:mm:ss' }}</small>
+          <small class="last-login text-muted">Last Login: {{lastLogin | dateFormat : 'DD-MMM-YYYY, hh:mm:ss A, z' : 'Etc/Zulu' }}</small>
         </div>
       </div>
       <!-- <div class="menu hover rounded-circle bg-light border border-border d-flex align-items-center justify-content-center"

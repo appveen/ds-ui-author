@@ -13,7 +13,6 @@ import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { PartnerSecretsComponent } from './partner-secrets/partner-secrets.component';
 import { DataGridModule } from 'src/app/utils/data-grid/data-grid.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
-import { MicroflowModule } from 'src/app/utils/microflow/microflow.module';
 import { TableCheckboxModule } from 'src/app/utils/table-checkbox/table-checkbox.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
@@ -46,7 +45,6 @@ const routes: Routes = [
     ReactiveFormsModule,
     SearchBoxModule,
     TableCheckboxModule,
-    MicroflowModule,
     ClickOutsideModule,
     BasicInfoModule,
     FilterTeamModule,

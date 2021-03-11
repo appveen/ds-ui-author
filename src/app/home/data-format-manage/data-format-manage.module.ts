@@ -16,6 +16,7 @@ import { StructureFieldModule } from 'src/app/utils/structure-field/structure-fi
 import { StructureFieldPropertiesModule } from 'src/app/utils/structure-field-properties/structure-field-properties.module';
 import { FilterTeamModule } from 'src/app/utils/pipes/filter-team.module';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
+import { SortablejsModule } from 'ngx-sortablejs';
 
 const routes: Routes = [
   {
@@ -40,7 +41,8 @@ const routes: Routes = [
     StructureFieldModule,
     StructureFieldPropertiesModule,
     FilterTeamModule,
-    CheckboxModule
+    CheckboxModule,
+    SortablejsModule
   ],
   declarations: [DataFormatManageComponent],
   exports: [RouterModule]

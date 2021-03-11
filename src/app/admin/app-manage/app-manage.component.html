@@ -202,7 +202,7 @@
                                             <div *ngIf="usr?.basicDetails?.alternateEmail">{{usr?.basicDetails?.alternateEmail}}</div>
                                         </td>
                                         <td>
-                                            <span class="text-secondary">{{usr?._metadata?.lastUpdated|date: 'dd-MMM-yyyy, hh:mm'}}</span>
+                                            <span class="text-secondary">{{usr?._metadata?.lastUpdated|dateFormat: 'DD-MMM-YYYY, HH:mm z' : 'Etc/Zulu'}}</span>
                                         </td>
                                     </tr>
                                     <tr *ngIf="userList.length==0">

@@ -19,6 +19,7 @@ import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.modul
 import { BotGuard } from 'src/app/utils/guards/bot.guard';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
+import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 
 const routes: Routes = [
   { path: '', component: BotsComponent, canActivate: [BotGuard] }
@@ -43,7 +44,8 @@ const routes: Routes = [
     RoundCheckModule,
     DeleteModalModule,
     FieldTypeModule,
-    SwitchModule
+    SwitchModule,
+    DateFormatModule
   ],
   declarations: [BotsComponent, BotsManageComponent],
   exports: [RouterModule, BotsComponent, BotsManageComponent]

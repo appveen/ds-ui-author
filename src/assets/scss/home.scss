@@ -87,7 +87,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .logo {
-  background-image: url("../img/data.stack_author_light_optimized.svg");
+  // background-image: url("../img/data.stack_author_light_optimized.svg");
+  background-image: url("../img/logo_default.svg");
 }
 
 .login-img {
@@ -301,9 +302,6 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 
-.fade.show {
-  //z-index: 1072;
-}
 
 .modal-content {
   width: 400px !important;
@@ -369,8 +367,6 @@ input[type="number"]::-webkit-outer-spin-button {
 .preHook-modal {
   .modal-content {
     width: 600px !important;
-    height: 500px !important;
-
     .label-width {
       width: 140px;
     }
@@ -394,6 +390,29 @@ input[type="number"]::-webkit-outer-spin-button {
 
     .modal-footer {
       border: none !important;
+    }
+  }
+}
+
+.preHook-preview-modal{
+  .modal-content {
+    width: 600px !important;
+    .modal-body {
+      min-height: 386px !important;
+      max-height: 420px !important;
+    }
+
+    .modal-header {
+      background: $light;
+    }
+
+    .modal-footer {
+      border: none !important;
+    }
+    .pre{
+      min-height: 386px !important;
+      max-height: 410px !important;
+      overflow: auto;
     }
   }
 }

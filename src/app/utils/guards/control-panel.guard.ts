@@ -17,7 +17,8 @@ export class ControlPanelGuard implements CanActivate, CanActivateChild {
       || this.commonService.hasPermissionStartsWith('PMG')
       || this.commonService.hasPermissionStartsWith('PVG')
       || this.commonService.hasPermissionStartsWith('PMBM')
-      || this.commonService.hasPermissionStartsWith('PVBM')) {
+      || this.commonService.hasPermissionStartsWith('PVBM')
+      || this.commonService.hasPermissionStartsWith('PVIS')) {
       return true;
     } else {
       this.router.navigate(['/app', this.commonService.app._id, 'noAccess']);

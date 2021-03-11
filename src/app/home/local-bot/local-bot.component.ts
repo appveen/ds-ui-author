@@ -48,7 +48,6 @@ export class LocalBotComponent implements OnInit {
   teamOptions: GetOptions = {};
   allTeams: Array<any>;
   additionalDetails: FormGroup;
-  toggleFieldTypeSelector: any;
   types: Array<any>;
   openDeleteModal: EventEmitter<any>;
   openDeleteBotModal: EventEmitter<any>;
@@ -67,7 +66,6 @@ export class LocalBotComponent implements OnInit {
     private fb: FormBuilder) {
     const self = this;
     self.activeTab = 0;
-    self.toggleFieldTypeSelector = {};
     self.botRecords = [];
     self.selectedBot = {};
     self.openDeleteModal = new EventEmitter();
@@ -82,7 +80,7 @@ export class LocalBotComponent implements OnInit {
       { class: 'odp-calendar', value: 'Date', label: 'Date' }
     ];
     self.botForm = self.fb.group({
-      botName: [null, [Validators.required, Validators.maxLength(30), Validators.pattern('[a-zA-Z0-9\\s-_]+')]],
+      botName: [null, [Validators.required, Validators.maxLength(30), Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
       desc: [null, [Validators.maxLength(240)]]
     });
     self.keyForm = self.fb.group({
@@ -90,14 +88,7 @@ export class LocalBotComponent implements OnInit {
       expires: [null, [Validators.required, Validators.min(1)]]
     });
     self.additionalDetails = self.fb.group({
-      extraInfo: self.fb.array([
-        self.fb.group({
-          key: ['', [Validators.required, Validators.maxLength(30)]],
-          type: ['String', Validators.required],
-          value: ['', [Validators.required, Validators.maxLength(30)]],
-          label: ['', [Validators.required, Validators.maxLength(30)]]
-        })
-      ])
+      extraInfo: self.fb.array([])
     });
   }
 
@@ -127,6 +118,7 @@ export class LocalBotComponent implements OnInit {
         self.showLazyLoader = false;
         if (users.length) {
           self.selectedBot = users[0];
+          self.getUserTeam();
         }
         self.botRecords = users;
       }, (err) => {
@@ -210,6 +202,7 @@ export class LocalBotComponent implements OnInit {
             self.botForm.reset();
             self.getBotRecords();
             self.getBotCount();
+            self.userTeams = [];
           }, err => {
             self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
           });
@@ -228,6 +221,7 @@ export class LocalBotComponent implements OnInit {
       });
     }
     self.selectedBot = this.botRecords[index];
+    console.log(self.selectedBot);
     self.getUserTeam();
   }
   editBot() {
@@ -282,7 +276,7 @@ export class LocalBotComponent implements OnInit {
             }
             res.isNew = true;
             res.isLatest = true;
-            self.selectedBot.botKeys.unshift(res);
+            self.selectedBot.botKeys = [res, ...self.selectedBot.botKeys];
             setTimeout(() => {
               self.selectedBot.botKeys.forEach(key => {
                 key.isLatest = false;
@@ -342,6 +336,27 @@ export class LocalBotComponent implements OnInit {
 
   createNewProperty() {
     const self = this;
+    if (self.userAttributeList.length) {
+      self.userAttributeList.forEach(element => {
+        let form = self.fb.group({
+          key: ['', Validators.required],
+          type: ['String', Validators.required],
+          value: ['', Validators.required],
+          label: ['', [Validators.required, Validators.maxLength(30)]]
+        })
+        form.patchValue(element);
+        (self.additionalDetails.get('extraInfo') as FormArray).push(form);
+      });
+    } else {
+      const form = self.fb.group({
+        label: ['', [Validators.required, Validators.maxLength(30)]],
+        key: ['', [Validators.required]],
+        type: ['String', [Validators.required]],
+        value: ['', [Validators.required]]
+      });
+      (self.additionalDetails.get('extraInfo') as FormArray).push(form);
+
+    }
     self.newAttributeModalRef = self.commonService.modal(self.newAttributeModal, { size: 'lg' });
     self.newAttributeModalRef.result.then(close => {
       self.resetAdditionDetailForm();
@@ -411,15 +426,14 @@ export class LocalBotComponent implements OnInit {
 
   getLabelError(i) {
     const self = this;
-    return self.additionalDetails.get(['extraInfo', i, 'label']).touched
-      && self.additionalDetails.get(['extraInfo', i, 'label']).dirty
+    return self.additionalDetails.get(['extraInfo', i, 'label']).touched 
+      && !self.additionalDetails.get(['extraInfo', i, 'label']).pristine
       && self.additionalDetails.get(['extraInfo', i, 'label']).hasError('required');
   }
 
   getValError(i) {
     const self = this;
     return self.additionalDetails.get(['extraInfo', i, 'value']).touched &&
-      self.additionalDetails.get(['extraInfo', i, 'value']).dirty &&
       self.additionalDetails.get(['extraInfo', i, 'value']).hasError('required');
   }
 
@@ -439,13 +453,14 @@ export class LocalBotComponent implements OnInit {
   }
   setUserAttributeType(type: any, index: number) {
     const self = this;
-    self.toggleFieldTypeSelector[index] = false;
     self.additionalDetails.get(['extraInfo', index, 'type']).patchValue(type.value);
+    self.additionalDetails.get(['extraInfo', index, 'type']).updateValueAndValidity();
     if (type.value === 'Boolean') {
       self.additionalDetails.get(['extraInfo', index, 'value']).patchValue(false);
     } else {
       self.additionalDetails.get(['extraInfo', index, 'value']).patchValue(null);
     }
+    self.additionalDetails.get(['extraInfo', index, 'value']).updateValueAndValidity();
   }
 
   private resetAdditionDetailForm() {
@@ -453,12 +468,6 @@ export class LocalBotComponent implements OnInit {
     self.additionalDetails.reset();
     self.additionalDetails = self.fb.group({
       extraInfo: self.fb.array([
-        self.fb.group({
-          key: ['', Validators.required,],
-          type: ['String', Validators.required],
-          value: ['', [Validators.required, Validators.maxLength(30)]],
-          label: ['', [Validators.required, Validators.maxLength(30)]]
-        })
       ])
     });
   }
@@ -474,13 +483,12 @@ export class LocalBotComponent implements OnInit {
       self.ts.warning('Please check the form fields, looks like few fields are empty');
     } else {
       self.newAttributeModalRef.close();
+      self.selectedBot.attributes = {};
       self.userAttributes.forEach((data) => {
         const payload = data.value;
         const detailKey = payload.key;
         delete payload.key;
-        if (!self.selectedBot.attributes) {
-          self.selectedBot.attributes = {};
-        }
+
         self.selectedBot.attributes[detailKey] = payload;
       });
       self.showLazyLoader = true;
@@ -535,7 +543,7 @@ export class LocalBotComponent implements OnInit {
           .subscribe(() => {
             self.showLazyLoader = false;
             self.getUserTeam();
-            self.ts.success('User has been added to group successfully');
+            self.ts.success('Bot has been added to group successfully');
           }, err => {
             self.ts.error(err.error.message);
           });
@@ -578,7 +586,7 @@ export class LocalBotComponent implements OnInit {
       const index = self.botRecords.findIndex(e => e._id === res._id)
       self.botRecords[index] = res;
       self.showLazyLoader = false;
-
+      self.ts.success(`The ${res?.basicDetails?.name || ''} bot is ${res?.isActive ? 'enabled':'disabled'}.`);
     }, (err) => {
       self.ts.error(err.error.message);
       self.showLazyLoader = false;

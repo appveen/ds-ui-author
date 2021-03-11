@@ -17,6 +17,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   changePasswordForm: FormGroup;
   changePasswordModalRef: NgbModalRef;
   message: string;
+  showPassword;
   constructor(private commonService: CommonService,
     private ts: ToastrService,
     private fb: FormBuilder) {
@@ -27,6 +28,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
       newpassword: [null, [Validators.required, Validators.minLength(8)]],
       confirmpassword: [null, [Validators.required, Validators.minLength(8)]]
     });
+    self.showPassword = {};
   }
 
   ngOnInit() {
@@ -53,7 +55,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     self.changePasswordForm.get('newpassword').markAsDirty();
     self.changePasswordForm.get('confirmpassword').markAsDirty();
     if (self.changePasswordForm.invalid) {
-        return;
+      return;
     }
     self.changePasswordForm.controls['confirmpassword'].disable();
     self.commonService.put('user', `/usr/${self.commonService.userDetails._id}/password`, self.changePasswordForm.value).subscribe(res => {
@@ -61,8 +63,8 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
       if (res) {
         self.ts.success('Redirecting to login screen, Please login again');
         setTimeout(() => {
-           self.commonService.logout();
-         }, 3000);
+          self.commonService.logout();
+        }, 3000);
       }
     }, err => {
       self.message = err.error.message;
@@ -88,7 +90,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   get matchPwd() {
     const self = this;
     return self.changePasswordForm.get('confirmpassword').dirty &&
-          (self.changePasswordForm.get('newpassword').value !== self.changePasswordForm.get('confirmpassword').value);
+      (self.changePasswordForm.get('newpassword').value !== self.changePasswordForm.get('confirmpassword').value);
   }
   get oldPasswordLength() {
     const self = this;

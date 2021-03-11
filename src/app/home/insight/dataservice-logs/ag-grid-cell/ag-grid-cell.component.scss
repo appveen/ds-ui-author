@@ -6,19 +6,16 @@
     font-size: 32px;
     line-height: 0;
     vertical-align: middle;
-    &.active {
+    &.success {
       color: $green;
     }
-    &.pending {
+    &.redirect {
       color: $orange;
     }
-    &.maintenance {
-      color: $light;
-    }
-    &.stopped {
+    &.error {
       color: $red;
     }
-    &.draft {
+    &.info {
       color: $accent;
     }
     .symbol {

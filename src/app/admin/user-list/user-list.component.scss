@@ -15,6 +15,7 @@
 
     li:not(:last-child) {
       border-bottom: $border-width solid $border-color;
+      word-break: break-all;
     }
 
     li:hover {
@@ -23,152 +24,9 @@
   }
 }
 
-table {
-  span {
-    vertical-align: middle;
-  }
-
-  .symbol {
-    font-size: 32px;
-    line-height: 0;
-  }
-
-  [class^="odp-"],
-  [class*=" odp-"] {
-    font-size: 16px;
-    line-height: 0;
-  }
-
-  .thead-accent {
-    background-color: $accent !important;
-    color: $white;
-  }
-
-  td:not(:first-child) {
-    border-top: 1px solid $border-color;
-  }
-
-  .selectedRow {
-    background-color: $light;
-  }
-}
-
-.user-list {
-  height: 58vh;
-  overflow-y: auto;
-
-  .user-img-container {
-    min-width: 28px;
-    max-width: 28px;
-    min-height: 28px;
-    max-height: 28px;
-    border-radius: 50%;
-    padding-top: 2px;
-    text-align: center;
-    border: 2px solid $border-color;
-  }
-
-  .usr-selected {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-
-  .td-content-height {
-    min-height: 40px !important;
-    max-height: 40px !important;
-    padding-left: 12px !important;
-    vertical-align: middle;
-    .v-middle {
-      top: 50%;
-      transform: translateY(-50%);
-    }
-  }
-
-  .img-td {
-    min-height: 40px !important;
-    max-height: 40px !important;
-    padding: 0 !important;
-    vertical-align: middle;
-  }
-
-  .col-name {
-    max-width: 290px !important;
-  }
-  .min-span {
-    max-width: 80px !important;
-    display: inline-block;
-  }
-}
-
-.popup-content input.form-control {
-  width: 100% !important;
-}
 .label-width {
   min-width: 200px;
   max-width: 200px;
-}
-.addEditUser-modal {
-  width: 600px !important;
-  height: 520px !important;
-  .value-width {
-    width: 400px;
-  }
-
-  .photo {
-    min-height: 50px;
-    max-height: 50px;
-    min-width: 50px;
-    max-width: 50px;
-    background: $border-color;
-  }
-
-  .add-icon {
-    background-color: $text-muted;
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    color: $white;
-    top: 52px;
-    left: 51%;
-    border: 1px solid $white;
-  }
-
-  .basic-detail-icon {
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    border: 1px solid $text-muted;
-    text-align: center;
-    padding-top: 1px;
-  }
-
-  span.error-icon {
-    top: 8px;
-    left: 92%;
-  }
-
-  div.error-icon {
-    width: 20px;
-    height: 20px;
-    background-color: $green;
-    color: $white;
-    text-align: center;
-    top: 5px;
-    left: 92%;
-  }
-
-  .modal-footer {
-    margin-top: -20px;
-  }
-}
-
-.user-import {
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  background: #fff;
-  width: 100%;
-  left: 0;
-  height: calc(100vh - 168px);
 }
 
 .user-option-class {
@@ -225,117 +83,7 @@ table {
   }
 }
 
-.auth-option {
-  .auth-option-thumbnail {
-    min-width: 120px;
-    max-width: 120px;
-    min-height: 100px;
-    max-height: 100px;
-    .logo,
-    .ldap-logo,
-    .azure-logo {
-      min-width: 70px;
-      min-height: 70px;
-    }
-    .logo {
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      width: 100%;
-    }
-    .azure-logo {
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-  }
-}
-
-.user-config-modal {
-  .input-group-append {
-    .btn {
-      min-height: 28px;
-    }
-  }
-}
-
-.ldap-view-block {
-  min-width: 400px;
-  max-width: 400px;
-  top: 36px;
-  border-radius: 5px;
-  box-shadow: 0px 6px 16px rgba(199, 199, 199, 0.5);
-  left: 194px;
-  z-index: 101;
-  .ldap-box {
-    min-width: 218px;
-    max-width: 218px;
-  }
-}
-
-
-.arrowlist-up {
-  content: "";
-  width: 0;
-  height: 0;
-  position: absolute;
-  bottom: 100%;
-  right: 356px;
-  /* border-width: 0 6px 6px 6px; */
-  border: solid transparent;
-  /* border-color: #ffffff14 transparent; */
-  /* box-shadow: 0px 6px 16px rgba(199, 199, 199, 0.5); */
-  border-left-color: #bdbdbd;
-  border-right-color: #bdbdbd;
-  border-bottom-color: white;
-  border-left-width: 10px;
-  border-right-width: 10px;
-  border-bottom-width: 10px;
-  border-top-width: 0px;
-}
-
-.ldap-view-block:after,
-.ldap-view-block:before {
-  bottom: 100%;
-  left: 50%;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-}
-
-.ldap-view-block:after {
-  border-color: rgba(136, 183, 213, 0);
-  border-bottom-color: white;
-  border-width: 6px;
-  margin-left: -180px;
-  width: 0;
-  height: 0;
-}
-.ldap-view-block:before {
-  border-color: rgba(189, 189, 189, 0);
-  border-bottom-color: #bdbdbd;
-  border-width: 8px;
-  margin-left: -182px;
-}
-
-.audit-log-table {
-  height: calc(100vh - 244px);
-  overflow: auto;
-}
-
-.logs {
-  cursor: pointer;
-}
-.table-height {
-  // min-height: calc(100vh - 300px);
-  // max-height: calc(100vh - 300px);
-  min-height: calc(100vh - 238px);
-  max-height: calc(100vh - 238px);
-}
-.eye-icon{   
+.eye-icon {
   padding: 6px;
   border-radius: 0.25rem;
   right: -1px;
@@ -343,12 +91,39 @@ table {
   border-right: 1px solid #ccc !important;
   border-top: 1px solid #ccc !important;
 }
-.password-input{
-  width:90%;
+
+.password-input {
+  width: 90%;
   border-radius: 0.25em 0em 0em 0.25em;
 }
 
 .error-icon-password {
   right: 13%;
   top: 7px;
+}
+
+.eye-icon-auth {
+  right: 15%;
+  top: 39%;
+}
+
+.card-container {
+  height: calc(100vh - 185px);
+}
+
+.grid-header {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: space-between;
+  align-items: center;
+  
+  .button-group {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 20px;
+  }
+
+  .count-text {
+    color: #747e8d;
+  }
 }

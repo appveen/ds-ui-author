@@ -64,8 +64,12 @@
           [ngClass]="{'bg-border': activeSubTab==9}" (click)="activeSubTab=9">
           <span class="">Groups</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==9"></span>
-
         </div>
+        <div *ngIf="hasPermission('PVGAIS') || hasPermission('PMGAIS')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
+        [ngClass]="{'bg-border': activeSubTab==10}" (click)="activeSubTab=10">
+        <span class="">Insights</span>
+        <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==10"></span>
+      </div>
       </div>
     </div>
     <div class="p-3 w-100">
@@ -96,6 +100,8 @@
       </odp-group-author-bots>
       <odp-group-author-groups *ngIf="activeSubTab==9" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
       </odp-group-author-groups>
+      <odp-group-author-insights *ngIf="activeSubTab==10" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
+      </odp-group-author-insights>
     </div>
   </div>
 </div>

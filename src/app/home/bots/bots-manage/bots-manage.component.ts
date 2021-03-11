@@ -13,13 +13,12 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { noop } from 'rxjs';
 import * as _ from 'lodash';
 
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
-import { App } from 'src/app/utils/interfaces/app';
 import { DeleteModalConfig } from 'src/app/utils/interfaces/schemaBuilder';
 import { AppService } from 'src/app/utils/services/app.service';
-import { noop } from 'rxjs';
 
 @Component({
     selector: 'odp-bots-manage',
@@ -84,7 +83,6 @@ export class BotsManageComponent implements OnInit, OnDestroy {
     userTeams: Array<any>;
     allTeams: Array<any>;
     selectedGroups: Array<any>;
-    userAppList: Array<App>;
     additionInfo_helper_txt = 'Show More';
     showMoreInfo: boolean;
     editDetails: boolean;
@@ -123,7 +121,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
         const arr = [];
         if (self.user && self.user.attributes) {
             Object.keys(self.user.attributes).forEach(key => {
-                if (self.user.attributes[key] && typeof self.user.attributes[key] === 'object' ) {
+                if (self.user.attributes[key] && typeof self.user.attributes[key] === 'object') {
                     arr.push({
                         key,
                         label: self.user.attributes[key].label,
@@ -131,12 +129,12 @@ export class BotsManageComponent implements OnInit, OnDestroy {
                         type: self.user.attributes[key].type
                     });
                 }
-                else if(self.user.attributes[key] && typeof self.user.attributes[key] === 'string'){
+                else if (self.user.attributes[key] && typeof self.user.attributes[key] === 'string') {
                     arr.push({
                         key,
                         label: key,
-                        value:self.user.attributes[key] ,
-                        type:'String'
+                        value: self.user.attributes[key],
+                        type: 'String'
                     })
                 }
             });
@@ -168,28 +166,20 @@ export class BotsManageComponent implements OnInit, OnDestroy {
         self.madeAppAdmin = false;
         // userDetails form is for updating basic user info
         self.userDetails = self.fb.group({
-            name: ['', [Validators.required]],
+            name: ['', [Validators.required,Validators.maxLength(30),Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
             email: ['', [Validators.pattern(/[\w]+@[a-zA-Z0-9-]{2,}(\.[a-z]{2,})+/)]],
             phone: ['', [Validators.pattern(/^[-+]?\d*$/)]],
             username: ['', [Validators.required]]
         });
         // additionalDetails form is for adding extra key-value pair info for an user specific to an app
         self.additionalDetails = self.fb.group({
-            extraInfo: self.fb.array([
-                self.fb.group({
-                    key: ['', Validators.required],
-                    type: ['String', Validators.required],
-                    value: ['', Validators.required],
-                    label: ['', Validators.required]
-                })
-            ])
+            extraInfo: self.fb.array([])
         });
         // resetPasswordForm form is for updating user password
         self.resetPasswordForm = self.fb.group({
             password: [null],
             cpassword: [null, [Validators.required]],
         });
-        self.userAppList = [];
         self.userGroupConfig.filter = {};
         self.teamOptions.filter = {};
         self.teamOptions.noApp = true;
@@ -241,7 +231,6 @@ export class BotsManageComponent implements OnInit, OnDestroy {
     getLabelError(i) {
         const self = this;
         return self.additionalDetails.get(['extraInfo', i, 'label']).touched
-            && self.additionalDetails.get(['extraInfo', i, 'label']).dirty
             && self.additionalDetails.get(['extraInfo', i, 'label']).hasError('required');
     }
 
@@ -252,14 +241,13 @@ export class BotsManageComponent implements OnInit, OnDestroy {
     }
     getKeyError(i) {
         const self = this;
-        return self.additionalDetails.get(['extraInfo', i, 'key']).touched && self.additionalDetails.get(['extraInfo', i, 'key']).dirty &&
+        return self.additionalDetails.get(['extraInfo', i, 'key']).touched &&
             self.additionalDetails.get(['extraInfo', i, 'key']).hasError('required');
     }
 
     getValError(i) {
         const self = this;
         return self.additionalDetails.get(['extraInfo', i, 'value']).touched &&
-            self.additionalDetails.get(['extraInfo', i, 'value']).dirty &&
             self.additionalDetails.get(['extraInfo', i, 'value']).hasError('required');
     }
 
@@ -328,8 +316,10 @@ export class BotsManageComponent implements OnInit, OnDestroy {
     addNewDetail() {
         const self = this;
         const newData = self.fb.group({
-            key: [''],
-            value: ['']
+            key: ['', [Validators.required]],
+            type: ['String', [Validators.required]],
+            value: ['', [Validators.required]],
+            label: ['', [Validators.required]]
         });
         (self.additionalDetails.get('extraInfo') as FormArray).push(newData);
         setTimeout(() => {
@@ -357,37 +347,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
     updateDetails() {
         const self = this;
         if (self.userDetails.invalid) {
-            const invalidCntrls = [];
-            const userControls = self.userDetails.controls;
-            for (const cntrl in userControls) {
-                if (userControls[cntrl].invalid) {
-                    invalidCntrls.push(cntrl);
-                }
-            }
-            let invalidItems = `<div>Please fill in the following fields:</div><ul>`;
-            invalidCntrls.forEach(e => {
-                let fieldName = '';
-                switch (e) {
-                    case 'name':
-                        fieldName = 'Name';
-                        break;
-                    case 'phone':
-                        fieldName = 'Phone';
-                        break;
-                    case 'email':
-                        fieldName = 'Email ID';
-                        break;
-                    case 'username':
-                        fieldName = 'Username';
-                        break;
-                    default:
-                        fieldName = e;
-                }
-                invalidItems = invalidItems.concat(`<li>${fieldName}</li>`);
-            });
-
-            invalidItems = invalidItems.concat(`</ul>`);
-            self.ts.warning(invalidItems);
+           return
         } else {
             self.user.basicDetails.name = self.userDetails.get('name').value;
             self.user.basicDetails.phone = self.userDetails.get('phone').value;
@@ -462,14 +422,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
         const self = this;
         self.additionalDetails.reset();
         self.additionalDetails = self.fb.group({
-            extraInfo: self.fb.array([
-                self.fb.group({
-                    key: ['', Validators.required],
-                    type: ['String', Validators.required],
-                    value: ['', Validators.required],
-                    label: ['', Validators.required]
-                })
-            ])
+            extraInfo: self.fb.array([])
         });
         // (self.additionalDetails.get('extraInfo') as FormArray).clear();
     }
@@ -480,6 +433,27 @@ export class BotsManageComponent implements OnInit, OnDestroy {
      */
     addAdditionInfo() {
         const self = this;
+        if (self.userAttributeList.length) {
+            self.userAttributeList.forEach(element => {
+                let form = self.fb.group({
+                    key: ['', Validators.required],
+                    type: ['String', Validators.required],
+                    value: ['', Validators.required],
+                    label: ['', Validators.required]
+                })
+                form.patchValue(element);
+                (self.additionalDetails.get('extraInfo') as FormArray).push(form);
+            });
+        } else {
+            const form = self.fb.group({
+                key: ['', [Validators.required]],
+                type: ['String', [Validators.required]],
+                value: ['', [Validators.required]],
+                label: ['', [Validators.required]]
+            });
+            (self.additionalDetails.get('extraInfo') as FormArray).push(form);
+
+        }
         if (self.manageUser) {
             self.newAttributeModalRef = self.commonService.modal(self.newAttributeModal, { size: 'lg' });
             self.newAttributeModalRef.result.then(close => {
@@ -583,6 +557,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
             self.ts.warning('Please check the form fields, looks like few fields are empty');
         } else {
             self.newAttributeModalRef.close();
+            self.user.attributes = {};
             self.userAttributes.forEach((data) => {
                 const payload = data.value;
                 const detailKey = payload.key;
@@ -592,7 +567,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
             self.commonService.put('user', `/usr/${self.user._id}`, self.user)
                 .subscribe((res) => {
                     self.user = res;
-                    self.ts.success('Added custom Details successfully');
+                    self.ts.success('Custom details updated successfully');
                     self.resetAdditionDetailForm();
                 }, (err) => {
                     self.ts.error(err.error.message);
@@ -709,37 +684,6 @@ export class BotsManageComponent implements OnInit, OnDestroy {
         });
     }
 
-    getUserApps() {
-        const self = this;
-        self.subscriptions['userApps'] = self.commonService.get('user', '/usr/' + self.user._id + '/appList', self.userAppConfig)
-            .subscribe((apps) => {
-                self.userAppList = [];
-                apps.apps.forEach(app => {
-                    const temp = {
-                        _id: app
-                    };
-                    self.userAppList.push(temp);
-                });
-                self.userAppList.forEach(app => {
-                    self.getAppLogo(app);
-                });
-            });
-    }
-
-    getAppLogo(app: App) {
-        const self = this;
-        const option: GetOptions = { select: 'logo.thumbnail', noApp: true };
-        self.subscriptions['getAppLogo_' + app._id] = self.commonService.get('user', '/app/' + app._id, option)
-            .subscribe((res) => {
-                app.logo = res.logo;
-            }, err => {
-                if (err.status === 404) {
-                    const index = self.userAppList.findIndex(e => e._id === app._id);
-                    self.userAppList.splice(index, 1);
-                }
-            });
-    }
-
     initConfig() {
         const self = this;
         self.userGroupConfig.filter.users = self.user._id;
@@ -760,7 +704,6 @@ export class BotsManageComponent implements OnInit, OnDestroy {
             self.additionalInfo = self.user.attributes;
         }*/
         self.getUserTeam();
-        self.getUserApps();
     }
 
     /** removeFromApp method is used to Remove the user from current

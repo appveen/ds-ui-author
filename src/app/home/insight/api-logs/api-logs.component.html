@@ -1,0 +1,156 @@
+<div class="d-flex flex-column  mt-2">
+    <div class="d-flex  mb-2 justify-content-end">
+        <div class="text-gray-medium mr-3">
+            <label class="m-0">Showing {{loaded || 0 }} of {{currentRecordsCount || 0 }}</label>
+        </div>
+    </div>
+    <div class="grid-container">
+        <ag-grid-angular #agGrid class="ag-theme-balham border-0" [frameworkComponents]="frameworkComponents"
+            [gridOptions]="gridOptions" [datasource]="dataSource">
+        </ag-grid-angular>
+    </div>
+
+    <div class="req-container position-absolute" *ngIf="showDetail">
+        <div class="d-flex align-items-center justify-content-between pt-4 ml-4">
+            <span class="font-weight-bold mb-1">{{selectedLog?.txnId}}</span>
+            <span class="fa fa-times text-muted hover mr-4" (click)="showDetail = false; activeTab = 0"></span>
+        </div>
+        <div class="tabs d-flex align-items-center border-bottom mt-3" id="sbTabs">
+            <div class="text-dark px-3 py-2 hover" (click)="activateTab(0)" [ngClass]="{'active':activeTab==0}">
+                <span>Request</span>
+            </div>
+            <div class="text-dark px-3 py-2 hover" (click)="activateTab(1)" [ngClass]="{'active':activeTab==1}">
+                <span>Response</span>
+            </div>
+        </div>
+
+        <div class="bg-light p-1 detail-container" #scrollMe>
+            <div class="m-2 bg-white req-details">
+                <div class="font-weight-bold  pl-3 pt-3">Request</div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Method & URL</div>
+                    <div class="d-flex px-4 pt-2">
+                        <div class="bg-dark method mr-2 d-flex justify-content-center">
+                            <span class="text-white">{{selectedLog?.operation}}</span>
+                        </div>
+                        <pre class="url">{{selectedLog?.url}}</pre>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Time</div>
+                    <div class="d-flex px-4 pt-2">
+                        <div class="ml-1">
+                            {{selectedLog?._metadata.createdAt | date:'dd-MMM-yyyy hh:mm:ss a'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Source of request</div>
+                    <div class="d-flex px-4 pt-2">
+                        <odp-service-icon size="18"></odp-service-icon>
+                        <span class="ml-1 ">
+                            {{ nameFormatter(selectedLog.serviceId)}}
+                        </span>
+                    </div>
+                    <div class="d-flex px-4 pt-2">
+                        <span class=" ml-1 dot-link"></span>
+                        <span class="mx-1 mt-1 far fa-bell"></span>
+                        <!-- <span class="mx-1">Remote IP</span> -->
+                        <div>{{selectedLog.logType}}</div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Requested By</div>
+                    <div class="d-flex px-4 pt-2">
+                        <span class="far fa-user"></span>
+                        <span class="ml-1 ">
+                            {{selectedLog?.userId}}
+                        </span>
+                    </div>
+                    <div class="d-flex px-4 pt-2">
+                        <span class=" ml-1 dot-link"></span>
+                        <span class="mx-1">Remote IP</span>
+                        <div>{{selectedLog.source}}</div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom"
+                    *ngIf="selectedLog?.operation==='POST' || selectedLog?.operation==='PUT' ">
+                    <div class="d-flex px-4 pt-2">
+                        <button type="button" class="btn btn-link text-accent" *ngIf="selectedLog?.logType==='api'  "
+                            (click)="showObject()">
+                            View request payload
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="m-2 bg-white req-details">
+                <div class="font-weight-bold  pl-3 pt-3">Response</div>
+
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Outcome</div>
+                    <div class="d-flex px-4 pt-2">
+                        <div class="status" [ngClass]="{
+                            'bg-success':selectedLog?.statusCode < 400,
+                            'bg-danger':selectedLog?.statusCode >=400}">
+                            <span class="text-white d-flex justify-content-center">
+                                {{selectedLog?.statusCode}}
+                            </span>
+                        </div>
+                        <div class="ml-1">
+                            {{selectedLog?.status}}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Time</div>
+                    <div class="d-flex px-4 pt-2">
+                        <div class="ml-1">
+                            {{selectedLog?._metadata.createdAt | date:'dd-MMM-yyyy hh:mm:ss a'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column p-3 border-bottom">
+                    <div class="text-muted">Transaction ID</div>
+                    <div class="d-flex px-4 pt-2">
+
+                        <div class="ml-1 ">
+                            {{selectedLog?.txnId}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<ng-template #logModal>
+    <div class="preHook-preview-modal">
+        <div class="modal-header bg-white">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <div class="d-flex align-items-center">
+                    <strong class="mr-2">Logs : {{selectedLog?.txnId}}</strong>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body p-4" id="requestData">
+            <pre [innerHTML]="htmlContent" class="pre"></pre>
+        </div>
+        <div class="modal-footer p-3 d-flex w-100 mt-auto justify-content-end align-items-end">
+            <div class="w-50 d-flex">
+                <button class="btn btn-link" type="button" (click)="copyFormat();tooltip.open()">Copy</button>
+                <div id="tooltip" placement="top" ngbTooltip="Copied" #tooltip="ngbTooltip" triggers="manual">
+                </div>
+            </div>
+            <div class="w-50 d-flex">
+                <button type="button" class="btn btn-link ml-auto" (click)="logModalRef.close(false)"
+                    id="sbDeleteModalNo">Close</button>
+            </div>
+           
+        </div>
+    </div>
+</ng-template>

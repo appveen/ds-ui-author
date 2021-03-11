@@ -1,5 +1,5 @@
 import { Component, OnDestroy, Input, TemplateRef, ViewChild, AfterViewInit, AfterContentChecked } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { CommonService } from '../services/common.service';
@@ -92,11 +92,18 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     self.formList.push(self.form);
     if (self.form.get('type').value === 'Array') {
       let subType = self.form.get(['definition', 0]);
-      while (subType.get('type').value === 'Array') {
+      if (subType) {
+        while (subType.get('type').value === 'Array') {
+          self.formList.push(subType as FormGroup);
+          subType = subType.get(['definition', 0]);
+        }
         self.formList.push(subType as FormGroup);
-        subType = subType.get(['definition', 0]);
       }
-      self.formList.push(subType as FormGroup);
+    }
+    if (this.formatType === 'FLATFILE') {
+      this.form.get('properties.fieldLength').setValidators([Validators.required, Validators.min(1)]);
+    } else {
+      this.form.get('properties.fieldLength').setValidators(null);
     }
   }
 
@@ -193,30 +200,44 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     if (self.form.value.properties.dataPath) {
       field = self.form.value.properties.dataPath.split('.definition').join('');
     }
-    if (self.canEdit) {
-      prop.patchValue(!prop.value);
-      self.form.markAsDirty();
+
+    if (self.form.value.properties && self.form.value.properties.password) {
+      field = field + '.checksum';
     }
     const options = {
       fields: field
     }
     if (self.subscriptions['unique-status']) {
       self.subscriptions['unique-status'].unsubscribe();
+      self.showLazyLoader = false;
+    }
+    if (self.canEdit) {
+      prop.patchValue(!prop.value);
+      self.form.markAsDirty();
     }
 
     if (prop.value && self.form.value.key) {
+      self.showLazyLoader = true
       self.subscriptions['unique-status'] = self.commonService
         .get('serviceManager', '/service/' + self.edit.id + '/checkUnique', options).subscribe(res => {
+          self.showLazyLoader = false;
           if (!res[field]) {
-            self.ts.warning('Unique index creation failed as there are non-unique values present in Appcenter')
+            prop.patchValue(false);
+            self.ts.warning('There are duplicate data present in appcenter for this attribute. Please clean up the data before marking the attribute as Unique.')
           }
 
         }, err => {
+          self.showLazyLoader = false;
           self.commonService.errorToast(err, 'Unable to fetch unique status');
         });
     }
   }
 
+  clearValue(){
+   this._dateFrom = null;
+   this.formList[0].get('properties.default').patchValue(null);
+  }
+  
   get labelError() {
     const self = this;
     if (self.form.get('properties.label') && self.form.get('properties.label').errors) {

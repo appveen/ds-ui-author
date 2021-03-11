@@ -95,7 +95,7 @@ export class FormulaBuilderComponent implements OnInit {
             self.selectedArg.operation = temp.operation;
             self.selectedArg.description = temp.description;
             self.selectedArg._args = self.appService.cloneObject(temp._args);
-            delete self.selectedArg.XPath;
+            delete self.selectedArg.dataPath;
             delete self.selectedArg.value;
         } else {
             if (self.formula.length === 0) {
@@ -132,7 +132,7 @@ export class FormulaBuilderComponent implements OnInit {
         const self = this;
         if (self.selectedArg) {
             self.selectedArg.type = 'FIXED';
-            self.selectedArg.XPath = attribute.xpath;
+            self.selectedArg.dataPath = attribute.dataPath;
             self.selectedArg.label = attribute.name;
             self.selectedArg.innerType = attribute.type;
         }
@@ -194,7 +194,7 @@ export interface MapperFunction {
     label?: string;
     type?: string;
     value?: string;
-    XPath?: string;
+    dataPath?: string;
     operation?: string;
     operationType?: string;
     description?: string;
@@ -213,7 +213,7 @@ export interface MapperFormula {
     label?: string;
     type?: string;
     value?: string;
-    XPath?: string;
+    dataPath?: string;
     operation?: string;
     operationType?: string;
     description?: string;

@@ -1,0 +1,54 @@
+<ul class="d-flex first">
+    <li class="field">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <span class="text mr-2">Function</span>
+            </div>
+            <span class="fa fa-chevron-right"></span>
+        </div>
+        <ul class="d-flex">
+            <li class="field" *ngFor="let funcGrp of functionList">
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <div class="d-flex align-items-center">
+                        <span class="text mr-2">{{funcGrp.category}}</span>
+                    </div>
+                    <span class="fa fa-chevron-right"></span>
+                </div>
+                <ul class="d-flex">
+                    <li class="field" *ngFor="let func of funcGrp.items" (click)="select(func,'DEDUCED')">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <div class="d-flex align-items-center">
+                                <span class="text mr-2">{{func.label}}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li class="field">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <span class="text mr-2">Source</span>
+            </div>
+            <span class="fa fa-chevron-right"></span>
+        </div>
+        <ul class="d-flex">
+            <li class="field" *ngFor="let def of sources" (click)="select(def,'FIXED')">
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <div class="d-flex align-items-center">
+                        <odp-field-type [field]="def" class="mr-2"></odp-field-type>
+                        <span class="text mr-2">{{def.properties.name}}</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <li class="field">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <span class="text mr-2">Value</span>
+            </div>
+        </div>
+    </li>
+</ul>

@@ -45,10 +45,17 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     userAttributeForm: FormGroup;
     manageAttributeModalRef: NgbModalRef;
     userAttributeList: Array<any>;
+    isUserAttrEdit: boolean;
 
     get user() {
         const self = this;
         return self._user;
+    }
+
+    get attributeAlreadyExists(): boolean {
+        const value = this.userAttributeForm?.get('label').value || '';
+        const list = !!this.userAttributeList?.length ? this.userAttributeList : [];
+        return !!value && !this.isUserAttrEdit && list.some(item => item.key === value);
     }
 
     @Input() set user(value) {
@@ -83,7 +90,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     showLazyLoader: boolean;
     toggleFieldTypeSelector: boolean;
     types: Array<any>;
-    showPassword:boolean;
+    showPassword: any;
     constructor(private fb: FormBuilder,
         private ts: ToastrService,
         private appService: AppService,
@@ -111,7 +118,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
             value: [null, [Validators.required]]
         });
         self.resetPasswordForm = self.fb.group({
-            password: [null, [Validators.required]],
+            password: [null, [Validators.required, Validators.minLength(8)]],
             cpassword: [null, [Validators.required]],
         });
         self.openDeleteModal = new EventEmitter();
@@ -127,6 +134,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
             { class: 'odp-boolean', value: 'Boolean', label: 'True/False' },
             { class: 'odp-calendar', value: 'Date', label: 'Date' },
         ];
+        this.showPassword = {};
     }
 
     ngOnInit() {
@@ -170,8 +178,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
     get invalidCPassword() {
         const self = this;
-        return (self.resetPasswordForm.get('cpassword').touched &&
-            self.resetPasswordForm.get('cpassword').dirty
+        return (self.resetPasswordForm.get('cpassword').dirty
             && self.resetPasswordForm.get('cpassword').hasError('required') ||
             (self.resetPasswordForm.get('cpassword').dirty && self.invalidMatch));
     }
@@ -298,6 +305,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
     manageUserAttribute(val?: any) {
         const self = this;
+        self.isUserAttrEdit = !!val;
         if (val) {
             self.userAttributeForm.get('key').patchValue(val.key);
             self.userAttributeForm.get('label').patchValue(val.label);
@@ -377,31 +385,9 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
     resetPassword() {
         const self = this;
+        self.resetPasswordForm.get('password').markAsDirty();
+        self.resetPasswordForm.get('cpassword').markAsDirty();
         if (self.resetPasswordForm.invalid) {
-            const invalidCtrls = [];
-            const pwdControls = self.resetPasswordForm.controls;
-            for (const cntrl in pwdControls) {
-                if (pwdControls[cntrl].invalid) {
-                    invalidCtrls.push(cntrl);
-                }
-            }
-            let invalidItems = `<div>Please fill in the following fields:</div><ul>`;
-            invalidCtrls.forEach(e => {
-                let fieldName = '';
-                switch (e) {
-                    case 'password':
-                        fieldName = 'Password';
-                        break;
-                    case 'cpassword':
-                        fieldName = 'Confirm Password';
-                        break;
-                    default:
-                        fieldName = e;
-                }
-                invalidItems = invalidItems.concat(`<li>${fieldName}</li>`);
-            });
-            invalidItems = invalidItems.concat(`</ul>`);
-            self.ts.warning(invalidItems);
             return;
         } else {
             self.showLazyLoader = true;

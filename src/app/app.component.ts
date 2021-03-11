@@ -22,6 +22,10 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentChecked,
   sessionExpireMsg: string;
   navigating: boolean;
   year: number;
+  get showStallLoader(): boolean {
+    return !!this.commonService?.stallRequests;
+  }
+
   constructor(private titleService: Title,
     public commonService: CommonService,
     private ts: ToastrService,

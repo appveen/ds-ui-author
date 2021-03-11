@@ -110,12 +110,12 @@ export class BotsComponent implements OnInit, OnDestroy {
         const self = this;
         self.userForm = self.fb.group({
             userData: self.fb.group({
-                username: [null, [Validators.required]],
+                username: [null, [Validators.required, Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
                 password: [null, [Validators.required, Validators.minLength(8)]],
                 bot: [true],
                 attributes: [{}],
                 basicDetails: self.fb.group({
-                    name: [null, [Validators.required]],
+                    name: [null, [Validators.required,Validators.maxLength(30), Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
                     phone: [null],
                     email: [null, [Validators.pattern(/[\w]+@[a-zA-Z0-9-]{2,}(\.[a-z]{2,})+/)]],
                     description: [null],
@@ -170,7 +170,7 @@ export class BotsComponent implements OnInit, OnDestroy {
     }
 
     initConfig() {
-        const self = this;
+        const self = this;  
         self.botList = [];
         self.apiConfig.count = 10;
         self.apiConfig.page = 1;
@@ -293,7 +293,7 @@ export class BotsComponent implements OnInit, OnDestroy {
      */
     fetchTeams() {
         const self = this;
-        self.subscriptions['teamsList'] = self.commonService.get('user', `/${self.commonService.app._id}/group`, { noApp: true })
+        self.subscriptions['teamsList'] = self.commonService.get('user', `/${self.commonService.app._id}/group`, { noApp: true, count: -1 })
             .subscribe((teams) => {
                 self.teamList = teams;
                 const index = self.teamList.findIndex(e => e.name === '#');
@@ -307,6 +307,9 @@ export class BotsComponent implements OnInit, OnDestroy {
 
     getBotList() {
         const self = this;
+        if (self.subscriptions['botList']) {
+            self.subscriptions['botList'].unsubscribe();
+        }
         if (self.hasPermission('PMB') || self.hasPermission('PVB')) {
             self.getBotCount();
             self.showLazyLoader = true;
@@ -328,8 +331,11 @@ export class BotsComponent implements OnInit, OnDestroy {
 
     getBotCount() {
         const self = this;
+        if (self.subscriptions['botCount']) {
+            self.subscriptions['botCount'].unsubscribe();
+        }
         if (self.hasPermission('PMB') || self.hasPermission('PVB')) {
-            self.subscriptions['botList'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}/count`, self.apiConfig)
+            self.subscriptions['botCount'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}/count`, self.apiConfig)
                 .subscribe((res) => {
                     self.totalRecords = res;
                 }, (err) => {
@@ -365,7 +371,8 @@ export class BotsComponent implements OnInit, OnDestroy {
             $or: [
                 { username: '/' + searchTerm + '/' },
                 { 'basicDetails.name': '/' + searchTerm + '/' }
-            ]
+            ],
+            bot: true
         };
         self.apiConfig.page = 1;
         self.botList = [];
@@ -375,7 +382,7 @@ export class BotsComponent implements OnInit, OnDestroy {
     clearSearch() {
         const self = this;
         self.initConfig();
-        self.apiConfig.filter = null;
+        self.getBotList();
     }
 
     sortSelected(model: any) {

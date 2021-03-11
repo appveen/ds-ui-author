@@ -2,8 +2,8 @@
 
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
-@import "~ag-grid-community/dist/styles/ag-grid.css";
-@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+@import "~ag-grid-community/src/styles/ag-grid.scss";
+@import "~ag-grid-community/src/styles/ag-theme-balham/sass/ag-theme-balham-mixin";
 
 .add-blur {
   -webkit-filter: blur(6px);
@@ -572,7 +572,7 @@
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.24);
 }
 
-/*---- ODP DATA GRID START ----*/
+/*---- DATA GRID START ----*/
 .data-grid-options {
   min-height: 40px;
   max-height: 40px;
@@ -679,7 +679,7 @@
     }
   }
 }
-/*---- ODP DATA GRID END ----*/
+/*---- DATA GRID END ----*/
 
 // .high-zIndex {
 //   //z-index: 1071;
@@ -812,21 +812,26 @@
   user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
 }
-/*---- ODP AG-GRID START ----*/
+/*---- AG-GRID START ----*/
 .ag-theme-balham {
+
+  @include ag-theme-balham((
+    balham-active-color: $primary
+  ));
   font-family: "Lato";
   font-size: 13px;
-  // .ag-root {
-  //   border: 0;
-  // }
-  // .ag-header {
-  //   background: #fff;
-  //   .ag-header-row:last-child{
-  //     .ag-header-cell{
-  //       border-top: 0;
-  //     }
-  //   }
-  // }
+  .ag-root {
+    border: 0;
+  }
+  .ag-header {
+    background: #fff;
+    .ag-header-row:last-child{
+      .ag-header-cell{
+        border-top: 0;
+      }
+    }
+  }
+
   .ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right) {
     border-style: dashed !important;
   }

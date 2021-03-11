@@ -3,8 +3,8 @@ import { NgbModalRef, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstr
 import { HttpHeaders, HttpClient, HttpParams, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, Subject, interval, timer } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { Observable, Subject, interval, timer, of } from 'rxjs';
+import { delayWhen, filter, flatMap, map, switchMap, take } from 'rxjs/operators';
 import * as sh from 'shorthash';
 import * as uuid from 'uuid/v1';
 import * as io from 'socket.io-client';
@@ -25,6 +25,16 @@ export class CommonService {
     private heartBeatRoutine: any;
     private sessionWarningRoutine: any;
     private subscriptions: any;
+    private extendApi: () => Observable<any>;
+    private fetchUserRolesApi: () => Observable<any>;
+    private isAuthenticatedApi: (noLoader?: boolean) => Observable<any>;
+    private deleteApi: (type, url, data?) => Observable<any>;
+    uploadFile: (type, url, data) => Observable<any>;
+    refreshToken: () => Observable<any>;
+    sendHeartBeat: () => Observable<any>;
+    get: (type, url, options?: GetOptions) => Observable<any>;
+    put: (type, url, data?) =>  Observable<any>;
+    post: (type, url, data) => Observable<any>;
     commonSpinner: boolean;
     addBlur: boolean;
     apiCalls: any;
@@ -59,6 +69,10 @@ export class CommonService {
     serviceMap: any;
     userMap: any;
     viewMicroFlow: boolean;
+    stallRequests: boolean;
+    private stallTime: number;
+    private stallCount = 0;
+
     constructor(
         private http: HttpClient,
         private appService: AppService,
@@ -95,6 +109,49 @@ export class CommonService {
         self.serviceMap = [];
         self.userMap = [];
         self.viewMicroFlow = false;
+        [
+            'extendApi',
+            'uploadFile',
+            'refreshToken',
+            'sendHeartBeat',
+            'fetchUserRolesApi',
+            'isAuthenticatedApi',
+            'get',
+            'put',
+            'post',
+            'deleteApi'
+        ].forEach(method => {
+            this[method] = (...args) => {
+                let user = this.sessionService.getUser();
+                if(!!user && typeof user === 'string') {
+                    user = JSON.parse(user);
+                }
+                if (!!user?.rbacUserToSingleSession) {
+                    this.stallCount += this.stallRequests ? 1 : 0;
+                    return of(true).pipe(
+                        map(() => (!!this.stallTime ? Date.now() - this.stallTime : 0)),
+                        delayWhen(() =>
+                            timer(0, 50).pipe(
+                                filter(() => !this.stallRequests),
+                                take(1)
+                            )
+                        ),
+                        switchMap(val => {
+                            if (!val || !this.stallCount) {
+                                return this['_' + method + '_'](...args);
+                            }
+                            this.stallCount -= 1;
+                            return timer(new Date(Date.now() + val)).pipe(
+                                take(1),
+                                switchMap(() => this['_' + method + '_'](...args))
+                            );
+                        })
+                    );
+                } else {
+                    return this['_' + method + '_'](...args);
+                }
+            };
+        });
     }
 
     afterAuthentication(): Promise<any> {
@@ -102,33 +159,45 @@ export class CommonService {
         self.apiCalls.afterAuthentication = true;
         return new Promise((resolve, reject) => {
             if (!self.userDetails.isSuperAdmin) {
-                self.fetchUserRoles().then(res1 => {
-                    self.fetchLastActiveApp().then(app => {
-                        self.apiCalls.afterAuthentication = false;
-                        resolve(res1);
-                    }, (err: any) => {
+                self.fetchUserRoles().then(
+                    res1 => {
+                        self.fetchLastActiveApp().then(
+                            app => {
+                                self.apiCalls.afterAuthentication = false;
+                                resolve(res1);
+                            },
+                            (err: any) => {
+                                self.apiCalls.afterAuthentication = false;
+                                reject(err);
+                            }
+                        );
+                    },
+                    (err: any) => {
                         self.apiCalls.afterAuthentication = false;
                         reject(err);
-                    });
-                }, (err: any) => {
-                    self.apiCalls.afterAuthentication = false;
-                    reject(err);
-                });
+                    }
+                );
             } else {
                 const arr = [];
                 arr.push(self.fetchAllApps());
-                Promise.all(arr).then((r) => {
-                    self.fetchLastActiveApp().then(app => {
-                        self.apiCalls.afterAuthentication = false;
-                        resolve({ status: 200 });
-                    }, (err: any) => {
+                Promise.all(arr).then(
+                    r => {
+                        self.fetchLastActiveApp().then(
+                            app => {
+                                self.apiCalls.afterAuthentication = false;
+                                resolve({ status: 200 });
+                            },
+                            (err: any) => {
+                                self.apiCalls.afterAuthentication = false;
+                                reject(err);
+                            }
+                        );
+                    },
+                    (err: any) => {
                         self.apiCalls.afterAuthentication = false;
                         reject(err);
-                    });
-                }, (err: any) => {
-                    self.apiCalls.afterAuthentication = false;
-                    reject(err);
-                });
+                    }
+                );
             }
         });
     }
@@ -138,22 +207,24 @@ export class CommonService {
         const options: GetOptions = {
             count: -1,
             noApp: true,
-            select: 'description,logo.thumbnail',
+            select: 'description,logo.thumbnail,defaultTimezone',
             sort: '_id'
         };
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['getAllApps'] = self.get('user', '/app', options)
-                .subscribe(res => {
+            self.subscriptions['getAllApps'] = self.get('user', '/app', options).subscribe(
+                res => {
                     self.appList = res;
                     self.app = self.appList[0];
                     resolve(res);
-                }, (err: any) => {
+                },
+                (err: any) => {
                     reject(err);
-                });
+                }
+            );
         });
     }
 
-    fetchUserRoles() {
+    private _fetchUserRolesApi_() {
         const self = this;
         const URL = environment.url['user'] + `/usr/${self.userDetails._id}/allRoles`;
         const filter: any = {
@@ -161,49 +232,64 @@ export class CommonService {
         };
         let httpParams = new HttpParams();
         httpParams = httpParams.set('filter', JSON.stringify(filter));
+        return self.http.get(URL, {
+            headers: self._getHeaders(false),
+            params: httpParams
+        });
+    }
+
+    fetchUserRoles() {
+        const self = this;
         self.noAccess = false;
         if (self.subscriptions['fetchUserRoles']) {
             self.subscriptions['fetchUserRoles'].unsubscribe();
         }
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['fetchUserRoles'] = self.http
-                .get(URL, {
-                    headers: self._getHeaders(),
-                    params: httpParams
-                })
-                .subscribe((data: any) => {
-                    self.permissions = [];
-                    if (data && data.roles && data.roles.length > 0) {
-                        self.permissions = data.roles.filter(e => e.type === 'author');
+            self.subscriptions['fetchUserRoles'] = this.fetchUserRolesApi()
+                .subscribe(
+                    (data: any) => {
+                        self.permissions = [];
+                        if (data && data.roles && data.roles.length > 0) {
+                            self.permissions = data.roles.filter(e => e.type === 'author');
+                        }
+                        const apps: Array<App> = self.permissions
+                            .map(e => e.app)
+                            .filter((e, i, a) => a.indexOf(e) === i)
+                            .map(e => Object.defineProperty({}, '_id', { value: e }));
+                        if (!self.userDetails.accessControl) {
+                            self.userDetails.accessControl = {};
+                        }
+                        if (!self.userDetails.accessControl.apps) {
+                            self.userDetails.accessControl.apps = [];
+                        }
+                        self.userDetails.apps = apps
+                            .concat(self.userDetails.accessControl.apps)
+                            .filter((e, i, a) => a.findIndex(x => x._id === e._id) === i);
+                        self.appList = self.userDetails.apps;
+                        if (self.appList && self.appList.length > 0) {
+                            self.app = self.appList[0];
+                            const arr = [];
+                            arr.push(self.getAppsDetails(self.appList));
+                            Promise.all(arr).then(
+                                r => {
+                                    resolve({ status: 200 });
+                                },
+                                (err: any) => {
+                                    reject(err);
+                                }
+                            );
+                        } else {
+                            self.noAccess = true;
+                            resolve({
+                                status: 401,
+                                message: "You don't have enough permissions"
+                            });
+                        }
+                    },
+                    err => {
+                        reject(err);
                     }
-                    const apps: Array<App> = self.permissions.map(e => e.app)
-                        .filter((e, i, a) => a.indexOf(e) === i)
-                        .map(e => Object.defineProperty({}, '_id', { value: e }));
-                    if (!self.userDetails.accessControl) {
-                        self.userDetails.accessControl = {};
-                    }
-                    if (!self.userDetails.accessControl.apps) {
-                        self.userDetails.accessControl.apps = [];
-                    }
-                    self.userDetails.apps = apps.concat(self.userDetails.accessControl.apps)
-                        .filter((e, i, a) => a.findIndex(x => x._id === e._id) === i);
-                    self.appList = self.userDetails.apps;
-                    if (self.appList && self.appList.length > 0) {
-                        self.app = self.appList[0];
-                        const arr = [];
-                        arr.push(self.getAppsDetails(self.appList));
-                        Promise.all(arr).then((r) => {
-                            resolve({ status: 200 });
-                        }, (err: any) => {
-                            reject(err);
-                        });
-                    } else {
-                        self.noAccess = true;
-                        resolve({ status: 401, message: 'You don\'t have enough permissions' });
-                    }
-                }, err => {
-                    reject(err);
-                });
+                );
         });
     }
 
@@ -213,14 +299,15 @@ export class CommonService {
             self.subscriptions['getAppDetails_' + app._id].unsubscribe();
         }
         return new Promise((resolve, reject) => {
-            self.subscriptions['getAppDetails_' + app._id] = self.get('user', '/app/' + app._id)
-                .subscribe((res: any) => {
+            self.subscriptions['getAppDetails_' + app._id] = self.get('user', '/app/' + app._id).subscribe(
+                (res: any) => {
                     app.logo = res.logo;
                     app.appCenterStyle = res.appCenterStyle;
                     app.description = res.description;
                     app.serviceVersionValidity = res.serviceVersionValidity;
                     resolve(res);
-                }, (err: any) => {
+                },
+                (err: any) => {
                     if (err.status === 404) {
                         if (!self.appList) {
                             self.appList = [];
@@ -231,7 +318,8 @@ export class CommonService {
                         }
                     }
                     resolve(err);
-                });
+                }
+            );
         });
     }
 
@@ -253,32 +341,39 @@ export class CommonService {
             fetch(ids);
         }
         function fetch(idList: Array<string>) {
-            promises.push(new Promise((resolve, reject) => {
-                self.subscriptions['getAppsDetails'] = self.get('user', '/app/', {
-                    noApp: true,
-                    count: -1,
-                    select: 'description,logo.thumbnail',
-                    sort: '_id',
-                    filter: {
-                        _id: {
-                            $in: idList
-                        }
-                    }
-                }).subscribe((res: Array<App>) => {
-                    self.appList.forEach(app => {
-                        const temp = res.find(e => e._id === app._id);
-                        if (temp) {
-                            app.logo = temp.logo;
-                            app.appCenterStyle = temp.appCenterStyle;
-                            app.description = temp.description;
-                            app.serviceVersionValidity = temp.serviceVersionValidity;
-                        }
-                    });
-                    resolve(res);
-                }, (err: any) => {
-                    resolve(err);
-                });
-            }));
+            promises.push(
+                new Promise((resolve, reject) => {
+                    self.subscriptions['getAppsDetails'] = self
+                        .get('user', '/app/', {
+                            noApp: true,
+                            count: -1,
+                            select: 'description,logo.thumbnail,defaultTimezone',
+                            sort: '_id',
+                            filter: {
+                                _id: {
+                                    $in: idList
+                                }
+                            }
+                        })
+                        .subscribe(
+                            (res: Array<App>) => {
+                                self.appList.forEach(app => {
+                                    const temp = res.find(e => e._id === app._id);
+                                    if (temp) {
+                                        app.logo = temp.logo;
+                                        app.appCenterStyle = temp.appCenterStyle;
+                                        app.description = temp.description;
+                                        app.serviceVersionValidity = temp.serviceVersionValidity;
+                                    }
+                                });
+                                resolve(res);
+                            },
+                            (err: any) => {
+                                resolve(err);
+                            }
+                        );
+                })
+            );
         }
         return Promise.all(promises);
     }
@@ -298,8 +393,8 @@ export class CommonService {
                 noApp: true
             };
             self.lastAppPrefId = null;
-            self.subscriptions['fetchLastActiveApp'] = self.get('user', '/preferences', options)
-                .subscribe(prefRes => {
+            self.subscriptions['fetchLastActiveApp'] = self.get('user', '/preferences', options).subscribe(
+                prefRes => {
                     if (prefRes && prefRes.length > 0) {
                         self.lastAppPrefId = prefRes[0]._id;
                         if (prefRes[0].value) {
@@ -307,20 +402,21 @@ export class CommonService {
                             if (temp) {
                                 self.app = temp;
                             } else {
-                                self.deleteLastActiveApp().then(res => {
-
-                                }, err => {
-
-                                });
+                                self.deleteLastActiveApp().then(
+                                    res => { },
+                                    err => { }
+                                );
                             }
                         }
                         resolve(prefRes[0].value);
                     } else {
                         resolve(null);
                     }
-                }, err => {
+                },
+                err => {
                     resolve(null);
-                });
+                }
+            );
         });
     }
 
@@ -342,12 +438,15 @@ export class CommonService {
             } else {
                 response = self.post('user', '/preferences', payload);
             }
-            self.subscriptions['saveLastActiveApp'] = response.subscribe(res => {
-                self.lastAppPrefId = res._id;
-                resolve(res._id);
-            }, err => {
-                resolve(null);
-            });
+            self.subscriptions['saveLastActiveApp'] = response.subscribe(
+                res => {
+                    self.lastAppPrefId = res._id;
+                    resolve(res._id);
+                },
+                err => {
+                    resolve(null);
+                }
+            );
         });
     }
 
@@ -358,13 +457,15 @@ export class CommonService {
         }
         return new Promise<any>((resolve, reject) => {
             if (self.lastAppPrefId) {
-                self.subscriptions['deleteLastActiveApp'] = self.delete('user', '/preferences/' + self.lastAppPrefId)
-                    .subscribe(res => {
+                self.subscriptions['deleteLastActiveApp'] = self.delete('user', '/preferences/' + self.lastAppPrefId).subscribe(
+                    res => {
                         self.lastAppPrefId = null;
                         resolve(null);
-                    }, err => {
+                    },
+                    err => {
                         resolve(null);
-                    });
+                    }
+                );
             } else {
                 resolve(null);
             }
@@ -377,12 +478,14 @@ export class CommonService {
             self.subscriptions['closeAllSessions'].unsubscribe();
         }
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['closeAllSessions'] = self.delete('user', `/usr/${userId}/closeAllSessions`)
-                .subscribe(res => {
+            self.subscriptions['closeAllSessions'] = self.delete('user', `/usr/${userId}/closeAllSessions`).subscribe(
+                res => {
                     resolve(res);
-                }, err => {
+                },
+                err => {
                     reject(err);
-                });
+                }
+            );
         });
     }
 
@@ -392,7 +495,25 @@ export class CommonService {
             self.subscriptions['login'].unsubscribe();
         }
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['login'] = self.http.post(environment.url.user + '/login', credentials)
+            self.subscriptions['login'] = self.http.post(environment.url.user + '/login', credentials).subscribe(
+                (response: any) => {
+                    self.resetUserDetails(response);
+                    resolve(response);
+                },
+                (err: any) => {
+                    reject(err);
+                }
+            );
+        });
+    }
+
+    ldapLogin(credentials: Credentials): Promise<any> {
+        const self = this;
+        if (self.subscriptions['login']) {
+            self.subscriptions['login'].unsubscribe();
+        }
+        return new Promise<any>((resolve, reject) => {
+            self.subscriptions['login'] = self.http.post(environment.url.user + '/ldap/login', credentials)
                 .subscribe((response: any) => {
                     self.resetUserDetails(response);
                     resolve(response);
@@ -402,31 +523,50 @@ export class CommonService {
         });
     }
 
-    extend(): Promise<any> {
+    private _extendApi_() {
         const self = this;
+        const token = self.sessionService.getToken();
+        if(!token) {
+            this.ts.error('Invalid Session');
+            console.log('Invalid Session');
+            this.logout();
+            return;
+        }
         const httpHeaders = new HttpHeaders()
             .set('Content-Type', 'application/json')
-            .set('Authorization', 'JWT ' + self.sessionService.getToken());
+            .set('Authorization', 'JWT ' + token);
+        return self.http.get(environment.url.user + '/extend', {
+            headers: httpHeaders
+        });
+    }
+
+    extend(): Promise<any> {
+        const self = this;
         if (self.subscriptions['extend']) {
             self.subscriptions['extend'].unsubscribe();
         }
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['extend'] = self.http.get(environment.url.user + '/extend', {
-                headers: httpHeaders
-            }).subscribe((response: any) => {
-                self.clearData();
-                self.resetUserDetails(response);
-                self.afterAuthentication().then(res => {
-                    resolve(response);
-                }, err => {
-                    reject(err);
-                });
-            }, (err: any) => {
-                if (err.status === 401) {
-                    self.sessionExpired.emit();
-                }
-                reject(err);
-            });
+            self.subscriptions['extend'] = self.extendApi()
+                .subscribe(
+                    (response: any) => {
+                        self.clearData();
+                        self.resetUserDetails(response);
+                        self.afterAuthentication().then(
+                            res => {
+                                resolve(response);
+                            },
+                            err => {
+                                reject(err);
+                            }
+                        );
+                    },
+                    (err: any) => {
+                        if (err.status === 401) {
+                            self.sessionExpired.emit();
+                        }
+                        reject(err);
+                    }
+                );
         });
     }
 
@@ -447,7 +587,6 @@ export class CommonService {
         if (response.token) {
             self.userDetails = JSON.parse(JSON.stringify(response));
             self.sessionService.saveSessionData(response);
-           
         } else {
             self.noAccess = true;
         }
@@ -466,27 +605,26 @@ export class CommonService {
         }
     }
 
-  
-
-    private _getHeaders() {
+    private _getHeaders(skipAuth: boolean) {
         const self = this;
         const httpHeaders = new HttpHeaders()
             .set('Content-Type', 'application/json; version=2')
-            .set('Authorization', 'JWT ' + self.sessionService.getToken())
             .set('txnId', sh.unique(uuid() + '-' + self.appService.randomStr(5)));
+        if(!skipAuth) {
+            const token = self.sessionService.getToken();
+            if(!token) {
+                this.ts.error('Invalid Session');
+                console.log('Invalid Session');
+                this.logout();
+                return;
+            } else {
+                httpHeaders.set('Authorization', 'JWT ' + token)
+            }
+        }
         return httpHeaders;
     }
 
-    private _getFileHeaders() {
-        const self = this;
-        const httpHeaders = new HttpHeaders().set(
-            'Authorization',
-            'JWT ' + self.sessionService.getToken()
-        );
-        return httpHeaders;
-    }
-
-    get(type, url, options?: GetOptions): Observable<any> {
+    private _get_(type, url, options?: GetOptions): Observable<any> {
         const self = this;
         let urlParams = new HttpParams();
         if (!options) {
@@ -516,70 +654,90 @@ export class CommonService {
         }
         if (options.serviceIds) {
             urlParams = urlParams.set('serviceIds', options.serviceIds);
-
-        }if (options.fields) {
+        }
+        if (options.fields) {
             urlParams = urlParams.set('fields', options.fields);
         }
+        if (options.apps) {
+            urlParams = urlParams.set('apps', options.apps);
+        }
         const URL = environment.url[type] + url;
-        return self.http
-            .get(URL, { params: urlParams, headers: self._getHeaders() });
+        return self.http.get(URL, {
+            params: urlParams,
+            headers: self._getHeaders(options.skipAuth)
+        });
     }
 
-    put(type, url, data?): Observable<any> {
+    private _put_(type, url, data?): Observable<any> {
         const self = this;
         const URL = environment.url[type] + url;
-        return self.http
-            .put(URL, data, { headers: self._getHeaders() });
+        return self.http.put(URL, data, { headers: self._getHeaders(false) });
     }
 
-    post(type, url, data): Observable<any> {
+    private _post_(type, url, data): Observable<any> {
         const self = this;
         const URL = environment.url[type] + url;
-        return self.http
-            .post(URL, data, { headers: self._getHeaders() });
+        return self.http.post(URL, data, { headers: self._getHeaders(false) });
     }
 
- 
-    uploadFile(type, url, data) {
+    private _uploadFile_(type, url, data) {
         const self = this;
+        const token = self.sessionService.getToken();
+        if(!token) {
+            this.ts.error('Invalid Session');
+            console.log('Invalid Session');
+            this.logout();
+            return;
+        }
         const httpHeaders = new HttpHeaders()
-            .set('Authorization', 'JWT ' + self.sessionService.getToken())
+            .set('Authorization', 'JWT ' + token)
             .set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE, PUT')
             .set('Access-Control-Allow-Origin', '*')
             .set('txnId', sh.unique(uuid() + '-' + self.randomStr(5)));
         url = environment.url[type] + url;
-        return self.http.request(new HttpRequest(
-            'POST',
-            url,
-            data,
-            {
+        return self.http.request(
+            new HttpRequest('POST', url, data, {
                 reportProgress: true,
                 headers: httpHeaders
-            }));
+            })
+        );
+    }
+
+    private _deleteApi_(type, url, data?) {
+        const self = this;
+        const URL = environment.url[type] + url;
+        return self.http.request(
+            new HttpRequest('DELETE', URL, data, {
+                headers: self._getHeaders(false)
+            })
+        )
     }
 
     delete(type, url, data?): Observable<any> {
         const self = this;
-        const URL = environment.url[type] + url;
         return new Observable(observe => {
-            self.http.request(new HttpRequest(
-                'DELETE',
-                URL,
-                data,
-                {
-                    headers: self._getHeaders()
-                })).subscribe((event: HttpEvent<any>) => {
-                    if (event.type === HttpEventType.Response) {
-                        if (event.status >= 200 && event.status < 300) {
-                            observe.next(event.body);
-                        } else {
-                            observe.error(event.body);
+            self.deleteApi(type, url, data)
+                .subscribe(
+                    (event: HttpEvent<any>) => {
+                        if (event.type === HttpEventType.Response) {
+                            if (event.status >= 200 && event.status < 300) {
+                                observe.next(event.body);
+                            } else {
+                                observe.error(event.body);
+                            }
                         }
+                    },
+                    err => {
+                        observe.error(err);
                     }
-                }, err => {
-                    observe.error(err);
-                });
+                );
         });
+    }
+
+    private _isAuthenticatedApi_(noLoader?: boolean) {
+        const self = this;
+        const URL = environment.url['user'] + '/check';
+        return self.http.get(URL, { headers: self._getHeaders(false) })
     }
 
     isAuthenticated(noLoader?: boolean) {
@@ -588,51 +746,61 @@ export class CommonService {
             self.subscriptions['isAuthenticated'].unsubscribe();
         }
         return new Promise<any>((resolve, reject) => {
-            const URL = environment.url['user'] + '/check';
             if (!noLoader) {
                 self.apiCalls.isAuthenticated = true;
             }
-            self.subscriptions['isAuthenticated'] = self.http
-                .get(URL, { headers: self._getHeaders() })
-                .subscribe(val => {
+            self.subscriptions['isAuthenticated'] = self.isAuthenticatedApi(noLoader).subscribe(
+                val => {
                     self.resetUserDetails(val);
-                    self.checkAuthType().then(res => {
-                        self.apiCalls.isAuthenticated = false;
-                        resolve(val);
-                    }, err => {
-                        self.apiCalls.isAuthenticated = false;
-                        reject(err);
-                    });
-                }, (err: any) => {
+                    self.checkAuthType().then(
+                        res => {
+                            self.apiCalls.isAuthenticated = false;
+                            resolve(val);
+                        },
+                        err => {
+                            self.apiCalls.isAuthenticated = false;
+                            reject(err);
+                        }
+                    );
+                },
+                (err: any) => {
                     self.apiCalls.isAuthenticated = false;
                     reject(err);
                     return err;
-                });
+                }
+            );
         });
     }
 
     checkAuthType() {
         const self = this;
-        const URL = environment.url['user'] + '/authType/' + self.userDetails.username;
+        const URL = environment.url['user'] + '/authType/' + self.userDetails._id;
         if (self.subscriptions['checkAuthType']) {
             self.subscriptions['checkAuthType'].unsubscribe();
         }
         return new Promise((resolve, reject) => {
-            self.subscriptions['checkAuthType'] = self.http
-                .get(URL)
-                .subscribe((val: any) => {
-                    if (val && val.auth) {
+            self.subscriptions['checkAuthType'] = self.http.get(URL).subscribe(
+                (val: any) => {
+                    if (!!val?.auth) {
                         self.connectionDetails = val.auth.connectionDetails;
                     }
+                    if(!!val?.validAuthTypes?.length) {
+                        this.appService.validAuthTypes = val.validAuthTypes;
+                    }
                     resolve(val);
-                }, err => {
+                },
+                err => {
                     reject(err);
-                });
+                }
+            );
         });
     }
 
     logout(noRedirect?) {
         const self = this;
+        self.stallRequests = false;
+        self.stallCount = 0;
+        self.stallTime = null;
         if (self.subscriptions['logout']) {
             self.subscriptions['logout'].unsubscribe();
         }
@@ -643,49 +811,58 @@ export class CommonService {
                 if (type === 'boolean') {
                     if (returned) {
                         self.userLoggedOut.emit(true);
-                        self.subscriptions['logout'] = self.delete('user', '/logout')
-                            .subscribe(res => {
+                        self.subscriptions['logout'] = self.delete('user', '/logout').subscribe(
+                            res => {
                                 self.clearData();
                                 self.appService.setFocus.emit('username');
                                 if (!noRedirect) {
                                     // self.ts.success('You are logged out successfully');
                                     self.router.navigate(['/auth']);
                                 }
-                            }, err => {
+                            },
+                            err => {
                                 console.error(err);
-                            });
+                            }
+                        );
                     }
                 } else {
-                    (returned as any).then(result => {
-                        if (result) {
-                            self.userLoggedOut.emit(true);
-                            self.subscriptions['logout'] = self.delete('user', '/logout')
-                                .subscribe(res => {
-                                    self.clearData();
-                                    self.appService.setFocus.emit('username');
-                                    if (!noRedirect) {
-                                        // self.ts.success('You are logged out successfully');
-                                        self.router.navigate(['/auth']);
+                    (returned as any).then(
+                        result => {
+                            if (result) {
+                                self.userLoggedOut.emit(true);
+                                self.subscriptions['logout'] = self.delete('user', '/logout').subscribe(
+                                    res => {
+                                        self.clearData();
+                                        self.appService.setFocus.emit('username');
+                                        if (!noRedirect) {
+                                            // self.ts.success('You are logged out successfully');
+                                            self.router.navigate(['/auth']);
+                                        }
+                                    },
+                                    err => {
+                                        console.error(err);
                                     }
-                                }, err => {
-                                    console.error(err);
-                                });
-                        }
-                    }, err => { });
+                                );
+                            }
+                        },
+                        err => { }
+                    );
                 }
             } else {
                 self.userLoggedOut.emit(true);
-                self.subscriptions['logout'] = self.delete('user', '/logout')
-                    .subscribe(res => {
+                self.subscriptions['logout'] = self.delete('user', '/logout').subscribe(
+                    res => {
                         self.clearData();
                         if (!noRedirect) {
                             // self.ts.success('You are logged out successfully');
                             self.router.navigate(['/auth']);
                         }
                         self.appService.setFocus.emit('username');
-                    }, err => {
+                    },
+                    err => {
                         console.error(err);
-                    });
+                    }
+                );
             }
         } else {
             self.clearData();
@@ -697,7 +874,7 @@ export class CommonService {
     clearData(notCurrentApp?: boolean) {
         const self = this;
         self.sessionService.clearSession();
-       
+
         if (self.autoRefreshRoutine) {
             clearTimeout(self.autoRefreshRoutine);
         }
@@ -726,22 +903,44 @@ export class CommonService {
         self.ts.clear();
     }
 
-    refreshToken() {
+    private _refreshToken_() {
         const self = this;
+        const token = self.sessionService.getToken();
+        if(!token) {
+            this.ts.error('Invalid Session');
+            console.log('Invalid Session');
+            this.logout();
+            return;
+        }
+        let user = self.sessionService.getUser();
+        if(typeof user === 'string') {
+            user = JSON.parse(user);
+        }
+        if(!!user?.rbacUserToSingleSession) {
+            this.stallRequests = true;
+            this.stallTime = Date.now();
+        }
         const httpHeaders = new HttpHeaders()
             .set('Content-Type', 'application/json')
-            .set('Authorization', 'JWT ' + self.sessionService.getToken())
+            .set('Authorization', 'JWT ' + token)
             .set('rToken', 'JWT ' + self.sessionService.getRefreshToken())
             .set('txnId', sh.unique(uuid() + '-' + self.appService.randomStr(5)));
         const URL = environment.url.user + '/refresh';
         return self.http.get(URL, { headers: httpHeaders });
     }
 
-    sendHeartBeat() {
+    private _sendHeartBeat_() {
         const self = this;
+        const token = self.sessionService.getToken();
+        if(!token) {
+            this.ts.error('Invalid Session');
+            console.log('Invalid Session');
+            this.logout();
+            return;
+        }
         const httpHeaders = new HttpHeaders()
             .set('Content-Type', 'application/json')
-            .set('Authorization', 'JWT ' + self.sessionService.getToken())
+            .set('Authorization', 'JWT ' + token)
             .set('txnId', sh.unique(uuid() + '-' + self.appService.randomStr(5)));
         const URL = environment.url.user + '/usr/hb';
         const payload = {
@@ -751,42 +950,57 @@ export class CommonService {
     }
 
     createAutoRefreshRoutine() {
-        const self = this;
-        const resolveIn = self.userDetails.expiresIn - new Date(self.userDetails.serverTime).getTime() - 300000;
-        let intervalValue = (self.userDetails.rbacUserTokenDuration - (5 * 60)) * 1000;
-        if (self.userDetails.bot) {
-            intervalValue = (self.userDetails.rbacBotTokenDuration - (5 * 60)) * 1000;
+        const resolveIn = this.userDetails.expiresIn - new Date(this.userDetails.serverTime).getTime() - 300000;
+        const intervalValue =
+            ((this.userDetails.bot ? this.userDetails.rbacBotTokenDuration : this.userDetails.rbacUserTokenDuration) - 5 * 60) * 1000;
+        this.handleRefreshToken(timer(resolveIn), 'firstRefresh', () => {
+            this.handleRefreshToken(interval(intervalValue), 'subsequentRefresh');
+        });
+    }
+
+    handleRefreshToken(onEvent: Observable<any>, subscriptionId: string, callback?: () => void) {
+        if (!!subscriptionId && !!this.subscriptions[subscriptionId]) {
+            this.subscriptions[subscriptionId].unsubscribe();
         }
-        timer(resolveIn).pipe(
-            flatMap(e => self.refreshToken())
-        ).subscribe((res1: any) => {
-            self.userDetails.expiresIn = res1.expiresIn;
-            let userData = self.appService.cloneObject(self.userDetails);
-            userData.token = res1.token;
-            userData.rToken = res1.rToken;
-            userData.uuid = res1.uuid;
-            self.sessionService.saveSessionData(userData);
-            self.subscriptions['refreshToken'] = interval(intervalValue).pipe(
-                flatMap(e => self.refreshToken())
-            ).subscribe((res2: any) => {
-                self.userDetails.expiresIn = res2.expiresIn;
-                userData = self.appService.cloneObject(self.userDetails);
-                userData.token = res2.token;
-                userData.rToken = res2.rToken;
-                userData.uuid = res2.uuid;
-                self.sessionService.saveSessionData(userData);
-            }, err => self.logout());
-        }, err => self.logout());
+        if (!!subscriptionId && subscriptionId === 'firstRefresh' && !!this.subscriptions['subsequentRefresh']) {
+            this.subscriptions['subsequentRefresh'].unsubscribe();
+        }
+
+        const newSubscription = onEvent.pipe(switchMap(e => this.refreshToken())).subscribe(
+            (res: any) => {
+                this.userDetails.expiresIn = res.expiresIn;
+                let userData = this.appService.cloneObject(this.userDetails);
+                userData.token = res.token;
+                userData.rToken = res.rToken;
+                userData.uuid = res.uuid;
+                this.sessionService.saveSessionData(userData);
+                this.stallRequests = false;
+                if (!!callback) {
+                    callback();
+                }
+            },
+            err => this.logout()
+        );
+
+        if (!!subscriptionId) {
+            this.subscriptions[subscriptionId] = newSubscription;
+        }
     }
 
     createHeartBeatRoutine() {
         const self = this;
-        const resolveIn = (self.userDetails.rbacHbInterval * 1000) - 1000;
-        self.sendHeartBeat().subscribe(data => {
-            self.subscriptions['sendHeartBeat'] = interval(resolveIn).pipe(
-                flatMap(e => self.sendHeartBeat())
-            ).subscribe((res2: any) => { }, err => self.logout());
-        }, err => self.logout());
+        const resolveIn = self.userDetails.rbacHbInterval * 1000 - 1000;
+        self.sendHeartBeat().subscribe(
+            data => {
+                self.subscriptions['sendHeartBeat'] = interval(resolveIn)
+                    .pipe(flatMap(e => self.sendHeartBeat()))
+                    .subscribe(
+                        (res2: any) => { },
+                        err => self.logout()
+                    );
+            },
+            err => self.logout()
+        );
     }
 
     enableSessionTimoutWarning() {
@@ -824,10 +1038,7 @@ export class CommonService {
                     portal: 'author'
                 }
             };
-            self.socket = io.connect(
-                environment.production ? '/' : 'http://localhost',
-                socketConfig
-            );
+            self.socket = io.connect(environment.production ? '/' : 'http://localhost', socketConfig);
             self.socket.on('connected', data => {
                 self.socket.emit('authenticate', { token: self.userDetails.token });
             });
@@ -917,8 +1128,7 @@ export class CommonService {
             return true;
         }
         // Check for App Admin
-        if (!self.userDetails.isSuperAdmin
-            && self.isAppAdmin) {
+        if (!self.userDetails.isSuperAdmin && self.isAppAdmin) {
             return true;
         }
         // Check for normal user
@@ -941,22 +1151,29 @@ export class CommonService {
             return true;
         }
         // Check for App Admin
-        if (!self.userDetails.isSuperAdmin
-            && self.isAppAdmin) {
+        if (!self.userDetails.isSuperAdmin && self.isAppAdmin) {
             return true;
         }
         // Check for normal user
-        if (entity && self.permissions.filter(e => (e.id.substr(0, 3) === segment
-            || e.id.substr(0, 4) === segment
-            || e.id.substr(0, 5) === segment)
-            && e.app === self.app._id
-            && e.entity === entity).length > 0) {
+        if (
+            entity &&
+            self.permissions.filter(
+                e =>
+                    (e.id.substr(0, 3) === segment || e.id.substr(0, 4) === segment || e.id.substr(0, 5) === segment) &&
+                    e.app === self.app._id &&
+                    e.entity === entity
+            ).length > 0
+        ) {
             return true;
         }
-        if (!entity && self.permissions.filter(e => (e.id.substr(0, 3) === segment
-            || e.id.substr(0, 4) === segment
-            || e.id.substr(0, 5) === segment)
-            && e.app === self.app._id).length > 0) {
+        if (
+            !entity &&
+            self.permissions.filter(
+                e =>
+                    (e.id.substr(0, 3) === segment || e.id.substr(0, 4) === segment || e.id.substr(0, 5) === segment) &&
+                    e.app === self.app._id
+            ).length > 0
+        ) {
             return true;
         }
         return false;
@@ -989,6 +1206,9 @@ export class CommonService {
 
     isThisUser(user) {
         const self = this;
+        if (!user) {
+            return false;
+        }
         if (self.userDetails && self.userDetails._id) {
             return user._id === self.userDetails._id;
         } else {
@@ -997,20 +1217,14 @@ export class CommonService {
         }
     }
 
-    azureLogin(username) {
+    azureLogin() {
         try {
             const self = this;
             const windowHeight = 500;
-            const windowWidth = 600;
-            const windowLeft = (window.innerWidth - windowWidth) / 2;
-            const windowTop = (window.innerHeight - windowHeight) / 2;
-            let url = `https://login.microsoftonline.com/${self.connectionDetails.tenant}/oauth2/v2.0/authorize`;
-            url += `?client_id=${self.connectionDetails.clientId}`;
-            url += `&response_type=code`;
-            url += `&redirect_uri=${self.connectionDetails.redirectUri.login}`;
-            url += `&response_mode=query`;
-            url += `&scope=user.read`;
-            url += `&login_hint=${username}`;
+            const windowWidth = 620;
+            const windowLeft = ((window.outerWidth - windowWidth) / 2) + window.screenLeft;
+            const windowTop = ((window.outerHeight - windowHeight) / 2) + window.screenTop;
+            const url = '/api/a/rbac/azure/login';
             const windowOptions = [];
             windowOptions.push(`height=${windowHeight}`);
             windowOptions.push(`width=${windowWidth}`);
@@ -1041,12 +1255,15 @@ export class CommonService {
             if (self.serviceMap && self.serviceMap[serviceId]) {
                 resolve(self.serviceMap[serviceId]);
             } else {
-                self.get('serviceManager', '/service/' + serviceId).subscribe(res => {
-                    self.serviceMap[serviceId] = res;
-                    resolve(self.serviceMap[serviceId]);
-                }, err => {
-                    reject(err);
-                });
+                self.get('serviceManager', '/service/' + serviceId).subscribe(
+                    res => {
+                        self.serviceMap[serviceId] = res;
+                        resolve(self.serviceMap[serviceId]);
+                    },
+                    err => {
+                        reject(err);
+                    }
+                );
             }
         });
     }
@@ -1057,12 +1274,15 @@ export class CommonService {
             if (self.userMap && self.userMap[userId]) {
                 resolve(self.userMap[userId]);
             } else {
-                self.get('user', '/usr/' + userId).subscribe(res => {
-                    self.userMap[userId] = res;
-                    resolve(self.userMap[userId]);
-                }, err => {
-                    reject(err);
-                });
+                self.get('user', '/usr/' + userId).subscribe(
+                    res => {
+                        self.userMap[userId] = res;
+                        resolve(self.userMap[userId]);
+                    },
+                    err => {
+                        reject(err);
+                    }
+                );
             }
         });
     }
@@ -1077,7 +1297,9 @@ export interface GetOptions {
     app?: string;
     noApp?: boolean;
     serviceIds?: string;
-    fields?:string;
+    fields?: string;
+    apps?: string;
+    skipAuth?: boolean;
 }
 
 export interface Permission {

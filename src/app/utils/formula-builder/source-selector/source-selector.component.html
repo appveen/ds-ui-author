@@ -1,0 +1,10 @@
+<ul class="d-flex first">
+    <li class="field" *ngFor="let def of sources" (click)="selectSource(def)">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <odp-field-type [field]="def" class="mr-2"></odp-field-type>
+                <span class="text mr-2">{{def.properties.name}}</span>
+            </div>
+        </div>
+    </li>
+</ul>

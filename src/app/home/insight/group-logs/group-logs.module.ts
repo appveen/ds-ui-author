@@ -10,8 +10,6 @@ import { AgGridFiltersComponent } from './ag-grid-filters/ag-grid-filters.compon
 import { GroupLogsComponent } from './group-logs.component';
 import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
 
-
-
 @NgModule({
     declarations: [
         GroupLogsComponent,

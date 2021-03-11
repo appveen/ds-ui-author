@@ -48,6 +48,9 @@ export class BasicInfoComponent implements OnInit {
   @Input() pattern;
   toggleEdit: boolean;
   message: string;
+  nameMessage: string;
+  descMessage: string;
+
   constructor() {
     const self = this;
     self.logoChange = new EventEmitter();
@@ -69,26 +72,13 @@ export class BasicInfoComponent implements OnInit {
       self.nameCharLimit = 40;
     }
   }
-  nameChanges(val) {
+  onNameChange(val) {
     const self = this;
+    self.nameMessage = null;
     if (val && val.length > self.nameCharLimit) {
-      self.message = `Name truncated to ${self.nameCharLimit} characters`;
-    }
-  }
-
-  discriptionChanges(val) {
-    const self = this;
-    if (val && val.length > 240) {
-      self.message = 'Description truncated to 240 characters';
-    }
-  }
-  onNameChange(val: string) {
-    const self = this;
-    self.message = null;
-    if (val && val.length > self.nameCharLimit) {
-      self.message = `Name truncated to ${self.nameCharLimit} characters`;
+      self.nameMessage = `Name cannot exceed ${self.nameCharLimit} characters. It will be truncated to ${self.nameCharLimit} characters`;
       setTimeout(() => {
-        self.message = null;
+        self.nameMessage = null;
       }, 3000);
       val = val.substr(0, self.nameCharLimit);
     }
@@ -98,11 +88,11 @@ export class BasicInfoComponent implements OnInit {
 
   onDescriptionChange(val: string) {
     const self = this;
-    self.message = null;
+    self.descMessage = null;
     if (val && val.length > self.descCharLimit) {
-      self.message = 'Description truncated to 240 characters';
+      self.descMessage = `Description cannot exceed ${self.descCharLimit} characters. It will be truncated to ${self.descCharLimit} characters`;
       setTimeout(() => {
-        self.message = null;
+        self.descMessage = null;
       }, 3000);
       val = val.substr(0, self.descCharLimit);
     }

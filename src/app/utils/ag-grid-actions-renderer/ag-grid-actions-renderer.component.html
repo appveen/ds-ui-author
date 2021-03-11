@@ -1,0 +1,5 @@
+<ng-container *ngFor="let button of buttons">
+    <button class="btn btn-link text-accent mr-2 p-0" (click)="handleButtonClick(button, $event)">
+        {{ button }}
+    </button>
+</ng-container>

@@ -2,7 +2,7 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 .usermanage-container {
   background-color: $white;
-  height: calc(100vh - 160px);
+  height: calc(100vh - 200px);
   width: calc(100vw - 26vw);
   overflow-y: auto;
   .user {
@@ -134,6 +134,10 @@
       }
       .cd-action {
         width: 33%;
+      }
+      .grid-container {
+        height: 250px;
+        display: grid;
       }
     }
     &-team {
@@ -318,7 +322,7 @@
 .reset-form {
   .error-icon {
     top: 33px;
-    left: 69%;
+    left: 63%;
   }
 }
 
@@ -364,18 +368,28 @@
 .eye-icon{   
   padding: 6px;
   border-radius: 0.25rem;
-  right: 24%;
+  right: -1px;
   border-bottom: 1px solid #ccc !important;
   border-right: 1px solid #ccc !important;
   border-top: 1px solid #ccc !important;
-  top: 26px;
 }
-#new-pwd{
-  width:200px !important;
+.password-input{
+  width:52%;
   border-radius: 0.25em 0em 0em 0.25em;
 }
 
 .error-icon-password {
-  right: 20% !important;
-  top: 26px !important;
+  right: 10%;
+  top: 7px;
+}
+.modal-label-pwd {
+  min-width: 130px;
+}
+.dropdown-itm {
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background: $light;
+  }
 }

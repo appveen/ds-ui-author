@@ -10,7 +10,8 @@
   </div> -->
   <div class="d-flex justify-content-between align-items-center border-bottom py-4">
     <div class="font-weight-bold font-lg text-accent">Apps</div>
-    <odp-search-box (enteredText)="searchTerm = $event" (reset)="searchTerm = '';" [selectOnEnter]="true" (enteredPressed)="enterToSelect($event)"></odp-search-box>
+    <odp-search-box (enteredText)="searchTerm = $event" (reset)="searchTerm = '';" [selectOnEnter]="true"
+      (enteredPressed)="enterToSelect($event)"></odp-search-box>
     <button class="add-new btn-min-width btn btn-primary" (click)="newApp()">
       <span class="fa fa-plus mr-2"></span>
       <span class="text">Add New App</span>
@@ -52,8 +53,8 @@
           ngbTooltip="App settings" routerLink="{{app._id}}">
           <span class="fa fa-cog text-white"></span>
         </div> -->
-          <div class="app-name text-center mt-2">
-            <p class="mb-0">{{app._id}}</p>
+          <div class="app-name text-center text-truncate mt-2" [ngbTooltip]="app._id">
+            {{app._id}}
           </div>
         </div>
 
@@ -79,11 +80,11 @@
       <div class="d-flex align-items-center justify-content-between mb-3">
         <div class="d-flex align-items-center">
           <span class="icon-circle d-flex align-items-center justify-content-center mr-2">
-            <odp-partner-icon size="16" color="1CAD49" class="mt-1"></odp-partner-icon>
+            <odp-partner-icon size="16" color="1CAD49"></odp-partner-icon>
           </span>
-          <span class="font-weight-bold mb-1">Create New App</span>
+          <span class="font-weight-bold ">Create New App</span>
         </div>
-        <span class="fa fa-times text-muted hover" (click)="newAppModalRef.close(false)"></span>
+        <span class="fa fa-times text-muted hover" (click)="!createAppLoader && newAppModalRef.close(false)"></span>
       </div>
       <div class="d-flex flex-column w-100" [formGroup]="form">
         <label for="name" class="font-sm text-secondary">
@@ -91,8 +92,8 @@
           <sup class="text-danger font-normal ml-2" ngbTooltip="Mandatory field">&bull;</sup>
         </label>
         <div class="name-wrapper position-relative">
-          <input type="text" class="form-control" id="name" formControlName="_id" placeholder="Give a name"
-            odpAutoFocus (keyup.enter)="newAppDesc.focus()"
+          <input type="text" class="form-control" id="name" formControlName="_id" placeholder="Give a name" odpAutoFocus
+            (keyup.enter)="newAppDesc.focus()"
             [ngClass]="{'is-invalid':form.get('_id').invalid && (form.get('_id').dirty || form.get('_id').touched)}">
           <ng-container *ngIf="form.get('_id').invalid && (form.get('_id').dirty || form.get('_id').touched)">
             <span *ngIf="form.get('_id').hasError('required')"
@@ -110,12 +111,25 @@
         <textarea #newAppDesc class="form-control" id="description" rows="5" placeholder="A brief description. Optional"
           formControlName="description" (keydown.enter)="$event.preventDefault()"
           (keyup.enter)="createNewAppBtn.click();"></textarea>
+        <label for="timezone" class="font-sm text-secondary mt-3">Timezone</label>
+        <odp-timezone-picker [edit]="{status:true}" formControlName="defaultTimezone"></odp-timezone-picker>
+        <!-- <select id="timezone" class="form-control" formControlName="defaultTimezone">
+            <option *ngFor="let tz of timezones" [value]="tz">{{tz}}</option>
+          </select> -->
+        <!-- <textarea #newAppDesc class="form-control" id="description" rows="5" placeholder="A brief description. Optional"
+          formControlName="description" (keydown.enter)="$event.preventDefault()"
+          (keyup.enter)="createNewAppBtn.click();"></textarea> -->
       </div>
       <div class="text-danger mt-3">{{errorMessage}} &nbsp;</div>
     </div>
     <div class="d-flex align-self-end justify-content-end w-100 mt-3">
-      <button #createNewAppBtn type="button" class="btn btn-min-width btn-create" [disabled]="form.invalid"
-        (click)="createApp()">Create App</button>
+      <button #createNewAppBtn type="button"
+        class="btn btn-min-width btn-create"
+        [disabled]="form.invalid || createAppLoader"
+        (click)="createApp()">
+        <span class="fa fa-spinner fa-pulse mr-1" *ngIf="createAppLoader"></span>
+        Create App
+      </button>
     </div>
   </div>
 </ng-template>

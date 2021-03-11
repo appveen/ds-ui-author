@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, EventEmitter, OnDestroy, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, EventEmitter, OnDestroy, TemplateRef, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { NgbModalRef, NgbButtonLabel } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/utils/services/common.service';
@@ -24,9 +24,14 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
   @ViewChild('deleteModal', { static: false }) deleteModal: TemplateRef<HTMLElement>;
   @Input() definitions: any;
   @Input() role: any;
-  @Input() roleChange: EventEmitter<any>;
+  @Input() firstInit: boolean;
   @Input() edit: any;
   @Input() name: string;
+  @Input() blockInvalidRole: any;
+  @Output() roleChange: EventEmitter<any>;
+  @Output() firstInitChange: EventEmitter<any>;
+  @Output() blockInvalidRoleChange = new EventEmitter();
+  @Output() oldRoleReset = new EventEmitter();
   deleteModalRef: NgbModalRef;
   sourceDefinition: Definition[];
   id: string;
@@ -47,7 +52,6 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
   canReviewFlag: boolean;
   activeTab: number;
   toggleDropdown: any;
-  blockInvalid: any;
   blockFocus: any;
   constructor(private commonService: CommonService,
     private appService: AppService,
@@ -60,7 +64,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     self.activeTab = 1;
     self.toggleDropdown = {};
     self.roleChange = new EventEmitter();
-    self.blockInvalid = {};
+    self.firstInitChange = new EventEmitter();
     self.blockFocus = {};
   }
 
@@ -83,6 +87,11 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
         ], {});
       }
       self.roleChange.emit(self.role);
+      if (!this.firstInit) {
+        setTimeout(() => {
+          this.oldRoleReset.emit(self.role);
+        }, 1000);
+      }
     } else {
       self.id = self.role._id;
       if (!self.role.roles) {
@@ -118,7 +127,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     self.oldData = self.appService.cloneObject(self.role);
     self.fields = self.flattenPermission(self.role.fields);
     self.selectedFieldsCopy = self.appService.cloneObject(self.fields);
-   
+
     self.onSelectRole(self.roles[0], 0);
     const manageRole = self.roles.find(e => e.manageRole);
     const viewRole = self.roles.find(e => e.viewRole);
@@ -133,6 +142,11 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
       skipReviewRole.name = 'Skip Review ' + self.name;
     }
     self.serviceName = self.name;
+    if (this.firstInit) {
+      this.oldRoleReset.emit(self.role);
+      this.firstInit = false;
+      this.firstInitChange.emit(false);
+    }
   }
 
   countFields() {
@@ -482,27 +496,13 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     return JSON.stringify(self.oldData) !== JSON.stringify(self.role);
   }
 
-  get isValid() {
-    const self = this;
-    let isValid = true;
-    self.roles.forEach(element => {
-      if (!element.name) {
-        isValid = false;
-      }
-    });
-    if (!isValid) {
-      return isValid;
-    }
-    isValid = self.ruleBlocksValid;
-    return isValid;
-  }
   get ruleBlocksValid() {
     const self = this;
     let isValid = true;
     let count = 0;
-    if (Object.keys(self.blockInvalid).length > 0) {
-      Object.keys(self.blockInvalid).forEach(key => {
-        if (self.blockInvalid[key]) {
+    if (Object.keys(self.blockInvalidRole).length > 0) {
+      Object.keys(self.blockInvalidRole).forEach(key => {
+        if (self.blockInvalidRole[key]) {
           count++;
         }
       });
@@ -609,6 +609,12 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     if (role.viewRole) {
       role.viewRole = false;
     }
+  }
+
+  onInvalidRole(data, key) {
+    const self = this;
+    self.blockInvalidRole[key] = data;
+    self.blockInvalidRoleChange.emit(self.blockInvalidRole);
   }
 }
 

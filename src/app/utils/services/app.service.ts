@@ -3,11 +3,11 @@ import { FormArray, FormControl, Validators } from '@angular/forms';
 import * as deepmerge from 'deepmerge';
 import * as uuid from 'uuid/v1';
 import * as _ from 'lodash';
+import * as momentTimeZone from 'moment-timezone';
 
-import { NodeData } from '../microflow/microflow.component';
-import { Definition } from '../mapper/mapper.model';
 import { ipValidate } from '../validators/ip.validator';
 import { RoleModel } from 'src/app/home/schema-utils/manage-permissions/manage-permissions.component';
+import { NodeData } from '../integration-flow/integration-flow.model';
 
 @Injectable({
     providedIn: 'root'
@@ -33,6 +33,8 @@ export class AppService {
     setFocus: EventEmitter<any>;
     fqdn: string;
     formatTypeChange: EventEmitter<any>;
+    validAuthTypes: string[];
+
     constructor() {
         const self = this;
         self.toggleSideNav = new EventEmitter<boolean>();
@@ -221,7 +223,7 @@ export class AppService {
             if (!def.properties) {
                 def.properties = {};
             }
-            if (!def._id) {
+            if (def.key !== '_id') {
                 if (def.type === 'Object') {
                     if (!fields[def.key]) {
                         fields[def.key] = {};
@@ -352,14 +354,14 @@ export class AppService {
         return false;
     }
 
-    getXPath(fullPath: string, type: string, hasRoot: boolean, rootDataKey: string) {
+    getDataPath(fullPath: string, type: string, hasRoot: boolean, rootDataKey: string) {
         const segments = fullPath.split('_self');
         let path;
         if (segments[segments.length - 1] === '' && type !== 'Object') {
             path = '.';
         } else {
             path = (segments[segments.length - 1] ? segments[segments.length - 1] : segments[segments.length - 2])
-                .split('.definition.').join('/').replace(/^\/(.*)/, '$1');
+                .split('.definition.').join('.').replace(/^\/(.*)/, '$1');
             if (type === 'Array') {
                 path = path + '[]';
             }
@@ -371,12 +373,12 @@ export class AppService {
             }
         }
         if (!hasRoot && (segments.length === 1 || type === 'Object')) {
-            path = './_data/' + path;
+            path = path;
         } else if (path !== '.') {
             if (path.indexOf('$headers') > -1 && hasRoot) {
-                path = './' + rootDataKey + '/' + path;
+                path = rootDataKey + '.' + path;
             } else {
-                path = './' + path;
+                path = path;
             }
         }
         return path;
@@ -388,22 +390,22 @@ export class AppService {
         return uuid();
     }
 
-    findDefinition(definition: Definition[], id: string) {
-        const self = this;
-        let temp: Definition;
-        for (const def of definition) {
-            if (def.id === id || def.path === id) {
-                temp = def;
-                break;
-            } else if (def.definition && def.definition.length > 0) {
-                const temp2 = self.findDefinition(def.definition, id);
-                if (temp2 && !temp) {
-                    temp = temp2;
-                }
-            }
-        }
-        return temp;
-    }
+    // findDefinition(definition: Definition[], id: string) {
+    //     const self = this;
+    //     let temp: Definition;
+    //     for (const def of definition) {
+    //         if (def.id === id || def.path === id) {
+    //             temp = def;
+    //             break;
+    //         } else if (def.definition && def.definition.length > 0) {
+    //             const temp2 = self.findDefinition(def.definition, id);
+    //             if (temp2 && !temp) {
+    //                 temp = temp2;
+    //             }
+    //         }
+    //     }
+    //     return temp;
+    // }
 
     getFormatTypeList() {
         return [
@@ -444,24 +446,28 @@ export class AppService {
     }
 
     addKeyForDataStructure(definition: any, type: string, parent?: string) {
-        Object.keys(definition).forEach(key => {
-            if (!definition[key].properties) {
-                definition[key].properties = {};
-            }
-            if (type === 'camelCase') {
-                definition[key].properties.dataKey = key;
-            } else {
-                definition[key].properties.dataKey = definition[key].properties.name;
-            }
-            definition[key].properties.dataPath = parent ?
-                (parent + '.definition.' + definition[key].properties.dataKey) : definition[key].properties.dataKey;
-            if (definition[key].type === 'Object') {
-                this.addKeyForDataStructure(definition[key].definition, type, definition[key].properties.dataPath);
-            } else if (definition[key].type === 'Array' && definition[key].definition._self.type === 'Object') {
-                this.addKeyForDataStructure(definition[key].definition, type, definition[key].properties.dataPath);
-            }
-           
-        });
+        if (definition) {
+            definition.forEach(def => {
+                if (!def.properties) {
+                    def.properties = {};
+                }
+                if (type === 'camelCase') {
+                    def.properties.dataKey = def.key;
+                } else {
+                    def.properties.dataKey = def.properties.name;
+                }
+                if (def.type === 'Array') {
+                    def.properties.dataKey = def.properties.dataKey + '[#]';
+                }
+                def.properties.dataPath = parent ?
+                    (parent + '.' + def.properties.dataKey) : def.properties.dataKey;
+                if (def.type === 'Object') {
+                    this.addKeyForDataStructure(def.definition, type, def.properties.dataPath);
+                } else if (def.type === 'Array' && def.definition[0].type === 'Object') {
+                    this.addKeyForDataStructure(def.definition[0].definition, type, def.properties.dataPath);
+                }
+            });
+        }
     }
 
     patchDataKey(definition: Array<any>, parent?: string): any[] {
@@ -470,7 +476,7 @@ export class AppService {
         if (definition) {
             definition.forEach(def => {
                 const properties = def.properties || {};
-                if (def._id) {
+                if (def.key === '_id') {
                     properties.dataKey = '_id';
                     defs.push({
                         key: '_id',
@@ -500,6 +506,8 @@ export class AppService {
 
     isValidURL(val: string) {
         if (val && val.match(/^https?:\/\/[\w-]{2,}\.([\w-]{2,}\.?)+/)) {
+            return true;
+        } else if (val && val.match(/^https?:\/\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}([\w-]{2,}\.?)+/)) {
             return true;
         }
         return false;
@@ -549,12 +557,12 @@ export class AppService {
         return new FormControl(val, [Validators.required, ipValidate]);
     }
 
-    countAttr(def) {
+    countAttr(definition) {
         let count = 0;
-        if (def && typeof def === 'object') {
-            Object.keys(def).forEach(key => {
-                if (def[key] && def[key].type === 'Object') {
-                    count += this.countAttr(def[key].definition);
+        if (!!definition && Array.isArray(definition)) {
+            definition.forEach(def => {
+                if (!!def && def.type === 'Object') {
+                    count += this.countAttr(def.definition);
                 } else {
                     count++;
                 }
@@ -565,23 +573,6 @@ export class AppService {
         }
     }
 
-    createDefinitionFromJSON(json: any) {
-        const self = this;
-        const temp = {};
-        Object.keys(json).forEach(key => {
-            temp[key] = {
-                type: _.capitalize(typeof json[key]),
-                properties: {
-                    name: key
-                }
-            };
-            if (typeof json[key] === 'object') {
-                temp[key].definition = self.createDefinitionFromJSON(json[key]);
-            }
-        });
-        return temp;
-    }
-
 
     getSortFromModel(sortModel: any) {
         let sort = '';
@@ -589,5 +580,29 @@ export class AppService {
             sort = sortModel.map(e => (e.sort === 'asc' ? '' : '-') + e.colId).join(',');
         }
         return sort;
+    }
+
+    getTimezones() {
+        return momentTimeZone.tz.names();
+    }
+
+    fixSchema(parsedDef) {
+        if (parsedDef) {
+            parsedDef.forEach(def => {
+                if (def.properties && def.properties.relatedTo) {
+                    def.type = 'Relation';
+                    def.properties._typeChanged = 'Relation';
+                    delete def.definition;
+                } else if (def.properties && def.properties.password) {
+                    def.type = 'String';
+                    def.properties._typeChanged = 'String';
+                    delete def.definition;
+                } else if (def.type === 'Array') {
+                    this.fixSchema(def.definition);
+                } else if (def.type === 'Object') {
+                    this.fixSchema(def.definition);
+                }
+            });
+        }
     }
 }

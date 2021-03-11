@@ -1,6 +1,6 @@
 <ng-container>
     <div class="overlay d-flex w-100 h-100 position-fixed" (click)="done(false)"></div>
-    <div class="modal d-block rounded m-5" (dragover)="dragOverEvent($event)">
+    <div class="modal d-block rounded m-5">
         <div class="modal-header bg-dark text-white">
             <h5 class="modal-title">Format Mapper</h5>
             <button type="button" class="close" aria-label="Close" (click)="done(false)">
@@ -45,7 +45,7 @@
                                 class="mapper-field-block border-left border-right border-top"
                                 [ngClass]="{'border-bottom':mappingLast}">
                                 <ng-container *ngIf="item.target.key != '$headers'">
-                                    <odp-mapping-block [edit]="edit" [index]="mappingIndex" [mappings]="mapping">
+                                    <odp-mapping-block [edit]="edit" [index]="mappingIndex" [mappings]="mapping" [sourceList]="sourceDefinition">
                                     </odp-mapping-block>
                                 </ng-container>
                             </div>
@@ -60,7 +60,7 @@
                                 class="mapper-field-block border-left border-right border-top"
                                 [ngClass]="{'border-bottom':mappingLast}">
                                 <ng-container *ngIf="item.target.key != '$headers'">
-                                    <odp-mapping-block [edit]="edit" [index]="mappingIndex" [mappings]="mapping">
+                                    <odp-mapping-block [edit]="edit" [index]="mappingIndex" [mappings]="mapping" [sourceList]="sourceDefinition">
                                     </odp-mapping-block>
                                 </ng-container>
                             </div>
@@ -79,8 +79,7 @@
 <ng-template #fieldsTemplate let-def="def" let-linkTop="linkTop" let-linkBottom="linkBottom">
     <div class="field-list-item d-flex flex-column">
         <div class="field-item d-flex align-items-center px-4"
-            [ngClass]="{'no-action':def.canToggle||!def.properties.name}" [draggable]="!def.canToggle && edit.status"
-            (drag)="dragEvent($event,def)">
+            [ngClass]="{'no-action':def.canToggle||!def.properties.name}">
             <ng-container *ngIf="def.key!='$headers'">
                 <div class="field-toggle-state d-flex mr-2">
                     <div class="toggle-state-icon d-flex h-100 w-100 align-items-center justify-content-center rounded bg-accent px-1"
@@ -104,12 +103,8 @@
                     <span
                         class="border text-accent bg-white rounded d-flex align-items-center justify-content-center field-type-badge mr-2">H</span>
                 </ng-container>
-                <div class="field-name w-100 text-truncate py-2"
-                    [ngClass]="{'hover':edit.status,'no-action':!edit.status}" [odpTruncated]="def.properties.name">
+                <div class="field-name w-100 text-truncate py-2 no-action" [odpTruncated]="def.properties.name">
                     {{def.properties.name}}
-                </div>
-                <div class="handle hover" *ngIf="edit.status">
-                    <span class="fa fa-th"></span>
                 </div>
             </ng-container>
         </div>

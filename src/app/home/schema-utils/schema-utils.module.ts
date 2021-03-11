@@ -29,6 +29,7 @@ import { PathCreatorComponent } from './manage-permissions/path-creator/path-cre
 import { FilterDefinitionModule } from 'src/app/utils/pipes/filter-definition/filter-definition.module';
 import { LogicalConditionComponent } from './manage-permissions/logical-condition/logical-condition.component';
 import { LoadingPlaceholderModule } from 'src/app/utils/loading-placeholder/loading-placeholder.module';
+import { SortablejsModule } from 'ngx-sortablejs';
 
 @NgModule({
     imports: [
@@ -48,7 +49,8 @@ import { LoadingPlaceholderModule } from 'src/app/utils/loading-placeholder/load
         SwitchModule,
         SearchTermModule,
         FilterDefinitionModule,
-        LoadingPlaceholderModule
+        LoadingPlaceholderModule,
+        SortablejsModule
     ],
     declarations: [
         SchemaStructurePipe,

@@ -100,7 +100,6 @@ export class LdapUsersComponent implements OnInit, OnDestroy {
     temp.basicDetails.alternateEmail = self.users[index].email;
     temp.basicDetails.name = self.users[index].name;
     temp.auth = {};
-    temp.auth.isLdap = true;
     temp.auth.authType = 'ldap';
     temp.auth.dn = self.users[index].dn;
     temp.accessControl = {};
@@ -178,7 +177,6 @@ export class LdapUsersComponent implements OnInit, OnDestroy {
               },
               auth: {
                 dn: e.dn,
-                isLdap: true
               },
               accessControl: {
                 accessLevel: 'None',

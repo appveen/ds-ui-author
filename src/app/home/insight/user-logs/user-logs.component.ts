@@ -1,12 +1,14 @@
+import { IDatasource, IGetRowsParams, GridOptions, ColDef } from 'ag-grid-community';
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AgGridAngular } from 'ag-grid-angular';
+import { switchMap } from 'rxjs/operators';
+import * as momentTz from 'moment-timezone';
+import { of } from 'rxjs';
+
 import { CommonService } from 'src/app/utils/services/common.service';
 import { APIConfig } from 'src/app/utils/interfaces/apiConfig';
-import { IDatasource, IGetRowsParams, GridApi, GridOptions } from 'ag-grid-community';
-import { AgGridAngular } from 'ag-grid-angular';
-import { AgGridFiltersComponent } from './ag-grid-filters/ag-grid-filters.component';
-import { map } from 'rxjs/operators';
-import { DatePipe } from '@angular/common';
-import { environment } from 'src/environments/environment';
+import { AgGridSharedFloatingFilterComponent } from 'src/app/utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.component';
+import { AppService } from 'src/app/utils/services/app.service';
 
 @Component({
     selector: 'odp-user-logs',
@@ -16,7 +18,6 @@ import { environment } from 'src/environments/environment';
 export class UserLogsComponent implements OnInit, OnDestroy {
     @ViewChild('logModal', { static: false }) logModal: TemplateRef<any>;
     @ViewChild('agGrid', { static: false }) agGrid: AgGridAngular;
-    public gridApi: GridApi;
     public gridOptions: GridOptions;
     showLazyLoader: boolean;
     dataSource: IDatasource;
@@ -25,17 +26,14 @@ export class UserLogsComponent implements OnInit, OnDestroy {
     activeModalTab: number;
     _columns: any;
     selectedLog: any;
-    rowData: any;
-    columnDefs: Array<any>;
     paginationPageSize = 30;
     currentRecordsCountPromise: Promise<any>;
     totalRecordsCount;
     currentRecordsCount;
     loaded: number;
     total: number;
-    noRowsTemplate;
-    constructor(private commonService: CommonService,
-        private datePipe: DatePipe) {
+
+    constructor(private commonService: CommonService, private appService: AppService) {
         const self = this;
         self.subscriptions = {};
         self.apiConfig = {
@@ -43,96 +41,116 @@ export class UserLogsComponent implements OnInit, OnDestroy {
             page: 1,
         };
         self.apiConfig.noApp = true;
-        self.apiConfig.filter = {
-            apps: self.commonService.app._id
-        }
-        self.noRowsTemplate ='<span>No records to display</span>';
-
     }
 
     ngOnInit() {
-        const self = this;
-        self.buildColumns();
-        self.getRecordsCount(true);
-
-    }
-    buildColumns() {
-        const self = this;
-        self.columnDefs = [{
-
-            headerName: 'TIME', field: '_metadata.createdAt',
-            filter: 'agTextColumnFilter', headerClass: 'hide-filter-icon', filterParams: {
-                caseSensitive: true,
-                suppressAndOrCondition: true,
-                suppressFilterButton: true,
-            },
-            suppressMenu: true,
-            floatingFilterComponentFramework: AgGridFiltersComponent,
-            valueFormatter: self.dateFormatter.bind(this)
-
-        },
-
-        {
-            headerName: 'SUMMARY', field: 'summary',
-            filter: 'agTextColumnFilter', headerClass: 'hide-filter-icon', filterParams: {
-                caseSensitive: true,
-                suppressAndOrCondition: true,
-                suppressFilterButton: true,
-            },
-            width: 200,
-            suppressMenu: true,
-            floatingFilterComponentFramework: AgGridFiltersComponent,
-            minWidth: 800
-
-
-
-        }],
-            this.configureGridSettings();
-
+        this.setupGrid();
     }
 
-    configureGridSettings(): void {
+    setupGrid() {
+        const defaultColDef: ColDef = {
+            filter: 'agTextColumnFilter',
+            filterParams: {
+                caseSensitive: true,
+                suppressAndOrCondition: true,
+                suppressFilterButton: true
+            },
+            headerClass: 'hide-filter-icon',
+            suppressMenu: true,
+            sortable: true,
+            resizable: true,
+            floatingFilterComponentFramework: AgGridSharedFloatingFilterComponent
+        };
+        const columnDefs = [
+            {
+                headerName: 'Time',
+                field: '_metadata.createdAt',
+                valueFormatter: this.dateFormatter.bind(this),
+                minWidth: 225,
+                refData: {
+                    filterType: 'date'
+                }
+            },
+            {
+                headerName: 'Summary',
+                field: 'summary',
+                valueFormatter: params => params.value,
+                minWidth: 800,
+                refData: {
+                    filterType: 'text'
+                }
+            }
+        ];
         this.gridOptions = {
-            enableFilter: true,
-            enableSorting: true,
-            enableColResize: true,
-            columnDefs: this.columnDefs,
+            defaultColDef,
+            columnDefs,
+            context: this,
+            suppressColumnVirtualisation: true,
             animateRows: true,
-            headerHeight: 45,
-            enableServerSideSorting: true,
             rowModelType: 'infinite',
-
+            floatingFilter: true,
+            cacheBlockSize: 30,
+            overlayNoRowsTemplate: '<span>No records to display</span>'
+        };
+        this.dataSource = {
+            getRows: (params: IGetRowsParams) => {
+                this.apiConfig.page = Math.ceil(params.endRow / 30);
+                if (this.apiConfig.page === 1) {
+                    this.loaded = 0;
+                }
+                if (!this.apiConfig.filter) {
+                    this.apiConfig.filter = { apps: this.commonService.app._id };
+                }
+                const filterModel = this.agGrid?.api?.getFilterModel();
+                const filterModelKeys = Object.keys(filterModel || {});
+                if (!!filterModelKeys.length) {
+                    this.apiConfig.filter.$and = filterModelKeys.map(key => {
+                        if (typeof filterModel[key].filter === 'string') {
+                            filterModel[key].filter = JSON.parse(filterModel[key].filter);
+                        }
+                        return filterModel[key].filter;
+                    });
+                } else {
+                    delete this.apiConfig.filter.$and;
+                }
+                this.apiConfig.sort = this.appService.getSortFromModel(this.agGrid?.api?.getSortModel() || []);
+                this.agGrid.api.showLoadingOverlay();
+                if (this.subscriptions['getRecords_data']) {
+                    this.subscriptions['getRecords_data'].unsubscribe();
+                }
+                this.subscriptions['getRecords_data'] = this.commonService
+                    .get('log', '/mon/author/user/log' + '/count', { filter: this.apiConfig.filter, noApp: true })
+                    .pipe(
+                        switchMap(count => {
+                            this.currentRecordsCount = count;
+                            return !!count ? this.commonService.get('log', `/mon/author/user/log`, this.apiConfig) : of(null);
+                        })
+                    )
+                    .subscribe(
+                        data => {
+                            if (!!data) {
+                                this.loaded += data.length;
+                                if (this.loaded < this.currentRecordsCount) {
+                                    params.successCallback(data);
+                                } else {
+                                    this.currentRecordsCount = this.loaded;
+                                    params.successCallback(data, this.currentRecordsCount);
+                                }
+                            } else {
+                                params.successCallback([], 0);
+                            }
+                            this.agGrid?.api?.hideOverlay();
+                        },
+                        err => {
+                            this.agGrid?.api?.hideOverlay();
+                            console.error(err);
+                            params.failCallback();
+                            this.commonService.errorToast(err, 'Unable to fetch logs');
+                        }
+                    );
+            }
         };
     }
-    
-    filterModified(value) {
-        const self = this;
-        const filterModel = self.agGrid.api.getFilterModel();
-        const filter = [];
-        if (filterModel) {
-            Object.keys(filterModel).forEach(key => {
-                try {
-                    if (filterModel[key].filter) {
-                        filter.push(JSON.parse(filterModel[key].filter));
-                    }
-                } catch (e) {
-                    console.error(e);
-                }
-            });
-        }
-        if (self.apiConfig && self.apiConfig.filter && filter && !self.apiConfig.filter.$and) {
-            self.apiConfig.filter.$and = [];
-        }
-
-        self.apiConfig.filter.$and = filter;
-
-        if (!self.apiConfig.filter.$and.length) {
-            delete self.apiConfig.filter.$and;
-        }
-        self.initRows();
-       
-    }
-
 
     ngOnDestroy() {
         const self = this;
@@ -144,107 +162,11 @@ export class UserLogsComponent implements OnInit, OnDestroy {
 
     }
 
-    onReady(params?) {
-        this.gridApi = params.api;
-        this.getRecords();
-    }
-
-    getRecords(first?) {
-        const self = this;
-
-        self.dataSource = {
-            getRows: (params: IGetRowsParams) => {
-                const filter = this.gridApi.getFilterModel();
-                self.agGrid.api.showLoadingOverlay();
-                if (self.apiConfig.filter && self.apiConfig.filter.$and) {
-                    self.apiConfig.filter.$and.push({ apps: self.commonService.app._id });
-                }
-                else {
-                    self.apiConfig.filter = {
-                        apps: self.commonService.app._id
-                    }
-                }
-
-                self.currentRecordsCountPromise.then(count => {
-                    if (params.endRow - 30 < self.currentRecordsCount) {
-                        self.apiConfig.page = Math.ceil(params.endRow / 30);
-                        if (self.subscriptions['getRecords_' + self.apiConfig.page]) {
-                            self.subscriptions['getRecords_' + self.apiConfig.page].unsubscribe();
-                        }
-                        self.subscriptions['getRecords_' + self.apiConfig.page] = self.commonService.get('log', `/mon/author/user/log`, self.apiConfig)
-                            .subscribe(rows => {
-                                self.loaded = params.endRow;
-                                if (self.loaded > self.currentRecordsCount) {
-                                    self.loaded = self.currentRecordsCount;
-                                }
-                                self.agGrid.api.hideOverlay();
-                                if (!rows.length) {
-                                    self.agGrid.api.showNoRowsOverlay();
-                                }
-                                if (self.loaded === self.currentRecordsCount) {
-                                    params.successCallback(rows, self.currentRecordsCount);
-                                } else {
-                                    params.successCallback(rows);
-                                }
-                            }, err => {
-                                self.showLazyLoader = false;
-                                self.commonService.errorToast(err, 'Unable to fetch logs');
-                            });
-                    }
-                    else {
-                        self.agGrid.api.hideOverlay();
-                        if(!self.currentRecordsCount){
-                            self.agGrid.api.showNoRowsOverlay();
-                        }
-                        params.successCallback([], self.currentRecordsCount);
-                    }
-
-
-
-                })
-
-            }
-        };
-        this.gridApi.setDatasource(self.dataSource);
-    }
-
-
-    initRows(nocount?: boolean) {
-        const self = this;
-        if (!nocount) {
-            self.getRecordsCount();
-        }
-        self.apiConfig.page = 1;
-    }
-
-    getRecordsCount(first?: boolean) {
-        const self = this;
-        const filter = self.apiConfig.filter;
-        self.currentRecordsCountPromise = self.commonService.get('log', '/mon/author/user/log' + '/count', { filter: filter, noApp: true }).pipe(
-            map(count => {
-                if (first) {
-                    self.totalRecordsCount = count;
-                }
-                self.currentRecordsCount = count;
-                return count;
-            })
-        ).toPromise();
-    }
     dateFormatter(params) {
-        const self = this;
-        const retval = this.datePipe.transform(params.value, 'yyyy-MM-dd  h:mm:ss a');
-        return retval;
-    }
-    sortChanged(event) {
-        const self = this;
-        const sortModel = self.agGrid.api.getSortModel();
-        let sort = '';
-        if (sortModel) {
-            sort = sortModel.map(e => (e.sort === 'asc' ? '' : '-') + e.colId).join(',');
+        if (!!params?.value) {
+            const date = new Date(params.value);
+            return momentTz(date.toISOString()).utc().format('DD-MMM-YYYY, hh:mm:ss A, z');
         }
-        self.apiConfig.sort = sort;
-        if (!environment.production) {
-            console.log('Sort Modified', sortModel);
-        }
+        return;
     }
 }

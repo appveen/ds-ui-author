@@ -7,20 +7,27 @@ import {
     EventEmitter,
     Renderer2,
     ViewChild,
-    QueryList, ViewChildren, ChangeDetectorRef, TemplateRef
+    QueryList,
+    ViewChildren,
+    ChangeDetectorRef,
+    TemplateRef
 } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { AgGridAngular } from 'ag-grid-angular';
+import { GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
 import { ToastrService } from 'ngx-toastr';
-import { noop } from 'rxjs';
+import { noop, Subject } from 'rxjs';
 import * as _ from 'lodash';
 
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
-import { App } from 'src/app/utils/interfaces/app';
 import { DeleteModalConfig } from 'src/app/utils/interfaces/schemaBuilder';
 import { AppService } from 'src/app/utils/services/app.service';
 import { SessionService } from 'src/app/utils/services/session.service';
+import { AgGridActionsRendererComponent } from 'src/app/utils/ag-grid-actions-renderer/ag-grid-actions-renderer.component';
+import { AgGridSharedFloatingFilterComponent } from 'src/app/utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.component';
+import { AttributesCellRendererComponent } from '../../attributes-cell-renderer/attributes-cell-renderer.component';
 
 @Component({
     selector: 'odp-user-manage',
@@ -28,48 +35,68 @@ import { SessionService } from 'src/app/utils/services/session.service';
     styleUrls: ['./user-manage.component.scss'],
     animations: [
         trigger('moveDown', [
-            state('void', style({
-                transformOrigin: 'right top',
-                transform: 'scale(0)'
-            })),
+            state(
+                'void',
+                style({
+                    transformOrigin: 'right top',
+                    transform: 'scale(0)'
+                })
+            ),
             transition('void => *', [
-                animate('250ms ease-in', style({
-                    transform: 'scale(1)'
-                }))
+                animate(
+                    '250ms ease-in',
+                    style({
+                        transform: 'scale(1)'
+                    })
+                )
             ]),
             transition('* => void', [
                 style({ transformOrigin: 'right top' }),
-                animate('250ms ease-out', style({
-                    transform: 'scale(0)'
-                }))
+                animate(
+                    '250ms ease-out',
+                    style({
+                        transform: 'scale(0)'
+                    })
+                )
             ])
         ]),
         trigger('zoomIn', [
-            state('void', style({
-                transform: 'translate(-50%, -50%) scale(0) '
-            })),
+            state(
+                'void',
+                style({
+                    transform: 'translate(-50%, -50%) scale(0) '
+                })
+            ),
             transition('void => *', [
-                animate('600ms cubic-bezier(0.86, 0, 0.07, 1)', style({
-                    transform: 'translate(-50%, -50%) scale(1) '
-                }))
+                animate(
+                    '600ms cubic-bezier(0.86, 0, 0.07, 1)',
+                    style({
+                        transform: 'translate(-50%, -50%) scale(1) '
+                    })
+                )
             ]),
             transition('* => void', [
-                animate('600ms cubic-bezier(0.86, 0, 0.07, 1)', style({
-                    transform: 'translate(-50%, -50%) scale(0.1) '
-                }))
+                animate(
+                    '600ms cubic-bezier(0.86, 0, 0.07, 1)',
+                    style({
+                        transform: 'translate(-50%, -50%) scale(0.1) '
+                    })
+                )
             ])
-        ]),
+        ])
     ]
 })
-
 export class UserManageComponent implements OnInit, OnDestroy {
     private _user: any;
     @ViewChild('newAttributeModal', { static: false }) newAttributeModal: TemplateRef<HTMLElement>;
     @ViewChild('assignTeamModal', { static: false }) assignTeamModal: TemplateRef<HTMLElement>;
     @ViewChild('editAttributeModal', { static: false }) editAttributeModal: TemplateRef<HTMLElement>;
+    @ViewChild('resetPasswordModel', { static: false }) resetPasswordModel: TemplateRef<HTMLElement>;
+    @ViewChild('agGrid') agGrid: AgGridAngular;
     @ViewChildren('newLabel') newLabel: QueryList<any>;
     @Output() removeUser: EventEmitter<any>;
     @Input() bredcrumbSub: any;
+    resetPasswordModelRef: NgbModalRef;
     newAttributeModalRef: NgbModalRef;
     assignTeamModalRef: NgbModalRef;
     editAttributeModalRef: NgbModalRef;
@@ -86,7 +113,6 @@ export class UserManageComponent implements OnInit, OnDestroy {
     userTeams: Array<any>;
     allTeams: Array<any>;
     selectedGroups: Array<any>;
-    userAppList: Array<App>;
     additionInfoHelperText = 'Show More';
     showMoreInfo: boolean;
     editDetails: boolean;
@@ -99,8 +125,14 @@ export class UserManageComponent implements OnInit, OnDestroy {
     editAttribute: any;
     openDeleteModal: EventEmitter<any>;
     private _toggleUserMng: boolean;
-    showPassword:boolean;
+    showPassword = {};
+    showResetPassword: boolean;
+    gridOptions: GridOptions
     @Output() toggleUserMngChange: EventEmitter<boolean>;
+    frameworkComponents: any;
+    filtering: boolean;
+    filterModel: any;
+    rowData: Array<any>;
 
     get toggleUserMng(): boolean {
         const self = this;
@@ -126,14 +158,16 @@ export class UserManageComponent implements OnInit, OnDestroy {
         return self._user;
     }
 
-    constructor(private fb: FormBuilder,
+    constructor(
+        private fb: FormBuilder,
         private commonService: CommonService,
         private appService: AppService,
         private ts: ToastrService,
         private ngbToolTipConfig: NgbTooltipConfig,
         private renderer: Renderer2,
         private cdr: ChangeDetectorRef,
-        private sessionService: SessionService) {
+        private sessionService: SessionService
+    ) {
         const self = this;
         self.subscriptions = {};
         self.showMoreInfo = false;
@@ -145,28 +179,20 @@ export class UserManageComponent implements OnInit, OnDestroy {
         self.toggleFieldTypeSelector = {};
         // userDetails form is for updating basic user info
         self.userDetails = self.fb.group({
-            name: ['', [Validators.required]],
+            name: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
             phone: ['', [Validators.pattern(/^[0-9]{8,16}$/)]],
-            username: ['', [Validators.required, Validators.pattern(/([\w]+@[a-zA-Z0-9-]{2,}(\.[a-z]{2,})+|admin)/)]],
+            // username: ['', [Validators.required, Validators.pattern(/([\w]+@[a-zA-Z0-9-]{2,}(\.[a-z]{2,})+|admin)/)]],
             alternateEmail: ['', [Validators.pattern(/([\w]+@[a-zA-Z0-9-]{2,}(\.[a-z]{2,})+|admin)/)]]
         });
         // additionalDetails form is for adding extra key-value pair info for an user specific to an app
         self.additionalDetails = self.fb.group({
-            extraInfo: self.fb.array([
-                self.fb.group({
-                    key: ['', Validators.required],
-                    type: ['String', Validators.required],
-                    value: ['', Validators.required],
-                    label: ['', Validators.required]
-                })
-            ])
+            extraInfo: self.fb.array([])
         });
         // resetPasswordForm form is for updating user password
         self.resetPasswordForm = self.fb.group({
             password: [null, [Validators.required, Validators.minLength(8)]],
-            cpassword: [null, [Validators.required]],
+            cpassword: [null, [Validators.required]]
         });
-        self.userAppList = [];
         self.userGroupConfig.filter = {};
         self.teamOptions.filter = {};
         self.teamOptions.noApp = true;
@@ -192,9 +218,13 @@ export class UserManageComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         const self = this;
+        self.rowData = [...this.userAttributeList];
+        self.showResetPassword =
+          self.commonService.userDetails.isSuperAdmin || self.isThisUser(self.user);
         self.ngbToolTipConfig.container = 'body';
         self.commonService.apiCalls.componentLoading = false;
         self.getAppNTeam();
+        self.setupUserAttrsGrid();
         self.subscriptions['sessionExpired'] = self.commonService.sessionExpired.subscribe(() => {
             self.userDetails.markAsPristine();
             self.resetPasswordForm.markAsPristine();
@@ -211,18 +241,164 @@ export class UserManageComponent implements OnInit, OnDestroy {
         return (self.additionalDetails.get('extraInfo') as FormArray).controls;
     }
 
+    setupUserAttrsGrid() {
+        const hasEditPermission = this.hasPermission('PMUBU');
+        const hasDeletePermission = this.hasPermission('PMUBD');
+        this.frameworkComponents = {
+            customCellRenderer: AttributesCellRendererComponent,
+            actionCellRenderer: AgGridActionsRendererComponent
+        };
+        this.gridOptions = {
+            defaultColDef: {
+                cellRenderer: 'customCellRenderer',
+                headerClass: 'hide-filter-icon',
+                resizable: true,
+                sortable: true,
+                filter: 'agTextColumnFilter',
+                suppressMenu: true,
+                floatingFilter: true,
+                floatingFilterComponentFramework: AgGridSharedFloatingFilterComponent,
+                filterParams: {
+                    caseSensitive: true,
+                    suppressAndOrCondition: true,
+                    suppressFilterButton: true
+                }
+            },
+            columnDefs: [
+                {
+                    headerName: 'Label',
+                    field: 'label',
+                    refData: {
+                        filterType: 'text'
+                    }
+                },
+                {
+                    headerName: 'Key',
+                    field: 'key',
+                    refData: {
+                        filterType: 'text'
+                    }
+                },
+                {
+                    headerName: 'Type',
+                    field: 'type',
+                    refData: {
+                        filterType: 'list_of_values',
+                        mapperFunction: 'gridAttrTypesMapper'
+                    }
+                },
+                {
+                    headerName: 'Value',
+                    field: 'value',
+                    filter: false,
+                    refData: {
+                        filterType: 'text'
+                    }
+                },
+                ...(hasEditPermission || hasDeletePermission
+                    ? [
+                          {
+                              headerName: 'Actions',
+                              pinned: 'right',
+                              cellRenderer: 'actionCellRenderer',
+                              sortable: false,
+                              filter: false,
+                              minWidth: hasEditPermission && hasDeletePermission ? 130 : 94,
+                              maxWidth: hasEditPermission && hasDeletePermission ? 130 : 94,
+                              refData: {
+                                  actionsButtons: [hasEditPermission ? 'Edit' : '', hasDeletePermission ? 'Delete' : '']
+                                      .filter(i => !!i)
+                                      .join(','),
+                                  actionCallbackFunction: 'onGridAction'
+                              }
+                          }
+                      ]
+                    : [])
+            ],
+            context: this,
+            animateRows: true,
+            onGridReady: this.onGridReady.bind(this),
+            onRowDataChanged: this.autoSizeAllColumns.bind(this),
+            onGridSizeChanged: this.forceResizeColumns.bind(this),
+            onRowDoubleClicked: this.onRowDoubleClick.bind(this)
+        };
+    }
+
+    onFilterChanged(event) {
+        this.filtering = true;
+        this.filterModel = this.agGrid?.api?.getFilterModel();
+        setTimeout(() => {
+          this.filtering = false;
+        }, 1000);
+      }
+
+    gridAttrTypesMapper(data: any[]) {
+        return this.types.map(type => {
+            const {label, value} = type;
+            return {label, value};
+        })
+    }
+
+    onGridAction(buttonName: string, rowNode: RowNode) {
+        switch(buttonName) {
+            case 'Edit': {
+                this.openEditAttributeModal(rowNode.data);
+            }
+            break;
+            case 'Delete': {
+                this.deleteAdditionInfo(rowNode.data?.key);
+            }
+            break;
+        }
+    }
+
+    private onGridReady(event: GridReadyEvent) {
+        this.forceResizeColumns();
+    }
+
+    private forceResizeColumns() {
+        this.agGrid?.api?.sizeColumnsToFit();
+        this.autoSizeAllColumns();
+    }
+
+    private autoSizeAllColumns() {
+        if (!!this.agGrid?.api && !!this.agGrid?.columnApi) {
+            setTimeout(() => {
+                const container = document.querySelector('.grid-container');
+                const availableWidth = !!container ? container.clientWidth - 170 : 993;
+                const allColumns = this.agGrid.columnApi.getAllColumns();
+                allColumns.forEach(col => {
+                    this.agGrid.columnApi.autoSizeColumn(col);
+                    if (col.getActualWidth() > 200 || this.agGrid.api.getDisplayedRowCount() === 0) {
+                        col.setActualWidth(200);
+                    }
+                });
+                const occupiedWidth = allColumns.reduce((pv, cv) => pv + cv.getActualWidth(), -170);
+                if (occupiedWidth < availableWidth) {
+                    this.agGrid.api.sizeColumnsToFit();
+                }
+            }, 2000);
+        }
+    }
+
+    private onRowDoubleClick(row: any) {
+        this.hasPermission('PMUBU') && this.openEditAttributeModal(row.data);
+    }
+
     getLabelError(i) {
         const self = this;
-        return self.additionalDetails.get(['extraInfo', i, 'label']).touched
-            && self.additionalDetails.get(['extraInfo', i, 'label']).dirty
-            && self.additionalDetails.get(['extraInfo', i, 'label']).hasError('required');
+        return (
+            self.additionalDetails.get(['extraInfo', i, 'label']).touched &&
+            self.additionalDetails.get(['extraInfo', i, 'label']).hasError('required')
+        );
     }
 
     getValError(i) {
         const self = this;
-        return self.additionalDetails.get(['extraInfo', i, 'value']).touched &&
-            self.additionalDetails.get(['extraInfo', i, 'value']).dirty &&
-            self.additionalDetails.get(['extraInfo', i, 'value']).hasError('required');
+        return (
+            self.additionalDetails.get(['extraInfo', i, 'value']).touched &&
+            self.additionalDetails.get(['extraInfo', i, 'value']).hasError('required')
+        );
     }
 
     setKey(i) {
@@ -248,15 +424,15 @@ export class UserManageComponent implements OnInit, OnDestroy {
 
     get initials() {
         const self = this;
-        const name = self.user.basicDetails.name.split(' ');
-        return name[0].charAt(0) + name[name.length - 1].charAt(0);
+        const name = (self.user?.basicDetails?.name || '').split(' ');
+        return ((name[0].charAt(0) + (name.length > 1 ? name[name.length - 1].charAt(0) : '')) as string).toUpperCase();
     }
 
     get nameError() {
         const self = this;
-        return self.userDetails.get('name').touched &&
-            self.userDetails.get('name').dirty &&
-            self.userDetails.get('name').hasError('required');
+        return (
+            self.userDetails.get('name').touched && self.userDetails.get('name').dirty && self.userDetails.get('name').hasError('required')
+        );
     }
 
     get phoneError() {
@@ -264,32 +440,32 @@ export class UserManageComponent implements OnInit, OnDestroy {
         return self.userDetails.get('phone').dirty && self.userDetails.get('phone').hasError('pattern');
     }
 
-    get usernameError() {
-        const self = this;
-        return (self.userDetails.get('username').dirty && self.userDetails.get('username').hasError('pattern')) ||
-            (self.userDetails.get('username') && self.userDetails.get('username').hasError('required'));
-    }
+    // get usernameError() {
+    //     const self = this;
+    //     return (self.userDetails.get('username').dirty && self.userDetails.get('username').hasError('pattern')) ||
+    //         (self.userDetails.get('username') && self.userDetails.get('username').hasError('required'));
+    // }
 
     get pwdError() {
         const self = this;
-        return (self.resetPasswordForm.get('password').dirty &&
-            self.resetPasswordForm.get('password').hasError('required')) ||
-            (self.resetPasswordForm.get('password').dirty &&
-                self.resetPasswordForm.get('password').hasError('minlength'));
+        return (
+            (self.resetPasswordForm.get('password').dirty && self.resetPasswordForm.get('password').hasError('required')) ||
+            (self.resetPasswordForm.get('password').dirty && self.resetPasswordForm.get('password').hasError('minlength'))
+        );
     }
 
     get cPwdError() {
         const self = this;
-        return (self.resetPasswordForm.get('cpassword').dirty &&
-            self.resetPasswordForm.get('cpassword').hasError('required')) ||
-            (self.resetPasswordForm.get('cpassword').dirty && self.matchPwd);
+        return (
+            (self.resetPasswordForm.get('cpassword').dirty && self.resetPasswordForm.get('cpassword').hasError('required')) ||
+            (self.resetPasswordForm.get('cpassword').dirty && self.matchPwd)
+        );
     }
     // returns if a user is also an AppAdmin
     get isAppAdmin() {
         const self = this;
         if (self.user.accessControl.apps && self.user.accessControl.apps.length > 0) {
-            return (!!self.user.accessControl.apps.find(_app => _app._id === self.commonService.app._id) ||
-                self.madeAppAdmin);
+            return !!self.user.accessControl.apps.find(_app => _app._id === self.commonService.app._id) || self.madeAppAdmin;
         }
         return false;
     }
@@ -297,7 +473,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
     get isElevatedUser() {
         const self = this;
         const logedInUser = self.sessionService.getUser(true);
-        if (self.user.basicDetails.name === logedInUser.basicDetails.name) {
+        if (self.user._id === logedInUser._id) {
             return false;
         } else {
             const isSuperAdmin = logedInUser.isSuperAdmin;
@@ -333,15 +509,15 @@ export class UserManageComponent implements OnInit, OnDestroy {
         const self = this;
         if (self.hasPermission('PMUBU')) {
             self.editDetails = !self.editDetails;
-            self.userDetails.patchValue({ name: self.user.basicDetails.name });
-            self.userDetails.patchValue({ phone: self.user.basicDetails.phone });
-            self.userDetails.patchValue({ username: self.user.username });
-            self.userDetails.patchValue({ alternateEmail: self.user.basicDetails.alternateEmail });
+            self.userDetails.patchValue({ name: self.user?.basicDetails?.name || '' });
+            self.userDetails.patchValue({ phone: self.user?.basicDetails?.phone || '' });
+            // self.userDetails.patchValue({ username: self.user.username });
+            self.userDetails.patchValue({ alternateEmail: self.user?.basicDetails?.alternateEmail || '' });
             if (self.authType !== 'local') {
-                self.userDetails.get('username').disable();
+                // self.userDetails.get('username').disable();
                 self.userDetails.get('phone').disable();
             } else {
-                self.userDetails.get('username').enable();
+                // self.userDetails.get('username').enable();
                 self.userDetails.get('phone').enable();
             }
         } else {
@@ -353,13 +529,13 @@ export class UserManageComponent implements OnInit, OnDestroy {
         const self = this;
         self.userDetails.get('name').markAsDirty();
         self.userDetails.get('phone').markAsDirty();
-        self.userDetails.get('username').markAsDirty();
+        // self.userDetails.get('username').markAsDirty();
         if (self.userDetails.invalid) {
             return;
         } else {
             self.user.basicDetails.name = self.userDetails.get('name').value;
             self.user.basicDetails.phone = self.userDetails.get('phone').value;
-            self.user.username = self.userDetails.get('username').value;
+            // self.user.username = self.userDetails.get('username').value;
             if (self.userDetails.get('alternateEmail').value === '') {
                 self.user.basicDetails.alternateEmail = null;
             } else {
@@ -368,21 +544,35 @@ export class UserManageComponent implements OnInit, OnDestroy {
             if (self.subscriptions['userDtl']) {
                 self.subscriptions['userDtl'].unsubscribe();
             }
-            self.subscriptions['userDtl'] = self.commonService.put('user', '/usr/' + self.user._id, self.user)
-                .subscribe(res => {
+            self.subscriptions['userDtl'] = self.commonService.put('user', '/usr/' + self.user._id, self.user).subscribe(
+                res => {
                     self.editDetails = false;
                     if (res.basicDetails.name) {
                         self.bredcrumbSub.next(res.basicDetails.name);
                     }
                     self.userDetails.reset();
                     self.ts.success('User details updated successfully');
-                }, (e) => {
+                },
+                e => {
                     self.editUserDetails();
                     self.ts.error(e.error.message);
-                });
+                }
+            );
         }
     }
 
+    openResetPassword() {
+        const self = this;
+        self.resetPasswordModelRef = self.commonService.modal(self.resetPasswordModel);
+        self.resetPasswordModelRef.result.then(
+            close => {
+                self.resetPasswordForm.reset();
+            },
+            dismiss => {
+                self.resetPasswordForm.reset();
+            }
+        );
+    }
     resetPassword() {
         const self = this;
         self.resetPasswordForm.get('password').markAsDirty();
@@ -395,16 +585,22 @@ export class UserManageComponent implements OnInit, OnDestroy {
             }
             self.subscriptions['resetPwd'] = self.commonService
                 .put('user', '/usr/' + self.user._id + '/reset', self.resetPasswordForm.value)
-                .subscribe(res => {
-                    if (res && self.user._id === self.commonService.userDetails._id) {
-                        self.ts.success('Redirecting to login screen, Please login again');
-                        setTimeout(() => {
-                            self.commonService.logout();
-                        }, 3000);
-                    } else if (res) {
-                        self.ts.success('Password changed successfully');
+                .subscribe(
+                    res => {
+                        self.resetPasswordModelRef.close();
+                        if (res && self.user._id === self.commonService.userDetails._id) {
+                            self.ts.success('Redirecting to login screen, Please login again');
+                            setTimeout(() => {
+                                self.commonService.logout();
+                            }, 3000);
+                        } else if (res) {
+                            self.ts.success('Password changed successfully');
+                        }
+                    },
+                    err => {
+                        self.commonService.errorToast(err, 'Unable to change password, please try again later');
                     }
-                }, err => { self.commonService.errorToast(err, 'Unable to change password, please try again later'); });
+                );
             self.resetPasswordForm.reset();
             self.resetPwd = false;
         }
@@ -420,8 +616,8 @@ export class UserManageComponent implements OnInit, OnDestroy {
         const self = this;
         const alertModal: any = {};
         alertModal.title = 'Delete Attribute';
-        alertModal.message = 'Are you sure you want to delete <span class="text-delete font-weight-bold">'
-            + attrName + '</span> Attribute?';
+        alertModal.message =
+            'Are you sure you want to delete <span class="text-delete font-weight-bold">' + attrName + '</span> Attribute?';
         alertModal.attrName = attrName;
         self.openDeleteModal.emit(alertModal);
     }
@@ -484,31 +680,38 @@ export class UserManageComponent implements OnInit, OnDestroy {
         if (data) {
             if (typeof data.attrName !== 'undefined') {
                 delete self.user.attributes[data.attrName];
-                self.commonService.put('user', '/usr/' + self.user._id, self.user)
-                    .subscribe(() => {
+                self.commonService.put('user', '/usr/' + self.user._id, self.user).subscribe(
+                    () => {
                         self.initConfig();
                         self.ts.success('Attribute deleted successfully');
+                        self.rowData = [...this.userAttributeList];
                         self.resetAdditionDetailForm();
-                    }, (err) => {
+                    },
+                    err => {
                         self.ts.error(err.error.message);
                         self.resetAdditionDetailForm();
-                    }, noop);
+                    },
+                    noop
+                );
             }
             if (data.removeAdmin) {
                 const payload = { apps: [] };
                 payload.apps.push(self.commonService.app._id);
-                self.subscriptions['removeAdminAccess'] =
-                    self.commonService.put('user', `/usr/${self.user._id}/appAdmin/revoke`, payload)
-                        .subscribe(() => {
+                self.subscriptions['removeAdminAccess'] = self.commonService
+                    .put('user', `/usr/${self.user._id}/appAdmin/revoke`, payload)
+                    .subscribe(
+                        () => {
                             self.madeAppAdmin = false;
                             self.user.accessControl.accessLevel = 'Selected';
                             const index = self.user.accessControl.apps.findIndex(e => e._id === self.commonService.app._id);
                             self.user.accessControl.apps.splice(index, 1);
                             self.ts.success(`User ${self.user.basicDetails.name}'s has been successfully
                             revoked as App Admin for App ${self.commonService.app._id}`);
-                        }, (err) => {
+                        },
+                        err => {
                             self.ts.error(err.error.message);
-                        });
+                        }
+                    );
             }
             if (data.removeFromApp) {
                 self._toggleUserMng = false;
@@ -517,11 +720,10 @@ export class UserManageComponent implements OnInit, OnDestroy {
             }
             if (data.removeGroupForUser) {
                 const teamIds = [data.teamId];
-                self.commonService.put('user', `/usr/${self.user._id}/removeFromGroups`, { groups: teamIds })
-                    .subscribe(() => {
-                        self.getUserTeam();
-                        self.ts.success(`${data.teamName} Group has been removed for user ${self.user.basicDetails.name}`);
-                    });
+                self.commonService.put('user', `/usr/${self.user._id}/removeFromGroups`, { groups: teamIds }).subscribe(() => {
+                    self.getUserTeam();
+                    self.ts.success(`${data.teamName} Group has been removed for user ${self.user.basicDetails.name}`);
+                });
             }
         }
     }
@@ -530,14 +732,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
         const self = this;
         self.additionalDetails.reset();
         self.additionalDetails = self.fb.group({
-            extraInfo: self.fb.array([
-                self.fb.group({
-                    key: ['', Validators.required],
-                    type: ['String', Validators.required],
-                    value: ['', Validators.required],
-                    label: ['', Validators.required]
-                })
-            ])
+            extraInfo: self.fb.array([])
         });
         // (self.additionalDetails.get('extraInfo') as FormArray).clear();
     }
@@ -548,13 +743,40 @@ export class UserManageComponent implements OnInit, OnDestroy {
      */
     addAdditionInfo() {
         const self = this;
+        if (self.userAttributeList.length) {
+            self.userAttributeList.forEach(element => {
+                let form = self.fb.group({
+                    key: ['', Validators.required],
+                    type: ['String', Validators.required],
+                    value: ['', Validators.required],
+                    label: ['', Validators.required]
+                });
+                form.patchValue(element);
+                (self.additionalDetails.get('extraInfo') as FormArray).push(form);
+            });
+        } else {
+            const form = self.fb.group({
+                key: ['', [Validators.required]],
+                type: ['String', [Validators.required]],
+                value: ['', [Validators.required]],
+                label: ['', [Validators.required]]
+            });
+            form.get('type').valueChanges.subscribe(() => {
+                form.get('value').setValue(null);
+            });
+            (self.additionalDetails.get('extraInfo') as FormArray).push(form);
+        }
+
         if (self.hasPermission('PMUBU')) {
             self.newAttributeModalRef = self.commonService.modal(self.newAttributeModal, { size: 'lg' });
-            self.newAttributeModalRef.result.then(close => {
-                self.resetAdditionDetailForm();
-            }, dismiss => {
-                self.resetAdditionDetailForm();
-            });
+            self.newAttributeModalRef.result.then(
+                close => {
+                    self.resetAdditionDetailForm();
+                },
+                dismiss => {
+                    self.resetAdditionDetailForm();
+                }
+            );
         } else {
             self.inSufficientPermission();
         }
@@ -576,10 +798,10 @@ export class UserManageComponent implements OnInit, OnDestroy {
     makeAppAdmin() {
         const self = this;
         if (self.hasPermission('PMUG')) {
-            const payload = { 'apps': [] };
+            const payload = { apps: [] };
             payload.apps.push(self.commonService.app._id);
-            self.subscriptions['makeAdmin'] = self.commonService.put('user', `/usr/${self.user._id}/appAdmin/grant`, payload)
-                .subscribe(() => {
+            self.subscriptions['makeAdmin'] = self.commonService.put('user', `/usr/${self.user._id}/appAdmin/grant`, payload).subscribe(
+                () => {
                     self.madeAppAdmin = true;
                     self.user.accessControl.accessLevel = 'Selected';
                     if (self.user.accessControl.apps) {
@@ -589,15 +811,15 @@ export class UserManageComponent implements OnInit, OnDestroy {
                         self.user.accessControl.apps.push({ _id: self.commonService.app._id, type: 'Management' });
                     }
                     self.ts.success(`User ${self.user.basicDetails.name} has been successfully granted App Admin privileges`);
-                }, (err) => {
+                },
+                err => {
                     self.ts.error(err.error.message);
-                });
+                }
+            );
         } else {
             self.inSufficientPermission();
         }
     }
-
-
 
     newField(event) {
         const self = this;
@@ -609,7 +831,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
     addExtraDetails() {
         const self = this;
         let empty = false;
-        self.userAttributes.forEach((control) => {
+        self.userAttributes.forEach(control => {
             const label = control.get('label').value;
             const val = control.get('value').value;
             if (label === '' || val === '') {
@@ -620,21 +842,27 @@ export class UserManageComponent implements OnInit, OnDestroy {
             self.ts.warning('Please check the form fields, looks like few fields are empty');
         } else {
             self.newAttributeModalRef.close();
-            self.userAttributes.forEach((data) => {
+            self.user.attributes = {};
+            self.userAttributes.forEach(data => {
                 const payload = data.value;
                 const detailKey = payload.key;
                 delete payload.key;
                 self.user.attributes[detailKey] = payload;
             });
-            self.commonService.put('user', `/usr/${self.user._id}`, self.user)
-                .subscribe(() => {
+
+            self.commonService.put('user', `/usr/${self.user._id}`, self.user).subscribe(
+                () => {
                     self.initConfig();
-                    self.ts.success('Added custom Details successfully');
+                    self.ts.success('Custom details updated successfully');
+                    this.rowData = [...this.userAttributeList];
                     self.resetAdditionDetailForm();
-                }, (err) => {
+                },
+                err => {
                     self.ts.error(err.error.message);
                     self.resetAdditionDetailForm();
-                }, noop);
+                },
+                noop
+            );
         }
     }
 
@@ -672,22 +900,26 @@ export class UserManageComponent implements OnInit, OnDestroy {
 
     getAllTeams() {
         const self = this;
-        self.teamOptions.filter = { 'users': { '$ne': self.user._id } };
+        self.teamOptions.filter = { users: { $ne: self.user._id } };
         self.teamOptions.filter.app = self.commonService.app._id;
         self.teamOptions.count = -1;
-        self.subscriptions['allTeams'] = self.commonService.get('user', `/${self.commonService.app._id}/group/`, self.teamOptions)
-            .subscribe((_teams) => {
-                self.allTeams = _teams;
-                const index = self.allTeams.findIndex(e => e.name === '#');
-                if (index >= 0) {
-                    self.allTeams.splice(index, 1);
+        self.subscriptions['allTeams'] = self.commonService
+            .get('user', `/${self.commonService.app._id}/group/`, self.teamOptions)
+            .subscribe(
+                _teams => {
+                    self.allTeams = _teams;
+                    const index = self.allTeams.findIndex(e => e.name === '#');
+                    if (index >= 0) {
+                        self.allTeams.splice(index, 1);
+                    }
+                    self.allTeams.forEach(_team => {
+                        _team.teamSelected = false;
+                    });
+                },
+                err => {
+                    self.ts.error(err.error.message);
                 }
-                self.allTeams.forEach((_team) => {
-                    _team.teamSelected = false;
-                });
-            }, (err) => {
-                self.ts.error(err.error.message);
-            });
+            );
     }
 
     getUserTeam() {
@@ -695,8 +927,9 @@ export class UserManageComponent implements OnInit, OnDestroy {
         if (self.manageGroup || self.viewGroup) {
             self.userGroupConfig.filter.users = self.user._id;
             self.userGroupConfig.count = -1;
-            self.subscriptions['userTeams'] = self.commonService.get('user', `/${self.commonService.app._id}/group/`, self.userGroupConfig)
-                .subscribe((_teams) => {
+            self.subscriptions['userTeams'] = self.commonService
+                .get('user', `/${self.commonService.app._id}/group/`, self.userGroupConfig)
+                .subscribe(_teams => {
                     self.userTeams = _teams;
                     const index = self.userTeams.findIndex(e => e.name === '#');
                     if (index >= 0) {
@@ -711,66 +944,40 @@ export class UserManageComponent implements OnInit, OnDestroy {
         const self = this;
         self.getAllTeams();
         self.assignTeamModalRef = self.commonService.modal(self.assignTeamModal, { windowClass: 'assignApp-modal', centered: true });
-        self.assignTeamModalRef.result.then((close) => {
-            if (close && self.selectedGroups && self.selectedGroups.length > 0) {
-                const teamIds = [];
-                self.selectedGroups.forEach((team) => {
-                    delete team.teamSelected;
-                    team.users.push(self.user._id);
-                    teamIds.push(team._id);
-                });
-                self.commonService.put('user', `/usr/${self.user._id}/addToGroups`, { groups: teamIds })
-                    .subscribe(() => {
-                        self.getUserTeam();
-                        // self.getAllTeams();
-                        self.ts.success('User has been added to group successfully');
-                    }, err => {
-                        self.commonService.errorToast(err);
+        self.assignTeamModalRef.result.then(
+            close => {
+                if (close && self.selectedGroups && self.selectedGroups.length > 0) {
+                    const teamIds = [];
+                    self.selectedGroups.forEach(team => {
+                        delete team.teamSelected;
+                        team.users.push(self.user._id);
+                        teamIds.push(team._id);
                     });
-            }
-        }, dismiss => { });
+                    self.commonService.put('user', `/usr/${self.user._id}/addToGroups`, { groups: teamIds }).subscribe(
+                        () => {
+                            self.getUserTeam();
+                            // self.getAllTeams();
+                            self.ts.success('User has been added to group successfully');
+                        },
+                        err => {
+                            self.commonService.errorToast(err);
+                        }
+                    );
+                }
+            },
+            dismiss => {}
+        );
     }
 
     addTeam(tIndex) {
         const self = this;
         self.allTeams[tIndex].teamSelected = !self.allTeams[tIndex].teamSelected;
         self.selectedGroups = [];
-        self.allTeams.forEach((_team) => {
+        self.allTeams.forEach(_team => {
             if (_team.teamSelected) {
                 self.selectedGroups.push(_team);
             }
         });
-    }
-
-    getUserApps() {
-        const self = this;
-        self.subscriptions['userApps'] = self.commonService.get('user', '/usr/' + self.user._id + '/appList', self.userAppConfig)
-            .subscribe((_apps) => {
-                self.userAppList = [];
-                _apps.apps.forEach(app => {
-                    const temp = {
-                        _id: app
-                    };
-                    self.userAppList.push(temp);
-                });
-                self.userAppList.forEach(app => {
-                    self.getAppLogo(app);
-                });
-            });
-    }
-
-    getAppLogo(app: App) {
-        const self = this;
-        const option: GetOptions = { select: 'logo.thumbnail', noApp: true };
-        self.subscriptions['getAppLogo_' + app._id] = self.commonService.get('user', '/app/' + app._id, option)
-            .subscribe((res) => {
-                app.logo = res.logo;
-            }, err => {
-                if (err.status === 404) {
-                    const index = self.userAppList.findIndex(e => e._id === app._id);
-                    self.userAppList.splice(index, 1);
-                }
-            });
     }
 
     initConfig() {
@@ -790,12 +997,11 @@ export class UserManageComponent implements OnInit, OnDestroy {
         const self = this;
         self.initConfig();
         self.getUserTeam();
-        self.getUserApps();
     }
 
     inSufficientPermission() {
         const self = this;
-        self.ts.warning('You don\'t have enough permissions');
+        self.ts.warning("You don't have enough permissions");
     }
 
     ngOnDestroy() {
@@ -824,11 +1030,14 @@ export class UserManageComponent implements OnInit, OnDestroy {
 
     closeAllSessions(user: any) {
         const self = this;
-        self.commonService.closeAllSessions(user._id).then(res => {
-            self.ts.success('User session closed');
-        }).catch(err => {
-            self.commonService.errorToast(err);
-        });
+        self.commonService
+            .closeAllSessions(user._id)
+            .then(res => {
+                self.ts.success('User session closed');
+            })
+            .catch(err => {
+                self.commonService.errorToast(err);
+            });
     }
 
     hasPermission(type: string): boolean {
@@ -876,31 +1085,36 @@ export class UserManageComponent implements OnInit, OnDestroy {
     openEditAttributeModal(item) {
         const self = this;
         self.editAttribute = self.appService.cloneObject(item);
-        delete self.user.attributes[item.key];
         self.editAttributeModalRef = self.commonService.modal(self.editAttributeModal);
-        self.editAttributeModalRef.result.then(close => {
-            if (close) {
-                const key = self.editAttribute.key;
-                delete self.editAttribute.key;
-                self.user.attributes[key] = self.appService.cloneObject(self.editAttribute);
-                self.commonService.put('user', `/usr/${self.user._id}`, self.user)
-                    .subscribe(() => {
-                        self.initConfig();
-                        self.ts.success('Custom Details Saved Successfully');
-                        self.resetAdditionDetailForm();
-                    }, (err) => {
-                        self.ts.error(err.error.message);
-                        self.resetAdditionDetailForm();
-                    }, noop);
-            } else {
-                const key = item.key;
-                delete item.key;
-                self.user.attributes[key] = item;
+        self.editAttributeModalRef.result.then(
+            close => {
+                if (close) {
+                    const key = self.editAttribute.key;
+                    delete self.editAttribute.key;
+                    self.user.attributes[key] = self.appService.cloneObject(self.editAttribute);
+                    self.commonService.put('user', `/usr/${self.user._id}`, self.user).subscribe(
+                        () => {
+                            self.rowData = [...this.userAttributeList];
+                            self.initConfig();
+                            self.ts.success('Custom Details Saved Successfully');
+                            self.resetAdditionDetailForm();
+                        },
+                        err => {
+                            self.ts.error(err.error.message);
+                            self.resetAdditionDetailForm();
+                        },
+                        noop
+                    );
+                } else {
+                    const {key, ...rest} = item;
+                    self.user.attributes[key] = rest;
+                }
+                self.editAttribute = {};
+            },
+            dismiss => {
+                self.editAttribute = {};
             }
-            self.editAttribute = {};
-        }, dismiss => {
-            self.editAttribute = {};
-        });
+        );
     }
 
     get userAttributeList() {

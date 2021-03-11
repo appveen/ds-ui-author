@@ -45,6 +45,16 @@
         min-width: 550px;
         max-width: 550px;
       }
+      .hook-header-name {
+        min-width: 202px;
+        
+      }
+      .hook-header-url {
+        min-width: 562px;
+        max-width: 562px;
+      }
+      
+
     }
   }
 }
@@ -52,3 +62,8 @@
   top: 7px;
   left: 90%;
 }
+
+sup{
+  top: auto !important;
+}
+

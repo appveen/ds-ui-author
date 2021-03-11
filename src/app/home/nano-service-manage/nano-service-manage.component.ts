@@ -312,7 +312,7 @@ export class NanoServiceManageComponent implements OnInit, OnDestroy, CanCompone
 
     convertHeader(key: string) {
         if (key) {
-            return 'ODP-NS-' + key.split(' ')
+            return 'Data-Stack-NS-' + key.split(' ')
                 .filter(e => e)
                 .map(e => e.charAt(0).toUpperCase() + e.substr(1, e.length))
                 .join('-');

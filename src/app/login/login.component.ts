@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit, AfterViewInit, AfterContentChecke
         self.version = environment.version;
         self.redirectLink = window.location.protocol + '//' + window.location.hostname + '/bc';
         self.appService.setFocus.subscribe(val => {
-            self.usernameControl.nativeElement.focus();
+            self.usernameControl?.nativeElement.focus();
         });
         if (this.commonService.userDetails
             && this.commonService.userDetails._id) {
@@ -102,16 +102,12 @@ export class LoginComponent implements OnInit, AfterViewInit, AfterContentChecke
                 return;
             }
             self.loader = true;
-            self.subscriptions['login'] = self.commonService.get('user', '/authType/' + username, { noApp: true }).subscribe(res => {
+            self.subscriptions['login'] = self.commonService.get('user', '/authType/' + username, { noApp: true, skipAuth: true }).subscribe(res => {
                 self.authTypeChecked = true;
                 self.loader = false;
                 self.appService.fqdn = res.fqdn;
-                if (res.authType === 'azure' && !res.bot) {
-                    self.authType = res.authType;
-                    self.commonService.connectionDetails = res.auth.connectionDetails;
-                } else {
-                    self.authType = 'local';
-                }
+                self.appService.validAuthTypes = res.validAuthTypes;
+                self.authType = res.bot ? 'local' : res.authType;
                 if (res.rbacUserToSingleSession
                     && res.sessionActive) {
                     self.rbacUserReloginAction = res.rbacUserReloginAction;
@@ -135,7 +131,7 @@ export class LoginComponent implements OnInit, AfterViewInit, AfterContentChecke
         self.form.get('password').disable();
         self.message = null;
         self.azureLoginLoader = true;
-        self.commonService.azureLogin(self.form.get('username').value)
+        self.commonService.azureLogin()
             .then(async (res) => {
                 if (res.status === 200) {
                     try {
@@ -180,7 +176,7 @@ export class LoginComponent implements OnInit, AfterViewInit, AfterContentChecke
                 return;
             }
             self.loader = true;
-            self.commonService.login(self.form.value)
+            self.commonService[self.authType === 'local' ? 'login' : 'ldapLogin'](self.form.value)
                 .then(res => {
                     self.commonService.afterAuthentication().then(data => {
                         self.loader = false;

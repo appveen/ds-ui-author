@@ -186,7 +186,7 @@ export class SelectServiceBlockComponent implements OnInit, OnDestroy {
     };
     let request;
     if (self.node.meta.formatType === 'dataService') {
-      options.select = '_id,app,name,definition,attributeList';
+      options.select = '_id,app,name,definition';
       request = self.commonService.get('serviceManager', '/service', options);
     } else {
       request = self.commonService.get('partnerManager', '/nanoService', options);

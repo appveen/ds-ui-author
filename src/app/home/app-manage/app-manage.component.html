@@ -148,7 +148,7 @@
 
                             <div class="d-flex pt-3 ml-2">
                                 <div class="d-flex certificate-card">
-                                    <img src="author/assets/img/certificate-icon.svg" alt="certificate">
+                                    <span class="odp-Dcert"></span>
                                 </div>
                                 <div class="d-flex  p-3">
                                     <div>
@@ -178,9 +178,7 @@
                             <div class="d-flex info-cards position-absolute ml-2">
                                 <div class="info-card-items  bg-white p-3">
                                     <div>
-                                        <span>
-                                            <img src="author/assets/img/globe.svg" alt="globe">
-                                        </span>
+                                        <span class="odp-global"></span>
                                         <span class="text-secondary card-name ml-2">Common Name</span>
                                     </div>
                                     <div>
@@ -189,9 +187,7 @@
                                 </div>
                                 <div class="info-card-items  bg-white p-3 ml-2">
                                     <div>
-                                        <span>
-                                            <img src="author/assets/img/case.svg" alt="case">
-                                        </span>
+                                        <span class="odp-approver"></span>
                                         <span class="text-secondary card-name ml-2">Owner</span>
                                     </div>
                                     <div>
@@ -200,8 +196,7 @@
                                 </div>
                                 <div class="info-card-items  bg-white p-3 ml-2">
                                     <div>
-                                        <span>
-                                            <img src="author/assets/img/verified.svg" alt="verified">
+                                        <span class="odp-double-check">
                                         </span>
                                         <span class="text-secondary card-name ml-2">Signed by</span>
                                     </div>
@@ -210,8 +205,7 @@
                                 </div>
                                 <div class="info-card-items  bg-white p-3 ml-2">
                                     <div>
-                                        <span>
-                                            <img src="author/assets/img/seal.svg" alt="seal">
+                                        <span class="odp-clock">
                                         </span>
                                         <span class="text-secondary card-name ml-2">Valid until</span>
                                     </div>
@@ -271,8 +265,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class=" mt-2"
-                                        [@stopping]="!serviceStatus.Undeployed?'disabled':'enable'">
+                                    <div class=" mt-2" [@stopping]="!serviceStatus.Undeployed?'disabled':'enable'">
                                         <div class="container">
                                             <div class="row service-status-card bg-white"
                                                 [@cardAction]="startServiceAttributes['startCard']">
@@ -326,8 +319,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class=" mt-2"
-                                        [@stopping]="!serviceStatus.Active?'disabled':'enable'">
+                                    <div class=" mt-2" [@stopping]="!serviceStatus.Active?'disabled':'enable'">
                                         <div class="container">
                                             <div class="row service-status-card bg-white"
                                                 [@cardAction]="startServiceAttributes['stopCard']">
@@ -400,28 +392,28 @@
                                             </div>
                                             <div class="row ml-2">
                                                 <span class="text-secondary">Total Flows</span>
-                                                <span
-                                                    class="text-secondary ml-auto pr-4">{{partnerFlowStatus.Total}}</span>
+                                                <span class="text-secondary ml-auto pr-4">{{partnerFlowStatus.Total ?
+                                                    partnerFlowStatus.Total : 0}}</span>
                                             </div>
                                             <div class="row ml-2 mt-3">
                                                 <span class="text-success">Running</span>
-                                                <span
-                                                    class="text-success ml-auto pr-4">{{partnerFlowStatus.Active?partnerFlowStatus.Active:0}}</span>
+                                                <span class="text-success ml-auto pr-4">{{partnerFlowStatus.Active ?
+                                                    partnerFlowStatus.Active : 0}}</span>
                                             </div>
                                             <div class="row ml-2 mt-3">
                                                 <span class="text-warning">Pending</span>
-                                                <span
-                                                    class="text-warning ml-auto pr-4">{{partnerFlowStatus.Pending?partnerFlowStatus.Pending:0}}</span>
+                                                <span class="text-warning ml-auto pr-4">{{partnerFlowStatus.Pending ?
+                                                    partnerFlowStatus.Pending : 0}}</span>
                                             </div>
                                             <div class="row ml-2 mt-3">
                                                 <span class="text-accent">Draft</span>
-                                                <span
-                                                    class="text-accent ml-auto pr-4">{{partnerFlowStatus.Draft?partnerFlowStatus.Draft:0}}</span>
+                                                <span class="text-accent ml-auto pr-4">{{partnerFlowStatus.Draft ?
+                                                    partnerFlowStatus.Draft : 0}}</span>
                                             </div>
                                             <div class="row ml-2 mt-3">
                                                 <span class="text-danger">Stopped</span>
-                                                <span
-                                                    class="text-danger ml-auto pr-4">{{partnerFlowStatus.Stopped?partnerFlowStatus.Stopped:0}}</span>
+                                                <span class="text-danger ml-auto pr-4">{{partnerFlowStatus.Stopped ?
+                                                    partnerFlowStatus.Stopped : 0}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -458,7 +450,8 @@
                                                         will start all flows,
                                                         Confirm?</h6>
                                                     <button class="btn btn-success start-all-btn"
-                                                        [disabled]="!partnerFlowStatus.Stopped" (click)="startAllFlows()">Start
+                                                        [disabled]="!partnerFlowStatus.Stopped"
+                                                        (click)="startAllFlows()">Start
                                                         All</button>
                                                 </div>
                                                 <div class="container starting-action"
@@ -478,8 +471,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mt-2"
-                                        [@stopping]="partnerFlowStatus.Active ?'enable':'disabled'">
+                                    <div class="row mt-2" [@stopping]="partnerFlowStatus.Active ?'enable':'disabled'">
                                         <div class="container">
                                             <div class="row service-status-card bg-white"
                                                 [@cardAction]="startFlowAttributes['stopCard']">
@@ -538,10 +530,9 @@
                             </div>
                         </div>
                         <div class="d-flex flex-column ml-2">
-                            <div class="bg-light rounded p-4 settings-overlay ml-auto">
+                            <div class="bg-light rounded p-4 settings-overlay ">
                                 <div class="d-flex flex-column border rounded p-3 bg-white">
                                     <p class="font-weight-bold">Data Service Configuration</p>
-
                                     <div class="d-flex mt-3">
                                         <div class="text-secondary option-label">
                                             Keep a history of data when data is changed?
@@ -621,7 +612,7 @@
                                 </div>
                             </div>
                             <div class="bg-light rounded p-4 mt-2 ml-auto w-100">
-                                <div class="d-flex  w-100 flex-column border rounded p-3 bg-white mt-1">
+                                <!-- <div class="d-flex  w-100 flex-column border rounded p-3 bg-white mt-1">
                                     <div class="d-flex ">
                                         <div class="text-secondary option-label">
                                             Enable Calendar
@@ -636,6 +627,36 @@
                                             </label>
                                             <span class="text">{{ isCalenderEnabled ? 'Yes' : 'No'}}</span>
                                         </div>
+                                    </div>
+                                </div> -->
+                                <div class="d-flex  w-100 flex-column border rounded p-3 bg-white mt-1">
+                                    <div class="d-flex ">
+                                        <div class="text-secondary option-label">
+                                            Disable Insights
+                                        </div>
+                                        <div class="switch-container d-flex align-items-center justify-content-center">
+
+                                            <label class="switch accent mb-0 mr-2">
+                                                <input type="checkbox" [(ngModel)]="appData.disableInsights"
+                                                    [ngModelOptions]="{standalone: true}">
+                                                <span class="slider"></span>
+                                                <span class="toggler"></span>
+                                            </label>
+                                            <span class="text">{{ appData?.disableInsights ? 'Yes' : 'No'}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex  w-100 flex-column border rounded p-3 bg-white mt-1">
+                                    <div class="d-flex align-items-center">
+                                        <div class="text-secondary option-label">
+                                            Timezone
+                                        </div>
+                                        <odp-timezone-picker [edit]="{status:true}"
+                                            [(ngModel)]="appData.defaultTimezone">
+                                        </odp-timezone-picker>
+                                        <!-- <select class="form-control" [(ngModel)]="appData.defaultTimezone">
+                                            <option *ngFor="let tz of timezones" [value]="tz">{{tz}}</option>
+                                        </select> -->
                                     </div>
                                 </div>
                             </div>
@@ -712,16 +733,16 @@
                             </div>
                             <div class="d-flex align-items-center">
                                 <!-- <span class="text-dark mx-2">Enable</span>
-                            <odp-switch [(checked)]="enabledIpWhitelist" [edit]="edit"></odp-switch> -->
-                                <odp-checkbox [(checked)]="enabledIpWhitelist" [edit]="{status:true}">Enable
+                            <odp-switch [(checked)]="enabledTrustedIP" [edit]="edit"></odp-switch> -->
+                                <odp-checkbox [(checked)]="enabledTrustedIP" [edit]="{status:true}">Enable
                                 </odp-checkbox>
                             </div>
                         </div>
                         <div class="property-list">
-                            <p *ngIf="!enabledIpWhitelist" class="text-secondary font-weight-bold">Please enable trusted
+                            <p *ngIf="!enabledTrustedIP" class="text-secondary font-weight-bold">Please enable trusted
                                 IP to start adding
                                 IP Addresses</p>
-                            <table *ngIf="enabledIpWhitelist" class="table">
+                            <table *ngIf="enabledTrustedIP" class="table">
                                 <thead>
                                     <tr class="bg-secondary text-white">
                                         <th>IP Address</th>
@@ -760,7 +781,7 @@
                                                     class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
                                                     <div class="text">No IP Address Added.</div>
                                                     <button type="button" class="btn btn-create mt-2" (click)="addIP()"
-                                                        *ngIf="enabledIpWhitelist">
+                                                        *ngIf="enabledTrustedIP">
                                                         <span class="fa fa-plus-circle mr-2"></span>
                                                         <span class="text">Create New</span>
                                                     </button>
@@ -771,7 +792,7 @@
                                     <tr *ngIf="ipList.length!=0">
                                         <td colspan="2">
                                             <button type="button" class="btn btn-sm btn-link" (click)="addIP()"
-                                                *ngIf="enabledIpWhitelist">
+                                                *ngIf="enabledTrustedIP">
                                                 <span class="fa fa-plus-circle mr-2"></span>
                                                 <span class="text">New IP Address</span>
                                             </button>

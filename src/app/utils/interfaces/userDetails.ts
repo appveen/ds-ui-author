@@ -37,13 +37,16 @@ export interface UserDetails {
     b2BFlowMaxConcurrentFiles?: number;
     b2BEnableTimebound?: boolean;
     b2BEnableTrustedIp?: boolean;
+    b2BEnable?: boolean;
+    verifyDeploymentUser?: boolean;
+    defaultTimezone?: string;
 }
 
 export interface Auth {
-    isLdap?: boolean;
     dn?: string;
     authType?: string;
     adAttribute?: string;
+    validAuthTypes?: Array<string>;
 }
 export interface AccessControl {
     apps?: null | App[];

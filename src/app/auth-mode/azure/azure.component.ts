@@ -232,6 +232,7 @@ export class AzureComponent implements OnInit, OnDestroy, AfterContentInit {
     windowOptions.push(`location=no`);
     const childWindow = document.open(url, '_blank', windowOptions.join(',')) as any;
     self.appService.listenForChildClosed(childWindow).then(data => {
+      console.log("data",data);
       if (environment.production) {
         if (data.status === 200) {
           self.activeStep = 1;

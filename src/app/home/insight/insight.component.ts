@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InsightService } from 'src/app/home/insight/insight.service';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
+import { CommonService } from 'src/app/utils/services/common.service';
 
 
 @Component({
@@ -49,7 +50,8 @@ export class InsightComponent implements OnInit {
         }
     }
     breadcrumbPaths: Array<Breadcrumb>;
-    constructor(private insightService: InsightService) {
+    constructor(private insightService: InsightService,
+        public commonService: CommonService) {
         const self = this;
         self.activeTab = 0;
         self.subscriptions = {};
@@ -69,13 +71,23 @@ export class InsightComponent implements OnInit {
             label: 'Insights'
         });
         self.searchModel.field = 'summary';
-        self.subscriptions['userLogs'] = self.insightService.searchUserLog.subscribe(_txnId => {
-            self.filters = { 'data.txnId': _txnId };
-            self.insightService.userLogFilter = self.filters;
-            self.searchModel.field = 'summary';
-            self.searchModel.term = _txnId;
-            self.activeTab = 2;
-        });
+        this.setActiveTab();
+        // self.subscriptions['userLogs'] = self.insightService.searchUserLog.subscribe(_txnId => {
+        //     self.filters = { 'data.txnId': _txnId };
+        //     self.insightService.userLogFilter = self.filters;
+        //     self.searchModel.field = 'summary';
+        //     self.searchModel.term = _txnId;
+        //     self.activeTab = 2;
+        // });
+    }
+    setActiveTab() {
+        if (this.hasDsPermission) {
+            this.activeTab = 0;
+        } else if (this.hasUserPermission) {
+            this.activeTab = 1;
+        } else {
+            this.activeTab = 2;
+        }
     }
 
     public get columns() {
@@ -204,5 +216,20 @@ export class InsightComponent implements OnInit {
         }
         self.filters[self.searchModel.field] = '/' + self.searchModel.term + '/';
         self.insightService.applyFilter.emit(self.filters);
+    }
+
+    get hasDsPermission() {
+        const self = this;
+        return self.commonService.hasPermission('PVISDS')
+    }
+
+    get hasUserPermission() {
+        const self = this;
+        return self.commonService.hasPermission('PVISU');
+    }
+    
+    get hasGroupsPermission() {
+        const self = this;
+        return self.commonService.hasPermission('PVISG');
     }
 }

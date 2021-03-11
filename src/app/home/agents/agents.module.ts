@@ -25,6 +25,7 @@ import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.mod
 import { AgentsHbComponent } from './agents-hb/agents-hb.component';
 import { AgentsStreakComponent } from './agents-streak/agents-streak.component';
 import { AgentsOptionsComponent } from './agents-options/agents-options.component';
+import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 
 const routes: Routes = [
     { path: '', component: AgentsComponent, pathMatch: 'full' },
@@ -47,6 +48,7 @@ const routes: Routes = [
         AutoFocusModule,
         DeleteModalModule,
         SwitchModule,
+        DateFormatModule,
         AgGridModule.withComponents([
             AgentGridCellComponent,
             AgentGridFilterComponent,

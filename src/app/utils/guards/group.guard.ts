@@ -16,7 +16,7 @@ export class GroupGuard implements CanActivate {
       || this.commonService.hasPermissionStartsWith('PVG')) {
       return true;
     } else {
-      this.router.navigate(['/app', this.commonService.app._id, 'noAccess']);
+      this.router.navigate(['/app', this.commonService.app._id,  'insight']);
       return false;
     }
   }

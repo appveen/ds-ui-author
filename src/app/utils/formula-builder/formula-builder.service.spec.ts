@@ -109,7 +109,7 @@ describe('FormulaBuilderService', () => {
   it('patchData should execute one', inject([FormulaBuilderService], (service: FormulaBuilderService) => {
     const formula: MapperFormula = {
       operation: 'fn:concat',
-      XPath: './name/'
+      dataPath: 'name'
     };
     const spy = spyOn(service, 'patchData').and.callThrough();
     service.patchData(formula);
@@ -122,7 +122,7 @@ describe('FormulaBuilderService', () => {
       _args: [
         {
           operation: 'fn:conca',
-          XPath: './name/'
+          dataPath: 'name'
         }
       ]
     };
