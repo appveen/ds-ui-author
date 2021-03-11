@@ -1,0 +1,14 @@
+.audit-object-log {
+  height: calc(100vh - 244px);
+  overflow: auto;
+}
+.table-wrapper {
+  max-height: calc(100vh - 293px);
+}
+.logs {
+  cursor: pointer;
+}
+.table-height {
+  max-height: calc(100vh - 300px);
+  min-height: calc(100vh - 300px);
+}
