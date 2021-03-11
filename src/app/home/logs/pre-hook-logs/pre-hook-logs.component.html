@@ -1,0 +1,235 @@
+<div class="d-flex flex-column w-100 h-100">
+  <div *ngIf="showLazyLoader" class="default-loader d-flex justify-content-center w-100 h-100">
+    <div class="align-self-center text-center">
+      <span class="fa fa-spinner fa-pulse fa-3x"></span>
+      <div class="text-secondary mt-2">Processing...</div>
+    </div>
+  </div>
+  
+  <!-- <div class="table-wrapper" >
+    <odp-data-grid (loadData)="loadMore($event)" [totalRecords]="totalCount" [pageSize]="30" [loading]="showLazyLoader"
+    (sortSelected)="sortSelected($event)">
+    <odp-data-grid-header width="100" key="name"  [ngClass]="{'d-none':!_columns.name.show}">
+    Name
+    </odp-data-grid-header>
+    <odp-data-grid-header key="docId" width="100" [ngClass]="{'d-none':!_columns.docId.show}">
+    ID
+    </odp-data-grid-header>
+    <odp-data-grid-header key="url" [ngClass]="{'d-none':!_columns.url.show}">
+    Prehook URL
+    </odp-data-grid-header>
+    <odp-data-grid-header key="_metadata.createdAt" [ngClass]="{'d-none':!_columns._createdAt.show}">
+    Started At
+    </odp-data-grid-header>
+    <odp-data-grid-header key="_metadata.lastUpdated" [ngClass]="{'d-none':!_columns._lastUpdated.show}">
+    Finished At
+    </odp-data-grid-header>
+    <odp-data-grid-header key="status" [ngClass]="{'d-none':!_columns.status.show}">
+    Status
+    </odp-data-grid-header>
+    <odp-data-grid-header  [ngClass]="{'d-none':!_columns.dia.show}">
+    Diagnostics
+    </odp-data-grid-header>
+    <odp-data-grid-row *ngFor="let log of logs; let i = index">
+    <odp-data-grid-cell [ngClass]="{'d-none':!_columns.name.show}">
+      <span class="text-secondary">
+      {{log.name}}
+      </span>
+    </odp-data-grid-cell>
+    <odp-data-grid-cell [ngClass]="{'d-none':!_columns.docId.show}">
+      <span class="text-secondary">{{log.docId}}</span>
+    </odp-data-grid-cell>
+    <odp-data-grid-cell [ngClass]="{'d-none':!_columns.url.show}">
+      <span class="text-secondary"  placement="top" [ngbTooltip]="log.url">{{log.url|weburlTruncate}}</span>
+    </odp-data-grid-cell>
+    <odp-data-grid-cell [ngClass]="{'d-none':!_columns._createdAt.show}">
+      <span class="text-secondary"  >{{log._metadata.createdAt| date:'dd-MMM-yyyy hh:mm:ss a' ||'None'}}</span>
+    </odp-data-grid-cell>
+    <odp-data-grid-cell [ngClass]="{'d-none':!_columns._lastUpdated.show}">
+      <span class="text-secondary"  >{{log._metadata.lastUpdated| date:'dd-MMM-yyyy hh:mm:ss a' ||'None'}}</span>
+    </odp-data-grid-cell>
+    <odp-data-grid-cell  [ngClass]="{'d-none':!_columns.status.show}">
+      <ng-container *ngIf="log.status=='Pending'">
+      <span class="text-secondary text-nowrap">
+        <i class="fa fa-arrows-v"></i>&nbsp;{{log.status}}
+      </span>
+      </ng-container>
+      <ng-container *ngIf="log.status=='Completed'">
+      <span class="text-success text-nowrap">
+        <i class="fa fa-check"></i>&nbsp;{{log.status}}
+      </span>
+      </ng-container>
+      <ng-container *ngIf="log.status=='Error'">
+      <span class="text-danger text-nowrap">
+        <i class="fa fa-times"></i>&nbsp;{{log.status}}
+      </span>
+      </ng-container>
+    </odp-data-grid-cell>
+    <odp-data-grid-cell [ngClass]="{'d-none':!_columns.dia.show}" (click)="showObject(i)">
+      <span class="text-primary logs"  ><i class="far fa-file-alt pr-1"></i>&nbsp;logs</span>
+    </odp-data-grid-cell>
+    </odp-data-grid-row>
+  </odp-data-grid>
+  </div> -->
+  <div class="card-container bg-white ">
+    <div class="data-grid-options d-flex align-items-center justify-content-between px-2">
+      <div class="d-flex align-items-center">
+      </div>
+      <div class="d-flex align-items-center">
+          <span class="page-info">
+            {{startNo}}-{{endNo}} of {{totalRecords}}
+          </span>
+        <button (click)="prevPage()" [disabled]="disablePrev" class="btn btn-link ml-2" type="button">
+          <span class="fa fa-angle-left"></span>
+        </button>
+        <button (click)="nextPage()" [disabled]="disableNext" class="btn btn-link ml-2" type="button">
+          <span class="fa fa-angle-right"></span>
+        </button>
+      </div>
+    </div>
+    <div class="table-height">
+      <div [columns]="tableColumns" class="data-grid border" odpDataGrid>
+        <div class="data-grid-header">
+          <div class="data-grid-row">
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort no-grip"
+                 id="_checkbox">S.No.
+            </div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="name" *ngIf="_columns.name.show">Name
+            </div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="docId" *ngIf="_columns.docId.show">ID
+            </div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="url" *ngIf="_columns.url.show">Prehook
+              URL
+            </div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort"
+                 id="_metadata.createdAt" *ngIf="_columns._createdAt.show">Started At
+            </div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort"
+                 id="_metadata.lastUpdated" *ngIf="_columns._lastUpdated.show">Finished At
+            </div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="status" *ngIf="_columns.status.show">
+              Status
+            </div>
+            <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort"
+                 id="diagnostics" *ngIf="_columns.dia.show">Diagnostics
+            </div>
+          
+          </div>
+          <div class="data-grid-row grid-filters">
+            <!-- <div class="data-grid-cell d-flex align-items-center no-move no-grip" (click)="clearFilter()">
+              <span class="fa fa-times text-danger close-search"></span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center no-move no-grip">
+              <input type="text" class="border bg-white rounded w-100" [ngModel]="value" (ngModelChange)="onChange($event,'url')">
+            </div>
+            <div class="data-grid-cell d-flex align-items-center no-move no-grip">
+              <select class="border rounded bg-white w-100" [ngModel]="value" (ngModelChange)="onChange($event,'logLevel')">
+              <option value="all">--All--</option>
+              <option value="debug">Create</option>
+              <option value="info">Update</option>
+              <option value="error">Delete</option>
+              <option value="error">Get</option>
+              </select>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center no-move no-grip">
+              <input type="text" class="border bg-white rounded w-100" [ngModel]="value" (ngModelChange)="onChange($event,'content')">
+            </div>
+            
+            <div class="data-grid-cell d-flex align-items-center no-move no-grip">
+              <input type="text" class="border bg-white rounded w-100" [ngModel]="value" (ngModelChange)="onChange($event,'content')">
+            </div> -->
+          </div>
+        </div>
+        <div class="data-grid-body">
+          <div *ngFor="let log of logs; let i = index" class="data-grid-row">
+            <div class="data-grid-cell d-flex align-items-center">
+              <span>{{(i + (currentPage - 1) * pageSize) + 1}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center"  *ngIf="_columns.name.show">
+              <span>{{log.name}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center"  *ngIf="_columns.docId.show">
+              <span>{{log.docId}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center"  *ngIf="_columns.url.show">
+              <span>{{log.url|weburlTruncate}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center"  *ngIf="_columns._createdAt.show">
+              <span>{{log._metadata.createdAt| date:'dd-MMM-yyyy hh:mm:ss a' || 'None'}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center"  *ngIf="_columns._lastUpdated.show">
+              <span>{{log._metadata.lastUpdated| date:'dd-MMM-yyyy hh:mm:ss a' || 'None'}}</span>
+            </div>
+            <div class="data-grid-cell d-flex align-items-center"  *ngIf="_columns.status.show">
+              <span>{{log.status}}</span>
+            </div>
+            <div (click)="showObject(i)" class="data-grid-cell d-flex align-items-center" *ngIf="_columns.dia.show">
+              <span class="text-primary logs"><i class="far fa-file-alt pr-1"></i>&nbsp;logs</span>
+            </div>
+          </div>
+          <div *ngIf="!showLazyLoader && logs.length === 0"
+               class="data-grid-row justify-content-center full-row">
+            <div class="data-grid-cell d-flex align-items-center w-100 justify-content-center">
+              <div class="no-users font-normal text-secondary">No Logs Found</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="totalCount==0&&showLazyLoader==false" class="empty-log w-100 text-center p-3">No logs present</div>
+  <!-- <div class="records w-100 text-center p-3 border-top" *ngIf="currentCount>0">{{logs.length}} of {{currentCount}} &nbsp;loaded</div> -->
+</div>
+
+<ng-template #logModal>
+  <div class="modal-header bg-secondary d-block">
+    <h5 class="text-dark m-0 font-weight-bold">Logs:
+      <span class="font-weight-bold">{{selectedLog.data.txnId}}</span>
+    </h5>
+    <div *ngIf="selectedLog.comment" class="btn-group" role="group">
+      <button (click)="activeModalTab = 0" [ngClass]="{'active':activeModalTab == 0}" class="btn btn-icon"
+              type="button">Payload
+      </button>
+      <button (click)="activeModalTab = 1" [ngClass]="{'active':activeModalTab == 1}" class="btn btn-icon"
+              type="button">Pre-Hook log
+      </button>
+    </div>
+  </div>
+  <div class="modal-body audit-object-log">
+    <div *ngIf="activeModalTab == 0"
+         class="d-flex flex-row">
+      <div class="">
+        <div class="col text-secondary font-weight-bold">Old Data</div>
+        <div class="col">
+          <pre class="text-dark">{{selectedLog.data.old|json}}</pre>
+        </div>
+      </div>
+      <div class="">
+        <div class="col text-secondary font-weight-bold">New Data</div>
+        <div class="col">
+          <pre class="text-dark">{{selectedLog.data.new|json}}</pre>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activeModalTab == 1 && selectedLog.comment" class="d-flex flex-row">
+      <table class="table table-sm">
+        <thead>
+        <th>S.No.</th>
+        <th>Message Returned</th>
+        <th>Timestamp</th>
+        </thead>
+        <tbody>
+        <tr>
+          <td>1.</td>
+          <td>{{selectedLog.comment}}</td>
+          <td>{{selectedLog.timestamp|date:'dd-MMM-yyyy hh:mm:ss a' || 'None'}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer p-3 bg-light">
+    <button (click)="logModalRef.close(false)" class="btn btn-min-width btn-light mx-3 float-right" type="button">Close</button>
+  </div>
+</ng-template>
