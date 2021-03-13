@@ -135,7 +135,9 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
       }
     }
     self.definition = value.definition;
-    this.getAllAttributeNames(this.definition);
+    if(!!this.definition) {
+      this.getAllAttributeNames(this.definition);
+    }
     self.getDocuments(value);
   }
 
@@ -243,7 +245,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     self.alertModal.title = 'Remove Field';
     self.alertModal.message =
       'Are you sure you want to remove <span class="font-weight-bold text-delete">' +
-      self.relatedViewFields[index].name +
+      self.relatedViewFields[index]?.properties?.name +
       '</span> field from view field list?';
     self.alertModal.type = 'one';
     self.alertModal.index = index;
@@ -284,7 +286,9 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
       .subscribe(
         res => {
           self.definition = res.definition;
-          this.getAllAttributeNames(this.definition);
+          if(!!this.definition) {
+            this.getAllAttributeNames(this.definition);
+          }
 
         },
         err => {
@@ -381,12 +385,14 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
 
   getAllAttributeNames(definition, parentKey?) {
     definition.forEach(element => {
-      if (element.type === 'Object' && element.properties &&  !element.properties.relatedTo) {
+      if (element.type === 'Object' && element.properties && !element.properties.password && !element.properties.relatedTo) {
         let key = element.key;
         if (parentKey) {
           key = parentKey + '.' + element.key
         }
-        this.getAllAttributeNames(element.definition, key)
+        if(!!element.definition) {
+          this.getAllAttributeNames(element.definition, key)
+        }
       } else if (element.type !== 'Array') {
         if (parentKey) {
           element.properties.name = parentKey + '.' + element.properties.name;
