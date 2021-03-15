@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, ViewChild, Input, TemplateRef, OnDestroy, AfterViewChecked } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormArray, AbstractControl } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
@@ -9,7 +9,7 @@ import { CommonService } from '../../services/common.service';
   templateUrl: './number-property.component.html',
   styleUrls: ['./number-property.component.scss']
 })
-export class NumberPropertyComponent implements OnDestroy {
+export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
 
   @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
   @Input() form: FormGroup;
@@ -28,6 +28,15 @@ export class NumberPropertyComponent implements OnDestroy {
     self.edit = {};
     self.deleteModal = {};
   }
+
+
+  ngAfterViewChecked() {
+    const defaultValue = this.form.get('properties.default').value
+    if (this.form.get('properties.default') && defaultValue != null && defaultValue != undefined) {
+      this.validateNumbDefaultValue(this.form.get('properties.default').value, this.form.get('properties'))
+    }
+  }
+
 
   ngOnDestroy() {
     const self = this;
