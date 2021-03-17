@@ -430,7 +430,6 @@ export class AppManageComponent implements OnInit, OnDestroy {
             self.ts.success('App saved successfully');
             self.commonService.appUpdates.emit(self.appData);
             self.commonService.app = res;
-            self.router.navigate([`/app/${self.appData._id}/sm`]);
         }, err => {
             self.commonService.errorToast(err);
         });
