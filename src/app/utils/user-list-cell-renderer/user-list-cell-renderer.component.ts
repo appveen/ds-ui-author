@@ -20,6 +20,7 @@ export class UserListCellRendererComponent implements AgRendererComponent {
     authType: string;
     azureToken: string;
     appsHtml: string;
+    value: any;
 
     constructor(private appService: AppService, private commonService: CommonService, private domSanitizer: DomSanitizer) { }
 
@@ -30,6 +31,7 @@ export class UserListCellRendererComponent implements AgRendererComponent {
     agInit(params: ICellRendererParams): void {
         this.params = params;
         this.data = params.data || {};
+        this.value = params.value;
         this.field = this.params.colDef.field;
         this.sameUser = this.commonService.isThisUser(this.data);
         this.appsHtml = this.getApps(this.data);
@@ -46,6 +48,23 @@ export class UserListCellRendererComponent implements AgRendererComponent {
                     `${temp.splice(0, 3).join(', ')} <span class="text-accent"> + ${temp.length - 3}</span>`
                 );
             }
+        }
+    }
+
+    usrGroupCount(groups) {
+        const teams = groups.split(',');
+        let usrGroups = '';
+        if (teams.length <= 3) {
+            return teams.map(e => e).join(',');
+        } else {
+            for (let i = 0; i < 3; i++) {
+                if (i !== 2) {
+                    usrGroups = usrGroups + teams[i] + ',';
+                } else {
+                    usrGroups = usrGroups + teams[i];
+                }
+            }
+            return `${usrGroups} <span class="text-accent">+ ${teams.length - 3}</span>`;
         }
     }
 }

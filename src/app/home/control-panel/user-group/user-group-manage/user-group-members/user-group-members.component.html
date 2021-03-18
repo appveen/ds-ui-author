@@ -1,110 +1,32 @@
 <div class="wrapper">
   <div class="d-flex flex-column">
-    <div class="d-flex justify-content-between pl-3 pr-2 py-2">
-      <div class="d-flex align-items-center">
-        <span class="fa fa-user mr-2"></span>
-        <span class="font-weight-bold">Members</span>
-      </div>
-      <odp-search-box (enteredText)="searchTable = $event" (reset)="searchTable = null"></odp-search-box>
-      <div class="d-flex align-items-center">
-        <span>&nbsp;</span>
-        <button *ngIf="hasPermission('PMGMUC')" type="button" class="btn btn-link" id="addNewMember"
+    <div class="grid-container mx-3">
+      <div class="grid-header d-flex align-items-center justify-content-between pl-2">
+        <div class="button-group" *ngIf="hasPermission('PMGMUD')">
+          <div class="d-flex align-items-center" (click)="!isSelectAllDisabled && checkAllUser(!isAllUserChecked)">
+            <odp-round-check [edit]="{status:!isSelectAllDisabled}" class="mr-2 pl-1" [checked]="isAllUserChecked"
+              (checkedChange)="!isSelectAllDisabled && checkAllUser($event)">
+            </odp-round-check>
+            <button type="button" class="btn btn-link text-accent px-0" [class.text-secondary]="isSelectAllDisabled"
+              [disabled]="isSelectAllDisabled">
+              Select All
+            </button>
+          </div>
+          <button *ngIf="selectedUsers.length>0" type="button" class="btn btn-link text-delete" (click)="removeUsers()">
+            <span class="fa fa-trash mr-2"></span>
+            <span class="text">Remove Users ({{selectedUsers.length}})</span>
+          </button>
+        </div>
+        <button *ngIf="hasPermission('PMGMUC')" type="button" class="btn btn-link p-0" id="addNewMember"
           (click)="showBrowseTab()">
           <span class="fa fa-plus mr-2"></span>
           <span class="text">Add User(s)</span>
         </button>
       </div>
-    </div>
-    <div class="d-flex flex-column position-relative">
-      <div class="user-list mx-3">
-        <div class="data-grid-options d-flex align-items-center justify-content-between px-2">
-          <div class="d-flex align-items-center">
-            <ng-container *ngIf="hasPermission('PMGMUD')">
-              <odp-round-check [(checked)]="checkAll" [edit]="{status:true}"></odp-round-check>
-              <span class="text-accent ml-2 font-sm hover" (click)="checkAll=!checkAll">Select All</span>
-            </ng-container>
-          </div>
-          <div class="d-flex align-items-center">
-            <!-- <span class="page-info">
-              {{startNo}}-{{endNo}} of {{totalRecords}}
-            </span>
-            <button type="button" class="btn btn-link ml-2" [disabled]="disablePrev" (click)="prevPage()">
-              <span class="fa fa-angle-left"></span>
-            </button>
-            <button type="button" class="btn btn-link ml-2" [disabled]="disableNext" (click)="nextPage()">
-              <span class="fa fa-angle-right"></span>
-            </button> -->
-          </div>
-        </div>
-        <div class="data-grid border" odpDataGrid [columns]="tableColumns">
-          <div class="data-grid-header">
-            <div class="data-grid-row">
-              <div *ngIf="hasPermission('PMGMUD')" id="_checkbox"
-                class="data-grid-cell d-flex align-items-center head-cell no-move no-sort"></div>
-              <div id="basicDetails.name" class="data-grid-cell d-flex align-items-center head-cell no-move no-sort">
-                Name</div>
-              <div id="username" class="data-grid-cell d-flex align-items-center head-cell no-move no-sort">Username
-              </div>
-              <div id="groups" class="data-grid-cell d-flex align-items-center head-cell no-move no-sort">Groups</div>
-            </div>
-          </div>
-          <div class="data-grid-body">
-            <div class="data-grid-row" *ngFor="let usr of userList | filterUser:searchTable;let usrIndex=index">
-              <div *ngIf="hasPermission('PMGMUD')" class="data-grid-cell d-flex align-items-center">
-                <odp-round-check [(checked)]="usr.selected" [edit]="{status:true}"></odp-round-check>
-              </div>
-              <div class="data-grid-cell d-flex align-items-center">
-                <ng-container *ngIf="usr.basicDetails;else noName">
-                  <ng-container *ngIf="usr.basicDetails.name && usr.basicDetails.name.trim();else noName">
-                    <span *ngIf="usr.basicDetails.name.length > 50" class="text-secondary"
-                      [ngbTooltip]="usr.basicDetails.name" placement="top">{{usr.basicDetails.name}}</span>
-                    <span *ngIf="usr.basicDetails.name.length <= 50"
-                      class="text-secondary">{{usr.basicDetails.name}}</span>
-                    <span *ngIf="isThisUser(usr)" class="text-accent ml-2">(You)</span>
-                  </ng-container>
-                </ng-container>
-                <ng-template #noName>
-                  <span class="text-muted">N.A.</span>
-                </ng-template>
-              </div>
-              <div class="data-grid-cell d-flex align-items-center">
-                <ng-container *ngIf="usr.username;else noName">
-                  <span *ngIf="usr.username.length > 50" [ngbTooltip]="usr.username" class="min-span text-secondary"
-                    placement="top">{{usr.username}}</span>
-                  <span *ngIf="usr.username.length <= 50" class="text-secondary">{{usr.username}}</span>
-                </ng-container>
-              </div>
-              <div class="data-grid-cell d-flex align-items-center">
-                <odp-loading-placeholder *ngIf="!usr.groups" width="120" height="14"></odp-loading-placeholder>
-                <span *ngIf="usr.groups" class="text-secondary" [innerHTML]="usrGroupCount(usr.groups)"></span>
-              </div>
-            </div>
-            <div class="data-grid-row full-row" *ngIf="(!userList || userList.length==0) && !showLazyLoader">
-              <div class="data-grid-cell d-flex align-items-center">
-                <span class="text-muted">No users in this Group</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div *ngIf="hasPermission('PMGMUD')"
-  class="user-options position-absolute w-100 bg-white d-flex flex-column justify-content-center px-3"
-  [ngClass]="{'show':selectedUsers.length>0}">
-  <div class="d-flex align-items-center justify-content-between">
-    <div class="selected-users">
-      <ng-container *ngFor="let user of selectedUsers;let first=first">
-        <span *ngIf="!first" class="comma">&nbsp;,</span>
-        <span class="name">
-          {{user.basicDetails && user.basicDetails.name ? user.basicDetails.name : user.username}}
-        </span>
-      </ng-container>
-    </div>
-    <div class="actions d-flex align-items-center">
-      <button type="button" class="btn btn-link" (click)="checkAll=false">Clear Selection</button>
-      <button type="button" class="btn btn-link" (click)="removeUsers()">Remove User(s)</button>
+      <div *ngIf="!hasPermission('PMGMUD') && !hasPermission('PMGMUC')"></div>
+      <ag-grid-angular class="ag-theme-balham" [frameworkComponents]="frameworkComponents" [gridOptions]="gridOptions"
+        [rowData]="userList | agGridFilter:filterModel" (filterModified)="!filtering && onFilterChanged($event)">
+      </ag-grid-angular>
     </div>
   </div>
 </div>
@@ -113,116 +35,30 @@
   <div class="modal-body p-4">
     <div class="d-flex align-items-center mb-4">
       <span class="fa fa-user-circle mr-2 fa-lg text-muted"></span>
-      <span class="font-weight-bold font-lg">Search users to add to this group</span>
-    </div>
-    <div class="d-flex justify-content-center mb-4" *ngIf="!showSelected">
-      <odp-search-box (enteredText)="searchUsers($event)" (reset)="clearSearch()"></odp-search-box>
+      <span class="font-weight-bold font-lg">Add users to this group</span>
     </div>
     <div class="d-flex flex-column w-100 align-items-center justify-content-between">
-      <div class="user-list w-100" *ngIf="!showSelected">
-        <table class="table table-hover">
-          <thead class="bg-accent text-white">
-            <tr>
-              <th scope="col" width="50px;">
-                <label class="checkbox-container" for="checkAllControlAdd">
-                  <input type="checkbox" id="checkAllControlAdd" [(ngModel)]="toggleUserSelectionAll">
-                  <span class="checkmark"></span>
-                </label>
-              </th>
-              <th scope="col">Name</th>
-              <th scope="col">Username</th>
-              <th scope="col">Groups</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let usr of searchedUsers;let usrIndex=index" [ngClass]="{'selected': usr.selected}"
-              class="hover">
-              <td>
-                <label [attr.for]="'src-'+usrIndex" class="checkbox-container mt-1">
-                  <input type="checkbox" [attr.id]="'src-'+usrIndex" (change)="toggleSearchedUser($event,usr)"
-                    [(ngModel)]="usr.selected" #selectUsr>
-                  <span class="checkmark"></span>
-                </label>
-              </td>
-              <td class="hover" (click)="selectUsr.click()">
-                <ng-container *ngIf="usr.basicDetails;else noName">
-                  <ng-container *ngIf="usr.basicDetails.name && usr.basicDetails.name.trim();else noName">
-                    {{usr.basicDetails.name}}
-                    <span *ngIf="isThisUser(usr)" class="text-accent mr-3">(You)</span>
-                  </ng-container>
-                </ng-container>
-                <ng-template #noName>
-                  <span class="text-muted">N.A.</span>
-                </ng-template>
-              </td>
-              <td class="text-secondary hover" (click)="selectUsr.click()">{{usr.username}}</td>
-              <td class="text-secondary d-flex hover" (click)="selectUsr.click()">
-                <span *ngIf="!usr.groups" class="fa fa-spinner fa-pulse"></span>
-                <span *ngIf="usr.groups">
-                  {{usr.groups}}
-                </span>
-              </td>
-            </tr>
-            <tr *ngIf="searchedUsers.length==0">
-              <td *ngIf="searchTerm" colspan="4" class="text-center">No users found</td>
-              <td *ngIf="!searchTerm" colspan="4" class="text-center">Starting typing user name</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="user-list w-100" *ngIf="showSelected">
-        <table class="table table-hover">
-          <thead class="user-list-thead">
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Username</th>
-              <th scope="col">Groups</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let usr of selectedUsersList;let usrIndex=index" [ngClass]="{'selected': usr.selected}">
-              <td class="hover">
-                <ng-container *ngIf="usr.basicDetails;else noName">
-                  <ng-container *ngIf="usr.basicDetails.name && usr.basicDetails.name.trim();else noName">
-                    {{usr.basicDetails.name}}
-                    <span *ngIf="isThisUser(usr)" class="text-accent mr-3">(You)</span>
-                  </ng-container>
-                </ng-container>
-                <ng-template #noName>
-                  <span class="text-muted">N.A.</span>
-                </ng-template>
-              </td>
-              <td class="text-secondary hover">{{usr.username}}</td>
-              <td class="text-secondary hover">
-                <span *ngIf="!usr.groups" class="fa fa-spinner fa-pulse"></span>
-                <span *ngIf="usr.groups">
-                  {{usr.groups}}
-                </span>
-              </td>
-              <td class="text-secondary hover">
-                <button type="button" class="btn btn-link text-danger" (click)="removeFromSelected(usrIndex)">
-                  <span class="fa fa-trash mr-2"></span>
-                  <span class="text">Remove</span>
-                </button>
-              </td>
-            </tr>
-            <tr *ngIf="selectedUsersList.length==0">
-              <td colspan="4" class="text-center">No user(s) selected</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="user-list w-100">
+        <ag-grid-angular *ngIf="allUsers?.length" class="ag-theme-balham"
+          [frameworkComponents]="userAddFrameworkComponents"
+          [gridOptions]="userAddgridOptions" [rowData]="allUsers | agGridFilter:userAddFilterModel"
+          (filterModified)="!userAddFiltering && onUserAddFilterChanged($event)">
+        </ag-grid-angular>
+        <div class="align-self-center text-center" *ngIf="!allUsers">
+          <span class="fa fa-spinner fa-pulse fa-3x"></span>
+          <div class="text-secondary mt-2">Processing...</div>
+        </div>
+        <div class="align-self-center text-center" *ngIf="!!allUsers && !allUsers.length">
+          <div class="text-secondary mt-2">No Users</div>
+        </div>
       </div>
     </div>
-    <div class="d-flex justify-content-end w-100">
-      <button *ngIf="selectedUsersList.length>0 && !showSelected" type="button" class="btn btn-link"
-        (click)="showSelected = true;">
-        ({{selectedUsersList.length}}) Selected
-      </button>
-      <button *ngIf="showSelected" type="button" class="btn btn-link" (click)="showSelected = false;">Back to
-        Search</button>
+    <div class="d-flex justify-content-end align-items-center w-100 mt-3">
+      <span class="text-secondary mr-3" *ngIf="selectedUsersList?.length">
+        {{ selectedUsersList.length }} Selected
+      </span>
       <button type="button" class="btn btn-link mr-3" (click)="clearBrowse();">Cancel</button>
-      <button type="button" class="btn btn-primary btn-min-width" (click)="addUsers()">Done</button>
+      <button type="button" class="btn btn-dark btn-min-width" (click)="addUsers()">Done</button>
     </div>
   </div>
 </ng-template>

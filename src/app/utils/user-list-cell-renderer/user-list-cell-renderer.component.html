@@ -3,6 +3,11 @@
         N.A.
     </span>
 </ng-template>
+<ng-container *ngIf="['username', '_id', 'phone'].includes(field)">
+    <ng-container *ngIf="!!value;else notAvailable">
+        {{ value }}
+    </ng-container>
+</ng-container>
 <ng-container *ngIf="field === 'basicDetails.name'">
     <ng-container *ngIf="!!data?.basicDetails?.name; else notAvailable">
         <span *ngIf="sameUser">
@@ -13,14 +18,9 @@
         </span>
     </ng-container>
 </ng-container>
-<ng-container *ngIf="field === 'username'">
-    <ng-container *ngIf="data?.username;else notAvailable">
-        {{data.username}}
-    </ng-container>
-</ng-container>
-<ng-container *ngIf="field === 'phone'">
-    <ng-container *ngIf="data?.phone;else notAvailable">
-        {{data.phone}}
+<ng-container *ngIf="field === 'groups'">
+    <ng-container *ngIf="data?.groups;else notAvailable">
+        {{ usrGroupCount(data.groups) }}
     </ng-container>
 </ng-container>
 <ng-container *ngIf="field === 'accessControl.apps._id'">
