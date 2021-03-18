@@ -33,17 +33,31 @@
         bottom: 0;
     }
 }
+
+.grid-container {
+    min-height: calc(100vh - 230px);
+    max-height: calc(100vh - 230px);
+    display:grid;
+    grid-template-rows: auto 1fr;
+}
+
 .user-list{
     min-height: calc(100vh - 268px);
     max-height: calc(100vh - 268px);
-    overflow-y: auto;
-    table{
-        .user-list-thead{
-            background-color: #747E8D;
-            color: #fff;
-        }
-    }
+    display:grid;
 }
+
+.button-group {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 20px;
+}
+
+.grid-header {
+    min-height: 40px;
+    max-height: 40px;
+}
+
 .modal-user-list{
     min-height: 300px;
     max-height: 400px;
