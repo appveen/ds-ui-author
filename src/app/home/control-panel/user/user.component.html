@@ -91,7 +91,7 @@
         <form class="d-flex flex-column p-4" [formGroup]="userForm" (ngSubmit)="!userInLocal ? addUser() : importUser()"
             odpFocusNext (trigger)="!userInLocal ? addUser() : importUser()">
             <div formGroupName="userData">
-                <div class="d-flex align-items-center w-100 mb-3" formGroupName="auth">
+                <div class="d-flex align-items-center w-100 mb-3" formGroupName="auth" *ngIf="validAuthTypes?.length > 1">
                     <div class="label-width text-secondary">Authentication Method</div>
                     <div class="value-width position-relative w-100">
                         <select class="form-control" formControlName="authType">
@@ -102,7 +102,10 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center w-100 mb-3">
-                    <div class="label-width text-secondary">Username</div>
+                    <div class="label-width text-secondary">
+                        Username
+                        <sup class="text-danger">*</sup>
+                    </div>
                     <div class="value-width position-relative w-100">
                         <input class="form-control" type="text" placeholder="Enter Username" formControlName="username"
                             odpAutoFocus (blur)="checkForDuplicate()"
@@ -115,7 +118,10 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center w-100 mb-3">
-                    <div class="label-width text-secondary">Name</div>
+                    <div class="label-width text-secondary">
+                        Name
+                        <sup class="text-danger">*</sup>
+                    </div>
                     <div class="value-width position-relative w-100" formGroupName="basicDetails">
                         <input class="form-control pr-4" type="text" placeholder="Enter Name" formControlName="name"
                             [ngClass]="{'is-invalid': invalidName}" autocomplete="autocomplete_off_hack">
@@ -128,7 +134,10 @@
                 </div>
                 <ng-container *ngIf="!userInLocal && userForm.get('userData.auth.authType').value==='local'">
                     <div class="d-flex align-items-center w-100 mb-3 position-relative">
-                        <div class="label-width text-secondary">Password</div>
+                        <div class="label-width text-secondary">
+                            Password
+                            <sup class="text-danger">*</sup>
+                        </div>
                         <div class="value-width position-relative w-100">
                             <input class="form-control password-input"
                                 [type]="showPassword['new'] ? 'text' : 'password'" placeholder="Password"
@@ -146,7 +155,10 @@
                             (click)="showPassword['new']= !showPassword['new']"></span>
                     </div>
                     <div class="d-flex align-items-center w-100 mb-3 position-relative">
-                        <div class="label-width text-secondary">Confirm Password</div>
+                        <div class="label-width text-secondary">
+                            Confirm Password
+                            <sup class="text-danger">*</sup>
+                        </div>
                         <div class="value-width position-relative w-100">
                             <input class="form-control password-input"
                                 [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"

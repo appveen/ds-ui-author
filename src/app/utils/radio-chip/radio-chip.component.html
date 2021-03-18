@@ -1,0 +1,8 @@
+<button class="btn btn-sm font-sm pl-1 rounded-pill" [ngClass]="{'btn-primary' : checked, 'btn-outline-primary': !checked}" (click)="onChange()" [disabled]="!editable || loading">
+    <div *ngIf="!loading" class="round-check-wrapper" [ngClass]="{'checked': checked, 'disabled': !editable }">
+        <span *ngIf="checked" class="fa fa-check text-accent"></span>
+        <span *ngIf="!editable && !checked" class="fa fa-times text-border font-xs"></span>
+    </div>
+    <span *ngIf="loading" class="fa fa-spinner fa-pulse"></span>
+    <span>{{ label }}</span>
+</button>

@@ -8,8 +8,10 @@
   .user {
     &-overview {
       .user-initials {
-        width: 80px;
-        height: 80px;
+        min-width: 80px;
+        max-width: 80px;
+        min-height: 80px;
+        max-height: 80px;
         border-radius: 50%;
         background-color: $light;
         span {
@@ -19,6 +21,9 @@
       .admin-star {
         top: 75px;
         left: 75px;
+      }
+      .user-action {
+        right: 24px;
       }
       .uo-icon {
         min-width: 30px;
@@ -126,16 +131,7 @@
         font-size: 1.5rem;
         font-style: italic;
       }
-      .cd-heading {
-        width: 33%;
-      }
-      .no-cd {
-        width: 33%;
-      }
-      .cd-action {
-        width: 33%;
-      }
-      .grid-container {
+      .attrs-grid-container {
         height: 250px;
         display: grid;
       }
@@ -145,6 +141,9 @@
       .team-container {
         padding: 15px;
         width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        
         .team-overview {
           min-width: 200px;
           max-width: 200px;
@@ -392,4 +391,16 @@
   &:hover {
     background: $light;
   }
+}
+.key-info-text {
+  min-height: 22px;
+}
+
+.attrs-error-icon {
+  top: 33px;
+  right: 2%;
+}
+
+.no-x {
+  background-image: none;
 }

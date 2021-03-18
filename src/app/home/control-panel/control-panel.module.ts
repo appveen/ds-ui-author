@@ -62,6 +62,7 @@ import { AgGridActionsRendererModule } from 'src/app/utils/ag-grid-actions-rende
 import { AttributesCellRendererComponent } from './attributes-cell-renderer/attributes-cell-renderer.component';
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 import { AgGridFilterModule } from 'src/app/utils/ag-grid-filter/ag-grid-filter.module';
+import { RadioChipModule } from 'src/app/utils/radio-chip/radio-chip.module';
 
 @NgModule({
     imports: [
@@ -99,7 +100,8 @@ import { AgGridFilterModule } from 'src/app/utils/ag-grid-filter/ag-grid-filter.
         AgGridSharedFloatingFilterModule,
         AgGridActionsRendererModule,
         DateFormatModule,
-        AgGridFilterModule
+        AgGridFilterModule,
+        RadioChipModule
     ],
     declarations: [
         ControlPanelComponent,

@@ -1,0 +1,33 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+button {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    column-gap: 5px;
+    transition: all 200ms ease-in;
+    font-weight: bold;
+
+    .round-check-wrapper {
+        min-width: 16px;
+        min-height: 16px;
+        max-width: 16px;
+        max-height: 16px;
+        border-radius: 50%;
+        border: 1px solid $primary;
+        background: white;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+
+        .fa-check {
+            font-size: 8px;
+        }
+        &.disabled {
+            border: 1px solid $border;
+            background: $input-disabled-bg;
+        }
+    }
+}
+

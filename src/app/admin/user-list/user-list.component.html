@@ -89,7 +89,7 @@
         </div>
         <form class="d-flex flex-column p-4" [formGroup]="userForm" autocomplete="off">
             <div>
-                <div class="d-flex w-100 mb-3">
+                <div class="d-flex w-100 mb-3" *ngIf="validAuthTypes?.length > 1">
                     <div class="label-width text-secondary">Authentication Type</div>
                     <div class="value-width position-relative w-100" formGroupName="auth">
                         <select class="form-control" formControlName="authType">

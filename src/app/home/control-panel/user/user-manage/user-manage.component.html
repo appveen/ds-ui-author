@@ -2,19 +2,15 @@
     (outside)="hideToggleManage()" [ignore]="['.ignore-click', '.dropdown-container']">
     <div class="d-flex flex-column">
         <div class="user-overview border-bottom px-4 py-3 d-flex position-relative">
-            <div class="user-initials mr-4 text-secondary d-flex align-items-center justify-content-center">
+            <div class="user-initials mr-2 text-secondary d-flex align-items-center justify-content-center">
                 <span>{{ initials }}</span>
             </div>
             <span class="fa fa-star fa-2x admin-star text-warning position-absolute" *ngIf="isAppAdmin"
                 ngbTooltip="App Admin" placement="top"></span>
-            <div>
-                <div class="mb-3 d-flex">
+            <div class="w-100">
+                <div class="ml-3 mb-3 d-flex">
                     <ng-container *ngIf="user?.basicDetails?.name; else noName">
-                        <div *ngIf="user.basicDetails.name.length > 50" class="user-name mr-2 text-truncate"
-                            [ngbTooltip]="user.basicDetails.name" placement="top">
-                            {{ user.basicDetails.name }}
-                        </div>
-                        <div *ngIf="user.basicDetails.name.length <= 50" class="user-name mr-2">
+                        <div class="user-name mr-2 text-truncate" [ngbTooltip]="user.basicDetails.name.length > 50 ? user.basicDetails.name : ''" placement="top">
                             {{ user.basicDetails.name }}
                         </div>
                     </ng-container>
@@ -23,37 +19,39 @@
                     </ng-template>
                     <!-- <div class="text-secondary font-normal align-self-end mb-1">{{user._id}}</div> -->
                 </div>
-                <div class="d-flex flex-column user-overview-details font-normal">
-                    <div class="d-flex mb-2">
-                        <div class="mr-4 d-flex">
-                            <span class="far fa-user text-secondary mr-2"></span>
-                            <span class="text-secondary mr-3"
-                                *ngIf="user.username.length <= 36">{{user.username}}</span>
-                            <span class="text-secondary text-truncate username-text mr-3"
-                                *ngIf="user.username.length > 36" [ngbTooltip]="user.username"
-                                placement="top">{{user.username}}</span>
-                            <span class="fas fa-phone text-secondary mr-2" id="userPhone"></span>
-                            <span class="text-secondary mr-3">
-                                {{ user?.basicDetails?.phone || '--' }}
-                            </span>
-                            <span class="text-secondary mr-2" id="lastActive">Last active on:</span>
-                            <span *ngIf="user.lastLogin"
-                                class="text-secondary">{{ user.lastLogin|dateFormat: 'DD-MMM-YYYY, hh:mm:ss A, z' : 'Etc/Zulu' }}</span>
-                            <span *ngIf="!user.lastLogin" class="text-secondary">N.A.</span>
-                        </div>
+                <div class="w-100 mr-4 d-flex flex-wrap justify-content-between user-overview-details font-normal">
+                    <div class="d-flex align-items-center ml-3 mb-2" *ngIf="!!user?.username">
+                        <span class="far fa-user text-secondary mr-2"></span>
+                        <span class="text-secondary text-truncate username-text"
+                            [ngbTooltip]="user.username.length > 36 ? user.username : ''" placement="top">
+                            {{user.username}}
+                        </span>
                     </div>
-                    <div class="mr-4 d-flex align-items-center" *ngIf="user.basicDetails?.alternateEmail">
+                    <div class="d-flex align-items-center ml-3 mb-2" *ngIf="!!user?.basicDetails?.phone">
+                        <span class="fas fa-phone text-secondary mr-2" id="userPhone"></span>
+                        <span class="text-secondary text-truncate"
+                            [ngbTooltip]="user.basicDetails.phone.length > 36 ? user.basicDetails.phone : ''" placement="top">
+                            {{ user.basicDetails.phone }}
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center ml-3 mb-2" *ngIf="user.basicDetails?.alternateEmail">
                         <span class="fas fa-envelope text-secondary mr-2"></span>
-                        <span class="text-secondary mr-3"
-                            *ngIf="user.basicDetails?.alternateEmail.length <= 36">{{user.basicDetails?.alternateEmail}}</span>
-                        <span class="text-secondary text-truncate username-text mr-3"
-                            *ngIf="user.basicDetails?.alternateEmail.length > 36"
-                            [ngbTooltip]="user.basicDetails?.alternateEmail"
-                            placement="top">{{user.basicDetails?.alternateEmail}}</span>
+                        <span class="text-secondary text-truncate username-text"
+                            [ngbTooltip]="user.basicDetails?.alternateEmail.length > 36 ? user.basicDetails?.alternateEmail : ''"
+                            placement="top">
+                            {{user.basicDetails?.alternateEmail}}
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center ml-3 mb-2" *ngIf="!!user?.lastLogin">
+                        <span class="text-secondary mr-2" id="lastActive">Last active on:</span>
+                        <span class="text-secondary text-truncate"
+                            [ngbTooltip]="user.lastLogin.length > 36 ? user.lastLogin : ''" placement="top">
+                            {{ user.lastLogin | dateFormat: 'DD-MMM-YYYY, hh:mm:ss A, z' : 'Etc/Zulu' }}
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="user-action ml-auto d-flex align-items-start">
+            <div class="user-action d-flex align-items-start position-absolute">
                 <button *ngIf="hasPermission('PMUBU') && authType !== 'azure'" type="button" class="btn btn-link border-0 py-0"
                     (click)="editUserDetails()">Edit User</button>
                 <div *ngIf="hasPermission('PMUA') || hasPermission('PMUBD')"
@@ -95,19 +93,18 @@
             </div>
         </div>
         <div class="user-additionInformation border-bottom">
-            <div class="d-flex w-100 px-4 py-3">
-                <div class="cd-heading">
+            <div class="d-flex justify-content-between align-items-center w-100 px-4 py-3">
+                <div>
                     <span class="fas fa-lg fa-plus-circle text-secondary mr-2"></span>
                     <strong>Attributes</strong>
                 </div>
-                <div *ngIf="!extraInfo" class="font-normal no-cd">No attributes have been configured</div>
-                <div *ngIf="extraInfo" class="no-cd"></div>
-                <div (click)="addAdditionInfo()" *ngIf="hasPermission('PMUBU')"
-                    class="d-flex justify-content-end cd-action">
-                    <button class="btn btn-link pt-0">+ Update Attributes</button>
-                </div>
+                <div *ngIf="!extraInfo" class="font-normal">No attributes have been configured</div>
+                <button *ngIf="hasPermission('PMUBU')" class="btn btn-success" (click)="editMode = false;openAttributeModal()">
+                    <span class="fa fa-plus mr-2"></span>
+                    Add Attribute
+                </button>
             </div>
-            <div class="grid-container px-4 pb-4" *ngIf="!!userAttributeList && !!extraInfo">
+            <div class="attrs-grid-container px-4 pb-4" *ngIf="!!userAttributeList && !!extraInfo">
                 <ag-grid-angular #agGrid class="card-container ag-theme-balham ag-grid-container" [gridOptions]="gridOptions" [rowData]="rowData | agGridFilter:filterModel"
                     [frameworkComponents]="frameworkComponents" (filterModified)="!filtering && onFilterChanged($event)">
                 </ag-grid-angular>
@@ -133,27 +130,15 @@
                 </div>
                 <div *ngIf="!isAppAdmin" class="app-admin-line"></div>
                 <div class="d-flex justify-content-end team-action-btn">
-                    <button class="btn btn-link" *ngIf="!isAppAdmin && manageGroup" (click)="assignTeam()">+ Assign
-                        Groups
-                    </button>
                     <button class="btn btn-link" *ngIf="isAppAdmin && manageGroup" (click)="removeAdminAccess()">Remove
                         Admin
                     </button>
                 </div>
             </div>
-            <div *ngIf="!isAppAdmin && (manageGroup || viewGroup)" class="d-flex flex-wrap team-container">
-                <div *ngFor="let team of userTeams"
-                    class="d-flex flex-column align-items-center mb-3 py-2 team-overview position-relative">
-                    <div class="position-absolute text-secondary remove-group" ngbTooltip="Remove this group"
-                        placement="top" (click)="removeGroupForUser(team.name, team._id)">
-                        <span class="fa fa-times"></span>
-                    </div>
-                    <div class="team bg-white d-flex flex-column justify-content-center align-items-center mb-2">
-                        <span class="fas fa-users fa-lg mb-2 text-muted"></span>
-                        <strong class="team-strength">{{team.users.length}}</strong>
-                    </div>
-                    <div class="text-truncate team-name text-center" [ngbTooltip]="team.name">{{team.name}}</div>
-                </div>
+            <div *ngIf="!isAppAdmin && (manageGroup || viewGroup) && !!toggleGroups?.length" class="d-flex flex-wrap team-container">
+                <odp-radio-chip *ngFor="let group of toggleGroups" class="m-2" [label]="group.name + ' (' + group.userCount + ')'"
+                    [checked]="group.checked" [loading]="group.loading" (checkedChange)="onGroupToggle(group, $event)">
+                </odp-radio-chip>
             </div>
         </div>
     </div>
@@ -188,17 +173,6 @@
                     *ngIf="userDetails.get('phone').dirty && userDetails.get('phone').hasError('pattern')"
                     [ngbTooltip]="'Please enter a valid 8-16 digit phone number'" placement="right"></span>
             </div>
-            <!-- <div class="d-flex w-100 mb-3 position-relative">
-                <label class="text-secondary" for="bd-username">Username</label>
-                <input type="text" id="bd-username" class="form-control" formControlName="username"
-                    [ngClass]="{'is-invalid': usernameError}" [disabled]="true">
-                <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                    *ngIf="userDetails.get('username').dirty && userDetails.get('username').hasError('pattern')"
-                    [ngbTooltip]="'Invalid username'" placement="right"></span>
-                <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                    *ngIf="userDetails.get('username').dirty && userDetails.get('username').hasError('required')"
-                    [ngbTooltip]="'username is required'" placement="right"></span>
-            </div> -->
             <div class="d-flex w-100 mb-3 position-relative" *ngIf="authType === 'local'">
                 <label class="text-secondary" for="bd-altEmail">Alternate Email</label>
                 <input type="text" id="bd-altEmail" class="form-control" formControlName="alternateEmail"
@@ -325,205 +299,73 @@
             </div>
         </div>
     </ng-template>
-    <ng-template #newAttributeModal>
-        <div class="modal-body new-attribute-modal ignore-outside d-flex flex-column">
-            <div class="d-flex justify-content-between">
-                <div class="font-lg ">
-                    <strong class="">User Attribute</strong>
-                </div>
-                <button type="button" class="btn btn-link " (click)="addNewDetail()">+ Add New</button>
-            </div>
-            <div class="p-4 form-body ">
-                <table class="table" [formGroup]="additionalDetails">
-                    <thead class="bg-accent text-white">
-                        <tr>
-                            <th>Name</th>
-                            <th>Key</th>
-                            <th>Type</th>
-                            <th>Value</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody formArrayName="extraInfo">
-                        <tr *ngFor="let control of userAttributes;let i=index" [formGroupName]="i">
-                            <td>
-                                <div class="mr-3 position-relative">
-                                    <input type="text" id="new-label" (keypress)="newField($event)" class="form-control"
-                                        formControlName="label" #newLabel [ngClass]="{'is-invalid': getLabelError(i)}"
-                                        odpAutoFocus (change)="setKey(i)">
-                                    <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                                        *ngIf="getLabelError(i)" ngbTooltip="This is a required field"
-                                        placement="right">
-                                    </span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mr-3 position-relative">
-                                    <input type="text" id="new-key" class="form-control" [readonly]="true"
-                                        formControlName="key">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-wrapper w-100 position-relative mr-3">
-                                    <div class="form-control hover ignore-click"
-                                        (click)="toggleFieldTypeSelector[i]=!toggleFieldTypeSelector[i]; closeAllOtherToggleField(i) ">
-                                        <odp-field-type [label]="true"
-                                            [field]="{type:control.get('type').value,properties:{}}">
-                                        </odp-field-type>
-                                    </div>
-                                    <div *ngIf="toggleFieldTypeSelector[i]"
-                                        class="type-dropdown border p-2 rounded d-flex flex-wrap justify-content-center position-absolute bg-white">
-                                        <button type="button"
-                                            class="btn btn-link type-width d-flex justify-content-center align-items-center text-accent ignore-click"
-                                            *ngFor="let type of types; let typeIndex = index;"
-                                            (click)="setUserAttributeType(type,i);$event.stopPropagation();">
-                                            <span class="{{type.class}}" placement="left"></span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="val-input position-relative">
-                                    <input *ngIf="control.get('type').value === 'String'" type="text" id="new-val"
-                                        (keypress)="newField($event)" class="form-control" formControlName="value"
-                                        [ngClass]="{'is-invalid': getValError(i)}">
-                                    <input *ngIf="control.get('type').value === 'Number'" type="number" id="new-val"
-                                        (keypress)="newField($event)" class="form-control" formControlName="value"
-                                        [ngClass]="{'is-invalid': getValError(i)}">
-                                    <input *ngIf="control.get('type').value === 'Date'" type="date" id="new-val"
-                                        (keypress)="newField($event)" class="form-control" formControlName="value"
-                                        [ngClass]="{'is-invalid': getValError(i)}">
-                                    <odp-switch *ngIf="control.get('type').value === 'Boolean'" [edit]="{status:true}"
-                                        [checked]="getUserAttributeValue(i)"
-                                        (checkedChange)="setUserAttributeValue($event,i)"></odp-switch>
-                                    <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                                        *ngIf="control.get('type').value !== 'Boolean' && getValError(i)"
-                                        ngbTooltip="This is a required field" placement="right"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="del-field ml-auto pt-2 hover"
-                                    (click)="removeField(i);$event.stopPropagation();" *ngIf="i > 0">
-                                    <span class="fas fa-times-circle fa-lg text-secondary"></span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="d-flex align-items-end justify-content-end mt-auto">
-                <button type="button" class="btn btn-link"
-                    (click)="newAttributeModalRef.close(false);$event.stopPropagation();">Cancel</button>
-                <button type="button" class="btn btn-min-width  btn-dark ml-5" [disabled]="additionalDetails.invalid"
-                    (click)="addExtraDetails();$event.stopPropagation();">Save</button>
-            </div>
-        </div>
-    </ng-template>
-
-    <ng-template #assignTeamModal>
-        <div class="assignApp-modal ignore-outside">
-            <div class="modal-header ignore-outside p-4">
-                <div class="text-dark d-flex ignore-outside">
-                    <label for="addApp" class="label-width ignore-outside">
-                        <strong class="ignore-outside">Add Groups</strong>
-                    </label>
-                    <div class="position-relative ignore-outside">
-                        <odp-search-box (enteredText)="teamSearch($event)" (reset)="resetTeams()"
-                            [ignoreOutside]="true">
-                        </odp-search-box>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body p-4 ignore-outside">
-                <div class="d-flex flex-wrap ignore-outside">
-                    <div class="team-card d-flex flex-column my-3 mx-4 ignore-outside"
-                        *ngFor="let team of allTeams| filterTeam: filterTeamStr; index as teamIndex;">
-                        <div class="team-thumbnail d-flex align-items-center justify-content-center hover ignore-outside"
-                            [ngClass]="{'team-selected': team['teamSelected'], 'bg-white': !team['teamSelected']}"
-                            (click)="addTeam(teamIndex)">
-                            <figure
-                                class="d-flex flex-column align-items-center justify-content-center position-relative ignore-outside">
-                                <img *ngIf="team.logo && team.logo.thumbnail" [src]="team.logo.thumbnail"
-                                    alt="team-logo">
-                                <div *ngIf="!team.logo || !team.logo.thumbnail"
-                                    class="d-flex flex-column justify-content-center align-items-center pt-4 ignore-outside">
-                                    <span class="fas fa-users fa-lg mb-2 text-muted ignore-outside"></span>
-                                    <strong class="team-strength ignore-outside"
-                                        [ngClass]="{'text-secondary': team['teamSelected']}">
-                                        {{team.users.length}}
-                                    </strong>
-                                </div>
-                                <figcaption class="team-thumbnail-caption position-absolute ignore-outside"
-                                    *ngIf="team['teamSelected']">
-                                    <span class="fas fa-check ignore-outside"></span>
-                                    <span class="text ignore-outside">Selected</span>
-                                </figcaption>
-                            </figure>
-                        </div>
-                        <div class="app-name text-truncate text-center mt-2 ignore-outside">{{team.name}}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer p-3 d-flex w-100 bg-white mt-auto justify-content-end align-items-center">
-                <button type="button" class="btn btn-link mr-3 ignore-outside" (click)="assignTeamModalRef.close(false)"
-                    id="appAddModalNo">Cancel</button>
-                <button type="button" class="btn btn-dark btn-min-width ignore-outside"
-                    (click)="assignTeamModalRef.close(true)" id="appAddModalYes">Add</button>
-            </div>
-        </div>
-    </ng-template>
 
     <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
         <odp-user-icon [size]="18" color="202A36"></odp-user-icon>
     </odp-delete-modal>
 
-    <ng-template #editAttributeModal>
-        <div class="modal-body p-4 ignore-outside">
+    <ng-template #attributeModal>
+        <div class="modal-body p-4 ignore-outside" [formGroup]="attributesForm">
             <div class="d-flex justify-content-between">
                 <div class="font-lg mb-3">
-                    <strong class="">Edit Attribute</strong>
+                    <strong class="">{{editMode? 'Edit Attribute' : 'Add Attribute'}}</strong>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="label">Label</label>
-                <input id="label" type="text" class="form-control" [(ngModel)]="editAttribute.label">
-            </div>
-            <div class="form-group">
-                <label for="key">Key</label>
-                <input id="key" type="text" class="form-control" [(ngModel)]="editAttribute.key" [disabled]="true">
-                <small class="form-text"></small>
+            <div class="form-group mb-1 position-relative">
+                <label for="label">
+                    Label
+                    <sup class="text-danger">*</sup>
+                </label>
+                <input id="label" type="text" class="form-control" [ngClass]="{'is-invalid no-x': getLabelError()}" formControlName="label">
+                <div class="key-info-text">
+                    <small class="text-secondary pt-1" *ngIf="!!attributesForm?.get('key')?.value">
+                        {{ 'Key: ' + attributesForm?.get('key').value }}
+                    </small>
+                </div>
+                <span class="fas fa-question-circle text-danger attrs-error-icon position-absolute"
+                    *ngIf="getLabelError()" ngbTooltip="This is a required field" placement="right">
+                </span>
             </div>
             <div class="form-group input-wrapper position-relative">
-                <label for="key">Type</label>
+                <label for="key">
+                    Type
+                    <sup class="text-danger">*</sup>
+                </label>
                 <div id="type" ngbDropdown #listDropdown="ngbDropdown" class="w-100" container="body">
                     <button class="btn bg-white border rounded w-100 d-flex justify-content-between align-items-center" ngbDropdownToggle>
-                        <odp-field-type [label]="true" [field]="{type:editAttribute.type,properties:{}}">
+                        <odp-field-type [label]="true" [field]="{type:attributesForm.get('type').value,properties:{}}">
                         </odp-field-type>
                     </button>
-                    <div ngbDropdownMenu>
-                        <div class="dropdown-itm px-2 py-1" *ngFor="let type of types" (click)="editAttribute.type = type.value;editAttribute.value = null;listDropdown.close();">
+                    <div style="width:350px" ngbDropdownMenu>
+                        <div class="dropdown-itm px-2 py-1" *ngFor="let type of types" (click)="onAttributeFormTypeChange(type);listDropdown.close();">
                             <odp-field-type [label]="true" [field]="{type:type.value,properties:{}}">
                             </odp-field-type>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="value">Value</label>
-                <input *ngIf="editAttribute.type === 'String'" id="value" type="text" class="form-control"
-                    [(ngModel)]="editAttribute.value">
-                <input *ngIf="editAttribute.type === 'Number'" id="value" type="number" class="form-control"
-                    [(ngModel)]="editAttribute.value">
-                <input *ngIf="editAttribute.type === 'Date'" id="value" type="date" class="form-control"
-                    [(ngModel)]="editAttribute.value">
-                <odp-switch *ngIf="editAttribute.type === 'Boolean'" [edit]="{status:true}"
-                    [(checked)]="editAttribute.value"></odp-switch>
+            <div class="form-group position-relative">
+                <label for="value">
+                    Value
+                    <sup class="text-danger">*</sup>
+                </label>
+                <input *ngIf="attributesForm.get('type').value === 'String'" id="value" type="text" class="form-control"
+                    [ngClass]="{'is-invalid no-x': getValError()}" formControlName="value">
+                <input *ngIf="attributesForm.get('type').value === 'Number'" id="value" type="number" class="form-control"
+                    [ngClass]="{'is-invalid no-x': getValError()}" formControlName="value">
+                <input *ngIf="attributesForm.get('type').value === 'Date'" id="value" type="date" class="form-control"
+                    [ngClass]="{'is-invalid no-x': getValError()}" formControlName="value">
+                <odp-switch *ngIf="attributesForm.get('type').value === 'Boolean'" [edit]="{status:true}"
+                    [checked]="attributesForm.get('value').value" (checkedChange)="attributesForm.get('value').setValue($event)"></odp-switch>
+                <span class="fas fa-question-circle text-danger attrs-error-icon position-absolute"
+                    *ngIf="attributesForm.get('type').value !== 'Boolean' && getValError()"
+                    ngbTooltip="This is a required field" placement="right"></span>
             </div>
             <div class="d-flex align-items-center justify-content-end mt-4">
                 <button type="button" class="btn btn-min-width btn-dark ignore-click mr-3"
-                    (click)="editAttributeModalRef.close(false)">Cancel</button>
-                <button type="button" class="btn btn-min-width btn-success ignore-click" [disabled]="!editAttribute.label || ['', null].includes(editAttribute.value)"
-                    (click)="editAttributeModalRef.close(true)">Save</button>
+                    (click)="attributeModalRef.close(false)">Cancel</button>
+                <button type="button" class="btn btn-min-width btn-success ignore-click" [disabled]="attributesForm.invalid"
+                    (click)="attributeModalRef.close(true)">{{ editMode ? 'Save' : 'Add'}}</button>
             </div>
         </div>
     </ng-template>

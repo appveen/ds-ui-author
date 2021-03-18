@@ -4,6 +4,9 @@
 .switch {
   position: relative;
   cursor: pointer;
+  &:focus {
+    outline: none;
+  }
 
   .slider {
     margin: 0;
