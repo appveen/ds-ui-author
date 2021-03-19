@@ -3,7 +3,7 @@
     display: grid;
     align-items: center;
     justify-items: stretch;
-    max-height: 24px;
+    max-height: 22px;
     overflow: hidden;
 }
 
@@ -13,8 +13,10 @@
     margin: 0;
 }
 
-.btn-sm {
-    height: 22px;
+.toggle-btn {
+    min-height: 22px !important;
+    min-height: 22px !important;
+    border: 1px solid #ccc;
 }
 
 .dropdown-container {

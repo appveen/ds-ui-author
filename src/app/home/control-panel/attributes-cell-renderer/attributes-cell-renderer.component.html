@@ -1,6 +1,6 @@
-<ng-container *ngIf="['label', 'key', 'value'].includes(field)">
-    {{ value }}
-</ng-container>
+<div #textSpan class="truncate" *ngIf="['label', 'key', 'value'].includes(field)">
+    <span [ngbTooltip]="value" [disableTooltip]="textSpan.offsetWidth >= textSpan.scrollWidth" placement="left">{{ value }}</span>
+</div>
 <ng-container *ngIf="field === 'type'">
     <odp-field-type [label]="true" [field]="{ type: value, properties: {} }"></odp-field-type>
 </ng-container>

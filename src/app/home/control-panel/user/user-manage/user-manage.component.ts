@@ -13,12 +13,12 @@ import {
     TemplateRef
 } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
 import { GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
 import { ToastrService } from 'ngx-toastr';
-import { noop, Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
@@ -87,21 +87,18 @@ import { AttributesCellRendererComponent } from '../../attributes-cell-renderer/
     ]
 })
 export class UserManageComponent implements OnInit, OnDestroy {
-    private _user: any;
-    @ViewChild('newAttributeModal', { static: false }) newAttributeModal: TemplateRef<HTMLElement>;
-    @ViewChild('assignTeamModal', { static: false }) assignTeamModal: TemplateRef<HTMLElement>;
-    @ViewChild('editAttributeModal', { static: false }) editAttributeModal: TemplateRef<HTMLElement>;
+    @ViewChild('attributeModal', { static: false }) attributeModal: TemplateRef<HTMLElement>;
     @ViewChild('resetPasswordModel', { static: false }) resetPasswordModel: TemplateRef<HTMLElement>;
     @ViewChild('agGrid') agGrid: AgGridAngular;
     @ViewChildren('newLabel') newLabel: QueryList<any>;
-    @Output() removeUser: EventEmitter<any>;
     @Input() bredcrumbSub: any;
+    @Output() removeUser: EventEmitter<any>;
+    @Output() toggleUserMngChange: EventEmitter<boolean>;
+    private _user: any;
+    private _toggleUserMng: boolean;
     resetPasswordModelRef: NgbModalRef;
-    newAttributeModalRef: NgbModalRef;
-    assignTeamModalRef: NgbModalRef;
-    editAttributeModalRef: NgbModalRef;
+    attributeModalRef: NgbModalRef;
     userDetails: FormGroup;
-    additionalDetails: FormGroup;
     resetPasswordForm: FormGroup;
     subscriptions: any;
     deleteModal: DeleteModalConfig;
@@ -109,30 +106,27 @@ export class UserManageComponent implements OnInit, OnDestroy {
     userAppConfig: GetOptions = {};
     teamOptions: GetOptions = {};
     updateTeamOption: GetOptions = {};
-    additionalInfo: any; // Variable object to store user's additional info and display on UI
     userTeams: Array<any>;
     allTeams: Array<any>;
-    selectedGroups: Array<any>;
     additionInfoHelperText = 'Show More';
     showMoreInfo: boolean;
     editDetails: boolean;
     resetPwd: boolean;
-    filterTeamStr = '';
     madeAppAdmin: boolean;
     showMoreOptions: boolean;
-    toggleFieldTypeSelector: any;
     types: Array<any>;
-    editAttribute: any;
     openDeleteModal: EventEmitter<any>;
-    private _toggleUserMng: boolean;
     showPassword = {};
     showResetPassword: boolean;
     gridOptions: GridOptions
-    @Output() toggleUserMngChange: EventEmitter<boolean>;
     frameworkComponents: any;
     filtering: boolean;
     filterModel: any;
     rowData: Array<any>;
+    attributesForm: FormGroup;
+    editMode = true;
+    chipChecked = false;
+    toggleGroups: Array<any>;
 
     get toggleUserMng(): boolean {
         const self = this;
@@ -150,7 +144,9 @@ export class UserManageComponent implements OnInit, OnDestroy {
             value.attributes = {};
         }
         self._user = value;
-        self.getAppNTeam();
+        if(!!self.allTeams) {
+            self.getUserTeam();
+        }
     }
 
     get user() {
@@ -176,7 +172,6 @@ export class UserManageComponent implements OnInit, OnDestroy {
         self.editDetails = false;
         self.resetPwd = false;
         self.madeAppAdmin = false;
-        self.toggleFieldTypeSelector = {};
         // userDetails form is for updating basic user info
         self.userDetails = self.fb.group({
             name: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
@@ -184,14 +179,19 @@ export class UserManageComponent implements OnInit, OnDestroy {
             // username: ['', [Validators.required, Validators.pattern(/([\w]+@[a-zA-Z0-9-]{2,}(\.[a-z]{2,})+|admin)/)]],
             alternateEmail: ['', [Validators.pattern(/([\w]+@[a-zA-Z0-9-]{2,}(\.[a-z]{2,})+|admin)/)]]
         });
-        // additionalDetails form is for adding extra key-value pair info for an user specific to an app
-        self.additionalDetails = self.fb.group({
-            extraInfo: self.fb.array([])
-        });
         // resetPasswordForm form is for updating user password
         self.resetPasswordForm = self.fb.group({
             password: [null, [Validators.required, Validators.minLength(8)]],
             cpassword: [null, [Validators.required]]
+        });
+        self.attributesForm = self.fb.group({
+            key: ['', [Validators.required]],
+            type: ['String', [Validators.required]],
+            value: ['', [Validators.required]],
+            label: ['', [Validators.required]]
+        });
+        self.attributesForm.get('label').valueChanges.pipe(filter(() => !this.editMode)).subscribe(val => {
+            self.attributesForm.get('key').patchValue(self.appService.toCamelCase(val));
         });
         self.userGroupConfig.filter = {};
         self.teamOptions.filter = {};
@@ -207,7 +207,6 @@ export class UserManageComponent implements OnInit, OnDestroy {
             showButtons: true
         };
         self.showMoreOptions = false;
-        self.toggleFieldTypeSelector = {};
         self.types = [
             { class: 'odp-abc', value: 'String', label: 'Text' },
             { class: 'odp-123', value: 'Number', label: 'Number' },
@@ -223,7 +222,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
           self.commonService.userDetails.isSuperAdmin || self.isThisUser(self.user);
         self.ngbToolTipConfig.container = 'body';
         self.commonService.apiCalls.componentLoading = false;
-        self.getAppNTeam();
+        self.getAllTeams();
         self.setupUserAttrsGrid();
         self.subscriptions['sessionExpired'] = self.commonService.sessionExpired.subscribe(() => {
             self.userDetails.markAsPristine();
@@ -236,9 +235,9 @@ export class UserManageComponent implements OnInit, OnDestroy {
         });
     }
 
-    get userAttributes() {
-        const self = this;
-        return (self.additionalDetails.get('extraInfo') as FormArray).controls;
+    onAttributeFormTypeChange(type: any) {
+        this.attributesForm.get('type').setValue(type.value);
+        this.attributesForm.get('value').setValue(type.value === 'Boolean' ? false : null);
     }
 
     setupUserAttrsGrid() {
@@ -282,6 +281,8 @@ export class UserManageComponent implements OnInit, OnDestroy {
                 {
                     headerName: 'Type',
                     field: 'type',
+                    width: 140,
+                    maxWidth: 140,
                     refData: {
                         filterType: 'list_of_values',
                         mapperFunction: 'gridAttrTypesMapper'
@@ -342,7 +343,8 @@ export class UserManageComponent implements OnInit, OnDestroy {
     onGridAction(buttonName: string, rowNode: RowNode) {
         switch(buttonName) {
             case 'Edit': {
-                this.openEditAttributeModal(rowNode.data);
+                this.editMode = true;
+                this.openAttributeModal(rowNode.data);
             }
             break;
             case 'Delete': {
@@ -364,10 +366,10 @@ export class UserManageComponent implements OnInit, OnDestroy {
     private autoSizeAllColumns() {
         if (!!this.agGrid?.api && !!this.agGrid?.columnApi) {
             setTimeout(() => {
-                const container = document.querySelector('.grid-container');
+                const container = document.querySelector('.attrs-grid-container');
                 const availableWidth = !!container ? container.clientWidth - 170 : 993;
                 const allColumns = this.agGrid.columnApi.getAllColumns();
-                allColumns.forEach(col => {
+                allColumns?.forEach(col => {
                     this.agGrid.columnApi.autoSizeColumn(col);
                     if (col.getActualWidth() > 200 || this.agGrid.api.getDisplayedRowCount() === 0) {
                         col.setActualWidth(200);
@@ -382,29 +384,24 @@ export class UserManageComponent implements OnInit, OnDestroy {
     }
 
     private onRowDoubleClick(row: any) {
-        this.hasPermission('PMUBU') && this.openEditAttributeModal(row.data);
+        if(this.hasPermission('PMUBU')) {
+            this.editMode = true;
+            this.openAttributeModal(row.data);
+        }
     }
 
-    getLabelError(i) {
-        const self = this;
+    getLabelError() {
         return (
-            self.additionalDetails.get(['extraInfo', i, 'label']).touched &&
-            self.additionalDetails.get(['extraInfo', i, 'label']).hasError('required')
+            this.attributesForm.get('label').touched &&
+            this.attributesForm.get('label').hasError('required')
         );
     }
 
-    getValError(i) {
-        const self = this;
+    getValError() {
         return (
-            self.additionalDetails.get(['extraInfo', i, 'value']).touched &&
-            self.additionalDetails.get(['extraInfo', i, 'value']).hasError('required')
+            this.attributesForm.get('value').touched &&
+            this.attributesForm.get('value').hasError('required')
         );
-    }
-
-    setKey(i) {
-        const self = this;
-        const val = self.additionalDetails.get(['extraInfo', i, 'label']).value;
-        self.additionalDetails.get(['extraInfo', i, 'key']).patchValue(self.appService.toCamelCase(val));
     }
 
     get extraInfo() {
@@ -486,23 +483,6 @@ export class UserManageComponent implements OnInit, OnDestroy {
             }
             return isSuperAdmin || isAppAdmin;
         }
-    }
-
-    // To add new additional information for user
-    addNewDetail() {
-        const self = this;
-        const newData = self.fb.group({
-            key: ['', [Validators.required]],
-            type: ['String', [Validators.required]],
-            value: ['', [Validators.required]],
-            label: ['', [Validators.required]]
-        });
-        (self.additionalDetails.get('extraInfo') as FormArray).push(newData);
-        setTimeout(() => {
-            if (self.newLabel.length >= 1) {
-                self.newLabel.last.nativeElement.focus();
-            }
-        }, 50);
     }
 
     editUserDetails() {
@@ -658,23 +638,6 @@ export class UserManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    removeGroupForUser(teamName, teamId) {
-        const self = this;
-        if (self.manageGroup) {
-            const alertModal: any = {};
-            alertModal.title = `Remove Group ${teamName}`;
-            alertModal.message = `Are you sure you want to remove group <span class="text-delete font-weight-bold">
-            ${teamName}</span> for user <span class="text-delete font-weight-bold">${self.user.basicDetails.name}</span>?`;
-            alertModal.removeGroupForUser = true;
-            alertModal.teamName = teamName;
-            alertModal.teamId = teamId;
-            alertModal.btnText = 'Remove';
-            self.openDeleteModal.emit(alertModal);
-        } else {
-            self.inSufficientPermission();
-        }
-    }
-
     closeDeleteModal(data) {
         const self = this;
         if (data) {
@@ -682,16 +645,12 @@ export class UserManageComponent implements OnInit, OnDestroy {
                 delete self.user.attributes[data.attrName];
                 self.commonService.put('user', '/usr/' + self.user._id, self.user).subscribe(
                     () => {
-                        self.initConfig();
                         self.ts.success('Attribute deleted successfully');
                         self.rowData = [...this.userAttributeList];
-                        self.resetAdditionDetailForm();
                     },
                     err => {
                         self.ts.error(err.error.message);
-                        self.resetAdditionDetailForm();
                     },
-                    noop
                 );
             }
             if (data.removeAdmin) {
@@ -718,81 +677,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
                 self.toggleUserMngChange.emit(false);
                 self.removeUser.emit([self.user._id]);
             }
-            if (data.removeGroupForUser) {
-                const teamIds = [data.teamId];
-                self.commonService.put('user', `/usr/${self.user._id}/removeFromGroups`, { groups: teamIds }).subscribe(() => {
-                    self.getUserTeam();
-                    self.ts.success(`${data.teamName} Group has been removed for user ${self.user.basicDetails.name}`);
-                });
-            }
         }
-    }
-
-    private resetAdditionDetailForm() {
-        const self = this;
-        self.additionalDetails.reset();
-        self.additionalDetails = self.fb.group({
-            extraInfo: self.fb.array([])
-        });
-        // (self.additionalDetails.get('extraInfo') as FormArray).clear();
-    }
-
-    /** This method is used for displaying the modal window which
-     * contains the form for adding extra Info for an User
-     * @author bijay_ps
-     */
-    addAdditionInfo() {
-        const self = this;
-        if (self.userAttributeList.length) {
-            self.userAttributeList.forEach(element => {
-                let form = self.fb.group({
-                    key: ['', Validators.required],
-                    type: ['String', Validators.required],
-                    value: ['', Validators.required],
-                    label: ['', Validators.required]
-                });
-                form.patchValue(element);
-                (self.additionalDetails.get('extraInfo') as FormArray).push(form);
-            });
-        } else {
-            const form = self.fb.group({
-                key: ['', [Validators.required]],
-                type: ['String', [Validators.required]],
-                value: ['', [Validators.required]],
-                label: ['', [Validators.required]]
-            });
-            form.get('type').valueChanges.subscribe(() => {
-                form.get('value').setValue(null);
-            });
-            (self.additionalDetails.get('extraInfo') as FormArray).push(form);
-        }
-
-        if (self.hasPermission('PMUBU')) {
-            self.newAttributeModalRef = self.commonService.modal(self.newAttributeModal, { size: 'lg' });
-            self.newAttributeModalRef.result.then(
-                close => {
-                    self.resetAdditionDetailForm();
-                },
-                dismiss => {
-                    self.resetAdditionDetailForm();
-                }
-            );
-        } else {
-            self.inSufficientPermission();
-        }
-    }
-
-    /** This method is used for removing formControls from additionalDetails form
-     * @author bijay_ps
-     */
-    removeField(index) {
-        const self = this;
-        (self.additionalDetails.get('extraInfo') as FormArray).removeAt(index);
-        setTimeout(() => {
-            if (self.newLabel.length >= 1) {
-                self.newLabel.last.nativeElement.focus();
-            }
-        }, 50);
     }
 
     makeAppAdmin() {
@@ -821,51 +706,6 @@ export class UserManageComponent implements OnInit, OnDestroy {
         }
     }
 
-    newField(event) {
-        const self = this;
-        if (event.key === 'Enter') {
-            self.addNewDetail();
-        }
-    }
-
-    addExtraDetails() {
-        const self = this;
-        let empty = false;
-        self.userAttributes.forEach(control => {
-            const label = control.get('label').value;
-            const val = control.get('value').value;
-            if (label === '' || val === '') {
-                empty = true;
-            }
-        });
-        if (empty) {
-            self.ts.warning('Please check the form fields, looks like few fields are empty');
-        } else {
-            self.newAttributeModalRef.close();
-            self.user.attributes = {};
-            self.userAttributes.forEach(data => {
-                const payload = data.value;
-                const detailKey = payload.key;
-                delete payload.key;
-                self.user.attributes[detailKey] = payload;
-            });
-
-            self.commonService.put('user', `/usr/${self.user._id}`, self.user).subscribe(
-                () => {
-                    self.initConfig();
-                    self.ts.success('Custom details updated successfully');
-                    this.rowData = [...this.userAttributeList];
-                    self.resetAdditionDetailForm();
-                },
-                err => {
-                    self.ts.error(err.error.message);
-                    self.resetAdditionDetailForm();
-                },
-                noop
-            );
-        }
-    }
-
     onCancel() {
         const self = this;
         if (self.editDetails) {
@@ -876,16 +716,6 @@ export class UserManageComponent implements OnInit, OnDestroy {
             self.resetPwd = false;
             self.resetPasswordForm.reset();
         }
-    }
-
-    teamSearch(event) {
-        const self = this;
-        self.filterTeamStr = event;
-    }
-
-    resetTeams() {
-        const self = this;
-        self.filterTeamStr = '';
     }
 
     userInfo() {
@@ -900,21 +730,19 @@ export class UserManageComponent implements OnInit, OnDestroy {
 
     getAllTeams() {
         const self = this;
-        self.teamOptions.filter = { users: { $ne: self.user._id } };
-        self.teamOptions.filter.app = self.commonService.app._id;
+        self.teamOptions.filter = { app: self.commonService.app._id };
         self.teamOptions.count = -1;
         self.subscriptions['allTeams'] = self.commonService
             .get('user', `/${self.commonService.app._id}/group/`, self.teamOptions)
             .subscribe(
                 _teams => {
-                    self.allTeams = _teams;
-                    const index = self.allTeams.findIndex(e => e.name === '#');
+                    const allTeams = _teams;
+                    const index = allTeams.findIndex(e => e.name === '#');
                     if (index >= 0) {
-                        self.allTeams.splice(index, 1);
+                        allTeams.splice(index, 1);
                     }
-                    self.allTeams.forEach(_team => {
-                        _team.teamSelected = false;
-                    });
+                    self.allTeams = [...allTeams];
+                    self.getUserTeam();
                 },
                 err => {
                     self.ts.error(err.error.message);
@@ -930,73 +758,53 @@ export class UserManageComponent implements OnInit, OnDestroy {
             self.subscriptions['userTeams'] = self.commonService
                 .get('user', `/${self.commonService.app._id}/group/`, self.userGroupConfig)
                 .subscribe(_teams => {
-                    self.userTeams = _teams;
-                    const index = self.userTeams.findIndex(e => e.name === '#');
+                    const userTeams = _teams;
+                    const index = userTeams.findIndex(e => e.name === '#');
                     if (index >= 0) {
-                        self.userTeams.splice(index, 1);
+                        userTeams.splice(index, 1);
                     }
-                    self.cdr.detectChanges();
+                    self.userTeams = [...userTeams];
+                    const otherTeams = self.allTeams.filter(team => self.userTeams.every(uTeam => uTeam._id !== team._id));
+                    const teamSortFn = (a, b) => {
+                        return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+                    };
+                    self.toggleGroups = [
+                        ...[...self.userTeams].sort(teamSortFn).map(team => ({_id: team._id, name: team.name, userCount: team.users?.length || 0, checked: true})),
+                        ...otherTeams.sort(teamSortFn).map(team => ({_id: team._id, name: team.name, userCount: team.users?.length || 0, checked: false}))
+                    ];
                 });
         }
     }
 
-    assignTeam() {
-        const self = this;
-        self.getAllTeams();
-        self.assignTeamModalRef = self.commonService.modal(self.assignTeamModal, { windowClass: 'assignApp-modal', centered: true });
-        self.assignTeamModalRef.result.then(
-            close => {
-                if (close && self.selectedGroups && self.selectedGroups.length > 0) {
-                    const teamIds = [];
-                    self.selectedGroups.forEach(team => {
-                        delete team.teamSelected;
-                        team.users.push(self.user._id);
-                        teamIds.push(team._id);
-                    });
-                    self.commonService.put('user', `/usr/${self.user._id}/addToGroups`, { groups: teamIds }).subscribe(
-                        () => {
-                            self.getUserTeam();
-                            // self.getAllTeams();
-                            self.ts.success('User has been added to group successfully');
-                        },
-                        err => {
-                            self.commonService.errorToast(err);
-                        }
-                    );
+    onGroupToggle(group: any, selected: boolean) {
+        group.loading = true;
+        if(selected) {
+            this.commonService.put('user', `/usr/${this.user._id}/addToGroups`, { groups: [group._id] }).subscribe(
+                () => {
+                    this.ts.success('User has been added to group successfully');
+                    this.getUserTeam();
+                },
+                err => {
+                    group.loading = false;
+                    this.commonService.errorToast(err);
                 }
-            },
-            dismiss => {}
-        );
-    }
-
-    addTeam(tIndex) {
-        const self = this;
-        self.allTeams[tIndex].teamSelected = !self.allTeams[tIndex].teamSelected;
-        self.selectedGroups = [];
-        self.allTeams.forEach(_team => {
-            if (_team.teamSelected) {
-                self.selectedGroups.push(_team);
+            );
+        } else {
+            const foundGroup = this.allTeams.find(team => team._id === group._id);
+            if(!!foundGroup?.users?.length) {
+                foundGroup.users = foundGroup.users.filter(u => u !== this.user._id);
             }
-        });
-    }
-
-    initConfig() {
-        const self = this;
-        self.userGroupConfig.filter.users = self.user._id;
-        if (self.user.attributes && Object.keys(self.user.attributes).length > 0) {
-            self.additionalInfo = self.user.attributes;
-            for (const key in self.additionalInfo) {
-                if (self.additionalInfo[key] === null) {
-                    delete self.additionalInfo[key];
+            this.commonService.put('user', `/usr/${this.user._id}/removeFromGroups`, { groups: [group._id] }).subscribe(
+                () => {
+                    this.ts.success(`${group.name} Group has been removed for user ${this.user.basicDetails.name}`);
+                    this.getUserTeam();
+                },
+                err => {
+                    group.loading = false;
+                    this.commonService.errorToast(err);
                 }
-            }
+            );
         }
-    }
-
-    getAppNTeam() {
-        const self = this;
-        self.initConfig();
-        self.getUserTeam();
     }
 
     inSufficientPermission() {
@@ -1012,14 +820,8 @@ export class UserManageComponent implements OnInit, OnDestroy {
         // if (self.deleteModalTemplateRef) {
         //     self.deleteModalTemplateRef.close();
         // }
-        if (self.assignTeamModalRef) {
-            self.assignTeamModalRef.close();
-        }
-        if (self.newAttributeModalRef) {
-            self.newAttributeModalRef.close();
-        }
-        if (self.editAttributeModalRef) {
-            self.editAttributeModalRef.close();
+        if (self.attributeModalRef) {
+            self.attributeModalRef.close();
         }
     }
 
@@ -1045,26 +847,6 @@ export class UserManageComponent implements OnInit, OnDestroy {
         return self.commonService.hasPermission(type);
     }
 
-    setUserAttributeType(type: any, index: number) {
-        const self = this;
-        self.toggleFieldTypeSelector[index] = false;
-        self.additionalDetails.get(['extraInfo', index, 'type']).patchValue(type.value);
-        if (type.value === 'Boolean') {
-            self.additionalDetails.get(['extraInfo', index, 'value']).patchValue(false);
-        } else {
-            self.additionalDetails.get(['extraInfo', index, 'value']).patchValue(null);
-        }
-    }
-
-    closeAllOtherToggleField(i) {
-        const self = this;
-        Object.keys(self.toggleFieldTypeSelector).forEach(element => {
-            if (element != i) {
-                self.toggleFieldTypeSelector[element] = false;
-            }
-        });
-    }
-
     getUserAttributeType(val: any) {
         const self = this;
         if (val !== null) {
@@ -1073,46 +855,33 @@ export class UserManageComponent implements OnInit, OnDestroy {
         return 'String';
     }
 
-    setUserAttributeValue(val: boolean, index: number) {
-        const self = this;
-        self.additionalDetails.get(['extraInfo', index, 'value']).patchValue(val);
-    }
-    getUserAttributeValue(index: number) {
-        const self = this;
-        return self.additionalDetails.get(['extraInfo', index, 'value']).value;
-    }
-
-    openEditAttributeModal(item) {
-        const self = this;
-        self.editAttribute = self.appService.cloneObject(item);
-        self.editAttributeModalRef = self.commonService.modal(self.editAttributeModal);
-        self.editAttributeModalRef.result.then(
+    openAttributeModal(item?: any) {
+        const resetValue = this.editMode ? this.appService.cloneObject(item) : {type: 'String'};
+        this.attributesForm.reset(resetValue);
+        this.attributeModalRef = this.commonService.modal(this.attributeModal);
+        this.attributeModalRef.result.then(
             close => {
                 if (close) {
-                    const key = self.editAttribute.key;
-                    delete self.editAttribute.key;
-                    self.user.attributes[key] = self.appService.cloneObject(self.editAttribute);
-                    self.commonService.put('user', `/usr/${self.user._id}`, self.user).subscribe(
+                    if(!this.user.attributes) {
+                        this.user.attributes = {};
+                    }
+                    const {key, ...rest} = this.attributesForm.value;
+                    this.user.attributes[key] = this.appService.cloneObject(rest);
+                    this.commonService.put('user', `/usr/${this.user._id}`, this.user).subscribe(
                         () => {
-                            self.rowData = [...this.userAttributeList];
-                            self.initConfig();
-                            self.ts.success('Custom Details Saved Successfully');
-                            self.resetAdditionDetailForm();
+                            this.rowData = [...this.userAttributeList];
+                            this.ts.success('Custom Details Saved Successfully');
                         },
                         err => {
-                            self.ts.error(err.error.message);
-                            self.resetAdditionDetailForm();
+                            this.ts.error(err.error.message);
                         },
-                        noop
                     );
-                } else {
+                } else if (this.editMode) {
                     const {key, ...rest} = item;
-                    self.user.attributes[key] = rest;
+                    this.user.attributes[key] = rest;
                 }
-                self.editAttribute = {};
             },
             dismiss => {
-                self.editAttribute = {};
             }
         );
     }
