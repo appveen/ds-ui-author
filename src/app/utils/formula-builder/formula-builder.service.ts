@@ -96,7 +96,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'SUBSTRING',
                         operation: 'fn:substring',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'string',
@@ -118,7 +118,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'CONCAT',
                         operation: 'fn:concat',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'string',
@@ -135,7 +135,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'CONTAINS',
                         operation: 'fn:contains',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'string',
@@ -152,7 +152,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'REPLACE',
                         operation: 'fn:replace',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'string',
@@ -174,7 +174,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'LOWER-CASE',
                         operation: 'fn:lower-case',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'string',
@@ -186,7 +186,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'UPPER-CASE',
                         operation: 'fn:upper-case',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'string',
@@ -204,7 +204,7 @@ export class FormulaBuilderService {
                         operationType: 'operator',
                         label: '+',
                         operation: '+',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'number',
@@ -221,7 +221,7 @@ export class FormulaBuilderService {
                         operationType: 'operator',
                         label: '-',
                         operation: '-',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'number',
@@ -238,7 +238,7 @@ export class FormulaBuilderService {
                         operationType: 'operator',
                         label: '*',
                         operation: '*',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'number',
@@ -255,7 +255,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'MIN',
                         operation: 'fn:min',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'array',
@@ -267,7 +267,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'MAX',
                         operation: 'fn:max',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'array',
@@ -279,7 +279,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'AVG',
                         operation: 'fn:avg',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'array',
@@ -291,7 +291,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'SUM',
                         operation: 'fn:sum',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'array',
@@ -303,7 +303,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'CEILING',
                         operation: 'fn:ceiling',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'number',
@@ -315,7 +315,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'FLOOR',
                         operation: 'fn:floor',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'number',
@@ -327,7 +327,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'ROUND',
                         operation: 'fn:round-half-to-even',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'number',
@@ -339,7 +339,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'DIV',
                         operation: 'div',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'number',
@@ -356,7 +356,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'MOD',
                         operation: 'mod',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'number',
@@ -379,7 +379,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'Parse',
                         operation: 'fn:parse',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'string',
@@ -396,7 +396,7 @@ export class FormulaBuilderService {
                         operationType: 'function',
                         label: 'Format',
                         operation: 'fn:format',
-                        args: [
+                        _args: [
                             {
                                 id: uuid(),
                                 type: 'string',
