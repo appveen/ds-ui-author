@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModalRef, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef, GridApi, GridOptions, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { of, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { AgGridSharedFloatingFilterComponent } from 'src/app/utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.component';
 import { APIConfig } from 'src/app/utils/interfaces/apiConfig';
@@ -16,7 +16,7 @@ import { AgGridCellComponent } from '../dataservice-logs/ag-grid-cell/ag-grid-ce
   templateUrl: './api-logs.component.html',
   styleUrls: ['./api-logs.component.scss']
 })
-export class ApiLogsComponent implements OnInit {
+export class ApiLogsComponent implements OnInit, OnDestroy {
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   @ViewChild('agGrid', { static: false }) agGrid: AgGridAngular;
   @ViewChild('logModal', { static: false }) logModal: TemplateRef<any>;
@@ -416,6 +416,7 @@ export class ApiLogsComponent implements OnInit {
     }
     return retVal;
   }
+
   copyFormat() {
     const self = this;
     const copyText = document.getElementById('requestData') as HTMLInputElement;
@@ -427,5 +428,19 @@ export class ApiLogsComponent implements OnInit {
     setTimeout(() => {
       this.tooltip.close();
     }, 1500);
+  }
+
+  clearFilters() {
+    this.agGrid.api.setFilterModel({});
+  }
+
+  get showClearFilter() {
+    if (this.agGrid && this.agGrid.api) {
+      const model = this.agGrid.api.getFilterModel();
+      if (Object.keys(model).length > 0) {
+        return true;
+      }
+    }
+    return false;
   }
 }

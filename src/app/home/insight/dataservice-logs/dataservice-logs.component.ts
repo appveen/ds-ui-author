@@ -60,7 +60,7 @@ export class DataserviceLogsComponent implements OnInit, OnDestroy {
     self.apiConfig.filter = {};
     self.subscriptions = {};
     self.activeTab = 0;
-    self.logTypesList = ['ExperienceHook', 'PostHook', 'PreHook', 'WorkflowHook'].map(value => ({value}));
+    self.logTypesList = ['ExperienceHook', 'PostHook', 'PreHook', 'WorkflowHook'].map(value => ({ value }));
     self.dataservices = [];
     self.noRowsTemplate = '<span>No records to display</span>';
     self.getRowsDebounceSubject = new Subject();
@@ -207,7 +207,7 @@ export class DataserviceLogsComponent implements OnInit, OnDestroy {
         const container = document.querySelector('.grid-container');
         const availableWidth = !!container ? container.clientWidth : 1154;
         this.agGrid.columnApi.autoSizeAllColumns();
-        const allColumns = this.agGrid.columnApi.getAllColumns();
+        const allColumns = this.agGrid.columnApi.getAllColumns() || [];
         const occupiedWidth = allColumns.reduce((pv, cv) => pv + cv.getActualWidth(), 0);
         if (occupiedWidth < availableWidth) {
           this.agGrid.api.sizeColumnsToFit();
@@ -227,9 +227,9 @@ export class DataserviceLogsComponent implements OnInit, OnDestroy {
     const self = this;
     this.apiConfig.page = Math.ceil(params.endRow / 30);
     if (this.apiConfig.page === 1) {
-        this.loaded = 0;
+      this.loaded = 0;
     }
-    if(!self.apiConfig.filter) {
+    if (!self.apiConfig.filter) {
       self.apiConfig.filter = {
         app: self.commonService.app._id,
       };
@@ -322,7 +322,7 @@ export class DataserviceLogsComponent implements OnInit, OnDestroy {
   getKeys(obj) {
     return Object.keys(obj);
   }
- 
+
   showHookObject() {
     const self = this;
     self.activeModalTab = 0;
@@ -338,7 +338,7 @@ export class DataserviceLogsComponent implements OnInit, OnDestroy {
       console.error('Error Parsing posthook JSON', e);
     }
     self.hookModalRef = self.commonService.modal(self.hookModal, { size: 'lg' });
-    
+
   }
 
   getAllDataServices() {
@@ -375,5 +375,5 @@ export class DataserviceLogsComponent implements OnInit, OnDestroy {
     }
     return retVal;
   }
- 
+
 }

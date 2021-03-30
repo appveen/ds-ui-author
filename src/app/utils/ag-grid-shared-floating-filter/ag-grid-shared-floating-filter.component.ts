@@ -141,7 +141,12 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
     }
   }
 
-  onParentModelChanged(parentModel: any, filterChangedEvent?: FilterChangedEvent): void {}
+  onParentModelChanged(parentModel: any, filterChangedEvent?: FilterChangedEvent): void {
+    if (!parentModel || Object.keys(parentModel).length === 0) {
+      this.otherItemInput = null;
+      this.prepareList();
+    }
+  }
 
   debounceInput(event) {
     this.debounceSubject.next(event);
