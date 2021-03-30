@@ -171,8 +171,10 @@
           <div class="value-width position-relative">
             <ng-container *ngIf="canEdit">
               <button type="button" class="btn btn-link" *ngIf="form.get('properties.default')?.value"
-                (click)="showDatePicker=true">{{form.get('properties.default')?.value
-                | date:'dd-MMM-yyyy' }}</button>
+                (click)="showDatePicker=true">
+                <ng-container *ngIf="form.get('properties.dateType').value == 'date'">{{form.get('properties.default')?.value | date:'dd-MMM-yyyy' }}</ng-container>
+                <ng-container *ngIf="form.get('properties.dateType').value != 'date'">{{form.get('properties.default')?.value | date:'dd-MMM-yyyy HH:mm:ss' }}</ng-container>
+              </button>
               <button type="button" class="btn btn-link" *ngIf="!form.get('properties.default')?.value"
                 (click)="showDatePicker=true">Select
                 Date</button>
