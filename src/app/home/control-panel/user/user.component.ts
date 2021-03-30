@@ -762,12 +762,16 @@ export class UserComponent implements OnInit, OnDestroy {
             .put('user', `/app/${this.commonService.app._id}/removeUsers`, { userIds })
             .subscribe(() => {
                 this.agGrid.api.deselectAll();
-                this.agGrid.api.purgeInfiniteCache();
+                setTimeout(() => {
+                    this.agGrid.api.purgeInfiniteCache();
+                }, 500);
                 this.ts.success(`Removed User(s) from ${this.selectedApp} App Successfully`);
             }, err => {
                 console.log(err);
                 this.agGrid.api.deselectAll();
-                this.agGrid.api.purgeInfiniteCache();
+                setTimeout(() => {
+                    this.agGrid.api.purgeInfiniteCache();
+                }, 500);
                 this.commonService.errorToast(err, 'unable to remove selected user(s), please try after sometime');
             });
     }
