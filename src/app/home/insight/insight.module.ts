@@ -16,6 +16,7 @@ import { DataserviceLogsModule } from './dataservice-logs/dataservice-logs.modul
 import { GroupLogsModule } from './group-logs/group-logs.module';
 import { UserLogsModule } from './user-logs/user-logs.module';
 import { ApiLogsModule } from './api-logs/api-logs.module';
+import { BotsLogsModule } from './bots-logs/bots-logs.module';
 
 const routes = [
     { path: '', component: InsightComponent },
@@ -38,7 +39,8 @@ const routes = [
         DataserviceLogsModule,
         GroupLogsModule,
         UserLogsModule,
-        ApiLogsModule
+        ApiLogsModule,
+        BotsLogsModule
     ],
     declarations: [InsightComponent, AgentLogsComponent],
     exports: [RouterModule]

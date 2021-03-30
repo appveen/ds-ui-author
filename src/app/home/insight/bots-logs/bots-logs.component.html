@@ -1,0 +1,7 @@
+<div class="text-gray-medium mr-3 mt-2 d-flex justify-content-end ">
+    <label class="m-0">Showing {{loaded || 0}} of {{currentRecordsCount || 0}}</label>
+</div>
+<div class="grid-container mt-2">
+    <ag-grid-angular #agGrid class="ag-theme-balham border-0" [gridOptions]="gridOptions" [datasource]="dataSource">
+    </ag-grid-angular>
+</div>

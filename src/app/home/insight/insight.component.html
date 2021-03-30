@@ -13,11 +13,11 @@
         <div class="text-dark px-3 py-2 hover" *ngIf="hasUserPermission" (click)="activateTab(2)" [ngClass]="{'active':activeTab==2}">
             <span>Users</span>
         </div>
-        <!--
+        
         <div class="text-dark px-3 py-2 hover" *ngIf="hasUserPermission" (click)="activateTab(3)" [ngClass]="{'active':activeTab==3}">
             <span>Bots</span>
         </div>
-        -->
+       
         <div class="text-dark px-3 py-2 hover" *ngIf="hasGroupsPermission "  (click)="activateTab(4)" [ngClass]="{'active':activeTab==4}">
             <span>Groups</span>
         </div>
@@ -26,7 +26,7 @@
         <odp-api-logs *ngIf="activeTab==0"></odp-api-logs>
         <odp-dataservice-logs *ngIf="activeTab==1"></odp-dataservice-logs>
         <odp-user-logs *ngIf="activeTab==2"></odp-user-logs>
-        <span *ngIf="activeTab==3">Bots</span>
+        <odp-bots-logs *ngIf="activeTab==3"></odp-bots-logs>
         <odp-group-logs *ngIf="activeTab==4"></odp-group-logs>
     </div>
 </div>
