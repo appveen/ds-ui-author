@@ -65,6 +65,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     cloneServiceModalRef: NgbModalRef;
     cloneData: any;
     easterEggEnabled: boolean;
+    serviceRecordCounts: Array<any>;
     constructor(public commonService: CommonService,
         private appService: AppService,
         private router: Router,
@@ -100,6 +101,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             rolTab: [false],
             setTab: [false]
         });
+        this.serviceRecordCounts = [];
     }
 
     ngOnInit() {
@@ -385,7 +387,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                     }
                     self._getAllServiceRecords(res.map(e => e._id)).subscribe((counts: any) => {
                         if (counts && counts.length > 0) {
-                            counts.forEach(item => {
+                            this.serviceRecordCounts = counts;
+                            this.serviceRecordCounts.forEach(item => {
                                 const temp = self.serviceList.find(e => e._id === item._id);
                                 if (temp) {
                                     temp._records = item.count;
@@ -694,7 +697,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                 return self.commonService.hasPermission('PMDSPD', 'SM');
             }
         }
-     
+
     }
 
     canStartStopService(id: string) {
@@ -758,10 +761,14 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                 self.commonService.get('serviceManager', '/service/' + service._id).subscribe(res => {
                     self.setServiceDetails(res);
                     self.serviceList.splice(index, 1, res);
-                    self._getServiceRecords(self.serviceList[index]);
+                    this.serviceRecordCounts.forEach(item => {
+                        const temp = self.serviceList.find(e => e._id === item._id);
+                        if (temp) {
+                            temp._records = item.count;
+                        }
+                    });
                 }, err => {
-                    // self.commonService.errorToast(err);
-                    // service._records = 0;
+                    console.error(err);
                 });
         }
     }
