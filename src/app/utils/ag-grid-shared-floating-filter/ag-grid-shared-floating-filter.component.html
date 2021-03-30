@@ -1,4 +1,5 @@
-<input type="text" class="form-control" *ngIf="type === 'text' || type === 'number'" [(ngModel)]="otherItemInput" (keyup)="debounceInput($event.target.value)" />
+<input type="text" class="form-control" *ngIf="type === 'text'" [(ngModel)]="otherItemInput" (keyup)="debounceInput($event.target.value)" />
+<input type="number" class="form-control" *ngIf="type === 'number'" [(ngModel)]="otherItemInput" (keyup)="debounceInput($event.target.value)" />
 <input type="date" class="form-control" *ngIf="type === 'date'" [(ngModel)]="otherItemInput" (change)="onChange($event.target.value)" />
 <div *ngIf="type === 'list_of_values'" ngbDropdown #listDropdown="ngbDropdown" container="body">
   <button
