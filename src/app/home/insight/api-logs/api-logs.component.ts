@@ -213,7 +213,7 @@ export class ApiLogsComponent implements OnInit, OnDestroy {
         const container = document.querySelector('.grid-container');
         const availableWidth = !!container ? container.clientWidth : 1154;
         this.agGrid.columnApi.autoSizeAllColumns();
-        const allColumns = this.agGrid.columnApi.getAllColumns();
+        const allColumns = this.agGrid.columnApi.getAllColumns() || [];
         const occupiedWidth = allColumns.reduce((pv, cv) => pv + cv.getActualWidth(), 0);
         if (occupiedWidth < availableWidth) {
           this.agGrid.api.sizeColumnsToFit();
