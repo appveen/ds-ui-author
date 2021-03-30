@@ -15,11 +15,15 @@ button {
         max-width: 16px;
         max-height: 16px;
         border-radius: 50%;
-        border: 1px solid $primary;
+        border: 1px solid #ccc;
         background: white;
         display: grid;
         align-items: center;
         justify-content: center;
+
+        &.checked {
+            border: 1px solid $primary;
+        }
 
         .fa-check {
             font-size: 8px;
