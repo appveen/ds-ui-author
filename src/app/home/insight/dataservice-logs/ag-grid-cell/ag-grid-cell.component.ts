@@ -16,6 +16,8 @@ export class AgGridCellComponent implements ICellRendererAngularComp {
   timer;
   delay = 200;
   prevent = false;
+  showIdsTooltip: boolean;
+  idsString: string;
 
   constructor() {
     this.subscriptions = {};
@@ -30,6 +32,21 @@ export class AgGridCellComponent implements ICellRendererAngularComp {
       this.value = formatter(params);
     } else {
       this.value = params.value;
+    }
+    if (this.params.colDef.field === 'reqBody._id') {
+      if (params.data && (params.data.operation === 'PUT' || params.data.operation === 'DELETE')) {
+        if (!this.value) {
+          this.value = params.data.reqBody ? params.data.reqBody._id : null;
+        }
+        if (!this.value && params.data.url.indexOf('utils/') === -1) {
+          this.value = params.data.url.split('?')[0].split('/').pop();
+        }
+        if (!this.value && params.data.url.indexOf('utils/bulkDelete') > -1) {
+          this.value = params.data.reqBody.ids.length + ' IDs';
+          this.showIdsTooltip = true;
+          this.idsString = params.data.reqBody.ids.join(', ');
+        }
+      }
     }
     if (this.definition.field === 'statusCode') {
       this.statusCodeClass = {
@@ -62,7 +79,7 @@ export class AgGridCellComponent implements ICellRendererAngularComp {
 
   onDoubleClick(event) {
     event.stopPropagation();
-    if(!!this.timer) {
+    if (!!this.timer) {
       clearTimeout(this.timer);
     }
     this.prevent = true;

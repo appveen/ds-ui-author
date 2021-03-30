@@ -14,7 +14,8 @@
             <button class="btn btn-link text-accent p-0" (click)="filterOnTxnId($event)" (dblclick)="onDoubleClick($event)">{{ value }}</button>
         </code>
     </div>
-    <div class="text-accent" *ngIf="['retry', 'reqBody._id', 'docId'].includes(definition?.field)">
+    <div class="text-accent" *ngIf="['retry', 'reqBody._id', 'docId'].includes(definition?.field)"
+        [ngbTooltip]="showIdsTooltip ? idsString : ''" container="body" placement="left">
         {{value}}
     </div>
     <div
