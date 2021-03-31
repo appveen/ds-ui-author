@@ -342,6 +342,11 @@ export class AppsComponent implements OnInit, OnDestroy {
         // return true;
     }
 
+    get experimentalFeatures() {
+        return this.commonService.userDetails.experimentalFeatures;
+        // return true;
+    }
+
     get lastLogin() {
         const self = this;
         return self.commonService.userDetails.lastLogin;

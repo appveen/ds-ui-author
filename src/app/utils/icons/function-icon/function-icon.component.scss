@@ -1,0 +1,23 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+svg {
+  position: static;
+  left: 0;
+  top: 0;
+}
+.one {
+  fill: #000;
+}
+.two {
+  fill: #000;
+}
+
+.active {
+  .one {
+    fill: lighten($border, 10);
+  }
+  .two {
+    fill: lighten($accent, 10);
+  }
+}

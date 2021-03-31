@@ -22,6 +22,7 @@ import { ApiIconComponent } from './api-icon/api-icon.component';
 import { FileIconComponent } from './file-icon/file-icon.component';
 import { AgentIconComponent } from './agent-icon/agent-icon.component';
 import { BookmarkIconComponent } from './bookmark-icon/bookmark-icon.component';
+import { FunctionIconComponent } from './function-icon/function-icon.component';
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import { BookmarkIconComponent } from './bookmark-icon/bookmark-icon.component';
     ApiIconComponent,
     FileIconComponent,
     AgentIconComponent,
-    BookmarkIconComponent
+    BookmarkIconComponent,
+    FunctionIconComponent
   ],
   exports: [
     CreateIconComponent,
@@ -73,7 +75,8 @@ import { BookmarkIconComponent } from './bookmark-icon/bookmark-icon.component';
     ApiIconComponent,
     FileIconComponent,
     AgentIconComponent,
-    BookmarkIconComponent
+    BookmarkIconComponent,
+    FunctionIconComponent
   ]
 })
 export class IconsModule { }

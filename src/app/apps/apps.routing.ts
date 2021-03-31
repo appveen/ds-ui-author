@@ -112,7 +112,11 @@ const routes: Routes = [
                 path: 'app',
                 loadChildren: () => import('../home/app-manage/app-manage.module').then(m => m.AppManageModule),
                 canActivate: [AppPanelGuard]
-            }
+            },
+            {
+                path: 'faas',
+                loadChildren: () => import('../home/faas/faas.module').then(m => m.FaasModule),
+            },
         ]
     },
 ];
