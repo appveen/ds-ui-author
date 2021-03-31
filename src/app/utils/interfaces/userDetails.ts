@@ -40,6 +40,7 @@ export interface UserDetails {
     b2BEnable?: boolean;
     verifyDeploymentUser?: boolean;
     defaultTimezone?: string;
+    experimentalFeatures?: boolean;
 }
 
 export interface Auth {
