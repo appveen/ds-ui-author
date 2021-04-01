@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { FaasListingComponent } from './faas-listing/faas-listing.component';
@@ -12,6 +12,8 @@ import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 import { FormatTypeBadgeModule } from 'src/app/utils/format-type-badge/format-type-badge.module';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
 
 
 const routes: Routes = [
@@ -25,13 +27,17 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,
+    FormsModule,
     NgbModule,
     IconsModule,
     ClickOutsideModule,
     BreadcrumbModule,
     SearchBoxModule,
     DeleteModalModule,
-    FormatTypeBadgeModule
+    FormatTypeBadgeModule,
+    CodemirrorModule,
+    BasicInfoModule,
+    BreadcrumbModule
   ],
   exports: [RouterModule]
 })
