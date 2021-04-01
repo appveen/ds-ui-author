@@ -112,6 +112,11 @@
                 ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
             </ng-container>
           </div>
+          <label for="apiEndpoint" class="font-sm text-secondary mt-3">API Endpoint</label>
+          <div class="name-wrapper position-relative">
+            <input type="text" class="form-control" id="apiEndpoint" placeholder="/api/a/fass/"
+              formControlName="api">
+          </div>
           <label for="description" class="font-sm text-secondary mt-3">Description</label>
           <div class="name-wrapper position-relative">
             <textarea #newFaasTextarea class="form-control" id="description" rows="5" placeholder="No description"

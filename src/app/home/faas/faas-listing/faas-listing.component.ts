@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import * as _ from 'lodash';
+
 import { GetOptions, CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
 
@@ -45,7 +47,8 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.showMoreOptions = {};
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
-      description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]]
+      description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
+      api: [null]
     });
     this.openDeleteModal = new EventEmitter();
     this.apiConfig = {
@@ -58,7 +61,10 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.showLazyLoader = true;
     this.getFaass();
     this.commonService.apiCalls.componentLoading = false;
-
+    this.form.get('api').disable();
+    this.form.get('name').valueChanges.subscribe(val => {
+      this.form.get('api').patchValue(`/api/a/faas/${this.commonService.app._id}/${_.camelCase(val)}`);
+    });
     this.changeAppSubscription = this.commonService.appChange.subscribe(_app => {
       this.app = this.commonService.app._id;
       this.showLazyLoader = true;
