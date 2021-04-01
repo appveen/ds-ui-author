@@ -17,22 +17,22 @@
     </div>
     <div class="d-flex flex-column w-100 px-3">
       <div class="card-container" (scroll)="loadMore($event)">
-        <ng-container *ngFor="let fass of fassList;let i=index;let first=first">
+        <ng-container *ngFor="let faas of faasList;let i=index;let first=first">
           <div
             class="d-flex align-items-center justify-content-between px-3 border-bottom border-left position-relative border-right nanoservice-list-item"
-            [ngClass]="{'border-top':first}" *ngIf="hasPermissionForFaas(fass._id)">
+            [ngClass]="{'border-top':first}" *ngIf="hasPermissionForFaas(faas._id)">
             <div class="d-flex align-items-center">
               <div class="info d-flex flex-column w-100">
-                <div class="font-weight-bold mb-1">{{fass.name}}</div>
-                <a [attr.href]="fass.url" target="_blank" class="font-sm text-accent text-truncate url-holder"
-                  container="body" [ngbTooltip]="fass.url">{{fass.url}}</a>
+                <div class="font-weight-bold mb-1">{{faas.name}}</div>
+                <a [attr.href]="faas.url" target="_blank" class="font-sm text-accent text-truncate url-holder"
+                  container="body" [ngbTooltip]="faas.url">{{faas.url}}</a>
               </div>
             </div>
             <div class="d-flex align-items-center justify-content-end">
               <div class="in-out-format d-flex align-items-center mr-3">
                 <div class="in-format d-flex flex-column">
                   <odp-format-type-badge
-                    [data]="{formatType:fass?.in?.formatType,excelType:fass?.in?.excelType}">
+                    [data]="{formatType:faas?.in?.formatType,excelType:faas?.in?.excelType}">
                   </odp-format-type-badge>
                 </div>
                 <div class="mapper d-flex flex-column mx-4">
@@ -40,13 +40,13 @@
                 </div>
                 <div class="out-format d-flex flex-column">
                   <odp-format-type-badge
-                    [data]="{formatType:fass?.out?.formatType,excelType:fass?.out?.excelType}">
+                    [data]="{formatType:faas?.out?.formatType,excelType:faas?.out?.excelType}">
                   </odp-format-type-badge>
                 </div>
               </div>
               <div class="microflows d-flex flex-column mr-3">
                 <small for="microflows" class="text-secondary mb-1">Integration Flows</small>
-                <div class="text-dark" [innerHTML]="getFlowInfo(fass.flows)"></div>
+                <div class="text-dark" [innerHTML]="getFlowInfo(faas.flows)"></div>
               </div>
               <div class="options d-flex align-items-center">
                 <button type="button" class="btn btn-link text-secondary" odpClickOutside
@@ -58,16 +58,16 @@
                   <button type="button" class="btn btn-link mr-3" (click)="viewFaas(i)"
                     [attr.id]="'viewNanoservice-'+i">View</button>
                   <button type="button" class="btn btn-link mr-3" (click)="editFaas(i)"
-                    [attr.id]="'editNanoservice-'+i" *ngIf="canManageFaas(fass._id)">Edit</button>
+                    [attr.id]="'editNanoservice-'+i" *ngIf="canManageFaas(faas._id)">Edit</button>
                   <button type="button" class="btn btn-link" (click)="deleteFaas(i)"
-                    [attr.id]="'deleteNanoservice-'+i" *ngIf="canDeleteFaas(fass._id)">Delete</button>
+                    [attr.id]="'deleteNanoservice-'+i" *ngIf="canDeleteFaas(faas._id)">Delete</button>
                 </div>
               </div>
             </div>
           </div>
         </ng-container>
         <div class="d-flex flex-column w-100 justify-content-center align-items-center p-3"
-          *ngIf="!fassList.length">
+          *ngIf="!faasList.length">
           <h5 class="my-4 text-secondary">zero. zip. zilch. nada.</h5>
         </div>
       </div>
@@ -80,7 +80,7 @@
   
   
   <ng-template #newFaasModal>
-    <div class="new-fass-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="form">
+    <div class="new-faas-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="form">
       <div class="d-flex flex-column w-100">
         <div class="d-flex align-items-center justify-content-between mb-3">
           <div class="d-flex align-items-center">

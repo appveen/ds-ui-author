@@ -16,7 +16,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   @ViewChild('newFaasModal', { static: false }) newFaasModal: TemplateRef<HTMLElement>;
   form: FormGroup;
   app: string;
-  fassList: Array<any> = [];
+  faasList: Array<any> = [];
   apiConfig: GetOptions;
   alertModal: {
     statusChange?: boolean;
@@ -63,7 +63,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       this.app = this.commonService.app._id;
       this.showLazyLoader = true;
       this.commonService.apiCalls.componentLoading = false;
-      this.fassList = [];
+      this.faasList = [];
       this.getFaass();
     });
   }
@@ -92,21 +92,21 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   triggerFaasCreate() {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
-    this.commonService.post('partnerManager', '/fass', payload).subscribe(res => {
+    this.commonService.post('partnerManager', '/faas', payload).subscribe(res => {
       this.ts.success('Nano Service Created.');
       this.appService.edit = res._id;
-      this.router.navigate(['/app/', this.commonService.app._id, 'fass', res._id]);
+      this.router.navigate(['/app/', this.commonService.app._id, 'faas', res._id]);
     }, err => {
       this.commonService.errorToast(err);
     });
   }
 
   editFaas(index: number) {
-    this.appService.edit = this.fassList[index]._id;
+    this.appService.edit = this.faasList[index]._id;
     this.router.navigate(['/app/', this.commonService.app._id, 'nsm', this.appService.edit]);
   }
   viewFaas(index) {
-    this.router.navigate(['/app/', this.commonService.app._id, 'nsm', this.fassList[index]._id]);
+    this.router.navigate(['/app/', this.commonService.app._id, 'nsm', this.faasList[index]._id]);
   }
 
   loadMore(event) {
@@ -126,13 +126,13 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       this.subscriptions['getFaass'].unsubscribe();
     }
     this.showLazyLoader = true;
-    this.subscriptions['getFaass'] = this.commonService.get('partnerManager', '/fass', this.apiConfig)
+    this.subscriptions['getFaass'] = this.commonService.get('partnerManager', '/faas', this.apiConfig)
       .subscribe(res => {
         this.showLazyLoader = false;
         if (res.length > 0) {
           res.forEach(_item => {
             this.fetchFlowsInUse(_item);
-            this.fassList.push(_item);
+            this.faasList.push(_item);
           });
         }
       }, err => {
@@ -145,7 +145,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.alertModal.statusChange = false;
     this.alertModal.title = 'Delete Nano Service?';
     this.alertModal.message = 'Are you sure you want to delete <span class="text-delete font-weight-bold">'
-      + this.fassList[index].name + '</span> Nano Service?';
+      + this.faasList[index].name + '</span> Nano Service?';
     this.alertModal.index = index;
     this.openDeleteModal.emit(this.alertModal);
   }
@@ -154,7 +154,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     if (data) {
       this.showLazyLoader = true;
       this.subscriptions['deleteFaass'] = this.commonService
-        .delete('partnerManager', '/fass/' + this.fassList[data.index]._id).subscribe(_d => {
+        .delete('partnerManager', '/faas/' + this.faasList[data.index]._id).subscribe(_d => {
           this.showLazyLoader = false;
           this.ts.info(_d.message ? _d.message : 'Nano Service deleted Successfully');
           this.clearSearch();
@@ -170,14 +170,14 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       'name': '/' + searchTerm + '/'
     };
     this.apiConfig.page = 1;
-    this.fassList = [];
+    this.faasList = [];
     this.getFaass();
   }
 
   clearSearch() {
     this.apiConfig.filter = null;
     this.apiConfig.page = 1;
-    this.fassList = [];
+    this.faasList = [];
     this.getFaass();
   }
 
@@ -224,7 +224,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       select: 'name',
       count: 4,
       filter: {
-        fass: flow._id
+        faas: flow._id
       }
     }).subscribe(res => {
       flow.flows = res;
