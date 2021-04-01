@@ -376,4 +376,18 @@ export class DataserviceLogsComponent implements OnInit, OnDestroy {
     return retVal;
   }
 
+  clearFilters() {
+    this.agGrid.api.setFilterModel({});
+  }
+
+  get showClearFilter() {
+    if (this.agGrid?.api) {
+      const model = this.agGrid.api.getFilterModel();
+      if (Object.keys(model).length > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

@@ -93,7 +93,7 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
     }
   }
 
-  prepareList() {
+  prepareList(clear?:boolean) {
     const colDef = this.params.column.getColDef();
     if (
       this.type === 'list_of_values' &&
@@ -111,7 +111,7 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
           rowData.push(rowNode.data);
         });
         let tempListItems: FilterListItem[] = this.mapperFunction(rowData);
-        if (!!this.listItems?.length) {
+        if (!clear && !!this.listItems?.length) {
           const otherItems = tempListItems.filter(tempObj => this.listItems.every(item => item.value !== tempObj.value));
           tempListItems = [...this.listItems, ...otherItems.map(item => ({ ...item, checked: !!item.checked }))];
         } else {
@@ -144,7 +144,7 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
   onParentModelChanged(parentModel: any, filterChangedEvent?: FilterChangedEvent): void {
     if (!parentModel || Object.keys(parentModel).length === 0) {
       this.otherItemInput = null;
-      this.prepareList();
+      this.prepareList(true);
     }
   }
 
