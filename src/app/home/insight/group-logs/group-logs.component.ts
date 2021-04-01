@@ -171,4 +171,18 @@ export class GroupLogsComponent implements OnInit, OnDestroy {
     }
     return;
   }
+
+  clearFilters() {
+    this.agGrid.api.setFilterModel({});
+  }
+
+  get showClearFilter() {
+    if (this.agGrid && this.agGrid.api) {
+      const model = this.agGrid.api.getFilterModel();
+      if (Object.keys(model).length > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
