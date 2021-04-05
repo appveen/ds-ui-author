@@ -27,7 +27,6 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   faasData: any;
   breadcrumbPaths: Array<Breadcrumb>;
   content: any;
-  codeMirrorOptions: any;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -38,11 +37,6 @@ export class FaasManageComponent implements OnInit, OnDestroy {
       status: false,
       id: null,
       editClicked: false
-    };
-    this.codeMirrorOptions = {
-      lineNumbers: true,
-      theme: 'material',
-      mode: 'javascript'
     };
     this.breadcrumbPaths = [];
     this.apiCalls = {};

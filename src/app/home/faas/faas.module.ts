@@ -12,7 +12,6 @@ import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 import { FormatTypeBadgeModule } from 'src/app/utils/format-type-badge/format-type-badge.module';
-import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
 import { CodeEditorModule } from 'src/app/utils/code-editor/code-editor.module';
 
@@ -36,7 +35,6 @@ const routes: Routes = [
     SearchBoxModule,
     DeleteModalModule,
     FormatTypeBadgeModule,
-    CodemirrorModule,
     BasicInfoModule,
     BreadcrumbModule,
     CodeEditorModule
