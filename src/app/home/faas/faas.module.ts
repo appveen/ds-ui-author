@@ -14,6 +14,7 @@ import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.modul
 import { FormatTypeBadgeModule } from 'src/app/utils/format-type-badge/format-type-badge.module';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
+import { CodeEditorModule } from 'src/app/utils/code-editor/code-editor.module';
 
 
 const routes: Routes = [
@@ -37,7 +38,8 @@ const routes: Routes = [
     FormatTypeBadgeModule,
     CodemirrorModule,
     BasicInfoModule,
-    BreadcrumbModule
+    BreadcrumbModule,
+    CodeEditorModule
   ],
   exports: [RouterModule]
 })

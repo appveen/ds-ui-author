@@ -46,6 +46,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     };
     this.breadcrumbPaths = [];
     this.apiCalls = {};
+    this.faasData = {};
   }
 
   ngOnInit(): void {
