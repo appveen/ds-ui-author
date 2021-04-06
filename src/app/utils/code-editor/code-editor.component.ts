@@ -1,4 +1,5 @@
 /// <reference path="../../../../node_modules/monaco-editor/monaco.d.ts" />
+import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
 import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges } from '@angular/core';
 
 let loadedMonaco = false;
@@ -11,11 +12,24 @@ let loadPromise: Promise<void>;
 })
 export class CodeEditorComponent implements AfterViewInit, OnChanges {
 
+  @Input() theme: string;
   @Input() code: string;
   @Output() codeChange: EventEmitter<string>;
   codeEditorInstance: monaco.editor.IStandaloneCodeEditor;
-  constructor() {
+  typesString: string;
+  constructor(private httpClient: HttpClient) {
+    this.theme = 'vs-dark';
     this.codeChange = new EventEmitter();
+    // const req = new HttpRequest('GET', '/assets/types.txt', {
+    //   responseType: 'text'
+    // });
+    // this.httpClient.request(req).subscribe((res) => {
+    //   if (res.type === HttpEventType.Response) {
+    //     this.typesString = res.body as any;
+    //   }
+    // }, err => {
+    //   console.log(err);
+    // });
   }
 
   ngAfterViewInit(): void {
@@ -27,22 +41,22 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
     } else {
       loadedMonaco = true;
       loadPromise = new Promise<void>((resolve: any) => {
-        if (typeof ((<any>window).monaco) === 'object') {
+        if (typeof ((window as any).monaco) === 'object') {
           resolve();
           return;
         }
         const onAmdLoader: any = () => {
           // Load monaco
-          (<any>window).require.config({ paths: { 'vs': 'assets/monaco/vs' } });
+          (window as any).require.config({ paths: { 'vs': 'assets/monaco/vs' } });
 
-          (<any>window).require(['vs/editor/editor.main'], () => {
+          (window as any).require(['vs/editor/editor.main'], () => {
             this.initMonaco();
             resolve();
           });
         };
 
         // Load AMD loader if necessary
-        if (!(<any>window).require) {
+        if (!(window as any).require) {
           const loaderScript: HTMLScriptElement = document.createElement('script');
           loaderScript.type = 'text/javascript';
           loaderScript.src = 'assets/monaco/vs/loader.js';
@@ -57,19 +71,39 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges() {
     if (this.codeEditorInstance) {
-      this.codeEditorInstance.setValue(this.code);
+      (window as any).monaco.editor.setTheme(this.theme);
     }
   }
 
   initMonaco(): void {
-    this.codeEditorInstance = (<any>window).monaco.editor.create(document.getElementById('code-editor'), {
+    // (window as any).monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+    //   target: monaco.languages.typescript.ScriptTarget.ES2016,
+    //   allowNonTsExtensions: true,
+    //   moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs
+    // });
+    // (window as any).monaco.languages.typescript.typescriptDefaults.addExtraLib(this.typesString, 'node_modules/@types/lodash/index.d.ts');
+    this.codeEditorInstance = (window as any).monaco.editor.create(document.getElementById('code-editor'), {
       value: this.code,
       language: 'javascript',
-      theme: 'vs-dark'
+      theme: this.theme,
+      automaticLayout: true,
+      scrollBeyondLastLine: false
     });
 
     this.codeEditorInstance.getModel().onDidChangeContent(e => {
-      this.codeChange.emit(this.codeEditorInstance.getValue());
+      const val = this.codeEditorInstance.getValue();
+      this.codeChange.emit(val);
     });
+
+    this.codeEditorInstance.layout();
+
+    // this.codeEditorInstance.onDidChangeCursorPosition((e) => {
+    //   if (e.position.lineNumber < 7) {
+    //     this.codeEditorInstance.setPosition({
+    //       lineNumber: 7,
+    //       column: 1
+    //     });
+    //   }
+    // });
   }
 }
