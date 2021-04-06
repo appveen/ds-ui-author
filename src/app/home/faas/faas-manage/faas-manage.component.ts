@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -27,10 +27,13 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   faasData: any;
   breadcrumbPaths: Array<Breadcrumb>;
   content: any;
+  selectedEditorTheme: string;
+  showCodeEditor: boolean;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
     private router: Router,
+    private ele: ElementRef,
     private ts: ToastrService) {
     this.subscriptions = {};
     this.edit = {
@@ -41,6 +44,8 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     this.breadcrumbPaths = [];
     this.apiCalls = {};
     this.faasData = {};
+    this.selectedEditorTheme = 'vs-dark';
+    this.ele.nativeElement.classList.add('h-100');
   }
 
   ngOnInit(): void {
@@ -71,12 +76,16 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   }
 
   getFaas(id: string) {
+    this.apiCalls.getFaas = true;
     this.subscriptions['getFaas'] = this.commonService.get('partnerManager', '/faas/' + id).subscribe(res => {
+      this.apiCalls.getFaas = false;
+      this.showCodeEditor = true;
       this.faasData = this.appService.cloneObject(res);
       delete this.faasData.__v;
       delete this.faasData._metadata;
       this.oldData = this.appService.cloneObject(this.faasData);
     }, err => {
+      this.apiCalls.getFaas = false;
       this.commonService.errorToast(err);
     });
   }
@@ -84,15 +93,18 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   save() {
     this.faasData.app = this.commonService.app._id;
     let request;
+    this.apiCalls.save = true;
     if (this.edit.id) {
       request = this.commonService.put('partnerManager', '/faas/' + this.edit.id, this.faasData);
     } else {
       request = this.commonService.post('partnerManager', '/faas', this.faasData);
     }
     this.subscriptions['save'] = request.subscribe(res => {
+      this.apiCalls.save = false;
       this.edit.status = false;
       this.router.navigate(['/app', this.commonService.app._id, 'nsl']);
     }, err => {
+      this.apiCalls.save = false;
       this.commonService.errorToast(err);
     });
   }
