@@ -216,7 +216,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       self.form.markAsDirty();
     }
 
-    if (prop.value && self.form.value.key) {
+    if (prop.value && self.form.value.key && !self.isLibrary && !self.isDataFormat) {
       self.showLazyLoader = true
       self.subscriptions['unique-status'] = self.commonService
         .get('serviceManager', '/service/' + self.edit.id + '/checkUnique', options).subscribe(res => {
