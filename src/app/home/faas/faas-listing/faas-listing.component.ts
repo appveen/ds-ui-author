@@ -109,10 +109,10 @@ export class FaasListingComponent implements OnInit, OnDestroy {
 
   editFaas(index: number) {
     this.appService.edit = this.faasList[index]._id;
-    this.router.navigate(['/app/', this.commonService.app._id, 'nsm', this.appService.edit]);
+    this.router.navigate(['/app/', this.commonService.app._id, 'faas', this.appService.edit]);
   }
   viewFaas(index) {
-    this.router.navigate(['/app/', this.commonService.app._id, 'nsm', this.faasList[index]._id]);
+    this.router.navigate(['/app/', this.commonService.app._id, 'faas', this.faasList[index]._id]);
   }
 
   loadMore(event) {
@@ -189,18 +189,18 @@ export class FaasListingComponent implements OnInit, OnDestroy {
 
 
   canManageFaas(id: string) {
-    const list1 = this.commonService.getEntityPermissions('NS_' + id);
-    const list2 = this.commonService.getEntityPermissions('NS');
+    const list1 = this.commonService.getEntityPermissions('FU_' + id);
+    const list2 = this.commonService.getEntityPermissions('FU');
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
       return true;
     } else {
-      if (list1.length === 0 && list2.find(e => e.id.substr(0, 4) === 'PMNS'
-        && e.id !== 'PMNSBC'
-        && e.id !== 'PMNSBD')) {
+      if (list1.length === 0 && list2.find(e => e.id.substr(0, 4) === 'PMFU'
+        && e.id !== 'PMFUBC'
+        && e.id !== 'PMFUBD')) {
         return true;
-      } else if (list1.length > 0 && list1.find(e => e.id.substr(0, 4) === 'PMNS'
-        && e.id !== 'PMNSBC'
-        && e.id !== 'PMNSBD')) {
+      } else if (list1.length > 0 && list1.find(e => e.id.substr(0, 4) === 'PMFU'
+        && e.id !== 'PMFUBC'
+        && e.id !== 'PMFUBD')) {
         return true;
       } else {
         return false;
@@ -222,7 +222,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     return this.commonService.hasPermission(type, entity);
   }
   hasWritePermission(entity: string) {
-    return this.commonService.hasPermission('PMNSBC', entity);
+    return this.commonService.hasPermission('PMFUBC', entity);
   }
 
   fetchFlowsInUse(flow: any) {
@@ -255,12 +255,12 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
       return true;
     } else {
-      const list = this.commonService.getEntityPermissions('NS_' + id);
-      if (list.length > 0 && list.find(e => e.id.startsWith('PMNS') || e.id.startsWith('PVNS'))) {
+      const list = this.commonService.getEntityPermissions('FU_' + id);
+      if (list.length > 0 && list.find(e => e.id.startsWith('PMFU') || e.id.startsWith('PVFU'))) {
         return true;
       } else if (list.length === 0
-        && (this.commonService.hasPermissionStartsWith('PMNS', 'NS')
-          || this.commonService.hasPermissionStartsWith('PVNS', 'NS'))) {
+        && (this.commonService.hasPermissionStartsWith('PMFU', 'FU')
+          || this.commonService.hasPermissionStartsWith('PVFU', 'FU'))) {
         return true;
       } else {
         return false;
