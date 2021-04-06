@@ -90,7 +90,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     });
   }
 
-  save() {
+  save(deploy?: boolean) {
     this.faasData.app = this.commonService.app._id;
     let request;
     this.apiCalls.save = true;
@@ -102,11 +102,34 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     this.subscriptions['save'] = request.subscribe(res => {
       this.apiCalls.save = false;
       this.edit.status = false;
+      // if (deploy) {
+      //   this.deploy();
+      // } else {
+      //   this.router.navigate(['/app', this.commonService.app._id, 'nsl']);
+      // }
+      if (deploy) {
+        this.ts.success('Saved ' + this.faasData.name + ' and deployment process has started.');
+      } else {
+        this.ts.success('Saved ' + this.faasData.name + '.');
+      }
       this.router.navigate(['/app', this.commonService.app._id, 'nsl']);
     }, err => {
       this.apiCalls.save = false;
       this.commonService.errorToast(err);
     });
+
+  }
+
+  deploy() {
+    if (this.edit.id) {
+      this.commonService.put('partnerManager', '/faas/' + this.edit.id + '/deploy', {}).subscribe(res => {
+        this.apiCalls.deploy = false;
+        this.router.navigate(['/app', this.commonService.app._id, 'nsl']);
+      }, err => {
+        this.apiCalls.deploy = false;
+        this.commonService.errorToast(err);
+      });
+    }
   }
 
   cancel() {
@@ -123,4 +146,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     return Object.values(this.apiCalls).some(e => e);
   }
 
+  get isValidSchema() {
+    return true;
+  }
 }
