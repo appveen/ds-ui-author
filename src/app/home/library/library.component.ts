@@ -114,6 +114,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
             self.showLazyLoader = false;
             self.router.navigate(['/app/', self.commonService.app._id, 'gs', res._id]);
         }, err => {
+            self.showLazyLoader = false;
             self.commonService.errorToast(err);
         });
     }
