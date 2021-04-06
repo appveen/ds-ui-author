@@ -25,7 +25,7 @@
             </button>
         </div>
     </odp-basic-info>
-    <div class="border-top border-bottom px-3 py-2 d-flex align-items-center justify-content-between">
+    <div class="border-top border-bottom px-3 py-2 d-flex align-items-center justify-content-between bg-light">
         <div class="url-info d-flex align-items-center">
             <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
             <span class="url text-accent">{{faasData.url || 'N.A.'}}</span>
@@ -38,22 +38,105 @@
             </select>
         </div>
     </div>
-    <div class="monaco-editor no-user-select {{selectedEditorTheme}} p-3">
-        <div class="view-lines monaco-mouse-cursor-text"
-            style="font-family: Menlo, Monaco, 'Courier New', monospace; font-weight: normal; font-size: 12px; font-feature-settings: 'liga' 0, 'calt' 0; line-height: 18px; letter-spacing: 0px; width: 1078px; height: 336px;">
-            <div style="height:18px;" class="view-line"><span><span class="mtk8">function</span><span
-                        class="mtk1">&nbsp;process</span><span class="mtk9">(</span><span
-                        class="mtk1 squiggly-inline-unnecessary">req</span><span class="mtk9">,</span><span
-                        class="mtk1">&nbsp;</span><span class="mtk1 squiggly-inline-unnecessary">res</span><span
-                        class="mtk9">)</span><span class="mtk1">&nbsp;</span><span class="mtk9">{{'{'}}</span></span>
+    <div class="d-flex align-items-stretch h-100 w-100">
+        <div class="editor-wrapper h-100">
+            <div class="monaco-editor no-user-select {{selectedEditorTheme}} p-3">
+                <div class="view-lines monaco-mouse-cursor-text"
+                    style="font-family: Menlo, Monaco, 'Courier New', monospace; font-weight: normal; font-size: 12px; font-feature-settings: 'liga' 0, 'calt' 0; line-height: 18px; letter-spacing: 0px; width: 1078px; height: 336px;">
+                    <div style="height:18px;" class="view-line"><span><span class="mtk8">function</span><span
+                                class="mtk1">&nbsp;process</span><span class="mtk9">(</span><span
+                                class="mtk1 squiggly-inline-unnecessary">req</span><span class="mtk9">,</span><span
+                                class="mtk1">&nbsp;</span><span class="mtk1 squiggly-inline-unnecessary">res</span><span
+                                class="mtk9">)</span><span class="mtk1">&nbsp;</span><span
+                                class="mtk9">{{'{'}}</span></span>
+                    </div>
+                </div>
+            </div>
+            <odp-code-editor *ngIf="showCodeEditor" class="code-editor" [theme]="selectedEditorTheme"
+                [(code)]="faasData.code"></odp-code-editor>
+            <div class="monaco-editor no-user-select {{selectedEditorTheme}} p-3">
+                <div class="view-lines monaco-mouse-cursor-text"
+                    style="font-family: Menlo, Monaco, 'Courier New', monospace; font-weight: normal; font-size: 12px; font-feature-settings: 'liga' 0, 'calt' 0; line-height: 18px; letter-spacing: 0px; width: 1078px; height: 336px;">
+                    <div style="height:18px;" class="view-line"><span><span class="mtk9">{{'}'}}</span></span></div>
+                </div>
             </div>
         </div>
-    </div>
-    <odp-code-editor *ngIf="showCodeEditor" class="code-editor" [theme]="selectedEditorTheme" [(code)]="faasData.code"></odp-code-editor>
-    <div class="monaco-editor no-user-select {{selectedEditorTheme}} p-3">
-        <div class="view-lines monaco-mouse-cursor-text"
-            style="font-family: Menlo, Monaco, 'Courier New', monospace; font-weight: normal; font-size: 12px; font-feature-settings: 'liga' 0, 'calt' 0; line-height: 18px; letter-spacing: 0px; width: 1078px; height: 336px;">
-            <div style="height:18px;" class="view-line"><span><span class="mtk9">{{'}'}}</span></span></div>
+        <div class="helper-panel bg-light">
+            <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+                <ngb-panel>
+                    <ng-template ngbPanelTitle>
+                        <span>Documentation</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                        3 wolf moon officia
+                        aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch
+                        3 wolf moon tempor,
+                        sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil
+                        anim keffiyeh helvetica,
+                        craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                        vice lomo. Leggings
+                        occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard
+                        of them accusamus
+                        labore sustainable VHS.
+                    </ng-template>
+                </ngb-panel>
+                <ngb-panel>
+                    <ng-template ngbPanelTitle>
+                        <span>Libraries</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                        Available Libraries :-
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="thead-light">
+                                    <th>Library Name</th>
+                                    <th>Version</th>
+                                    <th>Variable Name</th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>Lodash</td>
+                                <td class="text-center">4.17.15</td>
+                                <td>lodash</td>
+                            </tr>
+                            <tr>
+                                <td>Faker.js</td>
+                                <td class="text-center">4.1.0</td>
+                                <td>faker</td>
+                            </tr>
+                            <tr>
+                                <td>Log4js</td>
+                                <td class="text-center">10.9.3</td>
+                                <td>logger</td>
+                            </tr>
+                            <tr>
+                                <td>UUID</td>
+                                <td class="text-center">1.2.0</td>
+                                <td>uuid</td>
+                            </tr>
+                        </table>
+                    </ng-template>
+                </ngb-panel>
+                <ngb-panel>
+                    <ng-template ngbPanelTitle>
+                        <span>Examples</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                        3 wolf moon officia
+                        aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch
+                        3 wolf moon tempor,
+                        sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil
+                        anim keffiyeh helvetica,
+                        craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                        vice lomo. Leggings
+                        occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard
+                        of them accusamus
+                        labore sustainable VHS.
+                    </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
         </div>
     </div>
 </div>

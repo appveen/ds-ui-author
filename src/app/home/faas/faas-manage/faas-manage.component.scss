@@ -7,5 +7,15 @@
 }
 
 .code-editor {
-    height: calc(100vh - 321px);
+  height: calc(100vh - 321px);
+}
+
+.editor-wrapper {
+  width: calc(100% - 400px);
+}
+
+.helper-panel {
+  width: 400px;
+  width: 400px;
+  min-height: 400px;
 }
