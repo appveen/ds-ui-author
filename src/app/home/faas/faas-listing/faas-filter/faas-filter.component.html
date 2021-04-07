@@ -1,0 +1,13 @@
+<div *ngIf="showFilter" class="mt-2">
+    <input *ngIf="field == 'name' || field == 'url'" type="text"
+        class="border rounded bg-white w-100" [(ngModel)]="value" odpOnChange (textChange)="onChange($event)">
+    <input *ngIf="field==='lastInvokedAt'" type="date" class="border rounded bg-white w-100" [(ngModel)]="value"
+        (ngModelChange)="onChange($event)">
+    <select *ngIf="field==='status'" class="border rounded bg-white w-100" [(ngModel)]="value"
+        (ngModelChange)="onChange($event)">
+        <option value="">--All--</option>
+        <option value="RUNNING">RUNNING</option>
+        <option value="STOPPED">STOPPED</option>
+        <option value="DISABLED">DISABLED</option>
+    </select>
+</div>

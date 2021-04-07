@@ -3,10 +3,17 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { AgGridAngular, AgGridColumn } from 'ag-grid-angular';
+import { GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
+import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import * as _ from 'lodash';
 
 import { GetOptions, CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
+import { FaasFilterComponent } from './faas-filter/faas-filter.component';
+import { FaasCellComponent } from './faas-cell/faas-cell.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'odp-faas-listing',
@@ -15,10 +22,10 @@ import { AppService } from 'src/app/utils/services/app.service';
 })
 export class FaasListingComponent implements OnInit, OnDestroy {
 
+  @ViewChild('agGrid') agGrid: AgGridAngular;
   @ViewChild('newFaasModal', { static: false }) newFaasModal: TemplateRef<HTMLElement>;
   form: FormGroup;
   app: string;
-  faasList: Array<any> = [];
   apiConfig: GetOptions;
   alertModal: {
     statusChange?: boolean;
@@ -26,13 +33,21 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     message: string;
     index: number;
   };
-  showLazyLoader = true;
+  showLazyLoader: boolean;
   changeAppSubscription: any;
-  subscriptions: any = {};
-  showAddButton: boolean;
-  showMoreOptions: any;
+  subscriptions: any;
+
   openDeleteModal: EventEmitter<any>;
   newFaasModalRef: NgbModalRef;
+  columnDefs: Array<AgGridColumn>;
+  dataSource: IDatasource;
+  sortModel: any;
+  filterModel: any;
+  totalCount: number;
+  loadedCount: number;
+  showContextMenu: any;
+  selectedRow: any;
+  noRowsTemplate: string;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -44,7 +59,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       message: '',
       index: -1
     };
-    this.showMoreOptions = {};
+    this.subscriptions = {};
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
@@ -55,22 +70,64 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       page: 1,
       count: 30
     };
+    this.noRowsTemplate = '<span>No records to display</span>';
   }
   ngOnInit() {
-    this.app = this.commonService.app._id;
-    this.showLazyLoader = true;
-    this.getFaass();
+    this.configureColumns();
+    this.dataSource = {
+      getRows: (params: IGetRowsParams) => {
+        this.agGrid.api.showLoadingOverlay();
+        this.apiConfig.page = Math.ceil((params.endRow / 30));
+        if (this.apiConfig.page === 1) {
+          this.loadedCount = 0;
+        }
+        if (!this.apiConfig.filter) {
+          this.apiConfig.filter = {};
+        }
+        this.apiConfig.sort = this.appService.getSortFromModel(this.agGrid.api.getSortModel());
+        if (!!this.subscriptions['data_' + this.apiConfig.page]) {
+          this.subscriptions['data_' + this.apiConfig.page].unsubscribe();
+        }
+        this.subscriptions['data_' + this.apiConfig.page] = this.getFaasCount()
+          .pipe(
+            switchMap(count => {
+              this.totalCount = count;
+              if (this.totalCount > 0) {
+                return this.getFaas();
+              } else {
+                this.agGrid.api.hideOverlay();
+                this.agGrid.api.showNoRowsOverlay();
+                return of(null);
+              }
+            })
+          ).subscribe(
+            docs => {
+              if (!!docs) {
+                this.loadedCount += docs.length;
+                this.agGrid.api.hideOverlay();
+                if (this.loadedCount < this.totalCount) {
+                  params.successCallback(docs);
+                } else {
+                  this.totalCount = this.loadedCount;
+                  params.successCallback(docs, this.totalCount);
+                }
+              }
+            },
+            err => {
+              this.agGrid.api.hideOverlay();
+              console.error(err);
+              params.failCallback();
+            }
+          );
+      }
+    };
     this.commonService.apiCalls.componentLoading = false;
     this.form.get('api').disable();
     this.form.get('name').valueChanges.subscribe(val => {
       this.form.get('api').patchValue(`/api/a/faas/${this.commonService.app._id}/${_.camelCase(val)}`);
     });
-    this.changeAppSubscription = this.commonService.appChange.subscribe(_app => {
-      this.app = this.commonService.app._id;
-      this.showLazyLoader = true;
-      this.commonService.apiCalls.componentLoading = false;
-      this.faasList = [];
-      this.getFaass();
+    this.changeAppSubscription = this.commonService.appChange.subscribe(app => {
+      this.agGrid.api.purgeInfiniteCache();
     });
   }
 
@@ -81,6 +138,53 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     if (this.newFaasModalRef) {
       this.newFaasModalRef.close();
     }
+  }
+
+  configureColumns() {
+    const columns = [];
+    let col = new AgGridColumn();
+    col.headerName = 'Name';
+    col.field = 'name';
+    col.pinned = 'left';
+    col.lockPinned = true;
+    col.width = 180;
+    col.sort = 'asc';
+    columns.push(col);
+    col = new AgGridColumn();
+    col.headerName = 'URL';
+    col.field = 'url';
+    columns.push(col);
+    col = new AgGridColumn();
+    col.headerName = 'Description';
+    col.field = 'description';
+    columns.push(col);
+    col = new AgGridColumn();
+    col.headerName = 'Status';
+    col.field = 'status';
+    col.width = 100;
+    columns.push(col);
+    col = new AgGridColumn();
+    col.headerName = 'Last Invoked';
+    col.field = 'lastInvokedAt';
+    col.width = 180;
+    columns.push(col);
+    col = new AgGridColumn();
+    col.headerName = 'Options';
+    col.field = '_options';
+    col.pinned = 'right';
+    col.lockPinned = true;
+    columns.push(col);
+    columns.forEach((item: AgGridColumn) => {
+      item.suppressMovable = true;
+      item.resizable = true;
+      if (item.field !== '_options') {
+        item.sortable = true;
+        item.filter = 'agTextColumnFilter';
+        item.floatingFilterComponentFramework = FaasFilterComponent;
+      }
+      item.cellRendererFramework = FaasCellComponent;
+    });
+    this.columnDefs = columns;
   }
 
   newFaas() {
@@ -107,86 +211,124 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     });
   }
 
-  editFaas(index: number) {
-    this.appService.edit = this.faasList[index]._id;
-    this.router.navigate(['/app/', this.commonService.app._id, 'faas', this.appService.edit]);
-  }
-  viewFaas(index) {
-    this.router.navigate(['/app/', this.commonService.app._id, 'faas', this.faasList[index]._id]);
+  // editFaas(index: number) {
+  //   this.appService.edit = this.faasList[index]._id;
+  //   this.router.navigate(['/app/', this.commonService.app._id, 'faas', this.appService.edit]);
+  // }
+  // viewFaas(index) {
+  //   this.router.navigate(['/app/', this.commonService.app._id, 'faas', this.faasList[index]._id]);
+  // }
+
+  // loadMore(event) {
+  //   if (event.target.scrollTop >= 244) {
+  //     this.showAddButton = true;
+  //   } else {
+  //     this.showAddButton = false;
+  //   }
+  //   if (event.target.scrollTop + event.target.offsetHeight === event.target.children[0].offsetHeight) {
+  //     this.apiConfig.page = this.apiConfig.page + 1;
+  //     this.getFaas();
+  //   }
+  // }
+
+  getFaas() {
+    return this.commonService.get('partnerManager', '/faas', this.apiConfig);
   }
 
-  loadMore(event) {
-    if (event.target.scrollTop >= 244) {
-      this.showAddButton = true;
-    } else {
-      this.showAddButton = false;
-    }
-    if (event.target.scrollTop + event.target.offsetHeight === event.target.children[0].offsetHeight) {
-      this.apiConfig.page = this.apiConfig.page + 1;
-      this.getFaass();
-    }
+  getFaasCount() {
+    return this.commonService.get('partnerManager', '/faas/count', { filter: this.apiConfig.filter });
   }
 
-  getFaass() {
-    if (this.subscriptions['getFaass']) {
-      this.subscriptions['getFaass'].unsubscribe();
-    }
-    this.showLazyLoader = true;
-    this.subscriptions['getFaass'] = this.commonService.get('partnerManager', '/faas', this.apiConfig)
-      .subscribe(res => {
-        this.showLazyLoader = false;
-        if (res.length > 0) {
-          res.forEach(_item => {
-            this.fetchFlowsInUse(_item);
-            this.faasList.push(_item);
-          });
+  gridReady(event: GridReadyEvent) {
+    this.sortModel = this.agGrid.api.getSortModel();
+    this.agGrid.api.sizeColumnsToFit();
+  }
+
+
+  filterModified(event) {
+    const filter = [];
+    const filterModel = this.agGrid.api.getFilterModel();
+    this.filterModel = filterModel;
+    if (filterModel) {
+      Object.keys(filterModel).forEach(key => {
+        try {
+          if (filterModel[key].filter) {
+            filter.push(JSON.parse(filterModel[key].filter));
+          }
+        } catch (e) {
+          console.error(e);
         }
-      }, err => {
-        this.showLazyLoader = false;
-        this.commonService.errorToast(err, 'We are unable to fetch nano service, please try again later');
       });
-  }
-
-  deleteFaas(index: number) {
-    this.alertModal.statusChange = false;
-    this.alertModal.title = 'Delete Nano Service?';
-    this.alertModal.message = 'Are you sure you want to delete <span class="text-delete font-weight-bold">'
-      + this.faasList[index].name + '</span> Nano Service?';
-    this.alertModal.index = index;
-    this.openDeleteModal.emit(this.alertModal);
-  }
-
-  closeDeleteModal(data) {
-    if (data) {
-      this.showLazyLoader = true;
-      this.subscriptions['deleteFaass'] = this.commonService
-        .delete('partnerManager', '/faas/' + this.faasList[data.index]._id).subscribe(_d => {
-          this.showLazyLoader = false;
-          this.ts.info(_d.message ? _d.message : 'Nano Service deleted Successfully');
-          this.clearSearch();
-        }, err => {
-          this.showLazyLoader = false;
-          this.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
-        });
+    }
+    if (filter.length > 0) {
+      this.apiConfig.filter = { $and: filter };
+    } else {
+      this.apiConfig.filter = null;
+    }
+    if (!environment.production) {
+      console.log('Filter Modified', filterModel);
     }
   }
 
-  search(searchTerm: string) {
-    this.apiConfig.filter = {
-      'name': '/' + searchTerm + '/'
-    };
-    this.apiConfig.page = 1;
-    this.faasList = [];
-    this.getFaass();
+  sortChanged(event) {
+    const sortModel = this.agGrid.api.getSortModel();
+    this.sortModel = sortModel;
+    if (!environment.production) {
+      console.log('Sort Modified', sortModel);
+    }
   }
 
-  clearSearch() {
+  clearFilter() {
+    this.filterModel = null;
     this.apiConfig.filter = null;
-    this.apiConfig.page = 1;
-    this.faasList = [];
-    this.getFaass();
+    this.agGrid.api.setFilterModel(null);
   }
 
+  clearSort() {
+    this.sortModel = null;
+    this.agGrid.api.setSortModel([{ colId: 'name', sort: 'asc' }]);
+  }
+
+
+  get hasFilter() {
+    if (this.filterModel) {
+      return Object.keys(this.filterModel).length > 0;
+    }
+    return false;
+  }
+
+  get hasSort() {
+    if (!this.sortModel
+      || this.sortModel.findIndex(e => e.colId === 'name') === -1
+      || this.sortModel.length !== 1) {
+      return true;
+    }
+    return false;
+  }
+
+  // deleteFaas(index: number) {
+  //   this.alertModal.statusChange = false;
+  //   this.alertModal.title = 'Delete Nano Service?';
+  //   this.alertModal.message = 'Are you sure you want to delete <span class="text-delete font-weight-bold">'
+  //     + this.faasList[index].name + '</span> Nano Service?';
+  //   this.alertModal.index = index;
+  //   this.openDeleteModal.emit(this.alertModal);
+  // }
+
+  // closeDeleteModal(data) {
+  //   if (data) {
+  //     this.showLazyLoader = true;
+  //     this.subscriptions['deleteFaass'] = this.commonService
+  //       .delete('partnerManager', '/faas/' + this.faasList[data.index]._id).subscribe(_d => {
+  //         this.showLazyLoader = false;
+  //         this.ts.info(_d.message ? _d.message : 'Nano Service deleted Successfully');
+  //         this.clearSearch();
+  //       }, err => {
+  //         this.showLazyLoader = false;
+  //         this.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
+  //       });
+  //   }
+  // }
 
   canManageFaas(id: string) {
     const list1 = this.commonService.getEntityPermissions('FU_' + id);
@@ -207,6 +349,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       }
     }
   }
+
   canDeleteFaas(id: string) {
     const list = this.commonService.getEntityPermissions('PM_' + id);
     if (list.length === 0 && this.hasPermission('PMPBD')) {
@@ -225,32 +368,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     return this.commonService.hasPermission('PMFUBC', entity);
   }
 
-  fetchFlowsInUse(flow: any) {
-    this.commonService.get('partnerManager', '/flow/', {
-      select: 'name',
-      count: 4,
-      filter: {
-        faas: flow._id
-      }
-    }).subscribe(res => {
-      flow.flows = res;
-    }, err => {
-      flow.flows = [];
-    });
-  }
-
-  getFlowInfo(flows: Array<any>) {
-    if (!flows || flows.length === 0) {
-      return '<span class="text-muted">Not in use</span>';
-    } else {
-      if (flows.length > 3) {
-        return `<span class="text-dark">${flows.map(e => e.name).splice(0, 3).join(', ')}</span>&nbsp;
-        <span class="text-accent">+ more</span>`;
-      } else {
-        return `<span class="text-dark">${flows.map(e => e.name).join(', ')}</span>`;
-      }
-    }
-  }
   hasPermissionForFaas(id: string) {
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
       return true;
