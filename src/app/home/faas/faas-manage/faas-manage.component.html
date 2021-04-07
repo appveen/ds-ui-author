@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="helper-panel bg-light">
-            <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+            <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0" closeOthers="true">
                 <ngb-panel>
                     <ng-template ngbPanelTitle>
                         <span>Documentation</span>
@@ -92,7 +92,6 @@
                         <span>Libraries</span>
                     </ng-template>
                     <ng-template ngbPanelContent>
-                        Available Libraries :-
                         <table class="table table-bordered">
                             <thead>
                                 <tr class="thead-light">
@@ -103,23 +102,74 @@
                             </thead>
                             <tr>
                                 <td>Lodash</td>
-                                <td class="text-center">4.17.15</td>
+                                <td class="text-center">4.17.21</td>
                                 <td>lodash</td>
                             </tr>
                             <tr>
                                 <td>Faker.js</td>
-                                <td class="text-center">4.1.0</td>
+                                <td class="text-center">5.5.2</td>
                                 <td>faker</td>
                             </tr>
                             <tr>
                                 <td>Log4js</td>
-                                <td class="text-center">10.9.3</td>
+                                <td class="text-center">6.3.0</td>
                                 <td>logger</td>
                             </tr>
                             <tr>
                                 <td>UUID</td>
-                                <td class="text-center">1.2.0</td>
+                                <td class="text-center">8.3.2</td>
                                 <td>uuid</td>
+                            </tr>
+                            <tr>
+                                <td>Validator.js</td>
+                                <td class="text-center">13.5.2</td>
+                                <td>validator</td>
+                            </tr>
+                            <tr>
+                                <td>Moment.js</td>
+                                <td class="text-center">2.29.1</td>
+                                <td>moment</td>
+                            </tr>
+                        </table>
+                    </ng-template>
+                </ngb-panel>
+                <ngb-panel>
+                    <ng-template ngbPanelTitle>
+                        <span>ENV Variables</span>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="thead-light">
+                                    <th>ENV Variable</th>
+                                    <th>Default Value</th>
+                                    <!-- <th>Description</th> -->
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>DATA_STACK_NAMESPACE</td>
+                                <td class="text-center">-</td>
+                                <!-- <td>The Namespace of Data Stack</td> -->
+                            </tr>
+                            <tr>
+                                <td>FQDN</td>
+                                <td class="text-center">-</td>
+                                <!-- <td>FQDN</td> -->
+                            </tr>
+                            <tr>
+                                <td>DATA_STACK_APP_NAMESPACE</td>
+                                <td class="text-center">-</td>
+                                <!-- <td>The Namespace of Current App</td> -->
+                            </tr>
+                            <tr>
+                                <td>LOG_LEVEL</td>
+                                <td class="text-center">info</td>
+                                <!-- <td>Log Level for logging</td> -->
+                            </tr>
+                            <tr>
+                                <td>DATA_STACK_ALLOWED_FILE_TYPE</td>
+                                <td class="text-center">-</td>
+                                <!-- <td>The Allowed file types in Data Stack</td> -->
                             </tr>
                         </table>
                     </ng-template>

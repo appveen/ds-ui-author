@@ -17,5 +17,6 @@
 .helper-panel {
   width: 400px;
   width: 400px;
-  min-height: 400px;
+  height: calc(100vh - 230px);
+  overflow: auto;
 }
