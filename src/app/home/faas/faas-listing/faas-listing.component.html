@@ -1,9 +1,3 @@
-<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
-  <div class="align-self-center text-center">
-    <span class="fa fa-spinner fa-pulse fa-3x"></span>
-    <div class="text-secondary mt-2">Processing...</div>
-  </div>
-</div>
 <div class="d-flex flex-column w-100 h-100">
   <odp-breadcrumb></odp-breadcrumb>
   <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3 mb-3">
@@ -22,10 +16,6 @@
     </ag-grid-angular>
   </div>
 </div>
-
-<!-- <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-  <odp-function-icon [size]="18" color="DD5151" class="mt-1"></odp-function-icon>
-</odp-delete-modal> -->
 
 
 <ng-template #newFaasModal>

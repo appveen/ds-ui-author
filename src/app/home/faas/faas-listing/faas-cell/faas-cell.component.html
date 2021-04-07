@@ -1,3 +1,9 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
 <ng-container *ngIf="value">
     <span *ngIf="field == 'name'" class="d-flex align-items-center">
         <a [routerLink]="data?._id" class="text-accent font-weight-bold ml-3">{{value}}</a>
@@ -20,13 +26,17 @@
     <a *ngIf="data?.status === 'RUNNING'" href="#" class="text-accent mr-2" (click)="$event.preventDefault();">
         Stop
     </a>
-    <a href="#" class="text-accent mr-2" (click)="$event.preventDefault();">
+    <a href="#" class="text-accent mr-2" (click)="$event.preventDefault();redirectToManage()">
         View
     </a>
-    <a href="#" class="text-accent mr-2" (click)="$event.preventDefault();">
+    <a href="#" class="text-accent mr-2" (click)="$event.preventDefault();redirectToManage(true)">
         Edit
     </a>
-    <a href="#" class="text-accent mr-2" (click)="$event.preventDefault();">
+    <a href="#" class="text-accent mr-2" (click)="$event.preventDefault();deleteFaas()">
         Delete
     </a>
 </span>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+    <odp-function-icon [size]="18" color="DD5151" class="mt-1"></odp-function-icon>
+</odp-delete-modal>

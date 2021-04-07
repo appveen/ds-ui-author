@@ -25,19 +25,8 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   @ViewChild('agGrid') agGrid: AgGridAngular;
   @ViewChild('newFaasModal', { static: false }) newFaasModal: TemplateRef<HTMLElement>;
   form: FormGroup;
-  app: string;
   apiConfig: GetOptions;
-  alertModal: {
-    statusChange?: boolean;
-    title: string;
-    message: string;
-    index: number;
-  };
-  showLazyLoader: boolean;
-  changeAppSubscription: any;
   subscriptions: any;
-
-  openDeleteModal: EventEmitter<any>;
   newFaasModalRef: NgbModalRef;
   columnDefs: Array<AgGridColumn>;
   dataSource: IDatasource;
@@ -45,27 +34,18 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   filterModel: any;
   totalCount: number;
   loadedCount: number;
-  showContextMenu: any;
-  selectedRow: any;
   noRowsTemplate: string;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
     private fb: FormBuilder) {
-    this.alertModal = {
-      statusChange: false,
-      title: '',
-      message: '',
-      index: -1
-    };
     this.subscriptions = {};
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
       api: [null]
     });
-    this.openDeleteModal = new EventEmitter();
     this.apiConfig = {
       page: 1,
       count: 30
@@ -126,7 +106,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.form.get('name').valueChanges.subscribe(val => {
       this.form.get('api').patchValue(`/api/a/faas/${this.commonService.app._id}/${_.camelCase(val)}`);
     });
-    this.changeAppSubscription = this.commonService.appChange.subscribe(app => {
+    this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
       this.agGrid.api.purgeInfiniteCache();
     });
   }
@@ -211,26 +191,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     });
   }
 
-  // editFaas(index: number) {
-  //   this.appService.edit = this.faasList[index]._id;
-  //   this.router.navigate(['/app/', this.commonService.app._id, 'faas', this.appService.edit]);
-  // }
-  // viewFaas(index) {
-  //   this.router.navigate(['/app/', this.commonService.app._id, 'faas', this.faasList[index]._id]);
-  // }
-
-  // loadMore(event) {
-  //   if (event.target.scrollTop >= 244) {
-  //     this.showAddButton = true;
-  //   } else {
-  //     this.showAddButton = false;
-  //   }
-  //   if (event.target.scrollTop + event.target.offsetHeight === event.target.children[0].offsetHeight) {
-  //     this.apiConfig.page = this.apiConfig.page + 1;
-  //     this.getFaas();
-  //   }
-  // }
-
   getFaas() {
     return this.commonService.get('partnerManager', '/faas', this.apiConfig);
   }
@@ -305,30 +265,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     }
     return false;
   }
-
-  // deleteFaas(index: number) {
-  //   this.alertModal.statusChange = false;
-  //   this.alertModal.title = 'Delete Nano Service?';
-  //   this.alertModal.message = 'Are you sure you want to delete <span class="text-delete font-weight-bold">'
-  //     + this.faasList[index].name + '</span> Nano Service?';
-  //   this.alertModal.index = index;
-  //   this.openDeleteModal.emit(this.alertModal);
-  // }
-
-  // closeDeleteModal(data) {
-  //   if (data) {
-  //     this.showLazyLoader = true;
-  //     this.subscriptions['deleteFaass'] = this.commonService
-  //       .delete('partnerManager', '/faas/' + this.faasList[data.index]._id).subscribe(_d => {
-  //         this.showLazyLoader = false;
-  //         this.ts.info(_d.message ? _d.message : 'Nano Service deleted Successfully');
-  //         this.clearSearch();
-  //       }, err => {
-  //         this.showLazyLoader = false;
-  //         this.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
-  //       });
-  //   }
-  // }
 
   canManageFaas(id: string) {
     const list1 = this.commonService.getEntityPermissions('FU_' + id);
