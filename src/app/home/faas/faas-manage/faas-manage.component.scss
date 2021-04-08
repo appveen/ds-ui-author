@@ -4,19 +4,22 @@
 
 .monaco-editor {
   height: 42px;
+  .view-line {
+    font-size: 14px !important;
+  }
 }
 
 .code-editor {
-  height: calc(100vh - 321px);
+  height: calc(100vh - 340px);
 }
 
 .editor-wrapper {
-  width: calc(100% - 400px);
+  width: calc(100% - 360px);
 }
 
 .helper-panel {
-  width: 400px;
-  width: 400px;
+  width: 360px;
+  width: 360px;
   height: calc(100vh - 230px);
   overflow: auto;
 }

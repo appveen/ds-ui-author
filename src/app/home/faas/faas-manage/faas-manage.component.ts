@@ -28,6 +28,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   breadcrumbPaths: Array<Breadcrumb>;
   content: any;
   selectedEditorTheme: string;
+  selectedFontSize: number;
   showCodeEditor: boolean;
   constructor(private commonService: CommonService,
     private appService: AppService,
@@ -44,7 +45,8 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     this.breadcrumbPaths = [];
     this.apiCalls = {};
     this.faasData = {};
-    this.selectedEditorTheme = 'vs-dark';
+    this.selectedEditorTheme = 'vs-light';
+    this.selectedFontSize = 14;
     this.ele.nativeElement.classList.add('h-100');
   }
 
@@ -105,14 +107,14 @@ export class FaasManageComponent implements OnInit, OnDestroy {
       // if (deploy) {
       //   this.deploy();
       // } else {
-      //   this.router.navigate(['/app', this.commonService.app._id, 'nsl']);
+      //   this.router.navigate(['/app', this.commonService.app._id, 'faas']);
       // }
       if (deploy) {
         this.ts.success('Saved ' + this.faasData.name + ' and deployment process has started.');
       } else {
         this.ts.success('Saved ' + this.faasData.name + '.');
       }
-      this.router.navigate(['/app', this.commonService.app._id, 'nsl']);
+      this.router.navigate(['/app', this.commonService.app._id, 'faas']);
     }, err => {
       this.apiCalls.save = false;
       this.commonService.errorToast(err);
@@ -124,7 +126,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     if (this.edit.id) {
       this.commonService.put('partnerManager', '/faas/' + this.edit.id + '/deploy', {}).subscribe(res => {
         this.apiCalls.deploy = false;
-        this.router.navigate(['/app', this.commonService.app._id, 'nsl']);
+        this.router.navigate(['/app', this.commonService.app._id, 'faas']);
       }, err => {
         this.apiCalls.deploy = false;
         this.commonService.errorToast(err);
@@ -140,6 +142,10 @@ export class FaasManageComponent implements OnInit, OnDestroy {
         this.edit.status = false;
       }
     }
+  }
+
+  testRun() {
+    this.ts.info('There are no syntax errors!');
   }
 
   get apiCallsPending() {

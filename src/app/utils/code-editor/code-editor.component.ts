@@ -13,12 +13,14 @@ let loadPromise: Promise<void>;
 export class CodeEditorComponent implements AfterViewInit, OnChanges {
 
   @Input() theme: string;
+  @Input() fontSize: number;
   @Input() code: string;
   @Output() codeChange: EventEmitter<string>;
   codeEditorInstance: monaco.editor.IStandaloneCodeEditor;
   typesString: string;
   constructor(private httpClient: HttpClient) {
-    this.theme = 'vs-dark';
+    this.theme = 'vs-light';
+    this.fontSize = 14;
     this.codeChange = new EventEmitter();
     // const req = new HttpRequest('GET', '/assets/types.txt', {
     //   responseType: 'text'
@@ -71,7 +73,9 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges() {
     if (this.codeEditorInstance) {
-      (window as any).monaco.editor.setTheme(this.theme);
+      this.codeEditorInstance.updateOptions({ fontSize: this.fontSize, theme: this.theme });
+      // (window as any).monaco.editor.setTheme(this.theme);
+      // (window as any).monaco.editor.updateOption({ fontSize: this.fontSize });
     }
   }
 
@@ -87,7 +91,8 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
       language: 'javascript',
       theme: this.theme,
       automaticLayout: true,
-      scrollBeyondLastLine: false
+      scrollBeyondLastLine: false,
+      fontSize: this.fontSize
     });
 
     this.codeEditorInstance.getModel().onDidChangeContent(e => {

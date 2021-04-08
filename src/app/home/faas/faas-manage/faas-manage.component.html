@@ -23,8 +23,7 @@
                 <span class="fa fa-save mr-2"></span>
                 <span class="text">Save</span>
             </button>
-            <button *ngIf="edit.status" [disabled]="!isValidSchema"
-                (click)="save(true);edit.status=false" type="button"
+            <button *ngIf="edit.status" [disabled]="!isValidSchema" (click)="save(true);edit.status=false" type="button"
                 class="edit-button btn btn-min-width btn-dark" id="sbButtonSaveAndDeploy">
                 <span class="fa fa-save mr-2"></span>
                 <span class="text">Save &amp; Deploy</span>
@@ -33,10 +32,22 @@
     </odp-basic-info>
     <div class="border-top border-bottom px-3 py-2 d-flex align-items-center justify-content-between bg-light">
         <div class="url-info d-flex align-items-center">
+            <button type="button" class="btn btn-dark btn-sm mr-3" (click)="testRun()">
+                <span class="fa fa-flask mr-2"></span>
+                <span>Test</span>
+            </button>
             <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
             <span class="url text-accent">{{faasData.url || 'N.A.'}}</span>
         </div>
-        <div class="editor-theme-selection d-flex align-items-center">
+        <div class="editor-theme-selection d-flex align-items-center col-4">
+            <span class="label text-dark font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span>
+            <select class="custom-select mr-3" name="fontSize" id="fontSize" [(ngModel)]="selectedFontSize">
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="16">16</option>
+                <option value="18">18</option>
+                <option value="20">20</option>
+            </select>
             <span class="label text-dark font-weight-bold mr-2">Theme&nbsp;:</span>
             <select class="custom-select" name="theme" id="theme" [(ngModel)]="selectedEditorTheme">
                 <option value="vs-dark">Dark</option>
@@ -59,7 +70,7 @@
                 </div>
             </div>
             <odp-code-editor *ngIf="showCodeEditor" class="code-editor" [theme]="selectedEditorTheme"
-                [(code)]="faasData.code"></odp-code-editor>
+                [fontSize]="selectedFontSize" [(code)]="faasData.code"></odp-code-editor>
             <div class="monaco-editor no-user-select {{selectedEditorTheme}} p-3">
                 <div class="view-lines monaco-mouse-cursor-text"
                     style="font-family: Menlo, Monaco, 'Courier New', monospace; font-weight: normal; font-size: 12px; font-feature-settings: 'liga' 0, 'calt' 0; line-height: 18px; letter-spacing: 0px; width: 1078px; height: 336px;">
@@ -69,7 +80,7 @@
         </div>
         <div class="helper-panel bg-light">
             <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0" closeOthers="true">
-                <ngb-panel>
+                <!-- <ngb-panel>
                     <ng-template ngbPanelTitle>
                         <span>Documentation</span>
                     </ng-template>
@@ -86,7 +97,7 @@
                         of them accusamus
                         labore sustainable VHS.
                     </ng-template>
-                </ngb-panel>
+                </ngb-panel> -->
                 <ngb-panel>
                     <ng-template ngbPanelTitle>
                         <span>Libraries</span>
