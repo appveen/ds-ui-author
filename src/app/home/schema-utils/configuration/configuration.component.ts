@@ -171,6 +171,7 @@ export class ConfigurationComponent implements OnInit {
         break;
       }
     }
+    self.confirmServiceName = '';
     self.purgeModalTemplateRef = self.commonService.modal(self.purgeModalTemplate, { centered: true, windowClass: 'purge-model' });
     self.purgeModalTemplateRef.result.then((close) => {
       if (close) {
