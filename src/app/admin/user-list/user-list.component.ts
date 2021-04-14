@@ -251,9 +251,10 @@ export class UserListComponent implements OnInit, OnDestroy {
                 {
                     headerName: 'Last Login',
                     field: 'lastLogin',
-                    minWidth: 225,
+                    minWidth: 270,
                     refData: {
-                        filterType: 'date'
+                        filterType: 'date-time',
+                        timezone: 'Zulu'
                     }
                 },
                 {

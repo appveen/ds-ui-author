@@ -109,9 +109,10 @@ export class ApiLogsComponent implements OnInit, OnDestroy {
       {
         headerName: 'Time',
         field: '_metadata.createdAt',
-        minWidth: 180,
+        minWidth: 270,
         refData: {
-          filterType: 'date'
+          filterType: 'date-time',
+          timezone: 'Zulu'
         }
       },
       {

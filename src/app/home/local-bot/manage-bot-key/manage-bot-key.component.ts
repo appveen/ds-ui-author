@@ -82,9 +82,10 @@ export class ManageBotKeyComponent implements OnInit {
         {
           headerName: 'Expiry',
           field: 'createdAt',
-          minWidth: 174,
+          minWidth: 270,
           refData: {
-            filterType: 'date',
+            filterType: 'date-time',
+            timezone: 'Zulu',
             namespace: 'keys'
           }
         },

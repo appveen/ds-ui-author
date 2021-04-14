@@ -13,13 +13,13 @@
     margin: 0;
 }
 
-.toggle-btn {
+.lov-toggle-btn {
     min-height: 22px !important;
     min-height: 22px !important;
     border: 1px solid #ccc;
 }
 
-.dropdown-container {
+.lov-dropdown-container {
     display: grid;
     height: fit-content;
     max-height: 200px;
@@ -44,4 +44,24 @@
         padding: 0 10px;
         grid-template-columns: 1fr auto;
     }
+}
+
+.date-dropdown-container {
+    padding: 10px;
+    min-width: 240px;
+    max-width: 240px;
+
+    .dropdown-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 10px;
+    }
+}
+
+.date-toggle-btn {
+    display: flex !important;
+    justify-content: space-between;
+    min-height: 22px !important;
+    max-height: 22px !important;
+    color: #495057;
 }
