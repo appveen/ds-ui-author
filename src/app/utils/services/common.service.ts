@@ -1081,6 +1081,7 @@ export class CommonService {
         const self = this;
         if (self.socket) {
             self.socket.close();
+            self.socket = null;
         }
     }
 
