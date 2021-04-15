@@ -66,9 +66,10 @@ export class UserLogsComponent implements OnInit, OnDestroy {
                 headerName: 'Time',
                 field: '_metadata.createdAt',
                 valueFormatter: this.dateFormatter.bind(this),
-                minWidth: 225,
+                minWidth: 270,
                 refData: {
-                    filterType: 'date'
+                    filterType: 'date-time',
+                    timezone: 'Zulu'
                 }
             },
             {
