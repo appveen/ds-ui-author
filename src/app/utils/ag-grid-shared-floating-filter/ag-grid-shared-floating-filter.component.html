@@ -1,9 +1,86 @@
 <input type="text" class="form-control" *ngIf="type === 'text'" [(ngModel)]="otherItemInput" (keyup)="debounceInput($event.target.value)" />
 <input type="number" class="form-control" *ngIf="type === 'number'" [(ngModel)]="otherItemInput" (keyup)="debounceInput($event.target.value)" />
-<input type="date" class="form-control" *ngIf="type === 'date'" [(ngModel)]="otherItemInput" (change)="onChange($event.target.value)" />
-<div *ngIf="type === 'list_of_values'" ngbDropdown #listDropdown="ngbDropdown" container="body">
+<ng-container *ngIf="['date', 'date-time'].includes(type)">
+  <div ngbDropdown #dateDropdown="ngbDropdown" container="body" display="dynamic">
+      <button ngbDropdownToggle class="date-toggle-btn border btn btn-sm bg-white rounded w-100 d-flex align-items-center">
+          <div class="clue">
+              <ng-container *ngIf="dateFilterSet && !!fromDate">
+                  <strong class="text-primary" *ngIf="dateFilterType === 'equals'">
+                      =&nbsp;&nbsp;
+                  </strong>
+                  <strong class="text-primary" *ngIf="dateFilterType === 'lessThan'">
+                      <&nbsp;&nbsp;
+                  </strong>
+                  <strong class="text-primary" *ngIf="dateFilterType === 'greaterThan'">
+                      >&nbsp;&nbsp;
+                  </strong>
+                  <span *ngIf="type === 'date'">
+                      {{ fromDate | date:'dd/MM/yyyy'}}
+                  </span>
+                  <span *ngIf="type !== 'date'">
+                      {{ fromDate | date:'dd/MM/yyyy, HH:mm'}}
+                  </span>
+              </ng-container>
+              <ng-container *ngIf="dateFilterSet && !!toDate">
+                  <strong class="text-primary" *ngIf="dateFilterType === 'inRange'">
+                      &nbsp;&nbsp;:&nbsp;&nbsp;
+                  </strong>
+                  <span *ngIf="type === 'date'">
+                      {{ toDate | date:'dd/MM/yyyy'}}
+                  </span>
+                  <span *ngIf="type !== 'date'">
+                      {{ toDate | date:'dd/MM/yyyy, HH:mm'}}
+                  </span>
+              </ng-container>
+          </div>
+      </button>
+      <div class="date-dropdown-container" ngbDropdownMenu>
+          <div class="form-group">
+              <select class="form-control" [(ngModel)]="dateFilterType" (ngModelChange)="dateFilterSet = false; toDate = null; fromDate = null">
+                  <option value="equals">Equals</option>
+                  <option value="inRange">In Range</option>
+                  <option value="lessThan">Less Than</option>
+                  <option value="greaterThan">Greater Than</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <input [type]="type === 'date' ? 'date' : 'datetime-local'" class="form-control"
+                  [(ngModel)]="fromDate" (ngModelChange)="dateFilterSet = false">
+              <ng-container *ngIf="dateFilterType === 'inRange'">
+                  <div class="d-flex justify-content-center">
+                      <strong>
+                          <small>TO</small>
+                      </strong>
+                  </div>
+                  <input #toDateRef *ngIf="type === 'date'" type="date"
+                      [class.is-invalid]="!!toDateRef?.validity?.rangeUnderflow"
+                      min="{{ fromDate | date: 'yyyy-MM-dd'}}" class="form-control" [(ngModel)]="toDate" (ngModelChange)="dateFilterSet = false">
+                  <input #toDateRef *ngIf="type !== 'date'" type="datetime-local"
+                      [class.is-invalid]="!!toDateRef?.validity?.rangeUnderflow"
+                      min="{{ fromDate | date: 'yyyy-MM-ddTHH:mm'}}" class="form-control" [(ngModel)]="toDate" (ngModelChange)="dateFilterSet = false">
+                  <small class="text-danger" *ngIf="toDateRef?.nativeElement?.validity?.rangeUnderflow">
+                    {{ toDateRef?.nativeElement?.validationMessage }}
+                  </small>
+              </ng-container>
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-buttons">
+              <button class="btn btn-sm btn-link font-sm" [disabled]="!fromDate && !toDate"
+                  (click)="dateFilterSet = false; dateFilterType = 'equals'; toDate = null; fromDate = null; dateDropdown.close(); onChange()">
+                  Clear
+              </button>
+              <button class="btn btn-sm btn-dark font-sm"
+                  [disabled]="!fromDate || (dateFilterType === 'inRange' && (!toDate || toDateRef?.nativeElement?.validity?.rangeUnderflow))"
+                  (click)="dateFilterSet = true; dateDropdown.close(); onChange()">
+                  Apply
+              </button>
+          </div>
+      </div>
+  </div>
+</ng-container>
+<div *ngIf="type === 'list_of_values'" ngbDropdown #listDropdown="ngbDropdown" container="body" display="dynamic">
   <button
-    class="toggle-btn btn btn-sm bg-white rounded w-100 d-flex justify-content-between align-items-center"
+    class="lov-toggle-btn btn btn-sm bg-white rounded w-100 d-flex justify-content-between align-items-center"
     ngbDropdownToggle
     [disabled]="showLoading"
   >
@@ -22,7 +99,7 @@
         Loading...
     </em>
   </button>
-  <div class="dropdown-container" ngbDropdownMenu>
+  <div class="lov-dropdown-container" ngbDropdownMenu>
     <div class="dropdown-list">
       <div class="dropdown-itm py-1" *ngFor="let item of listItems">
         <odp-round-check class="mx-2" [edit]="{ status: true }" [checked]="item.checked" (checkedChange)="item.checked = !item.checked">

@@ -1,11 +1,13 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { AgFrameworkComponent } from 'ag-grid-angular';
 import { FilterChangedEvent, IFilterComp, IFloatingFilter, IFloatingFilterParams, TextFilter } from 'ag-grid-community';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-const FilterTypesList = ['text', 'number', 'date', 'list_of_values'];
-type FilterType = 'text' | 'number' | 'date' | 'list_of_values';
+import { AppService } from '../services/app.service';
+
+const FilterTypesList = ['text', 'number', 'date', 'date-time', 'list_of_values'];
+type FilterType = 'text' | 'number' | 'date' | 'date-time' | 'list_of_values';
 const isFilterType = (x: any): x is FilterType => {
   return typeof x === 'string' && FilterTypesList.includes(x);
 };
@@ -27,6 +29,7 @@ const isMapperFunction = (x: any): x is MapperFunction => {
   styleUrls: ['./ag-grid-shared-floating-filter.component.scss']
 })
 export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgFrameworkComponent<IFloatingFilterParams>, OnDestroy {
+  @ViewChild('toDateRef', { static: false}) toDateRef: ElementRef;
   params: IFloatingFilterParams;
   type: FilterType;
   listItems: Array<FilterListItem>;
@@ -40,14 +43,20 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
   otherItemInput: string;
   otherItemChecked: boolean;
   showOtherBox: boolean;
+  timezone: string;
+  fromDate: string;
+  toDate: string;
+  dateFilterType: string;
+  dateFilterSet: boolean;
 
   get checkedCount(): number {
     return this.listItems?.length ? this.listItems.filter(x => x.checked).length : 0;
   }
 
-  constructor() {
+  constructor(private appService: AppService) {
     this.listItems = [];
     this.debounceSubject = new Subject();
+    this.dateFilterType = 'equals';
   }
 
   agInit(params: IFloatingFilterParams): void {
@@ -61,6 +70,9 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
       this.debounceSubscription = this.debounceSubject
         .pipe(debounceTime(600), distinctUntilChanged())
         .subscribe(event => this.onChange(event));
+    }
+    if(['date', 'date-time'].includes(this.type)) {
+      this.timezone = colDef.refData?.timezone || 'Zulu';
     }
     const filterModel = this.params.api.getFilterModel();
     if (this.field in filterModel) {
@@ -79,8 +91,32 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
           }
           break;
         case 'date':
+        case 'date-time':
           {
-            this.otherItemInput = filterModel[this.field].filter[this.field].$lte.split('T')[0];
+            const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const filterValue = filterModel[this.field].filter[this.field];
+            let formatString = 'YYYY-MM-DD';
+            if(this.type === 'date-time') {
+              formatString += 'THH:mm';
+            }
+            if(!!filterValue?.$lt) {
+              this.fromDate = this.appService.getMomentInTimezone(new Date(filterValue.$lt), localTimezone).format(formatString);
+              this.toDate = null;
+              this.dateFilterType = 'lessThan';
+              this.dateFilterSet = true;
+            } else if (!!filterValue?.$gt) {
+              this.fromDate = this.appService.getMomentInTimezone(new Date(filterValue.$gt), localTimezone).format(formatString);
+              this.toDate = null;
+              this.dateFilterType = 'greaterThan';
+              this.dateFilterSet = true;
+            } else if (!!filterValue?.$lte && !!filterValue?.$gte) {
+              const lte = new Date(filterValue.$lte);
+              const gte = new Date(filterValue.$gte);
+              this.fromDate = this.appService.getMomentInTimezone(gte, localTimezone).format(formatString);
+              this.toDate = this.appService.getMomentInTimezone(lte, localTimezone).format(formatString);
+              this.dateFilterType = lte.getDate() - gte.getDate() > 0 ? 'inRange' : 'equals';
+              this.dateFilterSet = true;
+            }
           }
           break;
       }
@@ -145,6 +181,10 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
     if (!parentModel || Object.keys(parentModel).length === 0) {
       this.otherItemInput = null;
       this.prepareList(true);
+      this.fromDate = null;
+      this.toDate = null;
+      this.dateFilterSet = false;
+      this.dateFilterType = 'equals';
     }
   }
 
@@ -166,9 +206,10 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
         }
         break;
       case 'date':
+      case 'date-time':
         {
-          const queryDate = this.getDateQuery(value);
-          obj = !!queryDate ? { [this.field]: queryDate } : null;
+          const queryDate = this.getDateQuery();
+          obj = !!queryDate && !!Object.keys(queryDate).length ? { [this.field]: queryDate } : null;
         }
         break;
       case 'list_of_values':
@@ -191,23 +232,56 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
     this.otherItemChecked = this.showOtherBox && !clear;
   }
 
-  private getDateQuery(value: any) {
-    if (!!value) {
-      const fromDate = new Date(value);
-      fromDate.setHours(0);
-      fromDate.setMinutes(0);
-      fromDate.setSeconds(0);
-      fromDate.setMilliseconds(0);
-      const toDate = new Date(value);
-      toDate.setHours(23);
-      toDate.setMinutes(59);
-      toDate.setSeconds(59);
-      toDate.setMilliseconds(999);
-      const obj = {};
-      obj['$gte'] = fromDate.toISOString();
-      obj['$lte'] = toDate.toISOString();
-      return obj;
+  private getDateQuery() {
+    const obj = {};
+    let fromDate, toDate;
+    if (!!this.fromDate && (this.dateFilterType !== 'inRange' || !!this.toDate)) {
+      switch(this.dateFilterType) {
+        case 'equals': {
+          if(this.type === 'date') {
+            fromDate = this.appService.getMomentInTimezone(new Date(this.fromDate), this.timezone || 'Zulu', 'time:start');
+            toDate = this.appService.getMomentInTimezone(new Date(this.fromDate), this.timezone || 'Zulu', 'time:end');
+          } else {
+            fromDate = this.appService.getMomentInTimezone(new Date(this.fromDate + ':00'), this.timezone || 'Zulu', 'ms:start');
+            toDate = this.appService.getMomentInTimezone(new Date(this.fromDate + ':59'), this.timezone || 'Zulu', 'ms:end');
+          }
+          obj['$gte'] = fromDate.toISOString();
+          obj['$lte'] = toDate.toISOString();
+        };
+        break;
+        case 'inRange': {
+          if(this.type === 'date') {
+            fromDate = this.appService.getMomentInTimezone(new Date(this.fromDate), this.timezone || 'Zulu', 'time:start');
+            toDate = this.appService.getMomentInTimezone(new Date(this.toDate), this.timezone || 'Zulu', 'time:end');
+          } else {
+            fromDate = this.appService.getMomentInTimezone(new Date(this.fromDate + ':00'), this.timezone || 'Zulu', 'ms:start');
+            toDate = this.appService.getMomentInTimezone(new Date(this.toDate + ':59'), this.timezone || 'Zulu', 'ms:end');
+          }
+          obj['$gte'] = fromDate.toISOString();
+          obj['$lte'] = toDate.toISOString();
+        };
+        break;
+        case 'lessThan': {
+          if(this.type === 'date') {
+            fromDate = this.appService.getMomentInTimezone(new Date(this.fromDate), this.timezone || 'Zulu', 'time:start');
+          } else {
+            fromDate = this.appService.getMomentInTimezone(new Date(this.fromDate + ':00'), this.timezone || 'Zulu', 'ms:start');
+          }
+          obj['$lt'] = fromDate.toISOString();
+        };
+        break;
+        case 'greaterThan': {
+          if(this.type === 'date') {
+            toDate = this.appService.getMomentInTimezone(new Date(this.fromDate), this.timezone || 'Zulu', 'time:end');
+          } else {
+            toDate = this.appService.getMomentInTimezone(new Date(this.fromDate + ':59'), this.timezone || 'Zulu', 'ms:end');
+          }
+          obj['$gt'] = toDate.toISOString();
+        };
+        break;
+      }
     }
+    return obj;
   }
 
   private getFilterType(type: string) {
