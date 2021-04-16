@@ -227,9 +227,14 @@ export class InsightComponent implements OnInit {
         const self = this;
         return self.commonService.hasPermission('PVISU');
     }
-    
+
     get hasGroupsPermission() {
         const self = this;
         return self.commonService.hasPermission('PVISG');
+    }
+
+    get experimentalFeatures() {
+        const self = this;
+        return self.commonService.userDetails.experimentalFeatures;
     }
 }

@@ -14,7 +14,7 @@
             <span>Users</span>
         </div>
         
-        <div class="text-dark px-3 py-2 hover" *ngIf="hasUserPermission" (click)="activateTab(3)" [ngClass]="{'active':activeTab==3}">
+        <div class="text-dark px-3 py-2 hover" *ngIf="experimentalFeatures && hasUserPermission" (click)="activateTab(3)" [ngClass]="{'active':activeTab==3}">
             <span>Bots</span>
         </div>
        
