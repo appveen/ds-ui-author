@@ -116,8 +116,8 @@ export class IntegrationComponent implements OnInit, OnDestroy {
             self.hooks.hookshortName = 'reject';
             self.hooks.hookType = 'reject';
         } else if (self.hooks.sendForReviewHook) {
-            self.hooks.hookTitle = 'Send for Review hook';
-            self.hooks.hookshortName = 'Send for Review';
+            self.hooks.hookTitle = 'Rework hook';
+            self.hooks.hookshortName = 'rework';
             self.hooks.hookType = 'rework';
         } else if (self.hooks.discardHook) {
             self.hooks.hookTitle = 'Discard hook';

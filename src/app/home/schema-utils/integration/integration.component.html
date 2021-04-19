@@ -47,7 +47,7 @@
                 <div class="d-flex mb-3 w-100" *ngIf="canView('RRW')">
                     <span class="hover w-50" (click)="selectHook('sendForReviewHook')"
                         [ngClass]="{'text-accent': hooks.sendForReviewHook, 'text-bold': hooks.sendForReviewHook}">
-                        Send for Review
+                        Rework
                     </span>
                     <span class="text-muted d-flex w-25 justify-content-end">
                         {{ sendForReviewHooks.length }}
@@ -273,31 +273,31 @@
         </div>
         <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.sendForReviewHook">
             <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Send for Review hooks</strong>
+                <strong class="mr-auto">Rework hooks</strong>
                 <div class="ml-auto">
                     <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit('DPR')"
                         (click)="previewHook()">
-                        Preview send for review hook
+                        Preview Rework hook
                     </button>
                     <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit('RRW')"
                         (click)="newHook()">+ Add
-                        Send for Review
+                        Rework
                         hook
                     </button>
                 </div>
             </div>
-            <div class="text-secondary preHook-desc mb-4">Use a send for review hook to perform an action when data is
+            <div class="text-secondary preHook-desc mb-4">Use a rework hook to perform an action when data is
                 successfully
-                updated. Send for review hooks are triggered for all create, update and delete actions on data.
+                updated. Rework hooks are triggered for all create, update and delete actions on data.
             </div>
             <div class="hook-table">
                 <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Send for review hook Name</p>
-                    <p class="hook-header-url">Send for review hook URL</p>
+                    <p class="hook-header-name">Rework hook Name</p>
+                    <p class="hook-header-url">Rework hook URL</p>
                     <p *ngIf="edit.status">Action</p>
                 </div>
                 <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="sendForReviewHooks.length === 0">
-                    <span class="text-muted">No send for review hooks </span>
+                    <span class="text-muted">No Rework hooks </span>
                 </div>
                 <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="sendForReviewHooks.length > 0">
                     <div *ngFor="let hook of sendForReviewHooks; let hookIndex = index"
