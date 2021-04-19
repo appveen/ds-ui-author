@@ -103,7 +103,6 @@ export class UserComponent implements OnInit, OnDestroy {
         });
         this.configureAuthTypes();
         this.createUserForm();
-        this.configureFormValidators();
         this.ngbToolTipConfig.container = 'body';
         this.username = this.commonService.userDetails.username;
         if (this.commonService.userDetails.basicDetails && this.commonService.userDetails.basicDetails.name) {
@@ -172,7 +171,9 @@ export class UserComponent implements OnInit, OnDestroy {
                 roles: [null]
             })
         });
+        this.configureFormValidators();
     }
+    
     configureFormValidators() {
         const value = this.userForm.get('userData.auth.authType').value;
         this.userForm.get('userData.username').clearValidators();
