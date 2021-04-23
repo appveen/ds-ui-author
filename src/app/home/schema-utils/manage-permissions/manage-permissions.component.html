@@ -67,13 +67,16 @@
                                 class="info fa fa-info-circle text-muted position-absolute"
                                 ngbTooltip="Maximum 40 chars allowed" container="body" placement="right">&nbsp;</span>
                         </div>
-                        <div class="d-flex w-100 mb-3">
+                        <div class="d-flex w-100 mb-3 position-relative">
                             <span class="text-dark font-weight-bold first-column">Description</span>
-                            <textarea *ngIf="edit.status" class="form-control" [(ngModel)]="selectedRole.description"
+                            <textarea *ngIf="edit.status" class="form-control description" [(ngModel)]="selectedRole.description"
                                 placeholder="Description" rows="3" [disabled]="selectedRole.skipReviewRole"
-                                (keyup)="checkPermissionChange()"></textarea>
+                                (keyup)="checkPermissionChange()" maxlength="250"></textarea>
                             <span *ngIf="!edit.status"
-                                class="form-control-plaintext">{{selectedRole.description}}</span>
+                                class="form-control-plaintext text-break text-justify">{{selectedRole.description}}</span>
+                                <span #infoTooltip="ngbTooltip" *ngIf="edit.status"
+                                class="info fa fa-info-circle text-muted position-absolute"
+                                ngbTooltip="Maximum 250 chars allowed" container="body" placement="right">&nbsp;</span>
                         </div>
                     </div>
                     <button class="btn btn-link text-danger font-weight-bold" id="roleDeleteBtn" type="button"
