@@ -4,15 +4,12 @@ import { NgbModalRef, NgbButtonLabel } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
 
-
 export interface Definition {
   key?: string;
   properties?: any;
   type?: string;
   definition?: Definition[];
 }
-
-
 @Component({
   selector: 'odp-manage-permissions',
   templateUrl: './manage-permissions.component.html',
@@ -192,7 +189,13 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
       const fieldKey = parent ? parent + '.' + key : key;
       if (fields[key]._p) {
         temp[fieldKey] = fields[key];
+        if (parent) {
+          temp[fieldKey].parent = parent;
+        }
       } else {
+
+        temp[fieldKey] = { _t: "object", parent: parent ? parent : null }
+
         temp = Object.assign(temp, self.flattenPermission(fields[key], fieldKey));
       }
     });
@@ -289,7 +292,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     const self = this;
     return Object.keys(self.fields).filter(e => {
       if (!(e === '_metadata'
-        || e === '__v') && self.fields[e]._p[id] === 'R') {
+        || e === '__v') && self.fields[e]._p && self.fields[e]._p[id] === 'R') {
         return e;
       }
     }).length;
@@ -297,11 +300,17 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
 
   changeValue(key, val) {
     const self = this;
-    if (val) {
+
+    // select all / deselect all fields inside group when group is selected 
+    const grpFields = Object.keys(self.fields).map(key => { self.fields[key].name = key; return self.fields[key] }).filter(data => data?.parent == key).map(data => data.name)
+    grpFields.forEach(field => self.changeValue(field, val))
+
+    if (val && self.fields[key]._p) {
       self.fields[key]._p[self.selectedRole.id] = 'R';
-    } else {
+    } else if (!val && self.fields[key]._p) {
       self.fields[key]._p[self.selectedRole.id] = 'N';
     }
+
     self.updateRole();
   }
 
@@ -592,11 +601,39 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
 
   isChecked(key) {
     const self = this;
-    if (self.fields
+
+    // get all group fields
+    const grpFields = Object.keys(self.fields).map(key => { self.fields[key].name = key; return self.fields[key] }).filter(data => data?.parent == key).map(data => data.name)
+
+    // select group if all attributes in group are enabled 
+    if (grpFields.length > 0) {
+      let objChecked = true;
+
+      grpFields.forEach(grpField => {
+
+        // nested group condition 
+        if (self.fields && self.fields[grpField]._t == "object" 
+        && self.isChecked(grpField) == false) {
+          objChecked = false;
+        }
+        else if (self.fields
+          && self.fields[grpField]
+          && self.fields[grpField]._p
+          && self.selectedRole.id
+          && self.fields[grpField]._p[self.selectedRole.id] === 'N') {
+          objChecked = false;
+        }
+
+      });
+      return objChecked
+    }
+
+    else if (self.fields
       && self.fields[key]
       && self.fields[key]._p
       && self.selectedRole.id
       && self.fields[key]._p[self.selectedRole.id] === 'R') {
+
       return true;
     }
     return false;
