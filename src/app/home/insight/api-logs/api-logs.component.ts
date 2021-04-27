@@ -107,7 +107,7 @@ export class ApiLogsComponent implements OnInit, OnDestroy {
     };
     const columnDefs = [
       {
-        headerName: 'Time',
+        headerName: 'Date and Time',
         field: '_metadata.createdAt',
         minWidth: 270,
         refData: {
