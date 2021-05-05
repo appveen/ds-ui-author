@@ -24,6 +24,7 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     message: string;
     index: number;
   };
+  
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -56,6 +57,32 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     this.alertModal.message = 'Are you sure you want to delete <span class="text-delete font-weight-bold">'
       + this.data.name + '</span> Function?';
     this.openDeleteModal.emit(this.alertModal);
+  }
+
+  stopFaasDummy(data) {
+    this.data.app = this.commonService.app._id;
+    data.status = 'STOPPED';
+    let request;
+    request = this.commonService.put('partnerManager', '/faas/' + data._id, data);
+    request.subscribe(res => {
+        this.ts.error('Stopped ' + data.name + ' FaaS.');
+    }, err => {
+        this.commonService.errorToast(err);
+    });
+
+  }
+
+  startFaasDummy(data) {
+    this.data.app = this.commonService.app._id;
+    data.status = 'RUNNING';
+    let request;
+    request = this.commonService.put('partnerManager', '/faas/' + data._id, data);
+    request.subscribe(res => {
+        this.ts.success('Started ' + data.name + ' FaaS.');
+    }, err => {
+        this.commonService.errorToast(err);
+    });
+
   }
 
   closeDeleteModal(data) {

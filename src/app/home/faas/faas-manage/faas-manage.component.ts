@@ -92,15 +92,52 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     });
   }
 
-  save(deploy?: boolean) {
+  saveDummyCode(deploy?: boolean){
     this.faasData.app = this.commonService.app._id;
     let request;
     this.apiCalls.save = true;
+
+    if(deploy){
+      this.faasData.status = 'RUNNING';
+    }
+
     if (this.edit.id) {
       request = this.commonService.put('partnerManager', '/faas/' + this.edit.id, this.faasData);
     } else {
       request = this.commonService.post('partnerManager', '/faas', this.faasData);
     }
+
+    this.subscriptions['save'] = request.subscribe(res => {
+      this.apiCalls.save = false;
+      this.edit.status = false;
+      if (deploy) {
+        this.apiCalls.deploy = false;
+        this.ts.success('Saved ' + this.faasData.name + ' and deployment process has started.');
+        this.router.navigate(['/app', this.commonService.app._id, 'faas']);
+      } else {
+        this.ts.success('Saved ' + this.faasData.name + '.');
+        this.router.navigate(['/app', this.commonService.app._id, 'faas']);
+      }
+    }, err => {
+      this.apiCalls.save = false;
+      this.commonService.errorToast(err);
+    });
+
+
+  }
+
+  save(deploy?: boolean) {
+    this.faasData.app = this.commonService.app._id;
+    let request;
+    this.apiCalls.save = true;
+    
+
+    if (this.edit.id) {
+      request = this.commonService.put('partnerManager', '/faas/' + this.edit.id, this.faasData);
+    } else {
+      request = this.commonService.post('partnerManager', '/faas', this.faasData);
+    }
+
     this.subscriptions['save'] = request.subscribe(res => {
       this.apiCalls.save = false;
       this.edit.status = false;
