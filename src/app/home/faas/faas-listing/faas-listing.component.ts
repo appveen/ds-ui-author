@@ -183,7 +183,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     this.commonService.post('partnerManager', '/faas', payload).subscribe(res => {
-      this.ts.success('Nano Service Created.');
+      this.ts.success('Function has been created.');
       this.appService.edit = res._id;
       this.router.navigate(['/app/', this.commonService.app._id, 'faas', res._id]);
     }, err => {
