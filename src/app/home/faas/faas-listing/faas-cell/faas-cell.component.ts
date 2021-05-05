@@ -65,7 +65,7 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     let request;
     request = this.commonService.put('partnerManager', '/faas/' + data._id, data);
     request.subscribe(res => {
-        this.ts.error('Stopped ' + data.name + ' FaaS.');
+        this.ts.success('Stopped ' + data.name + ' function.');
     }, err => {
         this.commonService.errorToast(err);
     });
@@ -78,7 +78,7 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     let request;
     request = this.commonService.put('partnerManager', '/faas/' + data._id, data);
     request.subscribe(res => {
-        this.ts.success('Started ' + data.name + ' FaaS.');
+        this.ts.success('Started ' + data.name + ' function.');
     }, err => {
         this.commonService.errorToast(err);
     });
