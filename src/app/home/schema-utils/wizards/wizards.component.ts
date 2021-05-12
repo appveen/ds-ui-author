@@ -124,6 +124,14 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    toggleTooltip(tooltip, param: string) {
+        if (tooltip.isOpen()) {
+            tooltip.close();
+        } else {
+            tooltip.open({ param });
+        }
+    }
+
     addStepAfter() {
         const self = this;
         const i = (self.form.get('wizard.steps') as FormArray).controls.length - 1;
@@ -596,7 +604,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     uniqHookName() {
         const self = this;
-        if (!self.edit.status) {
+        if (self.edit.status) {
             const hookName = self.actionHookForm.get('name').value;
             const duplicateHookName = self.allActions.findIndex(e => e.name === hookName) >= 0;
             if (duplicateHookName) {
@@ -607,13 +615,14 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     get hookNameErr() {
         const self = this;
-        return self.actionHookForm.get('name').touched && ((self.actionHookForm.get('name').hasError('duplicateName')) ||
-            self.actionHookForm.get('name').hasError('required'));
+        return (self.actionHookForm.get('name').touched || self.actionHookForm.get('name').dirty)
+            && ((self.actionHookForm.get('name').hasError('duplicateName')) ||
+                self.actionHookForm.get('name').hasError('required'));
     }
 
     get hookUrlErr() {
         const self = this;
-        return self.actionHookForm.get('url').dirty &&
+        return (self.actionHookForm.get('url').touched || self.actionHookForm.get('url').dirty) &&
             (self.actionHookForm.get('url').hasError('pattern') || self.actionHookForm.get('url').hasError('required'));
     }
 

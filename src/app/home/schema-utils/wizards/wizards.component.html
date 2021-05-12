@@ -229,7 +229,8 @@
                 Attributes
                 <span class="field-Count d-flex justify-content-center align-items-center position-absolute"
                     [ngClass]="{'bg-gray': activeTab !== 1, 'bg-accent': activeTab === 1}"
-                    *ngIf="remainingFields.length > 0">{{ formArrLen === 0 ? remainingFields.length - 1 : remainingFields.length }}</span>
+                    *ngIf="remainingFields.length > 0">{{ formArrLen === 0 ? remainingFields.length - 1 :
+                    remainingFields.length }}</span>
                 <span class="field-Count d-flex justify-content-center align-items-center position-absolute"
                     [ngClass]="{'bg-gray': activeTab !== 1, 'bg-accent': activeTab === 1}"
                     *ngIf="remainingFields.length == 0">{{remainingFields.length}}</span>
@@ -299,10 +300,11 @@
                         <div class="mr-1 action-type d-inline" [ngClass]="{'bg-success': field.type === 'success',
                             'bg-warning': field.type === 'warning',
                             'bg-danger': field.type === 'danger'}"></div>
-                        <span>{{ field.type === 'success' ? 'Type 1' : field.type === 'warning' ? 'Type 2' : 'Type 3'}}</span>
+                        <span>{{ field.type === 'success' ? 'Type 1' : field.type === 'warning' ? 'Type 2' : 'Type
+                            3'}}</span>
                     </div>
-                    <span class="action-item text-truncate" placement="left"
-                        [ngbTooltip]="field.name">{{ field.name }}</span>
+                    <span class="action-item text-truncate" placement="left" [ngbTooltip]="field.name">{{ field.name
+                        }}</span>
                     <span *ngIf="edit.status" class="fas fa-cog text-secondary action-settings"
                         (click)="editHook(field)" placement="top" ngbTooltip="Edit hook"></span>
                 </div>
@@ -346,21 +348,21 @@
                             formControlName="name" maxlength="40" [ngClass]="{'is-invalid': hookNameErr}"
                             [value]="actionHookForm.get('name').value" (blur)="uniqHookName()" odpAutoFocus>
                         <span class="fas fa-question-circle text-danger position-absolute error-icon"
-                            *ngIf="hookNameErr" [ngbTooltip]="validationError" placement="right"></span>
+                            *ngIf="hookNameErr" [ngbTooltip]="validationError" triggers="manual" #t1="ngbTooltip"
+                            triggers="hover" (mouseenter)="toggleTooltip(t1, 'hook-name')" placement="right"></span>
                     </div>
                 </div>
                 <div class="d-flex w-100 mb-4">
                     <div class="label-width text-secondary">URL</div>
                     <div class="value-width position-relative">
+                        
                         <textarea class="form-control " type="text" rows="5" maxlength="2080"
                             placeholder="http://<hostname>:<port>/<path>" formControlName="url"
-                            [value]="actionHookForm.get('url').value" [ngClass]="{'is-invalid': hookUrlErr}"></textarea>
+                            [value]="actionHookForm.get('url').value" [ngClass]="{'is-invalid': hookUrlErr }"></textarea>
                         <span class="fas fa-question-circle text-danger position-absolute error-icon"
-                            *ngIf="actionHookForm.get('url').dirty && actionHookForm.get('url').hasError('pattern')"
-                            [ngbTooltip]="validationError" placement="right"></span>
-                        <span class="fas fa-question-circle text-danger position-absolute error-icon"
-                            *ngIf="actionHookForm.get('url').dirty && actionHookForm.get('url').hasError('required')"
-                            [ngbTooltip]="validationError" placement="right"></span>
+                            *ngIf="hookUrlErr"
+                            [ngbTooltip]="validationError" triggers="manual" #t2="ngbTooltip" triggers="hover"
+                            (mouseenter)="toggleTooltip(t2, 'hook-url')" placement="right"></span>
                     </div>
                 </div>
                 <div class="d-flex w-100 mb-4">
@@ -421,27 +423,33 @@
     </div>
 </ng-template>
 
-<ng-template #validationError>
+<ng-template #validationError let-param="param">
     <div class="d-flex flex-column">
-        <div *ngIf="actionHookForm.get('name').dirty && actionHookForm.get('name').hasError('required')"
-            class="d-flex justify-content-start"><span class="fa fa-circle fa-xs pr-1 pt-1"></span>A unique hook name is
-            required
-        </div>
-        <div *ngIf="form.get('name').hasError('maxlength')" class="d-flex justify-content-start"><span
-                class="fa fa-circle fa-xs pr-1 pt-1"></span>Field
-            name should be less than 40 characters
-        </div>
-        <div *ngIf="actionHookForm.get('name').hasError('duplicateName')" class="d-flex justify-content-start"><span
-                class="fa fa-circle fa-xs pr-1 pt-1"></span>Duplicate attribute name
-        </div>
-        <div *ngIf="actionHookForm.get('url').dirty && actionHookForm.get('url').hasError('pattern')"
-            class="d-flex justify-content-start"><span class="fa fa-circle fa-xs pr-1 pt-1"></span>
-            URL should be of format either http://&lt;hostname&gt;:&lt;port&gt;/&lt;path or
-            https://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;
-        </div>
-        <div *ngIf="actionHookForm.get('url').dirty && actionHookForm.get('url').hasError('required')"
-            class="d-flex justify-content-start"><span class="fa fa-circle fa-xs pr-1 pt-1"></span>
-            Required field
-        </div>
+        <ng-container *ngIf="param == 'hook-name'">
+            <div *ngIf="(actionHookForm.get('name').dirty || actionHookForm.get('name').touched) && actionHookForm.get('name').hasError('required')"
+                class="d-flex justify-content-start"><span class="fa fa-circle fa-xs pr-1 pt-1"></span>A unique hook
+                name is
+                required
+            </div>
+            <div *ngIf="form.get('name').hasError('maxlength')" class="d-flex justify-content-start"><span
+                    class="fa fa-circle fa-xs pr-1 pt-1"></span>Field
+                name should be less than 40 characters
+            </div>
+            <div *ngIf="actionHookForm.get('name').hasError('duplicateName')" class="d-flex justify-content-start"><span
+                    class="fa fa-circle fa-xs pr-1 pt-1"></span>Duplicate attribute name
+            </div>
+        </ng-container>
+        <ng-container *ngIf="param == 'hook-url'">
+            <div *ngIf="actionHookForm.get('url').dirty && actionHookForm.get('url').hasError('pattern')"
+                class="d-flex justify-content-start"><span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+                URL should be of format either http://&lt;hostname&gt;:&lt;port&gt;/&lt;path or
+                https://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;
+            </div>
+            <div *ngIf="( actionHookForm.get('url').dirty || actionHookForm.get('url').touched ) && actionHookForm.get('url').hasError('required')"
+                class="d-flex justify-content-start"><span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+                Required field
+            </div>
+        </ng-container>
     </div>
 </ng-template>
+
