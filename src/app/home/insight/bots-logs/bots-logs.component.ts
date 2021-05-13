@@ -64,7 +64,7 @@ export class BotsLogsComponent implements OnInit, OnDestroy {
     };
     const columnDefs = [
       {
-        headerName: 'Time',
+        headerName: 'Date and Time',
         field: '_metadata.createdAt',
         valueFormatter: this.dateFormatter.bind(this),
         minWidth: 270,

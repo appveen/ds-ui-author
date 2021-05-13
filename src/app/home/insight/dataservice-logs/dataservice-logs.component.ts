@@ -97,7 +97,7 @@ export class DataserviceLogsComponent implements OnInit, OnDestroy {
     };
     const columnDefs: Array<ColDef> = [
       {
-        headerName: 'Time',
+        headerName: 'Date and Time',
         field: '_metadata.createdAt',
         minWidth: 270,
         refData: {
