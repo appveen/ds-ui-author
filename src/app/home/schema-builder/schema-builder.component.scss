@@ -58,7 +58,7 @@
 }
 
 .builder-body {
-  min-height: calc(100vh - 224px);
+  min-height: 100%;
   max-height: calc(100vh - 224px);
   &.schema-creator {
     min-height: calc(100vh - 244px);
