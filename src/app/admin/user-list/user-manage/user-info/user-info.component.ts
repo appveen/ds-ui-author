@@ -343,7 +343,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
                     self.commonService.put('user', '/usr/' + self.user._id, self.user)
                         .subscribe(() => {
                             self.showLazyLoader = false;
-                            self.ts.success('Custom Details of user updated Successfully');
+                            self.ts.success('Attributes of user updated Successfully');
                         }, (err) => {
                             self.showLazyLoader = false;
                             self.commonService.errorToast(err);
