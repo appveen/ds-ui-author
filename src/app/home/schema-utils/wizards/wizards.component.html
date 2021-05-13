@@ -43,10 +43,10 @@
                     <!--<strong [ngClass]="{'mr-2': !edit.status, 'mr-3': edit.status}">{{ stepIndex }}</strong>-->
                     <input *ngIf="edit.status" type="text" class="form-control pr-4" id="stepName" name="sbName"
                         placeholder="Enter a step name" odpAutoFocus required maxlength="40" [(ngModel)]="stepName"
-                        #sbName="ngModel" #tabName [ngClass]="{'is-invalid': sbNameErr}">
+                        #sbName="ngModel" #tabName (blur)="setTouched()" [ngClass]="{'is-invalid': sbNameErr}">
                     <span *ngIf="!edit.status" class="text-dark">{{stepName}}</span>
                     <span class="fas fa-question-circle text-danger position-absolute field-error-symbol"
-                        *ngIf="stepNameAsFormCtrl && stepNameAsFormCtrl.dirty && stepNameAsFormCtrl.hasError('required')"
+                        *ngIf="stepNameAsFormCtrl && (stepNameAsFormCtrl.dirty || stepNameAsFormCtrl.touched) && stepNameAsFormCtrl.hasError('required')"
                         ngbTooltip="You cannot leave this blank" placement="right"></span>
                     <span class="fas fa-question-circle text-danger position-absolute field-error-symbol"
                         *ngIf="sameNameErr" ngbTooltip="Duplicate Step name" placement="right"></span>
