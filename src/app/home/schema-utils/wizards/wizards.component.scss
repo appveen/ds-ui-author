@@ -31,12 +31,6 @@
   }
 }
 
-#schema-creator{
-  .builder-body{
-    min-height: 100% !important;
-  }
-}
-
 .circle {
   min-width: 28px;
   min-height: 28px;
@@ -421,7 +415,9 @@
 }
 
 .steps-div {
-  min-height: 400px;
+  // min-height: calc(100vh - 205px);
+  // min-height: 400px;
+  min-height: 60vh;
   overflow-y: auto;
   overflow-x: hidden;
   .action-header {
@@ -437,8 +433,14 @@
   min-height: calc(100vh - 205px);
 }
 .content-steps-div {
-  max-height: 160px ;
-  height: 160px !important;
+  max-height: 30vh ;
+  height: 30vh !important;
+  min-height: auto;
+}
+
+#action-content{
+  max-height: 50vh ;
+  height: 50vh !important;
   min-height: auto;
 }
 

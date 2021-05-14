@@ -139,7 +139,7 @@
                         </div>
                     </ng-container>
                 </ng-container>
-                <div class="steps-div d-flex flex-column mt-4" *ngIf="selectedStepActions.length">
+                <div class="steps-div d-flex flex-column mt-4" id="action-content" *ngIf="selectedStepActions.length">
                     <div
                         class="d-flex align-items-center justify-content-between action-header px-3 border-bottom bg-light w-100">
                         <strong>Actions</strong>
@@ -169,7 +169,7 @@
                 </div>
                 <ng-container *ngIf="!selectedStepActions.length">
                     <ng-container *ngIf="edit.status">
-                        <div class="d-flex flex-column p-4 steps-div mt-2">
+                        <div class="d-flex flex-column p-4 steps-div mt-2" id="action-content" >
                             <div class="d-flex justify-content-between mb-4">
                                 <strong>Actions</strong>
                                 <button class="btn btn-link" type="button" id="addAction2" (click)="addHook()"
