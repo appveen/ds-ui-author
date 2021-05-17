@@ -100,7 +100,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     get sbNameErr() {
         const self = this;
-        return ((self.stepNameAsFormCtrl && self.stepNameAsFormCtrl.dirty && self.stepNameAsFormCtrl.hasError('required')) ||
+        return ((self.stepNameAsFormCtrl && (self.stepNameAsFormCtrl.dirty || self.stepNameAsFormCtrl.touched) && self.stepNameAsFormCtrl.hasError('required')) ||
             (self.stepNameAsFormCtrl && self.stepNameAsFormCtrl.dirty && self.sameNameErr));
     }
 
@@ -234,21 +234,33 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
+    setTouched(){
+        const self = this;
+        const selectedStep = self.form.get('wizard.selectedStep').value;
+        (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsTouched();
+    }
+
+
     get stepName() {
         const self = this;
         const selectedStep = self.form.get('wizard.selectedStep').value;
         return (self.form.get(['wizard', 'steps', selectedStep, 'name']) as FormArray).value;
     }
 
+    
     set stepName(val) {
         const self = this;
         const selectedStep = self.form.get('wizard.selectedStep').value;
         if (val) {
             (self.form.get(['wizard', 'steps', selectedStep, 'name'])).setValue(val);
             (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsDirty();
+            (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsTouched();
+
         } else {
             (self.form.get(['wizard', 'steps', selectedStep, 'name'])).setValue(null);
             (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsDirty();
+            (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsTouched();
+
         }
         const expSteps = self.form.get('wizard.steps').value;
         const stepsName = expSteps.map(e => e.name);
