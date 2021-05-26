@@ -23,7 +23,7 @@
                 <span class="fa fa-save mr-2"></span>
                 <span class="text">Save</span>
             </button>
-            <button *ngIf="edit.status" [disabled]="!isValidSchema" (click)="saveDummyCode(true);edit.status=false" type="button"
+            <button *ngIf="edit.status" [disabled]="!isValidSchema" (click)="save(true);edit.status=false" type="button"
                 class="edit-button btn btn-min-width btn-dark" id="sbButtonSaveAndDeploy">
                 <span class="fa fa-save mr-2"></span>
                 <span class="text">Save &amp; Deploy</span>

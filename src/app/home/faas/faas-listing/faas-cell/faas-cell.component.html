@@ -20,10 +20,10 @@
     <span class="text-muted">N.A.</span>
 </ng-container>
 <span *ngIf="field == '_options'">
-    <a *ngIf="data?.status === 'STOPPED'" href="#" class="text-accent mr-2" (click)="$event.preventDefault();startFaasDummy(data)">
+    <a *ngIf="data?.status === 'STOPPED'" href="#" class="text-accent mr-2" (click)="$event.preventDefault();startFaas(data)">
         Start
     </a>
-    <a *ngIf="data?.status === 'RUNNING'" href="#" class="text-accent mr-2" (click)="$event.preventDefault();stopFaasDummy(data)">
+    <a *ngIf="data?.status === 'RUNNING'" href="#" class="text-accent mr-2" (click)="$event.preventDefault();stopFaas(data)">
         Stop
     </a>
     <a href="#" class="text-accent mr-2" (click)="$event.preventDefault();redirectToManage()">
