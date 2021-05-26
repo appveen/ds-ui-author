@@ -453,7 +453,8 @@
             <div *ngIf="!previewHookFormat" class="d-flex justify-content-between align-items-center w-100">
                 <div class="d-flex align-items-center">
                     <span class="odp-flows mr-2"></span>
-                    <span class="font-weight-bold">Add {{hooks.hookTitle}}</span>
+                    <span class="font-weight-bold">
+                        {{ (editIndex == -1 ? 'Add ': 'Edit ') + hooks.hookTitle}}</span>
                 </div>
             </div>
         </div>
@@ -522,7 +523,9 @@
                     id="sbDeleteModalNo">Cancel</button>
                 <button type="button" class="btn btn-success btn-min-width ml-auto"
                     (click)="hookModalTemplateRef.close(true)" id="sbDeleteModalYes"
-                    [disabled]="hookForm.invalid">Add</button>
+                    [disabled]="hookForm.invalid">
+                    {{ (editIndex == -1 ? 'Add': 'Save') }}
+                </button>
             </div>
         </div>
     </div>
