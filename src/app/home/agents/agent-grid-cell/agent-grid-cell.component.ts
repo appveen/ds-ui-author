@@ -29,7 +29,7 @@ export class AgentGridCellComponent implements OnInit, ICellRendererAngularComp 
     self.params = params;
     self.value = params.value;
     self.field = params.colDef.field;
-    self.data = self.params.data;
+    self.data = self.params.data || {};
     if ((self.field === 'heartbeat'
       || self.field === 'streak'
       || self.field === '_options'
