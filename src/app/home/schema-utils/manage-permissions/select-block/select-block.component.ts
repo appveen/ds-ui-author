@@ -221,8 +221,20 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
     self.rowValueType[self.conditions.length - 1] = self.index > 0 ? 'ans' : 'user';
   }
 
+  updatePathValidators(index) {
+    const self = this;
+    const pathInvalidKeys = Object.keys(self.pathInvalid);
+
+    pathInvalidKeys.forEach(pathKey => {
+      if(index === +pathKey.split('_')[0]){
+        delete self.pathInvalid[pathKey];
+      }
+    });
+  }
+
   removeCondition(index) {
     const self = this;
+    self.updatePathValidators(index);
     self.conditions.splice(index, 1);
     delete self.rowDropDown[index];
     delete self.rowValueType[index];
@@ -232,6 +244,8 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
 
   removeThis() {
     const self = this;
+    self.pathInvalid = {};
+    self.isInvalid.emit(false);
     self.rules.splice(self.index, 1);
   }
 
@@ -294,7 +308,9 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
         username: '',
         attributes: {}
       });
-      def.attributes.definition = self.convertToObject(self.userAttributes);
+      const attrIndex = def.findIndex(data => data.key == 'attributes')
+
+      def[attrIndex].definition = self.convertToObject(self.userAttributes);
       return def;
     }
   }
@@ -310,7 +326,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
       temp[newKey] = self.appService.cloneObject(def);
       delete temp[newKey].key;
       temp[newKey].type = self.appService.toCapitalize(temp[newKey].type);
-      if (temp[newKey].definition && temp[newKey].definition.length > 0) {
+      if (temp[newKey]?.definition && temp[newKey]?.definition.length > 0) {
         temp[newKey].definition = self.convertToObject(temp[newKey].definition);
       }
     });
