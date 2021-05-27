@@ -487,6 +487,8 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
         filter: null
       });
     } else {
+      self.blockInvalidRole = {};
+      self.blockInvalidRoleChange.emit(self.blockInvalidRole);
       self.selectedRole.rule = [];
     }
     self.updateRole();
