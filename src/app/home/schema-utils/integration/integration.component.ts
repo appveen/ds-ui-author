@@ -187,11 +187,14 @@ export class IntegrationComponent implements OnInit, OnDestroy {
                     (self.form.get(hookpath).value).splice(index, 1);
                 }
                 self.addHook();
+              
             } else {
                 self.hookForm.reset();
             }
+            self.editIndex = -1;
         }, dismiss => {
             self.hookForm.reset();
+            self.editIndex = -1;
         });
     }
 

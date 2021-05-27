@@ -104,7 +104,7 @@
             </div>
             <div *ngIf="!loading" class="data-key-selector mx-2 d-flex align-items-center bg-white">
                 <div class="data-key-path d-flex align-items-center">
-                    <input type="number" class="form-control" [(ngModel)]="rule.level" [readOnly]="!edit.status">
+                    <input type="number" class="form-control" [(ngModel)]="rule.level" [attr.disabled]="!edit.status ? true : null" >
                 </div>
             </div>
         </div>

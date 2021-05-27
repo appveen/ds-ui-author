@@ -124,6 +124,8 @@ export class TraverseBlockComponent implements OnInit, AfterContentChecked {
 
   removeThis() {
     const self = this;
+    self.pathInvalid = {};
+    self.isInvalid.emit(false);
     self.rules.splice(self.index, 1);
   }
 

@@ -90,7 +90,7 @@
                 class="data-key-selector border rounded mx-2 d-flex align-items-center position-relative bg-white"
                 [ngClass]="{'invalid':pathInvalid[i+'_value']}">
                 <div class="data-key-path d-flex align-items-center px-2 ignore-outside bg-white"
-                    [ngClass]="{'hover':index>0}" (click)="rowValueTypeDropDown[i]=!rowValueTypeDropDown[i]">
+                    [ngClass]="{'hover':index>0}" (click)="!edit.status ? $event.stopPropagation() : rowValueTypeDropDown[i]=!rowValueTypeDropDown[i]">
                     <ng-container *ngIf="!rowValueType[i] || rowValueType[i] === 'user'">
                         <span class="far fa-user text-accent"></span>
                         <span class="selector-name ml-2">Logged In User</span>
@@ -112,11 +112,11 @@
                     (pathChange)="constructFilter()">
                 </odp-path-creator>
                 <ng-container *ngIf="rowValueType[i] == 'value'">
-                    <input *ngIf="!cond?.field?.type || cond?.field?.type == 'String'" type="text" class="form-control"
+                    <input [attr.disabled]="!edit.status ? true : null" *ngIf="!cond?.field?.type || cond?.field?.type == 'String'  || cond?.field?.type == 'User' || cond?.field?.type == 'Relation' " type="text" class="form-control"
                         [(ngModel)]="cond.value" (ngModelChange)="constructFilter()">
-                    <input *ngIf="cond?.field?.type == 'Number'" type="number" class="form-control"
+                    <input [attr.disabled]="!edit.status ? true : null" *ngIf="cond?.field?.type == 'Number'" type="number" class="form-control"
                         [(ngModel)]="cond.value" (ngModelChange)="constructFilter()">
-                    <input *ngIf="cond?.field?.type == 'Date'" type="date" class="form-control" [(ngModel)]="cond.value"
+                    <input [attr.disabled]="!edit.status ? true : null" *ngIf="cond?.field?.type == 'Date'" type="date" class="form-control" [(ngModel)]="cond.value"
                         (ngModelChange)="constructFilter()">
                     <odp-switch *ngIf="cond?.field?.type == 'Boolean'" [(checked)]="cond.value"
                         (checkedChange)="constructFilter()" [edit]="edit"></odp-switch>

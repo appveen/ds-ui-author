@@ -59,11 +59,11 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     this.openDeleteModal.emit(this.alertModal);
   }
 
-  stopFaasDummy(data) {
+  stopFaas(data) {
     this.data.app = this.commonService.app._id;
     data.status = 'STOPPED';
     let request;
-    request = this.commonService.put('partnerManager', '/faas/' + data._id, data);
+    request = this.commonService.put('partnerManager', '/faas/' + data._id + '/stop', data);
     request.subscribe(res => {
         this.ts.success('Stopped ' + data.name + ' function.');
     }, err => {
@@ -72,11 +72,11 @@ export class FaasCellComponent implements ICellRendererAngularComp {
 
   }
 
-  startFaasDummy(data) {
+  startFaas(data) {
     this.data.app = this.commonService.app._id;
     data.status = 'RUNNING';
     let request;
-    request = this.commonService.put('partnerManager', '/faas/' + data._id, data);
+    request = this.commonService.put('partnerManager', '/faas/' + data._id + '/start', data);
     request.subscribe(res => {
         this.ts.success('Started ' + data.name + ' function.');
     }, err => {
