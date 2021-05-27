@@ -492,7 +492,6 @@ export class SchemaBuilderService {
                             delete def.definition;
                         } else if (def.properties.schema) {
                             def.type = 'Global';
-                            delete def.definition;
                         } else if (def.properties.password) {
                             def.type = 'String';
                             delete def.definition;
