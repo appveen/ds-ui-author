@@ -310,7 +310,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
       });
       const attrIndex = def.findIndex(data => data.key == 'attributes')
 
-      def[attrIndex].definition = self.convertToObject(self.userAttributes);
+      def[attrIndex].definition = self.userAttributes;
       return def;
     }
   }
