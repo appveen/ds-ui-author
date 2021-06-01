@@ -14,19 +14,19 @@
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==1"></span>
 
         </div>
-        <div class="border-top"></div>
-        <div *ngIf="hasPermission('PVGAP') || hasPermission('PMGAP')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
+        <!-- <div class="border-top"></div> -->
+        <!-- <div *ngIf="hasPermission('PVGAP') || hasPermission('PMGAP')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
           [ngClass]="{'bg-border': activeSubTab==2}" (click)="activeSubTab=2">
           <span class="">Partners</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==2"></span>
 
-        </div>
-        <div *ngIf="hasPermission('PVGADF') || hasPermission('PMGADF')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
+        </div> 
+         <div *ngIf="hasPermission('PVGADF') || hasPermission('PMGADF')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
           [ngClass]="{'bg-border': activeSubTab==3}" (click)="activeSubTab=3">
           <span class="">Data Formats</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==3"></span>
 
-        </div>
+        </div> 
         <div *ngIf="hasPermission('PVGANS') || hasPermission('PMGANS')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
           [ngClass]="{'bg-border': activeSubTab==4}" (click)="activeSubTab=4">
           <span class="">
@@ -40,7 +40,7 @@
           <span class="">Agents</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==5"></span>
 
-        </div>
+        </div> -->
         <div class="border-top"></div>
         <div *ngIf="hasPermission('PVGABM') || hasPermission('PMGABM')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
           [ngClass]="{'bg-border': activeSubTab==6}" (click)="activeSubTab=6">
