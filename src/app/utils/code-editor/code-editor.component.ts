@@ -1,5 +1,5 @@
 /// <reference path="../../../../node_modules/monaco-editor/monaco.d.ts" />
-import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges } from '@angular/core';
 
 let loadedMonaco = false;
@@ -22,16 +22,6 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
     this.theme = 'vs-light';
     this.fontSize = 14;
     this.codeChange = new EventEmitter();
-    // const req = new HttpRequest('GET', '/assets/types.txt', {
-    //   responseType: 'text'
-    // });
-    // this.httpClient.request(req).subscribe((res) => {
-    //   if (res.type === HttpEventType.Response) {
-    //     this.typesString = res.body as any;
-    //   }
-    // }, err => {
-    //   console.log(err);
-    // });
   }
 
   ngAfterViewInit(): void {
@@ -74,19 +64,153 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
   ngOnChanges() {
     if (this.codeEditorInstance) {
       this.codeEditorInstance.updateOptions({ fontSize: this.fontSize, theme: this.theme });
-      // (window as any).monaco.editor.setTheme(this.theme);
-      // (window as any).monaco.editor.updateOption({ fontSize: this.fontSize });
+      // monaco.editor.setTheme(this.theme);
+      // monaco.editor.updateOption({ fontSize: this.fontSize });
     }
   }
 
   initMonaco(): void {
-    // (window as any).monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-    //   target: monaco.languages.typescript.ScriptTarget.ES2016,
-    //   allowNonTsExtensions: true,
-    //   moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs
-    // });
-    // (window as any).monaco.languages.typescript.typescriptDefaults.addExtraLib(this.typesString, 'node_modules/@types/lodash/index.d.ts');
-    this.codeEditorInstance = (window as any).monaco.editor.create(document.getElementById('code-editor'), {
+
+    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: false,
+      noSyntaxValidation: false,
+    });
+    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+      target: monaco.languages.typescript.ScriptTarget.ES2015,
+      allowNonTsExtensions: true,
+      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+    });
+
+    this.typesString = `const req = {
+      headers: {},
+      body: {},
+      header: (name) => {
+        return "";
+      },
+    };
+    
+    const res = {
+      setHeader: (name, value) => {},
+      status: (code = 200) => {},
+      write: (data) => {},
+      end: () => {},
+      josn: (data = {}) => {},
+    };
+    
+    const router = {
+      get: (path, callback = (req={
+      headers: {},
+      body: {},
+      header: (name) => {
+        return "";
+      },
+    }, res={
+      setHeader: (name, value) => {},
+      status: (code = 200) => {},
+      write: (data) => {},
+      end: () => {},
+      josn: (data = {}) => {},
+    }) => {}) => {},
+      put: (path, callback = (req={
+      headers: {},
+      body: {},
+      header: (name) => {
+        return "";
+      },
+    }, res={
+      setHeader: (name, value) => {},
+      status: (code = 200) => {},
+      write: (data) => {},
+      end: () => {},
+      josn: (data = {}) => {},
+    }) => {}) => {},
+      post: (path, callback = (req={
+      headers: {},
+      body: {},
+      header: (name) => {
+        return "";
+      },
+    }, res={
+      setHeader: (name, value) => {},
+      status: (code = 200) => {},
+      write: (data) => {},
+      end: () => {},
+      josn: (data = {}) => {},
+    }) => {}) => {},
+      delete: (path, callback = (req={
+      headers: {},
+      body: {},
+      header: (name) => {
+        return "";
+      },
+    }, res={
+      setHeader: (name, value) => {},
+      status: (code = 200) => {},
+      write: (data) => {},
+      end: () => {},
+      josn: (data = {}) => {},
+    }) => {}) => {},
+    };`;
+    monaco.languages.typescript.javascriptDefaults.addExtraLib(this.typesString);
+
+
+    monaco.languages.registerCompletionItemProvider('javascript', {
+      provideCompletionItems: (model, position) => {
+        const word = model.getWordUntilPosition(position);
+        const range: monaco.IRange = {
+          startLineNumber: position.lineNumber,
+          endLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endColumn: word.endColumn
+        };  
+        return {
+          suggestions: [
+            {
+              range,
+              label: 'router.post',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Add a POST Route',
+              insertText: [
+                'router.post(\'/\', async (req, res) => {',
+                '\t',
+                '});'].join('\n')
+            },
+            {
+              range,
+              label: 'router.put',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Add a PUT Route',
+              insertText: [
+                'router.put(\'/\', async (req, res) => {',
+                '\t',
+                '});'].join('\n')
+            },
+            {
+              range,
+              label: 'router.get',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Add a GET Route',
+              insertText: [
+                'router.get(\'/\', async (req, res) => {',
+                '\t',
+                '});'].join('\n')
+            },
+            {
+              range,
+              label: 'router.delete',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Add a DELETE Route',
+              insertText: [
+                'router.delete(\'/\', async (req, res) => {',
+                '\t',
+                '});'].join('\n')
+            }
+          ]
+        };
+      }
+    });
+
+    this.codeEditorInstance = monaco.editor.create(document.getElementById('code-editor'), {
       value: this.code,
       language: 'javascript',
       theme: this.theme,
@@ -101,14 +225,5 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
     });
 
     this.codeEditorInstance.layout();
-
-    // this.codeEditorInstance.onDidChangeCursorPosition((e) => {
-    //   if (e.position.lineNumber < 7) {
-    //     this.codeEditorInstance.setPosition({
-    //       lineNumber: 7,
-    //       column: 1
-    //     });
-    //   }
-    // });
   }
 }
