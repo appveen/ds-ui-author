@@ -112,7 +112,7 @@
                     (pathChange)="constructFilter()">
                 </odp-path-creator>
                 <ng-container *ngIf="rowValueType[i] == 'value'">
-                    <input [attr.disabled]="!edit.status ? true : null" *ngIf="!cond?.field?.type || cond?.field?.type == 'String'  || cond?.field?.type == 'User' || cond?.field?.type == 'Relation' " type="text" class="form-control"
+                    <input [attr.disabled]="!edit.status ? true : null" *ngIf="!cond?.field?.type || cond?.field?.type == 'String'  || cond?.field?.type == 'User' || cond?.field?.type == 'Relation' || cond?.field?.type == 'Geojson' || cond?.field?.type == 'Array'" type="text" class="form-control"
                         [(ngModel)]="cond.value" (ngModelChange)="constructFilter()">
                     <input [attr.disabled]="!edit.status ? true : null" *ngIf="cond?.field?.type == 'Number'" type="number" class="form-control"
                         [(ngModel)]="cond.value" (ngModelChange)="constructFilter()">
