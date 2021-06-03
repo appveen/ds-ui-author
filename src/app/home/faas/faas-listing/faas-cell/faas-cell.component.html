@@ -10,9 +10,9 @@
     </span>
     <code *ngIf="field == 'url'">{{value}}</code>
     <span *ngIf="field == 'status'">
-        <span *ngIf="data?.status=='RUNNING'" class="badge badge-success">{{data?.status}}</span>
-        <span *ngIf="data?.status=='DISABLED'" class="badge badge-dark">{{data?.status}}</span>
-        <span *ngIf="data?.status!=='RUNNING' &&  data?.status!=='DISABLED'" class="badge badge-danger">STOPPED</span>
+        <span *ngIf="data?.status=='Active'" class="badge badge-success">RUNNING</span>
+        <span *ngIf="data?.status=='Pending'" class="badge badge-warning">PENDING</span>
+        <span *ngIf="data?.status=='Undeployed'" class="badge badge-danger">STOPPED</span>
     </span>
     <span *ngIf="field == 'lastInvokedAt'">{{value | dateFormat:'YYYY MMM DD, HH:mm:ss, z':'Etc/Zulu'}}</span>
 </ng-container>
@@ -20,10 +20,12 @@
     <span class="text-muted">N.A.</span>
 </ng-container>
 <span *ngIf="field == '_options'">
-    <a *ngIf="data?.status === 'STOPPED'" href="#" class="text-accent mr-2" (click)="$event.preventDefault();startFaas(data)">
+    <a *ngIf="data?.status === 'Undeployed'" href="#" class="text-accent mr-2"
+        (click)="$event.preventDefault();startFaas(data)">
         Start
     </a>
-    <a *ngIf="data?.status === 'RUNNING'" href="#" class="text-accent mr-2" (click)="$event.preventDefault();stopFaas(data)">
+    <a *ngIf="data?.status === 'Active'" href="#" class="text-accent mr-2"
+        (click)="$event.preventDefault();stopFaas(data)">
         Stop
     </a>
     <a href="#" class="text-accent mr-2" (click)="$event.preventDefault();redirectToManage()">

@@ -24,7 +24,7 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     message: string;
     index: number;
   };
-  
+
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -61,26 +61,26 @@ export class FaasCellComponent implements ICellRendererAngularComp {
 
   stopFaas(data) {
     this.data.app = this.commonService.app._id;
-    data.status = 'STOPPED';
+    data.status = 'Undeployed';
     let request;
     request = this.commonService.put('partnerManager', '/faas/' + data._id + '/stop', data);
     request.subscribe(res => {
-        this.ts.success('Stopped ' + data.name + ' function.');
+      this.ts.success('Stopped ' + data.name + ' function.');
     }, err => {
-        this.commonService.errorToast(err);
+      this.commonService.errorToast(err);
     });
 
   }
 
   startFaas(data) {
     this.data.app = this.commonService.app._id;
-    data.status = 'RUNNING';
+    data.status = 'Pending';
     let request;
     request = this.commonService.put('partnerManager', '/faas/' + data._id + '/start', data);
     request.subscribe(res => {
-        this.ts.success('Started ' + data.name + ' function.');
+      this.ts.success('Started ' + data.name + ' function.');
     }, err => {
-        this.commonService.errorToast(err);
+      this.commonService.errorToast(err);
     });
 
   }
