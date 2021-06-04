@@ -10,6 +10,7 @@
     </span>
     <code *ngIf="field == 'url'">{{value}}</code>
     <span *ngIf="field == 'status'">
+        <span *ngIf="data?.status=='Draft'" class="badge badge-accent">DRAFT</span>
         <span *ngIf="data?.status=='Active'" class="badge badge-success">RUNNING</span>
         <span *ngIf="data?.status=='Pending'" class="badge badge-warning">PENDING</span>
         <span *ngIf="data?.status=='Undeployed'" class="badge badge-danger">STOPPED</span>
