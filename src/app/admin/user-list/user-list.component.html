@@ -20,6 +20,10 @@
                     <span class="fa fa-trash mr-2"></span>
                     <span class="text">Delete Users ({{selectedUsers.length}})</span>
                 </button>
+                <button *ngIf="showClearFilter" type="button" class="btn btn-link text-accent py-0" (click)="clearFilters()">
+                    <span class="fa fa-times mr-2"></span>
+                    <span class="text">Clear Filters</span>
+                </button>
             </div>
             <div class="d-flex align-items-center ">
                 <div class="count-text mr-3">Showing {{ loadedCount }} of {{ totalCount }}</div>
