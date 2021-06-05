@@ -554,25 +554,29 @@ export class SchemaBuilderComponent implements
         self.deleteModalTemplateRef.result.then((close) => {
             if (close) {
                 (self.form.controls.definition as FormArray).clear();
+                const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
+                tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
+
                 (self.form.controls.definition as FormArray).push(self.fb.group({
-                    _id: self.fb.group({
+                        key: ['_id'],
+                        type: ['id'],
                         prefix: [null],
                         suffix: [null],
                         padding: [null],
-                        counter: [null]
-                    })
+                        counter: [null],
+                        properties:  self.schemaService.getPropertiesStructure(tempDef.definition.find(d => d.key === '_id'))
                 }));
-                const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
-                tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
+                  
                 if (self.form.get(['definition', 0])) {
                     self.form.get(['definition', 0]).patchValue(tempDef.definition.find(d => d.key === '_id'));
                 }
-                const temp = self.schemaService.getDefinitionStructure();
-                (self.form.controls.definition as FormArray).push(temp);
-                setTimeout(() => {
-                    self.schemaService.selectedFieldId = temp.value._fieldId;
-                    self.schemaService.activeField.emit(temp.value._fieldId);
-                }, 200);
+
+                // const temp = self.schemaService.getDefinitionStructure();
+                // (self.form.controls.definition as FormArray).push(temp);
+                // setTimeout(() => {
+                //     self.schemaService.selectedFieldId = temp.value._fieldId;
+                //     self.schemaService.activeField.emit(temp.value._fieldId);
+                // }, 200);
             }
         }, dismiss => { });
     }
