@@ -571,12 +571,6 @@ export class SchemaBuilderComponent implements
                     self.form.get(['definition', 0]).patchValue(tempDef.definition.find(d => d.key === '_id'));
                 }
 
-                // const temp = self.schemaService.getDefinitionStructure();
-                // (self.form.controls.definition as FormArray).push(temp);
-                // setTimeout(() => {
-                //     self.schemaService.selectedFieldId = temp.value._fieldId;
-                //     self.schemaService.activeField.emit(temp.value._fieldId);
-                // }, 200);
             }
         }, dismiss => { });
     }
