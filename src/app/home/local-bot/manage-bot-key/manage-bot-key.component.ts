@@ -92,6 +92,7 @@ export class ManageBotKeyComponent implements OnInit {
         {
           headerName: 'Value',
           field: 'keyValue',
+          minWidth: 270,
           sortable: false,
           filter: false,
           refData: {
