@@ -191,7 +191,9 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
         || field.type === 'File'
         || field.type === 'Geojson'
         || field.type === 'Relation'
-        || field.type === 'User') {
+        || field.type === 'User'
+        || field.type === 'id')
+      {
         return false;
       } else if (field.type === 'Array') {
         if (field.definition.find(d => d.key === '_self')?.type === 'Object') {
