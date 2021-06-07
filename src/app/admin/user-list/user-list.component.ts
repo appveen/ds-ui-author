@@ -699,4 +699,18 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.showUserDetails = false;
         this.agGrid?.api?.purgeInfiniteCache();
     }
+
+    clearFilters() {
+        this.agGrid.api.setFilterModel({});
+    }
+
+    get showClearFilter() {
+        if (this.agGrid && this.agGrid.api) {
+          const model = this.agGrid.api.getFilterModel();
+          if (Object.keys(model).length > 0) {
+            return true;
+          }
+        }
+        return false;
+    }
 }
