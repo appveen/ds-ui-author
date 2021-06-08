@@ -173,7 +173,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
       }
 
       const keySplit = key.split(".")
-      if (keySplit.length == 2 && keySplit[1] === 'utc'){
+      if (keySplit.length > 1 && keySplit.slice(-1)[0] === 'utc'){
         condition.value = momentTz(condition.value).format("YYYY-MM-DD")
       }
       
