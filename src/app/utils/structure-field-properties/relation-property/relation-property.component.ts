@@ -144,6 +144,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
   selectServiceDropdown() {
     const self = this;
     const item = self.services.find(service => service._id === self.properties.get('relatedTo').value);
+    self.attributeList = [];
     self.selectService(item);
   }
 
