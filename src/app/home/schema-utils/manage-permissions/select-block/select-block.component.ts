@@ -182,7 +182,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
       name: '/' + searchTerm + '/'
     };
     if (searchTerm) {
-      self.commonService.get('serviceManager', '/service?draft=true', options).subscribe(res => {
+      self.commonService.get('serviceManager', '/service?draft=false', options).subscribe(res => {
         self.searchList = res;
       }, err => {
         self.searchList = [];
