@@ -1,6 +1,7 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 .builder-body {
+  
   height: calc(100vh - 201px);
   &.schema-creator {
     padding-bottom: 76px !important;
@@ -29,7 +30,6 @@
     max-width: 200px;
   }
 }
-
 
 .circle {
   min-width: 28px;
@@ -415,7 +415,7 @@
 }
 
 .steps-div {
-  min-height: calc(100vh - 205px);
+  min-height: 60vh;
   overflow-y: auto;
   overflow-x: hidden;
   .action-header {
@@ -431,7 +431,15 @@
   min-height: calc(100vh - 205px);
 }
 .content-steps-div {
-  min-height: calc(100vh - 400px);
+  max-height: 30vh ;
+  height: 30vh !important;
+  min-height: auto;
+}
+
+#action-content{
+  max-height: 50vh ;
+  height: 50vh !important;
+  min-height: auto;
 }
 
 .ml-4r {
