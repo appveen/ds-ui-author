@@ -59,7 +59,7 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
                 definition = tempDef.definition.find(d => d.key === '_self')?.definition || {};
               }
             } else {
-              definition = tempDef.definition || {};
+              definition = tempDef.definition || [];
             }
           } else {
 
@@ -151,6 +151,8 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
         keys.push(field.key + '.formattedAddress');
       } else if (field.type === 'File') {
         keys.push(field.key + '.metadata.filename');
+      } else if (field.type === 'Date') {
+        keys.push(field.key + '.utc');
       } else {
         keys.push(field.key);
       }

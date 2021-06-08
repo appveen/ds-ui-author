@@ -3,6 +3,7 @@ import { Rule } from '../manage-permissions.component';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
 import { SchemaBuilderService } from '../../schema-builder.service';
+import * as momentTz from 'moment-timezone';
 
 @Component({
   selector: 'odp-select-block',
@@ -170,6 +171,12 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
       } else {
         condition.value = innerValue;
       }
+
+      const keySplit = key.split(".")
+      if (keySplit.length == 2 && keySplit[1] === 'utc'){
+        condition.value = momentTz(condition.value).format("YYYY-MM-DD")
+      }
+      
       condition.condition = innerKey;
       condition.key = key;
     });
@@ -249,6 +256,15 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
     self.rules.splice(self.index, 1);
   }
 
+
+  dateFormatter(dateStr) {
+    if (!!dateStr) {
+      const date = new Date(dateStr);
+      return momentTz(date.toISOString()).toISOString();
+    }
+    return;
+  }
+
   constructFilter() {
     const self = this;
     let filter;
@@ -259,9 +275,14 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
         let value = cond.value;
         if (self.rowValueType[index] === 'ans') {
           value = '__#ANS.' + cond.value + '__';
-        } else if (self.rowValueType[index] === 'user') {
+        } 
+        else if (self.rowValueType[index] === 'user') {
           value = '__#USER.' + cond.value + '__';
-        } else {
+        } 
+        else if (cond.field.type == 'Date' && self.rowValueType[index] === 'value'){
+          value = self.dateFormatter(value);
+        }
+        else {
           value = cond.value;
         }
         const obj = Object.defineProperty({}, cond.key, {
