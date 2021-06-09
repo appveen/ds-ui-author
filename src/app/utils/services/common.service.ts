@@ -33,7 +33,7 @@ export class CommonService {
     refreshToken: () => Observable<any>;
     sendHeartBeat: () => Observable<any>;
     get: (type, url, options?: GetOptions) => Observable<any>;
-    put: (type, url, data?) =>  Observable<any>;
+    put: (type, url, data?) => Observable<any>;
     post: (type, url, data) => Observable<any>;
     commonSpinner: boolean;
     addBlur: boolean;
@@ -123,7 +123,7 @@ export class CommonService {
         ].forEach(method => {
             this[method] = (...args) => {
                 let user = this.sessionService.getUser();
-                if(!!user && typeof user === 'string') {
+                if (!!user && typeof user === 'string') {
                     user = JSON.parse(user);
                 }
                 if (!!user?.rbacUserToSingleSession) {
@@ -526,7 +526,7 @@ export class CommonService {
     private _extendApi_() {
         const self = this;
         const token = self.sessionService.getToken();
-        if(!token) {
+        if (!token) {
             this.ts.error('Invalid Session');
             console.log('Invalid Session');
             this.logout();
@@ -610,9 +610,9 @@ export class CommonService {
         const httpHeaders = new HttpHeaders()
             .set('Content-Type', 'application/json; version=2')
             .set('txnId', sh.unique(uuid() + '-' + self.appService.randomStr(5)));
-        if(!skipAuth) {
+        if (!skipAuth) {
             const token = self.sessionService.getToken();
-            if(!token) {
+            if (!token) {
                 this.ts.error('Invalid Session');
                 console.log('Invalid Session');
                 this.logout();
@@ -683,7 +683,7 @@ export class CommonService {
     private _uploadFile_(type, url, data) {
         const self = this;
         const token = self.sessionService.getToken();
-        if(!token) {
+        if (!token) {
             this.ts.error('Invalid Session');
             console.log('Invalid Session');
             this.logout();
@@ -784,7 +784,7 @@ export class CommonService {
                     if (!!val?.auth) {
                         self.connectionDetails = val.auth.connectionDetails;
                     }
-                    if(!!val?.validAuthTypes?.length) {
+                    if (!!val?.validAuthTypes?.length) {
                         this.appService.validAuthTypes = val.validAuthTypes;
                     }
                     resolve(val);
@@ -906,17 +906,17 @@ export class CommonService {
     private _refreshToken_() {
         const self = this;
         const token = self.sessionService.getToken();
-        if(!token) {
+        if (!token) {
             this.ts.error('Invalid Session');
             console.log('Invalid Session');
             this.logout();
             return;
         }
         let user = self.sessionService.getUser();
-        if(typeof user === 'string') {
+        if (typeof user === 'string') {
             user = JSON.parse(user);
         }
-        if(!!user?.rbacUserToSingleSession) {
+        if (!!user?.rbacUserToSingleSession) {
             this.stallRequests = true;
             this.stallTime = Date.now();
         }
@@ -932,7 +932,7 @@ export class CommonService {
     private _sendHeartBeat_() {
         const self = this;
         const token = self.sessionService.getToken();
-        if(!token) {
+        if (!token) {
             this.ts.error('Invalid Session');
             console.log('Invalid Session');
             this.logout();
@@ -1256,7 +1256,7 @@ export class CommonService {
             if (self.serviceMap && self.serviceMap[serviceId]) {
                 resolve(self.serviceMap[serviceId]);
             } else {
-                self.get('serviceManager', '/service/' + serviceId).subscribe(
+                self.get('serviceManager', '/service/' + serviceId + '?draft=true').subscribe(
                     res => {
                         self.serviceMap[serviceId] = res;
                         resolve(self.serviceMap[serviceId]);
