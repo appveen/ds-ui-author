@@ -67,7 +67,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
     self.addCondition('$where');
     if (self.index > 0 && self.rules) {
       self.apiCallStack.prevDataService = true;
-      self.commonService.getService(self.rules[self.index - 1].dataService).then(data => {
+      self.getService(self.rules[self.index - 1].dataService).then(data => {
         self.apiCallStack.prevDataService = false;
         self.prevDataService = data;
         self.prevDataService.definition = self.schemaService.patchType(self.prevDataService.definition);
@@ -77,7 +77,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
     }
     if (self.rule && self.rule.dataService) {
       self.apiCallStack.dataService = true;
-      self.commonService.getService(self.rule.dataService).then(data => {
+      self.getService(self.rule.dataService).then(data => {
         self.apiCallStack.dataService = false;
         self.selectService(data);
         if (self.rule.filter) {
@@ -109,12 +109,23 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  // Needed this method to fetch fresh service details (not cached)
+  getService(serviceId) {
+    return new Promise((resolve, reject) => {
+      this.commonService.get('serviceManager', '/service/' + serviceId + '?draft=true').subscribe(res => {
+        resolve(res);
+      }, err => {
+        reject(err);
+      });
+    });
+  }
+
   getUserAttributes() {
     const self = this;
     self.apiCallStack.getUserAttributes = true;
     self.commonService.get('user', `/usr/app/${self.commonService.app._id}/distinctAttributes`).subscribe(res => {
       self.apiCallStack.getUserAttributes = false;
-      self.userAttributes = res.attributes.map((usrAttr) => {usrAttr.key = usrAttr.key + '.value'; return usrAttr});
+      self.userAttributes = res.attributes.map((usrAttr) => { usrAttr.key = usrAttr.key + '.value'; return usrAttr; });
     }, err => {
       self.apiCallStack.getUserAttributes = false;
       self.userAttributes = [];
@@ -173,10 +184,10 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
       }
 
       const keySplit = key.split(".")
-      if (keySplit.length > 1 && keySplit.slice(-1)[0] === 'utc'){
+      if (keySplit.length > 1 && keySplit.slice(-1)[0] === 'utc') {
         condition.value = momentTz(condition.value).format("YYYY-MM-DD")
       }
-      
+
       condition.condition = innerKey;
       condition.key = key;
     });
@@ -234,7 +245,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
     const pathInvalidKeys = Object.keys(self.pathInvalid);
 
     pathInvalidKeys.forEach(pathKey => {
-      if(index === +pathKey.split('_')[0]){
+      if (index === +pathKey.split('_')[0]) {
         delete self.pathInvalid[pathKey];
       }
     });
@@ -276,11 +287,11 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
         let value = cond.value;
         if (self.rowValueType[index] === 'ans') {
           value = '__#ANS.' + cond.value + '__';
-        } 
+        }
         else if (self.rowValueType[index] === 'user') {
           value = '__#USER.' + cond.value + '__';
-        } 
-        else if (cond.field.type == 'Date' && self.rowValueType[index] === 'value'){
+        }
+        else if (cond.field.type == 'Date' && self.rowValueType[index] === 'value') {
           value = self.dateFormatter(value);
         }
         else {
