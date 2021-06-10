@@ -68,7 +68,12 @@ export class LibraryPropertyComponent implements OnInit, OnDestroy {
     const self = this;
     const options: GetOptions = {
       select: '_id,name',
-      count: 30
+      count: 30,
+      noApp: true,
+      filter: {
+        app: this.commonService.app._id,
+        definition: { $ne: null, $not: { $size: 0 } }
+      }
     };
     if (self.subscriptions['getLibraries']) {
       self.subscriptions['getLibraries'].unsubscribe();
@@ -93,7 +98,8 @@ export class LibraryPropertyComponent implements OnInit, OnDestroy {
           select: 'name definition app',
           filter: {
             name: '/' + val + '/',
-            app: self.commonService.app._id
+            app: self.commonService.app._id,
+            definition: { $ne: null, $not: { $size: 0 } }
           }
         };
         return self.commonService.get('serviceManager', '/globalSchema', options).toPromise().then(res => {
