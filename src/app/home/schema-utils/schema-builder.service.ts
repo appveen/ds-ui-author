@@ -225,8 +225,16 @@ export class SchemaBuilderService {
             temp.addControl('schemaName', new FormControl(value.properties
                 && value.properties.schemaName ? value.properties.schemaName : ''));
             if (value.properties && value.properties.schema) {
+                const apiOptions = {
+                    select: 'name',
+                    filter: {
+                        app: this.commonService.app._id,
+                        definition: { $ne: null, $not: { $size: 0 } }
+                    },
+                    noApp: true
+                };
                 self.commonService
-                    .get('serviceManager', '/globalSchema/' + value.properties.schema, { select: 'name' })
+                    .get('serviceManager', '/globalSchema/' + value.properties.schema, apiOptions)
                     .subscribe(res => {
                         temp.get('schemaName').patchValue(res.name);
                     }, err => { });
