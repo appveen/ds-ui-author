@@ -9,6 +9,7 @@
         <a [routerLink]="data?._id" class="text-accent font-weight-bold ml-3">{{value}}</a>
     </span>
     <code *ngIf="field == 'url'">{{value}}</code>
+    <code *ngIf="field == 'description'">{{value}}</code>
     <span *ngIf="field == 'status'">
         <span *ngIf="data?.status=='Draft'" class="badge badge-accent">DRAFT</span>
         <span *ngIf="data?.status=='Active'" class="badge badge-success">RUNNING</span>
