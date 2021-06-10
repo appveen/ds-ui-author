@@ -99,9 +99,9 @@ export class UserLogsComponent implements OnInit, OnDestroy {
                 if (this.apiConfig.page === 1) {
                     this.loaded = 0;
                 }
-                if (!this.apiConfig.filter) {
-                    this.apiConfig.filter = { apps: this.commonService.app._id };
-                }
+                // if (!this.apiConfig.filter) {
+                //     this.apiConfig.filter = { apps: this.commonService.app._id };
+                // }
                 const filterModel = this.agGrid?.api?.getFilterModel();
                 const filterModelKeys = Object.keys(filterModel || {});
                 if (!!filterModelKeys.length) {
