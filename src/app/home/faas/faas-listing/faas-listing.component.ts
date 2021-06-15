@@ -182,7 +182,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       if (close && this.form.valid) {
         this.triggerFaasCreate();
       }
-      this.form.reset();
     }, dismiss => {
       this.form.reset();
     });
@@ -192,10 +191,12 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     this.commonService.post('partnerManager', '/faas', payload).subscribe(res => {
+      this.form.reset();
       this.ts.success('Function has been created.');
       this.appService.edit = res._id;
       this.router.navigate(['/app/', this.commonService.app._id, 'faas', res._id]);
     }, err => {
+      this.form.reset();
       this.commonService.errorToast(err);
     });
   }
