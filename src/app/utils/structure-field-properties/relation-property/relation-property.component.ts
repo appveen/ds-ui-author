@@ -123,6 +123,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
 
   selectService(value) {
     const self = this;
+    self.attributeList = [];
     self.properties.get('relatedTo').patchValue(value._id);
     self.properties.get('relatedToName').patchValue(value.name);
     self.properties.get('relatedSearchField').patchValue('_id');
@@ -144,7 +145,6 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
   selectServiceDropdown() {
     const self = this;
     const item = self.services.find(service => service._id === self.properties.get('relatedTo').value);
-    self.attributeList = [];
     self.selectService(item);
   }
 
