@@ -1,6 +1,6 @@
 /// <reference path="../../../../node_modules/monaco-editor/monaco.d.ts" />
-import { HttpClient } from '@angular/common/http';
 import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges } from '@angular/core';
+import { AppService } from '../services/app.service';
 
 let loadedMonaco = false;
 let loadPromise: Promise<void>;
@@ -19,7 +19,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
   @Output() codeChange: EventEmitter<string>;
   codeEditorInstance: monaco.editor.IStandaloneCodeEditor;
   typesString: string;
-  constructor(private httpClient: HttpClient) {
+  constructor(private appService: AppService) {
     this.theme = 'vs-light';
     this.fontSize = 14;
     this.edit = { status: false };
@@ -61,13 +61,16 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
         }
       });
     }
+    this.appService.updateCodeEditorState.subscribe(() => {
+      if (this.codeEditorInstance) {
+        this.codeEditorInstance.updateOptions({ fontSize: this.fontSize, theme: this.theme, readOnly: !this.edit.status });
+      }
+    });
   }
 
   ngOnChanges() {
     if (this.codeEditorInstance) {
       this.codeEditorInstance.updateOptions({ fontSize: this.fontSize, theme: this.theme, readOnly: !this.edit.status });
-      // monaco.editor.setTheme(this.theme);
-      // monaco.editor.updateOption({ fontSize: this.fontSize });
     }
   }
 
@@ -99,6 +102,20 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
       josn: (data = {}) => {},
     };
     
+    const logger = {
+      warning: (message, obj) => {
+        return "";
+      },
+      error: (message, obj) => {
+        return "";
+      },
+      info: (message, obj) => {
+        return "";
+      },
+      debug: (message, obj) => {
+        return "";
+      },
+    };
     const router = {
       get: (path, callback = (req={
       headers: {},
@@ -218,7 +235,8 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
       theme: this.theme,
       automaticLayout: true,
       scrollBeyondLastLine: false,
-      fontSize: this.fontSize
+      fontSize: this.fontSize,
+      readOnly: !this.edit.status
     });
 
     this.codeEditorInstance.getModel().onDidChangeContent(e => {

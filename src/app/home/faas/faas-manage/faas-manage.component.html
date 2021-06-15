@@ -13,7 +13,7 @@
                 <span class="fa fa-close mr-2"></span>
                 <span class="text">Cancel</span>
             </button>
-            <button *ngIf="edit.id && !edit.status" (click)="edit.status=true;" type="button"
+            <button *ngIf="edit.id && !edit.status" (click)="enableEditing()" type="button"
                 class="edit-button btn btn-min-width btn-primary ml-3" id="editNanoServiceBtn">
                 <span class="odp-edit mr-2"></span>
                 <span class="text">Edit</span>

@@ -92,12 +92,17 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveDummyCode(deploy?: boolean){
+  enableEditing() {
+    this.edit.status = true;
+    this.appService.updateCodeEditorState.emit(this.edit);
+  }
+
+  saveDummyCode(deploy?: boolean) {
     this.faasData.app = this.commonService.app._id;
     let request;
     this.apiCalls.save = true;
 
-    if(deploy){
+    if (deploy) {
       this.faasData.status = 'RUNNING';
     }
 
@@ -130,7 +135,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     this.faasData.app = this.commonService.app._id;
     let request;
     this.apiCalls.save = true;
-    
+
 
     if (this.edit.id) {
       request = this.commonService.put('partnerManager', '/faas/' + this.edit.id, this.faasData);
