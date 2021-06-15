@@ -91,6 +91,8 @@ export class FaasListingComponent implements OnInit, OnDestroy {
                   this.totalCount = this.loadedCount;
                   params.successCallback(docs, this.totalCount);
                 }
+              } else {
+                params.successCallback([], 0);
               }
             },
             err => {

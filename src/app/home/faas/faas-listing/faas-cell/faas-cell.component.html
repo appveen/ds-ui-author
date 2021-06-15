@@ -21,7 +21,7 @@
 <ng-container *ngIf="!value && field != '_options'">
     <span class="text-muted">N.A.</span>
 </ng-container>
-<span *ngIf="field == '_options'">
+<span *ngIf="field == '_options' && data?._id">
     <a *ngIf="data?.status === 'Undeployed'" href="#" class="text-accent mr-2"
         (click)="$event.preventDefault();startFaas(data)">
         Start
