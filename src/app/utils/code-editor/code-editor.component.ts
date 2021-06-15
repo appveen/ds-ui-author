@@ -15,12 +15,14 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
   @Input() theme: string;
   @Input() fontSize: number;
   @Input() code: string;
+  @Input() edit: { status: boolean, id?: string };
   @Output() codeChange: EventEmitter<string>;
   codeEditorInstance: monaco.editor.IStandaloneCodeEditor;
   typesString: string;
   constructor(private httpClient: HttpClient) {
     this.theme = 'vs-light';
     this.fontSize = 14;
+    this.edit = { status: false };
     this.codeChange = new EventEmitter();
   }
 
@@ -63,7 +65,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges() {
     if (this.codeEditorInstance) {
-      this.codeEditorInstance.updateOptions({ fontSize: this.fontSize, theme: this.theme });
+      this.codeEditorInstance.updateOptions({ fontSize: this.fontSize, theme: this.theme, readOnly: !this.edit.status });
       // monaco.editor.setTheme(this.theme);
       // monaco.editor.updateOption({ fontSize: this.fontSize });
     }
@@ -162,7 +164,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
           endLineNumber: position.lineNumber,
           startColumn: word.startColumn,
           endColumn: word.endColumn
-        };  
+        };
         return {
           suggestions: [
             {

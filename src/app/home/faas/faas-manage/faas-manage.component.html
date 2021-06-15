@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </div> -->
-            <odp-code-editor *ngIf="showCodeEditor" class="code-editor" [theme]="selectedEditorTheme"
+            <odp-code-editor *ngIf="showCodeEditor" class="code-editor" [edit]="edit" [theme]="selectedEditorTheme"
                 [fontSize]="selectedFontSize" [(code)]="faasData.code"></odp-code-editor>
             <!-- <div class="monaco-editor no-user-select {{selectedEditorTheme}} p-3">
                 <div class="view-lines monaco-mouse-cursor-text"
