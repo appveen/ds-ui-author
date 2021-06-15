@@ -109,6 +109,15 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
       this.agGrid.api.purgeInfiniteCache();
     });
+    this.subscriptions['faas.delete'] = this.commonService.faas.delete.subscribe(data => {
+      this.agGrid.api.purgeInfiniteCache();
+    });
+    this.subscriptions['faas.status'] = this.commonService.faas.status.subscribe(data => {
+      this.agGrid.api.purgeInfiniteCache();
+    });
+    this.subscriptions['faas.new'] = this.commonService.faas.new.subscribe(data => {
+      this.agGrid.api.purgeInfiniteCache();
+    });
   }
 
   ngOnDestroy() {

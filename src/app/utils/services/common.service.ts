@@ -53,6 +53,11 @@ export class CommonService {
         status: EventEmitter<any>;
         delete: EventEmitter<any>;
     };
+    faas: {
+        new: EventEmitter<any>;
+        status: EventEmitter<any>;
+        delete: EventEmitter<any>;
+    };
     socket: SocketIOClient.Socket;
     permissions: Array<Permission>;
     rcvdKeys: any;
@@ -98,6 +103,11 @@ export class CommonService {
             delete: new EventEmitter()
         };
         self.flow = {
+            new: new EventEmitter(),
+            status: new EventEmitter(),
+            delete: new EventEmitter()
+        };
+        self.faas = {
             new: new EventEmitter(),
             status: new EventEmitter(),
             delete: new EventEmitter()
@@ -1072,6 +1082,21 @@ export class CommonService {
             self.socket.on('flowCreated', data => {
                 if (data.app === self.app._id) {
                     self.flow.new.emit(data);
+                }
+            });
+            self.socket.on('faasDeleted', data => {
+                if (data.app === self.app._id) {
+                    self.faas.delete.emit(data);
+                }
+            });
+            self.socket.on('faasStatus', data => {
+                if (data.app === self.app._id) {
+                    self.faas.status.emit(data);
+                }
+            });
+            self.socket.on('faasCreated', data => {
+                if (data.app === self.app._id) {
+                    self.faas.new.emit(data);
                 }
             });
         }
