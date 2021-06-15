@@ -18,6 +18,7 @@ import { CodeEditorModule } from 'src/app/utils/code-editor/code-editor.module';
 import { FaasCellComponent } from './faas-listing/faas-cell/faas-cell.component';
 import { FaasFilterComponent } from './faas-listing/faas-filter/faas-filter.component';
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
+import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
 
 
 const routes: Routes = [
@@ -46,7 +47,8 @@ const routes: Routes = [
       FaasCellComponent,
       FaasFilterComponent
     ]),
-    DateFormatModule
+    DateFormatModule,
+    OnChangeModule
   ],
   exports: [RouterModule]
 })
