@@ -7,14 +7,27 @@
 <ng-container *ngIf="value">
     <span *ngIf="field == 'name'" class="d-flex align-items-center">
         <a [routerLink]="data?._id" class="text-accent font-weight-bold ml-3">{{value}}</a>
+        <span *ngIf="data?.draftVersion" class="badge badge-accent ml-2" ngbTooltip="Draft Version" container="body">v{{data.draftVersion}}</span>
     </span>
     <code *ngIf="field == 'url'">{{value}}</code>
     <code *ngIf="field == 'description'">{{value}}</code>
     <span *ngIf="field == 'status'">
-        <span *ngIf="data?.status=='Draft'" class="badge badge-accent">DRAFT</span>
-        <span *ngIf="data?.status=='Active'" class="badge badge-success">RUNNING</span>
-        <span *ngIf="data?.status=='Pending'" class="badge pending">PENDING</span>
-        <span *ngIf="data?.status=='Undeployed'" class="badge badge-danger">STOPPED</span>
+        <ng-container *ngIf="data?.status=='Draft'">
+            <span class="badge badge-accent">DRAFT</span>
+            <span class="badge badge-accent ml-1">v{{data?.version || 1}}</span>
+        </ng-container>
+        <ng-container *ngIf="data?.status=='Active'">
+            <span class="badge badge-success">RUNNING</span>
+            <span class="badge badge-success ml-1">v{{data?.version || 1}}</span>
+        </ng-container>
+        <ng-container *ngIf="data?.status=='Pending'">
+            <span class="badge pending">PENDING</span>
+            <span class="badge pending ml-1">v{{data?.version || 1}}</span>
+        </ng-container>
+        <ng-container *ngIf="data?.status=='Undeployed'">
+            <span class="badge badge-danger">STOPPED</span>
+            <span class="badge badge-danger ml-1">v{{data?.version || 1}}</span>
+        </ng-container>
     </span>
     <span *ngIf="field == 'lastInvokedAt'">{{value | dateFormat:'YYYY MMM DD, HH:mm:ss, z':'Etc/Zulu'}}</span>
 </ng-container>
