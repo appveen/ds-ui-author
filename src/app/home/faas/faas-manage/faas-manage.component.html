@@ -16,18 +16,31 @@
             <button *ngIf="edit.id && !edit.status" (click)="enableEditing()" type="button"
                 class="edit-button btn btn-min-width btn-primary ml-3" id="editNanoServiceBtn">
                 <span class="odp-edit mr-2"></span>
-                <span class="text">Edit</span>
+                <span *ngIf="!faasData?.draftVersion" class="text">Edit</span>
+                <span *ngIf="faasData?.draftVersion" class="text">Edit Draft</span>
             </button>
-            <button *ngIf="edit.status" (click)="saveDummyCode();" type="button"
-                class="edit-button btn btn-min-width btn-primary mx-3" id="saveBtn">
+            <div class="btn-group mr-3" *ngIf="edit.status">
+                <button class="btn btn-primary btn-min-width" (click)="saveDummyCode();" type="button">Save</button>
+                <div ngbDropdown class="btn-group">
+                    <button class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle type="button"></button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                        <button ngbDropdownItem [disabled]="!isValidSchema" (click)="save(true);edit.status=false"
+                            type="button">Save &amp; Deploy</button>
+                        <button *ngIf="faasData?.draftVersion || faasData.status=='Draft'" ngbDropdownItem (click)="discardDraft()" type="button">Discard
+                            Draft</button>
+                    </div>
+                </div>
+            </div>
+            <!-- <button *ngIf="edit.status" (click)="saveDummyCode();" type="button"
+                class="edit-button btn btn-min-width btn-primary" id="saveBtn">
                 <span class="fa fa-save mr-2"></span>
                 <span class="text">Save</span>
             </button>
-            <button *ngIf="edit.status" [disabled]="!isValidSchema" (click)="save(true);edit.status=false" type="button"
-                class="edit-button btn btn-min-width btn-dark" id="sbButtonSaveAndDeploy">
+            <button *ngIf="edit.status" [disabled]="!isValidSchema" (click)="save(true);edit.status=false"
+                type="button" class="edit-button btn btn-min-width btn-dark" id="sbButtonSaveAndDeploy">
                 <span class="fa fa-save mr-2"></span>
                 <span class="text">Save &amp; Deploy</span>
-            </button>
+            </button> -->
         </div>
     </odp-basic-info>
     <div class="border-top border-bottom px-3 py-2 d-flex align-items-center justify-content-between bg-light">

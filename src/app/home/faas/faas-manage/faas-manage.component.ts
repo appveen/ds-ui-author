@@ -59,7 +59,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
           this.appService.edit = null;
           this.edit.status = true;
         }
-        this.getFaas(params.id);
+        this.getFaas(params.id, this.edit.status);
       } else {
         this.edit.status = true;
       }
@@ -77,24 +77,46 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     }
   }
 
-  getFaas(id: string) {
+  getFaas(id: string, draft?: boolean) {
     this.apiCalls.getFaas = true;
-    this.subscriptions['getFaas'] = this.commonService.get('partnerManager', '/faas/' + id).subscribe(res => {
+    let path = '/faas/' + id;
+    if (draft) {
+      path += '?draft=true';
+    }
+    this.showCodeEditor = false;
+    this.subscriptions['getFaas'] = this.commonService.get('partnerManager', path).subscribe(res => {
       this.apiCalls.getFaas = false;
       this.showCodeEditor = true;
       this.faasData = this.appService.cloneObject(res);
       delete this.faasData.__v;
       delete this.faasData._metadata;
       this.oldData = this.appService.cloneObject(this.faasData);
+      this.appService.updateCodeEditorState.emit(this.edit);
     }, err => {
       this.apiCalls.getFaas = false;
       this.commonService.errorToast(err);
     });
   }
 
+  discardDraft() {
+    const path = '/faas/' + this.edit.id + '/draftDelete';
+    this.apiCalls.discardDraft = true;
+    this.subscriptions['discardDraft'] = this.commonService.put('partnerManager', path, {}).subscribe(res => {
+      this.apiCalls.discardDraft = false;
+      this.getFaas(this.faasData._id);
+    }, err => {
+      this.apiCalls.discardDraft = false;
+      this.commonService.errorToast(err);
+    });
+  }
+
   enableEditing() {
     this.edit.status = true;
-    this.appService.updateCodeEditorState.emit(this.edit);
+    if (this.faasData.draftVersion) {
+      this.getFaas(this.faasData._id, true);
+    } else {
+      this.appService.updateCodeEditorState.emit(this.edit);
+    }
   }
 
   saveDummyCode(deploy?: boolean) {
@@ -178,6 +200,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     } else {
       if (!this.edit.editClicked) {
         this.edit.status = false;
+        this.getFaas(this.edit.id);
       }
     }
   }
