@@ -95,7 +95,7 @@ export class IntegrationComponent implements OnInit, OnDestroy {
     }
 
     onTabChange(event) {
-        this.hookForm.reset({ type: 'external' });
+        this.hookForm.reset({ type: event === 2 ? 'external' : 'function' });
         if (event === 2) {
             this.hookForm.get('url').disable();
         } else {
@@ -225,10 +225,12 @@ export class IntegrationComponent implements OnInit, OnDestroy {
 
             } else {
                 this.hookForm.reset({ type: 'external' });
+                this.active = 1;
             }
             this.editIndex = -1;
         }, dismiss => {
             this.hookForm.reset({ type: 'external' });
+            this.active = 1;
             this.editIndex = -1;
         });
     }
@@ -282,6 +284,7 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         this.form.get(hookpath).updateValueAndValidity();
         this.editIndex = -1;
         this.hookForm.reset({ type: 'external' });
+        this.active = 1;
     }
 
 
