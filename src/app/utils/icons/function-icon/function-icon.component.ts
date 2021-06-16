@@ -24,7 +24,7 @@ export class FunctionIconComponent implements OnInit {
   get style() {
     if (!this.active) {
       return {
-        stroke: `#${this.color}`
+        fill: `#${this.color}`
       };
     }
     return {};
