@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, OnDestroy, TemplateRef } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { NgbTooltip, NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTooltip, NgbTooltipConfig, NgbModalRef, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/utils/services/common.service';
 import * as _ from 'lodash';
 
@@ -51,6 +51,7 @@ export class IntegrationComponent implements OnInit, OnDestroy {
     htmlContent: string;
     active: number;
     searching: boolean;
+    name: string;
     constructor(
         private commonService: CommonService,
         private fb: FormBuilder,
@@ -68,7 +69,8 @@ export class IntegrationComponent implements OnInit, OnDestroy {
             url: [null, [Validators.required, Validators.pattern(/^http(s)?:(.*)\/?(.*)/)]],
             failMessage: '',
             refId: [null],
-            type: ['external', [Validators.required]]
+            type: ['external', [Validators.required]],
+            _func: []
         });
         this.hooks = {};
         this.hooks.preHook = true;
@@ -92,10 +94,20 @@ export class IntegrationComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.ngbToolTipConfig.container = 'body';
+        this.hookForm.get('type').valueChanges.subscribe(val => {
+            if (val === 'function') {
+                this.active = 2;
+                this.hookForm.get('url').disable();
+                this.hookForm.get('_func').patchValue(this.hookForm.value);
+            } else {
+                this.active = 1;
+                this.hookForm.get('url').enable();
+            }
+        });
     }
 
     onTabChange(event) {
-        this.hookForm.reset({ type: event === 2 ? 'external' : 'function' });
+        this.hookForm.reset({ type: event === 1 ? 'external' : 'function' });
         if (event === 2) {
             this.hookForm.get('url').disable();
         } else {
@@ -117,16 +129,15 @@ export class IntegrationComponent implements OnInit, OnDestroy {
                         status: 'Active'
                     },
                     count: -1,
-                    select: 'name,url'
+                    select: 'name url'
                 });
             }),
             tap(() => this.searching = false)
         )
 
     selectFunction(event) {
+        this.hookForm.patchValue(event.item);
         this.hookForm.get('refId').patchValue(event.item._id);
-        this.hookForm.get('name').patchValue(event.item.name);
-        this.hookForm.get('url').patchValue(event.item.url);
     }
 
     selectHook(hookName) {
@@ -277,7 +288,9 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         if (!hooks) {
             hooks = [];
         }
-        hooks.push(this.hookForm.value);
+        const temp = this.hookForm.getRawValue();
+        delete temp._func;
+        hooks.push(temp);
         this.form.get(hookpath).patchValue(hooks);
         this.form.get(hookpath).markAsTouched();
         this.form.get(hookpath).markAsDirty();
