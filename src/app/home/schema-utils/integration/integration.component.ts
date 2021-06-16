@@ -7,6 +7,8 @@ import * as _ from 'lodash';
 import { SchemaValuePipe } from 'src/app/home/schema-utils/schema-value.pipe';
 import { AppService } from 'src/app/utils/services/app.service';
 import { DeleteModalConfig } from 'src/app/utils/interfaces/schemaBuilder';
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -23,7 +25,7 @@ export class IntegrationComponent implements OnInit, OnDestroy {
     @Input() form: FormGroup;
     @Input() edit: any;
     hookModalTemplateRef: NgbModalRef;
-    hookPreviewTemplateRef:NgbModalRef;
+    hookPreviewTemplateRef: NgbModalRef;
     deleteModalTemplateRef: NgbModalRef;
     deleteModal: DeleteModalConfig;
     hookForm: FormGroup;
@@ -47,314 +49,339 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         loading: boolean;
     };
     htmlContent: string;
-
+    active: number;
+    searching: boolean;
     constructor(
         private commonService: CommonService,
         private fb: FormBuilder,
         private ngbToolTipConfig: NgbTooltipConfig,
         private appService: AppService) {
-        const self = this;
-        self.deleteModal = {
+        this.deleteModal = {
             title: 'Delete record(s)',
             message: 'Are you sure you want to delete self recordOa(s)?',
             falseButton: 'No',
             trueButton: 'Yes',
             showButtons: true
         };
-        self.hookForm = self.fb.group({
+        this.hookForm = this.fb.group({
             name: [null, Validators.required],
             url: [null, [Validators.required, Validators.pattern(/^http(s)?:(.*)\/?(.*)/)]],
-            failMessage: ''
+            failMessage: '',
+            refId: [null],
+            type: ['external', [Validators.required]]
         });
-        self.hooks = {};
-        self.hooks.preHook = true;
-        self.hooks.postHook = false;
-        self.previewHookFormat = false;
-        self.hooks.approveHook = false;
-        self.hooks.rejectHook = false;
-        self.hooks.sendForReviewHook = false;
-        self.hooks.discardHook = false;
-        self.hooks.submitHook = false;
-        self.hooks.hookTitle = 'Pre hook';
-        self.hooks.hookshortName = 'pre';
-        self.hooks.hookType = 'preHooks';
-        self.verifyUrl = {
+        this.hooks = {};
+        this.hooks.preHook = true;
+        this.hooks.postHook = false;
+        this.previewHookFormat = false;
+        this.hooks.approveHook = false;
+        this.hooks.rejectHook = false;
+        this.hooks.sendForReviewHook = false;
+        this.hooks.discardHook = false;
+        this.hooks.submitHook = false;
+        this.hooks.hookTitle = 'Pre hook';
+        this.hooks.hookshortName = 'pre';
+        this.hooks.hookType = 'preHooks';
+        this.verifyUrl = {
             status: false,
             loading: false
         };
-        self.triggeredHookValidation = false;
+        this.triggeredHookValidation = false;
+        this.active = 1;
     }
 
     ngOnInit() {
-        const self = this;
-        self.ngbToolTipConfig.container = 'body';
+        this.ngbToolTipConfig.container = 'body';
+    }
+
+    onTabChange(event) {
+        this.hookForm.reset({ type: event === 2 ? 'external' : 'function' });
+        if (event === 2) {
+            this.hookForm.get('url').disable();
+        } else {
+            this.hookForm.get('url').enable();
+        }
+    }
+
+    formatter = (result: any) => result.name;
+
+    searchFunction = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged(),
+            tap(() => this.searching = true),
+            switchMap(term => {
+                return this.commonService.get('partnerManager', '/faas', {
+                    filter: {
+                        name: '/' + term + '/',
+                        status: 'Active'
+                    },
+                    count: -1,
+                    select: 'name,url'
+                });
+            }),
+            tap(() => this.searching = false)
+        )
+
+    selectFunction(event) {
+        this.hookForm.get('refId').patchValue(event.item._id);
+        this.hookForm.get('name').patchValue(event.item.name);
+        this.hookForm.get('url').patchValue(event.item.url);
     }
 
     selectHook(hookName) {
-        const self = this;
-        Object.keys(self.hooks).forEach(e => {
+        Object.keys(this.hooks).forEach(e => {
             if (e === hookName) {
-                self.hooks[e] = true;
+                this.hooks[e] = true;
             } else {
-                self.hooks[e] = false;
+                this.hooks[e] = false;
             }
         });
-        if (self.hooks.preHook) {
-            self.hooks.hookTitle = 'Pre hook';
-            self.hooks.hookshortName = 'pre';
-            self.hooks.hookType = 'preHooks';
-        } else if (self.hooks.postHook) {
-            self.hooks.hookTitle = 'Post hook';
-            self.hooks.hookshortName = 'post';
-            self.hooks.hookType = 'webHooks';
-        } else if (self.hooks.approveHook) {
-            self.hooks.hookTitle = 'Approve hook';
-            self.hooks.hookshortName = 'approve';
-            self.hooks.hookType = 'approve';
-        } else if (self.hooks.rejectHook) {
-            self.hooks.hookTitle = 'Reject hook';
-            self.hooks.hookshortName = 'reject';
-            self.hooks.hookType = 'reject';
-        } else if (self.hooks.sendForReviewHook) {
-            self.hooks.hookTitle = 'Rework hook';
-            self.hooks.hookshortName = 'rework';
-            self.hooks.hookType = 'rework';
-        } else if (self.hooks.discardHook) {
-            self.hooks.hookTitle = 'Discard hook';
-            self.hooks.hookshortName = 'discard';
-            self.hooks.hookType = 'discard';
-        } else if (self.hooks.submitHook) {
-            self.hooks.hookTitle = 'Submit hook';
-            self.hooks.hookshortName = 'submit';
-            self.hooks.hookType = 'submit';
+        if (this.hooks.preHook) {
+            this.hooks.hookTitle = 'Pre hook';
+            this.hooks.hookshortName = 'pre';
+            this.hooks.hookType = 'preHooks';
+        } else if (this.hooks.postHook) {
+            this.hooks.hookTitle = 'Post hook';
+            this.hooks.hookshortName = 'post';
+            this.hooks.hookType = 'webHooks';
+        } else if (this.hooks.approveHook) {
+            this.hooks.hookTitle = 'Approve hook';
+            this.hooks.hookshortName = 'approve';
+            this.hooks.hookType = 'approve';
+        } else if (this.hooks.rejectHook) {
+            this.hooks.hookTitle = 'Reject hook';
+            this.hooks.hookshortName = 'reject';
+            this.hooks.hookType = 'reject';
+        } else if (this.hooks.sendForReviewHook) {
+            this.hooks.hookTitle = 'Rework hook';
+            this.hooks.hookshortName = 'rework';
+            this.hooks.hookType = 'rework';
+        } else if (this.hooks.discardHook) {
+            this.hooks.hookTitle = 'Discard hook';
+            this.hooks.hookshortName = 'discard';
+            this.hooks.hookType = 'discard';
+        } else if (this.hooks.submitHook) {
+            this.hooks.hookTitle = 'Submit hook';
+            this.hooks.hookshortName = 'submit';
+            this.hooks.hookType = 'submit';
         }
-        self.previewHookFormat = false;
+        this.previewHookFormat = false;
     }
 
     get hookErr() {
-        const self = this;
-        return self.hookForm.get('name').dirty && self.hookForm.get('name') && self.hookForm.hasError('duplicateName');
+        return this.hookForm.get('name').dirty && this.hookForm.get('name') && this.hookForm.hasError('duplicateName');
     }
 
     get hookUrlErr() {
-        const self = this;
-        return self.hookForm.get('url').dirty && self.hookForm.get('url') && self.hookForm.get('url').hasError('pattern');
+        return this.hookForm.get('url').dirty && this.hookForm.get('url') && this.hookForm.get('url').hasError('pattern');
     }
 
     newHook(index?) {
-        const self = this;
         if (index > -1) {
-            self.editIndex = index;
+            this.editIndex = index;
         }
-        self.verifyUrl.status = false;
-        self.verifyUrl.loading = false;
-        self.previewHookFormat = false;
-        self.triggeredHookValidation = false;
-        if (self.hooks.preHook && index !== undefined) {
-            self.hooks.postHook = false;
-            self.hookForm.patchValue(self.form.get('preHooks').value[index]);
-        } else if (self.hooks.postHook && index !== undefined) {
-            self.hooks.preHook = false;
-            self.hookForm.patchValue(self.form.get('webHooks').value[index]);
-        } else if (self.hooks.approveHook && index !== undefined) {
-            self.hooks.preHook = false;
-            self.hookForm.patchValue(self.form.get('workflowHooks.postHooks.approve').value[index]);
-        } else if (self.hooks.rejectHook && index !== undefined) {
-            self.hooks.preHook = false;
-            self.hooks.hookType = 'reject';
-            self.hookForm.patchValue(self.form.get('workflowHooks.postHooks.reject').value[index]);
-        } else if (self.hooks.sendForReviewHook && index !== undefined) {
-            self.hooks.preHook = false;
-            self.hookForm.patchValue(self.form.get('workflowHooks.postHooks.rework').value[index]);
-        } else if (self.hooks.discardHook && index !== undefined) {
-            self.hooks.preHook = false;
-            self.hookForm.patchValue(self.form.get('workflowHooks.postHooks.discard').value[index]);
-        } else if (self.hooks.submitHook && index !== undefined) {
-            self.hooks.preHook = false;
-            self.hookForm.patchValue(self.form.get('workflowHooks.postHooks.submit').value[index]);
+        this.verifyUrl.status = false;
+        this.verifyUrl.loading = false;
+        this.previewHookFormat = false;
+        this.triggeredHookValidation = false;
+        if (this.hooks.preHook && index !== undefined) {
+            this.hooks.postHook = false;
+            this.hookForm.patchValue(this.form.get('preHooks').value[index]);
+        } else if (this.hooks.postHook && index !== undefined) {
+            this.hooks.preHook = false;
+            this.hookForm.patchValue(this.form.get('webHooks').value[index]);
+        } else if (this.hooks.approveHook && index !== undefined) {
+            this.hooks.preHook = false;
+            this.hookForm.patchValue(this.form.get('workflowHooks.postHooks.approve').value[index]);
+        } else if (this.hooks.rejectHook && index !== undefined) {
+            this.hooks.preHook = false;
+            this.hooks.hookType = 'reject';
+            this.hookForm.patchValue(this.form.get('workflowHooks.postHooks.reject').value[index]);
+        } else if (this.hooks.sendForReviewHook && index !== undefined) {
+            this.hooks.preHook = false;
+            this.hookForm.patchValue(this.form.get('workflowHooks.postHooks.rework').value[index]);
+        } else if (this.hooks.discardHook && index !== undefined) {
+            this.hooks.preHook = false;
+            this.hookForm.patchValue(this.form.get('workflowHooks.postHooks.discard').value[index]);
+        } else if (this.hooks.submitHook && index !== undefined) {
+            this.hooks.preHook = false;
+            this.hookForm.patchValue(this.form.get('workflowHooks.postHooks.submit').value[index]);
         }
 
-        self.hookModalTemplateRef = self.commonService.modal(self.hookModalTemplate, { windowClass: 'preHook-modal' });
-        self.hookModalTemplateRef.result.then((close) => {
-            if (close && self.hookForm.valid) {
+        this.hookModalTemplateRef = this.commonService.modal(this.hookModalTemplate, { windowClass: 'preHook-modal' });
+        this.hookModalTemplateRef.result.then((close) => {
+            if (close && this.hookForm.valid) {
                 let hookpath;
-                if (self.hooks.preHook || self.hooks.postHook) {
-                    hookpath = self.hooks.hookType;
+                if (this.hooks.preHook || this.hooks.postHook) {
+                    hookpath = this.hooks.hookType;
                 } else {
-                    hookpath = 'workflowHooks.' + 'postHooks.' + self.hooks.hookType;
+                    hookpath = 'workflowHooks.' + 'postHooks.' + this.hooks.hookType;
                 }
                 if (index || index === 0) {
-                    (self.form.get(hookpath).value).splice(index, 1);
+                    (this.form.get(hookpath).value).splice(index, 1);
                 }
-                self.addHook();
-              
+                this.addHook();
+
             } else {
-                self.hookForm.reset();
+                this.hookForm.reset({ type: 'external' });
+                this.active = 1;
             }
-            self.editIndex = -1;
+            this.editIndex = -1;
         }, dismiss => {
-            self.hookForm.reset();
-            self.editIndex = -1;
+            this.hookForm.reset({ type: 'external' });
+            this.active = 1;
+            this.editIndex = -1;
         });
     }
 
-    previewHook(){
-        this.prettyPrint()
+    previewHook() {
+        this.prettyPrint();
         this.hookPreviewTemplateRef = this.commonService.modal(this.hookPreviewTemplate, { windowClass: 'preHook-preview-modal' });
     }
 
     changesDone() {
-        const self = this;
-        if (!self.form || !self.hooks) {
+        if (!this.form || !this.hooks) {
             return false;
         }
-
-        const changeInPreHooks = (self.form.get('preHooks') && self.form.get('preHooks').touched && self.form.get('preHooks').dirty);
-        const changeInPostHooks = (self.form.get('postHooks') && self.form.get('postHooks').touched && self.form.get('postHooks').dirty);
-        const changeInWfHooks = (self.form.get('workflowHooks.postHooks') && self.form.get('workflowHooks.postHooks').touched && self.form.get('workflowHooks.postHooks').dirty);
-
+        const changeInPreHooks = (this.form.get('preHooks') && this.form.get('preHooks').touched && this.form.get('preHooks').dirty);
+        const changeInPostHooks = (this.form.get('postHooks') && this.form.get('postHooks').touched && this.form.get('postHooks').dirty);
+        const changeInWfHooks = (this.form.get('workflowHooks.postHooks')
+            && this.form.get('workflowHooks.postHooks').touched
+            && this.form.get('workflowHooks.postHooks').dirty);
         return changeInPreHooks || changeInPostHooks || changeInWfHooks;
     }
 
     invalidForm() {
-        const self = this;
-        if (!self.form || !self.hooks) {
+        if (!this.form || !this.hooks) {
             return false;
         }
-
-        const errorInPreHooks = (self.form.get('preHooks') && self.form.get('preHooks').invalid);
-        const errorInPostHooks = (self.form.get('postHooks') && self.form.get('postHooks').invalid);
-        const errorInWfHooks = (self.form.get('workflowHooks.postHooks') && self.form.get('workflowHooks.postHooks').invalid);
-
+        const errorInPreHooks = (this.form.get('preHooks') && this.form.get('preHooks').invalid);
+        const errorInPostHooks = (this.form.get('postHooks') && this.form.get('postHooks').invalid);
+        const errorInWfHooks = (this.form.get('workflowHooks.postHooks') && this.form.get('workflowHooks.postHooks').invalid);
         return errorInPreHooks || errorInPostHooks || errorInWfHooks;
     }
 
     addHook() {
-        const self = this;
-        self.verifyUrl.status = false;
+        this.verifyUrl.status = false;
         let hooks;
         let hookpath;
-        if (self.hooks.preHook || self.hooks.postHook) {
-            hookpath = self.hooks.hookType;
+        if (this.hooks.preHook || this.hooks.postHook) {
+            hookpath = this.hooks.hookType;
         } else {
-            hookpath = 'workflowHooks.postHooks.' + self.hooks.hookType;
-            self.form.get('workflowHooks.postHooks').markAsTouched();
-            self.form.get('workflowHooks.postHooks').markAsDirty();
+            hookpath = 'workflowHooks.postHooks.' + this.hooks.hookType;
+            this.form.get('workflowHooks.postHooks').markAsTouched();
+            this.form.get('workflowHooks.postHooks').markAsDirty();
         }
-        hooks = self.form.get(hookpath).value;
+        hooks = this.form.get(hookpath).value;
         if (!hooks) {
             hooks = [];
         }
-        hooks.push(self.hookForm.value);
-        self.form.get(hookpath).patchValue(hooks);
-        self.form.get(hookpath).markAsTouched();
-        self.form.get(hookpath).markAsDirty();
-        self.form.get(hookpath).updateValueAndValidity();
-        self.editIndex = -1;
-        self.hookForm.reset();
+        hooks.push(this.hookForm.value);
+        this.form.get(hookpath).patchValue(hooks);
+        this.form.get(hookpath).markAsTouched();
+        this.form.get(hookpath).markAsDirty();
+        this.form.get(hookpath).updateValueAndValidity();
+        this.editIndex = -1;
+        this.hookForm.reset({ type: 'external' });
+        this.active = 1;
     }
 
 
     uniqueHook() {
-        const self = this;
-        if (self.hooks.preHook || self.hooks.postHook) {
+        if (this.hooks.preHook || this.hooks.postHook) {
             let hookpath;
             let duplicateHookName;
-            if (self.hooks.preHook || self.hooks.postHook) {
-                hookpath = self.hooks.hookType;
+            if (this.hooks.preHook || this.hooks.postHook) {
+                hookpath = this.hooks.hookType;
             } else {
-                hookpath = 'workflowHooks.' + 'postHooks.' + self.hooks.hookType;
+                hookpath = 'workflowHooks.' + 'postHooks.' + this.hooks.hookType;
             }
-            if (self.editIndex > -1) {
-                const tempValue = self.appService.cloneObject(self.form.get(hookpath).value);
-                tempValue.splice(self.editIndex, 1);
-                duplicateHookName = tempValue.find(e => e.name === self.hookForm.get('name').value);
+            if (this.editIndex > -1) {
+                const tempValue = this.appService.cloneObject(this.form.get(hookpath).value);
+                tempValue.splice(this.editIndex, 1);
+                duplicateHookName = tempValue.find(e => e.name === this.hookForm.get('name').value);
             } else {
-                duplicateHookName = self.form.get(hookpath).value.find(e => e.name === self.hookForm.get('name').value);
+                duplicateHookName = this.form.get(hookpath).value.find(e => e.name === this.hookForm.get('name').value);
             }
             if (duplicateHookName) {
-                self.hookForm.setErrors({
+                this.hookForm.setErrors({
                     duplicateName: true
                 });
             } else if (!duplicateHookName) {
-                self.hookForm.setErrors(null);
+                this.hookForm.setErrors(null);
             }
         }
     }
 
     removeHook(index) {
-        const self = this;
         let hooks;
         let hookpath;
-        if (self.hooks.preHook || self.hooks.postHook) {
-            hookpath = self.hooks.hookType;
+        if (this.hooks.preHook || this.hooks.postHook) {
+            hookpath = this.hooks.hookType;
         } else {
-            hookpath = 'workflowHooks.' + 'postHooks.' + self.hooks.hookType;
+            hookpath = 'workflowHooks.' + 'postHooks.' + this.hooks.hookType;
         }
-        hooks = self.form.get(hookpath).value;
+        hooks = this.form.get(hookpath).value;
         if (!hooks) {
             hooks = [];
         }
-        const temp = (self.form.get(hookpath).value);
-        self.deleteModal.title = 'Delete ' + temp[index].name;
-        self.deleteModal.message = 'Are you sure you want to delete ' + temp[index].name + '?';
-        self.deleteModal.showButtons = true;
-        self.deleteModalTemplateRef = self.commonService.modal(self.deleteModalTemplate);
-        self.deleteModalTemplateRef.result.then(close => {
+        const temp = (this.form.get(hookpath).value);
+        this.deleteModal.title = 'Delete ' + temp[index].name;
+        this.deleteModal.message = 'Are you sure you want to delete ' + temp[index].name + '?';
+        this.deleteModal.showButtons = true;
+        this.deleteModalTemplateRef = this.commonService.modal(this.deleteModalTemplate);
+        this.deleteModalTemplateRef.result.then(close => {
             if (close) {
-                if (self.hooks.postHook || self.hooks.preHook) {
-                    (self.form.get(self.hooks.hookType).value).splice(index, 1);
-                    self.form.get(self.hooks.hookType).markAsTouched();
-                    self.form.get(self.hooks.hookType).markAsDirty();
+                if (this.hooks.postHook || this.hooks.preHook) {
+                    (this.form.get(this.hooks.hookType).value).splice(index, 1);
+                    this.form.get(this.hooks.hookType).markAsTouched();
+                    this.form.get(this.hooks.hookType).markAsDirty();
                 } else {
-                    (self.form.get(['workflowHooks', 'postHooks', self.hooks.hookType]).value).splice(index, 1);
-                    self.form.get(['workflowHooks', 'postHooks', self.hooks.hookType]).markAsTouched();
-                    self.form.get(['workflowHooks', 'postHooks', self.hooks.hookType]).markAsDirty();
+                    (this.form.get(['workflowHooks', 'postHooks', this.hooks.hookType]).value).splice(index, 1);
+                    this.form.get(['workflowHooks', 'postHooks', this.hooks.hookType]).markAsTouched();
+                    this.form.get(['workflowHooks', 'postHooks', this.hooks.hookType]).markAsDirty();
                 }
-                self.form.markAsDirty();
+                this.form.markAsDirty();
             }
         }, dismiss => { });
     }
 
     activeUrl(url) {
-        const self = this;
-        self.verifyUrl.loading = true;
-        self.commonService.get('serviceManager', '/service/verifyHook?url=' + url, null).subscribe(res => {
-            self.verifyUrl.loading = false;
-            self.verifyUrl.status = true;
-            self.triggeredHookValidation = false;
+        this.verifyUrl.loading = true;
+        this.commonService.get('serviceManager', '/service/verifyHook?url=' + url, null).subscribe(res => {
+            this.verifyUrl.loading = false;
+            this.verifyUrl.status = true;
+            this.triggeredHookValidation = false;
         }, error => {
-            self.verifyUrl.status = false;
-            self.verifyUrl.loading = false;
-            self.triggeredHookValidation = true;
+            this.verifyUrl.status = false;
+            this.verifyUrl.loading = false;
+            this.triggeredHookValidation = true;
         });
     }
 
     closeTooltip() {
-        const self = this;
-        if (self.tooltip && self.tooltip.isOpen) {
-            self.tooltip.close();
+        if (this.tooltip && this.tooltip.isOpen) {
+            this.tooltip.close();
         }
     }
 
     prettyPrint() {
-        const self = this;
         const jsonStructure = {
             operation: 'POST'
         };
-        if (self.hooks.postHook) {
+        if (this.hooks.postHook) {
             jsonStructure['data'] = {};
-            jsonStructure['data']['old'] = new SchemaValuePipe().transform(self.form.getRawValue().definition);
-            jsonStructure['data']['new'] = new SchemaValuePipe().transform(self.form.getRawValue().definition);
-            self.htmlContent = JSON.stringify(jsonStructure, null, 4);
+            jsonStructure['data']['old'] = new SchemaValuePipe().transform(this.form.getRawValue().definition);
+            jsonStructure['data']['new'] = new SchemaValuePipe().transform(this.form.getRawValue().definition);
+            this.htmlContent = JSON.stringify(jsonStructure, null, 4);
         } else {
-            jsonStructure['data'] = new SchemaValuePipe().transform(self.form.getRawValue().definition);
-            self.htmlContent = JSON.stringify(jsonStructure, null, 4);
+            jsonStructure['data'] = new SchemaValuePipe().transform(this.form.getRawValue().definition);
+            this.htmlContent = JSON.stringify(jsonStructure, null, 4);
         }
     }
 
     copyFormat() {
-        const self = this;
         const copyText = document.getElementById('hookFormat') as HTMLInputElement;
         const textArea = document.createElement('textarea');
         textArea.textContent = JSON.stringify(JSON.parse(copyText.innerText), null, 4);
@@ -367,109 +394,95 @@ export class IntegrationComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        const self = this;
-        if (self.deleteModalTemplateRef) {
-            self.deleteModalTemplateRef.close();
+        if (this.deleteModalTemplateRef) {
+            this.deleteModalTemplateRef.close();
         }
-        if (self.hookModalTemplateRef) {
-            self.hookModalTemplateRef.close();
+        if (this.hookModalTemplateRef) {
+            this.hookModalTemplateRef.close();
         }
-        if (self.hookPreviewTemplateRef) {
-            self.hookPreviewTemplateRef.close();
+        if (this.hookPreviewTemplateRef) {
+            this.hookPreviewTemplateRef.close();
         }
-        
+
     }
 
     hasPermission(type: string, entity?: string) {
-        const self = this;
-        return self.commonService.hasPermission(type, entity);
+        return this.commonService.hasPermission(type, entity);
     }
 
     hasPermissionStartsWith(type: string, entity?: string) {
-        const self = this;
-        return self.commonService.hasPermissionStartsWith(type, entity);
+        return this.commonService.hasPermissionStartsWith(type, entity);
     }
 
     canEdit(type: string) {
-        const self = this;
-        if (self.hasPermission('PMDSI' + type, 'SM') || self.hasPermission('PMDSI' + type, 'SM_' + self.id)) {
+        if (this.hasPermission('PMDSI' + type, 'SM') || this.hasPermission('PMDSI' + type, 'SM_' + this.id)) {
             return true;
         }
         return false;
     }
 
     canView(type: string) {
-        const self = this;
-        if (self.hasPermission('PMDSI' + type, 'SM') || self.hasPermission('PMDSI' + type, 'SM_' + self.id)
-            || self.hasPermission('PVDSI' + type, 'SM') || self.hasPermission('PVDSI' + type, 'SM_' + self.id)) {
+        if (this.hasPermission('PMDSI' + type, 'SM') || this.hasPermission('PMDSI' + type, 'SM_' + this.id)
+            || this.hasPermission('PVDSI' + type, 'SM') || this.hasPermission('PVDSI' + type, 'SM_' + this.id)) {
             return true;
         }
         return false;
     }
 
     get id() {
-        const self = this;
-        return self.edit._id;
+        return this.edit._id;
     }
 
     get webHooks() {
-        const self = this;
-        if (self.form.get('webHooks')) {
-            return (self.form.get('webHooks').value) || [];
+        if (this.form.get('webHooks')) {
+            return (this.form.get('webHooks').value) || [];
         }
         return [];
     }
 
     get preHook() {
-        const self = this;
-        if (self.form.get('preHooks')) {
-            return (self.form.get('preHooks').value);
+        if (this.form.get('preHooks')) {
+            return (this.form.get('preHooks').value);
         }
         return [];
     }
 
     get approveHooks() {
-        const self = this;
-        if (self.form.get('workflowHooks.postHooks.approve')) {
-            return (self.form.get('workflowHooks.postHooks.approve').value);
+        if (this.form.get('workflowHooks.postHooks.approve')) {
+            return (this.form.get('workflowHooks.postHooks.approve').value);
         }
         return [];
     }
 
     get rejectHooks() {
-        const self = this;
-        if (self.form.get('workflowHooks.postHooks.reject')) {
-            return (self.form.get('workflowHooks.postHooks.reject').value);
+        if (this.form.get('workflowHooks.postHooks.reject')) {
+            return (this.form.get('workflowHooks.postHooks.reject').value);
         }
         return [];
     }
 
     get sendForReviewHooks() {
-        const self = this;
-        if (self.form.get('workflowHooks.postHooks.rework')) {
-            return (self.form.get('workflowHooks.postHooks.rework').value);
+        if (this.form.get('workflowHooks.postHooks.rework')) {
+            return (this.form.get('workflowHooks.postHooks.rework').value);
         }
         return [];
     }
 
     get discardHooks() {
-        const self = this;
-        if (self.form.get('workflowHooks.postHooks.discard')) {
-            return (self.form.get('workflowHooks.postHooks.discard').value);
+        if (this.form.get('workflowHooks.postHooks.discard')) {
+            return (this.form.get('workflowHooks.postHooks.discard').value);
         }
         return [];
     }
 
     get submitHooks() {
-        const self = this;
-        if (self.form.get('workflowHooks.postHooks.submit')) {
-            return (self.form.get('workflowHooks.postHooks.submit').value);
+        if (this.form.get('workflowHooks.postHooks.submit')) {
+            return (this.form.get('workflowHooks.postHooks.submit').value);
         }
         return [];
     }
     get editable() {
-        const self = this;
-        if (self.edit && self.edit.status) {
+        if (this.edit && this.edit.status) {
             return true;
         }
         return false;
