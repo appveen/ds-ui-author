@@ -102,13 +102,27 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             setTab: [false]
         });
         this.serviceRecordCounts = [];
+        window['imadeveloper'] = () => {
+            this.easterEggEnabled = true;
+            this.ts.success('You are Developer!');
+            setTimeout(() => {
+                Object.keys(this.showCardMenu).forEach(key => {
+                    this.showCardMenu[key] = true;
+                });
+            }, 200);
+            setTimeout(() => {
+                Object.keys(this.showCardMenu).forEach(key => {
+                    this.showCardMenu[key] = false;
+                });
+            }, 3000);
+        };
     }
 
     ngOnInit() {
         const self = this;
         self.app = self.commonService.app._id;
         self.showLazyLoader = true;
-        self.listenForEasterEgg();
+        // self.listenForEasterEgg();
         self.resetSearch();
         self.getServices();
         self.commonService.apiCalls.componentLoading = false;
@@ -778,33 +792,33 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         return self.commonService.hasPermission(type, entity);
     }
 
-    listenForEasterEgg() {
-        const self = this;
-        let text = '';
-        let intVal;
-        fromEvent(document, 'keyup').subscribe((event: KeyboardEvent) => {
-            text += event.key;
-            if (text === 'brahmaportal') {
-                text = '';
-                self.easterEggEnabled = true;
-                self.ts.success('You are Developer!');
-                clearInterval(intVal);
-                setTimeout(() => {
-                    Object.keys(self.showCardMenu).forEach(key => {
-                        self.showCardMenu[key] = true;
-                    });
-                }, 200);
-                setTimeout(() => {
-                    Object.keys(self.showCardMenu).forEach(key => {
-                        self.showCardMenu[key] = false;
-                    });
-                }, 3000);
-            }
-        });
-        intVal = setInterval(() => {
-            text = '';
-        }, 5000);
-    }
+    // listenForEasterEgg() {
+    //     const self = this;
+    //     let text = '';
+    //     let intVal;
+    //     fromEvent(document, 'keyup').subscribe((event: KeyboardEvent) => {
+    //         text += event.key;
+    //         if (text === 'brahmaportal') {
+    //             text = '';
+    //             self.easterEggEnabled = true;
+    //             self.ts.success('You are Developer!');
+    //             clearInterval(intVal);
+    //             setTimeout(() => {
+    //                 Object.keys(self.showCardMenu).forEach(key => {
+    //                     self.showCardMenu[key] = true;
+    //                 });
+    //             }, 200);
+    //             setTimeout(() => {
+    //                 Object.keys(self.showCardMenu).forEach(key => {
+    //                     self.showCardMenu[key] = false;
+    //                 });
+    //             }, 3000);
+    //         }
+    //     });
+    //     intVal = setInterval(() => {
+    //         text = '';
+    //     }, 5000);
+    // }
 
     get dummyRows() {
         const arr = new Array(15);
