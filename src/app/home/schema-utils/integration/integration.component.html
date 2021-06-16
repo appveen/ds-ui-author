@@ -459,71 +459,122 @@
             </div>
         </div>
         <div class="modal-body p-4">
-            <div class="d-flex flex-column mt-4" [formGroup]="hookForm">
-                <div class="d-flex w-100 mb-4">
-                    <div class="label-width mt-1 text-secondary">Name
-                        <sup class="text-danger font-lg " ngbTooltip="Mandatory field">*</sup>
-                    </div>
-                    <div class="value-width position-relative">
-                        <input *ngIf="edit.status" #preHookElts class="form-control" type="text"
-                            placeholder="Enter a name for the hook" [ngClass]="{'is-invalid': hookErr}"
-                            formControlName="name" [value]="hookForm.get('name').value" (keyup)="uniqueHook()"
-                            id="prehookName">
-                        <span class="fas fa-question-circle text-danger position-absolute field-error-symbol"
-                            *ngIf="hookForm.get('name').dirty && hookForm.get('name') && hookForm.hasError('duplicateName')"
-                            ngbTooltip="{{ 'This ' + hooks.hookshortName + 'hook name has already been used'}}"
-                            placement="right"></span>
-                    </div>
-                </div>
-                <div class="d-flex w-100 mb-4">
-                    <div class="label-width mt-1 text-secondary">Endpoint
-                        <sup class="text-danger font-lg " ngbTooltip="Mandatory field">*</sup>
-                    </div>
-                    <div class="value-width position-relative">
-                        <textarea *ngIf=" edit.status" class="form-control " type="text" rows="5" maxlength="2080"
-                            placeholder="http://<hostname>:<port>/<path>" [ngClass]="{'is-invalid': hookUrlErr}"
-                            formControlName="url" [value]="hookForm.get('url').value" (keyup)="uniqueHook()"
-                            id="prehookEndpoint"></textarea>
-                        <span class="fas fa-question-circle  text-danger position-absolute field-error-symbol"
-                            *ngIf="hookForm.get('url').dirty  && hookForm.get('url') && hookForm.get('url').hasError('pattern')"
-                            ngbTooltip="{{ 'please enter a valid ' + hooks.hookshortName + ' hook'}}"
-                            placement="right"></span>
-                    </div>
-                </div>
-                <div class="d-flex w-100 mb-4">
-                    <div class="label-width mt-1 text-secondary"></div>
-                    <div class="value-width d-flex">
-                        <button class="btn" *ngIf="!verifyUrl.status"
-                            [ngClass]="{'btn-primary': !verifyUrl.loading && !verifyUrl.status,'btn-default': verifyUrl.loading}"
-                            type="button" (click)="activeUrl(hookForm.get('url').value)">{{ verifyUrl.loading ? 'Connecting...' :
-                            'Test Connection'}}</button>
-                        <button class="btn" *ngIf="verifyUrl.status"
-                            [ngClass]="{'btn-default': verifyUrl.loading, 'btn-primary': !verifyUrl.loading && verifyUrl.status}"
-                            (click)="activeUrl(hookForm.get('url').value)">{{ verifyUrl.loading ? 'Connecting...' : 'Test Connection'}}</button>
-                        <span class="text-success ml-2 p-1" *ngIf="verifyUrl.status">Success</span>
-                        <span class="text-danger ml-2 p-1" *ngIf="triggeredHookValidation">Failed</span>
-                    </div>
-                </div>
-                <div class="d-flex w-00 mb-4">
-                    <div class="label-width mt-1 text-secondary">Failure message</div>
-                    <div class="value-width position-relative">
-                        <input *ngIf="edit.status" class="form-control" type="text"
-                            placeholder="Message to display when the hook fails" formControlName="failMessage">
-                        <div class="fas fa-info-circle text-secondary position-absolute info-icon"
-                            ngbTooltip="{{'This message will be displayed only if the added' +'    '+hooks.hookshortName + 'hooks'+'   '+'is down'}}"
-                            placement="top">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" (activeIdChange)="onTabChange($event)" class="nav-tabs">
+                <li [ngbNavItem]="1">
+                    <a ngbNavLink>External</a>
+                    <ng-template ngbNavContent>
+                        <div class="d-flex flex-column mt-4" [formGroup]="hookForm">
+                            <div class="d-flex w-100 mb-4">
+                                <div class="label-width mt-1 text-secondary">Name
+                                    <sup class="text-danger font-lg " ngbTooltip="Mandatory field">*</sup>
+                                </div>
+                                <div class="value-width position-relative">
+                                    <input *ngIf="edit.status" class="form-control" type="text"
+                                        placeholder="Enter a name for the hook" [ngClass]="{'is-invalid': hookErr}"
+                                        formControlName="name" [value]="hookForm.get('name').value"
+                                        (keyup)="uniqueHook()" id="prehookName">
+                                    <span
+                                        class="fas fa-question-circle text-danger position-absolute field-error-symbol"
+                                        *ngIf="hookForm.get('name').dirty && hookForm.get('name') && hookForm.hasError('duplicateName')"
+                                        ngbTooltip="{{ 'This ' + hooks.hookshortName + 'hook name has already been used'}}"
+                                        placement="right"></span>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-4">
+                                <div class="label-width mt-1 text-secondary">Endpoint
+                                    <sup class="text-danger font-lg " ngbTooltip="Mandatory field">*</sup>
+                                </div>
+                                <div class="value-width position-relative">
+                                    <textarea *ngIf=" edit.status" class="form-control " type="text" rows="5"
+                                        maxlength="2080" placeholder="http://<hostname>:<port>/<path>"
+                                        [ngClass]="{'is-invalid': hookUrlErr}" formControlName="url"
+                                        [value]="hookForm.get('url').value" (keyup)="uniqueHook()"
+                                        id="prehookEndpoint"></textarea>
+                                    <span
+                                        class="fas fa-question-circle  text-danger position-absolute field-error-symbol"
+                                        *ngIf="hookForm.get('url').dirty  && hookForm.get('url') && hookForm.get('url').hasError('pattern')"
+                                        ngbTooltip="{{ 'please enter a valid ' + hooks.hookshortName + ' hook'}}"
+                                        placement="right"></span>
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-4">
+                                <div class="label-width mt-1 text-secondary"></div>
+                                <div class="value-width d-flex">
+                                    <button class="btn" *ngIf="!verifyUrl.status"
+                                        [ngClass]="{'btn-primary': !verifyUrl.loading && !verifyUrl.status,'btn-default': verifyUrl.loading}"
+                                        type="button" (click)="activeUrl(hookForm.get('url').value)">{{
+                                        verifyUrl.loading ? 'Connecting...' :
+                                        'Test Connection'}}</button>
+                                    <button class="btn" *ngIf="verifyUrl.status"
+                                        [ngClass]="{'btn-default': verifyUrl.loading, 'btn-primary': !verifyUrl.loading && verifyUrl.status}"
+                                        (click)="activeUrl(hookForm.get('url').value)">{{ verifyUrl.loading ?
+                                        'Connecting...' : 'Test Connection'}}</button>
+                                    <span class="text-success ml-2 p-1" *ngIf="verifyUrl.status">Success</span>
+                                    <span class="text-danger ml-2 p-1" *ngIf="triggeredHookValidation">Failed</span>
+                                </div>
+                            </div>
+                            <div class="d-flex w-00 mb-4">
+                                <div class="label-width mt-1 text-secondary">Failure message</div>
+                                <div class="value-width position-relative">
+                                    <input *ngIf="edit.status" class="form-control" type="text"
+                                        placeholder="Message to display when the hook fails"
+                                        formControlName="failMessage">
+                                    <div class="fas fa-info-circle text-secondary position-absolute info-icon"
+                                        ngbTooltip="{{'This message will be displayed only if the added' +'    '+hooks.hookshortName + 'hooks'+'   '+'is down'}}"
+                                        placement="top">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                    <a ngbNavLink>Function</a>
+                    <ng-template ngbNavContent>
+                        <div class="d-flex flex-column mt-4" [formGroup]="hookForm">
+                            <div class="d-flex w-100 mb-4">
+                                <div class="label-width mt-1 text-secondary">Name
+                                    <sup class="text-danger font-lg " ngbTooltip="Mandatory field">*</sup>
+                                </div>
+                                <div class="value-width position-relative">
+                                    <input *ngIf="edit.status" class="form-control" type="text"
+                                        placeholder="Enter a name for the hook" [ngbTypeahead]="searchFunction"
+                                        [resultFormatter]="formatter" [inputFormatter]="formatter"
+                                        (selectItem)="selectFunction($event)">
+                                </div>
+                            </div>
+                            <div class="d-flex w-100 mb-4">
+                                <div class="label-width mt-1 text-secondary">Endpoint
+                                    <sup class="text-danger font-lg " ngbTooltip="Mandatory field">*</sup>
+                                </div>
+                                <div class="value-width position-relative">
+                                    <input type="text" class="form-control" formControlName="url">
+                                </div>
+                            </div>
+                            <div class="d-flex w-00 mb-4">
+                                <div class="label-width mt-1 text-secondary">Failure message</div>
+                                <div class="value-width position-relative">
+                                    <input *ngIf="edit.status" class="form-control" type="text"
+                                        placeholder="Message to display when the hook fails"
+                                        formControlName="failMessage">
+                                    <div class="fas fa-info-circle text-secondary position-absolute info-icon"
+                                        ngbTooltip="{{'This message will be displayed only if the added' +'    '+hooks.hookshortName + 'hooks'+'   '+'is down'}}"
+                                        placement="top">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+            <div [ngbNavOutlet]="nav"></div>
         </div>
         <div class="modal-footer p-3 d-flex w-100 mt-auto justify-content-end align-items-end">
             <div class="w-50 d-flex">
                 <button type="button" class="btn btn-link ml-auto" (click)="hookModalTemplateRef.close(false)"
                     id="sbDeleteModalNo">Cancel</button>
                 <button type="button" class="btn btn-success btn-min-width ml-auto"
-                    (click)="hookModalTemplateRef.close(true)" id="sbDeleteModalYes"
-                    [disabled]="hookForm.invalid">
+                    (click)="hookModalTemplateRef.close(true)" id="sbDeleteModalYes" [disabled]="hookForm.invalid">
                     {{ (editIndex == -1 ? 'Add': 'Save') }}
                 </button>
             </div>
