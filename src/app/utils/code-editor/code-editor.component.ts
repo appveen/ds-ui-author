@@ -99,7 +99,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
       status: (code = 200) => {},
       write: (data) => {},
       end: () => {},
-      josn: (data = {}) => {},
+      json: (data = {}) => {},
     };
     
     const logger = {
@@ -128,7 +128,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
       status: (code = 200) => {},
       write: (data) => {},
       end: () => {},
-      josn: (data = {}) => {},
+      json: (data = {}) => {},
     }) => {}) => {},
       put: (path, callback = (req={
       headers: {},
@@ -141,7 +141,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
       status: (code = 200) => {},
       write: (data) => {},
       end: () => {},
-      josn: (data = {}) => {},
+      json: (data = {}) => {},
     }) => {}) => {},
       post: (path, callback = (req={
       headers: {},
@@ -154,7 +154,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
       status: (code = 200) => {},
       write: (data) => {},
       end: () => {},
-      josn: (data = {}) => {},
+      json: (data = {}) => {},
     }) => {}) => {},
       delete: (path, callback = (req={
       headers: {},
@@ -167,7 +167,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
       status: (code = 200) => {},
       write: (data) => {},
       end: () => {},
-      josn: (data = {}) => {},
+      json: (data = {}) => {},
     }) => {}) => {},
     };`;
     monaco.languages.typescript.javascriptDefaults.addExtraLib(this.typesString);
