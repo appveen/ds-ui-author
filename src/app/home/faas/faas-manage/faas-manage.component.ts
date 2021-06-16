@@ -183,6 +183,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
 
   deploy() {
     if (this.edit.id) {
+      this.apiCalls.deploy = true;
       this.commonService.put('partnerManager', '/faas/' + this.edit.id + '/deploy', {}).subscribe(res => {
         this.apiCalls.deploy = false;
         this.ts.success('Saved ' + this.faasData.name + ' and deployment process has started.');
