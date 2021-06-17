@@ -13,6 +13,7 @@
           <div class="value-width" *ngIf=" form.get('properties._detailedType').value === 'enum'">
             <select class="form-control" formControlName="default" id="_currency"
               (change)="setEnumValue(form.get('properties'))">
+              <option [value]=null selected>Select Value</option>
               <option id="_relationAttr" *ngFor="let attr of form.get('properties.enum').value" [value]="attr">{{attr}}
               </option>
             </select>

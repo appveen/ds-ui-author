@@ -293,7 +293,13 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
   }
 
   setEnumValue(prop) {
-    prop.get('default').setValue(parseFloat(prop.get('default').value));
+    const value = prop.get('default').value;
+    if (!value || value === 'null' || value === null) {
+      prop.get('default').setValue(null);
+    }
+    else{
+      prop.get('default').setValue(parseFloat(prop.get('default').value));
+    }
   }
 
   get enumList() {
