@@ -59,6 +59,9 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     self.properties = self.form.get('properties') as FormGroup;
     self.getServices();
     self.getDefinition();
+    if(!self.properties.get('_default')){
+      self.properties.addControl('_default', new FormControl());
+    }
   }
 
   ngAfterViewInit(): void {
@@ -334,10 +337,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
       .get('api', url + '/' + self.properties.get('default').value, options)
       .subscribe(
         _data => {
-          // self.relationValue = _data;
-          if (self.defaultEle) {
-            self.defaultEle.writeValue(_data);
-          }
+          self.properties.get('_default').patchValue(_data);
         },
         err => {
           if (err.statusText === 'Forbidden') {
