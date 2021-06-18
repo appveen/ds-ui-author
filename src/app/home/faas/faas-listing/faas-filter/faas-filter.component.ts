@@ -20,7 +20,7 @@ export class FaasFilterComponent implements IFloatingFilter, AgFrameworkComponen
     this.params.parentFilterInstance((instance: IFilterComp) => {
       this.filterInstance = (instance as (TextFilter | NumberFilter));
     });
-    this.ele.nativeElement.classList.push('w-100');
+    // this.ele.nativeElement.classList.push('w-100');
   }
 
   onParentModelChanged(parentModel: any, filterChangedEvent?: FilterChangedEvent): void {
