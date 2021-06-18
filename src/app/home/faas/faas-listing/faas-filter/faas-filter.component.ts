@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
 import { AgFrameworkComponent } from 'ag-grid-angular';
 import { FilterChangedEvent, IFilterComp, IFloatingFilter, IFloatingFilterParams, NumberFilter, TextFilter } from 'ag-grid-community';
 
@@ -13,13 +13,14 @@ export class FaasFilterComponent implements IFloatingFilter, AgFrameworkComponen
   field: string;
   value: any;
   filterInstance: TextFilter | NumberFilter;
-  constructor() { }
+  constructor(private ele: ElementRef) { }
   agInit(params: IFloatingFilterParams): void {
     this.params = params;
     this.field = params.column.getColDef().field;
     this.params.parentFilterInstance((instance: IFilterComp) => {
       this.filterInstance = (instance as (TextFilter | NumberFilter));
     });
+    this.ele.nativeElement.classList.push('w-100');
   }
 
   onParentModelChanged(parentModel: any, filterChangedEvent?: FilterChangedEvent): void {
