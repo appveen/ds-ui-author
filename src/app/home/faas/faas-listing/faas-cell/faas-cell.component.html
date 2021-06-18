@@ -9,7 +9,10 @@
         <a [routerLink]="data?._id" class="text-accent font-weight-bold ml-3">{{value}}</a>
         <span *ngIf="data?.draftVersion" class="badge badge-accent ml-2" ngbTooltip="Draft Version" container="body">v{{data.draftVersion}}</span>
     </span>
-    <code *ngIf="field == 'url'">{{value}}</code>
+    <code *ngIf="field == 'url'">{{fqdn}}{{value}}</code>
+    <button *ngIf="field == 'url'" type="button" class="btn btn-link text-accent btn-sm ml-2" (click)="copyUrl()">
+        <span class="fa fa-copy"></span>
+    </button>
     <code *ngIf="field == 'description'">{{value}}</code>
     <span *ngIf="field == 'status'">
         <ng-container *ngIf="data?.status=='Draft'">

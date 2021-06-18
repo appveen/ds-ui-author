@@ -100,10 +100,22 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     }
   }
 
+  copyUrl() {
+    const url = this.fqdn + this.data.url;
+    this.appService.copyToClipboard(url);
+  }
+
   get data() {
     if (this.params && this.params.node && this.params.node.data) {
       return this.params.node.data;
     }
     return {};
+  }
+
+  get fqdn() {
+    if (this.commonService.userDetails && this.commonService.userDetails.fqdn) {
+      return this.commonService.userDetails.fqdn;
+    }
+    return '-';
   }
 }
