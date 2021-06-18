@@ -154,7 +154,7 @@
                     </div>
                     <span *ngIf="agentRoute.isActive" class="fa fa-angle-right mr-3"></span>
                 </div>
-                <div *ngIf="experimentalFeatures" #functionRoute="routerLinkActive"
+                <div #functionRoute="routerLinkActive"
                     class="icon-block hover d-flex align-items-center justify-content-between my-2"
                     routerLinkActive="text-accent bg-white active" [routerLink]="['faas']" id="function"
                     (mouseover)="hover.function = true" (mouseleave)="hover.function = false">
