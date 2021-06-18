@@ -45,10 +45,10 @@
     </odp-basic-info>
     <div class="border-top border-bottom px-3 py-2 d-flex align-items-center justify-content-between bg-light">
         <div class="url-info d-flex align-items-center">
-            <button type="button" class="btn btn-dark btn-sm mr-3" (click)="testRun()">
+            <!-- <button type="button" class="btn btn-dark btn-sm mr-3" (click)="testRun()">
                 <span class="fa fa-flask mr-2"></span>
                 <span>Test</span>
-            </button>
+            </button> -->
             <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
             <span class="url text-accent">{{faasData.url || 'N.A.'}}</span>
         </div>
@@ -172,28 +172,23 @@
                             </thead>
                             <tr>
                                 <td>DATA_STACK_NAMESPACE</td>
-                                <td class="text-center">-</td>
+                                <td class="text-center">{{namespace}}</td>
                                 <!-- <td>The Namespace of Data Stack</td> -->
                             </tr>
                             <tr>
                                 <td>FQDN</td>
-                                <td class="text-center">-</td>
+                                <td class="text-center">{{fqdn}}</td>
                                 <!-- <td>FQDN</td> -->
                             </tr>
                             <tr>
                                 <td>DATA_STACK_APP_NAMESPACE</td>
-                                <td class="text-center">-</td>
+                                <td class="text-center">{{faasData.namespace}}</td>
                                 <!-- <td>The Namespace of Current App</td> -->
                             </tr>
                             <tr>
                                 <td>LOG_LEVEL</td>
                                 <td class="text-center">info</td>
                                 <!-- <td>Log Level for logging</td> -->
-                            </tr>
-                            <tr>
-                                <td>DATA_STACK_ALLOWED_FILE_TYPE</td>
-                                <td class="text-center">-</td>
-                                <!-- <td>The Allowed file types in Data Stack</td> -->
                             </tr>
                         </table>
                     </ng-template>

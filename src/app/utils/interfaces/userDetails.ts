@@ -41,6 +41,7 @@ export interface UserDetails {
     verifyDeploymentUser?: boolean;
     defaultTimezone?: string;
     experimentalFeatures?: boolean;
+    fqdn?: string;
 }
 
 export interface Auth {

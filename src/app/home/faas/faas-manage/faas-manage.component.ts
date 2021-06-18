@@ -217,4 +217,18 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   get isValidSchema() {
     return true;
   }
+
+  get namespace() {
+    if (this.faasData && this.faasData.namespace) {
+      return this.faasData.namespace.split('-')[0];
+    }
+    return '-';
+  }
+
+  get fqdn() {
+    if (this.commonService.userDetails && this.commonService.userDetails.fqdn) {
+      return this.commonService.userDetails.fqdn;
+    }
+    return '-';
+  }
 }
