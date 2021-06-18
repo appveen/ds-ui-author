@@ -35,7 +35,7 @@
     <div class="label-width text-secondary">Default Value  </div>
     <div class="value-width">
       <ng-container *ngIf="edit.status">
-        <input class="form-control defaultEle" type="text" [ngbTypeahead]="searchDocumments" [inputFormatter]="documentFormatter"
+        <input class="form-control defaultEle" type="text" formControlName="_default" [ngbTypeahead]="searchDocumments" [inputFormatter]="documentFormatter"
           #defaultEle="ngbTypeahead" id="defaultEle" (selectItem)="selectDocument($event)" [resultFormatter]="documentFormatter"
           [disabled]="properties.get('default').disabled" *ngIf="documents &&  documents.length> 10">
         <select *ngIf="documents && documents.length!=0 && documents.length<=10" id="relatedTo" class="form-control"

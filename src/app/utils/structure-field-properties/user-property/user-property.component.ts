@@ -74,6 +74,9 @@ export class UserPropertyComponent implements OnInit {
       self.properties = self.form.get('properties') as FormGroup;
     }
     self.getDocuments();
+    if(!self.properties.get('_default')){
+      self.properties.addControl('_default', new FormControl());
+    }
   }
 
   ngAfterViewInit(): void {
@@ -93,9 +96,7 @@ export class UserPropertyComponent implements OnInit {
       self.commonService
         .get('user', `/usr/` + self.properties.get('default').value, options)
         .subscribe(_data => {
-          if (self.defaultEle) {
-            self.defaultEle.writeValue(_data);
-          }
+          self.properties.get('_default').patchValue(_data);
         }, err => {
           if (err.statusText === 'Forbidden') {
             self.properties.get('default').disable();

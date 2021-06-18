@@ -55,7 +55,7 @@
     <div class="value-width d-flex align-items-center">
       <ng-container *ngIf="edit.status">
         <input class="form-control" type="text" [ngbTypeahead]="searchDocumments" [inputFormatter]="documentFormatter"
-          #defaultEle="ngbTypeahead" id="defaultEle" (selectItem)="selectDocument($event)"
+          #defaultEle="ngbTypeahead" id="defaultEle" formControlName="_default" (selectItem)="selectDocument($event)"
           [resultFormatter]="documentFormatter" [disabled]="properties.get('default').disabled"
           *ngIf="documents && ( documents.length> 10 || isSerachFieldSecureTxt)">
         <select *ngIf="documents && documents.length!=0 && documents.length<=10 && !isSerachFieldSecureTxt" id="relatedTo" class="form-control"
