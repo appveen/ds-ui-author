@@ -168,6 +168,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     columns.forEach((item: AgGridColumn) => {
       item.suppressMovable = true;
       item.resizable = true;
+      item.suppressMenu = true;
       if (item.field !== '_options') {
         item.sortable = true;
         item.filter = 'agTextColumnFilter';
