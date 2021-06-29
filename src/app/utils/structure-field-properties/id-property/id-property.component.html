@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-row">
-      <div class="sub-level-width text-secondary">Length</div>
+      <div class="sub-level-width text-secondary">Min Length</div>
       <input *ngIf="canEdit" class="value-width form-control short" [ngClass]="{'is-invalid':paddingError}"
         type="number" #idPrefix formControlName="padding">
       <span *ngIf="!canEdit">{{form.get('padding').value}}</span>
@@ -45,6 +45,9 @@
       <div class="label-width"></div>
       <span class="text-danger" *ngIf="form.get('counter').hasError('counter')"><span class="fa fa-times mr-1"></span>
         {{counterError}}
+      </span>
+      <span class="text-danger" *ngIf="form.get('counter').hasError('max')"><span class="fa fa-times mr-1"></span>
+        Starts from cannot be more than 10 characters
       </span>
     </div>
   </div>

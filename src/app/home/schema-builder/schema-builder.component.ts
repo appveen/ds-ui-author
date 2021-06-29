@@ -145,7 +145,7 @@ export class SchemaBuilderComponent implements
                         prefix: [null],
                         suffix: [null],
                         padding: [null],
-                        counter: [null]
+                        counter: [null,[Validators.max(9999999999)]]
                     }
                 ),
                 self.schemaService.getDefinitionStructure()
@@ -187,7 +187,7 @@ export class SchemaBuilderComponent implements
         self.commonService.apiCalls.componentLoading = false;
         self.form.get('enableSearchIndex').patchValue(self.commonService.userDetails['enableSearchIndex']);
         self.form.get('definition').setValidators([sameName]);
-        self.form.get(['definition', 0]).setValidators([counterPaddingValidator]);
+        // self.form.get(['definition', 0]).setValidators([counterPaddingValidator]);
         self.breadcrumbPaths.push({
             active: false,
             label: 'Data Services',
@@ -205,8 +205,8 @@ export class SchemaBuilderComponent implements
                 }
                 self.commonService.apiCalls.componentLoading = true;
                 self.edit.id = param.id;
-                self.form.get(['definition', 0, 'counter'])
-                    .setAsyncValidators([counterValidator(self.commonService, self.edit.id)]);
+                // self.form.get(['definition', 0, 'counter'])
+                //     .setAsyncValidators([counterValidator(self.commonService, self.edit.id)]);
                 self.fillDetails(param.id);
             } else {
                 self.enableEdit(true);
@@ -558,15 +558,15 @@ export class SchemaBuilderComponent implements
                 tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
 
                 (self.form.controls.definition as FormArray).push(self.fb.group({
-                        key: ['_id'],
-                        type: ['id'],
-                        prefix: [null],
-                        suffix: [null],
-                        padding: [null],
-                        counter: [null],
-                        properties:  self.schemaService.getPropertiesStructure(tempDef.definition.find(d => d.key === '_id'))
+                    key: ['_id'],
+                    type: ['id'],
+                    prefix: [null],
+                    suffix: [null],
+                    padding: [null],
+                    counter: [null],
+                    properties: self.schemaService.getPropertiesStructure(tempDef.definition.find(d => d.key === '_id'))
                 }));
-                  
+
                 if (self.form.get(['definition', 0])) {
                     self.form.get(['definition', 0]).patchValue(tempDef.definition.find(d => d.key === '_id'));
                 }
@@ -668,7 +668,7 @@ export class SchemaBuilderComponent implements
                         prefix: [null],
                         suffix: [null],
                         padding: [null],
-                        counter: [null],
+                        counter: [null,[Validators.max(9999999999)]],
                         properties: self.schemaService.getPropertiesStructure(temp.definition.find(d => d.key === '_id'))
                     }));
                 }
