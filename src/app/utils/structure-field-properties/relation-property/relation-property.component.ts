@@ -235,7 +235,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     if (self.definition && self.definition.length) {
       const val = self.definition.filter(e => e.properties.dataPath === key);
       if (val && val[0]) {
-        return val[0].name;
+        return val[0].properties.name;
       }else {
         return null
       }
