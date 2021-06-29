@@ -23,7 +23,7 @@
           <span class="text">Add User(s)</span>
         </button>
       </div>
-      <div *ngIf="!hasPermission('PMGMUD') && !hasPermission('PMGMUC')"></div>
+      <div *ngIf="hasPermission('PMGMUD') || hasPermission('PMGMUC') ||hasPermission('PVGMUD') || hasPermission('PVGMUC')"></div>
       <ag-grid-angular class="ag-theme-balham" [frameworkComponents]="frameworkComponents" [gridOptions]="gridOptions"
         [rowData]="userList | agGridFilter:filterModel" (filterModified)="!filtering && onFilterChanged($event)">
       </ag-grid-angular>
