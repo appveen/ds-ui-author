@@ -231,8 +231,8 @@ export class UserGroupBotsComponent implements OnInit, OnDestroy {
       context: this,
       animateRows: true,
       onGridReady: this.onGridReady.bind(this),
-      onRowDataChanged: this.autoSizeAllColumns.bind(this),
-      onGridSizeChanged: this.forceResizeColumns.bind(this)
+      // onRowDataChanged: this.autoSizeAllColumns.bind(this),
+      // onGridSizeChanged: this.forceResizeColumns.bind(this)
     };
   }
 
@@ -360,7 +360,7 @@ export class UserGroupBotsComponent implements OnInit, OnDestroy {
   private onGridReady(event: GridReadyEvent) {
     this.gridApi = event.api;
     this.columnApi = event.columnApi;
-    this.forceResizeColumns();
+    // this.forceResizeColumns();
   }
 
   private forceResizeColumns() {
