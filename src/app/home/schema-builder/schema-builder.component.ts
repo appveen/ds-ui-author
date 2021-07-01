@@ -132,6 +132,7 @@ export class SchemaBuilderComponent implements
             description: [null, [maxLenValidator(250)]],
             api: ['/', [Validators.required]],
             permanentDeleteData: [true],
+            allowedFileTypes: [[]],
             wizard: self.fb.group({
                 steps: self.fb.array([]),
                 selectedStep: [0],
@@ -145,7 +146,7 @@ export class SchemaBuilderComponent implements
                         prefix: [null],
                         suffix: [null],
                         padding: [null],
-                        counter: [null]
+                        counter: [null, [Validators.max(9999999999)]]
                     }
                 ),
                 self.schemaService.getDefinitionStructure()
@@ -668,7 +669,7 @@ export class SchemaBuilderComponent implements
                         prefix: [null],
                         suffix: [null],
                         padding: [null],
-                        counter: [null],
+                        counter: [null, [Validators.max(9999999999)]],
                         properties: self.schemaService.getPropertiesStructure(temp.definition.find(d => d.key === '_id'))
                     }));
                 }

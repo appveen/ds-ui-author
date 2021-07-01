@@ -30,6 +30,8 @@ import { FilterDefinitionModule } from 'src/app/utils/pipes/filter-definition/fi
 import { LogicalConditionComponent } from './manage-permissions/logical-condition/logical-condition.component';
 import { LoadingPlaceholderModule } from 'src/app/utils/loading-placeholder/loading-placeholder.module';
 import { SortablejsModule } from 'ngx-sortablejs';
+import { RoundCheckModule } from 'src/app/utils/round-check/round-check.module';
+import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 
 @NgModule({
     imports: [
@@ -50,7 +52,8 @@ import { SortablejsModule } from 'ngx-sortablejs';
         SearchTermModule,
         FilterDefinitionModule,
         LoadingPlaceholderModule,
-        SortablejsModule
+        SortablejsModule,
+        CheckboxModule
     ],
     declarations: [
         SchemaStructurePipe,
