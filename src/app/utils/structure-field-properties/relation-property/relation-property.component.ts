@@ -141,7 +141,9 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     self.definition = value.definition;
     if(!!this.definition) {
       this.getAllAttributeNames(this.definition);
+      self.addToList('relatedViewFields', self.attributeList[0]);
     }
+  
     self.getDocuments(value);
   }
 
@@ -375,6 +377,11 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
   }
   onSelectSearchField() {
     const self = this;
+    let relatedSearchField = self.properties.get('relatedSearchField').value
+    let searchFieldIndex = self.attributeList.map(data => data.key).indexOf(relatedSearchField)
+    if(searchFieldIndex > -1){
+      self.addToList('relatedViewFields', self.attributeList[searchFieldIndex]);
+    }
     const service = self.services.find(e => e._id === self.properties.get('relatedTo').value);
     self.getDocuments(service);
   }
