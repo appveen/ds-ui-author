@@ -375,13 +375,11 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
       self.form.get('properties.default').patchValue(value);
     }
   }
-  onSelectSearchField() {
+
+
+  onSelectSearchField(selectedSearchField) {
     const self = this;
-    let relatedSearchField = self.properties.get('relatedSearchField').value
-    let searchFieldIndex = self.attributeList.map(data => data.key).indexOf(relatedSearchField)
-    if(searchFieldIndex > -1){
-      self.addToList('relatedViewFields', self.attributeList[searchFieldIndex]);
-    }
+    self.addToList('relatedViewFields', selectedSearchField);
     const service = self.services.find(e => e._id === self.properties.get('relatedTo').value);
     self.getDocuments(service);
   }
@@ -393,6 +391,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
 
   getAllAttributeNames(definition, parentKey?) {
     definition.forEach(element => {
+      let ele = JSON.parse(JSON.stringify(element));
       if (element.type === 'Object' && element.properties && !element.properties.password && !element.properties.relatedTo) {
         let key = element.key;
         if (parentKey) {
@@ -403,13 +402,13 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
         }
       } else if (element.type !== 'Array') {
         if (parentKey) {
-          element.properties.name = parentKey + '.' + element.properties.name;
-          element.properties.dataPath = element.properties.name;
+          ele.properties.name = parentKey + '.' + element.properties.name;
+          ele.properties.dataPath = element.properties.name;
         }
-        this.attributeList.push(element);
+        this.attributeList.push(ele);
       }
     });
-    console.log(this.attributeList);
+    
   }
 
   get relatedToName() {
