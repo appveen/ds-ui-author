@@ -21,8 +21,8 @@
   <div class="d-flex w-100 mb-4">
     <div class="label-width text-secondary">Search On Field</div>
     <div class="value-width">
-      <select *ngIf="edit.status" class="form-control" formControlName="relatedSearchField" id="searchOnField"
-        (change)="onSelectSearchField()">
+      <select *ngIf="edit.status" class="form-control" #selectedViewField formControlName="relatedSearchField" id="searchOnField"
+        (change)="onSelectSearchField(attributeList[selectedViewField.selectedIndex])">
         <option *ngFor="let attr of attributeList" [value]="attr?.properties?.dataPath" onchange="">{{attr?.properties?.name}}</option>
       </select>
       <span *ngIf="!edit.status && relatedSearchField">{{getViewLabel}}</span>
