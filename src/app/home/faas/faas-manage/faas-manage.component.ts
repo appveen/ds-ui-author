@@ -207,7 +207,17 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   }
 
   testRun() {
-    this.ts.info('There are no syntax errors!');
+    this.apiCalls.testRun = true;
+    this.commonService.put('partnerManager', '/faas/' + this.edit.id + '/test', {
+      code: this.faasData.code,
+      port: this.faasData.port
+    }).subscribe(res => {
+      this.apiCalls.testRun = false;
+      this.ts.info('There are no syntax errors!');
+    }, err => {
+      this.apiCalls.testRun = false;
+      this.commonService.errorToast(err);
+    });
   }
 
   get apiCallsPending() {
