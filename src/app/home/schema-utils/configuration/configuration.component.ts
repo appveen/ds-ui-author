@@ -322,6 +322,27 @@ export class ConfigurationComponent implements OnInit {
       return false
   }
 
+  setFileExtention(checked: boolean, ext: string) {
+    const allowedFileTypes = this.form.get('allowedFileTypes').value || [];
+    const index = allowedFileTypes.indexOf(ext)
+    if (checked) {
+      if (index < 0) {
+        allowedFileTypes.push(ext);
+      }
+    } else {
+      allowedFileTypes.splice(index, 1);
+    }
+    this.form.get('allowedFileTypes').setValue(allowedFileTypes);
+  }
+
+  getFileExtention(ext: string) {
+    const allowedFileTypes = this.form.get('allowedFileTypes').value || [];
+    if (allowedFileTypes.indexOf(ext) > -1) {
+      return true;
+    }
+    return false;
+  }
+
   set fuzzySearch(val: boolean) {
     const self = this;
     self.form.get('enableSearchIndex').patchValue(val);
@@ -335,5 +356,12 @@ export class ConfigurationComponent implements OnInit {
   get id() {
     const self = this;
     return self.edit._id;
+  }
+
+  get allowedFileTypes() {
+    if (this.commonService.userDetails && this.commonService.userDetails.allowedFileExt) {
+      return this.commonService.userDetails.allowedFileExt
+    }
+    return [];
   }
 }
