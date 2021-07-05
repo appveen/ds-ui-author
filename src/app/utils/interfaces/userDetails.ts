@@ -42,6 +42,7 @@ export interface UserDetails {
     defaultTimezone?: string;
     experimentalFeatures?: boolean;
     fqdn?: string;
+    allowedFileExt?: string[];
 }
 
 export interface Auth {
