@@ -66,6 +66,10 @@
             <span class="url text-accent">{{faasData.url || 'N.A.'}}</span>
         </div>
         <div class="editor-theme-selection d-flex align-items-center col-4">
+            <button type="button" class="btn btn-dark rounded-0 mr-3 d-flex align-items-center" (click)="showConsole=!showConsole;toggleConsole()">
+                <span class="fa fa-terminal mr-2"></span>
+                <span class="text">Console</span>
+            </button>
             <span class="label text-dark font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span>
             <select class="custom-select mr-3" name="fontSize" id="fontSize" [(ngModel)]="selectedFontSize">
                 <option value="13">13</option>
@@ -82,6 +86,10 @@
         </div>
     </div>
     <div class="d-flex align-items-stretch h-100 w-100">
+        <div [ngClass]="{'show':showConsole}" class="console position-absolute bg-dark text-white p-3">
+            <p *ngIf="logs.length==0">No Logs</p>
+            <pre *ngFor="let log of logs">{{log}}</pre>
+        </div>
         <div class="editor-wrapper h-100">
             <!-- <div class="monaco-editor no-user-select {{selectedEditorTheme}} p-3">
                 <div class="view-lines monaco-mouse-cursor-text"

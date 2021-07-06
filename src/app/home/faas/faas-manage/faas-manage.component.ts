@@ -30,6 +30,9 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   selectedEditorTheme: string;
   selectedFontSize: number;
   showCodeEditor: boolean;
+  showConsole: boolean;
+  loadingLogs: boolean;
+  logs: Array<any>;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -48,6 +51,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     this.selectedEditorTheme = 'vs-light';
     this.selectedFontSize = 14;
     this.ele.nativeElement.classList.add('h-100');
+    this.logs = [];
   }
 
   ngOnInit(): void {
@@ -216,6 +220,20 @@ export class FaasManageComponent implements OnInit, OnDestroy {
       this.ts.info('There are no syntax errors!');
     }, err => {
       this.apiCalls.testRun = false;
+      this.commonService.errorToast(err);
+    });
+  }
+
+  toggleConsole() {
+    this.loadingLogs = true;
+    this.commonService.get('mon', `/${this.commonService.app._id}/${this.edit.id}/console/logs`, {
+      page: 1,
+      count: 100
+    }).subscribe(res => {
+      this.loadingLogs = false;
+      this.logs = res;
+    }, err => {
+      this.loadingLogs = false;
       this.commonService.errorToast(err);
     });
   }
