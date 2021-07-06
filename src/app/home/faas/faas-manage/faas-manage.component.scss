@@ -34,6 +34,7 @@
   right: -600px;
   z-index: 2;
   transition: 0.2s;
+  overflow: auto;
   &.show {
     right: 0;
   }

@@ -228,7 +228,9 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     this.loadingLogs = true;
     this.commonService.get('mon', `/${this.commonService.app._id}/${this.edit.id}/console/logs`, {
       page: 1,
-      count: 100
+      count: 100,
+      noApp: true,
+      sort:'startTime'
     }).subscribe(res => {
       this.loadingLogs = false;
       this.logs = res;

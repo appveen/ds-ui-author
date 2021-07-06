@@ -88,7 +88,7 @@
     <div class="d-flex align-items-stretch h-100 w-100">
         <div [ngClass]="{'show':showConsole}" class="console position-absolute bg-dark text-white p-3">
             <p *ngIf="logs.length==0">No Logs</p>
-            <pre *ngFor="let log of logs">{{log}}</pre>
+            <pre *ngFor="let log of logs" class="text-white"><span style="color:{{log.level.colour}}">[{{log.startTime}}] [{{log.level.levelStr}}] </span> {{log.data.join(' ')}}</pre>
         </div>
         <div class="editor-wrapper h-100">
             <!-- <div class="monaco-editor no-user-select {{selectedEditorTheme}} p-3">
