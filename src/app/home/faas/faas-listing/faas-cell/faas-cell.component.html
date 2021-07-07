@@ -32,7 +32,7 @@
             <span class="badge badge-danger ml-1">v{{data?.version || 1}}</span>
         </ng-container>
     </span>
-    <span *ngIf="field == 'lastInvoked'">{{value | dateFormat:'YYYY MMM DD, HH:mm:ss, z':'Etc/Zulu'}}</span>
+    <span *ngIf="field == 'lastInvoked'">{{value | dateFormat:'YYYY MMM DD, HH:mm:ss'}}</span>
 </ng-container>
 <ng-container *ngIf="!value && field != '_options'">
     <span class="text-muted">N.A.</span>
