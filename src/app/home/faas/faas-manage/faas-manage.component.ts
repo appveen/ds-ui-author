@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef } from
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { switchMap } from 'rxjs/operators';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 
 import { AppService } from 'src/app/utils/services/app.service';
@@ -225,19 +226,31 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   }
 
   toggleConsole() {
-    this.loadingLogs = true;
-    this.commonService.get('mon', `/${this.commonService.app._id}/${this.edit.id}/console/logs`, {
-      page: 1,
-      count: 100,
-      noApp: true,
-      sort:'startTime'
-    }).subscribe(res => {
-      this.loadingLogs = false;
-      this.logs = res;
-    }, err => {
-      this.loadingLogs = false;
-      this.commonService.errorToast(err);
-    });
+    if (this.showConsole) {
+      this.loadingLogs = true;
+      this.commonService.get('mon', `/${this.commonService.app._id}/${this.edit.id}/console/logs/count`, { noApp: true }).pipe(
+        switchMap(e => {
+          let page = 1;
+          let count = e;
+          if (e >= 150) {
+            count = 100;
+            page = Math.ceil(e / 100);
+          }
+          return this.commonService.get('mon', `/${this.commonService.app._id}/${this.edit.id}/console/logs`, {
+            page,
+            count,
+            noApp: true,
+            sort: 'startTime'
+          })
+        })
+      ).subscribe(res => {
+        this.loadingLogs = false;
+        this.logs = res;
+      }, err => {
+        this.loadingLogs = false;
+        this.commonService.errorToast(err);
+      });
+    }
   }
 
   get apiCallsPending() {
