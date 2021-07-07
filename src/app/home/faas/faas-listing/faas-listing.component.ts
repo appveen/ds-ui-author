@@ -156,7 +156,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     columns.push(col);
     col = new AgGridColumn();
     col.headerName = 'Last Invoked';
-    col.field = 'lastInvokedAt';
+    col.field = 'lastInvoked';
     col.width = 180;
     columns.push(col);
     col = new AgGridColumn();
