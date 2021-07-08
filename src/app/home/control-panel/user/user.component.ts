@@ -171,6 +171,13 @@ export class UserComponent implements OnInit, OnDestroy {
                 roles: [null]
             })
         });
+        this.selectedTeamSize = 0;
+        this.userInLocal = false;
+        this.userForm.get('userData.auth.authType').enable();
+        this.userForm.get('userData.basicDetails.name').patchValue(null);
+        if (this.hasPermission('PMUG')) {
+            this.fetchTeams();
+        }
         this.configureFormValidators();
     }
     
