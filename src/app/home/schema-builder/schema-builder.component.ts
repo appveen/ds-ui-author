@@ -382,6 +382,7 @@ export class SchemaBuilderComponent implements
         }
         delete payload.port;
         delete payload.tags;
+        delete payload.allowedFileTypes;
         const list = self.commonService.getEntityPermissions('SM_' + self.serviceObj._id);
         if (!(self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin)) {
             delete payload.disableInsights;
