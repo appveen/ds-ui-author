@@ -58,18 +58,18 @@
     </odp-basic-info>
     <div class="border-top border-bottom px-3 py-2 d-flex align-items-center justify-content-between bg-light">
         <div class="url-info d-flex align-items-center">
-            <button type="button" class="btn btn-dark btn-sm mr-3" (click)="testRun()">
+            <!-- <button type="button" class="btn btn-dark btn-sm mr-3" (click)="testRun()">
                 <span class="fa fa-flask mr-2"></span>
                 <span>Test</span>
-            </button>
+            </button> -->
             <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
             <span class="url text-accent">{{faasData.url || 'N.A.'}}</span>
         </div>
         <div class="editor-theme-selection d-flex align-items-center col-4">
-            <button type="button" class="btn btn-dark rounded-0 mr-3 d-flex align-items-center" (click)="showConsole=!showConsole;toggleConsole()">
+            <!-- <button type="button" class="btn btn-dark rounded-0 mr-3 d-flex align-items-center" (click)="showConsole=!showConsole;toggleConsole()">
                 <span class="fa fa-terminal mr-2"></span>
                 <span class="text">Console</span>
-            </button>
+            </button> -->
             <span class="label text-dark font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span>
             <select class="custom-select mr-3" name="fontSize" id="fontSize" [(ngModel)]="selectedFontSize">
                 <option value="13">13</option>
