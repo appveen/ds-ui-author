@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, ViewChild, TemplateRef, OnInit 
 import { FormGroup, FormBuilder, Form } from '@angular/forms';
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { sameName } from 'src/app/home/custom-validators/same-name-validator';
+import { emptyEnum } from 'src/app/home/custom-validators/empty-enum-validator';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../services/common.service';
 
@@ -166,6 +167,12 @@ export class FieldTypeSelectorComponent {
       (self.form.get('properties') as FormGroup).removeControl('hasTokens');
       (self.form.get('properties') as FormGroup).addControl('hasTokens', self.fb.array([]));
     }
+    if(value == 'enum'){
+      self.form.get('properties.enum').setValidators([emptyEnum]);
+    }else{
+      self.form.get('properties.enum').clearValidators();
+    }
+
     if (value === 'email') {
       self.form.get('properties.email').patchValue(true);
     }
