@@ -32,10 +32,10 @@
                     (click)="activeTab = 4">
                     <span class="text">Properties</span>
                 </div> -->
-                <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 5}"
+                <!-- <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 5}"
                     (click)="activeTab = 5">
                     <span class="text">Trusted IP List</span>
-                </div>
+                </div> -->
             </div>
             <div class="tab-content w-100 pt-3">
                 <ng-container *ngIf="activeTab == 1">
@@ -376,7 +376,7 @@
                                     </div>
                                 </div>
 
-                                <div class="d-flex flex-column w-50">
+                                <!-- <div class="d-flex flex-column w-50">
                                     <div class="row manage-cards bg-white pb-2"
                                         [@cardAction]="confirmModalStateFlow['allFlow']?'expand':'collapse'"
                                         (click)="toggleCardFlow('allFlow')">
@@ -526,7 +526,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="d-flex flex-column ml-2">

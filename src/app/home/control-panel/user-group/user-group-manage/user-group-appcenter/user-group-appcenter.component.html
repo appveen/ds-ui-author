@@ -13,20 +13,17 @@
           [ngClass]="{'bg-border': activeSubTab==0}">
           <span class="">Data Services</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==0"></span>
-
         </div>
-        <div *ngIf="hasPermission('PVGCI') || hasPermission('PMGCI')" class="d-flex py-2 w-100 pl-3 hover justify-content-between" (click)="activeSubTab=1"
+        <!-- <div *ngIf="hasPermission('PVGCI') || hasPermission('PMGCI')" class="d-flex py-2 w-100 pl-3 hover justify-content-between" (click)="activeSubTab=1"
           [ngClass]="{'bg-border': activeSubTab==1}">
           <span class="">Interaction Flows</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==1"></span>
-
         </div>
         <div *ngIf="hasPermission('PVGCBM') || hasPermission('PMGCBM')" class="d-flex py-2 w-100 pl-3 hover justify-content-between" (click)="activeSubTab=2"
           [ngClass]="{'bg-border': activeSubTab==2}">
           <span class="">Bookmarks</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==2"></span>
-
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="px-3 w-100">
