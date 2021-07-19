@@ -257,7 +257,7 @@ export class TextPropertyComponent implements OnDestroy {
       self.setError('minlength', prop);
     } else if (prop.get('maxlength').value && value && (value.length > prop.get('maxlength').value)) {
       self.setError('maxlength', prop);
-    } else if (prop.get('pattern').value) {
+    } else if (prop.get('pattern').value && value) {
       const re = new RegExp(prop.get('pattern').value);
       if (!re.test(value)) {
         self.setError('pattern', prop);
