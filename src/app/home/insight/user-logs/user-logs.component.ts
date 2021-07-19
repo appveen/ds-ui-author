@@ -99,9 +99,9 @@ export class UserLogsComponent implements OnInit, OnDestroy {
                 if (this.apiConfig.page === 1) {
                     this.loaded = 0;
                 }
-                // if (!this.apiConfig.filter) {
-                //     this.apiConfig.filter = { apps: this.commonService.app._id };
-                // }
+                if (!this.apiConfig.filter) {
+                    this.apiConfig.filter = { app: { $in: [this.commonService.app._id, null] } };
+                }
                 const filterModel = this.agGrid?.api?.getFilterModel();
                 const filterModelKeys = Object.keys(filterModel || {});
                 if (!!filterModelKeys.length) {
@@ -174,12 +174,12 @@ export class UserLogsComponent implements OnInit, OnDestroy {
     clearFilters() {
         this.agGrid.api.setFilterModel({});
     }
-    
+
     get showClearFilter() {
         if (this.agGrid && this.agGrid.api) {
             const model = this.agGrid.api.getFilterModel();
             if (Object.keys(model).length > 0) {
-            return true;
+                return true;
             }
         }
         return false;
