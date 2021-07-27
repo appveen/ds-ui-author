@@ -60,7 +60,7 @@
     <div class="label-width text-secondary">Values</div>
     <div class="value-width position-relative">
       <ng-container *ngIf="edit.status">
-        <input class="form-control pr-4" (paste)="pasteOnList($event,'enum','number')" [ngClass]="{'is-invalid' : form.get('properties.enum').hasError('emptyEnum') }"
+        <input class="form-control pr-4" (paste)="pasteOnList($event,'enum','number')" [ngClass]="{'invalid-enum' : form.get('properties.enum').hasError('emptyEnum') }"
           (keyup.enter)="listEnterKey($event,'enum')" type="number" formControlName="_listInput" id="_numberLovInput">
         <button type="button" class="list-add-button btn btn-link hover position-absolute p-0"
           [disabled]="form.get('properties._listInput').value===''" (click)="addToList('enum')">

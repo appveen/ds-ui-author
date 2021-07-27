@@ -4,6 +4,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { CommonService } from '../services/common.service';
 import { ToastrService } from 'ngx-toastr';
+import { emptyEnum } from 'src/app/home/custom-validators/empty-enum-validator';
 
 @Component({
   selector: 'odp-structure-field-properties',
@@ -104,6 +105,10 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       this.form.get('properties.fieldLength').setValidators([Validators.required, Validators.min(1)]);
     } else {
       this.form.get('properties.fieldLength').setValidators(null);
+    }
+
+    if(self.form.get('properties._detailedType').value === 'enum' ){
+      self.form.get('properties.enum').setValidators([emptyEnum]);
     }
   }
 
