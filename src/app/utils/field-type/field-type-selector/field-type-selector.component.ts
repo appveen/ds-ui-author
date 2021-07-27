@@ -169,7 +169,9 @@ export class FieldTypeSelectorComponent {
     }
     if(value == 'enum'){
       self.form.get('properties.enum').setValidators([emptyEnum]);
-    }else{
+    }
+    else if(self.form.get('properties.enum')){
+      
       self.form.get('properties.enum').clearValidators();
     }
 
