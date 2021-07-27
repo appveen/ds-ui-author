@@ -39,3 +39,11 @@
       align-items: center;
     }
 }
+
+.invalid-enum{
+  background-color: rgba(150, 0, 0, 0.1);
+  border-color: #DD5151;
+  &:focus {
+    background-color: rgba(150, 0, 0, 0.1);
+  }
+}
