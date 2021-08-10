@@ -64,6 +64,7 @@ export class SchemaBuilderComponent implements
     action: ActionConfig;
     version: 1;
     activeTab = 0;
+    experienceSideNavActiveTab = 0; 
     errMessage: string;
     permissions: any = {};
     clickCount = 0;
@@ -138,6 +139,14 @@ export class SchemaBuilderComponent implements
                 selectedStep: [0],
                 usedFields: self.fb.array([])
             }),
+            stateModel: self.fb.group(
+                {
+                    attribute : [''],
+                    initialState : [[]],
+                    states: [{}],
+                    enabled: [false]
+                }
+            ),
             definition: self.fb.array([
                 self.fb.group(
                     {
@@ -151,6 +160,7 @@ export class SchemaBuilderComponent implements
                 ),
                 self.schemaService.getDefinitionStructure()
             ]),
+
             webHooks: [[]],
             preHooks: [[]],
             workflowHooks: self.fb.group({
@@ -461,6 +471,8 @@ export class SchemaBuilderComponent implements
         if (payload.definition) {
             self.appService.addKeyForDataStructure(payload.definition, 'camelCase');
         }
+
+        
         self.showLazyLoader = true;
         if (self.edit.id) {
             response = self.commonService.put('serviceManager', '/service/' + self.edit.id, payload);

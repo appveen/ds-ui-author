@@ -136,12 +136,37 @@
           </odp-integration>
         </ng-container>
         <ng-container *ngIf="activeTab == 2">
-          <div class="w-100 builder">
-            <div class="schema-creator scroll position-relative" id="schema-creator" [scrollTop]="schemaFieldheight">
-              <div class="builder-body border-left">
-                <odp-wizards [form]="form" [edit]="edit"></odp-wizards>
+          <div class="w-100 builder d-flex bg-light">
+            <div class='d-flex flex-column p-3' id='experience-side-nav'>
+              <div class='mb-3'>
+                <span class='text-accent text-bold'>
+                  State Model
+                </span>
+              </div>
+              <div class='mb-3'>
+                <span>
+                  Data Segmentation
+                </span>
+              </div>
+              <div class='mb-3'>
+                <span>
+                  Personalize
+                </span>
               </div>
             </div>
+            <div class='d-flex flex-column w-100'>
+              <div *ngIf="experienceSideNavActiveTab == 1" class="schema-creator scroll position-relative w-100" id="schema-creator" [scrollTop]="schemaFieldheight">
+                <div class="builder-body border-left">
+                  <odp-wizards [form]="form" [edit]="edit"></odp-wizards>
+                </div>
+              </div>
+
+              <div *ngIf="experienceSideNavActiveTab == 0"  class="schema-creator scroll position-relative w-100">
+                
+                <odp-state-model [(form)]='form' [edit]='edit'></odp-state-model>
+              </div>
+            </div>
+        
           </div>
         </ng-container>
         <ng-container>
