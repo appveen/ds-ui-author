@@ -28,7 +28,6 @@ import {
 } from 'src/environments/environment';
 import { AppService } from 'src/app/utils/services/app.service';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
-import { fromEvent } from 'rxjs';
 
 @Component({
     selector: 'odp-service-manager',
@@ -792,33 +791,10 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         return self.commonService.hasPermission(type, entity);
     }
 
-    // listenForEasterEgg() {
-    //     const self = this;
-    //     let text = '';
-    //     let intVal;
-    //     fromEvent(document, 'keyup').subscribe((event: KeyboardEvent) => {
-    //         text += event.key;
-    //         if (text === 'brahmaportal') {
-    //             text = '';
-    //             self.easterEggEnabled = true;
-    //             self.ts.success('You are Developer!');
-    //             clearInterval(intVal);
-    //             setTimeout(() => {
-    //                 Object.keys(self.showCardMenu).forEach(key => {
-    //                     self.showCardMenu[key] = true;
-    //                 });
-    //             }, 200);
-    //             setTimeout(() => {
-    //                 Object.keys(self.showCardMenu).forEach(key => {
-    //                     self.showCardMenu[key] = false;
-    //                 });
-    //             }, 3000);
-    //         }
-    //     });
-    //     intVal = setInterval(() => {
-    //         text = '';
-    //     }, 5000);
-    // }
+    transactionDoc() {
+        const docsAPI = `${environment.url.doc}/?q=/api/common/txn`;
+        window.open(docsAPI, '_blank');
+    }
 
     get dummyRows() {
         const arr = new Array(15);
