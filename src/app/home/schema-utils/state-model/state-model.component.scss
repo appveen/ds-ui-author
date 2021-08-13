@@ -1,9 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
-#select-state-model{
-    width: 30%;
-}
+
 .meme{
     top: 50%;
     left: 50%;
@@ -25,6 +23,8 @@
   border-radius: 2px;
   color: #F9F9F9;
   border: none;
+  font-size: 12px;
+  outline: none;
 }
 
 .selector-dropdown {
@@ -48,11 +48,42 @@
     }
 }
 
+#select-state-model{
+  width: 30%;
+}
+
+#stateModelInfo{
+  margin-top: 8px;
+  span{
+    background: #DEDEDE;
+    border-radius: 2px;
+    padding: 1.1px 3.1px;
+    font-size: 10px;
+  }
+
+}
+
+#add-state{
+  border: 1px solid #ccc;
+  padding: 4px 6px;
+}
+
+#new-state-input{
+  border-right: none !important;
+  border-radius: 0px !important;
+}
+
+#delete-state-model{
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .state-model-label{
     font-size: 0.770rem;
 }
 
-::ng-deep .mat-standard-chip{
+.mat-standard-chip{
   min-height: 24px !important;
   padding: 3px 6px 3px 9px !important;
 
@@ -77,6 +108,72 @@
     opacity: 1 !important;
     color: #fff !important;
     text-align: center;
+  }
+
+}
+
+.state-model-config{
+
+  .state-name{
+    margin-bottom: 15px;
+  }
+
+  input[type=checkbox]{
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    border: 1px solid #2D2D2D;
+    margin-right: 7px;
+    margin-bottom: 15px;
+  }
+
+  input[type=checkbox]+span{
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 21px;
+  }
+
+  input[type=checkbox]~span.fa{
+    color: #8C8C8C;
+    font-size: 15px;
+  }
+
+}
+
+.mat-form-field-flex{
+  background-color: transparent !important;
+  padding: 0px !important;
+}
+
+.mat-form-field{
+  background-color: transparent !important;
+  padding: 0 !important;
+
+
+  &:hover{
+    .mat-form-field-wrapper{
+      .mat-form-field-underline{
+        .mat-form-field-ripple{
+          background-color: #BABABA !important;
+        }
+      }
+    }    
+  }
+
+  .mat-form-field-wrapper{
+    .mat-form-field-underline{
+      .mat-form-field-ripple{
+        background-color: #BABABA !important;
+      }
+    }
+  }  
+
+  &.mat-form-field-disabled{
+    .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+    }
   }
 }
 

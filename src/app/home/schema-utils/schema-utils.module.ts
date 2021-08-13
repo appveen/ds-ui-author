@@ -33,10 +33,12 @@ import { SortablejsModule } from 'ngx-sortablejs';
 import { RoundCheckModule } from 'src/app/utils/round-check/round-check.module';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { StateModelComponent } from './state-model/state-model.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { FilterNextStatePipe } from './filter-next-state.pipe';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
     imports: [
@@ -59,10 +61,11 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
         LoadingPlaceholderModule,
         SortablejsModule,
         CheckboxModule,
-        MatChipsModule,
         MatFormFieldModule,
         MatSelectModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatChipsModule,
+        ScrollingModule
     ],
     declarations: [
         SchemaStructurePipe,
@@ -79,6 +82,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
         PathCreatorComponent,
         LogicalConditionComponent,
         StateModelComponent,
+        FilterNextStatePipe,
     ],
     exports: [
         SchemaStructurePipe,
