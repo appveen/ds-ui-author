@@ -8,7 +8,7 @@
         Per data service you will be able to select one attribute to configure a state model machine.
     </p>
 
-    <section *ngIf="!stateModelEnabled" [formGroup]="form">
+    <section *ngIf="!stateModelEnabled" [formGroup]="form" class='create-state-model'>
         <div class='d-flex justify-content-start'>
             <div id='select-state-model' formGroupName="stateModel" odpClickOutside (outside)='searchTerm = "" '>
                 <input  [attr.disabled]="!edit.status ? true : null" type="text" class="form-control" placeholder="Choose existing attribute or create one..." odpAutoFocus
