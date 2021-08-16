@@ -28,7 +28,7 @@ import { sameName } from 'src/app/home/custom-validators/same-name-validator';
     styleUrls: ['./structure-field.component.scss']
 })
 export class StructureFieldComponent implements OnInit, AfterContentInit, OnDestroy, DoCheck {
-
+    @Input() stateModelAttr: any;
     @Input() isLibrary: boolean;
     @Input() isDataFormat: boolean;
     @Input() all: FormArray;
@@ -179,6 +179,11 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 }
             });
         }
+    }
+
+    checkStateModel(){
+        const self = this;
+        return self.form.get('properties.name').value == self.stateModelAttr.value
     }
 
     addField(required?: boolean) {

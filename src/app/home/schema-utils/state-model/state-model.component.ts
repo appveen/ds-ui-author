@@ -9,6 +9,7 @@ import { SchemaBuilderService } from '../schema-builder.service';
 import {DeleteModalConfig } from 'src/app/utils/interfaces/schemaBuilder';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/utils/services/common.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'odp-state-model',
@@ -40,9 +41,8 @@ export class StateModelComponent implements OnInit {
     private appService: AppService,
     private schemaService: SchemaBuilderService,
     private commonService: CommonService,
-
+    private ts :ToastrService,
     private fb: FormBuilder) { 
-
       const self = this;
       self.deleteModal = {
         title: 'Delete State Model',
@@ -108,6 +108,8 @@ export class StateModelComponent implements OnInit {
     temp.get('type').patchValue(type);
     temp.get(['properties', '_detailedType']).patchValue('enum');
     tempArr.push(temp);
+
+    self.ts.success(`Created a new List of Values attribute ${attrName}. Now you can find it in the attribute list.`)
   }
 
   // convert existing List of Values attribute to State Model 
@@ -138,6 +140,10 @@ export class StateModelComponent implements OnInit {
       self.stateModelData = self.allStates.map(state => {
         return {'state': state, 'checked': false }
       });
+
+
+
+      self.ts.success(`Success! State Model ${self.stateModelAttribute} has been successfully created `)
 
     }
 

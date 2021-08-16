@@ -32,6 +32,9 @@
                     triggers="manual"></div> -->
             </div>
             <odp-field-type [field]="field" label="true"></odp-field-type>
+            <div class='state-model' *ngIf="checkStateModel()">
+                State Model
+            </div>
         </div>
         <div class="d-flex field-options">
             <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 hover"

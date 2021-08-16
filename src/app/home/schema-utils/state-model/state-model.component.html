@@ -38,14 +38,20 @@
                 <div class="selector-list-item d-flex align-items-center p-2 hover"
                 *ngIf="(ListOfValuesAttributes| filterDefinition:searchTerm).length == 0" (click)="addNewListOfValues('String')">
                     <span>Add &nbsp;</span>
-                    <span class="mr-2 font-weight-bold">{{searchTerm}}</span>
+                    <span class='border-circle'>
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <span class="font-weight-bold mr-2">{{searchTerm}}</span>
                     <odp-field-type [field]="{type:'String',properties:{}}"></odp-field-type>
 
                 </div>
                 <div class="selector-list-item d-flex align-items-center p-2 hover"
                 *ngIf="(ListOfValuesAttributes| filterDefinition:searchTerm).length == 0" (click)="addNewListOfValues('Number')">
                     <span>Add &nbsp;</span>
-                    <span class="mr-2 font-weight-bold">{{searchTerm}}</span>
+                    <span class='border-circle'>
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <span class="font-weight-bold mr-2">{{searchTerm}}</span>
                     <odp-field-type [field]="{type:'Number',properties:{}}"></odp-field-type>
 
                 </div>
@@ -91,15 +97,15 @@
                 </div>
             </div>
 
-            <div class='row' *ngIf="edit.status">
+            <div class='row mt-4' *ngIf="edit.status">
                
                     <div class="col-6">
-                        <span *ngIf="deleteStateCount>0" (click)='deleteStates()'>
-                            Delete {{deleteStateCount}} States
+                        <span *ngIf="deleteStateCount>0" class='cursor-pointer' (click)='deleteStates()'>
+                            Delete selected states ({{deleteStateCount}})
                         </span>
                     </div>
                     <div class="col-6 text-right">
-                        <span (click)='deleteAllNextStates()'>
+                        <span class='cursor-pointer' (click)='deleteAllNextStates()'>
                             Clear All Next States
                         </span>
                     </div>
@@ -152,6 +158,8 @@
                                 </mat-autocomplete>
 
                             </mat-form-field>
+
+                            <hr *ngIf="!edit.status" class='m-0 p-0'>
                         </div>
                     </div>
                 

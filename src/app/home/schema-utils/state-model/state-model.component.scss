@@ -42,6 +42,14 @@
         .selector-list-item {
           min-height: 36px;
           max-height: 36px;
+          .border-circle{
+            width: 19px;
+            height: 19px;
+            text-align: center;
+            margin: 5px 5px 5px 0px;
+            border: 1px solid black;
+            border-radius: 100%;
+          }
           &:hover {
             background: $light;
           }
@@ -118,6 +126,10 @@
 
 .state-model-config{
 
+  hr{
+    border: 1px solid #BABABA;
+  }
+
   .state-name{
     margin-bottom: 15px;
   }
@@ -181,3 +193,8 @@
   }
 }
 
+
+
+.cursor-pointer{
+  cursor: pointer;
+}

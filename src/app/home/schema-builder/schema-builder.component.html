@@ -111,7 +111,7 @@
                     <ng-container *ngFor="let def of definitions;let fieldIndex = index; let first = first;">
                       <div [class.disabled]="def.value.hasOwnProperty('_id')">
                         <odp-structure-field [formGroupName]="fieldIndex" [all]="form.get('definition')"
-                          [index]="fieldIndex" [first]="first" [edit]="edit" [type]="serviceObj?.type">
+                          [index]="fieldIndex" [first]="first" [edit]="edit" [type]="serviceObj?.type" [stateModelAttr]="form.get(['stateModel', 'attribute'])">
                         </odp-structure-field>
                       </div>
                     </ng-container>
