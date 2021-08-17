@@ -12,19 +12,15 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
 
     @Input() roles: Array<any>;
     @Output() rolesChange: EventEmitter<Array<any>>;
-    @ViewChild('exceptionListModal', { static: false }) exceptionListModal: TemplateRef<HTMLElement>;
     dropdownToggle: {
         [key: string]: boolean
     };
-    exceptionList: Array<any>;
     toggleDropdown: any;
     subscriptions: any;
     searchTerm: string;
     dataServiceTabs: Array<{ type: string; name: string }>;
     serviceList: Array<{ _id: string; name: string; hide?: boolean; selected?: boolean }>;
-    exceptionListModalRef: NgbModalRef;
     managePermissionsArray: Array<string>;
-    selectedException: any;
     dataHookList: Array<HookModule>;
     reviewHookList: Array<HookModule>;
     settingsTabList: Array<HookModule>;
@@ -34,7 +30,6 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
         private appService: AppService) {
         const self = this;
         self.dropdownToggle = {};
-        self.exceptionList = [];
         self.toggleDropdown = {};
         self.subscriptions = {};
         self.roles = [];
@@ -137,7 +132,7 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
                 entity: 'SM'
             }
         ];
-        self.auditList = [    
+        self.auditList = [
             {
                 label: 'Service',
                 segment: 'DSASR',
@@ -151,7 +146,7 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
         return self.serviceList && self.serviceList.length > 0;
     }
 
-   
+
     get checkAll() {
         const self = this;
         if (self.serviceList.length === 0) {
@@ -173,11 +168,8 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
 
     get basicPermission() {
         const self = this;
-        const viewIndex = self.roles.findIndex(r => r.id === 'PVDSB' && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
-        const manageIndex = self.roles.findIndex(r => (r.id === 'PMDSBC' || r.id === 'PMDSBU' || r.id === 'PMDSBD') && r.entity ===
-            ('SM' + (self.selectedException ?
-                ('_' + self.selectedException._id) : '')));
+        const viewIndex = self.roles.findIndex(r => r.id === 'PVDSB' && r.entity === 'SM');
+        const manageIndex = self.roles.findIndex(r => (r.id === 'PMDSBC' || r.id === 'PMDSBU' || r.id === 'PMDSBD') && r.entity === 'SM');
         if (manageIndex > -1) {
             return 'manage';
         }
@@ -189,37 +181,32 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
 
     set basicPermission(val: any) {
         const self = this;
-        const blockedIndex = self.roles.findIndex(r => r.id === 'PNDSB' && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const blockedIndex = self.roles.findIndex(r => r.id === 'PNDSB' && r.entity === 'SM');
         if (blockedIndex > -1) {
             self.roles.splice(blockedIndex, 1);
         }
-        const viewIndex = self.roles.findIndex(r => r.id === 'PVDSB' && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const viewIndex = self.roles.findIndex(r => r.id === 'PVDSB' && r.entity === 'SM');
         if (viewIndex > -1) {
             self.roles.splice(viewIndex, 1);
         }
-        const createIndex = self.roles.findIndex(r => r.id === 'PMDSBC' && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const createIndex = self.roles.findIndex(r => r.id === 'PMDSBC' && r.entity === 'SM');
         if (createIndex > -1) {
             self.roles.splice(createIndex, 1);
         }
-        const editIndex = self.roles.findIndex(r => r.id === 'PMDSBU' && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const editIndex = self.roles.findIndex(r => r.id === 'PMDSBU' && r.entity === 'SM');
         if (editIndex > -1) {
             self.roles.splice(editIndex, 1);
         }
-        const deleteIndex = self.roles.findIndex(r => r.id === 'PMDSBD' && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const deleteIndex = self.roles.findIndex(r => r.id === 'PMDSBD' && r.entity === 'SM');
         if (deleteIndex > -1) {
             self.roles.splice(deleteIndex, 1);
         }
         if (Array.isArray(val)) {
             val.forEach(item => {
-                self.roles.push(self.getPermissionObject(item, self.selectedException));
+                self.roles.push(self.getPermissionObject(item));
             });
         } else {
-            self.roles.push(self.getPermissionObject(val, self.selectedException));
+            self.roles.push(self.getPermissionObject(val));
             if (val === 'PNDSB') {
                 self.commonPermission = { id: 'PNDSD', type: 'D' };
                 self.commonPermission = { id: 'PNDSPD', type: 'PD' };
@@ -246,8 +233,7 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
     get powerPermissionDeploy() {
         const self = this;
         const manageIndex = self.roles.findIndex(r => (
-            r.id === 'PMDSPD') && r.entity === ('SM' + (self.selectedException ?
-                ('_' + self.selectedException._id) : '')));
+            r.id === 'PMDSPD') && r.entity === 'SM');
         if (manageIndex > -1) {
             return 'manage';
         }
@@ -257,8 +243,7 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
     get powerPermissionsStartStop() {
         const self = this;
         const manageIndex = self.roles.findIndex(r => (
-            r.id === 'PMDSPS') && r.entity === ('SM' + (self.selectedException ?
-                ('_' + self.selectedException._id) : '')));
+            r.id === 'PMDSPS') && r.entity === 'SM');
         if (manageIndex > -1) {
             return 'manage';
         }
@@ -268,11 +253,9 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
     get definitionPermission() {
         const self = this;
         const viewIndex = self.roles.findIndex(r => (
-            r.id === 'PVDSD') && r.entity === ('SM' + (self.selectedException ?
-                ('_' + self.selectedException._id) : '')));
+            r.id === 'PVDSD') && r.entity === 'SM');
         const manageIndex = self.roles.findIndex(r => (
-            r.id === 'PMDSD') && r.entity === ('SM' + (self.selectedException ?
-                ('_' + self.selectedException._id) : '')));
+            r.id === 'PMDSD') && r.entity === 'SM');
         if (manageIndex > -1) {
             return 'manage';
         }
@@ -282,14 +265,52 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
         return 'blocked';
     }
 
+    get integrationPermission() {
+        const self = this;
+        const viewIndex = self.roles.findIndex(r => (
+            r.id === 'PVDSI') && r.entity === 'SM');
+        const manageIndex = self.roles.findIndex(r => (
+            r.id === 'PMDSI') && r.entity === 'SM');
+        if (manageIndex > -1) {
+            return 'manage';
+        }
+        if (viewIndex > -1) {
+            return 'view';
+        }
+        return 'blocked';
+    }
+
+    get settingsPermission() {
+        const self = this;
+        const viewIndex = self.roles.findIndex(r => (
+            r.id === 'PVDSS') && r.entity === 'SM');
+        const manageIndex = self.roles.findIndex(r => (
+            r.id === 'PMDSS') && r.entity === 'SM');
+        if (manageIndex > -1) {
+            return 'manage';
+        }
+        if (viewIndex > -1) {
+            return 'view';
+        }
+        return 'blocked';
+    }
+
+    get auditPermission() {
+        const self = this;
+        const viewIndex = self.roles.findIndex(r => (
+            r.id === 'PVDSA') && r.entity === 'SM');
+        if (viewIndex > -1) {
+            return 'view';
+        }
+        return 'blocked';
+    }
+
     get experiencePermission() {
         const self = this;
         const viewIndex = self.roles.findIndex(r => (
-            r.id === 'PVDSE') && r.entity === ('SM' + (self.selectedException ?
-                ('_' + self.selectedException._id) : '')));
+            r.id === 'PVDSE') && r.entity === 'SM');
         const manageIndex = self.roles.findIndex(r => (
-            r.id === 'PMDSE') && r.entity === ('SM' + (self.selectedException ?
-                ('_' + self.selectedException._id) : '')));
+            r.id === 'PMDSE') && r.entity === 'SM');
         if (manageIndex > -1) {
             return 'manage';
         }
@@ -302,11 +323,9 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
     get rolePermission() {
         const self = this;
         const viewIndex = self.roles.findIndex(r => (
-            r.id === 'PVDSR') && r.entity === ('SM' + (self.selectedException ?
-                ('_' + self.selectedException._id) : '')));
+            r.id === 'PVDSR') && r.entity === 'SM');
         const manageIndex = self.roles.findIndex(r => (
-            r.id === 'PMDSR') && r.entity === ('SM' + (self.selectedException ?
-                ('_' + self.selectedException._id) : '')));
+            r.id === 'PMDSR') && r.entity === 'SM');
         if (manageIndex > -1) {
             return 'manage';
         }
@@ -319,25 +338,22 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
     // Common setPermission for Power settings,Definition,Experience and Role
     set commonPermission(val: any) {
         const self = this;
-        const blockedIndex = self.roles.findIndex(r => r.id === 'PNDS' + val.type && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const blockedIndex = self.roles.findIndex(r => r.id === 'PNDS' + val.type && r.entity === 'SM');
         if (blockedIndex > -1) {
             self.roles.splice(blockedIndex, 1);
         }
-        const manageIndex = self.roles.findIndex(r => r.id === 'PMDS' + val.type && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const manageIndex = self.roles.findIndex(r => r.id === 'PMDS' + val.type && r.entity === 'SM');
         if (manageIndex > -1) {
             self.roles.splice(manageIndex, 1);
         }
-        const viewIndex = self.roles.findIndex(r => r.id === 'PVDS' + val.type && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const viewIndex = self.roles.findIndex(r => r.id === 'PVDS' + val.type && r.entity === 'SM');
         if (viewIndex > -1) {
             self.roles.splice(viewIndex, 1);
         }
         if ((val.id.substring(0, 2) === 'PV' || val.id.substring(0, 2) === 'PM') && self.basicPermission === 'blocked') {
             self.basicPermission = 'PVDSB';
         }
-        self.roles.push(self.getPermissionObject(val.id, self.selectedException));
+        self.roles.push(self.getPermissionObject(val.id));
     }
 
 
@@ -345,8 +361,7 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
 
     get createPermission() {
         const self = this;
-        const manageIndex = self.roles.findIndex(r => r.id === 'PMDSBC' && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const manageIndex = self.roles.findIndex(r => r.id === 'PMDSBC' && r.entity === 'SM');
         if (manageIndex > -1) {
             return true;
         }
@@ -355,8 +370,7 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
 
     get editPermission() {
         const self = this;
-        const manageIndex = self.roles.findIndex(r => r.id === 'PMDSBU' && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const manageIndex = self.roles.findIndex(r => r.id === 'PMDSBU' && r.entity === 'SM');
         if (manageIndex > -1) {
             return true;
         }
@@ -365,8 +379,7 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
 
     get deletePermission() {
         const self = this;
-        const manageIndex = self.roles.findIndex(r => r.id === 'PMDSBD' && r.entity === ('SM' + (self.selectedException ?
-            ('_' + self.selectedException._id) : '')));
+        const manageIndex = self.roles.findIndex(r => r.id === 'PMDSBD' && r.entity === 'SM');
         if (manageIndex > -1) {
             return true;
         }
@@ -381,11 +394,6 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
         const temp = self.roles.filter(r => r.entity.indexOf('SM_') > -1)
             .map(item => item.entity.split('_')[1])
             .filter((e, i, a) => a.indexOf(e) === i);
-        self.exceptionList = temp.map(item => {
-            const obj: any = {};
-            obj._id = item;
-            return obj;
-        });
         self.getServiceList();
 
     }
@@ -401,62 +409,7 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
         };
         self.subscriptions['serviceList'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
             self.serviceList = res.filter(e => e);
-            self.exceptionList.forEach(item => {
-                const temp = self.serviceList.find(e => e._id === item._id);
-                if (temp) {
-                    temp.hide = true;
-                    item.name = temp.name;
-                } else {
-                    item.name = 'ERROR';
-                }
-            });
         });
-    }
-
-    openExceptionModal() {
-        const self = this;
-        self.exceptionListModalRef = self.commonService.modal(self.exceptionListModal, {
-            centered: true,
-            windowClass: 'service-exception-modal'
-        });
-        self.exceptionListModalRef.result.then(close => {
-            if (close) {
-                const temp = self.serviceList.filter(s => !s.hide && s.selected);
-                if (temp && temp.length > 0) {
-                    temp.forEach(item => {
-                        item.hide = true;
-                        self.exceptionList.push(item);
-                        let globalPermissions = [];
-                        globalPermissions = self.appService
-                            .cloneObject(self.roles.filter(e => e.entity === ('SM' + (self.selectedException ?
-                                ('_' + self.selectedException._id) : ''))));
-                        globalPermissions.forEach(itm => {
-                            itm['entity'] = 'SM_' + item._id;
-                            self.roles.push(itm);
-                        });
-                        self.selectedException = item;
-                    });
-                }
-            }
-            self.checkAll = false;
-        }, dismiss => {
-            self.checkAll = false;
-        });
-    }
-
-    removeException(service: any) {
-        const self = this;
-        const index = self.exceptionList.findIndex(i => i._id === service._id);
-        if (index > -1) {
-            self.exceptionList.splice(index, 1);
-            self.roles = self.roles.filter(r => r.entity.indexOf(service._id) === -1);
-            const temp = self.serviceList.find(s => s._id === service._id);
-            temp.hide = false;
-            self.rolesChange.emit(self.roles);
-        }
-        if (!self.exceptionList.length) {
-            self.selectedException = null;
-        }
     }
 
     removeRoleAtIndex(index: number) {
@@ -466,12 +419,12 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
         }
     }
 
-    getPermissionObject(id: string, service: any) {
+    getPermissionObject(id: string) {
         const self = this;
         return {
             id: id,
             app: self.commonService.app._id,
-            entity: 'SM' + (service ? '_' + service._id : ''),
+            entity: 'SM',
             type: 'author'
         };
     }
@@ -483,17 +436,12 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         const self = this;
-        if (self.exceptionListModalRef) {
-            self.exceptionListModalRef.close();
-        }
     }
 
     getHookPermissionLevel(segment: string, entity: string) {
         const self = this;
-        const viewIndex = self.roles.findIndex(r => r.id === 'PV' + segment
-            && r.entity === entity + (self.selectedException ? '_' + self.selectedException._id : ''));
-        const manageIndex = self.roles.findIndex(r => r.id === 'PM' + segment && r.entity === entity +
-            (self.selectedException ? '_' + self.selectedException._id : ''));
+        const viewIndex = self.roles.findIndex(r => r.id === 'PV' + segment && r.entity === entity);
+        const manageIndex = self.roles.findIndex(r => r.id === 'PM' + segment && r.entity === entity);
         if (manageIndex > -1) {
             return 'manage';
         }
@@ -505,31 +453,25 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
 
     changeHookPermissionLevel(level: string, segment: string, entity: string) {
         const self = this;
-        // if (!self.hasPermission('PMGAG')) {
-        //   return;
-        // }
         if (level === 'V' && segment === 'DSSR') {
             return;
         }
-        const blockedIndex = self.roles.findIndex(r => r.id === 'PN' + segment && r.entity === entity +
-            (self.selectedException ? '_' + self.selectedException._id : ''));
+        const blockedIndex = self.roles.findIndex(r => r.id === 'PN' + segment && r.entity === entity);
         if (blockedIndex > -1) {
             self.roles.splice(blockedIndex, 1);
         }
-        const viewIndex = self.roles.findIndex(r => r.id === 'PV' + segment && r.entity === entity +
-            (self.selectedException ? '_' + self.selectedException._id : ''));
+        const viewIndex = self.roles.findIndex(r => r.id === 'PV' + segment && r.entity === entity);
         if (viewIndex > -1) {
             self.roles.splice(viewIndex, 1);
         }
-        const manageIndex = self.roles.findIndex(r => r.id === 'PM' + segment && r.entity === entity +
-            (self.selectedException ? '_' + self.selectedException._id : ''));
+        const manageIndex = self.roles.findIndex(r => r.id === 'PM' + segment && r.entity === entity);
         if (manageIndex > -1) {
             self.roles.splice(manageIndex, 1);
         }
         if ((level === 'V' || level === 'M') && self.basicPermission === 'blocked') {
             self.basicPermission = 'PVDSB';
         }
-        self.roles.push(self.getPermissionObject('P' + level + segment, self.selectedException));
+        self.roles.push(self.getPermissionObject('P' + level + segment));
     }
 
     togglePermissionLevel(segment: string) {
@@ -537,12 +479,11 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
         if (!self.hasPermission('PMDS')) {
             return;
         }
-        const blockedIndex = self.roles.findIndex(r => r.id === 'PMDS' + segment && r.entity === ('SM' +
-            (self.selectedException ? ('_' + self.selectedException._id) : '')));
+        const blockedIndex = self.roles.findIndex(r => r.id === 'PMDS' + segment && r.entity === 'SM');
         if (blockedIndex > -1) {
             self.roles.splice(blockedIndex, 1);
         } else {
-            self.roles.push(self.getPermissionObject('PMDS' + segment, self.selectedException));
+            self.roles.push(self.getPermissionObject('PMDS' + segment));
         }
     }
 

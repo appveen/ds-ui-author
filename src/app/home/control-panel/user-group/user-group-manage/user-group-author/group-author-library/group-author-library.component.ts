@@ -12,18 +12,14 @@ export class GroupAuthorLibraryComponent implements OnInit, OnDestroy {
 
   @Input() roles: Array<any>;
   @Output() rolesChange: EventEmitter<Array<any>>;
-  @ViewChild('exceptionListModal', { static: false }) exceptionListModal: TemplateRef<HTMLElement>;
-  exceptionList: Array<any>;
   toggleDropdown: any;
   subscriptions: any;
   searchTerm: string;
   libraryList: Array<{ _id: string; name: string; hide?: boolean; selected?: boolean }>;
-  exceptionListModalRef: NgbModalRef;
 
   constructor(private commonService: CommonService,
     private appService: AppService) {
     const self = this;
-    self.exceptionList = [];
     self.toggleDropdown = {};
     self.subscriptions = {};
     self.roles = [];
@@ -43,11 +39,6 @@ export class GroupAuthorLibraryComponent implements OnInit, OnDestroy {
     const temp = self.roles.filter(r => r.entity.indexOf('GS_') > -1)
       .map(item => item.entity.split('_')[1])
       .filter((e, i, a) => a.indexOf(e) === i);
-    self.exceptionList = temp.map(item => {
-      const obj: any = {};
-      obj._id = item;
-      return obj;
-    });
     self.getLibraryList();
   }
 
@@ -65,51 +56,7 @@ export class GroupAuthorLibraryComponent implements OnInit, OnDestroy {
       self.libraryList.forEach(_lib => {
         _lib['attribute'] = GroupAuthorLibraryComponent.libAttrCount(_lib['definition']);
       });
-      self.exceptionList.forEach(item => {
-        const temp = self.libraryList.find(e => e._id === item._id);
-        if (temp) {
-          temp.hide = true;
-          item.name = temp.name;
-        } else {
-          item.name = 'ERROR';
-        }
-      });
     });
-  }
-
-  openExceptionModal() {
-    const self = this;
-    self.exceptionListModalRef = self.commonService.modal(self.exceptionListModal, {
-      centered: true,
-      windowClass: 'service-exception-modal'
-    });
-    self.exceptionListModalRef.result.then(close => {
-      if (close) {
-        const temp = self.libraryList.filter(s => !s.hide && s.selected);
-        if (temp && temp.length > 0) {
-          temp.forEach(item => {
-            item.hide = true;
-            self.exceptionList.push(item);
-            self.roles.push(self.getPermissionObject('PNL', item));
-          });
-        }
-      }
-      self.checkAll = false;
-    }, dismiss => {
-      self.checkAll = false;
-    });
-  }
-
-  removeException(service: any) {
-    const self = this;
-    const index = self.exceptionList.findIndex(i => i._id === service._id);
-    if (index > -1) {
-      self.exceptionList.splice(index, 1);
-      self.roles = self.roles.filter(r => r.entity.indexOf(service._id) === -1);
-      const temp = self.libraryList.find(s => s._id === service._id);
-      temp.hide = false;
-      self.rolesChange.emit(self.roles);
-    }
   }
 
   togglePermission(type: string, service?: any) {
@@ -181,9 +128,6 @@ export class GroupAuthorLibraryComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     const self = this;
-    if (self.exceptionListModalRef) {
-      self.exceptionListModalRef.close();
-    }
   }
 
   get globalPermissionType() {
