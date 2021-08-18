@@ -64,7 +64,7 @@ export class SchemaBuilderComponent implements
     action: ActionConfig;
     version: 1;
     activeTab = 0;
-    experienceSideNavActiveTab = 0; 
+    experienceSideNavActiveTab = 0;
     errMessage: string;
     permissions: any = {};
     clickCount = 0;
@@ -141,8 +141,8 @@ export class SchemaBuilderComponent implements
             }),
             stateModel: self.fb.group(
                 {
-                    attribute : [''],
-                    initialState : [[]],
+                    attribute: [''],
+                    initialStates: [[]],
                     states: [{}],
                     enabled: [false]
                 }
@@ -219,6 +219,11 @@ export class SchemaBuilderComponent implements
                 // self.form.get(['definition', 0, 'counter'])
                 //     .setAsyncValidators([counterValidator(self.commonService, self.edit.id)]);
                 self.fillDetails(param.id);
+
+                if (param.stateModel == 'stateModel') {
+                    self.activeTab = 2;
+                    self.experienceSideNavActiveTab = 0;
+                }
             } else {
                 self.enableEdit(true);
                 self.edit.id = null;
@@ -321,6 +326,7 @@ export class SchemaBuilderComponent implements
         const self = this;
         self.cd.detectChanges();
     }
+
     ngAfterViewInit() {
         const self = this;
         if (self.schemaName) {
@@ -344,6 +350,26 @@ export class SchemaBuilderComponent implements
             }, err => {
                 self.commonService.errorToast(err, 'Unable to fetch permissions');
             });
+        }
+    }
+
+    get stateModelIfEnabled() {
+        const self = this;
+        if (self.form.get(['stateModel', 'enabled']).value) {
+            return self.form.get(['stateModel', 'attribute'])
+        }
+        else {
+            return false;
+        }
+    }
+
+    deleteStateModel(condition) {
+        const self = this;
+        if (condition) {
+            self.form.get(['stateModel', 'enabled']).patchValue(false);
+            self.form.get(['stateModel', 'attribute']).patchValue('');
+            self.form.get(['stateModel', 'initialStates']).patchValue([]);
+            self.form.get(['stateModel', 'states']).patchValue({});
         }
     }
 
@@ -472,7 +498,7 @@ export class SchemaBuilderComponent implements
             self.appService.addKeyForDataStructure(payload.definition, 'camelCase');
         }
 
-        
+
         self.showLazyLoader = true;
         if (self.edit.id) {
             response = self.commonService.put('serviceManager', '/service/' + self.edit.id, payload);
@@ -764,7 +790,6 @@ export class SchemaBuilderComponent implements
                 self.commonService.errorToast(err, 'Unable to fetch details, please try again later');
             });
     }
-
 
     set name(val) {
         const self = this;

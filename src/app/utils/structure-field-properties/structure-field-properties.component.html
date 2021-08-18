@@ -122,9 +122,9 @@
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [type]='type'>
         </odp-relation-property>
         <odp-text-property *ngIf="formItem.get('type').value=='String'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType" [type]='type'>
+          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType" [type]='type' [(mainForm)]='mainForm'>
         </odp-text-property>
-        <odp-number-property *ngIf="formItem.get('type').value=='Number'" [form]="formItem" [edit]="edit"
+        <odp-number-property *ngIf="formItem.get('type').value=='Number'" [form]="formItem" [edit]="edit" [(mainForm)]='mainForm'
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat"  [formatType]="formatType"  [type]='type'>
         </odp-number-property>
         <odp-library-property *ngIf="formItem.get('type').value=='Global'" [form]="formItem" [edit]="edit"

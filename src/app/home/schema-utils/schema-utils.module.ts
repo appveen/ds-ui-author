@@ -38,7 +38,6 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FilterNextStatePipe } from './filter-next-state.pipe';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
     imports: [
@@ -65,7 +64,6 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
         MatSelectModule,
         MatAutocompleteModule,
         MatChipsModule,
-        ScrollingModule
     ],
     declarations: [
         SchemaStructurePipe,

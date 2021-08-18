@@ -12,7 +12,7 @@ import { emptyEnum } from 'src/app/home/custom-validators/empty-enum-validator';
   styleUrls: ['./structure-field-properties.component.scss']
 })
 export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewInit, AfterContentChecked {
-
+  @Input() mainForm: any;
   @Input() isLibrary: boolean;
   @Input() isDataFormat: boolean;
   @Input() formatType: string;

@@ -32,9 +32,9 @@
                     triggers="manual"></div> -->
             </div>
             <odp-field-type [field]="field" label="true"></odp-field-type>
-            <div class='state-model' *ngIf="checkStateModel()">
+            <a class='state-model' *ngIf="checkStateModel()" [routerLink]="['/app', app , 'sb', service, 'stateModel']" >
                 State Model
-            </div>
+            </a>
         </div>
         <div class="d-flex field-options">
             <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 hover"
@@ -71,7 +71,7 @@
             <div>
                 <odp-structure-field [all]="objectFields" [index]="i" [isLibrary]="isLibrary"
                     [isDataFormat]="isDataFormat" [formatType]="formatType" [edit]="edit" [level]="level+1"
-                    [isDataFormatUsed]="isDataFormatUsed">
+                    [isDataFormatUsed]="isDataFormatUsed" [stateModelAttr]='stateModelAttr' (deleteStateModel)='_deleteStateModel($event)'>
                 </odp-structure-field>
             </div>
         </ng-container>
@@ -84,7 +84,7 @@
             <div>
                 <odp-structure-field [all]="arrayFields" [index]="i" [isLibrary]="isLibrary"
                     [isDataFormat]="isDataFormat" [formatType]="formatType" [edit]="edit" [level]="level+1"
-                    [isDataFormatUsed]="isDataFormatUsed">
+                    [isDataFormatUsed]="isDataFormatUsed" [stateModelAttr]='stateModelAttr' (deleteStateModel)='_deleteStateModel($event)'>
                 </odp-structure-field>
             </div>
         </ng-container>

@@ -13,6 +13,7 @@ import { CommonService } from '../../services/common.service';
 export class TextPropertyComponent implements OnDestroy {
 
   @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
+  @Input() mainForm: FormGroup;
   @Input() form: FormGroup;
   @Input() edit: any;
   @Input() isLibrary: boolean;
@@ -44,12 +45,33 @@ export class TextPropertyComponent implements OnDestroy {
   }
 
   sortableOnUpdate = (event: any) => {
+    const self = this;
     if (this.editStateListOfValues === event.oldIndex) {
       this.editStateListOfValues = event.newIndex;
     } else if (this.editStateListOfValues === event.newIndex) {
       const diff = event.newIndex - (event.oldIndex || 0);
       this.editStateListOfValues = event.newIndex + (diff > 0 ? -1 : 1);
     }
+
+    let enums = self.form.get(['properties', 'enum']).value;
+
+    if (event.newIndex == 0 && self.checkStateModel()) {
+      let newInitialState = enums[event.oldIndex];
+      self.mainForm.get(['stateModel', 'initialStates']).patchValue([newInitialState]);
+    }
+
+    if(self.checkStateModel()){
+      let temp: any = enums[event.oldIndex];
+      enums[event.oldIndex] = enums[event.newIndex];
+      enums[event.newIndex] = temp;
+      (self.form.get(['properties', 'enum']) as FormArray).clear();  
+      for (let state of enums) {
+        (self.form.get(['properties', 'enum']) as FormArray).push(new FormControl(state));
+      }
+    }
+
+   
+
   }
 
   changeDefault(event) {
@@ -208,6 +230,22 @@ export class TextPropertyComponent implements OnDestroy {
         return;
       }
     }
+
+    if (self.checkStateModel()) {
+      let enums = self.form.get(['properties', 'enum']).value;
+
+      // initial state logic 
+      if (enums.length == 0) {
+        self.mainForm.get(['stateModel', 'initialStates']).patchValue([value])
+      }
+
+      // add state to state mapping dictionary
+      const statesDict = self.mainForm.get(['stateModel', 'states']).value;
+      statesDict[value] = [];
+      self.mainForm.get(['stateModel', 'states']).patchValue(statesDict);
+
+    }
+
     list.push(new FormControl(value));
   }
 
@@ -228,10 +266,14 @@ export class TextPropertyComponent implements OnDestroy {
     self.deleteModalTemplateRef = self.commonService.modal(self.deleteModalTemplate);
     self.deleteModalTemplateRef.result.then(close => {
       if (close) {
+        let state = self.form.get(['properties', 'enum']).value[index];
         ((self.form.get('properties')).get(control) as FormArray).removeAt(index);
         if ((self.form.get('properties') as FormGroup).get('default').value
           && tempValue === (self.form.get('properties') as FormGroup).get('default').value) {
           (self.form.get('properties') as FormGroup).get('default').patchValue('');
+        }
+        if (self.checkStateModel()) {
+          self.deleteStateModelState(index, state);
         }
       }
     }, dismiss => { });
@@ -302,4 +344,49 @@ export class TextPropertyComponent implements OnDestroy {
     }
     return retValue;
   }
+
+
+  checkStateModel() {
+    const self = this;
+    if (self.mainForm.get(['stateModel', 'enabled']).value) {
+      if (self.form.get('key').value === self.mainForm.get(['stateModel', 'attribute']).value) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  deleteStateModelState(index, state) {
+    const self = this;
+    let enums = self.form.get(['properties', 'enum']).value;
+
+    // delete from state model config
+    let stateModelConfig = self.mainForm.get(['stateModel', 'states']).value;
+    delete stateModelConfig[state];
+
+    // delete state from next set of states 
+    Object.keys(stateModelConfig).forEach(key => {
+      let stateIndex = stateModelConfig[key].indexOf(state);
+      if (stateIndex != -1) {
+        stateModelConfig[key].splice(stateIndex, 1);
+      }
+    });
+
+    self.mainForm.get(['stateModel', 'states']).patchValue(stateModelConfig);
+
+
+    // initial state logic
+    if (enums.length == 0) {
+      self.mainForm.get(['stateModel', 'initialStates']).patchValue([]);
+    }
+    else if (enums.length > 0) {
+      if (self.mainForm.get(['stateModel', 'initialStates']).value[0] == state) {
+        self.mainForm.get(['stateModel', 'initialStates']).patchValue([enums[0]]);
+      }
+    }
+  }
+
 }

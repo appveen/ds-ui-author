@@ -40,6 +40,11 @@ const routes: Routes = [
                 canActivate: [BuilderGuard]
             },
             {
+                path: 'sb/:id/:stateModel',
+                loadChildren: () => import('../home/schema-builder/schema-builder.module').then(m => m.SchemaBuilderModule),
+                canActivate: [BuilderGuard]
+            },
+            {
                 path: 'lib',
                 loadChildren: () => import('../home/library/library.module').then(m => m.LibraryModule),
                 canActivate: [LibraryGuard]

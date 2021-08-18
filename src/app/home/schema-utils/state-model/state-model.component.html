@@ -9,13 +9,14 @@
     </p>
 
     <section *ngIf="!stateModelEnabled" [formGroup]="form" class='create-state-model'>
-        <div class='d-flex justify-content-start'>
+        <div class="d-flex justify-content-start">
             <div id='select-state-model' formGroupName="stateModel" odpClickOutside (outside)='searchTerm = "" '>
-                <input  [attr.disabled]="!edit.status ? true : null" type="text" class="form-control" placeholder="Choose existing attribute or create one..." odpAutoFocus
-                formControlName="attribute" (odpSearchTerm)="searchTerm = $event" >
+                <input [attr.disabled]="!edit.status ? true : null" type="text" class="form-control"
+                    placeholder="Choose existing attribute or create one..." odpAutoFocus formControlName="attribute"
+                    (odpSearchTerm)="searchTerm = $event">
             </div>
-    
-            <button [disabled]='!edit.status' type='button' id='configureStateModel' (click)='enableStateModel()'>
+
+            <button [disabled]='!edit.status' id='configureStateModel' (click)='enableStateModel()'>
                 Configure State Model
             </button>
         </div>
@@ -25,37 +26,39 @@
                 *Attributes with List of Values only
             </span>
         </div>
-    
-        <div class="selector-dropdown d-flex flex-column border rounded bg-white"
-            *ngIf="searchTerm">
+
+        <div class="selector-dropdown d-flex flex-column border rounded bg-white" *ngIf="searchTerm">
             <div class="selector-list">
                 <div class="selector-list-item d-flex align-items-center p-2 hover"
-                *ngFor="let def of (ListOfValuesAttributes| filterDefinition:searchTerm)" (click)="addExistingListOfValues(def.properties.name)">
+                    *ngFor="let def of (ListOfValuesAttributes| filterDefinition:searchTerm)"
+                    (click)="addExistingListOfValues(def.properties.name)">
                     <odp-field-type [field]="def"></odp-field-type>
                     <span class="ml-2">{{def.properties.name}}</span>
                 </div>
-    
+
                 <div class="selector-list-item d-flex align-items-center p-2 hover"
-                *ngIf="(ListOfValuesAttributes| filterDefinition:searchTerm).length == 0" (click)="addNewListOfValues('String')">
-                    <span>Add &nbsp;</span>
+                    *ngIf="(ListOfValuesAttributes| filterDefinition:searchTerm).length == 0"
+                    (click)="setNewListAttrType('String')">
                     <span class='border-circle'>
-                        <i class="fa fa-plus"></i>
+                        +
                     </span>
+                    <span>Add &nbsp;</span>
                     <span class="font-weight-bold mr-2">{{searchTerm}}</span>
                     <odp-field-type [field]="{type:'String',properties:{}}"></odp-field-type>
 
                 </div>
                 <div class="selector-list-item d-flex align-items-center p-2 hover"
-                *ngIf="(ListOfValuesAttributes| filterDefinition:searchTerm).length == 0" (click)="addNewListOfValues('Number')">
-                    <span>Add &nbsp;</span>
+                    *ngIf="(ListOfValuesAttributes| filterDefinition:searchTerm).length == 0"
+                    (click)="setNewListAttrType('Number')">
                     <span class='border-circle'>
-                        <i class="fa fa-plus"></i>
+                        +
                     </span>
+                    <span>Add &nbsp;</span>
                     <span class="font-weight-bold mr-2">{{searchTerm}}</span>
                     <odp-field-type [field]="{type:'Number',properties:{}}"></odp-field-type>
 
                 </div>
-    
+
             </div>
             <!-- <div class="selector-list">
               
@@ -63,7 +66,7 @@
         </div>
 
         <div class='meme position-absolute text-center'>
-            <img src="/assets/img/state_model_meme.png" alt="Meme" >
+            <img src="/assets/img/state_model_meme.png" alt="Meme">
             <h4>
                 Hmm...That box must be important...
             </h4>
@@ -73,87 +76,97 @@
     </section>
 
     <section *ngIf="stateModelEnabled">
-        <div class="d-flex justify-content-between" >
-            <div id='select-state-model' >
-                <input  [attr.disabled]="true" type="text" class="form-control" [value]='stateModelAttribute'>
+        <div class="d-flex justify-content-between">
+            <div id='view-state-model'>
+                <input [attr.disabled]="true" type="text" class="form-control" [value]='StateModelAttrName'>
             </div>
             <div *ngIf="edit.status" class='mt-2'>
-                <span (click)="disableStateModel()" id='delete-state-model'>
-                    Delete State Model 
+                <span (click)="disableStateModel()" class='btn btn-link'>
+                    Delete State Model
                 </span>
             </div>
         </div>
-       
-        <div class='mt-3 p-3 bg-white' cdkScrollable>
-        
-            <div *ngIf="edit.status" class ='new-state-section d-flex justify-content-start'>
+
+        <div class='mt-2 p-3 bg-white new-state-section'>
+
+            <div *ngIf="edit.status" class='d-flex justify-content-start'>
                 <div class='w-50'>
                     <input #newStateBox type="text" class="form-control" id='new-state-input'
-                    placeholder="Add State Value here" (keyup.enter)='addNewState(newStateBox.value); newStateBox.value=null;'>
+                        placeholder="Add State Value here"
+                        (keyup.enter)='addNewState(newStateBox.value); newStateBox.value=null;'>
                 </div>
-        
-                <div id='add-state'  (click)='addNewState(newStateBox.value); newStateBox.value=null;'>
-                    <span class="fa fa-plus"></span>
+
+                <div id='add-state' (click)='addNewState(newStateBox.value); newStateBox.value=null;'>
+                    <span class="fa fa-plus hover"></span>
                 </div>
             </div>
 
-            <div class='row mt-4' *ngIf="edit.status">
-               
-                    <div class="col-6">
-                        <span *ngIf="deleteStateCount>0" class='cursor-pointer' (click)='deleteStates()'>
-                            Delete selected states ({{deleteStateCount}})
-                        </span>
-                    </div>
-                    <div class="col-6 text-right">
-                        <span class='cursor-pointer' (click)='deleteAllNextStates()'>
-                            Clear All Next States
-                        </span>
-                    </div>
+            <div class='row mt-2' *ngIf="edit.status" [hidden]='allStates.length == 0'>
+
+                <div class="col-6">
+                    <span *ngIf="deleteStateCount>0" class='hover btn btn-link p-0' (click)='deleteStates()'>
+                        Delete selected states ({{deleteStateCount}})
+                    </span>
+                </div>
+                <div class="col-6 text-right">
+                    <span class='hover btn btn-link' (click)='deleteAllNextStates()'>
+                        Clear All Next States
+                    </span>
+                </div>
             </div>
-        
-            <div class='mt-3'>
-                <div class='row mb-3'>
+
+            <div class='mt-2'>
+                <div class='row mb-2' [hidden]='allStates.length == 0'>
                     <div class='col-3'>
-                        <span class='state-model-label font-weight-bold'>State</span>
+                        <strong>State</strong>
                     </div>
                     <div class='col-9'>
-                        <span class='state-model-label font-weight-bold'>Add Next State</span>
+                        <strong>Add Next State</strong>
+
                     </div>
                 </div>
 
                 <div class='state-model-config' [sortablejs]="stateModelData"
-                [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
-                    <div class='row mb-3 align-items-center' *ngFor='let stateData of stateModelData; let i = index '>
-                        <div class='col-3'>
-                            <span *ngIf="edit.status" class="fa fa-bars text-muted hover mr-2"></span>
-                            <input *ngIf="edit.status" type="checkbox"  [(ngModel)]='stateData.checked'>
-                            <span class='state-name'>{{stateData.state}}</span>
-                            <span *ngIf="edit.status" class='fa fa-times float-right' (click)='deleteStates(stateData.state)'>
-                            </span>
+                    [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
+                    <div class='row align-items-center' *ngFor='let stateData of stateModelData; let i = index '>
+                        <div class='col-3' [ngClass]="{'mb-2': edit.status }">
+                            <div *ngIf="edit.status" class='d-inline-block'>
+                                <i class="fa fa-bars text-muted hover mr-2 fs-16"></i>
+                            </div>
+                            <div class='d-inline-block'>
+                                <input *ngIf="edit.status" type="checkbox" class='mb-0' [(ngModel)]='stateData.checked'>
+                            </div>
+                            <div class='state-name d-inline-block ' [ngbTooltip]="stateData.state">{{stateData.state}}
+                            </div>
+                            <div *ngIf="edit.status"
+                                class='fa hover fa-times text-muted pt-1 float-right d-inline-block'
+                                (click)='deleteStates(stateData.state)'>
+                            </div>
                         </div>
-                        <div class='col-9'>
+                        <div class='col-9' [ngClass]="{'mb-2': !edit.status }">
                             <mat-form-field class="example-chip-list w-100" appearance="fill">
                                 <mat-chip-list #chipList aria-label="Next State selection" [disabled]='!edit.status'>
-                                  <mat-chip *ngFor="let nextState of nextStates(stateData.state)" [selectable]="selectable"
-                                           [removable]="removable" (removed)="removeNextState(nextState, stateData.state)">
+                                    <mat-chip *ngFor="let nextState of nextStates(stateData.state)"
+                                        [selectable]="selectable" [removable]="removable"
+                                        (removed)="removeNextState(nextState, stateData.state)">
                                         {{nextState}}
-                                    <mat-icon matChipRemove *ngIf="removable">
-                                        <span class='fa fa-times'></span>
-                                    </mat-icon>
-                                  </mat-chip>
-                                  <input placeholder="{{ edit.status ? 'Next State...': '' }}"
-                                         #chipInput
-                                         [formControl]="stateCtrl"
-                                         [matChipInputFor]="chipList"
-                                         [matAutocomplete]="auto"
-                                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                         [matChipInputAddOnBlur]="addOnBlur"
-                                         (matChipInputTokenEnd)="addNewNextState($event, stateData.state , chipInput, auto)">
+                                        <mat-icon matChipRemove *ngIf="removable">
+                                            <span class='fa fa-times'></span>
+                                        </mat-icon>
+                                    </mat-chip>
+                                    <input placeholder="{{ edit.status ? 'Next State...': '' }}" #chipInput
+                                        [formControl]="stateCtrl" [matChipInputFor]="chipList" [matAutocomplete]="auto"
+                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                        [matChipInputAddOnBlur]="addOnBlur"
+                                        (matChipInputTokenEnd)="addNewNextState($event, stateData.state , chipInput, auto)">
                                 </mat-chip-list>
 
-                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedNextState($event, chipInput, i)">
-                                    <mat-option *ngFor="let nextState of autoCompleteNextStates(stateData.state) | filterNextState: chipInput.value" [value]="nextState">
-                                      {{nextState}}
+                                <mat-autocomplete #auto="matAutocomplete"
+                                    (optionSelected)="selectedNextState($event, chipInput, i)">
+                                    <mat-option
+                                        *ngFor="let nextState of autoCompleteNextStates(stateData.state) | filterNextState: chipInput.value"
+                                        [value]="nextState">
+                                        {{nextState}}
                                     </mat-option>
                                 </mat-autocomplete>
 
@@ -162,7 +175,7 @@
                             <hr *ngIf="!edit.status" class='m-0 p-0'>
                         </div>
                     </div>
-                
+
                 </div>
             </div>
 
@@ -174,20 +187,19 @@
 
 <ng-template #deleteModalTemplate>
     <div class="modal-body p-4">
-      <div class="d-flex align-items-center justify-content-between w-100">
-        <div class="d-flex align-items-center">
-          <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
-            <odp-service-icon [size]="18" color="DD5151" class="mt-1"></odp-service-icon>
-          </span>
-          <span class="font-weight-bold mb-1">{{deleteModal.title}}</span>
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-service-icon [size]="18" color="DD5151" class="mt-1"></odp-service-icon>
+                </span>
+                <span class="font-weight-bold mb-1">{{deleteModal.title}}</span>
+            </div>
+            <span class="fa fa-times text-secondary hover " (click)="deleteModalTemplateRef.close(false)"></span>
         </div>
-        <span class="fa fa-times text-secondary hover " (click)="deleteModalTemplateRef.close(false)"></span>
-      </div>
-      <p class="text-secondary text-center my-5">{{deleteModal.message}}</p>
-      <div class="d-flex align-items-center justify-content-end">
-        <button type="button" class="btn btn-min-width btn-delete" (click)="deleteModalTemplateRef.close(true)"
-          id="sbDeleteModalYes">Yes</button>
-      </div>
+        <p class="text-secondary text-center my-5">{{deleteModal.message}}</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-delete" (click)="deleteModalTemplateRef.close(true)"
+                id="sbDeleteModalYes">Yes</button>
+        </div>
     </div>
-  </ng-template>
-  
+</ng-template>
