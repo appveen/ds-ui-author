@@ -219,11 +219,6 @@ export class SchemaBuilderComponent implements
                 // self.form.get(['definition', 0, 'counter'])
                 //     .setAsyncValidators([counterValidator(self.commonService, self.edit.id)]);
                 self.fillDetails(param.id);
-
-                if (param.stateModel == 'stateModel') {
-                    self.activeTab = 2;
-                    self.experienceSideNavActiveTab = 0;
-                }
             } else {
                 self.enableEdit(true);
                 self.edit.id = null;
@@ -370,6 +365,14 @@ export class SchemaBuilderComponent implements
             self.form.get(['stateModel', 'attribute']).patchValue('');
             self.form.get(['stateModel', 'initialStates']).patchValue([]);
             self.form.get(['stateModel', 'states']).patchValue({});
+        }
+    }
+
+    viewStateModel(condition){
+        const self = this;
+        if(condition){
+            self.activeTab = 2;
+            self.experienceSideNavActiveTab = 0;
         }
     }
 

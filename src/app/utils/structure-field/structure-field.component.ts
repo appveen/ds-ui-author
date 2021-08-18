@@ -31,6 +31,7 @@ import { sameName } from 'src/app/home/custom-validators/same-name-validator';
 })
 export class StructureFieldComponent implements OnInit, AfterContentInit, OnDestroy, DoCheck {
     @Output() deleteStateModel = new EventEmitter<boolean>();
+    @Output() viewStateModel = new EventEmitter<boolean>();
     @Input() stateModelAttr: any;
     @Input() isLibrary: boolean;
     @Input() isDataFormat: boolean;
@@ -186,6 +187,11 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 }
             });
         }
+    }
+
+    _viewStateModel($event) {
+        const self = this;
+        self.viewStateModel.emit($event);
     }
 
     checkStateModel() {

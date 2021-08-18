@@ -32,7 +32,7 @@
                     triggers="manual"></div> -->
             </div>
             <odp-field-type [field]="field" label="true"></odp-field-type>
-            <a class='state-model' *ngIf="checkStateModel()" [routerLink]="['/app', app , 'sb', service, 'stateModel']" >
+            <a class='state-model hover' (click)='_viewStateModel(true)' *ngIf='checkStateModel()'>
                 State Model
             </a>
         </div>
@@ -71,7 +71,8 @@
             <div>
                 <odp-structure-field [all]="objectFields" [index]="i" [isLibrary]="isLibrary"
                     [isDataFormat]="isDataFormat" [formatType]="formatType" [edit]="edit" [level]="level+1"
-                    [isDataFormatUsed]="isDataFormatUsed" [stateModelAttr]='stateModelAttr' (deleteStateModel)='_deleteStateModel($event)'>
+                    [isDataFormatUsed]="isDataFormatUsed" [stateModelAttr]='stateModelAttr'
+                    (deleteStateModel)='_deleteStateModel($event)' (viewStateModel)='_viewStateModel($event)'>
                 </odp-structure-field>
             </div>
         </ng-container>
@@ -84,7 +85,8 @@
             <div>
                 <odp-structure-field [all]="arrayFields" [index]="i" [isLibrary]="isLibrary"
                     [isDataFormat]="isDataFormat" [formatType]="formatType" [edit]="edit" [level]="level+1"
-                    [isDataFormatUsed]="isDataFormatUsed" [stateModelAttr]='stateModelAttr' (deleteStateModel)='_deleteStateModel($event)'>
+                    [isDataFormatUsed]="isDataFormatUsed" [stateModelAttr]='stateModelAttr'
+                    (deleteStateModel)='_deleteStateModel($event)' (viewStateModel)='_viewStateModel($event)'>
                 </odp-structure-field>
             </div>
         </ng-container>
@@ -97,7 +99,8 @@
 
 <ng-template #validationError>
     <div class="d-flex flex-column">
-        <div *ngIf="form.get('properties.name').touched && form.get('key').hasError('required') && !isInvalidKey" class="d-flex justify-content-start">
+        <div *ngIf="form.get('properties.name').touched && form.get('key').hasError('required') && !isInvalidKey"
+            class="d-flex justify-content-start">
             <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
             <span>You cannot leave this blank</span>
         </div>
