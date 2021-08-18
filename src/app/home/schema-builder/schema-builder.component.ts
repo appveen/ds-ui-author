@@ -368,9 +368,9 @@ export class SchemaBuilderComponent implements
         }
     }
 
-    viewStateModel(condition){
+    viewStateModel(condition) {
         const self = this;
-        if(condition){
+        if (condition) {
             self.activeTab = 2;
             self.experienceSideNavActiveTab = 0;
         }

@@ -58,17 +58,17 @@ export class TextPropertyComponent implements OnDestroy {
       self.mainForm.get(['stateModel', 'initialStates']).patchValue([newInitialState]);
     }
 
-    if(self.checkStateModel()){
+    if (self.checkStateModel()) {
       let temp: any = enums[event.oldIndex];
       enums[event.oldIndex] = enums[event.newIndex];
       enums[event.newIndex] = temp;
-      (self.form.get(['properties', 'enum']) as FormArray).clear();  
+      (self.form.get(['properties', 'enum']) as FormArray).clear();
       for (let state of enums) {
         (self.form.get(['properties', 'enum']) as FormArray).push(new FormControl(state));
       }
     }
 
-   
+
 
   }
 

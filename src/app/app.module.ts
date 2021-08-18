@@ -30,9 +30,9 @@ import { IconsModule } from './utils/icons/icons.module';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { ReqResInterceptorService } from './utils/services/req-res-interceptor.service';
 import { SortablejsModule } from 'ngx-sortablejs';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import { MatSelectModule} from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 // enableProdMode();
 

@@ -112,7 +112,8 @@
                       <div [class.disabled]="def.value.hasOwnProperty('_id')">
                         <odp-structure-field [formGroupName]="fieldIndex" [all]="form.get('definition')"
                           [index]="fieldIndex" [first]="first" [edit]="edit" [type]="serviceObj?.type"
-                          [stateModelAttr]="stateModelIfEnabled" (deleteStateModel)="deleteStateModel($event)" (viewStateModel)='viewStateModel($event)'>
+                          [stateModelAttr]="stateModelIfEnabled" (deleteStateModel)="deleteStateModel($event)"
+                          (viewStateModel)='viewStateModel($event)'>
                         </odp-structure-field>
                       </div>
                     </ng-container>

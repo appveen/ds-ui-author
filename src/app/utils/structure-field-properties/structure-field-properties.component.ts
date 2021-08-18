@@ -107,7 +107,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       this.form.get('properties.fieldLength').setValidators(null);
     }
 
-    if(self.form.get('properties._detailedType').value === 'enum' ){
+    if (self.form.get('properties._detailedType').value === 'enum') {
       self.form.get('properties.enum').setValidators([emptyEnum]);
     }
   }
@@ -238,11 +238,11 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     }
   }
 
-  clearValue(){
-   this._dateFrom = null;
-   this.formList[0].get('properties.default').patchValue(null);
+  clearValue() {
+    this._dateFrom = null;
+    this.formList[0].get('properties.default').patchValue(null);
   }
-  
+
   get labelError() {
     const self = this;
     if (self.form.get('properties.label') && self.form.get('properties.label').errors) {
