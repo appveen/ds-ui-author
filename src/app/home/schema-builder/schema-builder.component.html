@@ -111,7 +111,9 @@
                     <ng-container *ngFor="let def of definitions;let fieldIndex = index; let first = first;">
                       <div [class.disabled]="def.value.hasOwnProperty('_id')">
                         <odp-structure-field [formGroupName]="fieldIndex" [all]="form.get('definition')"
-                          [index]="fieldIndex" [first]="first" [edit]="edit" [type]="serviceObj?.type">
+                          [index]="fieldIndex" [first]="first" [edit]="edit" [type]="serviceObj?.type"
+                          [stateModelAttr]="stateModelIfEnabled" (deleteStateModel)="deleteStateModel($event)"
+                          (viewStateModel)='viewStateModel($event)'>
                         </odp-structure-field>
                       </div>
                     </ng-container>
@@ -127,7 +129,8 @@
               </div>
             </div>
             <div class="properties-wrapper builder-body border-left">
-              <odp-structure-field-properties [edit]="edit" [type]="serviceObj?.type"></odp-structure-field-properties>
+              <odp-structure-field-properties [edit]="edit" [type]="serviceObj?.type" [(mainForm)]='form'>
+              </odp-structure-field-properties>
             </div>
           </div>
         </ng-container>
@@ -136,12 +139,42 @@
           </odp-integration>
         </ng-container>
         <ng-container *ngIf="activeTab == 2">
-          <div class="w-100 builder">
-            <div class="schema-creator scroll position-relative" id="schema-creator" [scrollTop]="schemaFieldheight">
-              <div class="builder-body border-left">
-                <odp-wizards [form]="form" [edit]="edit"></odp-wizards>
+          <div class="w-100 builder d-flex ">
+            <div class='d-flex flex-column p-3' id='experience-side-nav'>
+              <div class='mb-3'>
+                <span class='side-nav-tab'
+                  [ngClass]="{'text-accent' : experienceSideNavActiveTab == 0 , 'text-bold' : experienceSideNavActiveTab == 0}"
+                  (click)='experienceSideNavActiveTab = 0'>
+                  State Model
+                </span>
+              </div>
+              <div class='mb-3' *ngIf='false'>
+                <span class='side-nav-tab'>
+                  Data Segmentation
+                </span>
+              </div>
+              <div class='mb-3'>
+                <span class='side-nav-tab'
+                  [ngClass]="{'text-accent' : experienceSideNavActiveTab == 2 , 'text-bold' : experienceSideNavActiveTab == 2}"
+                  (click)='experienceSideNavActiveTab = 2'>
+                  Personalize
+                </span>
               </div>
             </div>
+            <div class='d-flex flex-column w-100'>
+              <div *ngIf="experienceSideNavActiveTab == 2" class="schema-creator scroll position-relative w-100"
+                id="schema-creator" [scrollTop]="schemaFieldheight">
+                <div class="builder-body border-left">
+                  <odp-wizards [form]="form" [edit]="edit"></odp-wizards>
+                </div>
+              </div>
+
+              <div *ngIf="experienceSideNavActiveTab == 0"
+                class="schema-creator scrollStateModel position-relative w-100 bg-light">
+                <odp-state-model [(form)]='form' [edit]='edit'></odp-state-model>
+              </div>
+            </div>
+
           </div>
         </ng-container>
         <ng-container>

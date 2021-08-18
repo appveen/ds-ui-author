@@ -122,10 +122,12 @@
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [type]='type'>
         </odp-relation-property>
         <odp-text-property *ngIf="formItem.get('type').value=='String'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType" [type]='type'>
+          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType" [type]='type'
+          [(mainForm)]='mainForm'>
         </odp-text-property>
         <odp-number-property *ngIf="formItem.get('type').value=='Number'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat"  [formatType]="formatType"  [type]='type'>
+          [(mainForm)]='mainForm' [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType"
+          [type]='type'>
         </odp-number-property>
         <odp-library-property *ngIf="formItem.get('type').value=='Global'" [form]="formItem" [edit]="edit"
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
@@ -172,18 +174,20 @@
             <ng-container *ngIf="canEdit">
               <button type="button" class="btn btn-link" *ngIf="form.get('properties.default')?.value"
                 (click)="showDatePicker=true">
-                <ng-container *ngIf="form.get('properties.dateType').value == 'date'">{{form.get('properties.default')?.value | date:'dd-MMM-yyyy' }}</ng-container>
-                <ng-container *ngIf="form.get('properties.dateType').value != 'date'">{{form.get('properties.default')?.value | date:'dd-MMM-yyyy HH:mm:ss' }}</ng-container>
+                <ng-container *ngIf="form.get('properties.dateType').value == 'date'">
+                  {{form.get('properties.default')?.value | date:'dd-MMM-yyyy' }}</ng-container>
+                <ng-container *ngIf="form.get('properties.dateType').value != 'date'">
+                  {{form.get('properties.default')?.value | date:'dd-MMM-yyyy HH:mm:ss' }}</ng-container>
               </button>
               <button type="button" class="btn btn-link" *ngIf="!form.get('properties.default')?.value"
                 (click)="showDatePicker=true">Select
                 Date</button>
               <odp-date-picker [(togglePicker)]="showDatePicker" [options]="{floating:true,buttons:true}"
                 *ngIf="showDatePicker" [(from)]="dateFrom"></odp-date-picker>
-                <button  class="btn btn-link text-muted p-0" *ngIf="form.get('properties.default')?.value"
-                (click)="clearValue()" >
+              <button class="btn btn-link text-muted p-0" *ngIf="form.get('properties.default')?.value"
+                (click)="clearValue()">
                 <span class="fas fa-times-circle"></span>
-            </button>
+              </button>
 
             </ng-container>
             <ng-container *ngIf="!canEdit">

@@ -42,6 +42,15 @@
     min-height: 40px;
     max-height: 40px;
   }
+
+  #experience-side-nav {
+    width: 175px;
+    // border-right: 1px solid #DBDBDB;
+
+    .side-nav-tab {
+      cursor: pointer;
+    }
+  }
 }
 
 .add-attribute {
@@ -55,6 +64,13 @@
   overflow-x: hidden;
   min-height: calc(100vh - 264px);
   max-height: calc(100vh - 264px);
+}
+
+.scrollStateModel {
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: calc(100vh - 224px);
+  max-height: calc(100vh - 224px);
 }
 
 .builder-body {

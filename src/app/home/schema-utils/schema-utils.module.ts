@@ -32,6 +32,12 @@ import { LoadingPlaceholderModule } from 'src/app/utils/loading-placeholder/load
 import { SortablejsModule } from 'ngx-sortablejs';
 import { RoundCheckModule } from 'src/app/utils/round-check/round-check.module';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
+import { StateModelComponent } from './state-model/state-model.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { FilterNextStatePipe } from './filter-next-state.pipe';
 
 @NgModule({
     imports: [
@@ -53,7 +59,11 @@ import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
         FilterDefinitionModule,
         LoadingPlaceholderModule,
         SortablejsModule,
-        CheckboxModule
+        CheckboxModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatAutocompleteModule,
+        MatChipsModule,
     ],
     declarations: [
         SchemaStructurePipe,
@@ -68,7 +78,9 @@ import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
         SelectBlockComponent,
         TraverseBlockComponent,
         PathCreatorComponent,
-        LogicalConditionComponent
+        LogicalConditionComponent,
+        StateModelComponent,
+        FilterNextStatePipe,
     ],
     exports: [
         SchemaStructurePipe,
@@ -83,7 +95,8 @@ import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
         SelectBlockComponent,
         TraverseBlockComponent,
         PathCreatorComponent,
-        LogicalConditionComponent
+        LogicalConditionComponent,
+        StateModelComponent,
     ],
     providers: [SchemaBuilderService]
 })

@@ -10,7 +10,9 @@ import {
     KeyValueDiffer,
     DoCheck,
     KeyValueChangeRecord,
-    TemplateRef
+    TemplateRef,
+    EventEmitter,
+    Output
 } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { NgbTooltip, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -28,7 +30,9 @@ import { sameName } from 'src/app/home/custom-validators/same-name-validator';
     styleUrls: ['./structure-field.component.scss']
 })
 export class StructureFieldComponent implements OnInit, AfterContentInit, OnDestroy, DoCheck {
-
+    @Output() deleteStateModel = new EventEmitter<boolean>();
+    @Output() viewStateModel = new EventEmitter<boolean>();
+    @Input() stateModelAttr: any;
     @Input() isLibrary: boolean;
     @Input() isDataFormat: boolean;
     @Input() all: FormArray;
@@ -58,6 +62,8 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
     private subscriptions: any;
     private oldName: string;
     private editDiffer: KeyValueDiffer<string, any>;
+    app: any;
+    service: any;
     constructor(private fb: FormBuilder,
         private schemaService: SchemaBuilderService,
         private commonService: CommonService,
@@ -77,6 +83,8 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         if (!self.level) {
             self.level = 0;
         }
+        self.app = self.commonService.app._id;
+        self.service = self.commonService.activeComponent['edit'].id;
         self.editDiffer = self.keyValDiff.find(self.edit).create();
         self.nameChange.title = 'Change attribute name?';
         self.nameChange.message = 'Data under old attribute name wont be accessible. Are you sure you want to continue?';
@@ -179,6 +187,19 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 }
             });
         }
+    }
+
+    _viewStateModel($event) {
+        const self = this;
+        self.viewStateModel.emit($event);
+    }
+
+    checkStateModel() {
+        const self = this;
+        if (self.stateModelAttr.value) {
+            return self.form.get('key').value == self.stateModelAttr.value
+        }
+        return false;
     }
 
     addField(required?: boolean) {
@@ -423,8 +444,16 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             self.schemaService.selectedFieldId = self.all.at(self.index - 1).get('_fieldId').value;
         }
         self.schemaService.activeField.emit(self.schemaService.selectedFieldId);
+        if (self.all.at(self.index).get(['properties', 'dataPath']).value == self.stateModelAttr.value) {
+            self.deleteStateModel.emit(true);
+        }
         self.all.removeAt(self.index);
         self.all.markAsDirty();
+    }
+
+    _deleteStateModel($event) {
+        const self = this;
+        self.deleteStateModel.emit($event);
     }
 
     pasteOnField(e) {
