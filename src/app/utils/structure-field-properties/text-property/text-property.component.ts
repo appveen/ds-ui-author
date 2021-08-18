@@ -52,9 +52,7 @@ export class TextPropertyComponent implements OnDestroy {
       const diff = event.newIndex - (event.oldIndex || 0);
       this.editStateListOfValues = event.newIndex + (diff > 0 ? -1 : 1);
     }
-
     let enums = self.form.get(['properties', 'enum']).value;
-
     if (event.newIndex == 0 && self.checkStateModel()) {
       let newInitialState = enums[event.oldIndex];
       self.mainForm.get(['stateModel', 'initialStates']).patchValue([newInitialState]);
@@ -230,25 +228,19 @@ export class TextPropertyComponent implements OnDestroy {
         return;
       }
     }
-
     if (self.checkStateModel()) {
       let enums = self.form.get(['properties', 'enum']).value;
-
       // initial state logic 
       if (enums.length == 0) {
         self.mainForm.get(['stateModel', 'initialStates']).patchValue([value])
       }
-
       // add state to state mapping dictionary
       const statesDict = self.mainForm.get(['stateModel', 'states']).value;
       statesDict[value] = [];
       self.mainForm.get(['stateModel', 'states']).patchValue(statesDict);
-
     }
-
     list.push(new FormControl(value));
   }
-
 
   removeFromList(control, index) {
     const self = this;
@@ -344,7 +336,6 @@ export class TextPropertyComponent implements OnDestroy {
     }
     return retValue;
   }
-
 
   checkStateModel() {
     const self = this;

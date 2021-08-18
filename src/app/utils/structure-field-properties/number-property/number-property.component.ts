@@ -10,7 +10,6 @@ import { CommonService } from '../../services/common.service';
   styleUrls: ['./number-property.component.scss']
 })
 export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
-
   @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
   @Input() mainForm: FormGroup;
   @Input() form: FormGroup;
@@ -30,14 +29,12 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
     self.deleteModal = {};
   }
 
-
   ngAfterViewChecked() {
     const defaultValue = this.form.get('properties.default').value
     if (this.form.get('properties.default') && defaultValue != null && defaultValue != undefined) {
       this.validateNumbDefaultValue(this.form.get('properties.default').value, this.form.get('properties'))
     }
   }
-
 
   ngOnDestroy() {
     const self = this;
@@ -234,25 +231,19 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
         return;
       }
     }
-
     if (self.checkStateModel()) {
       let enums = self.form.get(['properties', 'enum']).value;
-
       // initial state logic 
       if (enums.length == 0) {
         self.mainForm.get(['stateModel', 'initialStates']).patchValue([value])
       }
-
       // add state to state mapping dictionary
       const statesDict = self.mainForm.get(['stateModel', 'states']).value;
       statesDict[value] = [];
       self.mainForm.get(['stateModel', 'states']).patchValue(statesDict);
-
     }
-
     list.push(new FormControl(value));
   }
-
 
   removeFromList(control, index, prop: AbstractControl) {
     const self = this;
@@ -275,11 +266,9 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
         if (prop.get('default')?.value && tempValue === prop.get('default')?.value) {
           prop.get('default').patchValue('');
         }
-
         if (self.checkStateModel()) {
           self.deleteStateModelState(index, state);
         }
-
       }
     }, dismiss => { });
   }
@@ -370,11 +359,9 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
   deleteStateModelState(index, state) {
     const self = this;
     let enums = self.form.get(['properties', 'enum']).value;
-
     // delete from state model config
     let stateModelConfig = self.mainForm.get(['stateModel', 'states']).value;
     delete stateModelConfig[state];
-
     // delete state from next set of states 
     Object.keys(stateModelConfig).forEach(key => {
       let stateIndex = stateModelConfig[key].indexOf(state);
@@ -382,10 +369,7 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
         stateModelConfig[key].splice(stateIndex, 1);
       }
     });
-
     self.mainForm.get(['stateModel', 'states']).patchValue(stateModelConfig);
-
-
     // initial state logic
     if (enums.length == 0) {
       self.mainForm.get(['stateModel', 'initialStates']).patchValue([]);

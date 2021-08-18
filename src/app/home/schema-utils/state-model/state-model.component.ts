@@ -58,13 +58,10 @@ export class StateModelComponent implements OnInit {
     const self = this;
     let definitions = (self.form.get('definition') as FormArray).controls
     self.sourceDefinition = self.appService.patchDataKey(self.fb.array(definitions).value);
-
     if (self.stateModelEnabled) {
       self.stateModelData = self.allStates.map(state => {
         return { 'state': state, 'checked': false }
       });
-
-
     }
   }
 
@@ -101,7 +98,6 @@ export class StateModelComponent implements OnInit {
     return self.form.get(['stateModel', 'enabled']).value;
   }
 
-
   setNewListAttrType(type?) {
     this.newListAttrType = type;
   }
@@ -121,16 +117,13 @@ export class StateModelComponent implements OnInit {
     const attrName = self.form.get(['stateModel', 'attribute']).value;
     const tempArr = self.form.controls.definition as FormArray;
     const temp = self.schemaService.getDefinitionStructure({ _newField: true });
-
     const attrCamelCase = self.appService.toCamelCase(attrName);
-
     self.form.get(['stateModel', 'attribute']).patchValue(attrCamelCase);
     temp.get(['properties', 'name']).patchValue(attrName);
     temp.get(['properties', 'dataPath']).patchValue(attrCamelCase);
     temp.get('type').patchValue(self.newListAttrType);
     temp.get(['properties', '_detailedType']).patchValue('enum');
     tempArr.push(temp);
-
   }
 
   // convert existing List of Values attribute to State Model 
@@ -142,8 +135,6 @@ export class StateModelComponent implements OnInit {
   // configure the state model 
   enableStateModel() {
     const self = this;
-
-
     if (!self.stateModelAttribute) {
       return;
     }
@@ -153,7 +144,6 @@ export class StateModelComponent implements OnInit {
       self.form.get(['stateModel', 'enabled']).patchValue(true);
       self.newListAttrType = null;
       self.ts.success(`Success! State Model ${self.stateModelAttribute} has been successfully created . Now you can find it in the attribute list.`)
-
     }
     else {
       if (self.stateModelAttrIndex > -1) {
@@ -165,14 +155,12 @@ export class StateModelComponent implements OnInit {
           const stateModelDict = self.allStates.reduce((a, x) => ({ ...a, [x]: [] }), {});
           self.form.get(['stateModel', 'states']).patchValue(stateModelDict);
           self.form.get(['stateModel', 'initialStates']).patchValue([self.allStates[0]])
-
         }
         // first state as initial state 
         self.stateModelData = self.allStates.map(state => {
           return { 'state': state, 'checked': false }
         });
         self.ts.success(`Success! State Model ${self.stateModelAttribute} has been successfully created `)
-
       }
       else {
         this.ts.error('Please select type for new list of values')
@@ -200,7 +188,6 @@ export class StateModelComponent implements OnInit {
   // get all states in state model
   get allStates() {
     const self = this;
-
     if (self.stateModelAttrIndex > -1) {
       return self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'enum']).value;
     } else {
@@ -215,9 +202,7 @@ export class StateModelComponent implements OnInit {
     if ((!newState || !newState.toString().trim()) && (typeof newState !== 'number')) {
       return;
     }
-
     if (self.stateModelAttrIndex > -1) {
-
       if (self.stateModelAttributeType == 'Number') {
         newState = parseInt(newState);
         if (isNaN(newState)) {
@@ -234,7 +219,6 @@ export class StateModelComponent implements OnInit {
       }
       self.stateModelData.push({ 'state': newState, 'checked': false });
       (self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'enum']) as FormArray).push(new FormControl(newState));
-
       const statesDict = self.form.get(['stateModel', 'states']).value;
       statesDict[newState] = [];
       self.form.get(['stateModel', 'states']).patchValue(statesDict);
@@ -251,13 +235,10 @@ export class StateModelComponent implements OnInit {
   autoCompleteNextStates(state) {
     const self = this;
     const statesDict = this.form.get(['stateModel', 'states']).value;
-
-
     // a single state should have unique next set of states
     if (statesDict && statesDict[state] && statesDict[state].length) {
       return self.allStates.filter(x => !statesDict[state].includes(x))
         .filter(nextState => nextState != state);
-
     }
     return self.allStates.filter(nextState => nextState != state);
   }
@@ -266,9 +247,7 @@ export class StateModelComponent implements OnInit {
   removeNextState(nextState, state): void {
     const self = this;
     let states = this.form.get(['stateModel', 'states']).value;
-
     const index = states[state].indexOf(nextState);
-
     if (index >= 0) {
       states[state].splice(index, 1);
       self.form.get(['stateModel', 'states']).patchValue(states);
@@ -279,17 +258,13 @@ export class StateModelComponent implements OnInit {
   addNewNextState(event: MatChipInputEvent, state, chipInput, matAuto: MatAutocomplete): void {
     const self = this;
     let value: any = (event.value || '').trim();
-
     if (!value) {
       return
     }
-
     if (self.stateModelAttributeType == 'Number') {
       value = parseInt(value);
     }
-
     let validState = self.autoCompleteNextStates(state).find(st => st == value)
-
     if (validState) {
       const statesDict = this.form.get(['stateModel', 'states']).value;
       statesDict[state].push(value)
@@ -366,7 +341,6 @@ export class StateModelComponent implements OnInit {
     const self = this;
     const stateModelConfig = self.allStates.reduce((acc, curr) => (acc[curr] = [], acc), {});
     self.form.get(['stateModel', 'states']).patchValue(stateModelConfig);
-
   }
 
   sortableOnMove = (event: any) => {
@@ -377,19 +351,15 @@ export class StateModelComponent implements OnInit {
     if (event.newIndex == 0) {
       self.form.get(['stateModel', 'initialStates']).patchValue([self.stateModelData[0]['state']]);
     }
-
     let allStates = self.allStates;
     let temp: any = allStates[event.oldIndex];
     allStates[event.oldIndex] = allStates[event.newIndex];
     allStates[event.newIndex] = temp;
-
-
     (self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'enum']) as FormArray).clear();
 
     for (let state of allStates) {
       (self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'enum']) as FormArray).push(new FormControl(state));
     }
-
   }
 
 }
