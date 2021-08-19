@@ -58,6 +58,13 @@
   }
 }
 
+.state-model-desc {
+  max-width: 500px;
+  min-width: 500px;
+  max-height: 34px;
+  min-height: 34px;
+}
+
 #select-state-model {
   width: 30%;
   input {

@@ -148,6 +148,7 @@ export class StateModelComponent implements OnInit {
     else {
       if (self.stateModelAttrIndex > -1) {
         self.form.get(['stateModel', 'attribute']).patchValue(this.stateModelAttribute);
+        self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'default']).patchValue(null);
 
         self.form.get(['stateModel', 'enabled']).patchValue(true);
         // const existingStates = self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'enum']).value;
@@ -156,6 +157,7 @@ export class StateModelComponent implements OnInit {
           self.form.get(['stateModel', 'states']).patchValue(stateModelDict);
           self.form.get(['stateModel', 'initialStates']).patchValue([self.allStates[0]])
         }
+
         // first state as initial state 
         self.stateModelData = self.allStates.map(state => {
           return { 'state': state, 'checked': false }

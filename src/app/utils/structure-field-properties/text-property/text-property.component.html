@@ -16,7 +16,8 @@
             id="_default" placeholder="Default Value email"
             (blur)="validateEmail('DefaultEmail',form.get('properties.default').value,form.get('properties'))">
           <div class="value-width" *ngIf=" form.get('properties._detailedType').value === 'enum'">
-            <select class="form-control" formControlName="default" (change)="changeDefault($event)">
+            <select class="form-control" formControlName="default" (change)="changeDefault($event)"
+              [attr.disabled]="checkStateModel() ? '' : null">
               <option [value]=null selected>Select Value</option>
               <option *ngFor="let attr of form.get('properties.enum').value" [value]="attr">{{attr}}
               </option>
