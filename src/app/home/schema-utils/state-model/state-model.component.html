@@ -4,8 +4,9 @@
         <strong>State Model</strong>
     </div>
 
-    <p class='text-secondary mb-4'>
-        Per data service you will be able to select one attribute to configure a state model machine.
+    <p class='text-secondary mb-4 state-model-desc'>
+        Per data service you will be able to select one attribute to configure a state model machine.The first state
+        will be the starting state for the state model machine.
     </p>
 
     <section *ngIf="!stateModelEnabled" [formGroup]="form" class='create-state-model'>
