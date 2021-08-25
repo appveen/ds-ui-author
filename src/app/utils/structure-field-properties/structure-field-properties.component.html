@@ -72,11 +72,14 @@
           <div class="value-width bg-white position-relative">
             <button type="button"
               class="d-flex w-100 align-items-center justify-content-between bg-white px-2 py-1 border rounded ignore-click"
-              (click)="showDataTypes[formIndex]=true" [disabled]="!canEdit">
+              (click)="showDataTypes[formIndex]=true" [disabled]="!canEdit || checkStateModel()">
               <odp-field-type [field]="{type:formItem.value.type,properties:formItem.value.properties}" [label]="true">
               </odp-field-type>
               <span *ngIf="canEdit" class="fas fa-angle-down text-accent"></span>
             </button>
+            <small class='text-secondary' *ngIf="canEdit && checkStateModel()">
+              Type can't be changed because there is a state model configured
+            </small>
             <odp-field-type-selector *ngIf="showDataTypes[formIndex]" [(toggle)]="showDataTypes[formIndex]"
               [form]="formItem" [edit]="edit" [isLibrary]="isLibrary" [isDataFormat]="isDataFormat"
               [formatType]="formatType">

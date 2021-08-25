@@ -170,7 +170,7 @@ export class StateModelComponent implements OnInit {
     }
   }
 
-  // delete the state model
+  // remove the state model
   disableStateModel() {
     const self = this;
 
