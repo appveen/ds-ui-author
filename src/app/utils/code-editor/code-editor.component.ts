@@ -77,100 +77,15 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
   initMonaco(): void {
 
     monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-      noSemanticValidation: false,
+      noSemanticValidation: true,
       noSyntaxValidation: false,
     });
     monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-      target: monaco.languages.typescript.ScriptTarget.ES2015,
+      lib: ['es5'],
+      target: monaco.languages.typescript.ScriptTarget.ES2020,
       allowNonTsExtensions: true,
       moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
     });
-
-    this.typesString = `const req = {
-      headers: {},
-      body: {},
-      header: (name) => {
-        return "";
-      },
-    };
-    
-    const res = {
-      setHeader: (name, value) => {},
-      status: (code = 200) => {},
-      write: (data) => {},
-      end: () => {},
-      json: (data = {}) => {},
-    };
-    
-    const logger = {
-      warning: (message, obj) => {
-        return "";
-      },
-      error: (message, obj) => {
-        return "";
-      },
-      info: (message, obj) => {
-        return "";
-      },
-      debug: (message, obj) => {
-        return "";
-      },
-    };
-    const router = {
-      get: (path, callback = (req={
-      headers: {},
-      body: {},
-      header: (name) => {
-        return "";
-      },
-    }, res={
-      setHeader: (name, value) => {},
-      status: (code = 200) => {},
-      write: (data) => {},
-      end: () => {},
-      json: (data = {}) => {},
-    }) => {}) => {},
-      put: (path, callback = (req={
-      headers: {},
-      body: {},
-      header: (name) => {
-        return "";
-      },
-    }, res={
-      setHeader: (name, value) => {},
-      status: (code = 200) => {},
-      write: (data) => {},
-      end: () => {},
-      json: (data = {}) => {},
-    }) => {}) => {},
-      post: (path, callback = (req={
-      headers: {},
-      body: {},
-      header: (name) => {
-        return "";
-      },
-    }, res={
-      setHeader: (name, value) => {},
-      status: (code = 200) => {},
-      write: (data) => {},
-      end: () => {},
-      json: (data = {}) => {},
-    }) => {}) => {},
-      delete: (path, callback = (req={
-      headers: {},
-      body: {},
-      header: (name) => {
-        return "";
-      },
-    }, res={
-      setHeader: (name, value) => {},
-      status: (code = 200) => {},
-      write: (data) => {},
-      end: () => {},
-      json: (data = {}) => {},
-    }) => {}) => {},
-    };`;
-    monaco.languages.typescript.javascriptDefaults.addExtraLib(this.typesString);
 
 
     monaco.languages.registerCompletionItemProvider('javascript', {
@@ -223,6 +138,63 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
                 'router.delete(\'/\', async (req, res) => {',
                 '\t',
                 '});'].join('\n')
+            },
+            {
+              range,
+              label: 'SDK.App',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Use App from SDK',
+              insertText: 'const App = await DataStack.App(\'Adam\');'
+            },
+            {
+              range,
+              label: 'SDK.DataService',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Use DataService from SDK',
+              insertText: 'const DataService = await App.DataService(\'Test\');'
+            },
+            {
+              range,
+              label: 'SDK.DataService.List',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Use DataService List from SDK',
+              insertText: 'const records = await DataService.DataAPIs().ListRecords({count:30,page:1,sort:\'\',select:\'\',filter:{}});'
+            },
+            {
+              range,
+              label: 'SDK.DataService.Get',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Use DataService Get from SDK',
+              insertText: 'const records = await DataService.DataAPIs().GetRecord(\'ID\');'
+            },
+            {
+              range,
+              label: 'SDK.DataService.Update',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Use DataService Update from SDK',
+              insertText: [
+                'const updatedData = {};',
+                'const records = await DataService.DataAPIs().UpdateRecord(\'ID\', updatedData);'
+              ].join('\n')
+            },
+            {
+              range,
+              label: 'SDK.DataService.Delete',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Use DataService Delete from SDK',
+              insertText: [
+                'const records = await DataService.DataAPIs().DeleteRecord(\'ID\');'
+              ].join('\n')
+            },
+            {
+              range,
+              label: 'SDK.DataService.Create',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              documentation: 'Use DataService Create from SDK',
+              insertText: [
+                'const data = {};',
+                'const records = await DataService.DataAPIs().CreateRecord(data);'
+              ].join('\n')
             }
           ]
         };
