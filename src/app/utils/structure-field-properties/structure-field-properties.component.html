@@ -116,7 +116,7 @@
           <div *ngIf="!idField" class="d-flex w-100 my-4">
             <div class="label-width text-secondary">Custom Error</div>
             <div class="value-width">
-              <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage">
+              <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"  [attr.disabled]="checkStateModel() ? true : null">
               <span *ngIf="!canEdit">{{formItem.get('properties.errorMessage').value}}</span>
             </div>
           </div>
