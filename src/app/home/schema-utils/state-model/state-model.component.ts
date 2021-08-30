@@ -149,6 +149,7 @@ export class StateModelComponent implements OnInit {
       if (self.stateModelAttrIndex > -1) {
         self.form.get(['stateModel', 'attribute']).patchValue(this.stateModelAttribute);
         self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'default']).patchValue(null);
+        self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'readonly']).patchValue(false);
 
         self.form.get(['stateModel', 'enabled']).patchValue(true);
         // const existingStates = self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'enum']).value;

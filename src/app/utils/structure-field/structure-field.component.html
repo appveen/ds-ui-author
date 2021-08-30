@@ -39,15 +39,16 @@
         <div class="d-flex field-options">
             <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 hover"
                 [ngClass]="{'active':form.get('properties.readonly')?.value}" placement="top"
-                ngbTooltip="Mark as read-only" (click)="setReadOnly(form.get('properties.readonly'))" *ngIf="  (!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
-            && form.get('type').value !== 'Object') &&  edit.status && type!=='internal' && !isDataFormat ">
+                ngbTooltip="Mark as read-only" (click)="setReadOnly(form.get('properties.readonly'))"
+                *ngIf="  (!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
+            && form.get('type').value !== 'Object') &&  edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
                 <span class="odp-no-edit"></span>
             </div>
             <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 "
                 [ngClass]="{'active':form.get('properties.readonly')?.value}" placement="top"
                 ngbTooltip="Marked as read-only"
                 *ngIf="(!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
-            && form.get('type').value !== 'Object') && form.get('properties.readonly')?.value &&  !edit.status && type!=='internal' && !isDataFormat">
+            && form.get('type').value !== 'Object') && form.get('properties.readonly')?.value &&  !edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
                 <span class="odp-no-edit"></span>
             </div>
             <span *ngIf="canDelete && edit.status && type!=='internal'" class="fa hover"
