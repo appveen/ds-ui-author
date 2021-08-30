@@ -204,7 +204,7 @@
             <div class="label-width text-secondary">Description</div>
             <div class="value-width">
               <textarea *ngIf="canEdit" class="form-control" formControlName="_description"
-                placeholder="What is this attribute for?"></textarea>
+                placeholder="What is this attribute for?" [attr.disabled]="checkStateModel() ? true : null"></textarea>
               <span
                 *ngIf="!canEdit && formItem.get('properties._description') && formItem.get('properties._description').value">{{formItem.get('properties._description').value}}</span>
               <span *ngIf="!canEdit && !formItem.get('properties._description').value" class="text-muted">-</span>
