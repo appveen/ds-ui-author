@@ -24,7 +24,7 @@
       *ngFor="let formItem of formList;let formIndex = index; let isLastFormItem = last; let isFirstFormItem = first"
       [formGroup]="formItem">
       <div class="px-3 schemaProperties-body" [ngClass]="{'pt-4': isFirstFormItem}" formGroupName="properties">
-        <div class="d-flex flex-row mb-4 justify-content-center" *ngIf="!isDataFormat">
+        <div class="d-flex flex-row mb-4 justify-content-center" *ngIf="!(isDataFormat || checkStateModel())">
           <div class=" d-flex align-items-center font-13 checkbox mr-3 p-2"
             [ngClass]="{'selected-checkbox':formItem.get('properties.required').value,'hover':canEdit}"
             *ngIf="formItem.get('properties.required') && formItem.get('key').value !== '_self'"
@@ -116,7 +116,8 @@
           <div *ngIf="!idField" class="d-flex w-100 my-4">
             <div class="label-width text-secondary">Custom Error</div>
             <div class="value-width">
-              <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"  [attr.disabled]="checkStateModel() ? true : null">
+              <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"
+                [attr.disabled]="checkStateModel() ? true : null">
               <span *ngIf="!canEdit">{{formItem.get('properties.errorMessage').value}}</span>
             </div>
           </div>
