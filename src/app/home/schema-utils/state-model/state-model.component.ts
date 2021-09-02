@@ -150,8 +150,13 @@ export class StateModelComponent implements OnInit {
         self.form.get(['stateModel', 'attribute']).patchValue(this.stateModelAttribute);
         self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'default']).patchValue(null);
 
+        // remove readonly for state model if enabled for existing attribute
+        const isReadonly = self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'readonly']).value;
+        if (isReadonly) {
+          self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'readonly']).patchValue(false);
+        }
+
         self.form.get(['stateModel', 'enabled']).patchValue(true);
-        // const existingStates = self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'enum']).value;
         if (self.allStates.length > 0) {
           const stateModelDict = self.allStates.reduce((a, x) => ({ ...a, [x]: [] }), {});
           self.form.get(['stateModel', 'states']).patchValue(stateModelDict);
