@@ -87,6 +87,17 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     });
   }
 
+  checkStateModel() {
+    const self = this;
+    if (self.mainForm.get(['stateModel', 'enabled'])) {
+
+      if (self.mainForm.get(['stateModel', 'attribute']).value == self.form.get('key').value) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   collectForms() {
     const self = this;
     self.formList = [];
