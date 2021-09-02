@@ -148,26 +148,28 @@ export class StateModelComponent implements OnInit {
     else {
       if (self.stateModelAttrIndex > -1) {
         self.form.get(['stateModel', 'attribute']).patchValue(this.stateModelAttribute);
-        self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'default']).patchValue(null);
 
-        const isReadonly = self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'readonly']).value;
-        if (isReadonly) {
-          self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'readonly']).patchValue(false);
+        const stateModelProperties = self.form.get(['definition', self.stateModelAttrIndex, 'properties']);
+        stateModelProperties.get('default').patchValue(null);
+
+        const readonly = stateModelProperties.get('readonly');
+        if (readonly.value) {
+          readonly.patchValue(false);
         }
 
-        const isUnique = self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'unique']).value;
-        if (isUnique) {
-          self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'unique']).patchValue(false);
+        const unique = stateModelProperties.get('unique');
+        if (unique.value) {
+          unique.patchValue(false);
         }
 
-        const isRequired = self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'required']).value;
-        if (isRequired) {
-          self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'required']).patchValue(false);
+        const required = stateModelProperties.get('required');
+        if (required.value) {
+          required.patchValue(false);
         }
 
-        const isCreateOnly = self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'createOnly']).value;
-        if (isCreateOnly) {
-          self.form.get(['definition', self.stateModelAttrIndex, 'properties', 'createOnly']).patchValue(false);
+        const createOnly = stateModelProperties.get('createOnly');
+        if (createOnly.value) {
+          createOnly.patchValue(false);
         }
 
         self.form.get(['stateModel', 'enabled']).patchValue(true);
