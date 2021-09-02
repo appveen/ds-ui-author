@@ -3,7 +3,7 @@
         <div class="d-flex flex-column hooks-dashboard">
             <div class="mb-3"><strong>Data Hooks</strong></div>
             <div class="d-flex flex-column pl-2">
-                <div class="d-flex mb-3 w-100" *ngIf="canView('DPR')">
+                <div class="d-flex mb-3 w-100" *ngIf="canView()">
                     <span class="hover w-50" (click)="selectHook('preHook')"
                         [ngClass]="{'text-accent': hooks.preHook, 'text-bold': hooks.preHook}">
                         Pre hooks
@@ -12,7 +12,7 @@
                         {{ preHook.length }}
                     </span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView('DPO')">
+                <div class="d-flex mb-3 w-100" *ngIf="canView()">
                     <span class="hover w-50" (click)="selectHook('postHook')"
                         [ngClass]="{'text-accent': hooks.postHook, 'text-bold': hooks.postHook}" id="postHooks">Post
                         hooks</span>
@@ -23,28 +23,28 @@
             </div>
             <div class="mb-3"><strong>Review Hooks</strong></div>
             <div class="d-flex flex-column pl-2">
-                <div class="d-flex mb-3 w-100" *ngIf="canView('RSU')">
+                <div class="d-flex mb-3 w-100" *ngIf="canView()">
                     <span class="hover w-50" (click)="selectHook('submitHook')"
                         [ngClass]="{'text-accent': hooks.submitHook, 'text-bold': hooks.submitHook}">Submit</span>
                     <span class="text-muted d-flex w-25 justify-content-end">
                         {{ submitHooks.length }}
                     </span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView('RAP')">
+                <div class="d-flex mb-3 w-100" *ngIf="canView()">
                     <span class="hover w-50" (click)="selectHook('approveHook')"
                         [ngClass]="{'text-accent': hooks.approveHook, 'text-bold': hooks.approveHook}">Approve</span>
                     <span class="text-muted d-flex w-25 justify-content-end">
                         {{ approveHooks.length }}
                     </span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView('RRJ')">
+                <div class="d-flex mb-3 w-100" *ngIf="canView()">
                     <span class="hover w-50" (click)="selectHook('rejectHook')"
                         [ngClass]="{'text-accent': hooks.rejectHook, 'text-bold': hooks.rejectHook}">Reject</span>
                     <span class="text-muted d-flex w-25 justify-content-end">
                         {{ rejectHooks.length }}
                     </span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView('RRW')">
+                <div class="d-flex mb-3 w-100" *ngIf="canView()">
                     <span class="hover w-50" (click)="selectHook('sendForReviewHook')"
                         [ngClass]="{'text-accent': hooks.sendForReviewHook, 'text-bold': hooks.sendForReviewHook}">
                         Rework
@@ -53,7 +53,7 @@
                         {{ sendForReviewHooks.length }}
                     </span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView('RDI')">
+                <div class="d-flex mb-3 w-100" *ngIf="canView()">
                     <span class="hover w-50" (click)="selectHook('discardHook')"
                         [ngClass]="{'text-accent': hooks.discardHook, 'text-bold': hooks.discardHook}">Discard</span>
                     <span class="text-muted d-flex w-25 justify-content-end">
@@ -66,12 +66,12 @@
             <div class="mb-2 d-flex align-items-center">
                 <strong class="mr-auto">Pre hooks</strong>
                 <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit('DPR')"
+                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
                         Preview pre hook
                     </button>
-                    <button class=" btn btn-link p-0" type="button" *ngIf="edit.status && canEdit('DPR')"
-                        (click)="newHook()" id="addPrehook">+
+                    <button class=" btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()" (click)="newHook()"
+                        id="addPrehook">+
                         Add pre hook
                     </button>
                 </div>
@@ -121,11 +121,11 @@
             <div class="mb-2 d-flex align-items-center">
                 <strong class="mr-auto">Post hooks</strong>
                 <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit('DPR')"
+                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
                         Preview post hook
                     </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit('DPO')"
+                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
                         (click)="newHook()">+ Add
                         Post hook
                     </button>
@@ -171,11 +171,11 @@
             <div class="mb-2 d-flex align-items-center">
                 <strong class="mr-auto">Approve hooks</strong>
                 <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit('DPR')"
+                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
                         Preview approve hook
                     </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit('RAP')"
+                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
                         (click)="newHook()">+ Add
                         Approve
                         hook
@@ -223,11 +223,11 @@
             <div class="mb-2 d-flex align-items-center">
                 <strong class="mr-auto">Reject hooks</strong>
                 <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit('DPR')"
+                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
                         Preview reject hook
                     </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit('RRJ')"
+                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
                         (click)="newHook()">+ Add
                         Reject
                         hook
@@ -275,11 +275,11 @@
             <div class="mb-2 d-flex align-items-center">
                 <strong class="mr-auto">Rework hooks</strong>
                 <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit('DPR')"
+                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
                         Preview Rework hook
                     </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit('RRW')"
+                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
                         (click)="newHook()">+ Add
                         Rework
                         hook
@@ -327,11 +327,11 @@
             <div class="mb-2 d-flex align-items-center">
                 <strong class="mr-auto">Discard hooks</strong>
                 <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit('DPR')"
+                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
                         Preview discard hook
                     </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit('RDI')"
+                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
                         (click)="newHook()">+ Add
                         Discard
                         hook
@@ -379,11 +379,11 @@
             <div class="mb-2 d-flex align-items-center">
                 <strong class="mr-auto">Submit hooks</strong>
                 <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit('DPR')"
+                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
                         Preview submit hook
                     </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit('RSU')"
+                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
                         (click)="newHook()">+ Add
                         Submit
                         hook

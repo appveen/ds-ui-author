@@ -427,16 +427,16 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         return this.commonService.hasPermissionStartsWith(type, entity);
     }
 
-    canEdit(type: string) {
-        if (this.hasPermission('PMDSI' + type, 'SM') || this.hasPermission('PMDSI' + type, 'SM_' + this.id)) {
+    canEdit() {
+        if (this.hasPermission('PMDSI', 'SM') || this.hasPermission('PMDSI', 'SM_' + this.id)) {
             return true;
         }
         return false;
     }
 
-    canView(type: string) {
-        if (this.hasPermission('PMDSI' + type, 'SM') || this.hasPermission('PMDSI' + type, 'SM_' + this.id)
-            || this.hasPermission('PVDSI' + type, 'SM') || this.hasPermission('PVDSI' + type, 'SM_' + this.id)) {
+    canView() {
+        if (this.hasPermission('PMDSI', 'SM') || this.hasPermission('PMDSI', 'SM_' + this.id)
+            || this.hasPermission('PVDSI', 'SM') || this.hasPermission('PVDSI', 'SM_' + this.id)) {
             return true;
         }
         return false;
