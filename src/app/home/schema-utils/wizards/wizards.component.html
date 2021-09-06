@@ -118,9 +118,10 @@
                     <ng-container *ngIf="edit.status">
                         <div class="d-flex flex-column p-4">
                             <div class="d-flex flex-column">
-                                <strong class="mb-5">Attributes</strong>
+                                <strong>Attributes</strong>
+                                <small class='text-danger mt-1'>* Please select atleast one attribute</small>
                                 <div
-                                    class="text-secondary d-flex flex-column justify-content-center align-items-center h-100">
+                                    class="text-secondary mt-5 d-flex flex-column justify-content-center align-items-center h-100">
                                     <span>Tip: Clicking on <span
                                             class="fa hover fa-plus-circle text-success fa-lg pl-1 pr-1"></span>
                                         in the attributes pane on your right</span>
@@ -169,7 +170,7 @@
                 </div>
                 <ng-container *ngIf="!selectedStepActions.length">
                     <ng-container *ngIf="edit.status">
-                        <div class="d-flex flex-column p-4 steps-div mt-2" id="action-content" >
+                        <div class="d-flex flex-column p-4 steps-div mt-2" id="action-content">
                             <div class="d-flex justify-content-between mb-4">
                                 <strong>Actions</strong>
                                 <button class="btn btn-link" type="button" id="addAction2" (click)="addHook()"
@@ -355,12 +356,12 @@
                 <div class="d-flex w-100 mb-4">
                     <div class="label-width text-secondary">URL</div>
                     <div class="value-width position-relative">
-                        
+
                         <textarea class="form-control " type="text" rows="5" maxlength="2080"
                             placeholder="http://<hostname>:<port>/<path>" formControlName="url"
-                            [value]="actionHookForm.get('url').value" [ngClass]="{'is-invalid': hookUrlErr }"></textarea>
-                        <span class="fas fa-question-circle text-danger position-absolute error-icon"
-                            *ngIf="hookUrlErr"
+                            [value]="actionHookForm.get('url').value"
+                            [ngClass]="{'is-invalid': hookUrlErr }"></textarea>
+                        <span class="fas fa-question-circle text-danger position-absolute error-icon" *ngIf="hookUrlErr"
                             [ngbTooltip]="validationError" triggers="manual" #t2="ngbTooltip" triggers="hover"
                             (mouseenter)="toggleTooltip(t2, 'hook-url')" placement="right"></span>
                     </div>
@@ -452,4 +453,3 @@
         </ng-container>
     </div>
 </ng-template>
-

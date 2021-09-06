@@ -36,6 +36,7 @@ import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { EditConfig, ActionConfig, VersionConfig, DeleteModalConfig } from 'src/app/utils/interfaces/schemaBuilder';
 import { SchemaValuePipe } from '../schema-utils/schema-value.pipe';
 import { PrettyJsonPipe } from 'src/app/utils/pretty-json/pretty-json.pipe';
+import { wizardSteps } from '../custom-validators/wizard-steps.validator';
 
 @Component({
     selector: 'odp-schema-builder',
@@ -135,7 +136,7 @@ export class SchemaBuilderComponent implements
             permanentDeleteData: [true],
             allowedFileTypes: [[]],
             wizard: self.fb.group({
-                steps: self.fb.array([]),
+                steps: self.fb.array([], [wizardSteps]),
                 selectedStep: [0],
                 usedFields: self.fb.array([])
             }),
