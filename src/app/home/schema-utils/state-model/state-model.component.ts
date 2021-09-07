@@ -1,15 +1,17 @@
-import { Component, Input, OnInit, ElementRef, ViewChild, ViewEncapsulation, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ViewEncapsulation, TemplateRef } from '@angular/core';
 import { AppService } from 'src/app/utils/services/app.service';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { COMMA, D, ENTER } from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SchemaBuilderService } from '../schema-builder.service';
 import { DeleteModalConfig } from 'src/app/utils/interfaces/schemaBuilder';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalRef, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { ToastrService } from 'ngx-toastr';
+import { merge, Observable, OperatorFunction, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'odp-state-model',
@@ -35,6 +37,11 @@ export class StateModelComponent implements OnInit {
   stateModelData: any;
   deleteModal: DeleteModalConfig;
   newListAttrType: any;
+
+  @ViewChild('instance', { static: true }) instance: NgbTypeahead;
+  focus$ = new Subject<string>();
+  click$ = new Subject<string>();
+
 
   constructor(
     private appService: AppService,
@@ -64,6 +71,62 @@ export class StateModelComponent implements OnInit {
       });
     }
   }
+
+
+  search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
+    const inputFocus$ = this.focus$;
+
+    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+      map(term => {
+        const states = this.sourceDefinition.filter(data => data.properties._detailedType == 'enum');
+        if (term === '') {
+          return states;
+        }
+        else {
+          const filteredStates = states.filter(v => v.properties.name.toLowerCase().indexOf(term.toLowerCase()) > -1);
+          if (filteredStates.length != 0) {
+            return filteredStates;
+          }
+          else {
+            return [{ 'name': term, 'type': 'String', 'newAttr': true }, { 'name': term, 'type': 'Number', 'newAttr': true }]
+          }
+
+        }
+        return (term === '' ? states
+          : states.filter(v => v.properties.name.toLowerCase().indexOf(term.toLowerCase()) > -1));
+      }
+      ));
+  }
+
+  inputFormatter = (x: any) => {
+    if (!x) {
+      return;
+    }
+    else if (typeof (x) == 'string') {
+      return x;
+    }
+    else if (x.newAttr) {
+      return x.name;
+    }
+    else {
+      return x.properties.name
+    }
+  };
+
+  selectAttribute($event) {
+    const self = this;
+    if ($event.newAttr) {
+      this.newListAttrType = $event.type;
+      self.form.get(['stateModel', 'attribute']).patchValue($event.name);
+    }
+    else {
+      const attr = $event.properties.name.trim();
+      self.form.get(['stateModel', 'attribute']).patchValue(attr);
+    }
+  }
+
 
   // all possible List of Values attributes 
   get ListOfValuesAttributes() {
@@ -98,10 +161,6 @@ export class StateModelComponent implements OnInit {
     return self.form.get(['stateModel', 'enabled']).value;
   }
 
-  setNewListAttrType(type?) {
-    this.newListAttrType = type;
-  }
-
   get StateModelAttrName() {
     const self = this;
     let definition = (self.form.get('definition') as FormArray).value;
@@ -124,12 +183,6 @@ export class StateModelComponent implements OnInit {
     temp.get('type').patchValue(self.newListAttrType);
     temp.get(['properties', '_detailedType']).patchValue('enum');
     tempArr.push(temp);
-  }
-
-  // convert existing List of Values attribute to State Model 
-  addExistingListOfValues(value) {
-    const self = this;
-    self.form.get(['stateModel', 'attribute']).patchValue(value.trim());
   }
 
   // configure the state model 

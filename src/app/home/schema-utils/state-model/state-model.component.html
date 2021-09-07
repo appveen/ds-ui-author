@@ -11,69 +11,46 @@
 
     <section *ngIf="!stateModelEnabled" [formGroup]="form" class='create-state-model'>
         <div class="d-flex justify-content-start">
-            <div id='select-state-model' formGroupName="stateModel" odpClickOutside (outside)='searchTerm = "" '>
-                <input [attr.disabled]="!edit.status ? true : null" type="text" class="form-control"
-                    placeholder="Choose existing attribute or create one..." odpAutoFocus formControlName="attribute"
-                    (odpSearchTerm)="searchTerm = $event">
+            <div id='select-state-model' formGroupName="stateModel" odpClickOutside (outside)='searchTerm = "" '
+                class='position-relative'>
+                <input id="typeahead-basic" type="text" class="form-control"
+                    [attr.disabled]="!edit.status ? true : null" [ngbTypeahead]="search"
+                    (focus)="focus$.next($any($event).target.value)" [resultTemplate]="rt"
+                    [inputFormatter]="inputFormatter" (selectItem)="selectAttribute($event.item)"
+                    placeholder="Choose existing attribute or create one..." #instance="ngbTypeahead" />
             </div>
-
             <button [disabled]='!edit.status' id='configureStateModel' (click)='enableStateModel()'>
                 Configure State Model
             </button>
         </div>
-
         <div id='stateModelInfo' *ngIf="!searchTerm">
             <span>
                 *Attributes with List of Values only
             </span>
         </div>
-
-        <div class="selector-dropdown d-flex flex-column border rounded bg-white" *ngIf="searchTerm">
-            <div class="selector-list">
-                <div class="selector-list-item d-flex align-items-center p-2 hover"
-                    *ngFor="let def of (ListOfValuesAttributes| filterDefinition:searchTerm)"
-                    (click)="addExistingListOfValues(def.properties.name)">
-                    <odp-field-type [field]="def"></odp-field-type>
-                    <span class="ml-2">{{def.properties.name}}</span>
-                </div>
-
-                <div class="selector-list-item d-flex align-items-center p-2 hover"
-                    *ngIf="(ListOfValuesAttributes| filterDefinition:searchTerm).length == 0"
-                    (click)="setNewListAttrType('String')">
-                    <span class='border-circle'>
+        <ng-template #rt let-r="result" let-t="term">
+            <ng-container *ngIf="r.newAttr">
+                <div class="d-inline-flex">
+                    <span class='border-circle mr-2'>
                         +
                     </span>
                     <span>Add &nbsp;</span>
-                    <span class="font-weight-bold mr-2">{{searchTerm}}</span>
-                    <odp-field-type [field]="{type:'String',properties:{}}"></odp-field-type>
-
+                    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
                 </div>
-                <div class="selector-list-item d-flex align-items-center p-2 hover"
-                    *ngIf="(ListOfValuesAttributes| filterDefinition:searchTerm).length == 0"
-                    (click)="setNewListAttrType('Number')">
-                    <span class='border-circle'>
-                        +
-                    </span>
-                    <span>Add &nbsp;</span>
-                    <span class="font-weight-bold mr-2">{{searchTerm}}</span>
-                    <odp-field-type [field]="{type:'Number',properties:{}}"></odp-field-type>
-
+                <div class="d-inline-flex">
+                    <odp-field-type [field]="{type:r.type,properties:{}}"></odp-field-type>
                 </div>
-
-            </div>
-            <!-- <div class="selector-list">
-              
-            </div> -->
-        </div>
-
+            </ng-container>
+            <ng-container *ngIf="!r.newAttr">
+                <ngb-highlight [result]="r.properties.name" [term]="t"></ngb-highlight>
+            </ng-container>
+        </ng-template>
         <div class='meme position-absolute text-center'>
             <img src="./assets/img/state_model_meme.png" alt="Meme">
             <h4>
                 Hmm...That box must be important...
             </h4>
         </div>
-
-
     </section>
 
     <section *ngIf="stateModelEnabled">
