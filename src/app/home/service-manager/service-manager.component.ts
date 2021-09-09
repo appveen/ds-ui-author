@@ -612,12 +612,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
             return true;
         } else {
-            const list = self.commonService.getEntityPermissions('SM_' + id);
-            if (list.length > 0 && list.find(e => e.id.startsWith('PMDS') || e.id.startsWith('PVDS'))) {
-                return true;
-            } else if (list.length === 0
-                && (self.commonService.hasPermissionStartsWith('PMDS', 'SM')
-                    || self.commonService.hasPermissionStartsWith('PVDS', 'SM'))) {
+            if (self.commonService.hasPermissionStartsWith('PMDS', 'SM')
+                || self.commonService.hasPermissionStartsWith('PVDS', 'SM')) {
                 return true;
             } else {
                 return false;
@@ -630,12 +626,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
             return true;
         } else {
-            const list = self.commonService.getEntityPermissions('SM_' + id);
-            if (list.length > 0) {
-                return Boolean(list.find(e => e.id === 'PMDSD')) && self.commonService.hasPermission('PMDSBC', 'SM');
-            } else {
-                return self.commonService.hasPermission('PMDSD', 'SM') && self.commonService.hasPermission('PMDSBC', 'SM');
-            }
+            return self.commonService.hasPermission('PMDSD', 'SM') && self.commonService.hasPermission('PMDSBC', 'SM');
         }
     }
 
@@ -644,12 +635,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
             return true;
         } else {
-            const list = self.commonService.getEntityPermissions('SM_' + id);
-            if (list.length > 0) {
-                return Boolean(list.find(e => e.id === 'PMDS' + tab)) && self.commonService.hasPermission('PMDSBC', 'SM');
-            } else {
-                return self.commonService.hasPermission('PMDS' + tab, 'SM') && self.commonService.hasPermission('PMDSBC', 'SM');
-            }
+            return self.commonService.hasPermission('PMDS' + tab, 'SM') && self.commonService.hasPermission('PMDSBC', 'SM');
         }
     }
 
@@ -658,21 +644,13 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
             return true;
         } else {
-            const list1 = self.commonService.getEntityPermissions('SM_' + id);
-            if (list1.length > 0) {
-                return Boolean(list1.find(e => e.id.startsWith('PMDS')
-                    && e.id !== 'PMDSBC'
-                    && e.id !== 'PMDSBD'
-                    && e.id !== 'PMDSPD'
-                    && e.id !== 'PMDSPS'));
-            } else {
-                const list2 = self.commonService.getEntityPermissions('SM');
-                return Boolean(list2.find(e => e.id.startsWith('PMDS')
-                    && e.id !== 'PMDSBC'
-                    && e.id !== 'PMDSBD'
-                    && e.id !== 'PMDSPD'
-                    && e.id !== 'PMDSPS'));
-            }
+            const list2 = self.commonService.getEntityPermissions('SM');
+            return Boolean(list2.find(e => e.id.startsWith('PMDS')
+                && e.id !== 'PMDSBC'
+                && e.id !== 'PMDSBD'
+                && e.id !== 'PMDSPD'
+                && e.id !== 'PMDSPS'));
+
         }
     }
 
@@ -681,12 +659,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
             return true;
         } else {
-            const list = self.commonService.getEntityPermissions('SM_' + id);
-            if (list.length > 0) {
-                return Boolean(list.find(e => e.id === 'PMDSBD'));
-            } else {
-                return self.commonService.hasPermission('PMDSBD', 'SM');
-            }
+            return self.commonService.hasPermission('PMDSBD', 'SM');
         }
     }
 
@@ -703,12 +676,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             return false;
         }
         else {
-            const list = self.commonService.getEntityPermissions('SM_' + service._id);
-            if (list.length > 0) {
-                return Boolean(list.find(e => e.id === 'PMDSPD'));
-            } else {
-                return self.commonService.hasPermission('PMDSPD', 'SM');
-            }
+            return self.commonService.hasPermission('PMDSPD', 'SM');
         }
 
     }
@@ -722,12 +690,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
             return true;
         } else {
-            const list = self.commonService.getEntityPermissions('SM_' + id);
-            if (list.length > 0) {
-                return Boolean(list.find(e => e.id === 'PMDSPS'));
-            } else {
-                return self.commonService.hasPermission('PMDSPS', 'SM');
-            }
+            return self.commonService.hasPermission('PMDSPS', 'SM');
         }
     }
 

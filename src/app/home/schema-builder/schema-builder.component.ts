@@ -423,7 +423,7 @@ export class SchemaBuilderComponent implements
         delete payload.port;
         delete payload.tags;
         delete payload.allowedFileTypes;
-        const list = self.commonService.getEntityPermissions('SM_' + self.serviceObj._id);
+        const list = self.commonService.getEntityPermissions('SM');
         if (!(self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin)) {
             delete payload.disableInsights;
         }
@@ -437,71 +437,27 @@ export class SchemaBuilderComponent implements
         if (!self.hasPermissionForTab('E')) {
             delete payload.wizard;
         }
-        if (list.length === 0 && !self.hasPermission('PMDSSEP', 'SM')) {
+        if ((list.length === 0 && !this.hasPermission('PMDSS', 'SM')) ||
+            (list.length > 0 && !list.find(e => e.id === 'PMDSS'))) {
             delete payload.api;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSSEP')) {
-            delete payload.api;
-        }
-        if (list.length === 0 && !self.hasPermission('PMDSSDH', 'SM')) {
             delete payload.versionValidity;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSSDH')) {
-            delete payload.versionValidity;
-        }
-        if (list.length === 0 && !self.hasPermission('PMDSSPR', 'SM')) {
             delete payload.headers;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSSPR')) {
-            delete payload.headers;
-        }
-        if (list.length === 0 && !self.hasPermission('PMDSSFS', 'SM')) {
             delete payload.enableSearchIndex;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSSFS')) {
-            delete payload.enableSearchIndex;
-        }
-        if (list.length === 0 && !self.hasPermission('PMDSSPD', 'SM')) {
-            delete payload.permanentDeleteData;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSSPD')) {
             delete payload.permanentDeleteData;
         }
-
-        if (list.length === 0 && !self.hasPermission('PMDSIDPO', 'SM')) {
+        if ((list.length === 0 && !this.hasPermission('PMDSI', 'SM')) ||
+            (list.length > 0 && !list.find(e => e.id === 'PMDSI'))) {
             delete payload.webHooks;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSIDPO')) {
-            delete payload.webHooks;
-        }
-        if (list.length === 0 && !self.hasPermission('PMDSIDPR', 'SM')) {
             delete payload.preHooks;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSIDPR')) {
-            delete payload.preHooks;
-        }
-        if (list.length === 0 && !self.hasPermission('PMDSIRSU', 'SM')) {
             delete payload.workflowHooks.postHooks.submit;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSIRSU')) {
-            delete payload.workflowHooks.postHooks.submit;
-        }
-        if (list.length === 0 && !self.hasPermission('PMDSIRRW', 'SM')) {
             delete payload.workflowHooks.postHooks.rework;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSIRRW')) {
-            delete payload.workflowHooks.postHooks.rework;
-        }
-        if (list.length === 0 && !self.hasPermission('PMDSIRDI', 'SM')) {
             delete payload.workflowHooks.postHooks.discard;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSIRDI')) {
-            delete payload.workflowHooks.postHooks.discard;
-        }
-        if (list.length === 0 && !self.hasPermission('PMDSIRAP', 'SM')) {
             delete payload.workflowHooks.postHooks.approve;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSIRAP')) {
-            delete payload.workflowHooks.postHooks.approve;
-        }
-        if (list.length === 0 && !self.hasPermission('PMDSIRRJ', 'SM')) {
-            delete payload.workflowHooks.postHooks.reject;
-        } else if (list.length > 0 && !list.find(e => e.id === 'PMDSIRRJ')) {
             delete payload.workflowHooks.postHooks.reject;
         }
         if (payload.definition) {
             self.appService.addKeyForDataStructure(payload.definition, 'camelCase');
         }
-
 
         self.showLazyLoader = true;
         if (self.edit.id) {
@@ -1010,7 +966,7 @@ export class SchemaBuilderComponent implements
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
             return true;
         }
-        const list = self.commonService.getEntityPermissions('SM_' + self.serviceObj._id);
+        const list = self.commonService.getEntityPermissions('SM');
         let inAllPermission = false;
         let inListPermission = false;
         if (self.edit.status) {
@@ -1063,23 +1019,12 @@ export class SchemaBuilderComponent implements
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
             return true;
         }
-        const list = self.commonService.getEntityPermissions('SM_' + self.serviceObj._id);
-        if (list.length === 0) {
-            const list2 = self.commonService.getEntityPermissions('SM');
-            return Boolean(list2.find(e => e.id.startsWith('PMDS')
-                && e.id !== 'PMDSBC'
-                && e.id !== 'PMDSBD'
-                && e.id !== 'PMDSPD'
-                && e.id !== 'PMDSPS'));
-        } else if (list.length > 0 && (list.find(e => e.id.substr(0, 4) === 'PMDS'
+        const list2 = self.commonService.getEntityPermissions('SM');
+        return Boolean(list2.find(e => e.id.startsWith('PMDS')
             && e.id !== 'PMDSBC'
             && e.id !== 'PMDSBD'
             && e.id !== 'PMDSPD'
-            && e.id !== 'PMDSPS'))) {
-            return true;
-        } else {
-            return false;
-        }
+            && e.id !== 'PMDSPS'));
     }
 
     get canSaveAndDeploy() {
@@ -1093,24 +1038,15 @@ export class SchemaBuilderComponent implements
         else if (self.commonService.userDetails.verifyDeploymentUser && self.commonService.userDetails._id === self.serviceObj._metadata.lastUpdatedBy) {
             return false;
         } else {
-            const list = self.commonService.getEntityPermissions('SM_' + self.serviceObj._id);
-            if (list.length === 0 && self.hasPermission('PMDSPD', 'SM')) {
+            if (self.hasPermission('PMDSPD', 'SM')) {
                 const list2 = self.commonService.getEntityPermissions('SM');
                 return Boolean(list2.find(e => e.id.startsWith('PMDS')
                     && e.id !== 'PMDSBD'
                     && e.id !== 'PMDSBC'
                     && e.id !== 'PMDSPD'
                     && e.id !== 'PMDSPS'));
-            } else if (list.length > 0 && (list.find(e => e.id === 'PMDSPD')
-                && list.find(e => e.id.startsWith('PMDS')
-                    && e.id !== 'PMDSBD'
-                    && e.id !== 'PMDSBC'
-                    && e.id !== 'PMDSPD'
-                    && e.id !== 'PMDSPS'))) {
-                return true;
             }
         }
-
     }
 
     get canEditService() {
@@ -1118,12 +1054,10 @@ export class SchemaBuilderComponent implements
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
             return true;
         } else {
-            const list = self.commonService.getEntityPermissions('SM_' + self.serviceObj._id);
-            if (list.length === 0 && self.hasPermission('PMDSBU', 'SM')) {
+            if (self.hasPermission('PMDSBU', 'SM')) {
                 return true;
-            } else if (list.length > 0 && list.find(e => e.id === 'PMDSBU')) {
-                return true;
-            } else {
+            }
+            else {
                 return false;
             }
         }

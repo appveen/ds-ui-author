@@ -391,9 +391,6 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
         if (!self.roles) {
             self.roles = [];
         }
-        const temp = self.roles.filter(r => r.entity.indexOf('SM_') > -1)
-            .map(item => item.entity.split('_')[1])
-            .filter((e, i, a) => a.indexOf(e) === i);
         self.getServiceList();
 
     }
