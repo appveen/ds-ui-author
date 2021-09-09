@@ -428,15 +428,14 @@ export class IntegrationComponent implements OnInit, OnDestroy {
     }
 
     canEdit() {
-        if (this.hasPermission('PMDSI', 'SM') || this.hasPermission('PMDSI', 'SM_' + this.id)) {
+        if (this.hasPermission('PMDSI', 'SM')) {
             return true;
         }
         return false;
     }
 
     canView() {
-        if (this.hasPermission('PMDSI', 'SM') || this.hasPermission('PMDSI', 'SM_' + this.id)
-            || this.hasPermission('PVDSI', 'SM') || this.hasPermission('PVDSI', 'SM_' + this.id)) {
+        if (this.hasPermission('PMDSI', 'SM') || this.hasPermission('PVDSI', 'SM')) {
             return true;
         }
         return false;

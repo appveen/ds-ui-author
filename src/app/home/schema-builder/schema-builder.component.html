@@ -72,7 +72,7 @@
             [ngClass]="{'show':changesDoneInConfiguration,'text-danger':errorInConfiguration}"></span>
         </div>
         <div class="text-dark px-3 py-2 hover" (click)="activeTab=5" [ngClass]="{'active':activeTab==5}"
-          *ngIf="!edit.status && (hasPermissionStartsWith('PVDSA','SM') || hasPermissionStartsWith('PVDSA','SM_'+serviceObj._id))">
+          *ngIf="!edit.status && hasPermissionStartsWith('PVDSA','SM')">
           Audit
         </div>
         <div class="text-dark px-3 py-2 hover" (click)="activeTab=10" [ngClass]="{'active':activeTab==10}"

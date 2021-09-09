@@ -1,6 +1,6 @@
 {
-  "/": {
-    "target": "https://bifrost.ds.appveen.com/",
+  "/api": {
+    "target": "http://localhost:9080",
     "secure": false,
     "changeOrigin": true
   }

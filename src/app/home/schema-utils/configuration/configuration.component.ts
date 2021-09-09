@@ -298,7 +298,7 @@ export class ConfigurationComponent implements OnInit {
 
   canEdit(type: string) {
     const self = this;
-    if (self.hasPermission('PMDS' + type, 'SM') || self.hasPermission('PMDS' + type, 'SM_' + self.id)) {
+    if (self.hasPermission('PMDS' + type, 'SM')) {
       return true;
     }
     return false;
@@ -306,8 +306,8 @@ export class ConfigurationComponent implements OnInit {
 
   canView(type: string) {
     const self = this;
-    if (self.hasPermission('PMDS' + type, 'SM') || self.hasPermission('PMDS' + type, 'SM_' + self.id)
-      || self.hasPermission('PVDS' + type, 'SM') || self.hasPermission('PVDS' + type, 'SM_' + self.id)) {
+    if (self.hasPermission('PMDS' + type, 'SM')
+      || self.hasPermission('PVDS' + type, 'SM')) {
       return true;
     }
     return false;
