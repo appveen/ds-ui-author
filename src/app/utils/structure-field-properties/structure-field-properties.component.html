@@ -107,13 +107,13 @@
               <span *ngIf="!edit.status">{{formItem.get('properties.label').value}}</span>
             </div>
           </div>
-          <div class="d-flex">
+          <div class="d-flex mb-4">
             <div class="label-width"></div>
             <span class="text-danger" *ngIf="labelError"><span class="fa fa-times mr-1"></span>
               <span>Label should not be more than 40 characters</span>
             </span>
           </div>
-          <div *ngIf="!idField" class="d-flex w-100 my-4">
+          <div *ngIf="!idField && !(formItem.get('type').value =='Boolean')" class="d-flex w-100 mb-4">
             <div class="label-width text-secondary">Custom Error</div>
             <div class="value-width">
               <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"
