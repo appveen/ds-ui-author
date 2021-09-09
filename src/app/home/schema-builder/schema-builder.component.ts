@@ -1019,24 +1019,12 @@ export class SchemaBuilderComponent implements
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
             return true;
         }
-        const list = self.commonService.getEntityPermissions('SM');
-        if (list.length === 0) {
-            return Boolean(list.find(e => e.id.startsWith('PMDS')
-                && e.id !== 'PMDSBC'
-                && e.id !== 'PMDSBD'
-                && e.id !== 'PMDSPD'
-                && e.id !== 'PMDSPS'));
-        }
-        // else if (list.length > 0 && (list.find(e => e.id.substr(0, 4) === 'PMDS'
-        //     && e.id !== 'PMDSBC'
-        //     && e.id !== 'PMDSBD'
-        //     && e.id !== 'PMDSPD'
-        //     && e.id !== 'PMDSPS'))) {
-        //     return true;
-        // } 
-        else {
-            return false;
-        }
+        const list2 = self.commonService.getEntityPermissions('SM');
+        return Boolean(list2.find(e => e.id.startsWith('PMDS')
+            && e.id !== 'PMDSBC'
+            && e.id !== 'PMDSBD'
+            && e.id !== 'PMDSPD'
+            && e.id !== 'PMDSPS'));
     }
 
     get canSaveAndDeploy() {
