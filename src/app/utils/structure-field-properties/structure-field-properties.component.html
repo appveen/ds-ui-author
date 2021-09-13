@@ -117,7 +117,7 @@
             <div class="label-width text-secondary">Custom Error</div>
             <div class="value-width">
               <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"
-                [attr.disabled]="checkStateModel() ? true : null">
+                [attr.disabled]="(checkStateModel() || (formItem.get('type').value =='Boolean')) ? true : null">
               <span *ngIf="!canEdit">{{formItem.get('properties.errorMessage').value}}</span>
             </div>
           </div>
