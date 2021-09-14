@@ -196,7 +196,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
 
     checkStateModel() {
         const self = this;
-        if (self.stateModelAttr && self.stateModelAttr.value) {
+        if (self.stateModelAttr && self.stateModelAttr.value && self.form.get(['properties', '_detailedType']).value == 'enum') {
             return self.form.get('key').value == self.stateModelAttr.value
         }
         return false;
@@ -444,7 +444,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             self.schemaService.selectedFieldId = self.all.at(self.index - 1).get('_fieldId').value;
         }
         self.schemaService.activeField.emit(self.schemaService.selectedFieldId);
-        if (self.all.at(self.index).get('key').value == self.stateModelAttr?.value) {
+        if (self.all.at(self.index).get('key').value == self.stateModelAttr?.value && self.all.at(self.index).get(['properties', '_detailedType']).value == 'enum') {
             self.deleteStateModel.emit(true);
         }
         self.all.removeAt(self.index);
