@@ -182,6 +182,10 @@ export class StateModelComponent implements OnInit {
     temp.get(['properties', 'dataPath']).patchValue(attrCamelCase);
     temp.get('type').patchValue(self.newListAttrType);
     temp.get(['properties', '_detailedType']).patchValue('enum');
+    const oldFieldindex = this.sourceDefinition.findIndex(e => e.key == attrCamelCase);
+    if (oldFieldindex > -1) {
+      tempArr.removeAt(oldFieldindex);
+    }
     tempArr.push(temp);
   }
 
@@ -285,11 +289,11 @@ export class StateModelComponent implements OnInit {
           return;
         }
       }
-      if (self.allStates.length > 0) {
-        if (self.allStates.indexOf(newState) > -1) {
-          return;
-        }
-      } else if (self.allStates.length == 0) {
+
+      if (self.allStates.length > 0 && self.allStates.indexOf(newState) > -1) {
+        return;
+      }
+      if (self.allStates.length == 0) {
         // first element in enum so initial state 
         self.form.get(['stateModel', 'initialStates']).patchValue([newState])
       }
