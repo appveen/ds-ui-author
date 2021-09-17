@@ -234,7 +234,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
-    setTouched(){
+    setTouched() {
         const self = this;
         const selectedStep = self.form.get('wizard.selectedStep').value;
         (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsTouched();
@@ -247,7 +247,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         return (self.form.get(['wizard', 'steps', selectedStep, 'name']) as FormArray).value;
     }
 
-    
+
     set stepName(val) {
         const self = this;
         const selectedStep = self.form.get('wizard.selectedStep').value;
@@ -617,9 +617,10 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
     uniqHookName() {
         const self = this;
         if (self.edit.status) {
+            const hookId = self.actionHookForm.get('hookId').value;
             const hookName = self.actionHookForm.get('name').value;
-            const duplicateHookName = self.allActions.findIndex(e => e.name === hookName) >= 0;
-            if (duplicateHookName) {
+            const hookIndex = self.allActions.findIndex(e => e.name === hookName);
+            if (hookIndex >= 0 && hookId != self.allActions[hookIndex].hookId) {
                 self.actionHookForm.get('name').setErrors({ duplicateName: true });
             }
         }
