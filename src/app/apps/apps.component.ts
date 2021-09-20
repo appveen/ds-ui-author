@@ -271,6 +271,11 @@ export class AppsComponent implements OnInit, OnDestroy {
         }, 3000);
     }
 
+    openAPIsWindow() {
+        const docsAPI = `${environment.url.doc}/?q=/api/common/txn`;
+        window.open(docsAPI, '_blank');
+    }
+
     get hasDataServicePermission() {
         const self = this;
         return self.commonService.hasPermissionStartsWith('PMDS') || self.commonService.hasPermissionStartsWith('PVDS');
