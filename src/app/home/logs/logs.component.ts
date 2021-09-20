@@ -55,7 +55,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 
   setActiveTab() {
     const self = this;
-    if (self.hasPermission('PVDSASR')) {
+    if (self.hasPermission('PVDSA')) {
       self.activeTab = 1;
 
     }
