@@ -39,14 +39,14 @@
           </div>
         </div>
       </div> -->
-      <div class="d-flex w-100" *ngIf="canView('SDH') || canView('SPD')">
+      <div class="d-flex w-100" *ngIf="canView('S') || canView('S')">
         <div class="d-flex flex-column w-50">
           <span class="font-weight-bold">Data Settings</span>
           <span class="text-accent my-2"
             >These settings defines how records are handled</span
           >
           <div class="d-flex flex-column w-100 px-3">
-            <div class="d-flex mt-3" *ngIf="canView('SPD')">
+            <div class="d-flex mt-3" *ngIf="canView('S')">
               <div class="text-secondary option-label">
                 Delete data permanently when a record is deleted at the App
                 Center
@@ -59,7 +59,7 @@
                   justify-content-center
                 "
               >
-                <ng-container *ngIf="edit.status && canEdit('SPD')">
+                <ng-container *ngIf="edit.status && canEdit('S')">
                   <label class="switch accent mb-0 mr-2">
                     <input
                       type="checkbox"
@@ -72,7 +72,7 @@
                     form.get("permanentDeleteData").value ? "Yes" : "No"
                   }}</span>
                 </ng-container>
-                <ng-container *ngIf="!edit.status || !canEdit('SPD')">
+                <ng-container *ngIf="!edit.status || !canEdit('S')">
                   <span
                     class="text d-flex"
                     *ngIf="form && form.get('permanentDeleteData').value"
@@ -112,7 +112,7 @@
                 </ng-container>
               </div>
             </div>
-            <div class="d-flex mt-3" *ngIf="canView('SDH')">
+            <div class="d-flex mt-3" *ngIf="canView('S')">
               <div class="text-secondary option-label">
                 Keep a history of data when data is changed?
               </div>
@@ -124,7 +124,7 @@
                   justify-content-center
                 "
               >
-                <ng-container *ngIf="edit.status && canEdit('SPD')">
+                <ng-container *ngIf="edit.status && canEdit('S')">
                   <label class="switch accent mb-0 mr-2">
                     <input
                       type="checkbox"
@@ -139,7 +139,7 @@
                     retainDataHistory ? "Yes" : "No"
                   }}</span>
                 </ng-container>
-                <ng-container *ngIf="!edit.status || !canEdit('SPD')">
+                <ng-container *ngIf="!edit.status || !canEdit('S')">
                   <span class="text d-flex" *ngIf="retainDataHistory">
                     <span
                       class="
@@ -175,7 +175,7 @@
             </div>
             <div
               class="d-flex mt-3"
-              *ngIf="retainDataHistory && canView('SDH')"
+              *ngIf="retainDataHistory && canView('S')"
             >
               <div class="text-secondary option-label">Retain data by</div>
               <div class="d-flex flex-column">
@@ -191,7 +191,7 @@
                       ngbButton
                       type="radio"
                       value="count"
-                      [disabled]="!edit.status || !canEdit('SPD')"
+                      [disabled]="!edit.status || !canEdit('S')"
                     />
                     Versions
                   </label>
@@ -200,7 +200,7 @@
                       ngbButton
                       type="radio"
                       value="time"
-                      [disabled]="!edit.status || !canEdit('SPD')"
+                      [disabled]="!edit.status || !canEdit('S')"
                     />
                     Duration
                   </label>
@@ -214,7 +214,7 @@
                     [(ngModel)]="versionConfig.value"
                     [ngModelOptions]="{ standalone: true }"
                     (change)="patchVersionValue()"
-                    [disabled]="!edit.status || !canEdit('SPD')"
+                    [disabled]="!edit.status || !canEdit('S')"
                   >
                     <option value="">All</option>
                     <option value="custom">Custom</option>
@@ -231,7 +231,7 @@
                     (change)="patchVersionValue()"
                     [ngModelOptions]="{ standalone: true }"
                     [(ngModel)]="versionConfig.value"
-                    [disabled]="!edit.status || !canEdit('SPD')"
+                    [disabled]="!edit.status || !canEdit('S')"
                   >
                     <option value="-1" selected>All</option>
                     <option value="custom">Custom</option>
@@ -253,7 +253,7 @@
                     #vcCustomval="ngModel"
                     (change)="patchVersionValue()"
                     min="1"
-                    [disabled]="!edit.status || !canEdit('SPD')"
+                    [disabled]="!edit.status || !canEdit('S')"
                   />
                   <span
                     class="
@@ -280,7 +280,7 @@
                     [ngModelOptions]="{ standalone: true }"
                     [(ngModel)]="versionConfig.customValueSuffix"
                     (change)="patchVersionValue()"
-                    [disabled]="!edit.status || !canEdit('SPD')"
+                    [disabled]="!edit.status || !canEdit('S')"
                   >
                     <option value="minutes">Minutes</option>
                     <option value="hour">Hour</option>
@@ -357,7 +357,7 @@
           </div>
         </div>
       </div>
-      <div class="mt-3" *ngIf="edit.status && canEdit('SRE')">
+      <div class="mt-3" *ngIf="edit.status && canEdit('S')">
         <div class="d-flex flex-column w-50 p-3 reset-data">
           <div class="d-flex">
             <div class="mr-2 warning position-relative">
@@ -420,27 +420,27 @@
       </div>
     </div>
     <div class="">
-      <div class="d-flex flex-column mb-4" *ngIf="canView('SEP')">
+      <div class="d-flex flex-column mb-4" *ngIf="canView('S')">
         <strong class="font-weight-bold mb-3">Customize API endpoint</strong>
         <input
-          *ngIf="edit.status && canEdit('SEP')"
+          *ngIf="edit.status && canEdit('S')"
           type="text"
           class="form-control"
           formControlName="api"
           id="sbAPIEndpoint"
         />
         <span
-          *ngIf="!edit.status || !canEdit('SEP')"
+          *ngIf="!edit.status || !canEdit('S')"
           class="form-control-plaintext"
           >{{ form.get("api").value }}</span
         >
       </div>
-      <div class="d-flex flex-column fuzzy-toggle" *ngIf="canView('SFS')">
+      <div class="d-flex flex-column fuzzy-toggle" *ngIf="canView('S')">
         <div class="d-flex mb-2">
           <div class="font-weight-bold">Fuzzy-search:</div>
           <div class="value-width ml-3">
             <odp-switch
-              [edit]="{ status: edit.status && canEdit('SFS') }"
+              [edit]="{ status: edit.status && canEdit('S') }"
               [(checked)]="fuzzySearch"
             ></odp-switch>
           </div>
@@ -454,7 +454,7 @@
           having Collections).
         </div>
       </div>
-      <!-- <div class="d-flex flex-column w-100" *ngIf="canView('SPR')">
+      <!-- <div class="d-flex flex-column w-100" *ngIf="canView('S')">
         <span class="font-weight-bold mt-3 mb-2">Allowed File Types</span>
         <div class="d-flex flex-wrap">
           <label
@@ -472,7 +472,7 @@
         </div>
         <div class="d-flex flex-column w-100 px-3"></div>
       </div> -->
-      <div class="d-flex flex-column w-100" *ngIf="canView('SPR')">
+      <div class="d-flex flex-column w-100" *ngIf="canView('S')">
         <span class="font-weight-bold mt-3 mb-2">Properties</span>
         <table class="table">
           <thead class="bg-light text-secondary">
@@ -494,13 +494,13 @@
               </td>
               <td>
                 <span
-                  *ngIf="edit.status && canEdit('SPR')"
+                  *ngIf="edit.status && canEdit('S')"
                   class="fa fa-trash text-danger hover"
                   (click)="removeHeader(item.key)"
                 ></span>
               </td>
             </tr>
-            <tr *ngIf="edit.status && canEdit('SPR')">
+            <tr *ngIf="edit.status && canEdit('S')">
               <td colspan="4">
                 <button
                   type="button"
