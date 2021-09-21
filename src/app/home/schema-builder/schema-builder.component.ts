@@ -423,7 +423,6 @@ export class SchemaBuilderComponent implements
         delete payload.port;
         delete payload.tags;
         delete payload.allowedFileTypes;
-        const list = self.commonService.getEntityPermissions('SM');
         if (!(self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin)) {
             delete payload.disableInsights;
         }
@@ -437,16 +436,15 @@ export class SchemaBuilderComponent implements
         if (!self.hasPermissionForTab('E')) {
             delete payload.wizard;
         }
-        if ((list.length === 0 && !this.hasPermission('PMDSS', 'SM')) ||
-            (list.length > 0 && !list.find(e => e.id === 'PMDSS'))) {
+        if (!this.hasPermissionForTab('S')) {
             delete payload.api;
             delete payload.versionValidity;
             delete payload.headers;
             delete payload.enableSearchIndex;
             delete payload.permanentDeleteData;
+            delete payload.disableInsights;
         }
-        if ((list.length === 0 && !this.hasPermission('PMDSI', 'SM')) ||
-            (list.length > 0 && !list.find(e => e.id === 'PMDSI'))) {
+        if (this.hasPermissionForTab('I')) {
             delete payload.webHooks;
             delete payload.preHooks;
             delete payload.workflowHooks.postHooks.submit;
