@@ -423,9 +423,6 @@ export class SchemaBuilderComponent implements
         delete payload.port;
         delete payload.tags;
         delete payload.allowedFileTypes;
-        if (!(self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin)) {
-            delete payload.disableInsights;
-        }
         if (!self.hasPermissionForTab('D')) {
             delete payload.attributeList;
             delete payload.definition;
