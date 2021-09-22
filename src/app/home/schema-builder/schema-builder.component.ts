@@ -441,14 +441,10 @@ export class SchemaBuilderComponent implements
             delete payload.permanentDeleteData;
             delete payload.disableInsights;
         }
-        if (this.hasPermissionForTab('I')) {
+        if (!this.hasPermissionForTab('I')) {
             delete payload.webHooks;
             delete payload.preHooks;
-            delete payload.workflowHooks.postHooks.submit;
-            delete payload.workflowHooks.postHooks.rework;
-            delete payload.workflowHooks.postHooks.discard;
-            delete payload.workflowHooks.postHooks.approve;
-            delete payload.workflowHooks.postHooks.reject;
+            delete payload.workflowHooks;
         }
         if (payload.definition) {
             self.appService.addKeyForDataStructure(payload.definition, 'camelCase');
