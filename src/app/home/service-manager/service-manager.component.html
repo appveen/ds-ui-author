@@ -10,10 +10,10 @@
     <div class="font-weight-bold font-lg">List of Data Services</div>
     <odp-search-box (enteredText)="search($event)" (reset)="resetSearch();getServices();"></odp-search-box>
     <div class="d-flex align-items-center">
-      <button class="add-new btn-min-width btn btn-dark mr-3" (click)="transactionDoc()">
+      <!-- <button class="add-new btn-min-width btn btn-dark mr-3" (click)="transactionDoc()">
         <span class="fa fa-link mr-2"></span>
         <span class="text">Transaction Doc</span>
-      </button>
+      </button> -->
       <button class="add-new btn-min-width btn btn-primary" (click)="newService()" *ngIf="hasCreatePermission('SM')">
         <span class="fa fa-plus mr-2"></span>
         <span class="text">New Data Service</span>
