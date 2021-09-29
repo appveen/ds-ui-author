@@ -26,7 +26,8 @@
     <ng-content></ng-content>
   </div>
 </div>
-<div *ngIf="toggleEdit" class="backdrop position-fixed d-flex w-100 h-100" (click)="toggleEdit=false;message=null;nameMessage=null;descMessage=null">
+<div *ngIf="toggleEdit" class="backdrop position-fixed d-flex w-100 h-100"
+  (click)="toggleEdit=false;message=null;nameMessage=null;descMessage=null">
 </div>
 <div *ngIf="toggleEdit"
   class="editable-window position-absolute d-flex bg-white p-3 align-items-start justify-content-start" odpClickOutside
@@ -53,10 +54,10 @@
     <label for="name" class="font-sm text-secondary">Name<sup class="text-danger">*</sup></label>
     <div class="name-wrapper position-relative">
       <input #nameModel="ngModel" type="text" name="name" id="name" [disabled]="holderStyle==='square'?true:false"
-        class="form-control font-weight-bold" placeholder="Untitled name" [(ngModel)]="name"
+        class="form-control font-weight-bold" placeholder="Untitled name" [(ngModel)]="name" required
         (ngModelChange)="onNameChange($event)" odpAutoFocus (keyup.enter)="toggleEdit=false" [pattern]="pattern">
-      <span *ngIf="nameModel?.errors?.pattern" class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-        ngbTooltip="Name can be only alphanumeric and can only contain spaces">
+      <span *ngIf="nameModel?.errors?.pattern" class="text-danger position-absolute fa fa-exclamation-circle"
+        container="body" ngbTooltip="Name can be only alphanumeric and can only contain spaces">
       </span>
     </div>
     <span class="text-danger font-sm">{{ nameMessage }}&nbsp;</span>
