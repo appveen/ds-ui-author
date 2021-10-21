@@ -72,7 +72,6 @@ export class MakerCheckerComponent implements OnInit {
   makerCheckerGrp() {
     const self = this;
     return self.fb.group({
-      name: [null],
       steps: self.fb.array([])
     })
   }
@@ -185,7 +184,6 @@ export class MakerCheckerComponent implements OnInit {
       return;
     }
     else if (status) {
-      self.makerCheckerData.get('name').setValidators([Validators.required]);
       self.makerCheckerData.get('steps').setValidators([arrayNonEmpty]);
       self.steps.controls.forEach(step => {
         step.get('name').setValidators([Validators.required]);
@@ -195,7 +193,6 @@ export class MakerCheckerComponent implements OnInit {
       });
     }
     else {
-      self.makerCheckerData.get('name').clearValidators();
       self.makerCheckerData.get('steps').clearValidators();
       self.steps.controls.forEach(step => {
         step.get('name').clearValidators();
@@ -204,19 +201,8 @@ export class MakerCheckerComponent implements OnInit {
         step.get('approvals').updateValueAndValidity();
       });
     }
-    self.makerCheckerData.get('name').updateValueAndValidity();
     self.makerCheckerData.get('steps').updateValueAndValidity();
 
-  }
-
-  get makerCheckerNameError() {
-    const self = this;
-    if (self.makerCheckerData.get('name').invalid && (self.makerCheckerData.get('name').dirty || self.makerCheckerData.get('name').touched)) {
-      return true;
-    }
-    else {
-      return false;
-    }
   }
 
   stepNameError(step) {

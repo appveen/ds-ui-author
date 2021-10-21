@@ -44,21 +44,6 @@
             <div id='configure-maker-checker' class='rounded mt-4 b'>
 
                 <div class='edit-maker-checker p-3'>
-                    <div class='font-13'>Name</div>
-                    <ng-container *ngIf="edit.status">
-                        <div class='w-25 mt-2 d-flex align-items-center position-relative'>
-                            <input type="text" odpAutoFocus class='form-control' formControlName="name"
-                                [attr.disabled]="!makerCheckerEnabled? true : null"
-                                [ngClass]="{'is-invalid': makerCheckerNameError}">
-                            <span class="fas fa-question-circle text-danger mcname-error position-absolute"
-                                *ngIf="makerCheckerNameError" ngbTooltip="Maker Checker name is required"
-                                placement="right"></span>
-                        </div>
-                    </ng-container>
-                    <div class="mt-2" *ngIf="!edit.status">
-                        <strong class="font-normal">{{makerCheckerData.get('name').value}}</strong>
-                    </div>
-
                     <div class='mt-4'>
                         <div class='d-flex justify-content-between align-items-center'>
                             <div class="d-flex align-items-center steps-subtitle">

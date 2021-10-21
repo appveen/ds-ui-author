@@ -753,11 +753,11 @@ export class SchemaBuilderComponent implements
             res.workflowConfig.makerCheckers.forEach(makerChecker => {
                 let makerCheckerFormArray = (self.form.get(['workflowConfig', 'makerCheckers']) as FormArray);
                 let makerCheckerFormGrp = self.fb.group({
-                    name: [makerChecker.name],
                     steps: self.fb.array([])
                 });
                 makerChecker.steps.forEach(step => {
                     (makerCheckerFormGrp.get('steps') as FormArray).push(self.fb.group({
+                        id: [step.id],
                         name: step.name,
                         approvals: step.approvals
                     }))

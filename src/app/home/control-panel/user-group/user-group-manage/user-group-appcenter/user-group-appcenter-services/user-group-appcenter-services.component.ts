@@ -182,13 +182,4 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         }
     }
 
-    get makerCheckerName() {
-        const self = this;
-        if (self.makerCheckerData != null) {
-            return self.makerCheckerData.name;
-        }
-        else {
-            return null;
-        }
-    }
 }
