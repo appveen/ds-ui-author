@@ -177,7 +177,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
 
     get makerCheckerData() {
         const self = this;
-        if (self.selectedDS.workflowConfig && self.selectedDS.workflowConfig.makerCheckers.length > 0) {
+        if (self.selectedDS.workflowConfig && self.selectedDS.workflowConfig.enabled && self.selectedDS.workflowConfig.makerCheckers.length > 0) {
             return self.selectedDS.workflowConfig.makerCheckers[0]
         } else {
             return null;
