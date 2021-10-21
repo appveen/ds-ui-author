@@ -37,6 +37,9 @@ import { EditConfig, ActionConfig, VersionConfig, DeleteModalConfig } from 'src/
 import { SchemaValuePipe } from '../schema-utils/schema-value.pipe';
 import { PrettyJsonPipe } from 'src/app/utils/pretty-json/pretty-json.pipe';
 import { wizardSteps } from '../custom-validators/wizard-steps.validator';
+import { minLengthCheck } from '../custom-validators/min-length-validators';
+import { arrayNonEmpty } from '../custom-validators/non-empty-array.validator';
+import { F } from '@angular/cdk/keycodes';
 
 @Component({
     selector: 'odp-schema-builder',
@@ -148,6 +151,10 @@ export class SchemaBuilderComponent implements
                     enabled: [false]
                 }
             ),
+            workflowConfig: self.fb.group({
+                enabled: [false],
+                makerCheckers: self.fb.array([])
+            }),
             definition: self.fb.array([
                 self.fb.group(
                     {
@@ -652,6 +659,7 @@ export class SchemaBuilderComponent implements
                 self.version = res.version;
                 temp.definition = self.schemaService.generateStructure(temp.definition);
                 self.form.patchValue(temp);
+                self.fillMakerChecker(res);            
                 if (!self.form.get(['definition', 0])) {
                     (self.form.get(['definition']) as FormArray).push(self.fb.group({
                         key: ['_id'],
@@ -740,6 +748,27 @@ export class SchemaBuilderComponent implements
             }, err => {
                 self.commonService.errorToast(err, 'Unable to fetch details, please try again later');
             });
+    }
+
+    fillMakerChecker(res){
+        const self = this;
+        if(res.workflowConfig && res.workflowConfig.makerCheckers.length>0){
+            res.workflowConfig.makerCheckers.forEach(makerChecker => {
+                let makerCheckerFormArray = (self.form.get(['workflowConfig', 'makerCheckers']) as FormArray);
+                let makerCheckerFormGrp = self.fb.group({
+                    name: [makerChecker.name],
+                    steps: self.fb.array([])
+                });
+                makerChecker.steps.forEach(step => {
+                    (makerCheckerFormGrp.get('steps') as FormArray).push(self.fb.group({
+                        name: step.name,
+                        approvals: step.approvals
+                    }))
+
+                });
+                makerCheckerFormArray.push(makerCheckerFormGrp);
+            });
+        }        
     }
 
     set name(val) {

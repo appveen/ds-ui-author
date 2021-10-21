@@ -1,0 +1,74 @@
+.maker-checker-builder{
+
+
+  #maker-checker-section {
+    .text-gray {
+      color: #6c7584;
+    }
+  
+    .heading1 {
+      line-height: 30px;
+      vertical-align: middle;
+    }
+  
+    #remove-maker-checker {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #dfe1e2;
+  
+      span {
+        line-height: 30px;
+        vertical-align: middle;
+      }
+    }
+  
+    .b {
+      border: 1px solid #ececec;
+    }
+  
+    .b-right {
+      border-right: 1px solid #ececec;
+    }
+  
+    .b-bottom {
+      border-bottom: 1px solid #ececec;
+    }
+  
+    #configure-maker-checker {
+      min-height: 52vh;
+  
+      .edit-maker-checker {
+        .steps-subtitle{
+          height: 30px;
+        }
+        .mcname-error{
+          left: 90%;
+        }
+        .delete-steps {
+          width: 18px;
+          height: 18px;
+          line-height: 18px;
+        }
+  
+        .steps-header {
+          height: 32px;
+          background-color: #fbfbfb;
+        }
+  
+        .steps-section {
+          .step {
+            background-color: #fcfcfc;
+            .stepname-error{
+              left: 93%;
+            }
+            .approval-error{
+              left: 40%;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+}
+

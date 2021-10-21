@@ -15,6 +15,8 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     aggregatePermission: any;
     activeSubTab: number;
     showLazyLoader: boolean;
+    selectedDS: any;
+    makerCheckerEnabled: boolean;
 
     constructor(private commonService: CommonService,
         private appService: AppService) {
@@ -26,6 +28,8 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         self.roles = [];
         self.activeSubTab = 0;
         self.showLazyLoader = false;
+        self.selectedDS = {};
+        self.makerCheckerEnabled = false;
     }
 
     ngOnInit() {
@@ -39,14 +43,17 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
 
         const options: GetOptions = {
             count: -1,
-            select: 'entity,entityName,roles,type,app',
+            select: 'role,workflowConfig',
             filter: {
-                type: 'appcenter'
+                app: self.commonService.app._id
             }
         };
-        self.subscriptions['getServiceList'] = self.commonService.get('user', '/role', options).subscribe(res => {
+        self.subscriptions['getServiceList'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
 
-            self.serviceList = res;
+            self.serviceList = res.map(data => {
+                data.role.workflowConfig = data.workflowConfig;
+                return data.role
+            });
             self.serviceList.forEach(srvc => {
                 if (srvc.roles) {
                     srvc.roles.forEach(role => {
@@ -54,12 +61,21 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
                         role.entity = srvc.entity;
                     });
                 }
+                if (self.makerCheckerData) {
+
+                }
                 self.calculatePermission(srvc);
             });
+            self.selectedDS = self.serviceList[0];
             self.showLazyLoader = false;
         }, err => {
             self.commonService.errorToast(err, 'Unable to fetch services, please try again later');
         });
+    }
+
+    selectDataService(srvc) {
+        const self = this;
+        self.selectedDS = srvc;
     }
 
     calculatePermission(service: any) {
@@ -111,6 +127,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         }
         return false;
     }
+
     hasMethod(role: any, method: string) {
         if (role.operations.find(e => e.method === method)) {
             return true;
@@ -118,29 +135,37 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         return false;
     }
 
+    get totalActiveRoles() {
+        const self = this;
+        let selectedDsRoleIds = self.roles.filter(r => r.type === 'appcenter').map(r => r.id);
+        return self.selectedDS.roles.filter(r => selectedDsRoleIds.includes(r.id)).length;
+    }
+
     roleActive(role: any) {
         const self = this;
-        if (self.roles.find(r => r.id === role.id && r.entity === role.entity)) {
+        if (self.roles.find(r => r.id === role.id && r.entity === self.selectedDS.entity)) {
             return true;
         }
         return false;
     }
+
     toggleRole(event: Event, role: any, service: any) {
         const self = this;
         const target: HTMLInputElement = <HTMLInputElement>event.target;
         if (target.checked) {
             self.roles.push({
                 id: role.id,
-                entity: role.entity,
-                app: role.app,
+                entity: self.selectedDS.entity,
+                app: self.selectedDS.app,
                 type: 'appcenter'
             });
         } else {
-            const index = self.roles.findIndex(r => r.id === role.id && r.entity === role.entity);
+            const index = self.roles.findIndex(r => r.id === role.id && r.entity === self.selectedDS.entity);
             self.roles.splice(index, 1);
         }
         self.calculatePermission(service);
     }
+
     collapseAccordion() {
         const self = this;
         Object.keys(self.toggleAccordion).forEach(key => {
@@ -151,5 +176,24 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     hasPermission(type: string) {
         const self = this;
         return self.commonService.hasPermission(type);
+    }
+
+    get makerCheckerData() {
+        const self = this;
+        if (self.selectedDS.workflowConfig && self.selectedDS.workflowConfig.makerCheckers.length > 0) {
+            return self.selectedDS.workflowConfig.makerCheckers[0]
+        } else {
+            return null;
+        }
+    }
+
+    get makerCheckerName() {
+        const self = this;
+        if (self.makerCheckerData != null) {
+            return self.makerCheckerData.name;
+        }
+        else {
+            return null;
+        }
     }
 }
