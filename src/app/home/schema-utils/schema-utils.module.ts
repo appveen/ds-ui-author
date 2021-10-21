@@ -38,6 +38,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FilterNextStatePipe } from './filter-next-state.pipe';
+import { MakerCheckerComponent } from './maker-checker/maker-checker.component';
 
 @NgModule({
     imports: [
@@ -81,6 +82,7 @@ import { FilterNextStatePipe } from './filter-next-state.pipe';
         LogicalConditionComponent,
         StateModelComponent,
         FilterNextStatePipe,
+        MakerCheckerComponent,
     ],
     exports: [
         SchemaStructurePipe,
@@ -97,6 +99,7 @@ import { FilterNextStatePipe } from './filter-next-state.pipe';
         PathCreatorComponent,
         LogicalConditionComponent,
         StateModelComponent,
+        MakerCheckerComponent
     ],
     providers: [SchemaBuilderService]
 })

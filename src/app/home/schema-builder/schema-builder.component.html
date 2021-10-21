@@ -160,6 +160,13 @@
                   Personalize
                 </span>
               </div>
+              <div class='mb-3'>
+                <span class='side-nav-tab'
+                  [ngClass]="{'text-accent' : experienceSideNavActiveTab == 3 , 'text-bold' : experienceSideNavActiveTab == 3}"
+                  (click)='experienceSideNavActiveTab = 3'>
+                  Maker Checker
+                </span>
+              </div>
             </div>
             <div class='d-flex flex-column w-100'>
               <div *ngIf="experienceSideNavActiveTab == 2" class="schema-creator scroll position-relative w-100"
@@ -172,6 +179,10 @@
               <div *ngIf="experienceSideNavActiveTab == 0"
                 class="schema-creator scrollStateModel position-relative w-100 bg-light">
                 <odp-state-model [(form)]='form' [edit]='edit'></odp-state-model>
+              </div>
+
+              <div *ngIf="experienceSideNavActiveTab == 3" class="scrollStateModel">
+                <odp-maker-checker [(form)]='form' [edit]='edit'></odp-maker-checker>
               </div>
             </div>
 
