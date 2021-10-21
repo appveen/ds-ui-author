@@ -16,7 +16,6 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     activeSubTab: number;
     showLazyLoader: boolean;
     selectedDS: any;
-    makerCheckerEnabled: boolean;
 
     constructor(private commonService: CommonService,
         private appService: AppService) {
@@ -29,7 +28,6 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         self.activeSubTab = 0;
         self.showLazyLoader = false;
         self.selectedDS = {};
-        self.makerCheckerEnabled = false;
     }
 
     ngOnInit() {

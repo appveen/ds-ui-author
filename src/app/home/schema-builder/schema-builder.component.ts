@@ -37,9 +37,6 @@ import { EditConfig, ActionConfig, VersionConfig, DeleteModalConfig } from 'src/
 import { SchemaValuePipe } from '../schema-utils/schema-value.pipe';
 import { PrettyJsonPipe } from 'src/app/utils/pretty-json/pretty-json.pipe';
 import { wizardSteps } from '../custom-validators/wizard-steps.validator';
-import { minLengthCheck } from '../custom-validators/min-length-validators';
-import { arrayNonEmpty } from '../custom-validators/non-empty-array.validator';
-import { F } from '@angular/cdk/keycodes';
 
 @Component({
     selector: 'odp-schema-builder',
