@@ -61,9 +61,6 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
                         role.entity = srvc.entity;
                     });
                 }
-                if (self.makerCheckerData) {
-
-                }
                 self.calculatePermission(srvc);
             });
             self.selectedDS = self.serviceList[0];
