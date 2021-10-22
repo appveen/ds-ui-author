@@ -18,10 +18,17 @@
       </div>
 
     </div>
-    <div class='ds-details py-4 w-100 pr-4'>
-      <div class='d-flex justify-content-between'>
+    <div class='ds-details py-3 w-100 pr-4'>
+      <div class='d-flex align-items-center pt-1'>
+        <strong>Admin Privileges</strong>
+        <div class='ml-4 p-1'>
+          <odp-switch [edit]="{status:true}" [(checked)]="adminRole" (checkedChange)='toggleAdmin($event)'>
+          </odp-switch>
+        </div>
+      </div>
+      <div class='d-flex justify-content-between mt-4'>
         <div class='font-weight-bold mb-2'>Roles ({{selectedDS.roles.length}})</div>
-        <div>{{totalActiveRoles}} roles enabled</div>
+        <div *ngIf="!adminRole">{{totalActiveRoles}} roles enabled</div>
       </div>
       <div class="role-list-item-body bg-white font-normal b rounded mt-3">
         <ng-container *ngFor="let role of selectedDS.roles; let roleIndex = index">
@@ -54,57 +61,56 @@
             <span class="toggle font-sm">
               <label class="switch accent mb-0 mr-3 mt-1" [attr.for]="role.id" *ngIf="hasPermission('PMGCDS')">
                 <input type="checkbox" value="true" [attr.id]="role.id" (change)="toggleRole($event,role,selectedDS)"
-                  [ngModel]="roleActive(role)">
+                  [ngModel]="roleActive(role)" [attr.disabled]="adminRole? true : null">
                 <span class="slider"></span>
                 <span class="toggler border-border"></span>
               </label>
               <span class="text ml-2 font-normal">
-                <ng-container *ngIf="roleActive(role)">Yes</ng-container>
-                <ng-container *ngIf="!roleActive(role)">No</ng-container>
+                <span *ngIf="roleActive(role)" [ngClass]="{'text-muted': adminRole}">Yes</span>
+                <span *ngIf="!roleActive(role)" [ngClass]="{'text-muted': adminRole}">No</span>
               </span>
             </span>
           </div>
         </ng-container>
       </div>
-
-      <div class='mt-4'>
-        <div class="font-weight-bold">
-          Maker Checker
-        </div>
-        
-        <div class="text mt-4" *ngIf="makerCheckerData">{{makerCheckerName}}</div>
-        <!-- <odp-switch [edit]="{status:true}" [(checked)]="makerCheckerEnabled" ></odp-switch> -->
-      </div>
-
-      <div class="role-list-item-body bg-white font-normal b rounded mt-4" *ngIf="makerCheckerData">
-        <div class='steps-header b-bottom d-flex justify-content-between align-items-center text-muted px-4'>
-          <div>{{makerCheckerData.steps.length}} STEPS</div>
-          <div>4 APPROVALS</div>
-          <div></div>
-        </div>
-        <ng-container *ngFor="let step of makerCheckerData.steps; let roleIndex = index">
-          <div class="role-list-sub-item d-flex justify-content-between align-items-center px-4 b-bottom">
-            <div class="name">
-              <span class="text">{{ step.name }}</span>
-            </div>
-            <div class="permissions d-flex align-items-center">
-              {{step.approvals}}
-            </div>
-            <span class="toggle font-sm">
-              <label class="switch accent mb-0 mr-3 mt-1" [attr.for]="step.id" *ngIf="hasPermission('PMGCDS')">
-                <input type="checkbox" value="true" [attr.id]="step.id" (change)="toggleRole($event,step,selectedDS)"
-                  [ngModel]="roleActive(step)">
-                <span class="slider"></span>
-                <span class="toggler border-border"></span>
-              </label>
-              <span class="text ml-2 font-normal">
-                <ng-container *ngIf="roleActive(step)">Yes</ng-container>
-                <ng-container *ngIf="!roleActive(step)">No</ng-container>
-              </span>
-            </span>
+      <ng-container *ngIf="!adminRole">
+        <div class='mt-4'>
+          <div class="font-weight-bold">
+            Maker Checker
           </div>
-        </ng-container>
-      </div>
+        </div>
+
+        <div class="role-list-item-body bg-white font-normal b rounded mt-4" *ngIf="makerCheckerData">
+          <div class='steps-header b-bottom d-flex justify-content-between align-items-center text-muted px-4'>
+            <div>{{makerCheckerData.steps.length}} STEPS</div>
+            <div>4 APPROVALS</div>
+            <div></div>
+          </div>
+          <ng-container *ngFor="let step of makerCheckerData.steps; let roleIndex = index">
+            <div class="role-list-sub-item d-flex justify-content-between align-items-center px-4 b-bottom">
+              <div class="name">
+                <span class="text">{{ step.name }}</span>
+              </div>
+              <div class="permissions d-flex align-items-center">
+                {{step.approvals}}
+              </div>
+              <span class="toggle font-sm">
+                <label class="switch accent mb-0 mr-3 mt-1" [attr.for]="step.id" *ngIf="hasPermission('PMGCDS')">
+                  <input type="checkbox" value="true" [attr.id]="step.id" (change)="toggleRole($event,step,selectedDS)"
+                    [ngModel]="roleActive(step)">
+                  <span class="slider"></span>
+                  <span class="toggler border-border"></span>
+                </label>
+                <span class="text ml-2 font-normal">
+                  <ng-container *ngIf="roleActive(step)">Yes</ng-container>
+                  <ng-container *ngIf="!roleActive(step)">No</ng-container>
+                </span>
+              </span>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+
 
     </div>
   </div>

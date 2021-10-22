@@ -85,16 +85,6 @@
                     </button>
                 </div>
                 <ng-container *ngIf="!selectedRole.skipReviewRole">
-                    <div class="enable-review d-flex w-100 mb-3">
-                        <span class="text-dark font-weight-bold first-column">Enable Review System</span>
-                        <div class="d-flex flex-column">
-                            <odp-switch [(checked)]="canApprove" [edit]="edit"></odp-switch>
-                            <small class="text-muted role-control-right mb-3 mt-2">
-                                This role is entitled to enable review system for this Data Service and Grants
-                                permission to a user to Review the documents created in this Data Service.
-                            </small>
-                        </div>
-                    </div>
                     <div class="tab-list d-flex align-items-center border-bottom w-100">
                         <div class="tab px-3" [ngClass]="{'text-accent border-accent':activeTab === 1}"
                             (click)="activeTab=1">
