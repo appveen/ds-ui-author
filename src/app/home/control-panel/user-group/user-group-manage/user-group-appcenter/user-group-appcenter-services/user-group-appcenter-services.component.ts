@@ -64,7 +64,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
                 self.calculatePermission(srvc);
             });
             if (self.serviceList.length > 0) {
-               self.selectDataService(self.serviceList[0]);
+                self.selectDataService(self.serviceList[0]);
             }
             self.showLazyLoader = false;
         }, err => {
@@ -166,18 +166,18 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         self.calculatePermission(service);
     }
 
-    toggleAdmin(val){
+    toggleAdmin(val) {
         const self = this;
-        if(val){
+        if (val) {
             self.roles.push({
-                id: 'ADMIN_'+self.selectedDS.entity,
+                id: 'ADMIN_' + self.selectedDS.entity,
                 entity: self.selectedDS.entity,
                 app: self.selectedDS.app,
                 type: 'appcenter'
             });
-        }else{
-            const index = self.roles.findIndex(r => r.id === 'ADMIN_'+self.selectedDS.entity && r.entity === self.selectedDS.entity);
-            if(index != -1){
+        } else {
+            const index = self.roles.findIndex(r => r.id === 'ADMIN_' + self.selectedDS.entity && r.entity === self.selectedDS.entity);
+            if (index != -1) {
                 self.roles.splice(index, 1);
             }
         }
