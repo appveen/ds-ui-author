@@ -7,14 +7,14 @@
 </div>
 <div class="wrapper">
   <div class="d-flex w-100">
-    <div class="d-flex flex-column sub-menu  py-3 bg-light">
+    <!-- <div class="d-flex flex-column sub-menu  py-3 bg-light">
       <div class="d-flex flex-column">
         <div *ngIf="hasPermission('PVGCDS') || hasPermission('PMGCDS')" class="d-flex py-2 w-100 pl-3 hover justify-content-between" (click)="activeSubTab=0"
           [ngClass]="{'bg-border': activeSubTab==0}">
           <span class="">Data Services</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==0"></span>
         </div>
-        <!-- <div *ngIf="hasPermission('PVGCI') || hasPermission('PMGCI')" class="d-flex py-2 w-100 pl-3 hover justify-content-between" (click)="activeSubTab=1"
+        <div *ngIf="hasPermission('PVGCI') || hasPermission('PMGCI')" class="d-flex py-2 w-100 pl-3 hover justify-content-between" (click)="activeSubTab=1"
           [ngClass]="{'bg-border': activeSubTab==1}">
           <span class="">Interaction Flows</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==1"></span>
@@ -23,9 +23,9 @@
           [ngClass]="{'bg-border': activeSubTab==2}">
           <span class="">Bookmarks</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==2"></span>
-        </div> -->
+        </div>
       </div>
-    </div>
+    </div> -->
     <div class="px-3 w-100">
       <odp-user-group-appcenter-services *ngIf="activeSubTab==0" [(roles)]="roles" (rolesChange)="onChange($event)"
         class="w-100"></odp-user-group-appcenter-services>

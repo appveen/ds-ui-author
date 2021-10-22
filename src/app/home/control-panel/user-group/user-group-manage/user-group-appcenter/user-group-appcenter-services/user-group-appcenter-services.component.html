@@ -4,31 +4,30 @@
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="d-flex flex-column justify-content-center py-4">
-  <div class="d-flex align-items-center">
+<div class="d-flex flex-column justify-content-center row">
+  <div class="d-flex align-items-center p-3">
     <span class="font-weight-bold">Data Services</span>
   </div>
-  <div class='mt-4 rounded b data-services-section d-flex' *ngIf="!showLazyLoader">
-    <div class="select-ds d-flex flex-column pt-3">
+  <div class='data-services-section d-flex border-top' *ngIf="!showLazyLoader">
+    <div class="select-ds d-flex flex-column border-right border-light mr-3">
       <div class='ds-name py-2 px-4 hover' *ngFor="let srvc of serviceList; let srvcIndex = index"
-        (click)='selectDataService(srvc)'>
-        <span [ngClass]='{"text-accent": selectedDS == srvc}'>
+        (click)='selectDataService(srvc)' [ngClass]='{"text-accent alert-accent": selectedDS == srvc}'>
+        <span>
           {{ srvc.entityName }}
         </span>
       </div>
-
     </div>
     <div class='ds-details py-3 w-100 pr-4'>
-      <div class='d-flex align-items-center pt-1'>
+      <div class='d-flex align-items-center justify-content-between p-2 bg-light text-dark rounded col-3'>
         <strong>Admin Privileges</strong>
-        <div class='ml-4 p-1'>
+        <div class='p-1'>
           <odp-switch [edit]="{status:true}" [(checked)]="adminRole" (checkedChange)='toggleAdmin($event)'>
           </odp-switch>
         </div>
       </div>
-      <div class='d-flex justify-content-between mt-4'>
-        <div class='font-weight-bold mb-2'>Roles ({{selectedDS.roles.length}})</div>
-        <div *ngIf="!adminRole">{{totalActiveRoles}} roles enabled</div>
+      <div class='d-flex justify-content-between mt-4 py-2 px-3 bg-light rounded'>
+        <div class='font-weight-bold'>Roles ({{selectedDS.roles.length}})</div>
+        <div *ngIf="!adminRole" class="text-accent">{{totalActiveRoles}} roles enabled</div>
       </div>
       <div class="role-list-item-body bg-white font-normal b rounded mt-3">
         <ng-container *ngFor="let role of selectedDS.roles; let roleIndex = index">
@@ -73,17 +72,16 @@
           </div>
         </ng-container>
       </div>
-      <ng-container *ngIf="!adminRole">
-        <div class='mt-4'>
-          <div class="font-weight-bold">
+      <ng-container *ngIf="!adminRole && makerCheckerData">
+        <div class='d-flex justify-content-between mt-4 py-2 px-3 bg-light rounded'>
+          <div class="font-weight-bold ">
             Maker Checker
           </div>
         </div>
-
-        <div class="role-list-item-body bg-white font-normal b rounded mt-4" *ngIf="makerCheckerData">
+        <div class="role-list-item-body bg-white font-normal b rounded mt-4">
           <div class='steps-header b-bottom d-flex justify-content-between align-items-center text-muted px-4'>
             <div>{{makerCheckerData.steps.length}} STEPS</div>
-            <div>4 APPROVALS</div>
+            <div>{{totalApprovals}} APPROVALS</div>
             <div></div>
           </div>
           <ng-container *ngFor="let step of makerCheckerData.steps; let roleIndex = index">

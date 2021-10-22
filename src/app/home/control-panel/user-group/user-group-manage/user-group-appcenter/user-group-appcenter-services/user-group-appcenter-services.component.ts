@@ -204,4 +204,12 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         }
     }
 
+    get totalApprovals() {
+        if (this.makerCheckerData) {
+            return this.makerCheckerData.steps.reduce((prev,curr)=>prev+curr.approvals,0);
+        } else {
+            return 0;
+        }
+    }
+
 }
