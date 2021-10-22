@@ -16,6 +16,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     activeSubTab: number;
     showLazyLoader: boolean;
     selectedDS: any;
+    adminRole: boolean;
 
     constructor(private commonService: CommonService,
         private appService: AppService) {
@@ -28,6 +29,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         self.activeSubTab = 0;
         self.showLazyLoader = false;
         self.selectedDS = {};
+        self.adminRole = false;
     }
 
     ngOnInit() {
@@ -61,7 +63,9 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
                 }
                 self.calculatePermission(srvc);
             });
-            self.selectedDS = self.serviceList[0];
+            if (self.serviceList.length > 0) {
+               self.selectDataService(self.serviceList[0]);
+            }
             self.showLazyLoader = false;
         }, err => {
             self.commonService.errorToast(err, 'Unable to fetch services, please try again later');
@@ -71,6 +75,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     selectDataService(srvc) {
         const self = this;
         self.selectedDS = srvc;
+        self.adminRole = self.roles.filter(r => r.id == 'ADMIN_' + self.selectedDS.entity).length == 1;
     }
 
     calculatePermission(service: any) {
@@ -159,6 +164,23 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
             self.roles.splice(index, 1);
         }
         self.calculatePermission(service);
+    }
+
+    toggleAdmin(val){
+        const self = this;
+        if(val){
+            self.roles.push({
+                id: 'ADMIN_'+self.selectedDS.entity,
+                entity: self.selectedDS.entity,
+                app: self.selectedDS.app,
+                type: 'appcenter'
+            });
+        }else{
+            const index = self.roles.findIndex(r => r.id === 'ADMIN_'+self.selectedDS.entity && r.entity === self.selectedDS.entity);
+            if(index != -1){
+                self.roles.splice(index, 1);
+            }
+        }
     }
 
     collapseAccordion() {
