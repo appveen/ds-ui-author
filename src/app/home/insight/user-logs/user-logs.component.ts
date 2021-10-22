@@ -100,7 +100,7 @@ export class UserLogsComponent implements OnInit, OnDestroy {
                     this.loaded = 0;
                 }
                 if (!this.apiConfig.filter) {
-                    this.apiConfig.filter = { app: { $in: [this.commonService.app._id, null] } };
+                    this.apiConfig.filter = { app: { $in: [this.commonService.app._id, null] }, activityCode: { $regex: '^((?!BOT).)*$'}  };
                 }
                 const filterModel = this.agGrid?.api?.getFilterModel();
                 const filterModelKeys = Object.keys(filterModel || {});
