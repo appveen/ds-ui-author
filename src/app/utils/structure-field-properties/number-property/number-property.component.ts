@@ -345,7 +345,7 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
 
   checkStateModel() {
     const self = this;
-    if (self.mainForm.get(['stateModel', 'enabled']).value) {
+    if (self.mainForm && self.mainForm.get(['stateModel', 'enabled']).value) {
       if (self.form.get('key').value === self.mainForm.get(['stateModel', 'attribute']).value) {
         return true;
       }
