@@ -118,4 +118,11 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     }
     return '-';
   }
+  get hasManagePermission() {
+    return this.commonService.hasPermission('PMF')
+  }
+
+  get hasStartStopPermission() {
+    return this.commonService.hasPermission('PMFPS')
+  }
 }

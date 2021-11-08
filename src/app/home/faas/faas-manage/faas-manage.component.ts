@@ -274,4 +274,12 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     }
     return '-';
   }
+
+  get hasDeployPermission() {
+    return this.commonService.hasPermission('PMFPD')
+  }
+
+  get hasManagePermission() {
+    return this.commonService.hasPermission('PMF')
+  }
 }
