@@ -13,7 +13,7 @@
                 <span class="fa fa-close mr-2"></span>
                 <span class="text">Cancel</span>
             </button>
-            <button *ngIf="edit.id && !edit.status" (click)="enableEditing()" type="button"
+            <button *ngIf="edit.id && !edit.status && hasManagePermission" (click)="enableEditing()" type="button"
                 class="edit-button btn btn-min-width btn-primary ml-3" id="editNanoServiceBtn">
                 <span class="odp-edit mr-2"></span>
                 <span *ngIf="!faasData?.draftVersion" class="text">Edit</span>
@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-            <button *ngIf="edit.status" class="btn btn-dark btn-min-width" [disabled]="!isValidSchema"
+            <button *ngIf="edit.status && hasDeployPermission" class="btn btn-dark btn-min-width" [disabled]="!isValidSchema"
                 (click)="save(true);edit.status=false" type="button">Save &amp; Deploy</button>
             <!-- <div class="btn-group mr-3" *ngIf="edit.status">
                 <button class="btn btn-primary btn-min-width" (click)="saveDummyCode();" type="button">Save</button>

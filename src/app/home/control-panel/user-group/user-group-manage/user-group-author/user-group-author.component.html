@@ -14,6 +14,12 @@
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==1"></span>
 
         </div>
+        <div *ngIf="hasPermission('PVGAF') || hasPermission('PMGAF')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
+          [ngClass]="{'bg-border': activeSubTab==2}" (click)="activeSubTab=2">
+          <span class="">Functions</span>
+          <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==2"></span>
+
+        </div>
         <!-- <div class="border-top"></div> -->
         <!-- <div *ngIf="hasPermission('PVGAP') || hasPermission('PMGAP')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
           [ngClass]="{'bg-border': activeSubTab==2}" (click)="activeSubTab=2">
@@ -49,26 +55,26 @@
 
         </div> -->
         <div *ngIf="hasPermission('PVGAU') || hasPermission('PMGAU')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
-          [ngClass]="{'bg-border': activeSubTab==7}" (click)="activeSubTab=7">
+          [ngClass]="{'bg-border': activeSubTab==8}" (click)="activeSubTab=8">
           <span class="">Users</span>
-          <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==7"></span>
-
-        </div>
-        <div *ngIf="(hasPermission('PVGAB') || hasPermission('PMGAB'))"
-          class="d-flex py-2 w-100 pl-3 hover" [ngClass]="{'bg-border': activeSubTab==8}" (click)="activeSubTab=8">
-          <span class="">Bots</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==8"></span>
 
         </div>
-        <div *ngIf="hasPermission('PVGAG') || hasPermission('PMGAG')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
-          [ngClass]="{'bg-border': activeSubTab==9}" (click)="activeSubTab=9">
-          <span class="">Groups</span>
+        <div *ngIf="(hasPermission('PVGAB') || hasPermission('PMGAB'))"
+          class="d-flex py-2 w-100 pl-3 hover" [ngClass]="{'bg-border': activeSubTab==9}" (click)="activeSubTab=9">
+          <span class="">Bots</span>
           <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==9"></span>
+
+        </div>
+        <div *ngIf="hasPermission('PVGAG') || hasPermission('PMGAG')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
+          [ngClass]="{'bg-border': activeSubTab==10}" (click)="activeSubTab=10">
+          <span class="">Groups</span>
+          <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==10"></span>
         </div>
         <div *ngIf="hasPermission('PVGAIS') || hasPermission('PMGAIS')" class="d-flex py-2 w-100 pl-3 hover justify-content-between"
-        [ngClass]="{'bg-border': activeSubTab==10}" (click)="activeSubTab=10">
+        [ngClass]="{'bg-border': activeSubTab==11}" (click)="activeSubTab=11">
         <span class="">Insights</span>
-        <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==10"></span>
+        <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==11"></span>
       </div>
       </div>
     </div>
@@ -79,28 +85,31 @@
       <odp-group-author-library *ngIf="activeSubTab==1" [(roles)]="roles" (rolesChange)="onChange($event)"
         class="w-100">
       </odp-group-author-library>
+      <odp-group-author-functions *ngIf="activeSubTab==2" [(roles)]="roles" (rolesChange)="onChange($event)"
+        class="w-100">
+      </odp-group-author-functions>
       <!-- <odp-group-author-management *ngIf="activeSubTab==2" [roles]="roles" class="w-100"></odp-group-author-management> -->
-      <odp-group-author-partners *ngIf="activeSubTab==2" [(roles)]="roles" (rolesChange)="onChange($event)"
+      <odp-group-author-partners *ngIf="activeSubTab==3" [(roles)]="roles" (rolesChange)="onChange($event)"
         class="w-100">
       </odp-group-author-partners>
-      <odp-group-author-data-formats *ngIf="activeSubTab==3" [(roles)]="roles" (rolesChange)="onChange($event)"
+      <odp-group-author-data-formats *ngIf="activeSubTab==4" [(roles)]="roles" (rolesChange)="onChange($event)"
         class="w-100">
       </odp-group-author-data-formats>
-      <odp-group-author-nano-services *ngIf="activeSubTab==4" [(roles)]="roles" (rolesChange)="onChange($event)"
+      <odp-group-author-nano-services *ngIf="activeSubTab==5" [(roles)]="roles" (rolesChange)="onChange($event)"
         class="w-100">
       </odp-group-author-nano-services>
-      <odp-group-author-agents *ngIf="activeSubTab==5" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
+      <odp-group-author-agents *ngIf="activeSubTab==6" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
       </odp-group-author-agents>
-      <odp-group-author-bookmarks *ngIf="activeSubTab==6" [(roles)]="roles" (rolesChange)="onChange($event)"
+      <odp-group-author-bookmarks *ngIf="activeSubTab==7" [(roles)]="roles" (rolesChange)="onChange($event)"
         class="w-100">
       </odp-group-author-bookmarks>
-      <odp-group-author-users *ngIf="activeSubTab==7" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
+      <odp-group-author-users *ngIf="activeSubTab==8" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
       </odp-group-author-users>
-      <odp-group-author-bots *ngIf="activeSubTab==8" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
+      <odp-group-author-bots *ngIf="activeSubTab==9" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
       </odp-group-author-bots>
-      <odp-group-author-groups *ngIf="activeSubTab==9" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
+      <odp-group-author-groups *ngIf="activeSubTab==10" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
       </odp-group-author-groups>
-      <odp-group-author-insights *ngIf="activeSubTab==10" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
+      <odp-group-author-insights *ngIf="activeSubTab==11" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
       </odp-group-author-insights>
     </div>
   </div>

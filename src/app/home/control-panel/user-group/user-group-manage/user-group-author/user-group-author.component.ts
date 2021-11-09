@@ -23,22 +23,24 @@ export class UserGroupAuthorComponent implements OnInit {
       self.activeSubTab = 0;
     } else if (self.hasPermission('PVGAL') || self.hasPermission('PMGAL')) {
       self.activeSubTab = 1;
-    } else if (self.hasPermission('PVGAP') || self.hasPermission('PMGAP')) {
+    } else if (self.hasPermission('PVGAF') || self.hasPermission('PMGAF')) {
       self.activeSubTab = 2;
-    } else if (self.hasPermission('PVGADF') || self.hasPermission('PMGADF')) {
+    } else if (self.hasPermission('PVGAP') || self.hasPermission('PMGAP')) {
       self.activeSubTab = 3;
-    } else if (self.hasPermission('PVGANS') || self.hasPermission('PMGANS')) {
+    } else if (self.hasPermission('PVGADF') || self.hasPermission('PMGADF')) {
       self.activeSubTab = 4;
-    } else if (self.hasPermission('PVGAA') || self.hasPermission('PMGAA')) {
+    } else if (self.hasPermission('PVGANS') || self.hasPermission('PMGANS')) {
       self.activeSubTab = 5;
-    } else if (self.hasPermission('PVGABM') || self.hasPermission('PMGABM')) {
+    } else if (self.hasPermission('PVGAA') || self.hasPermission('PMGAA')) {
       self.activeSubTab = 6;
-    } else if (self.hasPermission('PVGAU') || self.hasPermission('PMGAU')) {
+    } else if (self.hasPermission('PVGABM') || self.hasPermission('PMGABM')) {
       self.activeSubTab = 7;
-    } else if (self.hasPermission('PVGAB') || self.hasPermission('PMGAB')) {
+    } else if (self.hasPermission('PVGAU') || self.hasPermission('PMGAU')) {
       self.activeSubTab = 8;
-    } else if (self.hasPermission('PVGAG') || self.hasPermission('PMGAG')) {
+    } else if (self.hasPermission('PVGAB') || self.hasPermission('PMGAB')) {
       self.activeSubTab = 9;
+    } else if (self.hasPermission('PVGAG') || self.hasPermission('PMGAG')) {
+      self.activeSubTab = 10;
     }
   }
 

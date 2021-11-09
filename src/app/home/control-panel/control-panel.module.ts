@@ -48,6 +48,7 @@ import { GroupAuthorDataServicesComponent } from './user-group/user-group-manage
 import { GroupAuthorDataFormatsComponent } from './user-group/user-group-manage/user-group-author/group-author-data-formats/group-author-data-formats.component';
 import { GroupAuthorAgentsComponent } from './user-group/user-group-manage/user-group-author/group-author-agents/group-author-agents.component';
 import { GroupAuthorLibraryComponent } from './user-group/user-group-manage/user-group-author/group-author-library/group-author-library.component';
+import { GroupAuthorFunctionsComponent } from './user-group/user-group-manage/user-group-author/group-author-functions/group-author-functions.component';
 import { GroupAuthorPartnersComponent } from './user-group/user-group-manage/user-group-author/group-author-partners/group-author-partners.component';
 import { GroupAuthorNanoServicesComponent } from './user-group/user-group-manage/user-group-author/group-author-nano-services/group-author-nano-services.component';
 import { GroupAuthorBookmarksComponent } from './user-group/user-group-manage/user-group-author/group-author-bookmarks/group-author-bookmarks.component';
@@ -129,6 +130,7 @@ import { RadioChipModule } from 'src/app/utils/radio-chip/radio-chip.module';
         GroupAuthorDataFormatsComponent,
         GroupAuthorAgentsComponent,
         GroupAuthorLibraryComponent,
+        GroupAuthorFunctionsComponent,
         GroupAuthorPartnersComponent,
         GroupAuthorNanoServicesComponent,
         GroupAuthorBookmarksComponent,
