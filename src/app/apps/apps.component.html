@@ -105,7 +105,7 @@
                 </div>
                 <span *ngIf="libraryRoute.isActive" class="fa fa-angle-right mr-3"></span>
             </div>
-            <div #functionRoute="routerLinkActive"
+            <div *ngIf="hasFunctionsPermission" #functionRoute="routerLinkActive"
                 class="icon-block hover d-flex align-items-center justify-content-between my-2"
                 routerLinkActive="text-accent bg-white active" [routerLink]="['faas']" id="function"
                 (mouseover)="hover.function = true" (mouseleave)="hover.function = false">

@@ -291,6 +291,11 @@ export class AppsComponent implements OnInit, OnDestroy {
         return self.commonService.hasPermission('PML') || self.commonService.hasPermission('PVL');
     }
 
+    get hasFunctionsPermission() {
+        const self = this;
+        return self.commonService.hasPermission('PMF') || self.commonService.hasPermission('PVF');
+    }
+
     get hasUsersPermission() {
         const self = this;
         return self.commonService.hasPermissionStartsWith('PVU') || self.commonService.hasPermissionStartsWith('PMU');
