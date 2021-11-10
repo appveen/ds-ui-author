@@ -269,7 +269,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
         self.alertModalTemplateRef = self.commonService.modal(self.alertModalTemplate);
         self.alertModalTemplateRef.result.then(close => {
             if (close) {
-                self.commonService.put('partnerManager', `/flow/${flow._id}/stop`, {}).subscribe(res => {
+                self.commonService.put('partnerManager', `/flow/${flow._id}/stop`, { app: this.commonService.app._id }).subscribe(res => {
                     self.ts.success('Stopping flow');
                     flow.status = 'Pending';
                 }, err => {
@@ -288,7 +288,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
         self.alertModalTemplateRef = self.commonService.modal(self.alertModalTemplate);
         self.alertModalTemplateRef.result.then(close => {
             if (close) {
-                self.commonService.put('partnerManager', `/flow/${flow._id}/start`, {}).subscribe(res => {
+                self.commonService.put('partnerManager', `/flow/${flow._id}/start`, { app: this.commonService.app._id }).subscribe(res => {
                     self.ts.success('Starting flow');
                     flow.status = 'Pending';
                 }, err => {
@@ -307,7 +307,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
         self.alertModalTemplateRef = self.commonService.modal(self.alertModalTemplate);
         self.alertModalTemplateRef.result.then(close => {
             if (close) {
-                self.commonService.put('partnerManager', `/flow/${flow._id}/deploy`, {}).subscribe(res => {
+                self.commonService.put('partnerManager', `/flow/${flow._id}/deploy`, { app: this.commonService.app._id }).subscribe(res => {
                     self.ts.success('Deploying flow');
                     flow.status = 'Pending';
                 }, err => {

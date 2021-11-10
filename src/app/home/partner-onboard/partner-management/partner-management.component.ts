@@ -222,7 +222,7 @@ export class PartnerManagementComponent implements OnInit {
     self.startFlowAttributes['playIcon'] = 'midStage';
     self.proccessing = true;
     self.cardActionDisabled = 'disabled';
-    self.commonService.put('partnerManager', `/${self.commonService.app._id}/partner/` + `${self.partner.get('_id').value}/startAll`).subscribe(res => {
+    self.commonService.put('partnerManager', `/${self.commonService.app._id}/partner/` + `${self.partner.get('_id').value}/startAll`,{ app: this.commonService.app._id }).subscribe(res => {
       if (res) {
         self.startFlowAttributes['playIcon'] = 'playIconHide';
         self.startFlowAttributes['playLoader'] = 'hideProcessing';
@@ -243,7 +243,7 @@ export class PartnerManagementComponent implements OnInit {
     self.startFlowAttributes['processing'] = 'playIcon';
     self.proccessing = true;
     self.cardActionDisabled = 'disabled';
-    self.commonService.put('partnerManager', `/${self.commonService.app._id}/partner/` + `${self.partner.get('_id').value}/stopAll`).subscribe(res => {
+    self.commonService.put('partnerManager', `/${self.commonService.app._id}/partner/` + `${self.partner.get('_id').value}/stopAll`,{ app: this.commonService.app._id }).subscribe(res => {
       if (res) {
         self.startFlowAttributes['stopIcon'] = 'playIconHide';
         self.startFlowAttributes['stopCircle'] = 'hideProcessing';

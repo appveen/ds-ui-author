@@ -272,7 +272,7 @@ export class IntegrationFlowComponent implements OnInit, OnDestroy {
     const self = this;
     self.apiCalls.deploy = true;
     const id = this.data.runningFlow ? this.data.runningFlow : this.data._id;
-    self.commonService.put('partnerManager', '/flow/' + id + '/deploy', {}).subscribe(res => {
+    self.commonService.put('partnerManager', '/flow/' + id + '/deploy', { app: this.commonService.app._id }).subscribe(res => {
       self.ts.success('Flow saved and deployed successfully');
       self.toggleMicroflowChange.emit(false);
       self.apiCalls.deploy = false;

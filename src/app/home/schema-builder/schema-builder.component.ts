@@ -511,7 +511,7 @@ export class SchemaBuilderComponent implements
     deploy(payload: any) {
         const self = this;
         self.showLazyLoader = true;
-        self.commonService.put('serviceManager', '/' + payload._id + '/deploy', {}).subscribe(res => {
+        self.commonService.put('serviceManager', '/' + payload._id + '/deploy', { app: this.commonService.app._id }).subscribe(res => {
             self.showLazyLoader = false;
             self.action.loading = false;
             self.roleChange = false;

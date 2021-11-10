@@ -577,7 +577,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.startServiceAttributes['playIcon'] = 'midStage';
         self.proccessing = true;
         self.cardActionDisabled = 'disabled';
-        self.commonService.put('serviceManager', `/${self.appData._id}/service/start`).subscribe(res => {
+        self.commonService.put('serviceManager', `/${self.appData._id}/service/start`,{ app: this.commonService.app._id }).subscribe(res => {
             self.startAllServices['processing'] = 'playIconHide';
             if (res) {
                 self.startAllServices['processing'] = 'playIconHide';
@@ -601,7 +601,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.startServiceAttributes['processing'] = 'playIcon';
         self.proccessing = true;
         self.cardActionDisabled = 'disabled';
-        self.commonService.put('serviceManager', `/${self.appData._id}/service/stop`).subscribe(res => {
+        self.commonService.put('serviceManager', `/${self.appData._id}/service/stop`,{ app: this.commonService.app._id }).subscribe(res => {
             if (res) {
                 self.startAllServices['processing'] = 'playIconHide';
                 self.startAllServices['processing'] = 'playIconHide';
@@ -909,7 +909,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.startFlowAttributes['playIcon'] = 'midStage';
         self.proccessing = true;
         self.cardActionDisabled = 'disabled';
-        self.commonService.put('partnerManager', `/flow/${self.commonService.app._id}/startAll`).subscribe(res => {
+        self.commonService.put('partnerManager', `/flow/${self.commonService.app._id}/startAll`,{ app: this.commonService.app._id }).subscribe(res => {
 
             if (res) {
                 self.startFlowAttributes['playIcon'] = 'playIconHide';

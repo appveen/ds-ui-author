@@ -558,7 +558,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                 if (self.serviceList[index].status === 'Active') {
                     url = '/' + self.serviceList[index]._id + '/stop';
                 }
-                self.subscriptions['updateservice'] = self.commonService.put('serviceManager', url, null).subscribe(d => {
+                self.subscriptions['updateservice'] = self.commonService.put('serviceManager', url, { app: this.commonService.app._id }).subscribe(d => {
                     if (self.serviceList[index].status === 'Active') {
                         self.ts.info('Stopping data service...');
                     } else {
@@ -587,7 +587,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         self.alertModalTemplateRef.result.then((close) => {
             if (close) {
                 const url = '/' + self.serviceList[index]._id + '/deploy';
-                self.subscriptions['updateservice'] = self.commonService.put('serviceManager', url, null).subscribe(d => {
+                self.subscriptions['updateservice'] = self.commonService.put('serviceManager', url, { app: this.commonService.app._id }).subscribe(d => {
                     self.ts.info('Deploying data service...');
                     self.serviceList[index].status = 'Pending';
                 }, err => {
