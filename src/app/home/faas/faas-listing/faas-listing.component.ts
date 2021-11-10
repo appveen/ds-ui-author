@@ -280,58 +280,22 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   }
 
   canManageFaas(id: string) {
-    const list1 = this.commonService.getEntityPermissions('FU_' + id);
-    const list2 = this.commonService.getEntityPermissions('FU');
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
       return true;
     } else {
-      if (list1.length === 0 && list2.find(e => e.id.substr(0, 4) === 'PMFU'
-        && e.id !== 'PMFUBC'
-        && e.id !== 'PMFUBD')) {
-        return true;
-      } else if (list1.length > 0 && list1.find(e => e.id.substr(0, 4) === 'PMFU'
-        && e.id !== 'PMFUBC'
-        && e.id !== 'PMFUBD')) {
-        return true;
-      } else {
-        return false;
-      }
+      return this.hasPermission('PMF');
     }
   }
 
   canDeleteFaas(id: string) {
-    const list = this.commonService.getEntityPermissions('PM_' + id);
-    if (list.length === 0 && this.hasPermission('PMPBD')) {
-      return true;
-    } else if (list.length > 0 && list.find(e => e.id === 'PMPBD')) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.hasPermission('PMF');
   }
 
   hasPermission(type: string, entity?: string) {
     return this.commonService.hasPermission(type, entity);
   }
   hasWritePermission(entity: string) {
-    return this.commonService.hasPermission('PMFUBC', entity);
-  }
-
-  hasPermissionForFaas(id: string) {
-    if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
-      return true;
-    } else {
-      const list = this.commonService.getEntityPermissions('FU_' + id);
-      if (list.length > 0 && list.find(e => e.id.startsWith('PMFU') || e.id.startsWith('PVFU'))) {
-        return true;
-      } else if (list.length === 0
-        && (this.commonService.hasPermissionStartsWith('PMFU', 'FU')
-          || this.commonService.hasPermissionStartsWith('PVFU', 'FU'))) {
-        return true;
-      } else {
-        return false;
-      }
-    }
+    return this.commonService.hasPermission('PMF', entity);
   }
 
 }
