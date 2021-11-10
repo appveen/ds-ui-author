@@ -118,16 +118,16 @@ export class UserGroupMembersComponent implements OnInit, OnDestroy {
             columnDefs: [
                 ...(this.hasPermission('PMGMUD')
                     ? [
-                          {
-                              headerName: '',
-                              pinned: 'left',
-                              sortable: false,
-                              cellRenderer: 'customCheckboxCellRenderer',
-                              minWidth: 40,
-                              maxWidth: 40,
-                              filter: false
-                          }
-                      ]
+                        {
+                            headerName: '',
+                            pinned: 'left',
+                            sortable: false,
+                            cellRenderer: 'customCheckboxCellRenderer',
+                            minWidth: 40,
+                            maxWidth: 40,
+                            filter: false
+                        }
+                    ]
                     : []),
                 {
                     headerName: 'Name',
@@ -240,11 +240,11 @@ export class UserGroupMembersComponent implements OnInit, OnDestroy {
     }
 
     onGridAction(buttonName: string, rowNode: RowNode) {
-        switch(buttonName) {
+        switch (buttonName) {
             case 'Remove': {
                 this.removeUsers(rowNode.data);
             }
-            break;
+                break;
         }
     }
 
@@ -314,7 +314,7 @@ export class UserGroupMembersComponent implements OnInit, OnDestroy {
         this.userAddFiltering = true;
         this.userAddFilterModel = this.userAddGridApi?.getFilterModel();
         setTimeout(() => {
-          this.userAddFiltering = false;
+            this.userAddFiltering = false;
         }, 1000);
     }
 
@@ -322,7 +322,7 @@ export class UserGroupMembersComponent implements OnInit, OnDestroy {
         this.filtering = true;
         this.filterModel = this.gridApi?.getFilterModel();
         setTimeout(() => {
-          this.filtering = false;
+            this.filtering = false;
         }, 1000);
     }
 
@@ -373,6 +373,7 @@ export class UserGroupMembersComponent implements OnInit, OnDestroy {
         const options = {
             filter: { isSuperAdmin: { $ne: true } },
             select: 'username,basicDetails.name',
+            count: 30,
             noApp: true
         };
         self.subscriptions['getAllUsers'] = self.commonService

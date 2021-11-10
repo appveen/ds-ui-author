@@ -140,6 +140,7 @@ export class UserGroupBotsComponent implements OnInit, OnDestroy {
         bot: true
       },
       select: '_id,basicDetails.name',
+      count: 30,
       noApp: true
     };
     self.subscriptions['getAllBots'] = self.commonService
