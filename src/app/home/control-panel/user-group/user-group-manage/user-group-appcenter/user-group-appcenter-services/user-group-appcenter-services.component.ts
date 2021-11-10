@@ -12,7 +12,6 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     serviceList: Array<any>;
     toggleAccordion: any;
     subscriptions: any;
-    aggregatePermission: any;
     activeSubTab: number;
     showLazyLoader: boolean;
     selectedDS: any;
@@ -23,7 +22,6 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         const self = this;
         self.serviceList = [];
         self.toggleAccordion = {};
-        self.aggregatePermission = {};
         self.subscriptions = {};
         self.roles = [];
         self.activeSubTab = 0;
@@ -49,25 +47,16 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
             }
         };
         self.subscriptions['getServiceList'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
-
+            self.showLazyLoader = false;
             self.serviceList = res.map(data => {
                 data.role.workflowConfig = data.workflowConfig;
                 return data.role
             });
-            self.serviceList.forEach(srvc => {
-                if (srvc.roles) {
-                    srvc.roles.forEach(role => {
-                        role.app = srvc.app;
-                        role.entity = srvc.entity;
-                    });
-                }
-                self.calculatePermission(srvc);
-            });
             if (self.serviceList.length > 0) {
                 self.selectDataService(self.serviceList[0]);
             }
-            self.showLazyLoader = false;
         }, err => {
+            self.showLazyLoader = false;
             self.commonService.errorToast(err, 'Unable to fetch services, please try again later');
         });
     }
@@ -76,45 +65,6 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         const self = this;
         self.selectedDS = srvc;
         self.adminRole = self.roles.filter(r => r.id == 'ADMIN_' + self.selectedDS.entity).length == 1;
-    }
-
-    calculatePermission(service: any) {
-        const self = this;
-        self.aggregatePermission[service.entity] = {
-            total: 'no'
-        };
-        const temp = self.roles
-            .filter(r => r.entity === service.entity && r.app === service.app)
-            .map(r => service.roles.find(e => e.id === r.id))
-            .filter(r => r);
-        if (temp && temp.length > 0) {
-            if (temp.find(r => r.operations.find(e => e.method === 'POST'
-                || e.method === 'PUT'
-                || e.method === 'DELETE'
-                || e.method === 'REVIEW'
-                || e.method === 'SKIP_REVIEW'))) {
-                self.aggregatePermission[service.entity]['total'] = 'manage';
-                if (temp.find(r => r.operations.find(e => e.method === 'POST'))) {
-                    self.aggregatePermission[service.entity]['POST'] = true;
-                }
-                if (temp.find(r => r.operations.find(e => e.method === 'PUT'))) {
-                    self.aggregatePermission[service.entity]['PUT'] = true;
-                }
-                if (temp.find(r => r.operations.find(e => e.method === 'DELETE'))) {
-                    self.aggregatePermission[service.entity]['DELETE'] = true;
-                }
-                if (temp.find(r => r.operations.find(e => e.method === 'REVIEW'))) {
-                    self.aggregatePermission[service.entity]['REVIEW'] = true;
-                }
-                if (temp.find(r => r.operations.find(e => e.method === 'SKIP_REVIEW'))) {
-                    self.aggregatePermission[service.entity]['SKIP_REVIEW'] = true;
-                }
-            } else {
-                self.aggregatePermission[service.entity]['total'] = 'view';
-            }
-        } else {
-            self.aggregatePermission[service.entity]['total'] = 'no';
-        }
     }
 
     hasManage(role: any) {
@@ -163,7 +113,6 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
             const index = self.roles.findIndex(r => r.id === role.id && r.entity === self.selectedDS.entity);
             self.roles.splice(index, 1);
         }
-        self.calculatePermission(service);
     }
 
     toggleAdmin(val) {
