@@ -431,11 +431,12 @@ export class SchemaBuilderComponent implements
             delete payload.attributeList;
             delete payload.definition;
         }
-        if (!self.hasPermissionForTab('R')) {
+        if (!self.hasPermissionForTab('R') && !self.hasPermissionForTab('D')) {
             delete payload.role;
         }
         if (!self.hasPermissionForTab('E')) {
             delete payload.wizard;
+            delete payload.stateModel;
         }
         if (!this.hasPermissionForTab('S')) {
             delete payload.api;
@@ -656,7 +657,7 @@ export class SchemaBuilderComponent implements
                 self.version = res.version;
                 temp.definition = self.schemaService.generateStructure(temp.definition);
                 self.form.patchValue(temp);
-                self.fillMakerChecker(res);            
+                self.fillMakerChecker(res);
                 if (!self.form.get(['definition', 0])) {
                     (self.form.get(['definition']) as FormArray).push(self.fb.group({
                         key: ['_id'],
@@ -747,9 +748,9 @@ export class SchemaBuilderComponent implements
             });
     }
 
-    fillMakerChecker(res){
+    fillMakerChecker(res) {
         const self = this;
-        if(res.workflowConfig && res.workflowConfig.makerCheckers.length>0){
+        if (res.workflowConfig && res.workflowConfig.makerCheckers.length > 0) {
             res.workflowConfig.makerCheckers.forEach(makerChecker => {
                 let makerCheckerFormArray = (self.form.get(['workflowConfig', 'makerCheckers']) as FormArray);
                 let makerCheckerFormGrp = self.fb.group({
@@ -765,7 +766,7 @@ export class SchemaBuilderComponent implements
                 });
                 makerCheckerFormArray.push(makerCheckerFormGrp);
             });
-        }        
+        }
     }
 
     set name(val) {
