@@ -492,7 +492,7 @@ export class SchemaBuilderComponent implements
         if (self.form.get(['definition', 0, 'counter']).dirty && self.edit.id) {
             const payload = self.schemaStructurePipe.transform(self.form.value);
             self.commonService.get('serviceManager', '/' + self.edit.id + '/' + self.commonService.app._id +
-                '/idCount').subscribe(res => {
+                '/idCount', { filter: { app: this.commonService.app._id } }).subscribe(res => {
                     if (payload.definition.find(d => d.key === '_id').counter <= res) {
                         self.commonService.errorToast(
                             { status: 400 }, 'Invalid value for counter because the current counter value is  ' + res);
@@ -640,7 +640,7 @@ export class SchemaBuilderComponent implements
         const self = this;
         (self.form.get('definition') as FormArray).clear();
         self.edit.loading = true;
-        self.subscriptions['getservice'] = self.commonService.get('serviceManager', '/service/' + id + '?draft=true')
+        self.subscriptions['getservice'] = self.commonService.get('serviceManager', '/service/' + id + '?draft=true', { filter: { app: this.commonService.app._id } })
             .subscribe(res => {
                 self.commonService.apiCalls.componentLoading = false;
                 self.schemaService.initialState(res);

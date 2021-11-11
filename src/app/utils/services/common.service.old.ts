@@ -692,7 +692,7 @@ export class CommonService {
                     if (!!val?.auth) {
                         self.connectionDetails = val.auth.connectionDetails;
                     }
-                    if(!!val?.validAuthTypes?.length) {
+                    if (!!val?.validAuthTypes?.length) {
                         this.appService.validAuthTypes = val.validAuthTypes;
                     }
                     resolve(val);
@@ -1137,7 +1137,7 @@ export class CommonService {
             if (self.serviceMap && self.serviceMap[serviceId]) {
                 resolve(self.serviceMap[serviceId]);
             } else {
-                self.get('serviceManager', '/service/' + serviceId).subscribe(
+                self.get('serviceManager', '/service/' + serviceId, { filter: { app: this.app._id } }).subscribe(
                     res => {
                         self.serviceMap[serviceId] = res;
                         resolve(self.serviceMap[serviceId]);

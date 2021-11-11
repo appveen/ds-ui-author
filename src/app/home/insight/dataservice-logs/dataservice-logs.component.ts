@@ -345,7 +345,7 @@ export class DataserviceLogsComponent implements OnInit, OnDestroy {
   getAllDataServices() {
     const self = this;
     let options = {
-      app: this.commonService.app._id,
+      filter: { app: this.commonService.app._id },
       select: 'name',
       count: -1
     };

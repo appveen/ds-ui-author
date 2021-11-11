@@ -48,6 +48,7 @@ export class LibraryPropertyComponent implements OnInit, OnDestroy {
     const options: GetOptions = {
       select: 'name'
     };
+    options.filter = { app: this.commonService.app._id };
     if (self.subscriptions['getLibraryName']) {
       self.subscriptions['getLibraryName'].unsubscribe();
     }

@@ -324,7 +324,7 @@ export class GlobalSchemasComponent implements
         const self = this;
         self.showLazyLoader = true;
         self.subscriptions['fillDetails'] = self.commonService
-            .get('serviceManager', '/globalSchema/' + (id ? id : self.edit.id))
+            .get('serviceManager', '/globalSchema/' + (id ? id : self.edit.id), { filter: { app: this.commonService.app._id } })
             .subscribe(res => {
                 self.showLazyLoader = false;
                 let temp: any;
@@ -348,7 +348,7 @@ export class GlobalSchemasComponent implements
                 }
                 self.form.patchValue(temp);
                 const typeCtrl = self.form.get('type');
-                if(!typeCtrl.value && !!temp.definition?.length && !!temp.definition[0].type) {
+                if (!typeCtrl.value && !!temp.definition?.length && !!temp.definition[0].type) {
                     typeCtrl.setValue(temp.definition[0].type);
                     typeCtrl.updateValueAndValidity();
                 }

@@ -350,7 +350,10 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 self.searchingRelation = true;
                 const options: GetOptions = {
                     select: 'name,version,definition',
-                    filter: { name: value }
+                    filter: {
+                        name: value,
+                        app: this.commonService.app._id
+                    }
                 };
                 self.subscriptions['service'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
                     self.searchingRelation = false;

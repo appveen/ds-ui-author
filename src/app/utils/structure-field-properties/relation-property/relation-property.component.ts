@@ -59,7 +59,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     self.properties = self.form.get('properties') as FormGroup;
     self.getServices();
     self.getDefinition();
-    if(!self.properties.get('_default')){
+    if (!self.properties.get('_default')) {
       self.properties.addControl('_default', new FormControl());
     }
   }
@@ -83,7 +83,8 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     const self = this;
     const options: GetOptions = {
       select: 'name,version,app,api,definition',
-      count: 30
+      count: 30,
+      filter: { app: this.commonService.app._id }
     };
     if (self.subscriptions['getServices']) {
       self.subscriptions['getServices'].unsubscribe();
@@ -139,11 +140,11 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
       }
     }
     self.definition = value.definition;
-    if(!!this.definition) {
+    if (!!this.definition) {
       this.getAllAttributeNames(this.definition);
       self.addToList('relatedViewFields', self.attributeList[0]);
     }
-  
+
     self.getDocuments(value);
   }
 
@@ -231,14 +232,14 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     }
   }
 
-  get getViewLabel(){
+  get getViewLabel() {
     const self = this;
     let key = self.form.get('properties.relatedSearchField').value
     if (self.definition && self.definition.length) {
       const val = self.definition.filter(e => e.properties.dataPath === key);
       if (val && val[0]) {
         return val[0].properties.name;
-      }else {
+      } else {
         return null
       }
     } else {
@@ -282,7 +283,8 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
   getDefinition() {
     const self = this;
     const options: GetOptions = {
-      select: 'definition name'
+      select: 'definition name',
+      filter: { app: this.commonService.app._id }
     };
     if (self.subscriptions['getRelationAttributes']) {
       self.subscriptions['getRelationAttributes'].unsubscribe();
@@ -292,7 +294,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
       .subscribe(
         res => {
           self.definition = res.definition;
-          if(!!this.definition) {
+          if (!!this.definition) {
             this.getAllAttributeNames(this.definition);
           }
 
@@ -351,7 +353,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
   }
   getAPI(relatedTo) {
     const self = this;
-    self.subscriptions['getRelation'] = self.commonService.get('serviceManager', '/service/' + relatedTo).subscribe(
+    self.subscriptions['getRelation'] = self.commonService.get('serviceManager', '/service/' + relatedTo, { filter: { app: this.commonService.app._id } }).subscribe(
       res => {
         self.relatedDSDef = res.definition;
         if (self.relatedDSDef[self.relatedSearchField] && self.relatedDSDef[self.relatedSearchField].properties && self.relatedDSDef[self.relatedSearchField].properties.password) {
@@ -397,7 +399,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
         if (parentKey) {
           key = parentKey + '.' + element.key
         }
-        if(!!element.definition) {
+        if (!!element.definition) {
           this.getAllAttributeNames(element.definition, key)
         }
       } else if (element.type !== 'Array') {
@@ -408,7 +410,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
         this.attributeList.push(ele);
       }
     });
-    
+
   }
 
   get relatedToName() {

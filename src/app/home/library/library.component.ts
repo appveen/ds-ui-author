@@ -56,6 +56,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
         }];
         self.openDeleteModal = new EventEmitter();
         self.config = {
+            filter: { app: this.commonService.app._id },
             page: 1,
             count: 30
         };

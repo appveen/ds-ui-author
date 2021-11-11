@@ -163,7 +163,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             if (index > -1) {
                 self.serviceList[index].status = 'Active';
             } else {
-                self.commonService.get('serviceManager', '/service/' + data._id).subscribe(service => {
+                self.commonService.get('serviceManager', '/service/' + data._id, { filter: { app: this.commonService.app._id } }).subscribe(service => {
                     // self.setServiceDetails(service);
                     // self.serviceList.push(service);
                 }, err => {
@@ -371,7 +371,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             page: 1,
             count: -1,
             select: null,
-            filter: null
+            filter: { app: this.commonService.app._id }
         };
     }
 
@@ -459,7 +459,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     _getServiceRecords(service) {
         const self = this;
         self.subscriptions['getservicerecord_' + service._id] =
-            self.commonService.get('serviceManager', '/' + service._id + '/utils/count').subscribe(res => {
+            self.commonService.get('serviceManager', '/' + service._id + '/utils/count', { filter: { app: this.commonService.app._id } }).subscribe(res => {
                 service._records = res;
             }, err => {
                 service._records = 0;
@@ -469,7 +469,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     _getAllServiceRecords(serviceIds: Array<string>) {
         const self = this;
         return self.commonService.get('serviceManager', '/all/count', {
-            serviceIds: serviceIds.join(',')
+            serviceIds: serviceIds.join(','),
+            filter: { app: this.commonService.app._id }
         });
     }
 
@@ -734,7 +735,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         });
         if (indx > -1) {
             self.subscriptions['getservicerecord_' + service._id] =
-                self.commonService.get('serviceManager', '/service/' + service._id).subscribe(res => {
+                self.commonService.get('serviceManager', '/service/' + service._id, { filter: { app: this.commonService.app._id } }).subscribe(res => {
                     self.setServiceDetails(res);
                     self.serviceList.splice(index, 1, res);
                     this.serviceRecordCounts.forEach(item => {

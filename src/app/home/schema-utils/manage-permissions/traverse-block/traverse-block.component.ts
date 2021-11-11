@@ -93,7 +93,8 @@ export class TraverseBlockComponent implements OnInit, AfterContentChecked {
     const options: GetOptions = {};
     options.filter = {
       name: '/' + searchTerm + '/',
-      status: "Active"
+      status: "Active",
+      app: this.commonService.app._id
     };
     if (searchTerm) {
       self.commonService.get('serviceManager', '/service', options).subscribe(res => {

@@ -716,9 +716,12 @@ export class CommonService {
     private _deleteApi_(type, url, data?) {
         const self = this;
         const URL = environment.url[type] + url;
+        let httpParams = new HttpParams();
+        httpParams = httpParams.set('filter', JSON.stringify({ app: this.app._id }));
         return self.http.request(
             new HttpRequest('DELETE', URL, data, {
-                headers: self._getHeaders(false)
+                headers: self._getHeaders(false),
+                params: httpParams
             })
         )
     }
@@ -1281,7 +1284,7 @@ export class CommonService {
             if (self.serviceMap && self.serviceMap[serviceId]) {
                 resolve(self.serviceMap[serviceId]);
             } else {
-                self.get('serviceManager', '/service/' + serviceId + '?draft=true').subscribe(
+                self.get('serviceManager', '/service/' + serviceId + '?draft=true', { filter: { app: this.app._id } }).subscribe(
                     res => {
                         self.serviceMap[serviceId] = res;
                         resolve(self.serviceMap[serviceId]);

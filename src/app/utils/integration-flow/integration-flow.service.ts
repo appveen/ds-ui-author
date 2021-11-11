@@ -224,6 +224,7 @@ export class IntegrationFlowService {
     const self = this;
     const options: GetOptions = {
       select: 'name,definition,attributeCount,formatType,character,excelType,strictValidation,lineSeparator',
+      filter: { app: this.commonService.app._id }
     };
     if (!data || !data.id || data.id === 'ERROR') {
       return Promise.resolve();
@@ -255,6 +256,7 @@ export class IntegrationFlowService {
   getServiceDetails(data: NodeData, nextNode: NodeData): Promise<any> {
     const self = this;
     const options: GetOptions = {};
+    options.filter = { app: this.commonService.app._id };
     if (!data.meta || !data.meta.formatId) {
       return Promise.resolve();
     }

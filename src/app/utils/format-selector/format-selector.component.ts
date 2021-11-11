@@ -146,7 +146,8 @@ export class FormatSelectorComponent implements OnDestroy {
         const options: GetOptions = {
             filter: {
                 name: '/' + searchTerm + '/',
-                definition: { $exists: true }
+                definition: { $exists: true },
+                app: this.commonService.app._id
             },
             select: 'name,definition,attributeCount,formatType,character,excelType,strictValidation,lineSeparator',
             count: 5

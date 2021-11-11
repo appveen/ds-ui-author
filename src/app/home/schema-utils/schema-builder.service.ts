@@ -189,7 +189,7 @@ export class SchemaBuilderService {
             const arr = [];
             if (value.properties && value.properties.relatedViewFields) {
                 self.commonService
-                    .get('serviceManager', '/service/' + value.properties.relatedTo, { select: 'name' })
+                    .get('serviceManager', '/service/' + value.properties.relatedTo, { select: 'name', filter: { app: this.commonService.app._id } })
                     .subscribe(res => {
                         temp.get('relatedToName').patchValue(res.name);
                     }, err => { });

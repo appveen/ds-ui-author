@@ -220,7 +220,8 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       field = field + '.checksum';
     }
     const options = {
-      fields: field
+      fields: field,
+      filter: { app: this.commonService.app._id }
     }
     if (self.subscriptions['unique-status']) {
       self.subscriptions['unique-status'].unsubscribe();
