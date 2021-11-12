@@ -4,7 +4,7 @@
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="d-flex flex-column justify-content-center row">
+<div class="d-flex flex-column justify-content-center row" *ngIf="serviceList.length > 0">
   <div class="d-flex align-items-center p-3">
     <span class="font-weight-bold">Data Services</span>
   </div>
@@ -111,5 +111,11 @@
 
 
     </div>
+  </div>
+</div>
+<div class="d-flex flex-row w-100 no-ds" *ngIf="serviceList.length == 0">
+  <div class="d-flex flex-column w-50 h-auto justify-content-center m-auto">
+    <span class="text-muted"> There is no Data Service available. Please create a Data Service to configure the roles.
+    </span>
   </div>
 </div>
