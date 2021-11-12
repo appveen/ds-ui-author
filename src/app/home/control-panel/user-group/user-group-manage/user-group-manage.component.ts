@@ -89,7 +89,9 @@ export class UserGroupManageComponent implements OnInit, OnDestroy, CanComponent
   getGroup(id: string) {
     const self = this;
     self.showLazyLoader = true;
-    self.apiConfig.filter = {};
+    self.apiConfig.filter = {
+      app: this.commonService.app._id
+    };
     self.subscriptions['getGroup'] = self.commonService.get('user', '/group/' + id, self.apiConfig).subscribe(res => {
       self.showLazyLoader = false;
       try {
@@ -215,7 +217,7 @@ export class UserGroupManageComponent implements OnInit, OnDestroy, CanComponent
   closeDeleteModal(data) {
     const self = this;
     if (data) {
-      const url = '/group/' + data._id;
+      const url = '/group/' + data._id + '?app=' + this.commonService.app._id;
       self.showLazyLoader = true;
       self.subscriptions['deleteGroup'] = self.commonService.delete('user', url).subscribe(d => {
         self.showLazyLoader = false;

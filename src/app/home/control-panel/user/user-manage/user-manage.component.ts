@@ -144,7 +144,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
             value.attributes = {};
         }
         self._user = value;
-        if(!!self.allTeams) {
+        if (!!self.allTeams) {
             self.getUserTeam();
         }
     }
@@ -219,7 +219,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
         const self = this;
         self.rowData = [...this.userAttributeList];
         self.showResetPassword =
-          self.commonService.userDetails.isSuperAdmin || self.isThisUser(self.user);
+            self.commonService.userDetails.isSuperAdmin || self.isThisUser(self.user);
         self.ngbToolTipConfig.container = 'body';
         self.commonService.apiCalls.componentLoading = false;
         self.getAllTeams();
@@ -298,22 +298,22 @@ export class UserManageComponent implements OnInit, OnDestroy {
                 },
                 ...(hasEditPermission || hasDeletePermission
                     ? [
-                          {
-                              headerName: 'Actions',
-                              pinned: 'right',
-                              cellRenderer: 'actionCellRenderer',
-                              sortable: false,
-                              filter: false,
-                              minWidth: hasEditPermission && hasDeletePermission ? 130 : 94,
-                              maxWidth: hasEditPermission && hasDeletePermission ? 130 : 94,
-                              refData: {
-                                  actionsButtons: [hasEditPermission ? 'Edit' : '', hasDeletePermission ? 'Delete' : '']
-                                      .filter(i => !!i)
-                                      .join(','),
-                                  actionCallbackFunction: 'onGridAction'
-                              }
-                          }
-                      ]
+                        {
+                            headerName: 'Actions',
+                            pinned: 'right',
+                            cellRenderer: 'actionCellRenderer',
+                            sortable: false,
+                            filter: false,
+                            minWidth: hasEditPermission && hasDeletePermission ? 130 : 94,
+                            maxWidth: hasEditPermission && hasDeletePermission ? 130 : 94,
+                            refData: {
+                                actionsButtons: [hasEditPermission ? 'Edit' : '', hasDeletePermission ? 'Delete' : '']
+                                    .filter(i => !!i)
+                                    .join(','),
+                                actionCallbackFunction: 'onGridAction'
+                            }
+                        }
+                    ]
                     : [])
             ],
             context: this,
@@ -329,28 +329,28 @@ export class UserManageComponent implements OnInit, OnDestroy {
         this.filtering = true;
         this.filterModel = this.agGrid?.api?.getFilterModel();
         setTimeout(() => {
-          this.filtering = false;
+            this.filtering = false;
         }, 1000);
-      }
+    }
 
     gridAttrTypesMapper(data: any[]) {
         return this.types.map(type => {
-            const {label, value} = type;
-            return {label, value};
+            const { label, value } = type;
+            return { label, value };
         })
     }
 
     onGridAction(buttonName: string, rowNode: RowNode) {
-        switch(buttonName) {
+        switch (buttonName) {
             case 'Edit': {
                 this.editMode = true;
                 this.openAttributeModal(rowNode.data);
             }
-            break;
+                break;
             case 'Delete': {
                 this.deleteAdditionInfo(rowNode.data?.key);
             }
-            break;
+                break;
         }
     }
 
@@ -384,7 +384,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
     }
 
     private onRowDoubleClick(row: any) {
-        if(this.hasPermission('PMUBU')) {
+        if (this.hasPermission('PMUBU')) {
             this.editMode = true;
             this.openAttributeModal(row.data);
         }
@@ -769,8 +769,8 @@ export class UserManageComponent implements OnInit, OnDestroy {
                         return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
                     };
                     self.toggleGroups = [
-                        ...[...self.userTeams].sort(teamSortFn).map(team => ({_id: team._id, name: team.name, userCount: team.users?.length || 0, checked: true})),
-                        ...otherTeams.sort(teamSortFn).map(team => ({_id: team._id, name: team.name, userCount: team.users?.length || 0, checked: false}))
+                        ...[...self.userTeams].sort(teamSortFn).map(team => ({ _id: team._id, name: team.name, userCount: team.users?.length || 0, checked: true })),
+                        ...otherTeams.sort(teamSortFn).map(team => ({ _id: team._id, name: team.name, userCount: team.users?.length || 0, checked: false }))
                     ];
                 });
         }
@@ -778,8 +778,8 @@ export class UserManageComponent implements OnInit, OnDestroy {
 
     onGroupToggle(group: any, selected: boolean) {
         group.loading = true;
-        if(selected) {
-            this.commonService.put('user', `/usr/${this.user._id}/addToGroups`, { groups: [group._id] }).subscribe(
+        if (selected) {
+            this.commonService.put('user', `/usr/${this.user._id}/addToGroups`, { groups: [group._id], app: this.commonService.app._id }).subscribe(
                 () => {
                     this.ts.success('User has been added to group successfully');
                     this.getUserTeam();
@@ -791,10 +791,10 @@ export class UserManageComponent implements OnInit, OnDestroy {
             );
         } else {
             const foundGroup = this.allTeams.find(team => team._id === group._id);
-            if(!!foundGroup?.users?.length) {
+            if (!!foundGroup?.users?.length) {
                 foundGroup.users = foundGroup.users.filter(u => u !== this.user._id);
             }
-            this.commonService.put('user', `/usr/${this.user._id}/removeFromGroups`, { groups: [group._id] }).subscribe(
+            this.commonService.put('user', `/usr/${this.user._id}/removeFromGroups`, { groups: [group._id], app: this.commonService.app._id }).subscribe(
                 () => {
                     this.ts.success(`${group.name} Group has been removed for user ${this.user.basicDetails.name}`);
                     this.getUserTeam();
@@ -856,16 +856,16 @@ export class UserManageComponent implements OnInit, OnDestroy {
     }
 
     openAttributeModal(item?: any) {
-        const resetValue = this.editMode ? this.appService.cloneObject(item) : {type: 'String'};
+        const resetValue = this.editMode ? this.appService.cloneObject(item) : { type: 'String' };
         this.attributesForm.reset(resetValue);
         this.attributeModalRef = this.commonService.modal(this.attributeModal);
         this.attributeModalRef.result.then(
             close => {
                 if (close) {
-                    if(!this.user.attributes) {
+                    if (!this.user.attributes) {
                         this.user.attributes = {};
                     }
-                    const {key, ...rest} = this.attributesForm.value;
+                    const { key, ...rest } = this.attributesForm.value;
                     this.user.attributes[key] = this.appService.cloneObject(rest);
                     this.commonService.put('user', `/usr/${this.user._id}`, this.user).subscribe(
                         () => {
@@ -877,7 +877,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
                         },
                     );
                 } else if (this.editMode) {
-                    const {key, ...rest} = item;
+                    const { key, ...rest } = item;
                     this.user.attributes[key] = rest;
                 }
             },
