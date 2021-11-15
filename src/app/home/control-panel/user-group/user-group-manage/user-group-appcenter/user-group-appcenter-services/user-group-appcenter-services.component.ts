@@ -47,7 +47,6 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
             }
         };
         self.subscriptions['getServiceList'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
-            self.showLazyLoader = false;
             self.serviceList = res.map(data => {
                 data.role.workflowConfig = data.workflowConfig;
                 return data.role
@@ -55,6 +54,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
             if (self.serviceList.length > 0) {
                 self.selectDataService(self.serviceList[0]);
             }
+            self.showLazyLoader = false;
         }, err => {
             self.showLazyLoader = false;
             self.commonService.errorToast(err, 'Unable to fetch services, please try again later');
@@ -64,7 +64,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     selectDataService(srvc) {
         const self = this;
         self.selectedDS = srvc;
-        self.adminRole = self.roles.filter(r => r.id == 'ADMIN_' + self.selectedDS.entity).length == 1;
+        self.adminRole = self.roles.filter(r => r.id == 'ADMIN_' + self.selectedDS.entityName).length == 1;
     }
 
     hasManage(role: any) {
@@ -93,7 +93,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
 
     roleActive(role: any) {
         const self = this;
-        if (self.roles.find(r => r.id === role.id && r.entity === self.selectedDS.entity)) {
+        if (self.roles.find(r => r.id === role.id && r.entity === self.selectedDS.entityName)) {
             return true;
         }
         return false;
@@ -105,12 +105,12 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         if (target.checked) {
             self.roles.push({
                 id: role.id,
-                entity: self.selectedDS.entity,
-                app: self.selectedDS.app,
+                entity: self.selectedDS.entityName,
+                app: self.commonService.app._id,
                 type: 'appcenter'
             });
         } else {
-            const index = self.roles.findIndex(r => r.id === role.id && r.entity === self.selectedDS.entity);
+            const index = self.roles.findIndex(r => r.id === role.id && r.entity === self.selectedDS.entityName);
             self.roles.splice(index, 1);
         }
     }
@@ -119,13 +119,13 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         const self = this;
         if (val) {
             self.roles.push({
-                id: 'ADMIN_' + self.selectedDS.entity,
-                entity: self.selectedDS.entity,
-                app: self.selectedDS.app,
+                id: 'ADMIN_' + self.selectedDS.entityName,
+                entity: self.selectedDS.entityName,
+                app: self.commonService.app._id,
                 type: 'appcenter'
             });
         } else {
-            const index = self.roles.findIndex(r => r.id === 'ADMIN_' + self.selectedDS.entity && r.entity === self.selectedDS.entity);
+            const index = self.roles.findIndex(r => r.id === 'ADMIN_' + self.selectedDS.entityName && r.entity === self.selectedDS.entityName);
             if (index != -1) {
                 self.roles.splice(index, 1);
             }
@@ -155,7 +155,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
 
     get totalApprovals() {
         if (this.makerCheckerData) {
-            return this.makerCheckerData.steps.reduce((prev,curr)=>prev+curr.approvals,0);
+            return this.makerCheckerData.steps.reduce((prev, curr) => prev + curr.approvals, 0);
         } else {
             return 0;
         }
