@@ -371,7 +371,6 @@ export class UserGroupMembersComponent implements OnInit, OnDestroy {
         const self = this;
         self.userAddFilterModel = null;
         const options = {
-            filter: { isSuperAdmin: { $ne: true } },
             select: 'username,basicDetails.name',
             sort: 'username',
             count: 30,

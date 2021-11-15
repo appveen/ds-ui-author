@@ -147,8 +147,8 @@ export class UserComponent implements OnInit, OnDestroy {
             : [{ label: 'Local', value: 'local' }];
     }
 
-    createUserForm(){
-        this.userForm =  this.fb.group({
+    createUserForm() {
+        this.userForm = this.fb.group({
             userData: this.fb.group({
                 auth: this.fb.group({
                     authType: [!!this.validAuthTypes?.length ? this.validAuthTypes[0].value : 'local', [Validators.required]]
@@ -180,7 +180,7 @@ export class UserComponent implements OnInit, OnDestroy {
         }
         this.configureFormValidators();
     }
-    
+
     configureFormValidators() {
         const value = this.userForm.get('userData.auth.authType').value;
         this.userForm.get('userData.username').clearValidators();
@@ -307,10 +307,7 @@ export class UserComponent implements OnInit, OnDestroy {
                 }
                 if (!this.apiConfig.filter) {
                     this.apiConfig.filter = {
-                        bot: false,
-                        isSuperAdmin: {
-                            $ne: true
-                        }
+                        bot: false
                     };
                 }
                 const filterModel = this.agGrid?.api?.getFilterModel();
@@ -367,15 +364,15 @@ export class UserComponent implements OnInit, OnDestroy {
     }
 
     onGridAction(buttonName: string, rowNode: RowNode) {
-        switch(buttonName) {
+        switch (buttonName) {
             case 'View': {
                 this.onRowDoubleClick(rowNode);
             }
-            break;
+                break;
             case 'Remove': {
-                this.removeUsers({ userIds: [rowNode.data._id], single: true});
+                this.removeUsers({ userIds: [rowNode.data._id], single: true });
             }
-            break;
+                break;
         }
     }
 
@@ -425,10 +422,7 @@ export class UserComponent implements OnInit, OnDestroy {
         this.apiConfig.page = 1;
         this.apiConfig.noApp = true;
         this.apiConfig.filter = {
-          bot: false,
-          isSuperAdmin: {
-            $ne: true
-          }
+            bot: false
         };
         this.teamConfig.count = -1;
         this.teamConfig.filter.app = this.commonService.app;
@@ -443,7 +437,7 @@ export class UserComponent implements OnInit, OnDestroy {
     }
 
     get isAllUserChecked() {
-        if(!!this.agGrid?.api) {
+        if (!!this.agGrid?.api) {
             const selectedNodes = this.agGrid.api.getSelectedNodes();
             const visibleRowCount = this.agGrid.api.getInfiniteRowCount();
             return (!!selectedNodes.length && (visibleRowCount - selectedNodes.length < 2));
@@ -505,7 +499,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
     newUser() {
         this.showPassword = {};
-        if(this.validAuthTypes?.length === 1) {
+        if (this.validAuthTypes?.length === 1) {
             this.userForm.get('userData.auth.authType').disable();
         }
         this.newUserModalRef = this.commonService.modal(this.newUserModal, { centered: true, size: 'lg', windowClass: 'new-user-modal' });
@@ -711,22 +705,15 @@ export class UserComponent implements OnInit, OnDestroy {
     }
 
     search(event) {
-
         if (!this.searchForm.value.searchTerm || this.searchForm.value.searchTerm.trim() === '') {
             this.apiConfig.filter = {
-                bot: false,
-                isSuperAdmin: {
-                    $ne: true
-                }
+                bot: false
             };
         } else {
             this.apiConfig.filter = {
                 username: '/' + this.searchForm.value.searchTerm + '/',
                 'basicDetails.name': '/' + this.searchForm.value.searchTerm + '/',
-                bot: false,
-                isSuperAdmin: {
-                    $ne: true
-                }
+                bot: false
             };
         }
         this.agGrid.api.purgeInfiniteCache();
@@ -785,8 +772,8 @@ export class UserComponent implements OnInit, OnDestroy {
             });
     }
 
-    removeUsers(params?: {userIds?: Array<string>; single?: boolean}) {
-        if(!!params?.single) {
+    removeUsers(params?: { userIds?: Array<string>; single?: boolean }) {
+        if (!!params?.single) {
             this.userToRemove = !!params.userIds?.length ? params.userIds[0] : null;
         }
         this.removeSelectedModalRef = this.commonService.modal(this.removeSelectedModal);
