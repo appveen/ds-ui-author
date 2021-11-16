@@ -64,7 +64,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     selectDataService(srvc) {
         const self = this;
         self.selectedDS = srvc;
-        self.adminRole = self.roles.filter(r => r.id == 'ADMIN_' + self.selectedDS.entity).length == 1;
+        self.adminRole = self.roles.filter(r => r.id == 'ADMIN_' + self.selectedDS._id).length == 1;
     }
 
     hasManage(role: any) {
@@ -93,7 +93,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
 
     roleActive(role: any) {
         const self = this;
-        if (self.roles.find(r => r.id === role.id && r.entity === self.selectedDS.entity)) {
+        if (self.roles.find(r => r.id === role.id && r.entity === self.selectedDS._id)) {
             return true;
         }
         return false;
@@ -105,12 +105,12 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         if (target.checked) {
             self.roles.push({
                 id: role.id,
-                entity: self.selectedDS.entity,
+                entity: self.selectedDS._id,
                 app: self.selectedDS.app,
                 type: 'appcenter'
             });
         } else {
-            const index = self.roles.findIndex(r => r.id === role.id && r.entity === self.selectedDS.entity);
+            const index = self.roles.findIndex(r => r.id === role.id && r.entity === self.selectedDS._id);
             self.roles.splice(index, 1);
         }
     }
@@ -119,13 +119,13 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         const self = this;
         if (val) {
             self.roles.push({
-                id: 'ADMIN_' + self.selectedDS.entity,
-                entity: self.selectedDS.entity,
+                id: 'ADMIN_' + self.selectedDS._id,
+                entity: self.selectedDS._id,
                 app: self.selectedDS.app,
                 type: 'appcenter'
             });
         } else {
-            const index = self.roles.findIndex(r => r.id === 'ADMIN_' + self.selectedDS.entity && r.entity === self.selectedDS.entity);
+            const index = self.roles.findIndex(r => r.id === 'ADMIN_' + self.selectedDS._id && r.entity === self.selectedDS._id);
             if (index != -1) {
                 self.roles.splice(index, 1);
             }
