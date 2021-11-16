@@ -47,7 +47,6 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
             }
         };
         self.subscriptions['getServiceList'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
-            self.showLazyLoader = false;
             self.serviceList = res.map(data => {
                 data.role.workflowConfig = data.workflowConfig;
                 return data.role
@@ -55,6 +54,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
             if (self.serviceList.length > 0) {
                 self.selectDataService(self.serviceList[0]);
             }
+            self.showLazyLoader = false;
         }, err => {
             self.showLazyLoader = false;
             self.commonService.errorToast(err, 'Unable to fetch services, please try again later');
@@ -106,7 +106,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
             self.roles.push({
                 id: role.id,
                 entity: self.selectedDS._id,
-                app: self.selectedDS.app,
+                app: self.commonService.app._id,
                 type: 'appcenter'
             });
         } else {
@@ -121,7 +121,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
             self.roles.push({
                 id: 'ADMIN_' + self.selectedDS._id,
                 entity: self.selectedDS._id,
-                app: self.selectedDS.app,
+                app: self.commonService.app._id,
                 type: 'appcenter'
             });
         } else {
@@ -155,7 +155,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
 
     get totalApprovals() {
         if (this.makerCheckerData) {
-            return this.makerCheckerData.steps.reduce((prev,curr)=>prev+curr.approvals,0);
+            return this.makerCheckerData.steps.reduce((prev, curr) => prev + curr.approvals, 0);
         } else {
             return 0;
         }
