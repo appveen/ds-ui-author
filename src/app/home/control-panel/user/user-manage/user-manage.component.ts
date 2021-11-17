@@ -181,9 +181,16 @@ export class UserManageComponent implements OnInit, OnDestroy {
         });
         // resetPasswordForm form is for updating user password
         self.resetPasswordForm = self.fb.group({
-            password: [null, [Validators.required, Validators.minLength(8)]],
+            password: [null],
             cpassword: [null, [Validators.required]]
         });
+        if(self.commonService.userDetails.rbacPasswordComplexity){
+            self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*?~]).+$/)])
+        }
+        else{
+            self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8)])
+        }
+        self.resetPasswordForm.get('password').updateValueAndValidity();
         self.attributesForm = self.fb.group({
             key: ['', [Validators.required]],
             type: ['String', [Validators.required]],
@@ -447,7 +454,8 @@ export class UserManageComponent implements OnInit, OnDestroy {
         const self = this;
         return (
             (self.resetPasswordForm.get('password').dirty && self.resetPasswordForm.get('password').hasError('required')) ||
-            (self.resetPasswordForm.get('password').dirty && self.resetPasswordForm.get('password').hasError('minlength'))
+            (self.resetPasswordForm.get('password').dirty && self.resetPasswordForm.get('password').hasError('minlength')) ||
+            (self.resetPasswordForm.get('password').dirty && self.resetPasswordForm.get('password').hasError('pattern'))
         );
     }
 

@@ -54,20 +54,28 @@ export class UserManageComponent implements OnInit, OnDestroy {
     constructor(private commonService: CommonService,
         private fb: FormBuilder,
         private ts: ToastrService) {
+        const self = this;
         this.backToList = new EventEmitter();
         this.deleteUsr = new EventEmitter();
         this.activeTab = 1;
         this.showSerchbox = false;
-        this.resetPasswordForm = this.fb.group({
-            password: [null, [Validators.required, Validators.minLength(8)]],
+        self.resetPasswordForm = self.fb.group({
+            password: [null],
             cpassword: [null, [Validators.required]],
         });
+        if(self.commonService.userDetails.rbacPasswordComplexity){
+            self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*?~]).+$/)])
+        }
+        else{
+            self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8)])
+        }
+        self.resetPasswordForm.get('password').updateValueAndValidity();
         this.showPassword = {};
         this.user = {};
     }
 
     ngOnInit() {
-
+      
     }
 
     ngOnDestroy() {
@@ -81,8 +89,12 @@ export class UserManageComponent implements OnInit, OnDestroy {
     }
 
     get invalidPassword() {
-        return this.resetPasswordForm.get('password').dirty
-            && this.resetPasswordForm.get('password').hasError('required');
+        const self = this;
+        return self.resetPasswordForm.get('password').touched &&
+            self.resetPasswordForm.get('password').dirty
+            && (self.resetPasswordForm.get('password').hasError('required') ||
+                self.resetPasswordForm.get('password').hasError('pattern') ||
+                self.resetPasswordForm.get('password').hasError('minlength'));
     }
 
     get invalidCPassword() {

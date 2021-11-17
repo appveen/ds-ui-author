@@ -18,15 +18,18 @@
         <div class="grid-header my-2">
             <div class="button-group">
                 <ng-container *ngIf="hasPermission('PMUBD')">
-                    <div class="d-flex align-items-center" (click)="!isSelectAllDisabled && checkAllUser(!isAllUserChecked)">
-                        <odp-round-check [edit]="{status:!isSelectAllDisabled}" class="mx-2 pl-1" [checked]="isAllUserChecked"
-                            (checkedChange)="!isSelectAllDisabled && checkAllUser($event)">
+                    <div class="d-flex align-items-center"
+                        (click)="!isSelectAllDisabled && checkAllUser(!isAllUserChecked)">
+                        <odp-round-check [edit]="{status:!isSelectAllDisabled}" class="mx-2 pl-1"
+                            [checked]="isAllUserChecked" (checkedChange)="!isSelectAllDisabled && checkAllUser($event)">
                         </odp-round-check>
-                        <button type="button" class="btn btn-link text-accent px-0" [class.text-secondary]="isSelectAllDisabled" [disabled]="isSelectAllDisabled">
+                        <button type="button" class="btn btn-link text-accent px-0"
+                            [class.text-secondary]="isSelectAllDisabled" [disabled]="isSelectAllDisabled">
                             Select All
                         </button>
                     </div>
-                    <button *ngIf="selectedUsers.length>0" type="button" class="btn btn-link text-delete" (click)="removeUsers()">
+                    <button *ngIf="selectedUsers.length>0" type="button" class="btn btn-link text-delete"
+                        (click)="removeUsers()">
                         <span class="fa fa-trash mr-2"></span>
                         <span class="text">Remove Users ({{selectedUsers.length}})</span>
                     </button>
@@ -91,7 +94,8 @@
         <form class="d-flex flex-column p-4" [formGroup]="userForm" (ngSubmit)="!userInLocal ? addUser() : importUser()"
             odpFocusNext (trigger)="!userInLocal ? addUser() : importUser()">
             <div formGroupName="userData">
-                <div class="d-flex align-items-center w-100 mb-3" formGroupName="auth" *ngIf="validAuthTypes?.length > 1">
+                <div class="d-flex align-items-center w-100 mb-3" formGroupName="auth"
+                    *ngIf="validAuthTypes?.length > 1">
                     <div class="label-width text-secondary">Authentication Method</div>
                     <div class="value-width position-relative w-100">
                         <select class="form-control" formControlName="authType">
@@ -142,12 +146,15 @@
                             <input class="form-control password-input"
                                 [type]="showPassword['new'] ? 'text' : 'password'" placeholder="Password"
                                 formControlName="password"
-                                [ngClass]="{'is-invalid': invalidPassword || invalidPasswordLength}"
+                                [ngClass]="{'is-invalid': invalidPassword || invalidPasswordLength || invalidPasswordPattern }"
                                 autocomplete="new-password">
                             <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
                                 *ngIf="invalidPassword" ngbTooltip="This is a required field" placement="right"></span>
                             <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
                                 *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"
+                                placement="right"></span>
+                            <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
+                                *ngIf="invalidPasswordPattern" ngbTooltip="Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)"
                                 placement="right"></span>
                         </div>
                         <span class="fas eye-icon position-absolute hover"
