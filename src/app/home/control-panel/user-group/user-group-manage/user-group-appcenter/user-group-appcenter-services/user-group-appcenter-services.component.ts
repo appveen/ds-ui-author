@@ -47,9 +47,9 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
             }
         };
         self.subscriptions['getServiceList'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
-            self.serviceList = res.map(data => {
+            self.serviceList = res.filter(data => !!data.role).map(data => {
                 data.role.workflowConfig = data.workflowConfig;
-                return data.role
+                return data.role;
             });
             if (self.serviceList.length > 0) {
                 self.selectDataService(self.serviceList[0]);
