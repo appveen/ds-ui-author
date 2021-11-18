@@ -196,7 +196,12 @@ export class UserComponent implements OnInit, OnDestroy {
                 Validators.required,
                 Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')
             ]);
-            this.userForm.get('userData.password').setValidators([Validators.required, Validators.minLength(8)]);
+            if(this.commonService.userDetails.rbacPasswordComplexity){
+                this.userForm.get('userData.password').setValidators([Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*?~]).+$/)])
+            }
+            else{
+                this.userForm.get('userData.password').setValidators([Validators.required, Validators.minLength(8)]);
+            }
             this.userForm.get('userData.cpassword').setValidators([Validators.required, Validators.minLength(8)]);
         } else {
             this.userForm.get('userData.username').setValidators([Validators.required]);
@@ -476,6 +481,15 @@ export class UserComponent implements OnInit, OnDestroy {
 
     get invalidPasswordLength() {
         return this.userForm.get('userData.password').dirty && this.userForm.get('userData.password').hasError('minlength');
+    }
+
+    get invalidPasswordPattern() {
+        if(this.commonService.userDetails.rbacPasswordComplexity){
+            return this.userForm.get('userData.password').dirty && this.userForm.get('userData.password').hasError('pattern');
+        }
+        else{
+            return false;
+        }
     }
 
     get invalidCPassword() {

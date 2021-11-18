@@ -23,6 +23,8 @@ export interface UserDetails {
     rbacUserCloseWindowToLogout?: boolean;
     rbacBotTokenDuration?: number;
     rbacHbInterval?: number;
+    rbacPasswordLength?: number;
+    rbacPasswordComplexity?: boolean;
     privateFilter?: boolean;
     googleApiKey?: string;
     b2BAgentMaxFileSize?: string;

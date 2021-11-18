@@ -118,9 +118,16 @@ export class UserInfoComponent implements OnInit, OnDestroy {
             value: [null, [Validators.required]]
         });
         self.resetPasswordForm = self.fb.group({
-            password: [null, [Validators.required, Validators.minLength(8)]],
+            password: [null],
             cpassword: [null, [Validators.required]],
         });
+        if(self.commonService.userDetails.rbacPasswordComplexity){
+            self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*?~]).+$/)])
+        }
+        else{
+            self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8)])
+        }
+        self.resetPasswordForm.get('password').updateValueAndValidity();
         self.openDeleteModal = new EventEmitter();
         self.alertModal = {
             statusChange: false,
@@ -172,8 +179,11 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
     get invalidPassword() {
         const self = this;
-        return self.resetPasswordForm.get('password').touched && self.resetPasswordForm.get('password').dirty
-            && self.resetPasswordForm.get('password').hasError('required');
+        return self.resetPasswordForm.get('password').touched &&
+            self.resetPasswordForm.get('password').dirty
+            && (self.resetPasswordForm.get('password').hasError('required') ||
+                self.resetPasswordForm.get('password').hasError('pattern') ||
+                self.resetPasswordForm.get('password').hasError('minlength'));
     }
 
     get invalidCPassword() {

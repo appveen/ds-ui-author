@@ -39,8 +39,7 @@
           <button type="button" class="btn btn-link mr-3" (click)="openResetPassword()">Reset Password</button>
         </div>
         <div>
-          <button type="button" class="btn btn-link mr-3" (click)="deleteUser()"
-            [disabled]="user?.isSuperAdmin">Delete
+          <button type="button" class="btn btn-link mr-3" (click)="deleteUser()" [disabled]="user?.isSuperAdmin">Delete
             User</button>
         </div>
       </div>
@@ -56,7 +55,8 @@
             Groups</div>
         </div>
         <div class="text-muted">
-          <span *ngIf="user?.lastLogin">Last active on: {{user?.lastLogin|dateFormat: 'DD-MMM-YYYY, hh:mm:ss A, z': 'Etc/Zulu'}}</span>
+          <span *ngIf="user?.lastLogin">Last active on: {{user?.lastLogin|dateFormat: 'DD-MMM-YYYY, hh:mm:ss A, z':
+            'Etc/Zulu'}}</span>
           <span *ngIf="!user?.lastLogin">Last active on: N.A.</span>
         </div>
       </div>
@@ -97,6 +97,10 @@
         <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
           *ngIf="resetPasswordForm.get('password').dirty && resetPasswordForm.get('password').hasError('minlength')"
           [ngbTooltip]="'Password should be minimum 8 chars long'" ccontainer="body" placement="right"></span>
+        <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+          *ngIf="resetPasswordForm.get('password').dirty && resetPasswordForm.get('password').hasError('pattern')"
+          [ngbTooltip]="'Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)'"
+          ccontainer="body" placement="right"></span>
       </div>
       <div class="d-flex w-100 mb-3 position-relative">
         <label class="text-secondary modal-label" for="c-pwd">Confirm Password</label>
@@ -112,7 +116,8 @@
       </div>
     </form>
     <div class="d-flex align-items-end justify-content-end mt-5">
-      <button type="button" class="btn btn-min-width btn-dark" (click)="resetPassword()">Save</button>
+      <button type="button" class="btn btn-min-width btn-dark" (click)="resetPassword()"
+        [disabled]='resetPasswordForm.invalid'>Save</button>
     </div>
   </div>
 </ng-template>
