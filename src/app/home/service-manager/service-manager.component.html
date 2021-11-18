@@ -121,7 +121,8 @@
                 <span class="odp-edit icon mr-2"></span>
                 <span class="text">Edit</span>
               </div>
-              <div *ngIf="canEditService(service._id) && serviceList[i].type==='internal' && serviceList[i].status!='Stopped'"
+              <div
+                *ngIf="canEditService(service._id) && serviceList[i].type==='internal' && serviceList[i].status!='Stopped'"
                 class="button float-left w-50 pl-4 py-2 text-secondary hover ignore-outside" (click)="editService(i)"
                 id="_editEntity">
                 <span class="odp-edit icon mr-2"></span>
@@ -340,7 +341,7 @@
       </div>
       <p>
         <span class="text-muted">You are Cloning:&nbsp;</span>
-        <span class="font-weight-bold">{{cloneData.name}}</span>
+        <span class="font-weight-bold">{{cloneData?.name}}</span>
       </p>
       <div class="d-flex flex-column w-100">
         <div class="form-group">
