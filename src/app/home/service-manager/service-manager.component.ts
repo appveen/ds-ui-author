@@ -323,6 +323,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         }
         if (payload.expTab) {
             payload.wizard = self.cloneData.wizard;
+            payload.stateModel = self.cloneData.stateModel;
+            payload.workflowConfig = self.cloneData.workflowConfig;
         }
         if (payload.setTab) {
             payload.tags = self.cloneData.tags;
