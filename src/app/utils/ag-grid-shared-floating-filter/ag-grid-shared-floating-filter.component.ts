@@ -178,14 +178,14 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
   }
 
   onParentModelChanged(parentModel: any, filterChangedEvent?: FilterChangedEvent): void {
-    if (!parentModel || Object.keys(parentModel).length === 0) {
-      this.otherItemInput = null;
-      this.prepareList(true);
-      this.fromDate = null;
-      this.toDate = null;
-      this.dateFilterSet = false;
-      this.dateFilterType = 'equals';
-    }
+    // if (!parentModel || Object.keys(parentModel).length === 0) {
+    //   this.otherItemInput = null;
+    //   this.prepareList(true);
+    //   this.fromDate = null;
+    //   this.toDate = null;
+    //   this.dateFilterSet = false;
+    //   this.dateFilterType = 'equals';
+    // }
   }
 
   debounceInput(event) {
