@@ -70,6 +70,11 @@ export class StateModelComponent implements OnInit {
         return { 'state': state, 'checked': false }
       });
     }
+
+    this.form.get('stateModel').valueChanges.subscribe(selectedValue => {
+      this.form.get('stateModel').markAsDirty();
+    })
+    
   }
 
 
