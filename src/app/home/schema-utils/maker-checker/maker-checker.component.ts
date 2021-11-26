@@ -4,9 +4,8 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteModalConfig } from 'src/app/utils/interfaces/schemaBuilder';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
-import { positiveNumber } from '../../custom-validators/positive-number-validator';
 import { arrayNonEmpty } from '../../custom-validators/non-empty-array.validator';
-
+import { duplicateStepName } from '../../custom-validators/duplicate-step-name.validator';
 @Component({
   selector: 'odp-maker-checker',
   templateUrl: './maker-checker.component.html',
@@ -184,7 +183,7 @@ export class MakerCheckerComponent implements OnInit {
       return;
     }
     else if (status) {
-      self.makerCheckerData.get('steps').setValidators([arrayNonEmpty]);
+      self.makerCheckerData.get('steps').setValidators([arrayNonEmpty, duplicateStepName]);
       self.steps.controls.forEach(step => {
         step.get('name').setValidators([Validators.required]);
         step.get('name').updateValueAndValidity();
