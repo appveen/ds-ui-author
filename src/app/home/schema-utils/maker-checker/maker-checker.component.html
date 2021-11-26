@@ -108,13 +108,16 @@
                                                 <div class="d-flex align-items-center position-relative w-75">
                                                     <input type="text" odpAutoFocus class='form-control '
                                                         formControlName='name' (keyup.enter)="addStep()"
-                                                        [ngClass]="{'is-invalid': stepNameError(step)}"
+                                                        [ngClass]="{'is-invalid': stepNameError(step) || step.hasError('duplicateStepName')}"
                                                         [attr.disabled]="!makerCheckerEnabled? true : null">
                                                     <span
                                                         class="fas fa-question-circle text-danger stepname-error position-absolute"
                                                         *ngIf="stepNameError(step)" ngbTooltip="Step name is required"
                                                         placement="right"></span>
-
+                                                    <span
+                                                        class="fas fa-question-circle text-danger stepname-error position-absolute"
+                                                        *ngIf="step.hasError('duplicateStepName')"
+                                                        ngbTooltip="Duplicate step name" placement="right"></span>
                                                 </div>
                                             </ng-container>
                                             <ng-container *ngIf="!edit.status">
