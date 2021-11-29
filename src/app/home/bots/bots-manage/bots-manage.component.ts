@@ -166,7 +166,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
         self.madeAppAdmin = false;
         // userDetails form is for updating basic user info
         self.userDetails = self.fb.group({
-            name: ['', [Validators.required,Validators.maxLength(30),Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
+            name: ['', [Validators.required, Validators.maxLength(30), Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
             email: ['', [Validators.pattern(/[\w]+@[a-zA-Z0-9-]{2,}(\.[a-z]{2,})+/)]],
             phone: ['', [Validators.pattern(/^[-+]?\d*$/)]],
             username: ['', [Validators.required]]
@@ -347,7 +347,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
     updateDetails() {
         const self = this;
         if (self.userDetails.invalid) {
-           return
+            return
         } else {
             self.user.basicDetails.name = self.userDetails.get('name').value;
             self.user.basicDetails.phone = self.userDetails.get('phone').value;
@@ -356,7 +356,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
             if (self.subscriptions['userDtl']) {
                 self.subscriptions['userDtl'].unsubscribe();
             }
-            self.subscriptions['userDtl'] = self.commonService.put('user', '/usr/' + self.user._id, self.user)
+            self.subscriptions['userDtl'] = self.commonService.put('user', '/usr/' + self.user._id + '/?app=' + this.commonService.app._id, self.user)
                 .subscribe(res => {
                     self.editDetails = false;
                     self.ts.success('User details updated successfully');
@@ -564,7 +564,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
                 delete payload.key;
                 self.user.attributes[detailKey] = payload;
             });
-            self.commonService.put('user', `/usr/${self.user._id}`, self.user)
+            self.commonService.put('user', `/usr/${self.user._id}/?app=` + this.commonService.app._id, self.user)
                 .subscribe((res) => {
                     self.user = res;
                     self.ts.success('Custom details updated successfully');
@@ -799,7 +799,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
                 const key = self.editAttribute.key;
                 delete self.editAttribute.key;
                 self.user.attributes[key] = self.appService.cloneObject(self.editAttribute);
-                self.commonService.put('user', `/usr/${self.user._id}`, self.user)
+                self.commonService.put('user', `/usr/${self.user._id}/?app=` + this.commonService.app._id, self.user)
                     .subscribe((res) => {
                         self.user = res;
                         self.ts.success('Custom Details Saved Successfully');
@@ -833,7 +833,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
         if (data) {
             if (typeof data.attrName !== 'undefined') {
                 delete self.user.attributes[data.attrName];
-                self.commonService.put('user', '/usr/' + self.user._id, self.user)
+                self.commonService.put('user', '/usr/' + self.user._id + '/?app=' + this.commonService.app._id, self.user)
                     .subscribe((res) => {
                         self.user = res;
                         self.initConfig();

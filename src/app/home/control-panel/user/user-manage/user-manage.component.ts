@@ -184,10 +184,10 @@ export class UserManageComponent implements OnInit, OnDestroy {
             password: [null],
             cpassword: [null, [Validators.required]]
         });
-        if(self.commonService.userDetails.rbacPasswordComplexity){
+        if (self.commonService.userDetails.rbacPasswordComplexity) {
             self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*?~]).+$/)])
         }
-        else{
+        else {
             self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8)])
         }
         self.resetPasswordForm.get('password').updateValueAndValidity();
@@ -532,7 +532,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
             if (self.subscriptions['userDtl']) {
                 self.subscriptions['userDtl'].unsubscribe();
             }
-            self.subscriptions['userDtl'] = self.commonService.put('user', '/usr/' + self.user._id, self.user).subscribe(
+            self.subscriptions['userDtl'] = self.commonService.put('user', '/usr/' + self.user._id + '/?app=' + this.commonService.app._id, self.user).subscribe(
                 res => {
                     self.editDetails = false;
                     if (res.basicDetails.name) {
@@ -651,7 +651,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
         if (data) {
             if (typeof data.attrName !== 'undefined') {
                 delete self.user.attributes[data.attrName];
-                self.commonService.put('user', '/usr/' + self.user._id, self.user).subscribe(
+                self.commonService.put('user', '/usr/' + self.user._id + '/?app=' + this.commonService.app._id, self.user).subscribe(
                     () => {
                         self.ts.success('Attribute deleted successfully');
                         self.rowData = [...this.userAttributeList];
@@ -875,7 +875,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
                     }
                     const { key, ...rest } = this.attributesForm.value;
                     this.user.attributes[key] = this.appService.cloneObject(rest);
-                    this.commonService.put('user', `/usr/${this.user._id}`, this.user).subscribe(
+                    this.commonService.put('user', `/usr/${this.user._id}?app=` + this.commonService.app._id, this.user).subscribe(
                         () => {
                             this.rowData = [...this.userAttributeList];
                             this.ts.success('Custom Details Saved Successfully');
