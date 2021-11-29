@@ -45,7 +45,7 @@ export class ManageBotGroupComponent implements OnInit {
     const self = this;
     const teamIds = [data.teamId];
     self.showLazyLoader = true;
-    self.commonService.put('user', `/usr/${self.selectedBot._id}/removeFromGroups`, { groups: teamIds })
+    self.commonService.put('user', `/usr/${self.selectedBot._id}/removeFromGroups?app=${this.commonService.app._id}`, { groups: teamIds })
       .subscribe(() => {
         self.showLazyLoader = false
         self.dataChange.emit();

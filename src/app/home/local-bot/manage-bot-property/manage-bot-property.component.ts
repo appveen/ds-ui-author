@@ -135,20 +135,20 @@ export class ManageBotPropertyComponent implements OnInit {
         },
         ...(this.hasPermission('PMBBU')
           ? [
-              {
-                headerName: 'Actions',
-                pinned: 'right',
-                cellRenderer: 'actionCellRenderer',
-                sortable: false,
-                filter: false,
-                minWidth: 94,
-                maxWidth: 94,
-                refData: {
-                  actionsButtons: 'Edit,Delete',
-                  actionCallbackFunction: 'onGridAction'
-                }
+            {
+              headerName: 'Actions',
+              pinned: 'right',
+              cellRenderer: 'actionCellRenderer',
+              sortable: false,
+              filter: false,
+              minWidth: 94,
+              maxWidth: 94,
+              refData: {
+                actionsButtons: 'Edit,Delete',
+                actionCallbackFunction: 'onGridAction'
               }
-            ]
+            }
+          ]
           : [])
       ],
       context: this,
@@ -160,7 +160,7 @@ export class ManageBotPropertyComponent implements OnInit {
   }
 
   gridTypesMapper(data: any[]) {
-    return this.types.map(type => ({label: type.label, value: type.value}));
+    return this.types.map(type => ({ label: type.label, value: type.value }));
   }
 
   private onGridReady(event: GridReadyEvent) {
@@ -215,19 +215,19 @@ export class ManageBotPropertyComponent implements OnInit {
       this.filtering = false;
     }, 1000);
   }
-  
+
   get userAttributes() {
     const self = this;
     return (self.additionalDetails.get('extraInfo') as FormArray).controls;
   }
-  
+
 
   // To add new additional information for user
   addNewDetail() {
     const self = this;
     const newData = self.getAttributesFormGroup();
     (self.additionalDetails.get('extraInfo') as FormArray).push(newData);
-  
+
   }
 
   getAttributesFormGroup() {
@@ -297,7 +297,7 @@ export class ManageBotPropertyComponent implements OnInit {
       });
       self.showLazyLoader = true;
 
-      self.commonService.put('user', `/usr/${self.selectedBot._id}`, self.selectedBot)
+      self.commonService.put('user', `/usr/${self.selectedBot._id}?app=${this.commonService.app._id}`, self.selectedBot)
         .subscribe(() => {
           self.showLazyLoader = false;
 
@@ -319,7 +319,7 @@ export class ManageBotPropertyComponent implements OnInit {
         self.showLazyLoader = true;
 
         delete self.selectedBot.attributes[data.attrName];
-        self.commonService.put('user', '/usr/' + self.selectedBot._id, self.selectedBot)
+        self.commonService.put('user', '/usr/' + self.selectedBot._id + '?app=' + this.commonService.app._id, self.selectedBot)
           .subscribe((res) => {
             self.showLazyLoader = false;
 
@@ -340,7 +340,7 @@ export class ManageBotPropertyComponent implements OnInit {
   removeField(index) {
     const self = this;
     (self.additionalDetails.get('extraInfo') as FormArray).removeAt(index);
-   
+
   }
   private resetAdditionDetailForm() {
     const self = this;
@@ -351,7 +351,7 @@ export class ManageBotPropertyComponent implements OnInit {
   }
   openEditAttributeModal(item) {
     const self = this;
-    if(!self.editAttributeForm) {
+    if (!self.editAttributeForm) {
       self.editAttributeForm = this.getAttributesFormGroup();
     }
     self.editAttributeForm.patchValue(self.appService.cloneObject(item));
@@ -363,10 +363,10 @@ export class ManageBotPropertyComponent implements OnInit {
         const key = self.editAttributeForm.get('key').value;
         self.showLazyLoader = true;
         self.selectedBot.attributes[key] = self.editAttributeForm.value;
-        self.commonService.put('user', `/usr/${self.selectedBot._id}`, self.selectedBot)
+        self.commonService.put('user', `/usr/${self.selectedBot._id}?app=${this.commonService.app._id}`, self.selectedBot)
           .subscribe((res) => {
             self.showLazyLoader = false;
-             self.dataChange.emit(res);
+            self.dataChange.emit(res);
             self.ts.success('Custom Details Saved Successfully');
             self.editAttributeForm.reset();
           }, (err) => {
