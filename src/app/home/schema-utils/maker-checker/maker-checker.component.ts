@@ -154,6 +154,7 @@ export class MakerCheckerComponent implements OnInit {
       self.steps.push(step);
     })
     self.deleteSteps = new Array(self.steps.length).fill(false);
+    self.deleteAllSteps = false;
   }
 
   toggleDeleteAllSteps(val) {
