@@ -129,7 +129,6 @@ export class MakerCheckerComponent implements OnInit {
     const self = this;
     self.steps.push(self.newStep());
     self.deleteSteps.push(false);
-
   }
 
   deleteStep(i: number) {
@@ -147,12 +146,15 @@ export class MakerCheckerComponent implements OnInit {
     const self = this;
     const remainingSteps = self.deleteSteps.reduce(function (a, e, i) {
       if (e === false)
-        a.push(self.steps.at(i).value);
+        a.push(self.steps.at(i));
       return a;
     }, []);
     self.steps.clear();
-    self.steps.setValue(remainingSteps);
+    remainingSteps.forEach((step) => {
+      self.steps.push(step);
+    })
     self.deleteSteps = new Array(self.steps.length).fill(false);
+    self.deleteAllSteps = false;
   }
 
   toggleDeleteAllSteps(val) {
