@@ -320,11 +320,18 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         }
         if (payload.rolTab) {
             payload.role = self.cloneData.role;
+            if (payload.role && payload.role.roles) {
+                this.appService.fixPermissionIdsInRoles(payload.role.roles);
+                payload.role.fields = this.appService.getDefaultFields(payload.role.roles.map(e => e.id), payload.definition, {});
+            }
         }
         if (payload.expTab) {
             payload.wizard = self.cloneData.wizard;
             payload.stateModel = self.cloneData.stateModel;
             payload.workflowConfig = self.cloneData.workflowConfig;
+            if (payload.workflowConfig && payload.workflowConfig.makerChecker) {
+                this.appService.fixPermissionIdsInWF(payload.workflowConfig.makerChecker);
+            }
         }
         if (payload.setTab) {
             payload.tags = self.cloneData.tags;

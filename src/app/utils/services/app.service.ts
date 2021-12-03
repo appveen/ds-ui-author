@@ -648,4 +648,18 @@ export class AppService {
             });
         }
     }
+
+    fixPermissionIdsInRoles(roles) {
+        roles.forEach((role) => {
+            role.id = 'P' + this.rand(10);
+        });
+    }
+
+    fixPermissionIdsInWF(makerChecker) {
+        if (makerChecker && makerChecker[0] && makerChecker[0].steps) {
+            makerChecker[0].steps.forEach((step) => {
+                step.id = 'C' + this.rand(10);
+            });
+        }
+    }
 }
