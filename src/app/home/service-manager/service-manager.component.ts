@@ -329,8 +329,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             payload.wizard = self.cloneData.wizard;
             payload.stateModel = self.cloneData.stateModel;
             payload.workflowConfig = self.cloneData.workflowConfig;
-            if (payload.workflowConfig && payload.workflowConfig.makerChecker) {
-                this.appService.fixPermissionIdsInWF(payload.workflowConfig.makerChecker);
+            if (payload.workflowConfig && payload.workflowConfig.makerCheckers) {
+                this.appService.fixPermissionIdsInWF(payload.workflowConfig.makerCheckers);
             }
         }
         if (payload.setTab) {
