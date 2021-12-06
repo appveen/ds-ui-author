@@ -161,28 +161,7 @@ export class AppService {
     getDefaultRoles(): Array<RoleModel> {
         const mp = 'P' + this.rand(10);
         const vp = 'P' + this.rand(10);
-        const srp = 'P' + this.rand(10);
         return [
-            {
-                skipReviewRole: true,
-                id: srp,
-                name: 'Skip Review',
-                operations: [
-                    {
-                        method: 'SKIP_REVIEW'
-                    },
-                    {
-                        method: 'POST'
-                    },
-                    {
-                        method: 'PUT'
-                    },
-                    {
-                        method: 'DELETE'
-                    },
-                ],
-                description: 'This role entitles an authorized user to create, update or delete a record and without any approval'
-            },
             {
                 manageRole: true,
                 id: mp,
