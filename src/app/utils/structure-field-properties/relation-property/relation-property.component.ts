@@ -405,7 +405,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
       } else if (element.type !== 'Array') {
         if (parentKey) {
           ele.properties.name = parentKey + '.' + element.properties.name;
-          ele.properties.dataPath = element.properties.name;
+          ele.properties.dataPath = element.properties.dataPath;
         }
         this.attributeList.push(ele);
       }
