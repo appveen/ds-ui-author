@@ -41,7 +41,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
 
         const options: GetOptions = {
             count: -1,
-            select: 'role,workflowConfig',
+            select: 'role,workflowConfig,name',
             filter: {
                 app: self.commonService.app._id
             }
@@ -49,6 +49,7 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         self.subscriptions['getServiceList'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
             self.serviceList = res.filter(data => !!data.role).map(data => {
                 data.role.workflowConfig = data.workflowConfig;
+                data.role.name = data.name;
                 return data.role;
             });
             if (self.serviceList.length > 0) {

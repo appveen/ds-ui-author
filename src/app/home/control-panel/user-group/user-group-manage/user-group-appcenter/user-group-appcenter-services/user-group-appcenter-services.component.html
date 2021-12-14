@@ -13,7 +13,7 @@
       <div class='ds-name py-2 px-4 hover' *ngFor="let srvc of serviceList; let srvcIndex = index"
         (click)='selectDataService(srvc)' [ngClass]='{"text-accent alert-accent": selectedDS == srvc}'>
         <span>
-          {{ srvc.entityName }}
+          {{ srvc.name }}
         </span>
       </div>
     </div>
