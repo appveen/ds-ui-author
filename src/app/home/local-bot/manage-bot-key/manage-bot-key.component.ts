@@ -23,7 +23,7 @@ export class ManageBotKeyComponent implements OnInit {
   @Output() dataChange: EventEmitter<any>;
   openDeleteBotKeyModal: EventEmitter<any>;
   editKeyModalRef: NgbModalRef
-  showLazyLoader:boolean;
+  showLazyLoader: boolean;
   keyForm: FormGroup
   gridOptions: GridOptions;
   frameworkComponents: any;
@@ -42,7 +42,7 @@ export class ManageBotKeyComponent implements OnInit {
       label: [null, [Validators.required, Validators.maxLength(30), Validators.pattern('[a-zA-Z0-9\\s-_]+')]],
       expires: [null, [Validators.required, Validators.min(1)]]
     });
-    self.openDeleteBotKeyModal =new EventEmitter();
+    self.openDeleteBotKeyModal = new EventEmitter();
   }
 
   ngOnInit() {
@@ -101,20 +101,20 @@ export class ManageBotKeyComponent implements OnInit {
         },
         ...(this.hasPermission('PMBBU') || this.hasPermission('PMBA')
           ? [
-              {
-                headerName: 'Actions',
-                pinned: 'right',
-                cellRenderer: 'actionCellRenderer',
-                sortable: false,
-                filter: false,
-                minWidth: (this.hasPermission('PMBBU') ? 94 : 0) + (this.hasPermission('PMBA') ? 164 : 0),
-                maxWidth: (this.hasPermission('PMBBU') ? 94 : 0) + (this.hasPermission('PMBA') ? 164 : 0),
-                refData: {
-                  actionButtonsMapperFn: 'actionButtonsMapperFn',
-                  actionCallbackFunction: 'onGridAction'
-                }
+            {
+              headerName: 'Actions',
+              pinned: 'right',
+              cellRenderer: 'actionCellRenderer',
+              sortable: false,
+              filter: false,
+              minWidth: (this.hasPermission('PMBBU') ? 94 : 0) + (this.hasPermission('PMBA') ? 164 : 0),
+              maxWidth: (this.hasPermission('PMBBU') ? 94 : 0) + (this.hasPermission('PMBA') ? 164 : 0),
+              refData: {
+                actionButtonsMapperFn: 'actionButtonsMapperFn',
+                actionCallbackFunction: 'onGridAction'
               }
-            ]
+            }
+          ]
           : [])
       ],
       context: this,
@@ -155,13 +155,13 @@ export class ManageBotKeyComponent implements OnInit {
     }
   }
 
-  actionButtonsMapperFn(data:any) {
+  actionButtonsMapperFn(data: any) {
     const buttons = [];
-    if(this.hasPermission('PMBBU')) {
+    if (this.hasPermission('PMBBU')) {
       buttons.push('Edit');
       buttons.push('Delete');
     }
-    if(this.hasPermission('PMBA')) {
+    if (this.hasPermission('PMBA')) {
       buttons.push('End Session');
       buttons.push(data.isActive ? 'Deactivate' : 'Activate')
     }
@@ -214,7 +214,7 @@ export class ManageBotKeyComponent implements OnInit {
         payload.keyId = key._id;
         self.showLazyLoader = true;
 
-        self.commonService.put('user', `/bot/botKey/${self.selectedBot._id}`, payload)
+        self.commonService.put('user', `/bot/botKey/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
           .subscribe((res) => {
             self.showLazyLoader = false;
             self.selectedBot = res;
@@ -252,7 +252,7 @@ export class ManageBotKeyComponent implements OnInit {
     const payload = { keyId: key._id }
     self.showLazyLoader = true;
 
-    self.commonService.delete('user', `/bot/botKey/session/${self.selectedBot._id}`, payload)
+    self.commonService.delete('user', `/bot/botKey/session/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
       .subscribe((res) => {
         self.showLazyLoader = false;
         self.ts.success("Session ended");
@@ -265,11 +265,11 @@ export class ManageBotKeyComponent implements OnInit {
   deactivateKey(key) {
     const self = this;
     const payload = key
-    payload.isActive = !key.isActive ;
+    payload.isActive = !key.isActive;
     payload.keyId = key._id;
     self.showLazyLoader = true;
 
-    self.commonService.put('user', `/bot/botKey/${self.selectedBot._id}`, payload)
+    self.commonService.put('user', `/bot/botKey/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
       .subscribe((res) => {
         self.showLazyLoader = false;
         self.selectedBot = res;
@@ -293,20 +293,20 @@ export class ManageBotKeyComponent implements OnInit {
 
 
   closeDeleteBotKeyModal(data) {
-    if(data){
-    const self = this;
-    const payload = { keyId: data._id }
-    self.showLazyLoader = true;
+    if (data) {
+      const self = this;
+      const payload = { keyId: data._id }
+      self.showLazyLoader = true;
 
-    self.commonService.delete('user', `/bot/botKey/${self.selectedBot._id}`, payload)
-      .subscribe((res) => {
-        self.showLazyLoader = false;
-        self.selectedBot = res;
-        self.dataChange.emit(res);
-      }, err => {
-        self.showLazyLoader = false;
-        self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
-      });
+      self.commonService.delete('user', `/bot/botKey/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
+        .subscribe((res) => {
+          self.showLazyLoader = false;
+          self.selectedBot = res;
+          self.dataChange.emit(res);
+        }, err => {
+          self.showLazyLoader = false;
+          self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
+        });
     }
   }
   hasPermission(type: string): boolean {

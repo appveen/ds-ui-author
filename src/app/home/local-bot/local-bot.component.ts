@@ -267,7 +267,7 @@ export class LocalBotComponent implements OnInit {
         payload.expires = payload.expires * 1440;
         self.showLazyLoader = true;
 
-        self.commonService.post('user', `/bot/botKey/${self.selectedBot._id}`, payload)
+        self.commonService.post('user', `/bot/botKey/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
           .subscribe((res) => {
             self.showLazyLoader = false;
             self.keyForm.reset();
@@ -581,7 +581,7 @@ export class LocalBotComponent implements OnInit {
   toggleStatus(event) {
     const self = this;
     self.showLazyLoader = true;
-    self.commonService.put('user', `/bot/${self.selectedBot._id}/status/${self.selectedBot.isActive ? 'disable' : 'enable'}`).subscribe((res) => {
+    self.commonService.put('user', `/bot/${self.selectedBot._id}/status/${self.selectedBot.isActive ? 'disable' : 'enable'}?app=${this.commonService.app._id}`).subscribe((res) => {
       self.selectedBot = res;
       const index = self.botRecords.findIndex(e => e._id === res._id)
       self.botRecords[index] = res;
