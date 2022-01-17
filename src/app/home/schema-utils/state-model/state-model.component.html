@@ -4,162 +4,176 @@
         <strong>State Model</strong>
     </div>
 
-    <p class='text-secondary mb-4 state-model-desc'>
-        Per data service you will be able to select one attribute to configure a state model machine.The first state
-        will be the starting state for the state model machine.
-    </p>
+    <ng-container *ngIf="!isSchemaFree">
+        <p class='text-secondary mb-4 state-model-desc'>
+            Per data service you will be able to select one attribute to configure a state model machine.The first state
+            will be the starting state for the state model machine.
+        </p>
 
-    <section *ngIf="!stateModelEnabled" [formGroup]="form" class='create-state-model'>
-        <div class="d-flex justify-content-start">
-            <div id='select-state-model' formGroupName="stateModel" odpClickOutside (outside)='searchTerm = "" '
-                class='position-relative'>
-                <input id="typeahead-basic" type="text" class="form-control"
-                    [attr.disabled]="!edit.status ? true : null" [ngbTypeahead]="search"
-                    (focus)="focus$.next($any($event).target.value)" [resultTemplate]="rt"
-                    [inputFormatter]="inputFormatter" (selectItem)="selectAttribute($event.item)"
-                    placeholder="Choose existing attribute or create one..." #instance="ngbTypeahead" />
-            </div>
-            <button [disabled]='!edit.status' id='configureStateModel' (click)='enableStateModel()'>
-                Configure State Model
-            </button>
-        </div>
-        <div id='stateModelInfo' *ngIf="!searchTerm">
-            <span>
-                *Attributes with List of Values only
-            </span>
-        </div>
-        <ng-template #rt let-r="result" let-t="term">
-            <ng-container *ngIf="r.newAttr">
-                <div class="d-inline-flex">
-                    <span class='border-circle mr-2'>
-                        +
-                    </span>
-                    <span>Add &nbsp;</span>
-                    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+        <section *ngIf="!stateModelEnabled" [formGroup]="form" class='create-state-model'>
+            <div class="d-flex justify-content-start">
+                <div id='select-state-model' formGroupName="stateModel" odpClickOutside (outside)='searchTerm = "" '
+                    class='position-relative'>
+                    <input id="typeahead-basic" type="text" class="form-control"
+                        [attr.disabled]="!edit.status ? true : null" [ngbTypeahead]="search"
+                        (focus)="focus$.next($any($event).target.value)" [resultTemplate]="rt"
+                        [inputFormatter]="inputFormatter" (selectItem)="selectAttribute($event.item)"
+                        placeholder="Choose existing attribute or create one..." #instance="ngbTypeahead" />
                 </div>
-                <div class="d-inline-flex">
-                    <odp-field-type [field]="{type:r.type,properties:{}}"></odp-field-type>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="!r.newAttr">
-                <ngb-highlight [result]="r.properties.name" [term]="t"></ngb-highlight>
-            </ng-container>
-        </ng-template>
-        <div class='meme position-absolute text-center'>
-            <img src="./assets/img/state_model_meme.png" alt="Meme">
-            <h4>
-                Hmm...That box must be important...
-            </h4>
-        </div>
-    </section>
-
-    <section *ngIf="stateModelEnabled">
-        <div class="d-flex justify-content-between">
-            <div id='view-state-model'>
-                <input [attr.disabled]="true" type="text" class="form-control" [value]='StateModelAttrName'>
+                <button [disabled]='!edit.status' id='configureStateModel' (click)='enableStateModel()'>
+                    Configure State Model
+                </button>
             </div>
-            <div *ngIf="edit.status" class='mt-2'>
-                <span (click)="disableStateModel()" class='btn btn-link'>
-                    Delete State Model
+            <div id='stateModelInfo' *ngIf="!searchTerm">
+                <span>
+                    *Attributes with List of Values only
                 </span>
             </div>
-        </div>
+            <ng-template #rt let-r="result" let-t="term">
+                <ng-container *ngIf="r.newAttr">
+                    <div class="d-inline-flex">
+                        <span class='border-circle mr-2'>
+                            +
+                        </span>
+                        <span>Add &nbsp;</span>
+                        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                    </div>
+                    <div class="d-inline-flex">
+                        <odp-field-type [field]="{type:r.type,properties:{}}"></odp-field-type>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="!r.newAttr">
+                    <ngb-highlight [result]="r.properties.name" [term]="t"></ngb-highlight>
+                </ng-container>
+            </ng-template>
+            <div class='meme position-absolute text-center'>
+                <img src="./assets/img/state_model_meme.png" alt="Meme">
+                <h4>
+                    Hmm...That box must be important...
+                </h4>
+            </div>
+        </section>
 
-        <div class='mt-2 p-3 bg-white new-state-section'>
-
-            <div *ngIf="edit.status" class='d-flex justify-content-start'>
-                <div class='w-50'>
-                    <input #newStateBox type="text" class="form-control" id='new-state-input'
-                        placeholder="Add State Value here"
-                        (keyup.enter)='addNewState(newStateBox.value); newStateBox.value=null;'>
+        <section *ngIf="stateModelEnabled">
+            <div class="d-flex justify-content-between">
+                <div id='view-state-model'>
+                    <input [attr.disabled]="true" type="text" class="form-control" [value]='StateModelAttrName'>
                 </div>
-
-                <div id='add-state' (click)='addNewState(newStateBox.value); newStateBox.value=null;'>
-                    <span class="fa fa-plus hover"></span>
+                <div *ngIf="edit.status" class='mt-2'>
+                    <span (click)="disableStateModel()" class='btn btn-link'>
+                        Delete State Model
+                    </span>
                 </div>
             </div>
 
-            <div class='row mt-2' *ngIf="edit.status" [hidden]='allStates.length == 0'>
+            <div class='mt-2 p-3 bg-white new-state-section'>
 
-                <div class="col-6">
-                    <span *ngIf="deleteStateCount>0" class='hover btn btn-link p-0' (click)='deleteStates()'>
-                        Delete selected states ({{deleteStateCount}})
-                    </span>
-                </div>
-                <div class="col-6 text-right">
-                    <span class='hover btn btn-link' (click)='deleteAllNextStates()'>
-                        Clear All Next States
-                    </span>
-                </div>
-            </div>
-
-            <div class='mt-2'>
-                <div class='row mb-2' [hidden]='allStates.length == 0'>
-                    <div class='col-3'>
-                        <strong>State</strong>
+                <div *ngIf="edit.status" class='d-flex justify-content-start'>
+                    <div class='w-50'>
+                        <input #newStateBox type="text" class="form-control" id='new-state-input'
+                            placeholder="Add State Value here"
+                            (keyup.enter)='addNewState(newStateBox.value); newStateBox.value=null;'>
                     </div>
-                    <div class='col-9'>
-                        <strong>Add Next State</strong>
 
+                    <div id='add-state' (click)='addNewState(newStateBox.value); newStateBox.value=null;'>
+                        <span class="fa fa-plus hover"></span>
                     </div>
                 </div>
 
-                <div class='state-model-config' [sortablejs]="stateModelData"
-                    [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
-                    <div class='row align-items-center' *ngFor='let stateData of stateModelData; let i = index '>
-                        <div class='col-3' [ngClass]="{'mb-2': edit.status }">
-                            <div *ngIf="edit.status" class='d-inline-block'>
-                                <i class="fa fa-bars text-muted hover mr-2 fs-16"></i>
-                            </div>
-                            <div class='d-inline-block'>
-                                <input *ngIf="edit.status" type="checkbox" class='mb-0' [(ngModel)]='stateData.checked'>
-                            </div>
-                            <div class='state-name d-inline-block ' [ngbTooltip]="stateData.state">{{stateData.state}}
-                            </div>
-                            <div *ngIf="edit.status"
-                                class='fa hover fa-times text-muted pt-1 float-right d-inline-block'
-                                (click)='deleteStates(stateData.state)'>
-                            </div>
+                <div class='row mt-2' *ngIf="edit.status" [hidden]='allStates.length == 0'>
+
+                    <div class="col-6">
+                        <span *ngIf="deleteStateCount>0" class='hover btn btn-link p-0' (click)='deleteStates()'>
+                            Delete selected states ({{deleteStateCount}})
+                        </span>
+                    </div>
+                    <div class="col-6 text-right">
+                        <span class='hover btn btn-link' (click)='deleteAllNextStates()'>
+                            Clear All Next States
+                        </span>
+                    </div>
+                </div>
+
+                <div class='mt-2'>
+                    <div class='row mb-2' [hidden]='allStates.length == 0'>
+                        <div class='col-3'>
+                            <strong>State</strong>
                         </div>
-                        <div class='col-9' [ngClass]="{'mb-2': !edit.status }">
-                            <mat-form-field class="example-chip-list w-100" appearance="fill">
-                                <mat-chip-list #chipList aria-label="Next State selection" [disabled]='!edit.status'>
-                                    <mat-chip *ngFor="let nextState of nextStates(stateData.state)"
-                                        [selectable]="selectable" [removable]="removable"
-                                        (removed)="removeNextState(nextState, stateData.state)">
-                                        {{nextState}}
-                                        <mat-icon matChipRemove *ngIf="removable">
-                                            <span class='fa fa-times'></span>
-                                        </mat-icon>
-                                    </mat-chip>
-                                    <input placeholder="{{ edit.status ? 'Next State...': '' }}" #chipInput
-                                        [formControl]="stateCtrl" [matChipInputFor]="chipList" [matAutocomplete]="auto"
-                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                        [matChipInputAddOnBlur]="addOnBlur"
-                                        (matChipInputTokenEnd)="addNewNextState($event, stateData.state , chipInput, auto)">
-                                </mat-chip-list>
+                        <div class='col-9'>
+                            <strong>Add Next State</strong>
 
-                                <mat-autocomplete #auto="matAutocomplete"
-                                    (optionSelected)="selectedNextState($event, chipInput, i)">
-                                    <mat-option
-                                        *ngFor="let nextState of autoCompleteNextStates(stateData.state) | filterNextState: chipInput.value"
-                                        [value]="nextState">
-                                        {{nextState}}
-                                    </mat-option>
-                                </mat-autocomplete>
-
-                            </mat-form-field>
-
-                            <hr *ngIf="!edit.status" class='m-0 p-0'>
                         </div>
                     </div>
 
+                    <div class='state-model-config' [sortablejs]="stateModelData"
+                        [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
+                        <div class='row align-items-center' *ngFor='let stateData of stateModelData; let i = index '>
+                            <div class='col-3' [ngClass]="{'mb-2': edit.status }">
+                                <div *ngIf="edit.status" class='d-inline-block'>
+                                    <i class="fa fa-bars text-muted hover mr-2 fs-16"></i>
+                                </div>
+                                <div class='d-inline-block'>
+                                    <input *ngIf="edit.status" type="checkbox" class='mb-0'
+                                        [(ngModel)]='stateData.checked'>
+                                </div>
+                                <div class='state-name d-inline-block ' [ngbTooltip]="stateData.state">
+                                    {{stateData.state}}
+                                </div>
+                                <div *ngIf="edit.status"
+                                    class='fa hover fa-times text-muted pt-1 float-right d-inline-block'
+                                    (click)='deleteStates(stateData.state)'>
+                                </div>
+                            </div>
+                            <div class='col-9' [ngClass]="{'mb-2': !edit.status }">
+                                <mat-form-field class="example-chip-list w-100" appearance="fill">
+                                    <mat-chip-list #chipList aria-label="Next State selection"
+                                        [disabled]='!edit.status'>
+                                        <mat-chip *ngFor="let nextState of nextStates(stateData.state)"
+                                            [selectable]="selectable" [removable]="removable"
+                                            (removed)="removeNextState(nextState, stateData.state)">
+                                            {{nextState}}
+                                            <mat-icon matChipRemove *ngIf="removable">
+                                                <span class='fa fa-times'></span>
+                                            </mat-icon>
+                                        </mat-chip>
+                                        <input placeholder="{{ edit.status ? 'Next State...': '' }}" #chipInput
+                                            [formControl]="stateCtrl" [matChipInputFor]="chipList"
+                                            [matAutocomplete]="auto"
+                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                            [matChipInputAddOnBlur]="addOnBlur"
+                                            (matChipInputTokenEnd)="addNewNextState($event, stateData.state , chipInput, auto)">
+                                    </mat-chip-list>
+
+                                    <mat-autocomplete #auto="matAutocomplete"
+                                        (optionSelected)="selectedNextState($event, chipInput, i)">
+                                        <mat-option
+                                            *ngFor="let nextState of autoCompleteNextStates(stateData.state) | filterNextState: chipInput.value"
+                                            [value]="nextState">
+                                            {{nextState}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+
+                                </mat-form-field>
+
+                                <hr *ngIf="!edit.status" class='m-0 p-0'>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
+
             </div>
 
-        </div>
+        </section>
+    </ng-container>
 
-    </section>
+    <ng-container *ngIf="isSchemaFree">
+        <div class='d-flex align-items-center justify-content-center schema-free-message'>
+            <div class='text-secondary'>
+                Schema Free is enabled, it restricts you from configuring the state model
+            </div>
+        </div>
+    </ng-container>
 
 </div>
 

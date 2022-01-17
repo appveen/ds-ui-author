@@ -77,7 +77,6 @@ export class StateModelComponent implements OnInit {
     
   }
 
-
   search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
     const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
     const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
@@ -447,4 +446,10 @@ export class StateModelComponent implements OnInit {
     }
   }
 
+  get isSchemaFree() {
+    const self = this;
+    if (self.form && self.form.get('schemaFree')) {
+        return self.form.get('schemaFree').value;
+    }
+  }
 }
