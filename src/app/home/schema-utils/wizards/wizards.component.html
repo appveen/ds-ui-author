@@ -1,4 +1,4 @@
-<div class="d-flex flex-row w-100 h-100 ">
+<div class="d-flex flex-row w-100 h-100 " *ngIf="!isSchemaFree">
     <div class="d-flex flex-column w-50 steps-div bg-light h-auto align-items-center justify-content-center">
         <ng-container *ngIf="steps.length>0">
             <div class="d-flex align-items-center steps-count bg-gray border-bottom w-100">
@@ -313,6 +313,14 @@
         </div>
     </div>
 </div>
+
+<ng-container *ngIf="isSchemaFree">
+    <div class='d-flex align-items-center justify-content-center schema-free-message'>
+        <div class='text-secondary'>
+            Schema Free is enabled, it restricts you from customizing the data experience
+        </div>
+    </div>
+</ng-container>
 
 <ng-template #deleteModalTemplate>
     <div class="modal-body p-4">

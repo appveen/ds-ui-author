@@ -451,5 +451,6 @@ export class StateModelComponent implements OnInit {
     if (self.form && self.form.get('schemaFree')) {
         return self.form.get('schemaFree').value;
     }
+    return false;
   }
 }
