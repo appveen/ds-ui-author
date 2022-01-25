@@ -421,7 +421,7 @@ export class SchemaBuilderComponent implements
 
     }
 
-    schemaFreeConfiguration(){
+    schemaFreeConfiguration() {
         const self = this;
 
         // reset state model
@@ -431,7 +431,7 @@ export class SchemaBuilderComponent implements
             'initialStates': [],
             'states': {}
         });
-      
+
         // reset personalize 
         (self.form.get('wizard.steps') as FormArray).clear();
         (self.form.get('wizard.usedFields') as FormArray).clear();
@@ -462,6 +462,7 @@ export class SchemaBuilderComponent implements
         if (self.form && self.form.get('schemaFree')) {
             return self.form.get('schemaFree').value;
         }
+        return false;
     }
 
     save(deploy?: boolean) {
@@ -993,7 +994,7 @@ export class SchemaBuilderComponent implements
         if (!self.form.valid) {
             return false;
         }
-        if ((self.form.get('definition') as FormArray).length < 2) {
+        if (!self.isSchemaFree && (self.form.get('definition') as FormArray).length < 2) {
             return false;
         }
         if (self.errorInRoles) {
