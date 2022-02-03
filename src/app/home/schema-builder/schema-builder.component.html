@@ -84,10 +84,10 @@
         <ng-container>
           <div class="m-3" *ngIf="activeTab == 0" >
             <div ngbDropdown class="d-inline-block">
-              <button class="btn btn-outline-secondary" id="dropdownBasic1" ngbDropdownToggle [disabled]="!edit.status">{{isSchemaFree ? "Schema Free Design": "Schema Designer"}}</button>
+              <button type="button" class="btn btn-outline-secondary" id="dropdownBasic1" ngbDropdownToggle [disabled]="!edit.status">{{isSchemaFree ? "Schema Free Design": "Schema Designer"}}</button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <button ngbDropdownItem (click)='toggleSchemaType(true)' *ngIf="!isSchemaFree">Schema Free Design</button>
-                <button ngbDropdownItem (click)='toggleSchemaType(false)' *ngIf="isSchemaFree">Schema Designer</button>
+                <button ngbDropdownItem type="button" (click)='toggleSchemaType(true)' *ngIf="!isSchemaFree">Schema Free Design</button>
+                <button ngbDropdownItem type="button" (click)='toggleSchemaType(false)' *ngIf="isSchemaFree">Schema Designer</button>
               </div>
             </div>
           </div>
