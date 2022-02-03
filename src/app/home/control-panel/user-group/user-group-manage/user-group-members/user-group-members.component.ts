@@ -373,7 +373,7 @@ export class UserGroupMembersComponent implements OnInit, OnDestroy {
         const options = {
             select: 'username,basicDetails.name',
             sort: 'username',
-            count: 30,
+            count: -1,
             noApp: true
         };
         self.subscriptions['getAllUsers'] = self.commonService
