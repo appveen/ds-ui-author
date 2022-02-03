@@ -124,6 +124,14 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    get isSchemaFree() {
+        const self = this;
+        if (self.form && self.form.get('schemaFree')) {
+            return self.form.get('schemaFree').value;
+        }
+        return false;
+    }
+
     toggleTooltip(tooltip, param: string) {
         if (tooltip.isOpen()) {
             tooltip.close();

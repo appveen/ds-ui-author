@@ -82,8 +82,26 @@
       </div>
       <div class="builder-body d-flex flex-column w-100" *ngIf="hasAnyTabPermission">
         <ng-container>
-          <div class="w-100 builder" [ngClass]="{'d-none':activeTab != 0,'d-flex':activeTab == 0}">
-            <div class="d-flex flex-column w-100">
+          <div class="m-3" *ngIf="activeTab == 0" >
+            <div ngbDropdown class="d-inline-block">
+              <button type="button" class="btn btn-outline-secondary" id="dropdownBasic1" ngbDropdownToggle [disabled]="!edit.status">{{isSchemaFree ? "Schema Free Design": "Schema Designer"}}</button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button ngbDropdownItem type="button" (click)='toggleSchemaType(true)' *ngIf="!isSchemaFree">Schema Free Design</button>
+                <button ngbDropdownItem type="button" (click)='toggleSchemaType(false)' *ngIf="isSchemaFree">Schema Designer</button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isSchemaFree && activeTab == 0" class='schema-free d-flex align-items-center justify-content-center'>
+            <div class='text-center w-25'>
+              <img src="./assets/img/Book.png" alt="Schema Free">
+              <div class='font-weight-bold mt-3'>Schema Free</div>
+              <div class='text-secondary mt-2'>
+                Add data without any structure in app centre, you can use it as repository to store data.
+              </div>
+            </div>
+          </div>
+          <div class="w-100 builder" [ngClass]="{'d-none':activeTab != 0,'d-flex':activeTab == 0}" *ngIf="!isSchemaFree">
+            <div class="d-flex flex-column w-100" >
               <div class="options d-flex justify-content-between align-items-center border-bottom px-3">
                 <span class="text-dark font-weight-bold">Attributes</span>
                 <div class="d-flex justify-content-end align-items-center"
@@ -266,6 +284,28 @@
     <div class="d-flex align-items-center justify-content-end">
       <button type="button" class="btn btn-min-width btn-dark"
         (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #schemaToggleTemplate>
+  <div class="modal-body p-4">
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="d-flex align-items-center">
+        <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
+          <odp-service-icon [size]="18" color="DD5151" class="mt-1"></odp-service-icon>
+        </span>
+        <span class="font-weight-bold mb-1">{{toggleSchemaModal.title}}</span>
+      </div>
+      <span class="fa fa-times text-secondary hover " (click)="schemaToggleTemplateRef.close(false)"></span>
+    </div>
+    <p class="text-secondary my-5">{{toggleSchemaModal.message}}</p>
+    <div class="d-flex align-items-center justify-content-end">
+      <button type="button" class="btn btn-min-width btn-outline-dark mr-3" (click)="schemaToggleTemplateRef.close(false)"
+        id="sbDeleteModalYes">Cancel</button>
+      <button type="button" class="btn btn-min-width btn-primary" (click)="schemaToggleTemplateRef.close(true)"
+        id="sbDeleteModalYes">Enable</button>
     </div>
   </div>
 </ng-template>
