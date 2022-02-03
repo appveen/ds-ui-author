@@ -49,6 +49,14 @@ export class MakerCheckerComponent implements OnInit {
     }
   }
 
+  get isSchemaFree() {
+    const self = this;
+    if (self.form && self.form.get('schemaFree')) {
+        return self.form.get('schemaFree').value;
+    }
+    return false;
+  }
+
   get makerCheckerData() {
     const self = this;
     if (self.makerCheckerCreated) {
