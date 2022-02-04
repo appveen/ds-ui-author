@@ -581,7 +581,7 @@ export class SchemaBuilderComponent implements
 
     checkSaveAndDeploy() {
         const self = this;
-        if (self.form.get(['definition', 0, 'counter']).dirty && self.edit.id) {
+        if (!self.isSchemaFree && self.form.get(['definition', 0, 'counter']).dirty && self.edit.id) {
             const payload = self.schemaStructurePipe.transform(self.form.value);
             self.commonService.get('serviceManager', '/' + self.edit.id + '/' + self.commonService.app._id +
                 '/idCount', { filter: { app: this.commonService.app._id } }).subscribe(res => {
