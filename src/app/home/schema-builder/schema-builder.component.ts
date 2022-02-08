@@ -418,7 +418,7 @@ export class SchemaBuilderComponent implements
                     else {
                         const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
                         tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
-                        if (tempDef.definition) {
+                        if (tempDef.definition.length == 0) {
                             tempDef.definition = [{
                                 counter: 1001,
                                 key: "_id",
