@@ -417,20 +417,6 @@ export class SchemaBuilderComponent implements
                     }
                     const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
                     tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
-                    if (tempDef.definition.length == 0) {
-                        tempDef.definition = [{
-                            counter: 1001,
-                            key: "_id",
-                            padding: null,
-                            prefix: tempDef.name.substr(0, 3).toUpperCase(),
-                            properties: {
-                                "dataKey": "_id",
-                                "dataPath": "_id",
-                                "name": "ID",
-                            },
-                            suffix: null,
-                        }];
-                    }
                     (self.form.controls.definition as FormArray).push(self.fb.group({
                         key: ['_id'],
                         type: ['id'],
