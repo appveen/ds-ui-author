@@ -415,7 +415,7 @@ export class SchemaBuilderComponent implements
                     if (schemaFree) {
                         self.schemaFreeConfiguration();
                     }
-                    else {
+                    //else {
                         const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
                         tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
                         if (tempDef.definition.length == 0) {
@@ -445,7 +445,7 @@ export class SchemaBuilderComponent implements
                         if (self.form.get(['definition', 0])) {
                             self.form.get(['definition', 0]).patchValue(tempDef.definition.find(d => d.key === '_id'));
                         }
-                    }
+                    //}
                     self.form.get('schemaFree').patchValue(schemaFree);
                 }
             }
