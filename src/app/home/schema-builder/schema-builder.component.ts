@@ -418,7 +418,20 @@ export class SchemaBuilderComponent implements
                     else {
                         const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
                         tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
-
+                        if (tempDef.definition) {
+                            tempDef.definition = [{
+                                counter: 1001,
+                                key: "_id",
+                                padding: null,
+                                prefix: tempDef.name.substr(0, 3).toUpperCase(),
+                                properties: {
+                                    "dataKey": "_id",
+                                    "dataPath": "_id",
+                                    "name": "ID",
+                                },
+                                suffix: null,
+                            }];
+                        }
                         (self.form.controls.definition as FormArray).push(self.fb.group({
                             key: ['_id'],
                             type: ['id'],
@@ -750,26 +763,28 @@ export class SchemaBuilderComponent implements
                 temp.definition = self.schemaService.generateStructure(temp.definition);
                 self.form.patchValue(temp);
                 self.fillMakerChecker(res);
-                if (!self.form.get(['definition', 0])) {
-                    (self.form.get(['definition']) as FormArray).push(self.fb.group({
-                        key: ['_id'],
-                        type: ['id'],
-                        prefix: [null],
-                        suffix: [null],
-                        padding: [null],
-                        counter: [null, [Validators.max(9999999999)]],
-                        properties: self.schemaService.getPropertiesStructure(temp.definition.find(d => d.key === '_id'))
-                    }));
-                }
-                if (self.form.get(['definition', 0])) {
-                    self.form.get(['definition', 0]).patchValue(temp.definition.find(d => d.key === '_id'));
-                }
+                if (!self.isSchemaFree) {
+                    if (!self.form.get(['definition', 0])) {
+                        (self.form.get(['definition']) as FormArray).push(self.fb.group({
+                            key: ['_id'],
+                            type: ['id'],
+                            prefix: [null],
+                            suffix: [null],
+                            padding: [null],
+                            counter: [null, [Validators.max(9999999999)]],
+                            properties: self.schemaService.getPropertiesStructure(temp.definition.find(d => d.key === '_id'))
+                        }));
+                    }
+                    if (self.form.get(['definition', 0])) {
+                        self.form.get(['definition', 0]).patchValue(temp.definition.find(d => d.key === '_id'));
+                    }
 
-                temp.definition.filter(def => def.key !== '_id').forEach(def => {
-                    const tempDef = self.schemaService.getDefinitionStructure(self.appService.cloneObject(def));
-                    tempDef.get('properties.name').patchValue(def.properties.name);
-                    (self.form.get('definition') as FormArray).push(tempDef);
-                });
+                    temp.definition.filter(def => def.key !== '_id').forEach(def => {
+                        const tempDef = self.schemaService.getDefinitionStructure(self.appService.cloneObject(def));
+                        tempDef.get('properties.name').patchValue(def.properties.name);
+                        (self.form.get('definition') as FormArray).push(tempDef);
+                    });
+                }
                 temp.tags.forEach(tag => {
                     (self.form.get('tags') as FormArray).push(new FormControl(tag));
                 });
