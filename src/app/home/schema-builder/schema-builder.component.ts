@@ -415,21 +415,7 @@ export class SchemaBuilderComponent implements
                     if (schemaFree) {
                         self.schemaFreeConfiguration();
                     }
-                    const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
-                    tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
-                    (self.form.controls.definition as FormArray).push(self.fb.group({
-                        key: ['_id'],
-                        type: ['id'],
-                        prefix: [null],
-                        suffix: [null],
-                        padding: [null],
-                        counter: [null],
-                        properties: self.schemaService.getPropertiesStructure(tempDef.definition.find(d => d.key === '_id'))
-                    }));
-
-                    if (self.form.get(['definition', 0])) {
-                        self.form.get(['definition', 0]).patchValue(tempDef.definition.find(d => d.key === '_id'));
-                    }
+                   
                     self.form.get('schemaFree').patchValue(schemaFree);
                 }
             }
@@ -460,6 +446,21 @@ export class SchemaBuilderComponent implements
         (self.form.get('workflowConfig.makerCheckers') as FormArray).clear()
         self.form.get('workflowConfig.enabled').patchValue(false);
 
+        const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
+        tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
+        (self.form.controls.definition as FormArray).push(self.fb.group({
+            key: ['_id'],
+            type: ['id'],
+            prefix: [null],
+            suffix: [null],
+            padding: [null],
+            counter: [null],
+            properties: self.schemaService.getPropertiesStructure(tempDef.definition.find(d => d.key === '_id'))
+        }));
+
+        if (self.form.get(['definition', 0])) {
+            self.form.get(['definition', 0]).patchValue(tempDef.definition.find(d => d.key === '_id'));
+        }
     }
 
     get isSchemaFree() {
