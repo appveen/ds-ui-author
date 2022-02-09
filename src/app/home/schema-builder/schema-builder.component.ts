@@ -415,24 +415,7 @@ export class SchemaBuilderComponent implements
                     if (schemaFree) {
                         self.schemaFreeConfiguration();
                     }
-                    else {
-                        const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
-                        tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
-
-                        (self.form.controls.definition as FormArray).push(self.fb.group({
-                            key: ['_id'],
-                            type: ['id'],
-                            prefix: [null],
-                            suffix: [null],
-                            padding: [null],
-                            counter: [null],
-                            properties: self.schemaService.getPropertiesStructure(tempDef.definition.find(d => d.key === '_id'))
-                        }));
-
-                        if (self.form.get(['definition', 0])) {
-                            self.form.get(['definition', 0]).patchValue(tempDef.definition.find(d => d.key === '_id'));
-                        }
-                    }
+                   
                     self.form.get('schemaFree').patchValue(schemaFree);
                 }
             }
@@ -463,6 +446,21 @@ export class SchemaBuilderComponent implements
         (self.form.get('workflowConfig.makerCheckers') as FormArray).clear()
         self.form.get('workflowConfig.enabled').patchValue(false);
 
+        const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
+        tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
+        (self.form.controls.definition as FormArray).push(self.fb.group({
+            key: ['_id'],
+            type: ['id'],
+            prefix: [null],
+            suffix: [null],
+            padding: [null],
+            counter: [null],
+            properties: self.schemaService.getPropertiesStructure(tempDef.definition.find(d => d.key === '_id'))
+        }));
+
+        if (self.form.get(['definition', 0])) {
+            self.form.get(['definition', 0]).patchValue(tempDef.definition.find(d => d.key === '_id'));
+        }
     }
 
     get isSchemaFree() {
@@ -750,6 +748,7 @@ export class SchemaBuilderComponent implements
                 temp.definition = self.schemaService.generateStructure(temp.definition);
                 self.form.patchValue(temp);
                 self.fillMakerChecker(res);
+
                 if (!self.form.get(['definition', 0])) {
                     (self.form.get(['definition']) as FormArray).push(self.fb.group({
                         key: ['_id'],
@@ -770,6 +769,7 @@ export class SchemaBuilderComponent implements
                     tempDef.get('properties.name').patchValue(def.properties.name);
                     (self.form.get('definition') as FormArray).push(tempDef);
                 });
+
                 temp.tags.forEach(tag => {
                     (self.form.get('tags') as FormArray).push(new FormControl(tag));
                 });
