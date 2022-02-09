@@ -398,7 +398,7 @@ export class SchemaBuilderComponent implements
         if (schemaFree) {
             self.toggleSchemaModal = {
                 title: 'Enable Schema Free',
-                message: 'Allows you to use app centre as a repository for unstructured data storage.',
+                message: 'Allows you to use Appcenter as a repository for unstructured data storage.',
                 info: '(Enabling schema free will remove all the Validations)'
             };
         } else {
