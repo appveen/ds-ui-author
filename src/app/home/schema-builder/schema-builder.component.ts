@@ -404,7 +404,7 @@ export class SchemaBuilderComponent implements
         } else {
             self.toggleSchemaModal = {
                 title: 'Enabling Schema Designer',
-                message: 'Define data in collection, exisiting data will be mainitained but might not accessible. New documents will require validations',
+                message: 'Define data in collection, existing data will be maintained but might not be accessible. New documents will require validations',
                 info: ''
             };
         }
@@ -445,6 +445,15 @@ export class SchemaBuilderComponent implements
         // reset maker checker 
         (self.form.get('workflowConfig.makerCheckers') as FormArray).clear()
         self.form.get('workflowConfig.enabled').patchValue(false);
+
+        // reset workflow hooks
+        (self.form.get(['workflowHooks', 'postHooks']) as FormGroup).reset({
+            submit: [],
+            rework: [],
+            discard: [],
+            approve: [],
+            reject: []
+        });
 
         const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
         tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
