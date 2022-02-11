@@ -456,9 +456,11 @@ export class SchemaBuilderComponent implements
         });
 
         // remove conditions
-        self.roleData.roles.forEach(role => {
-            role.rule = [];
-        });
+        if(self.roleData && self.roleData.roles){
+            self.roleData.roles.forEach(role => {
+                role.rule = [];
+            });
+        }
 
         const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
         tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
