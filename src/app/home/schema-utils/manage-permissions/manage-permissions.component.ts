@@ -25,6 +25,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
   @Input() edit: any;
   @Input() name: string;
   @Input() blockInvalidRole: any;
+  @Input() schemaFree: boolean;
   @Output() roleChange: EventEmitter<any>;
   @Output() firstInitChange: EventEmitter<any>;
   @Output() blockInvalidRoleChange = new EventEmitter();

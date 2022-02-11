@@ -91,7 +91,7 @@
                             Permission
                         </div>
                         <div class="tab px-3" [ngClass]="{'text-accent border-accent':activeTab === 2}"
-                            (click)="activeTab=2">
+                            (click)="activeTab=2" *ngIf="!schemaFree"> 
                             Condition
                         </div>
                     </div>

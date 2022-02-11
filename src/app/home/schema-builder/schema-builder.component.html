@@ -96,7 +96,7 @@
               <img src="./assets/img/Book.png" alt="Schema Free">
               <div class='font-weight-bold mt-3'>Schema Free</div>
               <div class='text-secondary mt-2'>
-                Add data without any structure in the Appcentre, you can use it as a repository to store the data.
+                Add data without any structure in the Appcenter, you can use it as a repository to store the data.
               </div>
             </div>
           </div>
@@ -212,7 +212,7 @@
         </ng-container>
         <ng-container *ngIf="activeTab == 4">
           <div class="d-flex flex-column w-100">
-            <odp-manage-permissions #permissionsComponent [name]="name" [(role)]="role"
+            <odp-manage-permissions #permissionsComponent [name]="name" [(role)]="role" [schemaFree]="isSchemaFree"
               [(firstInit)]="manageRolesFirstInit" [(blockInvalidRole)]="blockInvalidRole" [definitions]="definitions"
               [edit]="edit" (oldRoleReset)="onOldRoleReset($event)" [ngClass]="{'d-none':activeTab != 4}">
             </odp-manage-permissions>
