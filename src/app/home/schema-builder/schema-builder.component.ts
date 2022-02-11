@@ -455,6 +455,13 @@ export class SchemaBuilderComponent implements
             reject: []
         });
 
+        // remove conditions
+        if(self.roleData && self.roleData.roles){
+            self.roleData.roles.forEach(role => {
+                role.rule = [];
+            });
+        }
+
         const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
         tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
         (self.form.controls.definition as FormArray).push(self.fb.group({
