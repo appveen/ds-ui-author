@@ -4,13 +4,13 @@
         <ng-container *ngIf="!makerCheckerCreated">
             <div class="d-flex flex-column w-50 create-maker-checker h-auto justify-content-center m-auto text-center">
                 <div *ngIf="!edit.status" class='text-muted'>
-                    There is no custom maker checker configured for this data service.
+                    There is no custom workflow configured for this data service.
                 </div>
                 <div *ngIf="edit.status">
                     <img src="./assets/img/maker-checker.png" alt="">
-                    <div class='font-lg font-weight-bold mt-4'>Add Maker Checker</div>
+                    <div class='font-lg font-weight-bold mt-4'>Add Workflows</div>
                     <div class='text-muted mt-2'>
-                        Click on add to create a multilevel maker checker for permitting various permissions/roles.
+                        Click on add to create a multilevel workflow for permitting various permissions/roles.
                     </div>
                     <div class="mt-4">
                         <button class="btn btn-primary btn-min-width" id="AddNewMakerChecker"
@@ -26,7 +26,7 @@
             <form [formGroup]="makerCheckerData">
                 <div class='d-flex justify-content-between'>
                     <div class='d-flex justify-content-start'>
-                        <strong class='heading1'>Maker Checker</strong>
+                        <strong class='heading1'>Workflows</strong>
                         <div class='ml-4 p-1' [ngClass]="{'pt-2': !edit.status}">
                             <odp-switch [edit]="edit" [(checked)]="makerCheckerEnabled"
                                 (checkedChange)='toggleMakerChecker($event)'></odp-switch>
@@ -169,7 +169,7 @@
     <ng-container *ngIf="isSchemaFree">
         <div class='d-flex align-items-center justify-content-center schema-free-message w-100'>
             <div class='text-secondary'>
-                Schema Free is enabled, it restricts you from configuring maker checker
+                Schema Free is enabled, it restricts you from configuring workflows
             </div>
         </div>
     </ng-container>

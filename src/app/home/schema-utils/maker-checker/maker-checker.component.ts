@@ -28,8 +28,8 @@ export class MakerCheckerComponent implements OnInit {
     private appService: AppService) {
     const self = this;
     self.deleteModal = {
-      title: 'Delete Maker Checker',
-      message: 'Are you sure you want to delete the maker checker?',
+      title: 'Delete Workflow',
+      message: 'Are you sure you want to delete the workflow ?',
       falseButton: 'Cancel',
       trueButton: 'Delete',
       showButtons: true
