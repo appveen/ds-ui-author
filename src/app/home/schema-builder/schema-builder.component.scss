@@ -62,8 +62,8 @@
 .scroll {
   overflow-y: auto;
   overflow-x: hidden;
-  min-height: calc(100vh - 264px);
-  max-height: calc(100vh - 264px);
+  min-height:  calc(100vh - 330px);
+  max-height: calc(100vh - 330px);
 }
 
 .scrollStateModel {
