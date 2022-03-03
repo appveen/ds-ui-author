@@ -5,7 +5,7 @@
             <!-- <div class="btn-group">
                 <span class="btn btn-outline-accent" (click)="purgeAudit()">Purge Audit</span>
             </div> -->
-            <button  (click)="purgeAudit()" type="button"
+            <button  (click)="purgeAudit()" type="button" *ngIf="canPurgeAudit()"
                 class="edit-button btn btn-min-width btn-primary" >
                 <span class="odp-trash mr-2"></span>
                 <span class="text">Purge Audit</span>

@@ -50,17 +50,21 @@ export class SchemaBuilderComponent implements
 
     @ViewChild('deleteModalTemplate') deleteModalTemplate: TemplateRef<HTMLElement>;
     @ViewChild('pageChangeModalTemplate') pageChangeModalTemplate: TemplateRef<HTMLElement>;
+    @ViewChild('schemaToggleTemplate') schemaToggleTemplate: TemplateRef<HTMLElement>;
     @ViewChild('permissionsComponent') permissionsComponent: ManagePermissionsComponent;
     @ViewChild('integrationComponent') integrationComponent: IntegrationComponent;
     @ViewChild('schemaName') schemaName: ElementRef;
     deleteModalTemplateRef: NgbModalRef;
     pageChangeModalTemplateRef: NgbModalRef;
+    schemaToggleTemplateRef: NgbModalRef;
+    toggleTemplateRef: NgbModalRef;
     app: string;
     form: FormGroup;
     showLazyLoader: boolean;
     cloneServiceId: string;
     editServiceId: string;
     deleteModal: DeleteModalConfig;
+    toggleSchemaModal: any;
     edit: EditConfig;
     action: ActionConfig;
     version: 1;
@@ -124,6 +128,13 @@ export class SchemaBuilderComponent implements
             trueButton: 'Yes',
             showButtons: true
         };
+
+        self.toggleSchemaModal = {
+            title: '',
+            message: '',
+            info: ''
+        };
+
         self.action = {
             loading: false,
             status: false,
@@ -135,6 +146,7 @@ export class SchemaBuilderComponent implements
             api: ['/', [Validators.required]],
             permanentDeleteData: [true],
             allowedFileTypes: [[]],
+            schemaFree: [false],
             wizard: self.fb.group({
                 steps: self.fb.array([], [wizardSteps]),
                 selectedStep: [0],
@@ -381,6 +393,100 @@ export class SchemaBuilderComponent implements
         }
     }
 
+    toggleSchemaType(schemaFree: boolean) {
+        const self = this;
+        if (schemaFree) {
+            self.toggleSchemaModal = {
+                title: 'Enable Schema Free',
+                message: 'Allows you to use Appcenter as a repository for unstructured data storage.',
+                info: '(Enabling schema free will remove all the Validations)'
+            };
+        } else {
+            self.toggleSchemaModal = {
+                title: 'Enabling Schema Designer',
+                message: 'Define data in collection, existing data will be maintained but might not be accessible. New documents will require validations',
+                info: ''
+            };
+        }
+        self.schemaToggleTemplateRef = self.commonService.modal(self.schemaToggleTemplate);
+        self.schemaToggleTemplateRef.result.then((response) => {
+            if (response) {
+                if (self.form && self.form.get('schemaFree')) {
+                    if (schemaFree) {
+                        self.schemaFreeConfiguration();
+                    }
+                   
+                    self.form.get('schemaFree').patchValue(schemaFree);
+                }
+            }
+        }, dismiss => { });
+
+    }
+
+    schemaFreeConfiguration() {
+        const self = this;
+
+        // reset state model
+        self.form.get('stateModel').patchValue({
+            'enabled': false,
+            'attribute': '',
+            'initialStates': [],
+            'states': {}
+        });
+
+        // reset personalize 
+        (self.form.get('wizard.steps') as FormArray).clear();
+        (self.form.get('wizard.usedFields') as FormArray).clear();
+        self.form.get('wizard.selectedStep').patchValue([0]);
+
+        // remove all attributes 
+        (self.form.controls.definition as FormArray).clear();
+
+        // reset maker checker 
+        (self.form.get('workflowConfig.makerCheckers') as FormArray).clear()
+        self.form.get('workflowConfig.enabled').patchValue(false);
+
+        // reset workflow hooks
+        (self.form.get(['workflowHooks', 'postHooks']) as FormGroup).reset({
+            submit: [],
+            rework: [],
+            discard: [],
+            approve: [],
+            reject: []
+        });
+
+        // remove conditions
+        if(self.roleData && self.roleData.roles){
+            self.roleData.roles.forEach(role => {
+                role.rule = [];
+            });
+        }
+
+        const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
+        tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
+        (self.form.controls.definition as FormArray).push(self.fb.group({
+            key: ['_id'],
+            type: ['id'],
+            prefix: [null],
+            suffix: [null],
+            padding: [null],
+            counter: [null],
+            properties: self.schemaService.getPropertiesStructure(tempDef.definition.find(d => d.key === '_id'))
+        }));
+
+        if (self.form.get(['definition', 0])) {
+            self.form.get(['definition', 0]).patchValue(tempDef.definition.find(d => d.key === '_id'));
+        }
+    }
+
+    get isSchemaFree() {
+        const self = this;
+        if (self.form && self.form.get('schemaFree')) {
+            return self.form.get('schemaFree').value;
+        }
+        return false;
+    }
+
     save(deploy?: boolean) {
         const self = this;
         const value = self.form.getRawValue();
@@ -489,7 +595,7 @@ export class SchemaBuilderComponent implements
 
     checkSaveAndDeploy() {
         const self = this;
-        if (self.form.get(['definition', 0, 'counter']).dirty && self.edit.id) {
+        if (!self.isSchemaFree && self.form.get(['definition', 0, 'counter']).dirty && self.edit.id) {
             const payload = self.schemaStructurePipe.transform(self.form.value);
             self.commonService.get('serviceManager', '/' + self.edit.id + '/' + self.commonService.app._id +
                 '/idCount', { filter: { app: this.commonService.app._id } }).subscribe(res => {
@@ -658,6 +764,7 @@ export class SchemaBuilderComponent implements
                 temp.definition = self.schemaService.generateStructure(temp.definition);
                 self.form.patchValue(temp);
                 self.fillMakerChecker(res);
+
                 if (!self.form.get(['definition', 0])) {
                     (self.form.get(['definition']) as FormArray).push(self.fb.group({
                         key: ['_id'],
@@ -678,6 +785,7 @@ export class SchemaBuilderComponent implements
                     tempDef.get('properties.name').patchValue(def.properties.name);
                     (self.form.get('definition') as FormArray).push(tempDef);
                 });
+
                 temp.tags.forEach(tag => {
                     (self.form.get('tags') as FormArray).push(new FormControl(tag));
                 });
@@ -910,7 +1018,7 @@ export class SchemaBuilderComponent implements
         if (!self.form.valid) {
             return false;
         }
-        if ((self.form.get('definition') as FormArray).length < 2) {
+        if (!self.isSchemaFree && (self.form.get('definition') as FormArray).length < 2) {
             return false;
         }
         if (self.errorInRoles) {

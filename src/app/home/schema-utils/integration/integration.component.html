@@ -21,8 +21,8 @@
                     </span>
                 </div>
             </div>
-            <div class="mb-3"><strong>Review Hooks</strong></div>
-            <div class="d-flex flex-column pl-2">
+            <div class="mb-3" *ngIf="!isSchemaFree"><strong>Review Hooks</strong></div>
+            <div class="d-flex flex-column pl-2" *ngIf="!isSchemaFree">
                 <div class="d-flex mb-3 w-100" *ngIf="canView()">
                     <span class="hover w-50" (click)="selectHook('submitHook')"
                         [ngClass]="{'text-accent': hooks.submitHook, 'text-bold': hooks.submitHook}">Submit</span>

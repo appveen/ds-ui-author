@@ -74,9 +74,8 @@ export class StateModelComponent implements OnInit {
     this.form.get('stateModel').valueChanges.subscribe(selectedValue => {
       this.form.get('stateModel').markAsDirty();
     })
-    
-  }
 
+  }
 
   search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
     const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
@@ -245,7 +244,22 @@ export class StateModelComponent implements OnInit {
         self.stateModelData = self.allStates.map(state => {
           return { 'state': state, 'checked': false }
         });
-        self.ts.success(`Success! State Model ${self.stateModelAttribute} has been successfully created `)
+
+        // state model reset to initial state if existing records
+        self.commonService.get('serviceManager', '/all/count', {
+          serviceIds: self.commonService.activeComponent['edit'].id,
+          filter: { app: this.commonService.app._id }
+        }).subscribe((data) => {
+          if (data[0].count > 0) {
+            self.ts.warning(`All the existing records with null or invalid values for ${self.stateModelAttribute} will be updated to the initial state.  State Model ${self.stateModelAttribute} has been successfully created`)
+          }
+          else {
+            self.ts.success(`Success! State Model ${self.stateModelAttribute} has been successfully created `)
+          }
+        }, err => {
+          self.ts.success(`Success! State Model ${self.stateModelAttribute} has been successfully created `)
+        });
+
       }
       else {
         this.ts.error('Please select type for new list of values')
@@ -447,4 +461,11 @@ export class StateModelComponent implements OnInit {
     }
   }
 
+  get isSchemaFree() {
+    const self = this;
+    if (self.form && self.form.get('schemaFree')) {
+      return self.form.get('schemaFree').value;
+    }
+    return false;
+  }
 }

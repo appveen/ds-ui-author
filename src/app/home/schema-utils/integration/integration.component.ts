@@ -441,6 +441,14 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         return false;
     }
 
+    get isSchemaFree() {
+        const self = this;
+        if (self.form && self.form.get('schemaFree')) {
+            return self.form.get('schemaFree').value;
+        }
+        return false;
+    }
+
     get id() {
         return this.edit._id;
     }
