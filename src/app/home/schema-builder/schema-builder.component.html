@@ -53,7 +53,7 @@
           <span class="fa fa-circle fa-xs ml-2"
             [ngClass]="{'show':changesDoneInIntegration,'text-danger':errorInIntegration}"></span>
         </div>
-        <div class="text-dark px-3 py-2 hover" *ngIf="hasPermissionForTab('E')" (click)="activeTab=2"
+        <div class="text-dark px-3 py-2 hover" *ngIf="hasPermissionForTab('E') && !isSchemaFree" (click)="activeTab=2"
           [ngClass]="{'active':activeTab==2}">
           <span>Experience</span>
           <span class="fa fa-circle fa-xs ml-2"
@@ -96,7 +96,7 @@
               <img src="./assets/img/Book.png" alt="Schema Free">
               <div class='font-weight-bold mt-3'>Schema Free</div>
               <div class='text-secondary mt-2'>
-                Schema-free data service allows to you store documents without defining any schema.
+                Schema-free data service allows you to store documents without defining any schema.
                 Data validations can only be enforced using the validation hooks.
               </div>
             </div>
