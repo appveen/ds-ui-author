@@ -84,7 +84,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
 
   getFaas(id: string, draft?: boolean) {
     this.apiCalls.getFaas = true;
-    let path = '/faas/' + id;
+    let path = `/${this.commonService.app._id}/faas/${id}`;
     if (draft) {
       path += '?draft=true';
     }
@@ -104,7 +104,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   }
 
   discardDraft() {
-    const path = '/faas/' + this.edit.id + '/draftDelete';
+    const path = `/${this.commonService.app._id}/faas/${this.edit.id}/draftDelete`;
     this.apiCalls.discardDraft = true;
     this.subscriptions['discardDraft'] = this.commonService.put('partnerManager', path, {}).subscribe(res => {
       this.apiCalls.discardDraft = false;
@@ -134,9 +134,9 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     }
 
     if (this.edit.id) {
-      request = this.commonService.put('partnerManager', '/faas/' + this.edit.id, this.faasData);
+      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/faas/${this.edit.id}`, this.faasData);
     } else {
-      request = this.commonService.post('partnerManager', '/faas', this.faasData);
+      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/faas`, this.faasData);
     }
 
     this.subscriptions['save'] = request.subscribe(res => {
@@ -165,9 +165,9 @@ export class FaasManageComponent implements OnInit, OnDestroy {
 
 
     if (this.edit.id) {
-      request = this.commonService.put('partnerManager', '/faas/' + this.edit.id, this.faasData);
+      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/faas/${this.edit.id}`, this.faasData);
     } else {
-      request = this.commonService.post('partnerManager', '/faas', this.faasData);
+      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/faas`, this.faasData);
     }
 
     this.subscriptions['save'] = request.subscribe(res => {
@@ -189,7 +189,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   deploy() {
     if (this.edit.id) {
       this.apiCalls.deploy = true;
-      this.commonService.put('partnerManager', '/faas/' + this.edit.id + '/deploy', { app: this.commonService.app._id }).subscribe(res => {
+      this.commonService.put('partnerManager', `/${this.commonService.app._id}/faas/utils/${this.edit.id}/deploy`, { app: this.commonService.app._id }).subscribe(res => {
         this.apiCalls.deploy = false;
         this.ts.success('Saved ' + this.faasData.name + ' and deployment process has started.');
         this.router.navigate(['/app', this.commonService.app._id, 'faas']);
@@ -213,7 +213,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
 
   testRun() {
     this.apiCalls.testRun = true;
-    this.commonService.put('partnerManager', '/faas/' + this.edit.id + '/test', {
+    this.commonService.put('partnerManager', `/${this.commonService.app._id}/faas/${this.edit.id}/test`, {
       code: this.faasData.code,
       port: this.faasData.port
     }).subscribe(res => {
