@@ -311,7 +311,7 @@ export class UserListComponent implements OnInit, OnDestroy {
             this.loadedCount = 0;
         }
         const filterModel = this.agGrid?.api?.getFilterModel();
-        if(filterModel && 'accessControl.apps._id' in filterModel) {
+        if (filterModel && 'accessControl.apps._id' in filterModel) {
             this.apiConfig.apps = JSON.parse(filterModel['accessControl.apps._id'].filter)['accessControl.apps._id'].$in.join(',');
         } else {
             delete this.apiConfig.apps;
@@ -402,15 +402,15 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     onGridAction(buttonName: string, rowNode: RowNode) {
-        switch(buttonName) {
+        switch (buttonName) {
             case 'View': {
                 this.onRowDoubleClick(rowNode);
             }
-            break;
+                break;
             case 'Delete': {
                 this.deleteSelected([rowNode.data]);
             }
-            break;
+                break;
         }
     }
 
@@ -419,14 +419,14 @@ export class UserListComponent implements OnInit, OnDestroy {
             filter: this.apiConfig.filter,
             noApp: true
         };
-        if(this.apiConfig.apps) {
+        if (this.apiConfig.apps) {
             options.apps = this.apiConfig.apps;
         }
-        return this.commonService.get('user', `/usr/count`, options);
+        return this.commonService.get('user', `/admin/user/utils/count`, options);
     }
 
     getUserList() {
-        return this.commonService.get('user', `/usr`, this.apiConfig);
+        return this.commonService.get('user', `/admin/user`, this.apiConfig);
     }
 
     initConfig() {
@@ -444,7 +444,7 @@ export class UserListComponent implements OnInit, OnDestroy {
                 res => {
                     this.invalidUniqueUsername = true;
                 },
-                err => {}
+                err => { }
             );
         }
     }
@@ -527,7 +527,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     newUser() {
         this.showPassword = {};
-        if(this.validAuthTypes?.length === 1) {
+        if (this.validAuthTypes?.length === 1) {
             this.userForm.get('auth.authType').disable();
         }
         this.newUserModalRef = this.commonService.modal(this.newUserModal, { centered: true, size: 'lg', windowClass: 'new-user-modal' });
@@ -556,7 +556,7 @@ export class UserListComponent implements OnInit, OnDestroy {
             this.userForm.get('auth.authType').enable();
             const userData = this.userForm.value;
             this.showSpinner = true;
-            this.subscriptions['newUser'] = this.commonService.post('user', '/usr', userData).subscribe(
+            this.subscriptions['newUser'] = this.commonService.post('user', '/admin/user', userData).subscribe(
                 userRes => {
                     this.showSpinner = false;
                     this.agGrid.api.purgeInfiniteCache();
@@ -608,7 +608,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     closeDeleteModal(data) {
         if (data) {
-            const url = '/usr/' + data._id;
+            const url = '/admin/user/' + data._id;
             this.showSpinner = true;
             this.subscriptions['deleteUser'] = this.commonService.delete('user', url).subscribe(
                 d => {
@@ -648,7 +648,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     deleteUsers(users?: Array<any>) {
         const deleteReqArr = (!!users?.length ? users : this.selectedUsers).map(
-            usr => new Promise((resolve, reject) => this.commonService.delete('user', '/usr/' + usr._id).subscribe(resolve, reject))
+            usr => new Promise((resolve, reject) => this.commonService.delete('user', '/admin/user/' + usr._id).subscribe(resolve, reject))
         );
         this.showSpinner = true;
         Promise.all(deleteReqArr).then(
@@ -706,10 +706,10 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     get showClearFilter() {
         if (this.agGrid && this.agGrid.api) {
-          const model = this.agGrid.api.getFilterModel();
-          if (Object.keys(model).length > 0) {
-            return true;
-          }
+            const model = this.agGrid.api.getFilterModel();
+            if (Object.keys(model).length > 0) {
+                return true;
+            }
         }
         return false;
     }

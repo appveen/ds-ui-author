@@ -123,7 +123,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
   getUserAttributes() {
     const self = this;
     self.apiCallStack.getUserAttributes = true;
-    self.commonService.get('user', `/usr/app/${self.commonService.app._id}/distinctAttributes`).subscribe(res => {
+    self.commonService.get('user', `/${self.commonService.app._id}/user/utils/distinctAttributes`).subscribe(res => {
       self.apiCallStack.getUserAttributes = false;
       self.userAttributes = res.attributes.map((usrAttr) => { usrAttr.key = usrAttr.key + '.value'; return usrAttr; });
     }, err => {

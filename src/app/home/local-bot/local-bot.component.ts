@@ -197,7 +197,7 @@ export class LocalBotComponent implements OnInit {
           }
 
         }
-        self.commonService.post('user', `/usr/app/${self.commonService.app._id}/create?app=${this.commonService.app._id}`, payload)
+        self.commonService.post('user', `/${self.commonService.app._id}/bot`, payload)
           .subscribe((res) => {
             self.botForm.reset();
             self.getBotRecords();
@@ -236,7 +236,7 @@ export class LocalBotComponent implements OnInit {
         self.selectedBot.basicDetails.name = self.botForm.get('botName').value;
         self.selectedBot.description = self.botForm.get('desc').value;
 
-        self.subscriptions['userDtl'] = self.commonService.put('user', '/usr/' + self.selectedBot._id + '?app=' + this.commonService.app._id, self.selectedBot)
+        self.subscriptions['userDtl'] = self.commonService.put('user', `/${this.commonService.app._id}/bot/${this.selectedBot._id}`, self.selectedBot)
           .subscribe(res => {
             self.showLazyLoader = false;
 
@@ -493,7 +493,7 @@ export class LocalBotComponent implements OnInit {
       });
       self.showLazyLoader = true;
 
-      self.commonService.put('user', `/usr/${self.selectedBot._id}?app=${this.commonService.app._id}`, self.selectedBot)
+      self.commonService.put('user', `/${this.commonService.app._id}/bot/${self.selectedBot._id}`, self.selectedBot)
         .subscribe(() => {
           self.showLazyLoader = false;
           self.ts.success('Added custom Details successfully');
@@ -538,8 +538,7 @@ export class LocalBotComponent implements OnInit {
           teamIds.push(team._id);
         });
         self.showLazyLoader = true;
-
-        self.commonService.put('user', `/usr/${self.selectedBot._id}/addToGroups?app=${this.commonService.app._id}`, { groups: teamIds })
+        self.commonService.put('user', `/${this.commonService.app._id}/user/utils/addToGroups/${self.selectedBot._id}`, { groups: teamIds })
           .subscribe(() => {
             self.showLazyLoader = false;
             self.getUserTeam();

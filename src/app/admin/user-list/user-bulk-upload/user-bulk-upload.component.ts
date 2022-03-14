@@ -124,7 +124,7 @@ export class UserBulkUploadComponent implements OnInit {
     self.uploadObj.showUploadSpinner = true;
     self.uploadObj.showUploadTag = true;
     self.uploadObj.uploadError = false;
-    self.subscriptions['uploadFile_'] = self.commonService.uploadFile('user', '/usr/bulkCreate/upload', formData)
+    self.subscriptions['uploadFile_'] = self.commonService.uploadFile('user', `/${this.commonService.app._id}/user/utils/bulkCreate/upload`, formData)
       .subscribe(event => {
         if (event.type === HttpEventType.UploadProgress) {
           self.uploadObj.uploadProgress = Math.round(event.loaded / event.total * 100);
@@ -177,7 +177,7 @@ export class UserBulkUploadComponent implements OnInit {
     self.fileSettings.type = self.fileData.type;
     self.fileSettings.fileName = self.fileData.fileName;
     self.fileSettings.fileId = self.fileData.fileId;
-    const path = '/usr/bulkCreate/' + self.fileData.fileId + '/sheetSelect';
+    const path = `/${this.commonService.app._id}/user/bulkCreate/utils/` + self.fileData.fileId + '/sheetSelect';
     self.subscriptions['file-settings'] = self.commonService.put('user', path, self.fileSettings)
       .subscribe(res => {
         self.parseObj.showParseTag = false;
@@ -221,7 +221,7 @@ export class UserBulkUploadComponent implements OnInit {
   getErrorLog(data) {
     const self = this;
     self.showLazyLoader = true;
-    const path = '/usr/bulkCreate/' + self.fileMappingData.fileId + '/validate';
+    const path = `/${this.commonService.app._id}/user/bulkCreate/utils/` + self.fileMappingData.fileId + '/validate';
     self.subscriptions['file-settings'] = self.commonService.put('user', path, data)
       .subscribe(res => {
         self.showLazyLoader = false;
@@ -238,7 +238,7 @@ export class UserBulkUploadComponent implements OnInit {
   getCount() {
     const self = this;
     self.showLazyLoader = true;
-    const path = '/usr/bulkCreate/' + self.fileMappingData.fileId + '/count';
+    const path = `/${this.commonService.app._id}/user/bulkCreate/utils/` + self.fileMappingData.fileId + '/count';
     self.subscriptions['getCount'] = self.commonService.get('user', path, { noApp: true, filter: self.apiConfig.filter })
       .subscribe(res => {
         self.totalUserCount = res;
@@ -305,7 +305,7 @@ export class UserBulkUploadComponent implements OnInit {
   getUsers() {
     const self = this;
     self.tableLoader = true;
-    const path = '/usr/bulkCreate/' + self.fileMappingData.fileId + '/userList';
+    const path = `/${this.commonService.app._id}/user/bulkCreate/utils/` + self.fileMappingData.fileId + '/userList';
     self.subscriptions['getUsers'] = self.commonService.get('user', path, self.apiConfig)
       .subscribe(res => {
         self.userList = res;
@@ -327,7 +327,7 @@ export class UserBulkUploadComponent implements OnInit {
       }
     };
     self.tableLoader = true;
-    const path = '/usr/bulkCreate/' + self.fileMappingData.fileId+ '/userList';
+    const path = `/${this.commonService.app._id}/user/bulkCreate/utils/` + self.fileMappingData.fileId + '/userList';
     self.subscriptions['getConflicts'] = self.commonService.get('user', path, apiConfig)
       .subscribe(res => {
         self.conflictRecords = res;
@@ -342,7 +342,7 @@ export class UserBulkUploadComponent implements OnInit {
 
   resolveContinue() {
     const self = this;
-    const path = '/usr/bulkCreate/' + self.fileMappingData.fileId;
+    const path = `/${this.commonService.app._id}/user/bulkCreate/utils/` + self.fileMappingData.fileId;
     self.fileSettings['conflictSerialNo'] = self.resolveArray;
     self.fileSettings['fileId'] = self.fileMappingData.fileId;
     self.subscriptions['file-settings'] = self.commonService.post('user', path, self.fileSettings)

@@ -329,7 +329,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
     }
     getUserDetail() {
         const self = this;
-        self.subscriptions['userDetails'] = self.commonService.get('user', `/usr/app/${self.appData._id}`, { noApp: true, count: -1 })
+        self.subscriptions['userDetails'] = self.commonService.get('user', `/admin/app/${self.appData._id}`, { noApp: true, count: -1 })
             .subscribe(d => {
                 if (d.length > 0) {
                     self.userList = d;
@@ -351,7 +351,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
                 _id: { $nin: existingUserIds }
             }
         };
-        self.subscriptions['userlist'] = self.commonService.get('user', '/usr', config).subscribe((d: Array<UserDetails>) => {
+        self.subscriptions['userlist'] = self.commonService.get('user', `/${this.appData._id}/user`, config).subscribe((d: Array<UserDetails>) => {
             if (d.length > 0) {
                 d.forEach(u => {
                     u.checked = false;
@@ -521,7 +521,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         const self = this;
         if (self.selectedGroup && self.selectedGroup.length > 0) {
             self.userConfig.filter['_id'] = { $in: self.selectedGroup.users };
-            self.subscriptions['getuserlist'] = self.commonService.get('user', '/usr', self.userConfig).subscribe(d => {
+            self.subscriptions['getuserlist'] = self.commonService.get('user', `/${this.appData._id}/user`, self.userConfig).subscribe(d => {
                 if (d.length > 0) {
                     self.groupUserList = d;
                 }

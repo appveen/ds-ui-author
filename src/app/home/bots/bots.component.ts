@@ -115,7 +115,7 @@ export class BotsComponent implements OnInit, OnDestroy {
                 bot: [true],
                 attributes: [{}],
                 basicDetails: self.fb.group({
-                    name: [null, [Validators.required,Validators.maxLength(30), Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
+                    name: [null, [Validators.required, Validators.maxLength(30), Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
                     phone: [null],
                     email: [null, [Validators.pattern(/[\w]+@[a-zA-Z0-9-]{2,}(\.[a-z]{2,})+/)]],
                     description: [null],
@@ -170,7 +170,7 @@ export class BotsComponent implements OnInit, OnDestroy {
     }
 
     initConfig() {
-        const self = this;  
+        const self = this;
         self.botList = [];
         self.apiConfig.count = 10;
         self.apiConfig.page = 1;
@@ -222,8 +222,9 @@ export class BotsComponent implements OnInit, OnDestroy {
         const payload = {
             groups: teamData
         };
+
         const username = self.userForm.get('userData.username').value;
-        self.commonService.put('user', `/usr/${username}/${self.commonService.app._id}/import`, payload)
+        self.commonService.put('user', `/${self.commonService.app._id}/user/utils/import/${username}`, payload)
             .subscribe((res) => {
                 self.newBotModalRef.close(true);
                 self.initConfig();
@@ -252,7 +253,7 @@ export class BotsComponent implements OnInit, OnDestroy {
             user: userData,
             groups: teamData
         };
-        self.commonService.post('user', `/usr/app/${self.commonService.app._id}/create`, payload)
+        self.commonService.post('user', `/${self.commonService.app._id}/user`, payload)
             .subscribe((res) => {
                 self.newBotModalRef.close(true);
                 self.initConfig();

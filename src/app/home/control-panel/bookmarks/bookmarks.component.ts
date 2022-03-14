@@ -258,7 +258,7 @@ export class BookmarksComponent implements OnInit {
       count: -1,
       noApp: true
     };
-    self.subscriptions['getMembers'] = self.commonService.get('user', `/usr/`, options)
+    self.subscriptions['getMembers'] = self.commonService.get('user', `/${this.commonService.app._id}/user`, options)
       .subscribe((res) => {
         self.userList = res;
       }, (err) => {

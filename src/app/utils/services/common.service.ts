@@ -236,7 +236,7 @@ export class CommonService {
 
     private _fetchUserRolesApi_() {
         const self = this;
-        const URL = environment.url['user'] + `/usr/${self.userDetails._id}/allRoles`;
+        const URL = environment.url['user'] + `/data/${self.userDetails._id}/allRoles`;
         const filter: any = {
             'roles.type': 'author'
         };
@@ -488,7 +488,7 @@ export class CommonService {
             self.subscriptions['closeAllSessions'].unsubscribe();
         }
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['closeAllSessions'] = self.delete('user', `/usr/${userId}/closeAllSessions`).subscribe(
+            self.subscriptions['closeAllSessions'] = self.delete('user', `/${this.app._id}/user/utils/closeAllSessions/${userId}`).subscribe(
                 res => {
                     resolve(res);
                 },
@@ -955,7 +955,7 @@ export class CommonService {
             .set('Content-Type', 'application/json')
             .set('Authorization', 'JWT ' + token)
             .set('txnId', sh.unique(uuid() + '-' + self.appService.randomStr(5)));
-        const URL = environment.url.user + '/usr/hb';
+        const URL = environment.url.user + '/auth/hb';
         const payload = {
             uuid: sessionStorage.getItem('ba-uuid')
         };
@@ -1303,7 +1303,7 @@ export class CommonService {
             if (self.userMap && self.userMap[userId]) {
                 resolve(self.userMap[userId]);
             } else {
-                self.get('user', '/usr/' + userId).subscribe(
+                self.get('user', `/${this.app._id}/user/${userId}`).subscribe(
                     res => {
                         self.userMap[userId] = res;
                         resolve(self.userMap[userId]);

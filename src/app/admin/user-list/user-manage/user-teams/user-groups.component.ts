@@ -42,7 +42,7 @@ export class UserGroupsComponent implements OnInit {
     getUserApps() {
         const self = this;
         self.showSpinner = true;
-        self.subscriptions['userApps'] = self.commonService.get('user', '/usr/' + self.user._id + '/appList', self.userAppConfig)
+        self.subscriptions['userApps'] = self.commonService.get('user', '/data/' + self.user._id + '/appList', self.userAppConfig)
             .subscribe(res => {
                 self.showSpinner = false;
                 const temp = [];

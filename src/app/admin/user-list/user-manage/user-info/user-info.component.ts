@@ -121,10 +121,10 @@ export class UserInfoComponent implements OnInit, OnDestroy {
             password: [null],
             cpassword: [null, [Validators.required]],
         });
-        if(self.commonService.userDetails.rbacPasswordComplexity){
+        if (self.commonService.userDetails.rbacPasswordComplexity) {
             self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*?~]).+$/)])
         }
-        else{
+        else {
             self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8)])
         }
         self.resetPasswordForm.get('password').updateValueAndValidity();
@@ -244,7 +244,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
             self.user.basicDetails.phone = self.userBasicDetail.get('phone').value;
             self.user.basicDetails.alternateEmail = self.userBasicDetail.get('alternateEmail').value;
             self.showLazyLoader = true;
-            self.commonService.put('user', '/usr/' + self.user._id, self.user)
+            self.commonService.put('user', '/admin/user/' + self.user._id, self.user)
                 .subscribe(() => {
                     self.showLazyLoader = false;
                     self.ts.success('Basic Details of user updated Successfully');
@@ -272,7 +272,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
             }
             self.user.username = self.userCreds.get('username').value;
             self.showLazyLoader = true;
-            self.commonService.put('user', '/usr/' + self.user._id, self.user)
+            self.commonService.put('user', '/admin/user/' + self.user._id, self.user)
                 .subscribe(() => {
                     self.showLazyLoader = false;
                     self.ts.success('Username updated Successfully');
@@ -301,7 +301,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
         if (data) {
             self.user.attributes[data._id] = null;
             self.showLazyLoader = true;
-            self.commonService.put('user', '/usr/' + self.user._id, self.user)
+            self.commonService.put('user', '/admin/user/' + self.user._id, self.user)
                 .subscribe((updatedUser) => {
                     self.showLazyLoader = false;
                     self.user = updatedUser;
@@ -350,7 +350,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
                     }
                     self.userAttributeList = arr;
                     self.showLazyLoader = true;
-                    self.commonService.put('user', '/usr/' + self.user._id, self.user)
+                    self.commonService.put('user', '/admin/user/' + self.user._id, self.user)
                         .subscribe(() => {
                             self.showLazyLoader = false;
                             self.ts.success('Attributes of user updated Successfully');
@@ -401,7 +401,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
             return;
         } else {
             self.showLazyLoader = true;
-            self.commonService.put('user', '/usr/' + self.user._id + '/reset', self.resetPasswordForm.value)
+            self.commonService.put('user', '/admin/user/utils/reset/' + self.user._id, self.resetPasswordForm.value)
                 .subscribe(() => {
                     self.showLazyLoader = false;
                     self.resetPasswordModelRef.close();

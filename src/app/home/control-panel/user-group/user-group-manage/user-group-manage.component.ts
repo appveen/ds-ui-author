@@ -193,7 +193,7 @@ export class UserGroupManageComponent implements OnInit, OnDestroy, CanComponent
       noApp: true
     };
     const arr = [];
-    arr.push(self.commonService.get('user', `/${self.commonService.app._id}/group/${self.group._id}/usr`, options).toPromise());
+    arr.push(self.commonService.get('user', `/${self.commonService.app._id}/group/${self.group._id}/user`, options).toPromise());
     // arr.push(self.commonService.get('user', `/bot/app/${self.commonService.app._id}/`, options).toPromise());
     Promise.all(arr).then(res => {
       self.allUsers = Array.prototype.concat.apply([], res);
