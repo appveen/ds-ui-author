@@ -403,7 +403,7 @@ export class CommonService {
                 noApp: true
             };
             self.lastAppPrefId = null;
-            self.subscriptions['fetchLastActiveApp'] = self.get('user', '/preferences', options).subscribe(
+            self.subscriptions['fetchLastActiveApp'] = self.get('user', '/data/preferences', options).subscribe(
                 prefRes => {
                     if (prefRes && prefRes.length > 0) {
                         self.lastAppPrefId = prefRes[0]._id;
@@ -444,9 +444,9 @@ export class CommonService {
             };
             let response: Observable<any>;
             if (self.lastAppPrefId) {
-                response = self.put('user', '/preferences/' + self.lastAppPrefId, payload);
+                response = self.put('user', '/data/preferences/' + self.lastAppPrefId, payload);
             } else {
-                response = self.post('user', '/preferences', payload);
+                response = self.post('user', '/data/preferences', payload);
             }
             self.subscriptions['saveLastActiveApp'] = response.subscribe(
                 res => {
@@ -467,7 +467,7 @@ export class CommonService {
         }
         return new Promise<any>((resolve, reject) => {
             if (self.lastAppPrefId) {
-                self.subscriptions['deleteLastActiveApp'] = self.delete('user', '/preferences/' + self.lastAppPrefId).subscribe(
+                self.subscriptions['deleteLastActiveApp'] = self.delete('user', '/data/preferences/' + self.lastAppPrefId).subscribe(
                     res => {
                         self.lastAppPrefId = null;
                         resolve(null);
@@ -749,7 +749,7 @@ export class CommonService {
 
     private _isAuthenticatedApi_(noLoader?: boolean) {
         const self = this;
-        const URL = environment.url['user'] + '/check';
+        const URL = environment.url['user'] + '/auth/check';
         return self.http.get(URL, { headers: self._getHeaders(false) })
     }
 
@@ -824,7 +824,7 @@ export class CommonService {
                 if (type === 'boolean') {
                     if (returned) {
                         self.userLoggedOut.emit(true);
-                        self.subscriptions['logout'] = self.delete('user', '/logout').subscribe(
+                        self.subscriptions['logout'] = self.delete('user', '/auth/logout').subscribe(
                             res => {
                                 self.clearData();
                                 self.appService.setFocus.emit('username');
@@ -843,7 +843,7 @@ export class CommonService {
                         result => {
                             if (result) {
                                 self.userLoggedOut.emit(true);
-                                self.subscriptions['logout'] = self.delete('user', '/logout').subscribe(
+                                self.subscriptions['logout'] = self.delete('user', '/auth/logout').subscribe(
                                     res => {
                                         self.clearData();
                                         self.appService.setFocus.emit('username');
@@ -863,7 +863,7 @@ export class CommonService {
                 }
             } else {
                 self.userLoggedOut.emit(true);
-                self.subscriptions['logout'] = self.delete('user', '/logout').subscribe(
+                self.subscriptions['logout'] = self.delete('user', '/auth/logout').subscribe(
                     res => {
                         self.clearData();
                         if (!noRedirect) {

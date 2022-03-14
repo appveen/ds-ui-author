@@ -32,7 +32,7 @@ export class UserGroupAppcenterBokmarkComponent implements OnInit {
     const self = this;
     self.bookmarkConfig.select = 'name';
     self.showLazyLoader = true;
-    const path = '/app/' + self.commonService.app._id + '/bookmark';
+    const path = '/' + self.commonService.app._id + '/bookmark';
     self.subscriptions['getBookmarkList'] = self.commonService.get('user', path, self.bookmarkConfig)
       .subscribe((res) => {
         self.showLazyLoader = false;

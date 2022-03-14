@@ -92,7 +92,7 @@ export class UserGroupManageComponent implements OnInit, OnDestroy, CanComponent
     self.apiConfig.filter = {
       app: this.commonService.app._id
     };
-    self.subscriptions['getGroup'] = self.commonService.get('user', '/group/' + id, self.apiConfig).subscribe(res => {
+    self.subscriptions['getGroup'] = self.commonService.get('user', `/${this.commonService.app._id}/group/` + id, self.apiConfig).subscribe(res => {
       self.showLazyLoader = false;
       try {
         if (res.roles && res.roles.length > 0) {
@@ -167,9 +167,9 @@ export class UserGroupManageComponent implements OnInit, OnDestroy, CanComponent
     }
     self.showLazyLoader = true;
     if (self.group._id) {
-      response = self.commonService.put('user', '/group/' + self.group._id, payload);
+      response = self.commonService.put('user', `/${this.commonService.app._id}/group/` + self.group._id, payload);
     } else {
-      response = self.commonService.post('user', '/group/', payload);
+      response = self.commonService.post('user', `/${this.commonService.app._id}/group/`, payload);
     }
     self.subscriptions['saveGroup'] = response.subscribe(res => {
       self.updatedGrpName = res.name;
@@ -217,7 +217,7 @@ export class UserGroupManageComponent implements OnInit, OnDestroy, CanComponent
   closeDeleteModal(data) {
     const self = this;
     if (data) {
-      const url = '/group/' + data._id + '?app=' + this.commonService.app._id;
+      const url = `/${this.commonService.app._id}/group/${data._id}`
       self.showLazyLoader = true;
       self.subscriptions['deleteGroup'] = self.commonService.delete('user', url).subscribe(d => {
         self.showLazyLoader = false;

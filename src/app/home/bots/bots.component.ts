@@ -314,7 +314,7 @@ export class BotsComponent implements OnInit, OnDestroy {
         if (self.hasPermission('PMB') || self.hasPermission('PVB')) {
             self.getBotCount();
             self.showLazyLoader = true;
-            self.subscriptions['botList'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}`, self.apiConfig)
+            self.subscriptions['botList'] = self.commonService.get('user', `/${self.commonService.app._id}/bot`, self.apiConfig)
                 .subscribe((users) => {
                     self.showLazyLoader = false;
                     if (users.length > 0) {
@@ -336,7 +336,7 @@ export class BotsComponent implements OnInit, OnDestroy {
             self.subscriptions['botCount'].unsubscribe();
         }
         if (self.hasPermission('PMB') || self.hasPermission('PVB')) {
-            self.subscriptions['botCount'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}/count`, self.apiConfig)
+            self.subscriptions['botCount'] = self.commonService.get('user', `/${self.commonService.app._id}/bot/utils/count`, self.apiConfig)
                 .subscribe((res) => {
                     self.totalRecords = res;
                 }, (err) => {

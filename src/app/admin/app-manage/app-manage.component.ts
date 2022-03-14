@@ -282,7 +282,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.groupConfig.filter = {
             app: appId
         };
-        self.commonService.get('user', '/group', self.groupConfig).subscribe(res => {
+        self.commonService.get('user', `/${this.commonService.app._id}/group`, self.groupConfig).subscribe(res => {
             if (res.length > 0) {
                 self.groupList = res;
                 const index = self.groupList.findIndex(e => e.name === '#');

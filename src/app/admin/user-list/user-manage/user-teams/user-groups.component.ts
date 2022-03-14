@@ -80,7 +80,7 @@ export class UserGroupsComponent implements OnInit {
         const self = this;
         self.userAppGroupConfig.filter = { app: self.selectedApp, users: self.user._id };
         self.showLazyLoader = true;
-        self.subscriptions['userGroupForApp'] = self.commonService.get('user', '/group', self.userAppGroupConfig)
+        self.subscriptions['userGroupForApp'] = self.commonService.get('user', `/${this.commonService.app._id}/group`, self.userAppGroupConfig)
             .subscribe((groups) => {
                 self.showLazyLoader = false;
                 self.groupList = [];

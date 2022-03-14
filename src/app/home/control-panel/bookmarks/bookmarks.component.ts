@@ -144,7 +144,7 @@ export class BookmarksComponent implements OnInit {
       filter: self.bookmarkConfig.filter,
       noApp: true
     };
-    const path = '/app/' + self.commonService.app._id + '/bookmark/count';
+    const path = '/' + self.commonService.app._id + '/bookmark/utils/count';
     self.subscriptions['getBookmarkList'] = self.commonService.get('user', path, options)
       .subscribe((res) => {
         self.totalRecords = res;
@@ -155,7 +155,7 @@ export class BookmarksComponent implements OnInit {
 
   getBookmarkList() {
     const self = this;
-    const path = '/app/' + self.commonService.app._id + '/bookmark';
+    const path = '/' + self.commonService.app._id + '/bookmark';
     self.subscriptions['getBookmarkList'] = self.commonService.get('user', path, self.bookmarkConfig)
       .subscribe((res) => {
         self.showLazyLoader = false;
@@ -203,7 +203,7 @@ export class BookmarksComponent implements OnInit {
   }
   closeDeleteModal(event) {
     const self = this;
-    const path = '/app/' + self.commonService.app._id + '/bookmark';
+    const path = '/' + self.commonService.app._id + '/bookmark';
     if (event) {
       self.subscriptions['deleteBookmark'] = self.commonService.delete('user', path + '/' + event._id)
         .subscribe((res) => {
@@ -220,9 +220,9 @@ export class BookmarksComponent implements OnInit {
   closeBulkDeleteModal(event) {
     const self = this;
     const ids = self.bookmarkList.filter(e => e.checked).map(e => e._id);
-    const path = '/app/' + self.commonService.app._id + '/bookmark';
+    const path = '/' + self.commonService.app._id + '/bookmark';
     if (event) {
-      self.subscriptions['bulkDeleteBookmark'] = self.commonService.delete('user', path + '/bulkDelete?id=' + ids.join(','))
+      self.subscriptions['bulkDeleteBookmark'] = self.commonService.delete('user', path + '/utils/bulkDelete?id=' + ids.join(','))
         .subscribe((res) => {
           self.showLazyLoader = false;
           self.getBookmarkList();

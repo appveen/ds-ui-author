@@ -113,7 +113,7 @@ export class LocalBotComponent implements OnInit {
       },
       noApp: true
     }
-    self.subscriptions['getUserList'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}`, options)
+    self.subscriptions['getUserList'] = self.commonService.get('user', `/${self.commonService.app._id}/bot`, options)
       .subscribe((users) => {
         self.showLazyLoader = false;
         if (users.length) {
@@ -138,7 +138,7 @@ export class LocalBotComponent implements OnInit {
       },
       noApp: true
     }
-    self.subscriptions['getUserCount'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}/count`, options)
+    self.subscriptions['getUserCount'] = self.commonService.get('user', `/${self.commonService.app._id}/bot/utils/count`, options)
       .subscribe((count) => {
         self.botCount = count;
 
@@ -164,7 +164,7 @@ export class LocalBotComponent implements OnInit {
       },
       noApp: true
     }
-    self.subscriptions['getUserList'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}`, options)
+    self.subscriptions['getUserList'] = self.commonService.get('user', `/${self.commonService.app._id}/bot`, options)
       .subscribe((users) => {
         self.showLazyLoader = false;
         if (users.length) {
@@ -267,7 +267,7 @@ export class LocalBotComponent implements OnInit {
         payload.expires = payload.expires * 1440;
         self.showLazyLoader = true;
 
-        self.commonService.post('user', `/bot/botKey/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
+        self.commonService.post('user', `/${self.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
           .subscribe((res) => {
             self.showLazyLoader = false;
             self.keyForm.reset();
@@ -580,7 +580,7 @@ export class LocalBotComponent implements OnInit {
   toggleStatus(event) {
     const self = this;
     self.showLazyLoader = true;
-    self.commonService.put('user', `/bot/${self.selectedBot._id}/status/${self.selectedBot.isActive ? 'disable' : 'enable'}?app=${this.commonService.app._id}`).subscribe((res) => {
+    self.commonService.put('user', `/${self.commonService.app._id}/bot/utils/status/${self.selectedBot._id}/${self.selectedBot.isActive ? 'disable' : 'enable'}?app=${this.commonService.app._id}`).subscribe((res) => {
       self.selectedBot = res;
       const index = self.botRecords.findIndex(e => e._id === res._id)
       self.botRecords[index] = res;

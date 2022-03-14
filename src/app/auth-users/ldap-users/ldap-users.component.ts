@@ -67,7 +67,7 @@ export class LdapUsersComponent implements OnInit, OnDestroy {
       self.searchModal.searchText = null;
       return;
     }
-    self.commonService.post('user', '/ldap/search', self.searchModal).subscribe(res => {
+    self.commonService.post('user', '/auth/ldap/search', self.searchModal).subscribe(res => {
       self.users = res;
       self.users.forEach(u => {
         if (self.selectedUsers.find(e => e.username && u.username
@@ -120,7 +120,7 @@ export class LdapUsersComponent implements OnInit, OnDestroy {
     self.importingUsersModalRef = self.commonService
       .modal(self.importingUsersModal, { centered: true, beforeDismiss: () => false });
     self.importingUsersModalRef.result.then(close => { }, dismiss => { });
-    self.commonService.post('user', '/ldap/import', self.selectedUsers).subscribe(res => {
+    self.commonService.post('user', '/auth/ldap/import', self.selectedUsers).subscribe(res => {
       self.importingUsersModalRef.close();
       self.appService.toggleSideNav.emit(true);
       self.toggleChange.emit(false);
@@ -134,7 +134,7 @@ export class LdapUsersComponent implements OnInit, OnDestroy {
 
   checkIfUserExist(user: UsersResponse) {
     const self = this;
-    self.commonService.get('user', '/usr', { filter: { username: user.username }, select: '_id', noApp: true }).subscribe(res => {
+    self.commonService.get('user', `/${this.commonService.app._id}/user`, { filter: { username: user.username }, select: '_id', noApp: true }).subscribe(res => {
       if (res && res.length > 0) {
         user.selected = true;
         user.exist = true;

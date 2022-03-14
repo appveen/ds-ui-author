@@ -131,7 +131,7 @@ export class ManageBookmarksComponent implements OnInit {
   }
   saveBookmark() {
     const self = this;
-    const path = '/app/' + self.commonService.app._id + '/bookmark';
+    const path = '/' + self.commonService.app._id + '/bookmark';
     const payload = self.bookmarkForm.value;
     if (self._bookmark && self._bookmark._id) {
       self.subscriptions['addBookmark'] = self.commonService.put('user', path + '/' + self._bookmark._id, payload)
