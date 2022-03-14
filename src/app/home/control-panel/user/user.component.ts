@@ -639,7 +639,7 @@ export class UserComponent implements OnInit, OnDestroy {
             return;
         }
         this.showLazyLoader = true;
-        this.commonService.get('user', `/authType/${enteredUN}`).subscribe(
+        this.commonService.get('user', `/auth/authType/${enteredUN}`).subscribe(
             res => {
                 this.showLazyLoader = false;
                 this.userInLocal = true;

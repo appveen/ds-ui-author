@@ -545,7 +545,7 @@ export class CommonService {
         const httpHeaders = new HttpHeaders()
             .set('Content-Type', 'application/json')
             .set('Authorization', 'JWT ' + token);
-        return self.http.get(environment.url.user + '/extend', {
+        return self.http.get(environment.url.user + '/auth/extend', {
             headers: httpHeaders
         });
     }
@@ -787,7 +787,7 @@ export class CommonService {
 
     checkAuthType() {
         const self = this;
-        const URL = environment.url['user'] + '/authType/' + self.userDetails._id;
+        const URL = environment.url['user'] + '/auth/authType/' + self.userDetails._id;
         if (self.subscriptions['checkAuthType']) {
             self.subscriptions['checkAuthType'].unsubscribe();
         }
@@ -938,7 +938,7 @@ export class CommonService {
             .set('Authorization', 'JWT ' + token)
             .set('rToken', 'JWT ' + self.sessionService.getRefreshToken())
             .set('txnId', sh.unique(uuid() + '-' + self.appService.randomStr(5)));
-        const URL = environment.url.user + '/refresh';
+        const URL = environment.url.user + '/auth/refresh';
         return self.http.get(URL, { headers: httpHeaders });
     }
 

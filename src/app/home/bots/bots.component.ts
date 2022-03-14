@@ -275,7 +275,7 @@ export class BotsComponent implements OnInit, OnDestroy {
             self.userForm.get('userData.username').patchValue(null);
             return;
         }
-        self.commonService.get('user', `/authType/${enteredUN}`)
+        self.commonService.get('user', `/auth/authType/${enteredUN}`)
             .subscribe(res => {
                 const temp = res;
                 self.userExist = true;

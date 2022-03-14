@@ -440,7 +440,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         const username = this.userForm.get('username').value;
         this.invalidUniqueUsername = false;
         if (username) {
-            this.commonService.get('user', '/authType/' + username).subscribe(
+            this.commonService.get('user', '/auth/authType/' + username).subscribe(
                 res => {
                     this.invalidUniqueUsername = true;
                 },

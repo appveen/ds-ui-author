@@ -102,7 +102,7 @@ export class LoginComponent implements OnInit, AfterViewInit, AfterContentChecke
                 return;
             }
             self.loader = true;
-            self.subscriptions['login'] = self.commonService.get('user', '/authType/' + username, { noApp: true, skipAuth: true }).subscribe(res => {
+            self.subscriptions['login'] = self.commonService.get('user', '/auth/authType/' + username, { noApp: true, skipAuth: true }).subscribe(res => {
                 self.authTypeChecked = true;
                 self.loader = false;
                 self.appService.fqdn = res.fqdn;
