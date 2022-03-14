@@ -415,7 +415,7 @@ export class SchemaBuilderComponent implements
                     if (schemaFree) {
                         self.schemaFreeConfiguration();
                     }
-                   
+
                     self.form.get('schemaFree').patchValue(schemaFree);
                 }
             }
@@ -456,7 +456,7 @@ export class SchemaBuilderComponent implements
         });
 
         // remove conditions
-        if(self.roleData && self.roleData.roles){
+        if (self.roleData && self.roleData.roles) {
             self.roleData.roles.forEach(role => {
                 role.rule = [];
             });
@@ -563,9 +563,9 @@ export class SchemaBuilderComponent implements
 
         self.showLazyLoader = true;
         if (self.edit.id) {
-            response = self.commonService.put('serviceManager', '/service/' + self.edit.id, payload);
+            response = self.commonService.put('serviceManager', `/${this.commonService.app._id}/service/` + self.edit.id, payload);
         } else {
-            response = self.commonService.post('serviceManager', '/service', payload);
+            response = self.commonService.post('serviceManager', `/${this.commonService.app._id}/service`, payload);
         }
         response.subscribe(res => {
             self.showLazyLoader = false;
@@ -597,19 +597,18 @@ export class SchemaBuilderComponent implements
         const self = this;
         if (!self.isSchemaFree && self.form.get(['definition', 0, 'counter']).dirty && self.edit.id) {
             const payload = self.schemaStructurePipe.transform(self.form.value);
-            self.commonService.get('serviceManager', '/' + self.edit.id + '/' + self.commonService.app._id +
-                '/idCount', { filter: { app: this.commonService.app._id } }).subscribe(res => {
-                    if (payload.definition.find(d => d.key === '_id').counter <= res) {
-                        self.commonService.errorToast(
-                            { status: 400 }, 'Invalid value for counter because the current counter value is  ' + res);
-                        self.enableEdit(true);
-                        return;
-                    } else {
-                        self.save(true);
-                    }
-                }, err => {
-                    self.commonService.errorToast(err, 'Unable to get the count.');
-                });
+            self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/idCount/${this.edit.id}`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
+                if (payload.definition.find(d => d.key === '_id').counter <= res) {
+                    self.commonService.errorToast(
+                        { status: 400 }, 'Invalid value for counter because the current counter value is  ' + res);
+                    self.enableEdit(true);
+                    return;
+                } else {
+                    self.save(true);
+                }
+            }, err => {
+                self.commonService.errorToast(err, 'Unable to get the count.');
+            });
         } else {
             self.save(true);
         }
@@ -618,7 +617,7 @@ export class SchemaBuilderComponent implements
     deploy(payload: any) {
         const self = this;
         self.showLazyLoader = true;
-        self.commonService.put('serviceManager', '/' + payload._id + '/deploy', { app: this.commonService.app._id }).subscribe(res => {
+        self.commonService.put('serviceManager', `/${this.commonService.app._id}/service/utils/${payload._id}/deploy`, { app: this.commonService.app._id }).subscribe(res => {
             self.showLazyLoader = false;
             self.action.loading = false;
             self.roleChange = false;
@@ -746,7 +745,7 @@ export class SchemaBuilderComponent implements
         const self = this;
         (self.form.get('definition') as FormArray).clear();
         self.edit.loading = true;
-        self.subscriptions['getservice'] = self.commonService.get('serviceManager', '/service/' + id + '?draft=true', { filter: { app: this.commonService.app._id } })
+        self.subscriptions['getservice'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/` + id + '?draft=true', { filter: { app: this.commonService.app._id } })
             .subscribe(res => {
                 self.commonService.apiCalls.componentLoading = false;
                 self.schemaService.initialState(res);

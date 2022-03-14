@@ -1284,7 +1284,7 @@ export class CommonService {
             if (self.serviceMap && self.serviceMap[serviceId]) {
                 resolve(self.serviceMap[serviceId]);
             } else {
-                self.get('serviceManager', '/service/' + serviceId + '?draft=true', { filter: { app: this.app._id } }).subscribe(
+                self.get('serviceManager', `/${this.app._id}/service/` + serviceId + '?draft=true', { filter: { app: this.app._id } }).subscribe(
                     res => {
                         self.serviceMap[serviceId] = res;
                         resolve(self.serviceMap[serviceId]);

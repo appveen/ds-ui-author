@@ -112,7 +112,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
   // Needed this method to fetch fresh service details (not cached)
   getService(serviceId) {
     return new Promise((resolve, reject) => {
-      this.commonService.get('serviceManager', '/service/' + serviceId + '?draft=true', { filter: { app: this.commonService.app._id } }).subscribe(res => {
+      this.commonService.get('serviceManager', `/${this.commonService.app._id}/service/` + serviceId + '?draft=true', { filter: { app: this.commonService.app._id } }).subscribe(res => {
         resolve(res);
       }, err => {
         reject(err);
@@ -202,7 +202,7 @@ export class SelectBlockComponent implements OnInit, AfterContentChecked {
       app: this.commonService.app._id
     };
     if (searchTerm) {
-      self.commonService.get('serviceManager', '/service', options).subscribe(res => {
+      self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options).subscribe(res => {
         self.searchList = res;
       }, err => {
         self.searchList = [];

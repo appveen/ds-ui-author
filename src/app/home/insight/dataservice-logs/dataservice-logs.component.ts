@@ -349,7 +349,7 @@ export class DataserviceLogsComponent implements OnInit, OnDestroy {
       select: 'name',
       count: -1
     };
-    self.subscriptions['getservice'] = self.commonService.get('serviceManager', '/service', options).subscribe(
+    self.subscriptions['getservice'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options).subscribe(
       res => {
         self.dataservices = res.map(itm => ({ value: itm.name, label: itm.name }));
       },

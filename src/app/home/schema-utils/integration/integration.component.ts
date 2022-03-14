@@ -362,7 +362,7 @@ export class IntegrationComponent implements OnInit, OnDestroy {
 
     activeUrl(url) {
         this.verifyUrl.loading = true;
-        this.commonService.get('serviceManager', '/service/verifyHook?url=' + url, { filter: { app: this.commonService.app._id } }).subscribe(res => {
+        this.commonService.get('serviceManager', `/${this.commonService.app._id}/service/verifyHook?url=` + url, { filter: { app: this.commonService.app._id } }).subscribe(res => {
             this.verifyUrl.loading = false;
             this.verifyUrl.status = true;
             this.triggeredHookValidation = false;

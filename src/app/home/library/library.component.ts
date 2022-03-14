@@ -109,7 +109,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
         const payload = self.form.value;
         payload.app = self.commonService.app._id;
         self.showLazyLoader = true;
-        self.commonService.post('serviceManager', '/globalSchema', payload).subscribe(res => {
+        self.commonService.post('serviceManager', `/${this.commonService.app._id}/globalSchema`, payload).subscribe(res => {
             self.ts.success('Library Created.');
             self.appService.editLibraryId = res._id;
             self.showLazyLoader = false;
@@ -159,7 +159,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
             self.subscriptions['getLibraries'].unsubscribe();
         }
         self.showLazyLoader = true;
-        self.subscriptions['getLibraries'] = self.commonService.get('serviceManager', '/globalSchema', self.config).subscribe(res => {
+        self.subscriptions['getLibraries'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/globalSchema`, self.config).subscribe(res => {
             self.showLazyLoader = false;
             if (res.length > 0) {
                 res.forEach(_library => {
@@ -204,7 +204,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
     closeDeleteModal(data) {
         const self = this;
         if (data) {
-            const url = '/globalSchema/' + self.libraryList[data.index]._id;
+            const url = `/${this.commonService.app._id}/globalSchema/` + self.libraryList[data.index]._id;
             self.showLazyLoader = true;
             self.subscriptions['deleteLibrary'] = self.commonService.delete('serviceManager', url).subscribe(_d => {
                 self.showLazyLoader = false;

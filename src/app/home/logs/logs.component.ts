@@ -49,7 +49,7 @@ export class LogsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const self = this;
     self.setActiveTab();
-  
+
   }
 
   setActiveTab() {
@@ -58,7 +58,7 @@ export class LogsComponent implements OnInit, OnDestroy {
       self.activeTab = 1;
 
     }
-   
+
   }
   ngOnDestroy() {
     const self = this;
@@ -204,7 +204,7 @@ export class LogsComponent implements OnInit, OnDestroy {
       if (close) {
         if (self.confirmServiceName === self.service.name) {
           self.subscriptions['purge'] = self.commonService.delete('serviceManager',
-            `/${self.appService.purgeServiceId}/purge/author-audit`)
+            `/${this.commonService.app._id}}/service/utils/purge/author-audit/${self.appService.purgeServiceId}`)
             .subscribe((res) => {
               self.confirmServiceName = '';
               self.purgeModalTemplateRef.close();

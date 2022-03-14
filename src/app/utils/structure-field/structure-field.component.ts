@@ -355,7 +355,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                         app: this.commonService.app._id
                     }
                 };
-                self.subscriptions['service'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
+                self.subscriptions['service'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options).subscribe(res => {
                     self.searchingRelation = false;
                     if (res && res.length > 0) {
                         self.selectType({ value: 'Relation', label: 'Relation' });

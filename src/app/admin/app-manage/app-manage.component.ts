@@ -193,7 +193,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
                 app: `${app}`
             }
         };
-        self.commonService.get('serviceManager', '/service/count', options).subscribe(res => {
+        self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/count`, options).subscribe(res => {
             self.servicesCount = res;
         }, err => {
 

@@ -235,7 +235,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     if (prop.value && self.form.value.key && !self.isLibrary && !self.isDataFormat) {
       self.showLazyLoader = true
       self.subscriptions['unique-status'] = self.commonService
-        .get('serviceManager', '/service/' + self.edit.id + '/checkUnique', options).subscribe(res => {
+        .get('serviceManager', `/${this.commonService.app._id}/service/` + self.edit.id + '/checkUnique', options).subscribe(res => {
           self.showLazyLoader = false;
           if (!res[field]) {
             prop.patchValue(false);

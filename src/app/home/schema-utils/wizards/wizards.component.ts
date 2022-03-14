@@ -515,7 +515,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
     activeUrl(url) {
         const self = this;
         self.verifyUrl.loading = true;
-        self.commonService.get('serviceManager', '/service/verifyHook?url=' + url, { filter: { app: this.commonService.app._id } }).subscribe(res => {
+        self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/verifyHook?url=` + url, { filter: { app: this.commonService.app._id } }).subscribe(res => {
             self.verifyUrl.loading = false;
             self.verifyUrl.status = true;
             self.triggeredHookValidation = false;

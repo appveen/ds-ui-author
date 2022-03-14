@@ -89,7 +89,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     if (self.subscriptions['getServices']) {
       self.subscriptions['getServices'].unsubscribe();
     }
-    self.subscriptions['getServices'] = self.commonService.get('serviceManager', '/service', options).subscribe(
+    self.subscriptions['getServices'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options).subscribe(
       data => {
         self.services = data;
 
@@ -115,7 +115,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
           }
         };
         return self.commonService
-          .get('serviceManager', '/service', options)
+          .get('serviceManager', `/${this.commonService.app._id}/service`, options)
           .toPromise()
           .then(res => {
             return res;
@@ -290,7 +290,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
       self.subscriptions['getRelationAttributes'].unsubscribe();
     }
     self.subscriptions['getRelationAttributes'] = self.commonService
-      .get('serviceManager', '/service/' + self.properties.get('relatedTo').value, options)
+      .get('serviceManager', `/${this.commonService.app._id}/service/` + self.properties.get('relatedTo').value, options)
       .subscribe(
         res => {
           self.definition = res.definition;
@@ -353,7 +353,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
   }
   getAPI(relatedTo) {
     const self = this;
-    self.subscriptions['getRelation'] = self.commonService.get('serviceManager', '/service/' + relatedTo, { filter: { app: this.commonService.app._id } }).subscribe(
+    self.subscriptions['getRelation'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/` + relatedTo, { filter: { app: this.commonService.app._id } }).subscribe(
       res => {
         self.relatedDSDef = res.definition;
         if (self.relatedDSDef[self.relatedSearchField] && self.relatedDSDef[self.relatedSearchField].properties && self.relatedDSDef[self.relatedSearchField].properties.password) {

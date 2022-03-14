@@ -231,7 +231,7 @@ export class IntegrationFlowService {
     }
     if (!self.apiCache[data.id]) {
       if (data.type === 'dataService') {
-        self.apiCache[data.id] = self.commonService.get('serviceManager', '/service/' + data.id, options).toPromise();
+        self.apiCache[data.id] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/` + data.id, options).toPromise();
       } else {
         self.apiCache[data.id] = self.commonService.get('partnerManager', '/dataFormat/' + data.id, options).toPromise();
       }
@@ -264,7 +264,7 @@ export class IntegrationFlowService {
       if (data.meta.formatType === 'dataService') {
         options.select = 'name,definition,attributeCount';
         self.apiCache[data.meta.formatId] = self.commonService
-          .get('serviceManager', '/service/' + data.meta.formatId, options).toPromise();
+          .get('serviceManager', `/${this.commonService.app._id}/service/` + data.meta.formatId, options).toPromise();
       } else {
         self.apiCache[data.meta.formatId] = self.commonService
           .get('partnerManager', '/nanoService/' + data.meta.formatId, options).toPromise();
