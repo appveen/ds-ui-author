@@ -341,7 +341,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
     getAppDetails(app: App) {
         const self = this;
         self.showLazyLoader = true;
-        self.subscriptions['appDtl'] = self.commonService.get('user', '/app/' + app._id, { noApp: true })
+        self.subscriptions['appDtl'] = self.commonService.get('user', '/admin/app/' + app._id, { noApp: true })
             .subscribe((res: any) => {
                 self.showLazyLoader = false;
                 app = Object.assign(app, res);
@@ -359,7 +359,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
         const notReqApps = self.userApps.map(e => e._id);
         self.apiConfig.filter = { _id: { $nin: notReqApps } };
         self.showLazyLoader = true;
-        self.subscriptions['apps'] = self.commonService.get('user', '/app', self.apiConfig).subscribe(res => {
+        self.subscriptions['apps'] = self.commonService.get('user', '/admin/app', self.apiConfig).subscribe(res => {
             self.showLazyLoader = false;
             self.appList = [];
             res.forEach(item => {
@@ -396,7 +396,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
     getAppLogo(app: App) {
         const self = this;
         const option: GetOptions = { select: 'logo.thumbnail', noApp: true };
-        self.subscriptions['getAppLogo_' + app._id] = self.commonService.get('user', '/app/' + app._id, option)
+        self.subscriptions['getAppLogo_' + app._id] = self.commonService.get('user', '/admin/app/' + app._id, option)
             .subscribe((res) => {
                 app.logo = res.logo;
             }, err => {
