@@ -264,7 +264,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
     getApp(id: string) {
         const self = this;
         self.showLazyLoader = true;
-        self.commonService.get('user', '/app/' + id, { noApp: true }).subscribe(res => {
+        self.commonService.get('user', '/data/app/' + id, { noApp: true }).subscribe(res => {
             self.showLazyLoader = false;
             self.tempList = res.users;
             self.appData = Object.assign(self.appData, res);
@@ -329,7 +329,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
     }
     getUserDetail() {
         const self = this;
-        self.subscriptions['userDetails'] = self.commonService.get('user', `/admin/app/${self.appData._id}`, { noApp: true, count: -1 })
+        self.subscriptions['userDetails'] = self.commonService.get('user', `/data/app/${self.appData._id}`, { noApp: true, count: -1 })
             .subscribe(d => {
                 if (d.length > 0) {
                     self.userList = d;
@@ -425,7 +425,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         if (!this.changesDone) {
             return;
         }
-        self.commonService.put('user', '/app/' + self.appData._id, self.appData).subscribe(res => {
+        self.commonService.put('user', '/data/app/' + self.appData._id, self.appData).subscribe(res => {
             self.oldData = self.appService.cloneObject(self.appData);
             self.ts.success('App saved successfully');
             self.commonService.appUpdates.emit(self.appData);
@@ -447,7 +447,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
     closeDeleteModal(data) {
         const self = this;
         if (data) {
-            const url = '/app/' + data._id;
+            const url = '/admin/app/' + data._id;
             self.showLazyLoader = true;
             self.subscriptions['deleteApp'] = self.commonService.delete('user', url).subscribe(d => {
                 self.showLazyLoader = false;
@@ -536,7 +536,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         if (self.selectedUsersForAddition.length > 0) {
             const payload = { users: self.selectedUsersForAddition };
             self.subscriptions['userAddition'] = self.commonService
-                .put('user', `/app/${self.appData._id}/addUsers`, payload)
+                .put('user', `/data/app/${self.appData._id}/addUsers`, payload)
                 .subscribe(() => {
                     self.onCancel();
                     self.getUserDetail();

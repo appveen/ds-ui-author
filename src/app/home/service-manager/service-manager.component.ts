@@ -478,7 +478,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
     _getAllServiceRecords(serviceIds: Array<string>) {
         const self = this;
-        return self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/count/all`, {
+        return self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/all/count`, {
             serviceIds: serviceIds.join(','),
             filter: { app: this.commonService.app._id }
         });

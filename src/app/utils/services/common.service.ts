@@ -221,7 +221,7 @@ export class CommonService {
             sort: '_id'
         };
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['getAllApps'] = self.get('user', '/app', options).subscribe(
+            self.subscriptions['getAllApps'] = self.get('user', '/admin/app', options).subscribe(
                 res => {
                     self.appList = res;
                     self.app = self.appList[0];
@@ -309,7 +309,7 @@ export class CommonService {
             self.subscriptions['getAppDetails_' + app._id].unsubscribe();
         }
         return new Promise((resolve, reject) => {
-            self.subscriptions['getAppDetails_' + app._id] = self.get('user', '/app/' + app._id).subscribe(
+            self.subscriptions['getAppDetails_' + app._id] = self.get('user', '/data/app/' + app._id).subscribe(
                 (res: any) => {
                     app.logo = res.logo;
                     app.appCenterStyle = res.appCenterStyle;
@@ -354,7 +354,7 @@ export class CommonService {
             promises.push(
                 new Promise((resolve, reject) => {
                     self.subscriptions['getAppsDetails'] = self
-                        .get('user', '/app/', {
+                        .get('user', '/data/app/', {
                             noApp: true,
                             count: -1,
                             select: 'description,logo.thumbnail,defaultTimezone',
