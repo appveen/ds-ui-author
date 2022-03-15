@@ -348,21 +348,23 @@ export class SchemaBuilderComponent implements
 
     fetchPermissions(id) {
         const self = this;
-        const options = {
-            filter: { entity: id }
-        };
-        if (self.serviceObj.role) {
-            self.roleData = self.serviceObj.role;
-            self.oldRoleData = self.appService.cloneObject(self.serviceObj.role);
-        } else {
-            self.subscriptions['fetchPermissions'] = self.commonService.get('user', '/role', options).subscribe(res => {
-                self.serviceObj.role = res[0];
-                self.roleData = res[0];
-                self.oldRoleData = self.appService.cloneObject(self.role);
-            }, err => {
-                self.commonService.errorToast(err, 'Unable to fetch permissions');
-            });
-        }
+        // const options = {
+        //     filter: { entity: id }
+        // };
+        self.roleData = self.serviceObj.role;
+        self.oldRoleData = self.appService.cloneObject(self.serviceObj.role);
+        // if (self.serviceObj.role) {
+        //     self.roleData = self.serviceObj.role;
+        //     self.oldRoleData = self.appService.cloneObject(self.serviceObj.role);
+        // } else {
+        //     self.subscriptions['fetchPermissions'] = self.commonService.get('user', '/role', options).subscribe(res => {
+        //         self.serviceObj.role = res[0];
+        //         self.roleData = res[0];
+        //         self.oldRoleData = self.appService.cloneObject(self.role);
+        //     }, err => {
+        //         self.commonService.errorToast(err, 'Unable to fetch permissions');
+        //     });
+        // }
     }
 
     get stateModelIfEnabled() {
