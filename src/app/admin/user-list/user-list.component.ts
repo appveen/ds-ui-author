@@ -515,7 +515,7 @@ export class UserListComponent implements OnInit, OnDestroy {
             noApp: true,
             sort: '_id'
         };
-        this.commonService.get('user', '/app', config).subscribe(
+        this.commonService.get('user', '/admin/app', config).subscribe(
             res => {
                 this.appList = res;
             },

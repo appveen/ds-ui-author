@@ -93,7 +93,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
 
     getApp(id: string) {
         const self = this;
-        self.commonService.get('user', '/app/' + id, { noApp: true }).subscribe(res => {
+        self.commonService.get('user', '/admin/app/' + id, { noApp: true }).subscribe(res => {
             self.tempList = res.users;
             self.appData = Object.assign(self.appData, res);
             self.oldData = self.appService.cloneObject(self.appData);
@@ -222,7 +222,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         if (!this.changesDone) {
             return;
         }
-        self.commonService.put('user', '/app/' + self.appData._id, self.appData).subscribe(res => {
+        self.commonService.put('user', '/admin/app/' + self.appData._id, self.appData).subscribe(res => {
             self.oldData = self.appService.cloneObject(self.appData);
             self.ts.success('App saved successfully');
             self.router.navigate(['/admin']);
@@ -235,7 +235,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         const self = this;
         self.deleteModalRef = self.commonService.modal(self.deleteModal);
         self.deleteModalRef.result.then(close => {
-            self.commonService.delete('user', '/app/' + self.appData._id).subscribe(res => {
+            self.commonService.delete('user', '/admin/app/' + self.appData._id).subscribe(res => {
                 self.ts.success('App deleted successfully');
                 self.router.navigate(['/admin']);
             }, err => {
