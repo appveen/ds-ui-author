@@ -1,0 +1,26 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.header {
+  min-height: 50px;
+  max-height: 50px;
+}
+.options {
+  min-height: 50px;
+  max-height: 50px;
+}
+
+.card-container {
+  height: calc(100vh - 170px);
+  overflow: auto;
+}
+
+.custom-style {
+  height: 100%;
+}
+
+
+.fa-exclamation-circle {
+  top: 8px;
+  right: 8px;
+}

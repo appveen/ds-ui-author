@@ -1,0 +1,75 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="apiCallsPending">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="d-flex flex-column w-100 h-100">
+    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+    <odp-basic-info hideLogo="true" [(name)]="flowData.name" [(description)]="flowData.description" [edit]="edit">
+        <div class="d-flex justify-content-end align-items-center">
+            <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link"
+                id="cancelNanoServiceBtn">
+                <span class="fa fa-close mr-2"></span>
+                <span class="text">Cancel</span>
+            </button>
+            <button *ngIf="edit.id && !edit.status && hasManagePermission" (click)="enableEditing()" type="button"
+                class="edit-button btn btn-min-width btn-primary ml-3" id="editNanoServiceBtn">
+                <span class="odp-edit mr-2"></span>
+                <span *ngIf="!flowData?.draftVersion" class="text">Edit</span>
+                <span *ngIf="flowData?.draftVersion" class="text">Edit Draft</span>
+            </button>
+            <div class="btn-group mr-3" *ngIf="edit.status">
+                <button class="btn btn-primary btn-min-width" (click)="saveDummyCode();" type="button">Save</button>
+                <div *ngIf="flowData?.draftVersion || flowData.status=='Draft'" ngbDropdown class="btn-group">
+                    <button class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle type="button"></button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                        <button *ngIf="flowData?.draftVersion || flowData.status=='Draft'" ngbDropdownItem
+                            (click)="discardDraft()" type="button">Discard
+                            Draft</button>
+                    </div>
+                </div>
+            </div>
+            <button *ngIf="edit.status && hasDeployPermission" class="btn btn-dark btn-min-width"
+                [disabled]="!isValidSchema" (click)="save(true);edit.status=false" type="button">Save &amp;
+                Deploy</button>
+        </div>
+    </odp-basic-info>
+    <div class="border-top border-bottom px-3 py-2 d-flex align-items-center justify-content-between bg-light">
+        <div class="url-info d-flex align-items-center">
+            <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
+            <span class="url text-accent">{{flowData?.inputStage?.options?.path || 'N.A.'}}</span>
+        </div>
+        <div class="editor-theme-selection d-flex align-items-center col-4">
+            <!-- <button type="button" class="btn btn-dark rounded-0 mr-3 d-flex align-items-center"
+                (click)="showConsole=!showConsole;toggleConsole()">
+                <span class="fa fa-terminal mr-2"></span>
+                <span class="text">Console</span>
+            </button> -->
+            <span class="label text-dark font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span>
+            <select class="custom-select mr-3" name="fontSize" id="fontSize" [(ngModel)]="selectedFontSize">
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="16">16</option>
+                <option value="18">18</option>
+                <option value="20">20</option>
+            </select>
+            <span class="label text-dark font-weight-bold mr-2">Theme&nbsp;:</span>
+            <select class="custom-select" name="theme" id="theme" [(ngModel)]="selectedEditorTheme">
+                <option value="vs-dark">Dark</option>
+                <option value="vs-light">Light</option>
+            </select>
+        </div>
+    </div>
+    <div class="d-flex align-items-stretch h-100 w-100">
+        <div [ngClass]="{'show':showConsole}" class="console position-absolute bg-dark text-white p-3">
+            <p *ngIf="logs.length==0">No Logs</p>
+            <pre *ngFor="let log of logs"
+                class="text-white"><span style="color:{{log.level.colour}}">[{{log.startTime}}] [{{log.level.levelStr}}] </span> {{log.data.join(' ')}}</pre>
+        </div>
+        <div class="editor-wrapper h-100">
+            <odp-code-editor *ngIf="showCodeEditor" class="code-editor" [edit]="edit" [theme]="selectedEditorTheme"
+                [fontSize]="selectedFontSize" [(code)]="code"></odp-code-editor>
+        </div>
+    </div>
+</div>

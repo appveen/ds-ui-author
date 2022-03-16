@@ -49,16 +49,16 @@ const routes: Routes = [
                 loadChildren: () => import('../home/global-schemas/global-schemas.module').then(m => m.GlobalSchemasModule),
                 canActivate: [LibraryGuard]
             },
-            {
-                path: 'pm',
-                loadChildren: () => import('../home/partner-listing/partner-listing.module').then(m => m.PartnerListingModule),
-                canActivate: [PartnerGuard]
-            },
-            {
-                path: 'po/:id',
-                loadChildren: () => import('../home/partner-onboard/partner-onboard.module').then(m => m.PartnerOnboardModule),
-                canActivate: [PartnerGuard]
-            },
+            // {
+            //     path: 'pm',
+            //     loadChildren: () => import('../home/partner-listing/partner-listing.module').then(m => m.PartnerListingModule),
+            //     canActivate: [PartnerGuard]
+            // },
+            // {
+            //     path: 'po/:id',
+            //     loadChildren: () => import('../home/partner-onboard/partner-onboard.module').then(m => m.PartnerOnboardModule),
+            //     canActivate: [PartnerGuard]
+            // },
             {
                 path: 'dfl',
                 loadChildren: () => import('../home/data-format-listing/data-format-listing.module').then(m => m.DataFormatListingModule),
@@ -69,22 +69,22 @@ const routes: Routes = [
                 loadChildren: () => import('../home/data-format-manage/data-format-manage.module').then(m => m.DataFormatManageModule),
                 canActivate: [DataFormatGuard]
             },
-            {
-                path: 'nsl',
-                loadChildren: () => import('../home/nano-service-listing/nano-service-listing.module').then(m => m.NanoServiceListingModule),
-                canActivate: [NanoServiceGuard]
-            },
-            {
-                path: 'nsm/:id',
-                loadChildren: () => import('../home/nano-service-manage/nano-service-manage.module').then(m => m.NanoServiceManageModule),
-                canActivate: [NanoServiceGuard]
-            },
-            {
-                path: 'agent',
-                loadChildren: () => import('../home/agents/agents.module').then(m => m.AgentsModule),
-                canActivate: [AgentGuard]
+            // {
+            //     path: 'nsl',
+            //     loadChildren: () => import('../home/nano-service-listing/nano-service-listing.module').then(m => m.NanoServiceListingModule),
+            //     canActivate: [NanoServiceGuard]
+            // },
+            // {
+            //     path: 'nsm/:id',
+            //     loadChildren: () => import('../home/nano-service-manage/nano-service-manage.module').then(m => m.NanoServiceManageModule),
+            //     canActivate: [NanoServiceGuard]
+            // },
+            // {
+            //     path: 'agent',
+            //     loadChildren: () => import('../home/agents/agents.module').then(m => m.AgentsModule),
+            //     canActivate: [AgentGuard]
 
-            },
+            // },
             {
                 path: 'insight',
                 loadChildren: () => import('../home/insight/insight.module').then(m => m.InsightModule),
@@ -116,6 +116,14 @@ const routes: Routes = [
             {
                 path: 'faas',
                 loadChildren: () => import('../home/faas/faas.module').then(m => m.FaasModule),
+            },
+            {
+                path: 'flow',
+                loadChildren: () => import('../home/b2b-flows/b2b-flows.module').then(m => m.B2bFlowsModule),
+            },
+            {
+                path: 'flow/:id',
+                loadChildren: () => import('../home/b2b-flows-manage/b2b-flows-manage.module').then(m => m.B2bFlowsManageModule),
             },
         ]
     },
