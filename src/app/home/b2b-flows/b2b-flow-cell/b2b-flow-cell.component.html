@@ -28,7 +28,7 @@
             <span class="badge pending">PENDING</span>
             <span class="badge pending ml-1">v{{data?.version || 1}}</span>
         </ng-container>
-        <ng-container *ngIf="data?.status=='Undeployed'">
+        <ng-container *ngIf="data?.status=='Stopped'">
             <span class="badge badge-danger">STOPPED</span>
             <span class="badge badge-danger ml-1">v{{data?.version || 1}}</span>
         </ng-container>
