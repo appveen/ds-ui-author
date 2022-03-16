@@ -39,7 +39,7 @@
     <span class="text-muted">N.A.</span>
 </ng-container>
 <span *ngIf="field == '_options' && data?._id">
-    <a *ngIf="data?.status === 'Undeployed' && hasStartStopPermission" href="#" class="text-accent mr-2"
+    <a *ngIf="data?.status === 'Stopped' && hasStartStopPermission" href="#" class="text-accent mr-2"
         (click)="$event.preventDefault();startFaas(data)">
         Start
     </a>
