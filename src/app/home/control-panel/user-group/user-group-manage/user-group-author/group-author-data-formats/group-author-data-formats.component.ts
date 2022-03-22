@@ -79,7 +79,7 @@ export class GroupAuthorDataFormatsComponent implements OnInit {
       self.subscriptions['getDataFormats'].unsubscribe();
     }
     self.showLazyLoader = true;
-    self.subscriptions['getDataFormats'] = self.commonService.get('partnerManager', '/dataFormat', options)
+    self.subscriptions['getDataFormats'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/dataFormat`, options)
       .subscribe(res => {
         self.showLazyLoader = false;
         if (res.length > 0) {

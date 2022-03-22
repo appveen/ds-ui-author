@@ -109,7 +109,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     const self = this;
     const payload = self.form.value;
     payload.app = self.commonService.app._id;
-    self.commonService.post('partnerManager', '/dataFormat', payload).subscribe(res => {
+    self.commonService.post('partnerManager', `/${this.commonService.app._id}/dataFormat`, payload).subscribe(res => {
       self.ts.success('Data Format Created.');
       self.appService.editServiceId = res._id;
       self.router.navigate(['/app/', self.commonService.app._id, 'dfm', res._id]);
@@ -147,7 +147,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     payload.formatType = self.cloneData.formatType;
     payload.character = self.cloneData.character;
     payload.excelType = self.cloneData.excelType;
-    self.commonService.post('partnerManager', '/dataFormat', payload).subscribe(res => {
+    self.commonService.post('partnerManager', `/${this.commonService.app._id}/dataFormat`, payload).subscribe(res => {
       self.ts.success('Data Format Cloned.');
       self.appService.editServiceId = res._id;
       self.cloneDataFormatModalRef.close(false);
@@ -175,7 +175,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
       this.subscriptions['getDataFormats'].unsubscribe();
     }
     this.showLazyLoader = true;
-    this.subscriptions['getDataFormats'] = this.commonService.get('partnerManager', '/dataFormat', this.apiConfig)
+    this.subscriptions['getDataFormats'] = this.commonService.get('partnerManager', `/${this.commonService.app._id}/dataFormat`, this.apiConfig)
       .pipe(
         switchMap(
           (dfArray: any[]) => {
@@ -184,7 +184,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
             }
             return forkJoin(
               dfArray.map(
-                df => this.commonService.get('partnerManager', '/flow/', {
+                df => this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/`, {
                   select: 'name',
                   filter: {
                     dataFormat: df._id
@@ -227,7 +227,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     if (data) {
       self.showLazyLoader = true;
       self.subscriptions['deleteDataFormat'] = self.commonService
-        .delete('partnerManager', '/dataFormat/' + self.dataFormatList[data.index]._id).subscribe(d => {
+        .delete('partnerManager', `/${this.commonService.app._id}/dataFormat/` + self.dataFormatList[data.index]._id).subscribe(d => {
           self.showLazyLoader = false;
           self.ts.success(d.message ? d.message : 'Data Format deleted Successfully');
           self.clearSearch();

@@ -198,7 +198,7 @@ export class DataFormatManageComponent implements
         const self = this;
         self.showLazyLoader = true;
         self.subscriptions['fillDetails'] = self.commonService
-            .get('partnerManager', '/dataFormat/' + (id ? id : self.edit.id))
+            .get('partnerManager', `/${this.commonService.app._id}/dataFormat/` + (id ? id : self.edit.id))
             .subscribe(res => {
                 self.showLazyLoader = false;
                 let temp;
@@ -350,9 +350,9 @@ export class DataFormatManageComponent implements
         payload.lineSeparator = self.form.value.lineSeparator;
         payload.strictValidation = self.form.value.strictValidation;
         if (self.edit.id) {
-            response = self.commonService.put('partnerManager', '/dataFormat/' + self.edit.id, payload);
+            response = self.commonService.put('partnerManager', `/${this.commonService.app._id}/dataFormat/` + self.edit.id, payload);
         } else {
-            response = self.commonService.post('partnerManager', '/dataFormat', payload);
+            response = self.commonService.post('partnerManager', `/${this.commonService.app._id}/dataFormat`, payload);
         }
         self.subscriptions['globalschema'] = response.subscribe(res => {
             self.commonService.commonSpinner = false;
@@ -467,7 +467,7 @@ export class DataFormatManageComponent implements
             }
         };
         self.microflows = [];
-        self.commonService.get('partnerManager', '/flow', options).subscribe(res => {
+        self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, options).subscribe(res => {
             if (res && res.length > 0) {
                 res.forEach(item => {
                     const inAgent = item.blocks.find(e => e.meta.blockType === 'INPUT');
@@ -533,7 +533,7 @@ export class DataFormatManageComponent implements
 
     getAgentName(id: string, data: any) {
         const self = this;
-        self.commonService.get('partnerManager', '/agentRegistry', {
+        self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, {
             select: 'name',
             filter: {
                 agentID: id

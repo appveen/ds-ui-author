@@ -104,7 +104,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
   }
 
   discardDraft() {
-    const path = `/${this.commonService.app._id}/faas/${this.edit.id}/draftDelete`;
+    const path = `/${this.commonService.app._id}/faas/utils/${this.edit.id}/draftDelete`;
     this.apiCalls.discardDraft = true;
     this.subscriptions['discardDraft'] = this.commonService.put('partnerManager', path, {}).subscribe(res => {
       this.apiCalls.discardDraft = false;
@@ -213,7 +213,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
 
   testRun() {
     this.apiCalls.testRun = true;
-    this.commonService.put('partnerManager', `/${this.commonService.app._id}/faas/${this.edit.id}/test`, {
+    this.commonService.put('partnerManager', `/${this.commonService.app._id}/faas/utils/${this.edit.id}/test`, {
       code: this.faasData.code,
       port: this.faasData.port
     }).subscribe(res => {

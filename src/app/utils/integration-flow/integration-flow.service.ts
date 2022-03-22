@@ -233,7 +233,7 @@ export class IntegrationFlowService {
       if (data.type === 'dataService') {
         self.apiCache[data.id] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/` + data.id, options).toPromise();
       } else {
-        self.apiCache[data.id] = self.commonService.get('partnerManager', '/dataFormat/' + data.id, options).toPromise();
+        self.apiCache[data.id] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/dataFormat/` + data.id, options).toPromise();
       }
     }
     return new Promise((resolve, reject) => {
@@ -267,7 +267,7 @@ export class IntegrationFlowService {
           .get('serviceManager', `/${this.commonService.app._id}/service/` + data.meta.formatId, options).toPromise();
       } else {
         self.apiCache[data.meta.formatId] = self.commonService
-          .get('partnerManager', '/nanoService/' + data.meta.formatId, options).toPromise();
+          .get('partnerManager', `/${this.commonService.app._id}/nanoService/` + data.meta.formatId, options).toPromise();
       }
     }
     return new Promise((resolve, reject) => {
@@ -407,7 +407,7 @@ export class IntegrationFlowService {
       options.filter.type = type;
     }
     return new Promise((resolve, reject) => {
-      self.subscriptions['getAgents'] = self.commonService.get('partnerManager', '/agentRegistry', options).subscribe(res => {
+      self.subscriptions['getAgents'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, options).subscribe(res => {
         resolve(res);
       }, err => {
         reject(err);

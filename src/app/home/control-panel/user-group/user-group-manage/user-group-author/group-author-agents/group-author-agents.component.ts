@@ -96,7 +96,7 @@ export class GroupAuthorAgentsComponent implements OnInit {
     if (self.subscriptions['getAgentList']) {
       self.subscriptions['getAgentList'].unsubscribe();
     }
-    self.subscriptions['getAgentList'] = self.commonService.get('partnerManager', '/agentRegistry', options)
+    self.subscriptions['getAgentList'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, options)
         .subscribe(res => {
           self.showLazyLoader = false;
           if (res.length > 0) {

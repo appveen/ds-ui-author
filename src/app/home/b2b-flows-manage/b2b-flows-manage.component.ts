@@ -212,7 +212,7 @@ export class B2bFlowsManageComponent implements OnInit {
 
   testRun() {
     this.apiCalls.testRun = true;
-    this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}/test`, {
+    this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/utils/${this.edit.id}/test`, {
       code: this.flowData.code,
       port: this.flowData.port
     }).subscribe(res => {

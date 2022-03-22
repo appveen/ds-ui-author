@@ -888,7 +888,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
                 app: self.commonService.app._id,
             }
         };
-        self.commonService.get('partnerManager', '/flow/status/count').subscribe(res => {
+        self.commonService.get('partnerManager', `/${self.commonService.app._id}/flow/utils/status/count`).subscribe(res => {
             self.partnerFlowStatus = res;
             self.showLazyLoader = false;
 
@@ -909,7 +909,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.startFlowAttributes['playIcon'] = 'midStage';
         self.proccessing = true;
         self.cardActionDisabled = 'disabled';
-        self.commonService.put('partnerManager', `/flow/${self.commonService.app._id}/startAll`, { app: this.commonService.app._id }).subscribe(res => {
+        self.commonService.put('partnerManager', `/${self.commonService.app._id}/flow/utils/startAll`, { app: this.commonService.app._id }).subscribe(res => {
 
             if (res) {
                 self.startFlowAttributes['playIcon'] = 'playIconHide';
@@ -934,7 +934,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.startFlowAttributes['processing'] = 'playIcon';
         self.proccessing = true;
         self.cardActionDisabled = 'disabled';
-        self.commonService.put('partnerManager', `/flow/${self.commonService.app._id}/stopAll`).subscribe(res => {
+        self.commonService.put('partnerManager', `/${self.commonService.app._id}/flow/utils/stopAll`).subscribe(res => {
             if (res) {
                 self.startFlowAttributes['stopIcon'] = 'playIconHide';
                 self.startFlowAttributes['stopCircle'] = 'hideProcessing';
