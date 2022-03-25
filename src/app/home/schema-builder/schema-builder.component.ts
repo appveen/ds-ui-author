@@ -205,6 +205,7 @@ export class SchemaBuilderComponent implements
         };
         self.nameChange = new EventEmitter();
         self.breadcrumbPaths = [];
+        self.roleData = {};
     }
 
     ngOnInit() {
@@ -348,11 +349,17 @@ export class SchemaBuilderComponent implements
 
     fetchPermissions(id) {
         const self = this;
-        // const options = {
+        // const options = { 
         //     filter: { entity: id }
         // };
-        self.roleData = self.serviceObj.role;
-        self.oldRoleData = self.appService.cloneObject(self.serviceObj.role);
+        if(self.serviceObj.role){
+            self.roleData = self.serviceObj.role;
+            self.oldRoleData = self.appService.cloneObject(self.serviceObj.role);
+        }
+        else{
+            self.roleData.roles = self.appService.getDefaultRoles();
+            self.oldRoleData = self.appService.cloneObject(self.roleData);
+        }
         // if (self.serviceObj.role) {
         //     self.roleData = self.serviceObj.role;
         //     self.oldRoleData = self.appService.cloneObject(self.serviceObj.role);
@@ -498,7 +505,7 @@ export class SchemaBuilderComponent implements
         let payload;
         if (self.hasAnyTabPermission) {
             payload = self.schemaStructurePipe.transform(value);
-            if (!self.roleData.roles || self.roleData.roles.length === 0) {
+            if (!self.roleData || !self.roleData.roles || self.roleData.roles.length === 0) {
                 self.roleData.roles = self.appService.getDefaultRoles();
             }
             const definition = self.appService.patchDataKey(self.fb.array(self.definitions).value);
