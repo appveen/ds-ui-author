@@ -352,11 +352,11 @@ export class SchemaBuilderComponent implements
         // const options = { 
         //     filter: { entity: id }
         // };
-        if(self.serviceObj.role){
+        if (self.serviceObj.role) {
             self.roleData = self.serviceObj.role;
             self.oldRoleData = self.appService.cloneObject(self.serviceObj.role);
         }
-        else{
+        else {
             self.roleData.roles = self.appService.getDefaultRoles();
             self.oldRoleData = self.appService.cloneObject(self.roleData);
         }
