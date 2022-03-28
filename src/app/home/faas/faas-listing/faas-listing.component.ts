@@ -209,7 +209,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   }
 
   getFaasCount() {
-    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/count`, { filter: this.apiConfig.filter });
+    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`, { filter: this.apiConfig.filter });
   }
 
   gridReady(event: GridReadyEvent) {
