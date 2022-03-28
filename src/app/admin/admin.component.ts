@@ -238,7 +238,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   getAgentPassword() {
     const self = this;
     if (!self.agentConfig.password) {
-      self.commonService.get('partnerManager', '/agentRegistry/IEG/password').subscribe(
+      self.commonService.get('partnerManager', '/agent/IEG/password').subscribe(
         res => {
           self.agentConfig.password = res.password;
         },

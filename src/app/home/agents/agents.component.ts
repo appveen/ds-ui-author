@@ -225,12 +225,12 @@ export class AgentsComponent implements OnInit, OnDestroy {
 
     getAgentCount() {
         const self = this;
-        return self.commonService.get('partnerManager', '/agentRegistry/count', self.apiConfig);
+        return self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/count`, self.apiConfig);
     }
 
     getAgentList() {
         const self = this;
-        return self.commonService.get('partnerManager', '/agentRegistry', self.apiConfig);
+        return self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, self.apiConfig);
     }
 
     gridReady(event: GridReadyEvent) {
@@ -326,7 +326,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
                 }
                 delete self.agentData.isEdit;
                 self.agGrid.api.showLoadingOverlay();
-                self.commonService.post('partnerManager', '/agentRegistry', self.agentData).subscribe(res => {
+                self.commonService.post('partnerManager', `/${this.commonService.app._id}/agent`, self.agentData).subscribe(res => {
                     self.agentType = 'APPAGENT';
                     self.selectAgentList();
                     self.agGrid.api.hideOverlay();

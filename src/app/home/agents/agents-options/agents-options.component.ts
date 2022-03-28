@@ -124,8 +124,8 @@ export class AgentsOptionsComponent implements OnInit, OnDestroy {
     self.alertModalTemplateRef = self.commonService.modal(self.alertModalTemplate, { centered: true });
     self.alertModalTemplateRef.result.then(close => {
       if (close) {
-        self.commonService.put('partnerManager', `/agentRegistry/${self.agent._id}/${type}`).subscribe(res => {
-          self.output.emit({ reload: false,type });
+        self.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/utils/${self.agent._id}/${type}`).subscribe(res => {
+          self.output.emit({ reload: false, type });
           self.ts.success(res.message);
         }, err => {
           self.commonService.errorToast(err);
@@ -147,7 +147,7 @@ export class AgentsOptionsComponent implements OnInit, OnDestroy {
   closeDeleteModal(data) {
     const self = this;
     if (data) {
-      self.commonService.delete('partnerManager', `/agentRegistry/${data._id}`).subscribe(res => {
+      self.commonService.delete('partnerManager', `/${this.commonService.app._id}/agent/${data._id}`).subscribe(res => {
         self.ts.success('Agent deleted successfully');
         self.output.emit({ reload: true });
       }, err => {
@@ -167,7 +167,7 @@ export class AgentsOptionsComponent implements OnInit, OnDestroy {
           return;
         }
         delete self.agentData.isEdit;
-        self.commonService.put('partnerManager', '/agentRegistry/' + self.agent._id, self.agentData).subscribe(res => {
+        self.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/` + self.agent._id, self.agentData).subscribe(res => {
           self.output.emit({ reload: true });
         }, err => {
           self.commonService.errorToast(err);
@@ -225,7 +225,7 @@ export class AgentsOptionsComponent implements OnInit, OnDestroy {
 
   triggerAgentUpdate(agentId: string) {
     const self = this;
-    self.commonService.put('partnerManager', '/' + self.commonService.app._id + '/triggerOTA/' + agentId).subscribe(res => {
+    self.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/utils/${agentId}/triggerOTA`).subscribe(res => {
       let message = res.message;
       if (!message) {
         message = 'Agent Update Triggred';
@@ -239,7 +239,7 @@ export class AgentsOptionsComponent implements OnInit, OnDestroy {
   fetchPassword() {
     const self = this;
     if (!self.agent.decPassword) {
-      self.commonService.get('partnerManager', '/agentRegistry/' + self.agent._id + '/password').subscribe(res => {
+      self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/${self.agent._id}/password`).subscribe(res => {
         self.agent.decPassword = res.password;
       }, err => {
         self.commonService.errorToast(err);
@@ -283,7 +283,7 @@ export class AgentsOptionsComponent implements OnInit, OnDestroy {
       return;
     }
     self.apiCalls.password = true;
-    self.commonService.put('partnerManager', '/agentRegistry/' + self.agentPasswordModel.agent._id + '/password', {
+    self.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/utils/${self.agentPasswordModel.agent._id}/password`, {
       password: self.agentPasswordModel.password
     }).subscribe(res => {
       self.apiCalls.password = false;

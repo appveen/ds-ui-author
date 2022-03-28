@@ -32,7 +32,7 @@ export class AgentsHbComponent implements OnInit {
       sort: '-timestamp',
       noApp: true
     };
-    self.commonService.get('partnerManager', '/agentMonitoring', options).subscribe(res => {
+    self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/heartbeats`, options).subscribe(res => {
       if (res.length === 0) {
         self.agent.heartbeat = -1;
         self.agent.streak = [];
