@@ -769,7 +769,7 @@ export class UserComponent implements OnInit, OnDestroy {
             return;
         }
         this.subscriptions['removeUsers'] = this.commonService
-            .put('user', `/app/${this.commonService.app._id}/removeUsers`, { userIds })
+            .put('user', `/${this.commonService.app._id}/user/utils/removeUsers`, { userIds })
             .subscribe(() => {
                 this.agGrid.api.deselectAll();
                 setTimeout(() => {
