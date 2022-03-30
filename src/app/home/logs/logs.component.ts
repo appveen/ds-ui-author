@@ -204,7 +204,7 @@ export class LogsComponent implements OnInit, OnDestroy {
       if (close) {
         if (self.confirmServiceName === self.service.name) {
           self.subscriptions['purge'] = self.commonService.delete('serviceManager',
-            `/${this.commonService.app._id}}/service/utils/purge/author-audit/${self.appService.purgeServiceId}`)
+            `/${this.commonService.app._id}}/service/utils/${self.appService.purgeServiceId}/purge/author-audit`)
             .subscribe((res) => {
               self.confirmServiceName = '';
               self.purgeModalTemplateRef.close();
