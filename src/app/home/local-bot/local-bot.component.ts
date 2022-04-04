@@ -316,7 +316,7 @@ export class LocalBotComponent implements OnInit {
     if (data) {
       self.showLazyLoader = true;
       self.subscriptions['removeUsers'] = self.commonService
-        .put('user', `/app/${self.commonService.app._id}/removeBots`, { userIds: [data._id] })
+        .put('user', `/${self.commonService.app._id}/user/utils/removeBots`, { userIds: [data._id] })
         .subscribe(() => {
           self.showLazyLoader = false;
           self.getBotRecords();
