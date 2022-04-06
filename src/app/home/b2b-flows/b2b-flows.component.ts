@@ -109,7 +109,8 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       const name = this.form.get('name').value;
       this.form.get('inputStage').patchValue({
         type: val,
-        option: {
+        options: {
+          _id: 'STAGE1000',
           method: 'POST',
           path: name ? _.camelCase(name) : null
         }
@@ -123,8 +124,8 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
           type: type ? type : 'API'
         };
       }
-      if (!inputStage.option) {
-        inputStage.option = {
+      if (!inputStage.options) {
+        inputStage.options = {
           method: 'POST',
           path: val ? _.camelCase(val) : null
         };
