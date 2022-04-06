@@ -103,15 +103,20 @@ export class LoginComponent implements OnInit, AfterViewInit, AfterContentChecke
             }
             self.loader = true;
             self.subscriptions['login'] = self.commonService.get('user', '/auth/authType/' + username, { noApp: true, skipAuth: true }).subscribe(res => {
-                self.authTypeChecked = true;
                 self.loader = false;
-                self.appService.fqdn = res.fqdn;
-                self.appService.validAuthTypes = res.validAuthTypes;
-                self.authType = res.bot ? 'local' : res.authType;
-                if (res.rbacUserToSingleSession
-                    && res.sessionActive) {
-                    self.rbacUserReloginAction = res.rbacUserReloginAction;
-                    self.activeSessionWarning();
+                if (res.bot) {
+                    self.message = "Couldn't find your account";
+                }
+                else {
+                    self.authTypeChecked = true;
+                    self.appService.fqdn = res.fqdn;
+                    self.appService.validAuthTypes = res.validAuthTypes;
+                    self.authType = res.authType;
+                    if (res.rbacUserToSingleSession
+                        && res.sessionActive) {
+                        self.rbacUserReloginAction = res.rbacUserReloginAction;
+                        self.activeSessionWarning();
+                    }
                 }
             }, err => {
                 self.loader = false;
