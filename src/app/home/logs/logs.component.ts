@@ -15,7 +15,6 @@ export class LogsComponent implements OnInit, OnDestroy {
   @ViewChild('auditlog', { static: false }) auditlog: AuditLogsComponent;
   @ViewChild('purgeModalTemplate', { static: false }) purgeModalTemplate: TemplateRef<HTMLElement>;
   service: any;
-
   activeTab: number;
   subscriptions: any;
   showColumns: boolean;
@@ -68,6 +67,14 @@ export class LogsComponent implements OnInit, OnDestroy {
         self.subscriptions[key].unsubscribe();
       }
     });
+  }
+
+  canPurgeAudit() {
+    const self = this;
+    if (self.hasPermission('PMDSS', 'SM')) {
+      return true;
+    }
+    return false;
   }
 
   search() {

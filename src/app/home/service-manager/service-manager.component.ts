@@ -318,6 +318,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         if (payload.desTab) {
             payload.definition = self.cloneData.definition;
         }
+        payload.schemaFree = self.cloneData.schemaFree;
         if (payload.rolTab) {
             payload.role = self.cloneData.role;
             if (payload.role && payload.role.roles) {

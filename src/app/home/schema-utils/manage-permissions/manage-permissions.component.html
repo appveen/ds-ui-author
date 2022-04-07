@@ -69,12 +69,13 @@
                         </div>
                         <div class="d-flex w-100 mb-3 position-relative">
                             <span class="text-dark font-weight-bold first-column">Description</span>
-                            <textarea *ngIf="edit.status" class="form-control description" [(ngModel)]="selectedRole.description"
-                                placeholder="Description" rows="3" [disabled]="selectedRole.skipReviewRole"
-                                (keyup)="checkPermissionChange()" maxlength="250"></textarea>
+                            <textarea *ngIf="edit.status" class="form-control description"
+                                [(ngModel)]="selectedRole.description" placeholder="Description" rows="3"
+                                [disabled]="selectedRole.skipReviewRole" (keyup)="checkPermissionChange()"
+                                maxlength="250"></textarea>
                             <span *ngIf="!edit.status"
                                 class="form-control-plaintext text-break text-justify">{{selectedRole.description}}</span>
-                                <span #infoTooltip="ngbTooltip" *ngIf="edit.status"
+                            <span #infoTooltip="ngbTooltip" *ngIf="edit.status"
                                 class="info fa fa-info-circle text-muted position-absolute"
                                 ngbTooltip="Maximum 250 chars allowed" container="body" placement="right">&nbsp;</span>
                         </div>
@@ -91,7 +92,7 @@
                             Permission
                         </div>
                         <div class="tab px-3" [ngClass]="{'text-accent border-accent':activeTab === 2}"
-                            (click)="activeTab=2">
+                            (click)="activeTab=2" *ngIf="!schemaFree">
                             Condition
                         </div>
                     </div>
@@ -161,7 +162,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex w-100 mb-3" *ngIf="selectRoleType == 'view'">
+                            <div class="d-flex w-100 mb-3" *ngIf="selectRoleType == 'view' && !schemaFree">
                                 <span class="text-secondary font-weight-bold first-column"></span>
                                 <div class="d-flex flex-column">
                                     <div class="d-flex flex-column pt-3 position-relative fields-container">

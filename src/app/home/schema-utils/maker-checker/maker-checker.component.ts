@@ -28,8 +28,8 @@ export class MakerCheckerComponent implements OnInit {
     private appService: AppService) {
     const self = this;
     self.deleteModal = {
-      title: 'Delete Maker Checker',
-      message: 'Are you sure you want to delete the maker checker?',
+      title: 'Delete Workflow',
+      message: 'Are you sure you want to delete the workflow ?',
       falseButton: 'Cancel',
       trueButton: 'Delete',
       showButtons: true
@@ -47,6 +47,14 @@ export class MakerCheckerComponent implements OnInit {
         self.toggleValidators(true);
       }
     }
+  }
+
+  get isSchemaFree() {
+    const self = this;
+    if (self.form && self.form.get('schemaFree')) {
+        return self.form.get('schemaFree').value;
+    }
+    return false;
   }
 
   get makerCheckerData() {
