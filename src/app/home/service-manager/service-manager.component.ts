@@ -766,7 +766,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
 
     transactionDoc() {
-        const docsAPI = `${environment.url.doc}/?q=/api/common/txn`;
+        const docsAPI = `${environment.url.doc}/?q=/api/a/common/txn`;
         window.open(docsAPI, '_blank');
     }
 
