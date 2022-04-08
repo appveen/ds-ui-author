@@ -272,7 +272,7 @@ export class AppsComponent implements OnInit, OnDestroy {
     }
 
     openAPIsWindow() {
-        const docsAPI = `${environment.url.doc}/?q=/api/common/txn`;
+        const docsAPI = `${environment.url.doc}/?q=/api/a/common/txn`;
         window.open(docsAPI, '_blank');
     }
 
