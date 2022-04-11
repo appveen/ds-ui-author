@@ -286,6 +286,7 @@ export class B2bFlowsManageComponent implements OnInit {
     const temp: any = {};
     temp.inputStage = JSON.parse(JSON.stringify(this.flowData.inputStage));
     temp.stages = JSON.parse(JSON.stringify(this.flowData.stages || []));
+    temp.dataStructures = JSON.parse(JSON.stringify(this.flowData.dataStructures || []));
     return JSON.stringify(temp, null, 4);
   }
 
@@ -293,5 +294,6 @@ export class B2bFlowsManageComponent implements OnInit {
     const temp = JSON.parse(data);
     this.flowData.inputStage = temp.inputStage;
     this.flowData.stages = temp.stages || [];
+    this.flowData.dataStructures = temp.dataStructures || {};
   }
 }
