@@ -400,7 +400,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                         self.showCardMenu[len + i] = false;
                         // if (service.definition || service.webHook || service.status === 'Draft') {
                         self.setServiceDetails(service);
-                        service['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}?app=${this.commonService.app._id}`;
+                        // service['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}?app=${this.commonService.app._id}`;
+                        service.docapi = `${environment.url.doc}/?q=/api/a/sm/${service.app}/service/utils/${service._id}/swagger`;
                         service._records = 0;
                         self.serviceList.push(service);
                         // }
@@ -463,7 +464,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         service._references = service.relatedSchemas && service.relatedSchemas.incoming ? service.relatedSchemas.incoming.length : 0;
         service._preHooks = service.preHooks ? service.preHooks.length : 0;
         service._webHooks = service.webHooks ? service.webHooks.length + service._preHooks : 0 + service._preHooks;
-        service.docapi = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}?app=${this.commonService.app._id}`;
+        // service.docapi = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}?app=${this.commonService.app._id}`;
+        service.docapi = `${environment.url.doc}/?q=/api/a/sm/${service.app}/service/utils/${service._id}/swagger`;
     }
 
     _getServiceRecords(service) {
