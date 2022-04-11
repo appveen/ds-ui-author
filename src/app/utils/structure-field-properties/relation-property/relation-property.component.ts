@@ -84,7 +84,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     const options: GetOptions = {
       select: 'name,version,app,api,definition',
       count: 30,
-      filter: { app: this.commonService.app._id }
+      filter: { app: this.commonService.app._id , status: { $in: ['Active', 'Undeployed'] }}
     };
     if (self.subscriptions['getServices']) {
       self.subscriptions['getServices'].unsubscribe();
