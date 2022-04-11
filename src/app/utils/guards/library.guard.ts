@@ -15,7 +15,7 @@ export class LibraryGuard implements CanActivate {
     if (this.commonService.hasPermissionStartsWith('PML') || this.commonService.hasPermissionStartsWith('PVL')) {
       return true;
     } else {
-      this.router.navigate(['/app', this.commonService.app._id, 'pm']);
+      this.router.navigate(['/app', this.commonService.app._id, 'flow']);
       return false;
     }
   }
