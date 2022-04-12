@@ -232,7 +232,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                 if (service.status === 'Draft') {
                     request = self.commonService.delete('serviceManager', `/${this.commonService.app._id}/service/` + id);
                 } else {
-                    request = self.commonService.delete('serviceManager', `/${this.commonService.app._id}/service/utils/draftDelete/${id}`);
+                    request = self.commonService.delete('serviceManager', `/${this.commonService.app._id}/service/utils/${id}/draftDelete`);
                 }
                 request.subscribe(res => {
                     Object.keys(self.showCardDraft).forEach(key => {
