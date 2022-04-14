@@ -1044,7 +1044,7 @@ export class CommonService {
     connectSocket() {
         const self = this;
         if (!self.socket && self.app && self.app._id) {
-            const socketConfig : Partial<ManagerOptions | SocketOptions> = {
+            const socketConfig : Partial<ManagerOptions & SocketOptions> = {
                 query: {
                     app: self.app._id,
                     userId: self.userDetails._id,
