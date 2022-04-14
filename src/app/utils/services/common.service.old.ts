@@ -7,7 +7,7 @@ import { Observable, Subject, interval, timer } from 'rxjs';
 import { flatMap, switchMap } from 'rxjs/operators';
 import * as sh from 'shorthash';
 import * as uuid from 'uuid/v1';
-import * as io from 'socket.io-client';
+import { connect, io, Socket } from "socket.io-client";
 
 import { UserDetails } from 'src/app/utils/interfaces/userDetails';
 import { environment } from 'src/environments/environment';
@@ -16,6 +16,7 @@ import { AppService } from './app.service';
 import { Role } from 'src/app/utils/interfaces/role';
 import { CanComponentDeactivate } from '../guards/route.guard';
 import { SessionService } from './session.service';
+import { SocketConnectOpts } from 'net';
 
 @Injectable({
     providedIn: 'root'
@@ -43,7 +44,7 @@ export class CommonService {
         status: EventEmitter<any>;
         delete: EventEmitter<any>;
     };
-    socket: SocketIOClient.Socket;
+    socket: Socket;
     permissions: Array<Permission>;
     rcvdKeys: any;
     sessionExpired: EventEmitter<void>;
@@ -913,14 +914,14 @@ export class CommonService {
     connectSocket() {
         const self = this;
         if (!self.socket && self.app && self.app._id) {
-            const socketConfig: SocketIOClient.ConnectOpts = {
+            const socketConfig = {
                 query: {
                     app: self.app._id,
                     userId: self.userDetails._id,
                     portal: 'author'
                 }
             };
-            self.socket = io.connect(environment.production ? '/' : 'http://localhost', socketConfig);
+            self.socket = connect(environment.production ? '/' : 'http://localhost', socketConfig);
             self.socket.on('connected', data => {
                 self.socket.emit('authenticate', { token: self.userDetails.token });
             });
