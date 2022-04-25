@@ -7,7 +7,7 @@ import { Observable, Subject, interval, timer, of } from 'rxjs';
 import { delayWhen, filter, flatMap, map, switchMap, take } from 'rxjs/operators';
 import * as sh from 'shorthash';
 import * as uuid from 'uuid/v1';
-import * as io from 'socket.io-client';
+import { connect , Socket } from "socket.io-client";
 
 import { UserDetails } from 'src/app/utils/interfaces/userDetails';
 import { environment } from 'src/environments/environment';
@@ -58,7 +58,7 @@ export class CommonService {
         status: EventEmitter<any>;
         delete: EventEmitter<any>;
     };
-    socket: SocketIOClient.Socket;
+    socket: Socket;
     permissions: Array<Permission>;
     rcvdKeys: any;
     sessionExpired: EventEmitter<void>;
@@ -1044,14 +1044,14 @@ export class CommonService {
     connectSocket() {
         const self = this;
         if (!self.socket && self.app && self.app._id) {
-            const socketConfig: SocketIOClient.ConnectOpts = {
+            const socketConfig = {
                 query: {
                     app: self.app._id,
                     userId: self.userDetails._id,
                     portal: 'author'
                 }
             };
-            self.socket = io.connect(environment.production ? '/' : 'http://localhost', socketConfig);
+            self.socket = connect(environment.production ? '/' : 'http://localhost', socketConfig);
             self.socket.on('connected', data => {
                 self.socket.emit('authenticate', { token: self.userDetails.token });
             });
