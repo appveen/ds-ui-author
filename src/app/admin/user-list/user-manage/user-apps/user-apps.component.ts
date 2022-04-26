@@ -239,7 +239,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
                 const appPayload = { apps: [] };
                 appPayload.apps = self.appList.filter(e => e.selected).map(e => e._id);
                 self.showLazyLoader = true;
-                self.subscriptions['assignApp'] = self.commonService.put('user', `/admin/user/utils/import/${self.user.username}`, appPayload)
+                self.subscriptions['assignApp'] = self.commonService.put('user', `/admin/user/utils/addToApps/${self.user._id}`, appPayload)
                     .subscribe(() => {
                         self.showLazyLoader = false;
                         self.getUserApps();
