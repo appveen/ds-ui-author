@@ -355,7 +355,8 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                         app: this.commonService.app._id,
                         status: {
                             $in: ['Active', 'Undeployed']
-                        }
+                        },
+                        schemaFree: false
                     }
                 };
                 self.subscriptions['service'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options).subscribe(res => {
