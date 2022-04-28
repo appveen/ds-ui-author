@@ -117,7 +117,11 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
           select: 'name,version,app,api,definition',
           filter: {
             name: '/' + val + '/',
-            app: self.commonService.app._id
+            app: self.commonService.app._id,
+            status: {
+              $in: ['Active', 'Undeployed']
+            },
+            schemaFree: false
           }
         };
         return self.commonService
