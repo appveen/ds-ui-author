@@ -765,7 +765,7 @@ export class SchemaBuilderComponent implements
                 }
                 self.nameChange.emit(res.name);
                 // self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${self.serviceObj._id}/swagger/${self.serviceObj.app}${self.serviceObj.api}`;
-                self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/${self.serviceObj.app}/service/utils/${self.serviceObj._id}/swagger`;
+                self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/${self.serviceObj.app}/service/utils/${self.serviceObj._id}/swagger/${self.serviceObj.app}${self.serviceObj.api}`;
 
                 self.edit.loading = false;
                 const temp = JSON.parse(JSON.stringify(res));
