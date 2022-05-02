@@ -39,6 +39,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     @ViewChild('alertModalTemplate', { static: false }) alertModalTemplate: TemplateRef<HTMLElement>;
     @ViewChild('newServiceModal', { static: false }) newServiceModal: TemplateRef<HTMLElement>;
     @ViewChild('cloneServiceModal', { static: false }) cloneServiceModal: TemplateRef<HTMLElement>;
+    @ViewChild('yamlModalTemplate', { static: false }) yamlModalTemplate: TemplateRef<HTMLElement>;
     app: string;
     serviceSearchForm: FormGroup;
     serviceList: Array<any> = [];
@@ -62,9 +63,12 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     alertModalTemplateRef: NgbModalRef;
     newServiceModalRef: NgbModalRef;
     cloneServiceModalRef: NgbModalRef;
+    yamlModalTemplateRef: NgbModalRef;
     cloneData: any;
     easterEggEnabled: boolean;
     serviceRecordCounts: Array<any>;
+    serviceYaml: any;
+    deploymentYaml: any;
     constructor(public commonService: CommonService,
         private appService: AppService,
         private router: Router,
@@ -290,6 +294,25 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         self.subscriptions['updateservice'] = self.commonService.put('serviceManager', url, null).subscribe(d => {
             self.ts.info('Repairing data service...');
             self.serviceList[index].status = 'Pending';
+        }, err => {
+            self.commonService.errorToast(err);
+        });
+    }
+
+    getYamls(index: number) {
+        const self = this;
+        const url = `/${this.commonService.app._id}/service/utils/${self.serviceList[index]._id}/yamls`;
+        self.subscriptions['updateservice'] = self.commonService.get('serviceManager', url, null).subscribe(data => {
+            this.serviceYaml = data.service;
+            this.deploymentYaml = data.deployment;
+            this.yamlModalTemplateRef = this.commonService.modal(this.yamlModalTemplate);
+            this.yamlModalTemplateRef.result.then(close => {
+                this.serviceYaml = null;
+                this.deploymentYaml = null;
+            }, dismiss => {
+                this.serviceYaml = null;
+                this.deploymentYaml = null;
+            });
         }, err => {
             self.commonService.errorToast(err);
         });

@@ -134,6 +134,12 @@
                 <span class="fa fa-toolbox icon text-primary mr-2"></span>
                 <span class="text">Repair</span>
               </div>
+              <div *ngIf="canEditService(service._id) && easterEggEnabled"
+                class="button float-left w-50 pl-4 py-2 text-secondary hover ignore-outside" (click)="getYamls(i)"
+                id="_repairEntity">
+                <span class="fa fa-toolbox icon text-primary mr-2"></span>
+                <span class="text">Yamls</span>
+              </div>
               <div *ngIf="canCloneService(service._id)" class="button float-left w-50 pl-4 py-2 text-secondary hover"
                 (click)="cloneService(i)" id="_cloneEntity">
                 <span class="fa fa-copy icon mr-2"></span>
@@ -434,6 +440,27 @@
     <div class="d-flex align-self-end justify-content-end w-100 mt-3">
       <button type="button" class="btn btn-min-width btn-create" id="cloneServiceModalYes"
         [disabled]="cloneForm.invalid" (click)="triggerClone()">Clone</button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #yamlModalTemplate>
+  <div class="modal-body p-4">
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="d-flex align-items-center">
+        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
+          <odp-service-icon [size]="18" color="202a36" class="mt-1"></odp-service-icon>
+        </span>
+        <span class="font-weight-bold mb-1">Yamls</span>
+      </div>
+      <span class="fa fa-times text-secondary hover " (click)="yamlModalTemplateRef.close(false)"></span>
+    </div>
+    <textarea class="form-control my-3" rows="10" cols="30" readonly>{{serviceYaml}}</textarea>
+    <textarea class="form-control my-3" rows="10" cols="30" readonly>{{deploymentYaml}}</textarea>
+    <div class="d-flex align-items-center justify-content-end">
+      <button type="button" class="btn btn-min-width btn-dark"
+        (click)="yamlModalTemplateRef.close(false)">Close</button>
     </div>
   </div>
 </ng-template>
