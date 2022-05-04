@@ -7,7 +7,7 @@ import { Observable, Subject, interval, timer, of } from 'rxjs';
 import { delayWhen, filter, flatMap, map, switchMap, take } from 'rxjs/operators';
 import * as sh from 'shorthash';
 import * as uuid from 'uuid/v1';
-import { connect, io, Socket, ManagerOptions, SocketOptions } from "socket.io-client";
+import { connect, Socket, ManagerOptions, SocketOptions } from 'socket.io-client';
 
 import { UserDetails } from 'src/app/utils/interfaces/userDetails';
 import { environment } from 'src/environments/environment';
