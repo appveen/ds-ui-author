@@ -97,7 +97,7 @@ export class NanoServiceListingComponent implements OnInit, OnDestroy {
     const self = this;
     const payload = self.form.value;
     payload.app = self.commonService.app._id;
-    self.commonService.post('partnerManager', '/nanoService', payload).subscribe(res => {
+    self.commonService.post('partnerManager', `/${this.commonService.app._id}/nanoService`, payload).subscribe(res => {
       self.ts.success('Nano Service Created.');
       self.appService.edit = res._id;
       self.router.navigate(['/app/', self.commonService.app._id, 'nsm', res._id]);
@@ -135,7 +135,7 @@ export class NanoServiceListingComponent implements OnInit, OnDestroy {
       self.subscriptions['getNanoServices'].unsubscribe();
     }
     self.showLazyLoader = true;
-    self.subscriptions['getNanoServices'] = self.commonService.get('partnerManager', '/nanoService', self.apiConfig)
+    self.subscriptions['getNanoServices'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/nanoService`, self.apiConfig)
       .subscribe(res => {
         self.showLazyLoader = false;
         if (res.length > 0) {
@@ -165,7 +165,7 @@ export class NanoServiceListingComponent implements OnInit, OnDestroy {
     if (data) {
       self.showLazyLoader = true;
       self.subscriptions['deleteNanoServices'] = self.commonService
-        .delete('partnerManager', '/nanoService/' + self.nanoServiceList[data.index]._id).subscribe(_d => {
+        .delete('partnerManager', `/${this.commonService.app._id}/nanoService/` + self.nanoServiceList[data.index]._id).subscribe(_d => {
           self.showLazyLoader = false;
           self.ts.info(_d.message ? _d.message : 'Nano Service deleted Successfully');
           self.clearSearch();
@@ -238,7 +238,7 @@ export class NanoServiceListingComponent implements OnInit, OnDestroy {
 
   fetchFlowsInUse(flow: any) {
     const self = this;
-    self.commonService.get('partnerManager', '/flow/', {
+    self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/`, {
       select: 'name',
       count: 4,
       filter: {

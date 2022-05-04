@@ -121,7 +121,7 @@ export class GroupAuthorPartnersComponent implements OnInit, OnDestroy {
         app: self.commonService.app._id,
       }
     };
-    self.subscriptions['partnersList'] = self.commonService.get('partnerManager', '/partner', options).subscribe(res => {
+    self.subscriptions['partnersList'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/partner`, options).subscribe(res => {
       self.partersList = res.filter(e => e);
       self.partersList.forEach(_srvc => {
         _srvc['attribute'] = _srvc.flows.length;
@@ -222,7 +222,7 @@ export class GroupAuthorPartnersComponent implements OnInit, OnDestroy {
         _id: self.selectedException._id
       }
     };
-    self.subscriptions['partnersList'] = self.commonService.get('partnerManager', '/partner', options).subscribe(res => {
+    self.subscriptions['partnersList'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/partner`, options).subscribe(res => {
       if (res[0].flows.length > 0) {
         res[0].flows.forEach(e => {
           self.fetchFlowForPartner(e).subscribe(flw => {
@@ -247,7 +247,7 @@ export class GroupAuthorPartnersComponent implements OnInit, OnDestroy {
 
   fetchFlowForPartner(flowId): Observable<any> {
     const self = this;
-    return self.commonService.get('partnerManager', `/flow/${flowId}`, { select: 'name partner' });
+    return self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/${flowId}`, { select: 'name partner' });
   }
 
   discardFlowExceptionChngs() {

@@ -7,7 +7,7 @@ export const environment = {
         serviceManager: '/api/a/sm',
         serviceLogs: '/api/a/sm/service',
         notificationEngine: '/api/a/ne',
-        partnerManager: '/api/a/pm',
+        partnerManager: '/api/a/bm',
         workflow: '/api/a/wf',
         doc: '/doc',
         api: '/api/c',

@@ -74,7 +74,7 @@ export class UserPropertyComponent implements OnInit {
       self.properties = self.form.get('properties') as FormGroup;
     }
     self.getDocuments();
-    if(!self.properties.get('_default')){
+    if (!self.properties.get('_default')) {
       self.properties.addControl('_default', new FormControl());
     }
   }
@@ -94,7 +94,7 @@ export class UserPropertyComponent implements OnInit {
     };
     self.subscriptions['getRelationData'] =
       self.commonService
-        .get('user', `/usr/` + self.properties.get('default').value, options)
+        .get('user', `/${this.commonService.app._id}/user/${self.properties.get('default').value}`, options)
         .subscribe(_data => {
           self.properties.get('_default').patchValue(_data);
         }, err => {
@@ -107,7 +107,7 @@ export class UserPropertyComponent implements OnInit {
 
 
   addToList(control, value?) {
-   
+
     const self = this;
     if (!value) {
       value = self.properties.get('_listInput').value;
@@ -117,7 +117,7 @@ export class UserPropertyComponent implements OnInit {
     }
     let list: FormArray = self.properties.get(control) as FormArray;
     self.properties.get('_listInput').patchValue(null);
-    
+
     if (list.value.length > 0) {
       if (list.value.indexOf(value) > -1) {
         return;
@@ -156,7 +156,7 @@ export class UserPropertyComponent implements OnInit {
       self.subscriptions['getDocuments'].unsubscribe();
     }
     self.subscriptions['getDocuments'] = self.commonService
-      .get('user', `/usr/app/${self.commonService.app._id}`, options)
+      .get('user', `/${self.commonService.app._id}/user`, options)
       .subscribe(data => {
         self.documents = data;
         self.properties.get('default').enable();
@@ -178,7 +178,7 @@ export class UserPropertyComponent implements OnInit {
         };
 
         options.filter[self.relatedSearchField] = '/' + val + '/';
-        return self.commonService.get('user', `/usr/app/${self.commonService.app._id}`, options).toPromise().then(res => {
+        return self.commonService.get('user', `/${self.commonService.app._id}/user`, options).toPromise().then(res => {
           return res;
         });
       }))

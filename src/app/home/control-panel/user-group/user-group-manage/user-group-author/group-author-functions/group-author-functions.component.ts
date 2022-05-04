@@ -51,7 +51,7 @@ export class GroupAuthorFunctionsComponent implements OnInit, OnDestroy {
         app: self.commonService.app._id,
       }
     };
-    self.commonService.get('partnerManager', '/faas', options).subscribe(res => {
+    self.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, options).subscribe(res => {
       self.functionsList = res;
       self.functionsList.forEach(_lib => {
         _lib['attribute'] = GroupAuthorFunctionsComponent.faasAttrCount(_lib['definition']);

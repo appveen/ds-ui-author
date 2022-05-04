@@ -205,6 +205,7 @@ export class SchemaBuilderComponent implements
         };
         self.nameChange = new EventEmitter();
         self.breadcrumbPaths = [];
+        self.roleData = {};
     }
 
     ngOnInit() {
@@ -348,21 +349,29 @@ export class SchemaBuilderComponent implements
 
     fetchPermissions(id) {
         const self = this;
-        const options = {
-            filter: { entity: id }
-        };
+        // const options = { 
+        //     filter: { entity: id }
+        // };
         if (self.serviceObj.role) {
             self.roleData = self.serviceObj.role;
             self.oldRoleData = self.appService.cloneObject(self.serviceObj.role);
-        } else {
-            self.subscriptions['fetchPermissions'] = self.commonService.get('user', '/role', options).subscribe(res => {
-                self.serviceObj.role = res[0];
-                self.roleData = res[0];
-                self.oldRoleData = self.appService.cloneObject(self.role);
-            }, err => {
-                self.commonService.errorToast(err, 'Unable to fetch permissions');
-            });
         }
+        else {
+            self.roleData.roles = self.appService.getDefaultRoles();
+            self.oldRoleData = self.appService.cloneObject(self.roleData);
+        }
+        // if (self.serviceObj.role) {
+        //     self.roleData = self.serviceObj.role;
+        //     self.oldRoleData = self.appService.cloneObject(self.serviceObj.role);
+        // } else {
+        //     self.subscriptions['fetchPermissions'] = self.commonService.get('user', '/role', options).subscribe(res => {
+        //         self.serviceObj.role = res[0];
+        //         self.roleData = res[0];
+        //         self.oldRoleData = self.appService.cloneObject(self.role);
+        //     }, err => {
+        //         self.commonService.errorToast(err, 'Unable to fetch permissions');
+        //     });
+        // }
     }
 
     get stateModelIfEnabled() {
@@ -415,7 +424,7 @@ export class SchemaBuilderComponent implements
                     if (schemaFree) {
                         self.schemaFreeConfiguration();
                     }
-                   
+
                     self.form.get('schemaFree').patchValue(schemaFree);
                 }
             }
@@ -456,7 +465,7 @@ export class SchemaBuilderComponent implements
         });
 
         // remove conditions
-        if(self.roleData && self.roleData.roles){
+        if (self.roleData && self.roleData.roles) {
             self.roleData.roles.forEach(role => {
                 role.rule = [];
             });
@@ -496,7 +505,7 @@ export class SchemaBuilderComponent implements
         let payload;
         if (self.hasAnyTabPermission) {
             payload = self.schemaStructurePipe.transform(value);
-            if (!self.roleData.roles || self.roleData.roles.length === 0) {
+            if (!self.roleData || !self.roleData.roles || self.roleData.roles.length === 0) {
                 self.roleData.roles = self.appService.getDefaultRoles();
             }
             const definition = self.appService.patchDataKey(self.fb.array(self.definitions).value);
@@ -563,9 +572,9 @@ export class SchemaBuilderComponent implements
 
         self.showLazyLoader = true;
         if (self.edit.id) {
-            response = self.commonService.put('serviceManager', '/service/' + self.edit.id, payload);
+            response = self.commonService.put('serviceManager', `/${this.commonService.app._id}/service/` + self.edit.id, payload);
         } else {
-            response = self.commonService.post('serviceManager', '/service', payload);
+            response = self.commonService.post('serviceManager', `/${this.commonService.app._id}/service`, payload);
         }
         response.subscribe(res => {
             self.showLazyLoader = false;
@@ -597,19 +606,18 @@ export class SchemaBuilderComponent implements
         const self = this;
         if (!self.isSchemaFree && self.form.get(['definition', 0, 'counter']).dirty && self.edit.id) {
             const payload = self.schemaStructurePipe.transform(self.form.value);
-            self.commonService.get('serviceManager', '/' + self.edit.id + '/' + self.commonService.app._id +
-                '/idCount', { filter: { app: this.commonService.app._id } }).subscribe(res => {
-                    if (payload.definition.find(d => d.key === '_id').counter <= res) {
-                        self.commonService.errorToast(
-                            { status: 400 }, 'Invalid value for counter because the current counter value is  ' + res);
-                        self.enableEdit(true);
-                        return;
-                    } else {
-                        self.save(true);
-                    }
-                }, err => {
-                    self.commonService.errorToast(err, 'Unable to get the count.');
-                });
+            self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/idCount/${this.edit.id}`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
+                if (payload.definition.find(d => d.key === '_id').counter <= res) {
+                    self.commonService.errorToast(
+                        { status: 400 }, 'Invalid value for counter because the current counter value is  ' + res);
+                    self.enableEdit(true);
+                    return;
+                } else {
+                    self.save(true);
+                }
+            }, err => {
+                self.commonService.errorToast(err, 'Unable to get the count.');
+            });
         } else {
             self.save(true);
         }
@@ -618,7 +626,7 @@ export class SchemaBuilderComponent implements
     deploy(payload: any) {
         const self = this;
         self.showLazyLoader = true;
-        self.commonService.put('serviceManager', '/' + payload._id + '/deploy', { app: this.commonService.app._id }).subscribe(res => {
+        self.commonService.put('serviceManager', `/${this.commonService.app._id}/service/utils/${payload._id}/deploy`, { app: this.commonService.app._id }).subscribe(res => {
             self.showLazyLoader = false;
             self.action.loading = false;
             self.roleChange = false;
@@ -746,7 +754,7 @@ export class SchemaBuilderComponent implements
         const self = this;
         (self.form.get('definition') as FormArray).clear();
         self.edit.loading = true;
-        self.subscriptions['getservice'] = self.commonService.get('serviceManager', '/service/' + id + '?draft=true', { filter: { app: this.commonService.app._id } })
+        self.subscriptions['getservice'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/` + id + '?draft=true', { filter: { app: this.commonService.app._id } })
             .subscribe(res => {
                 self.commonService.apiCalls.componentLoading = false;
                 self.schemaService.initialState(res);
@@ -756,7 +764,9 @@ export class SchemaBuilderComponent implements
                     self.enableEdit(true);
                 }
                 self.nameChange.emit(res.name);
-                self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${self.serviceObj._id}/swagger/${self.serviceObj.app}${self.serviceObj.api}`;
+                // self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${self.serviceObj._id}/swagger/${self.serviceObj.app}${self.serviceObj.api}`;
+                self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/${self.serviceObj.app}/service/utils/${self.serviceObj._id}/swagger/${self.serviceObj.app}${self.serviceObj.api}`;
+
                 self.edit.loading = false;
                 const temp = JSON.parse(JSON.stringify(res));
                 delete temp.wizard;

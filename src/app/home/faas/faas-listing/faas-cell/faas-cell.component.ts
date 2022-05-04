@@ -63,7 +63,7 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     this.data.app = this.commonService.app._id;
     data.status = 'Undeployed';
     let request;
-    request = this.commonService.put('partnerManager', '/faas/' + data._id + '/stop', data);
+    request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/faas/utils/${data._id}/stop`, data);
     request.subscribe(res => {
       this.ts.success('Stopped ' + data.name + ' function.');
     }, err => {
@@ -76,7 +76,7 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     this.data.app = this.commonService.app._id;
     data.status = 'Pending';
     let request;
-    request = this.commonService.put('partnerManager', '/faas/' + data._id + '/start', data);
+    request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/faas/utils/${data._id}/start`, data);
     request.subscribe(res => {
       this.ts.success('Started ' + data.name + ' function.');
     }, err => {
@@ -89,7 +89,7 @@ export class FaasCellComponent implements ICellRendererAngularComp {
     if (data) {
       this.showLazyLoader = true;
       this.commonService
-        .delete('partnerManager', '/faas/' + this.data._id).subscribe(_d => {
+        .delete('partnerManager', `/${this.commonService.app._id}/faas/${this.data._id}`).subscribe(_d => {
           this.showLazyLoader = false;
           this.ts.info(_d.message ? _d.message : 'Function deleted Successfully');
           this.params.api.purgeInfiniteCache();

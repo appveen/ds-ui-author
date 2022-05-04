@@ -55,7 +55,7 @@ export class LibraryPropertyComponent implements OnInit, OnDestroy {
     const id = self.form.get('properties.schema').value;
     if (!self.form.get('properties.schemaName').value && id) {
       self.subscriptions['getLibraryName'] = self.commonService
-        .get('serviceManager', '/globalSchema/' + id, options).subscribe(res => {
+        .get('serviceManager', `/${this.commonService.app._id}/globalSchema/` + id, options).subscribe(res => {
           if (self.form.get('properties.schemaName')) {
             self.form.get('properties.schemaName').patchValue(res.name);
           }
@@ -80,7 +80,7 @@ export class LibraryPropertyComponent implements OnInit, OnDestroy {
       self.subscriptions['getLibraries'].unsubscribe();
     }
     self.subscriptions['getLibraries'] = self.commonService
-      .get('serviceManager', '/globalSchema', options)
+      .get('serviceManager', `/${this.commonService.app._id}/globalSchema`, options)
       .subscribe(data => {
         self.libraries = data;
       }, err => {
@@ -103,7 +103,7 @@ export class LibraryPropertyComponent implements OnInit, OnDestroy {
             definition: { $ne: null, $not: { $size: 0 } }
           }
         };
-        return self.commonService.get('serviceManager', '/globalSchema', options).toPromise().then(res => {
+        return self.commonService.get('serviceManager', `/${this.commonService.app._id}/globalSchema`, options).toPromise().then(res => {
           return res;
         });
       })

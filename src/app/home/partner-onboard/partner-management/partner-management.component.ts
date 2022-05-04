@@ -148,7 +148,7 @@ export class PartnerManagementComponent implements OnInit {
         partner: self.partner.get('_id').value,
       }
     };
-    self.commonService.get('partnerManager', '/flow/status/count', option).subscribe(res => {
+    self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/status/count`, option).subscribe(res => {
       self.flowStatus = res;
       self.showLazyLoader = false;
     }, err => {

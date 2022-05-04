@@ -173,7 +173,7 @@ export class AuditLogsComponent implements OnInit, OnDestroy {
     if (self.subscriptions['getlogs']) {
       self.subscriptions['getlogs'].unsubscribe();
     }
-    self.subscriptions['getlogs'] = self.commonService.get('log', `/mon/author/sm/audit`, self.apiConfig)
+    self.subscriptions['getlogs'] = self.commonService.get('log', `/mon/${self.commonService.app._id}/author/sm/audit`, self.apiConfig)
       .subscribe(_d => {
         self.showLazyLoader = false;
         if (_d.length > 0) {
@@ -216,7 +216,7 @@ export class AuditLogsComponent implements OnInit, OnDestroy {
       }
     }
     self.subscriptions[firstLoad ? 'getlogsCountFirst' : 'getlogsCount'] =
-      self.commonService.get('log', `/mon/author/sm/audit/count`, options).subscribe(count => {
+      self.commonService.get('log', `/mon/${self.commonService.app._id}/author/sm/audit/count`, options).subscribe(count => {
         self.showLazyLoader = false;
         self.totalCount = count;
         self.totalRecords = count;

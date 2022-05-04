@@ -189,7 +189,7 @@ export class SchemaBuilderService {
             const arr = [];
             if (value.properties && value.properties.relatedViewFields) {
                 self.commonService
-                    .get('serviceManager', '/service/' + value.properties.relatedTo, { select: 'name', filter: { app: this.commonService.app._id } })
+                    .get('serviceManager', `/${this.commonService.app._id}/service/` + value.properties.relatedTo, { select: 'name', filter: { app: this.commonService.app._id } })
                     .subscribe(res => {
                         temp.get('relatedToName').patchValue(res.name);
                     }, err => { });
@@ -234,7 +234,7 @@ export class SchemaBuilderService {
                     noApp: true
                 };
                 self.commonService
-                    .get('serviceManager', '/globalSchema/' + value.properties.schema, apiOptions)
+                    .get('serviceManager', `/${this.commonService.app._id}/globalSchema/` + value.properties.schema, apiOptions)
                     .subscribe(res => {
                         temp.get('schemaName').patchValue(res.name);
                     }, err => { });

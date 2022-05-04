@@ -193,7 +193,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   triggerFaasCreate() {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
-    this.commonService.post('partnerManager', '/faas', payload).subscribe(res => {
+    this.commonService.post('partnerManager', `/${this.commonService.app._id}/faas`, payload).subscribe(res => {
       this.form.reset();
       this.ts.success('Function has been created.');
       this.appService.edit = res._id;
@@ -205,11 +205,11 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   }
 
   getFaas() {
-    return this.commonService.get('partnerManager', '/faas', this.apiConfig);
+    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, this.apiConfig);
   }
 
   getFaasCount() {
-    return this.commonService.get('partnerManager', '/faas/count', { filter: this.apiConfig.filter });
+    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`, { filter: this.apiConfig.filter });
   }
 
   gridReady(event: GridReadyEvent) {

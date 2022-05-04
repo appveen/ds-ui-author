@@ -116,7 +116,7 @@ export class AppListComponent implements OnInit, OnDestroy {
 
   getApps() {
     const self = this;
-    self.commonService.get('user', '/app', self.apiConfig).subscribe(res => {
+    self.commonService.get('user', '/admin/app', self.apiConfig).subscribe(res => {
       self.appList = [];
       self.commonService.appList = [];
       res.forEach(item => {
@@ -158,7 +158,7 @@ export class AppListComponent implements OnInit, OnDestroy {
     self.errorMessage = null;
     self.createAppLoader = true;
     self.showLazyLoader = true;
-    self.commonService.post('user', '/app', payload).subscribe(res => {
+    self.commonService.post('user', '/admin/app', payload).subscribe(res => {
       self.createAppLoader = false;
       self.newAppModalRef.close();
       self.commonService.appList.push(res);
@@ -192,7 +192,7 @@ export class AppListComponent implements OnInit, OnDestroy {
   closeDeleteModal(data) {
     const self = this;
     if (data) {
-      const url = '/app/' + data._id;
+      const url = '/admin/app/' + data._id;
       self.showLazyLoader = true;
       self.subscriptions['deleteApp'] = self.commonService.delete('user', url).subscribe(d => {
         self.showLazyLoader = false;

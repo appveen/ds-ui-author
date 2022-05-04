@@ -55,14 +55,14 @@
             Enable
         </a>
         <!-- <span class="fa fa-info-circle text-accent mr-2" ngbTooltip="Right Click on the record for More Options" container="body"></span> -->
-        <!-- <a *ngIf="data.type == 'APPAGENT' && hasViewPermission(data._id, 'PMABD')" href="#" class="text-accent mr-2"
+        <a *ngIf="data.type == 'APPAGENT' && hasViewPermission(data._id, 'PMABD')" href="#" class="text-accent mr-2"
             (click)="$event.preventDefault();activateOption('delete')">
             Delete
         </a>
         <a *ngIf="hasViewPermission(data._id, 'PMABU')" href="#" class="text-accent mr-2"
             (click)="$event.preventDefault();activateOption('edit')">
             Edit
-        </a> -->
+        </a>
     </span>
 </div>
 

@@ -149,7 +149,7 @@ export class UserGroupComponent implements OnInit, OnDestroy {
         const payload = self.form.value;
         payload.app = self.commonService.app._id;
         self.showLazyLoader = true;
-        self.subscriptions['createGroup'] = self.commonService.post('user', '/group', payload).subscribe(res => {
+        self.subscriptions['createGroup'] = self.commonService.post('user', `/${this.commonService.app._id}/group/`, payload).subscribe(res => {
             self.newGroup = {};
             self.showLazyLoader = false;
             self.newGroupModalRef.close();

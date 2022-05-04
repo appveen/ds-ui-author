@@ -106,7 +106,7 @@ export class LdapComponent implements OnInit, OnDestroy, AfterContentInit {
       pending: true,
       isError: false
     };
-    self.commonService.post('user', '/ldap/test', self.ldapForm.value).subscribe(res => {
+    self.commonService.post('user', '/auth/ldap/test', self.ldapForm.value).subscribe(res => {
       self.validateResponse = res;
       self.validateResponse.isError = false;
       self.validateResponse.pending = false;
@@ -136,7 +136,7 @@ export class LdapComponent implements OnInit, OnDestroy, AfterContentInit {
       || self.ldapForm.get('searchText').invalid) {
       return;
     }
-    self.commonService.post('user', '/ldap/search', self.ldapForm.value).subscribe(res => {
+    self.commonService.post('user', '/auth/ldap/search', self.ldapForm.value).subscribe(res => {
       self.users = res;
       self.users.forEach(u => {
         if (self.ldapForm.get('admin').value && u.username
@@ -182,7 +182,7 @@ export class LdapComponent implements OnInit, OnDestroy, AfterContentInit {
     const self = this;
     self.warningModalRef.close();
     self.applyingChangesModalRef = self.commonService.modal(self.applyingChangesModal);
-    self.commonService.post('user', '/ldap', self.ldapForm.value).subscribe(res => {
+    self.commonService.post('user', '/auth/ldap', self.ldapForm.value).subscribe(res => {
       self.completed.status = true;
       self.completed.pending = false;
     }, err => {

@@ -1,0 +1,64 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<ng-container *ngIf="value">
+    <span *ngIf="field == 'name'" class="d-flex align-items-center">
+        <a [routerLink]="data?._id" class="text-accent font-weight-bold ml-3">{{value}}</a>
+        <span *ngIf="data?.draftVersion" class="badge badge-accent ml-2" ngbTooltip="Draft Version"
+            container="body">v{{data.draftVersion}}</span>
+    </span>
+    <code *ngIf="field == 'url'">{{fqdn}}{{value}}</code>
+    <button *ngIf="field == 'url'" type="button" class="btn btn-link text-accent btn-sm ml-2" (click)="copyUrl()">
+        <span class="fa fa-copy"></span>
+    </button>
+    <code *ngIf="field == 'description'">{{value}}</code>
+    <span *ngIf="field == 'status'">
+        <ng-container *ngIf="data?.status=='Draft'">
+            <span class="badge badge-accent">DRAFT</span>
+            <span class="badge badge-accent ml-1">v{{data?.version || 1}}</span>
+        </ng-container>
+        <ng-container *ngIf="data?.status=='Active'">
+            <span class="badge badge-success">RUNNING</span>
+            <span class="badge badge-success ml-1">v{{data?.version || 1}}</span>
+        </ng-container>
+        <ng-container *ngIf="data?.status=='Pending'">
+            <span class="badge pending">PENDING</span>
+            <span class="badge pending ml-1">v{{data?.version || 1}}</span>
+        </ng-container>
+        <ng-container *ngIf="data?.status=='Stopped'">
+            <span class="badge badge-danger">STOPPED</span>
+            <span class="badge badge-danger ml-1">v{{data?.version || 1}}</span>
+        </ng-container>
+    </span>
+    <span *ngIf="field == 'lastInvoked'">{{value | dateFormat:'YYYY MMM DD, HH:mm:ss'}}</span>
+</ng-container>
+<ng-container *ngIf="!value && field != '_options'">
+    <span class="text-muted">N.A.</span>
+</ng-container>
+<span *ngIf="field == '_options' && data?._id">
+    <a *ngIf="data?.status === 'Stopped' && hasStartStopPermission" href="#" class="text-accent mr-2"
+        (click)="$event.preventDefault();startFaas(data)">
+        Start
+    </a>
+    <a *ngIf="data?.status === 'Active' && hasStartStopPermission" href="#" class="text-accent mr-2"
+        (click)="$event.preventDefault();stopFaas(data)">
+        Stop
+    </a>
+    <a href="#" class="text-accent mr-2" (click)="$event.preventDefault();redirectToManage()">
+        View
+    </a>
+    <a href="#" class="text-accent mr-2" *ngIf="hasManagePermission"
+        (click)="$event.preventDefault();redirectToManage(true)">
+        Edit
+    </a>
+    <a href="#" class="text-accent mr-2" *ngIf="hasManagePermission" (click)="$event.preventDefault();deleteFaas()">
+        Delete
+    </a>
+</span>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+    <odp-function-icon [size]="18" color="DD5151" class="mt-1"></odp-function-icon>
+</odp-delete-modal>

@@ -177,7 +177,7 @@ export class ConfigurationComponent implements OnInit {
       if (close) {
         if (self.confirmServiceName === self.form.value.name) {
           self.subscriptions['purge'] = self.commonService.delete('serviceManager',
-            `/${self.appService.purgeServiceId}/purge/${self.purgeModal.type}`)
+            `/${this.commonService.app._id}/service/utils/${self.appService.purgeServiceId}/purge/${self.purgeModal.type}`)
             .subscribe(() => {
               self.confirmServiceName = '';
               self.purgeModalTemplateRef.close();

@@ -297,7 +297,7 @@ export class ManageBotPropertyComponent implements OnInit {
       });
       self.showLazyLoader = true;
 
-      self.commonService.put('user', `/usr/${self.selectedBot._id}?app=${this.commonService.app._id}`, self.selectedBot)
+      self.commonService.put('user', `/${this.commonService.app._id}/bot/${self.selectedBot._id}`, self.selectedBot)
         .subscribe(() => {
           self.showLazyLoader = false;
 
@@ -319,7 +319,7 @@ export class ManageBotPropertyComponent implements OnInit {
         self.showLazyLoader = true;
 
         delete self.selectedBot.attributes[data.attrName];
-        self.commonService.put('user', '/usr/' + self.selectedBot._id + '?app=' + this.commonService.app._id, self.selectedBot)
+        self.commonService.put('user', `/${this.commonService.app._id}/bot/${self.selectedBot._id}`, self.selectedBot)
           .subscribe((res) => {
             self.showLazyLoader = false;
 
@@ -363,7 +363,7 @@ export class ManageBotPropertyComponent implements OnInit {
         const key = self.editAttributeForm.get('key').value;
         self.showLazyLoader = true;
         self.selectedBot.attributes[key] = self.editAttributeForm.value;
-        self.commonService.put('user', `/usr/${self.selectedBot._id}?app=${this.commonService.app._id}`, self.selectedBot)
+        self.commonService.put('user', `/${this.commonService.app._id}/bot/${self.selectedBot._id}`, self.selectedBot)
           .subscribe((res) => {
             self.showLazyLoader = false;
             self.dataChange.emit(res);

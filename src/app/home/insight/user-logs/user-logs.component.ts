@@ -120,11 +120,11 @@ export class UserLogsComponent implements OnInit, OnDestroy {
                     this.subscriptions['getRecords_data'].unsubscribe();
                 }
                 this.subscriptions['getRecords_data'] = this.commonService
-                    .get('log', '/mon/author/user/log' + '/count', { filter: this.apiConfig.filter, noApp: true })
+                    .get('log', `/mon/${this.commonService.app._id}/author/user/log` + '/count', { filter: this.apiConfig.filter, noApp: true })
                     .pipe(
                         switchMap(count => {
                             this.currentRecordsCount = count;
-                            return !!count ? this.commonService.get('log', `/mon/author/user/log`, this.apiConfig) : of(null);
+                            return !!count ? this.commonService.get('log', `/mon/${this.commonService.app._id}/author/user/log`, this.apiConfig) : of(null);
                         })
                     )
                     .subscribe(

@@ -47,7 +47,7 @@ export class TimeboundBlockComponent implements OnInit {
   }
 
   getCalendars() {
-    this.commonService.get('serviceManager', '/service', {
+    this.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, {
       filter: { name: `${this.commonService.app._id} Calendar`, app: this.commonService.app._id, status: 'Active' },
       count: 1,
       select: 'definition'

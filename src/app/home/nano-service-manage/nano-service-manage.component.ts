@@ -173,7 +173,7 @@ export class NanoServiceManageComponent implements OnInit, OnDestroy, CanCompone
 
     getNanoService(id: string) {
         const self = this;
-        self.subscriptions['getNanoService'] = self.commonService.get('partnerManager', '/nanoService/' + id).subscribe(res => {
+        self.subscriptions['getNanoService'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/nanoService/` + id).subscribe(res => {
             self.oldData = self.appService.cloneObject(res);
             delete self.oldData.__v;
             delete self.oldData._metadata;
@@ -263,9 +263,9 @@ export class NanoServiceManageComponent implements OnInit, OnDestroy, CanCompone
         const self = this;
         let request;
         if (self.edit.id) {
-            request = self.commonService.put('partnerManager', '/nanoService/' + self.edit.id, payload);
+            request = self.commonService.put('partnerManager', `/${this.commonService.app._id}/nanoService/` + self.edit.id, payload);
         } else {
-            request = self.commonService.post('partnerManager', '/nanoService', payload);
+            request = self.commonService.post('partnerManager', `/${this.commonService.app._id}/nanoService`, payload);
         }
         self.subscriptions['saveNanoService'] = request.subscribe(res => {
             self.edit.status = false;
@@ -391,7 +391,7 @@ export class NanoServiceManageComponent implements OnInit, OnDestroy, CanCompone
             }
         };
         self.microflows = [];
-        self.commonService.get('partnerManager', '/flow', options).subscribe(res => {
+        self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, options).subscribe(res => {
             if (res && res.length > 0) {
                 res.forEach(item => {
                     const inAgent = item.blocks.find(e => e.meta.blockType === 'INPUT');
@@ -456,7 +456,7 @@ export class NanoServiceManageComponent implements OnInit, OnDestroy, CanCompone
 
     getAgentName(id: string, data: any) {
         const self = this;
-        self.commonService.get('partnerManager', '/agentRegistry', {
+        self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, {
             select: 'name',
             filter: {
                 agentID: id

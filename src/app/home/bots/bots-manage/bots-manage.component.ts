@@ -356,7 +356,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
             if (self.subscriptions['userDtl']) {
                 self.subscriptions['userDtl'].unsubscribe();
             }
-            self.subscriptions['userDtl'] = self.commonService.put('user', '/usr/' + self.user._id + '/?app=' + this.commonService.app._id, self.user)
+            self.subscriptions['userDtl'] = self.commonService.put('user', `/${this.commonService.app._id}/bot/${self.user._id}`, self.user)
                 .subscribe(res => {
                     self.editDetails = false;
                     self.ts.success('User details updated successfully');
@@ -399,9 +399,10 @@ export class BotsManageComponent implements OnInit, OnDestroy {
             if (self.subscriptions['resetPwd']) {
                 self.subscriptions['resetPwd'].unsubscribe();
             }
+
             self.resetPasswordForm.get('password').patchValue(self.resetPasswordForm.get('cpassword').value);
             self.subscriptions['resetPwd'] = self.commonService
-                .put('user', '/usr/' + self.user._id + '/reset', self.resetPasswordForm.value)
+                .put('user', `/${this.commonService.app._id}/user/utils/reset/${self.user._id}`, self.resetPasswordForm.value)
                 .subscribe(res => {
                     self.ts.success('Password changed successfully');
                 }, err => { self.commonService.errorToast(err, 'Unable to change password, please try again later'); });
@@ -484,7 +485,8 @@ export class BotsManageComponent implements OnInit, OnDestroy {
         if (self.manageUser) {
             const payload = { apps: [] };
             payload.apps.push(self.commonService.app._id);
-            self.subscriptions['makeAdmin'] = self.commonService.put('user', `/usr/${self.user._id}/appAdmin/grant`, payload)
+
+            self.subscriptions['makeAdmin'] = self.commonService.put('user', `/${self.commonService.app._id}/user/utils/appAdmin/${self.user._id}/grant`, payload)
                 .subscribe(() => {
                     self.madeAppAdmin = true;
                     self.user.accessControl.accessLevel = 'Selected';
@@ -517,7 +519,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
                     const payload = { apps: [] };
                     payload.apps.push(self.commonService.app._id);
                     self.subscriptions['removeAdminAccess'] =
-                        self.commonService.put('user', `/usr/${self.user._id}/appAdmin/revoke`, payload)
+                        self.commonService.put('user', `/${self.commonService.app._id}/user/utils/appAdmin/${self.user._id}/revoke`, payload)
                             .subscribe(() => {
                                 self.madeAppAdmin = false;
                                 self.user.accessControl.accessLevel = 'Selected';
@@ -564,7 +566,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
                 delete payload.key;
                 self.user.attributes[detailKey] = payload;
             });
-            self.commonService.put('user', `/usr/${self.user._id}/?app=` + this.commonService.app._id, self.user)
+            self.commonService.put('user', `/${this.commonService.app._id}/bot/${self.user._id}`, self.user)
                 .subscribe((res) => {
                     self.user = res;
                     self.ts.success('Custom details updated successfully');
@@ -662,7 +664,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
                     team.users.push(self.user._id);
                     teamIds.push(team._id);
                 });
-                self.commonService.put('user', `/usr/${self.user._id}/addToGroups`, { groups: teamIds })
+                self.commonService.put('user', `/${this.commonService.app._id}/user/utils/addToGroups/${self.user._id}`, { groups: teamIds })
                     .subscribe(() => {
                         self.getUserTeam();
                         self.ts.success('User has been added to group successfully');
@@ -799,7 +801,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
                 const key = self.editAttribute.key;
                 delete self.editAttribute.key;
                 self.user.attributes[key] = self.appService.cloneObject(self.editAttribute);
-                self.commonService.put('user', `/usr/${self.user._id}/?app=` + this.commonService.app._id, self.user)
+                self.commonService.put('user', `/${this.commonService.app._id}/user/${self.user._id}`, self.user)
                     .subscribe((res) => {
                         self.user = res;
                         self.ts.success('Custom Details Saved Successfully');
@@ -833,7 +835,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
         if (data) {
             if (typeof data.attrName !== 'undefined') {
                 delete self.user.attributes[data.attrName];
-                self.commonService.put('user', '/usr/' + self.user._id + '/?app=' + this.commonService.app._id, self.user)
+                self.commonService.put('user', `/${this.commonService.app._id}/user/${this.user._id}`, self.user)
                     .subscribe((res) => {
                         self.user = res;
                         self.initConfig();

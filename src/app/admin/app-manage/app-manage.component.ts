@@ -93,7 +93,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
 
     getApp(id: string) {
         const self = this;
-        self.commonService.get('user', '/app/' + id, { noApp: true }).subscribe(res => {
+        self.commonService.get('user', '/admin/app/' + id, { noApp: true }).subscribe(res => {
             self.tempList = res.users;
             self.appData = Object.assign(self.appData, res);
             self.oldData = self.appService.cloneObject(self.appData);
@@ -105,7 +105,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
 
     getUserDetail() {
         const self = this;
-        self.subscriptions['userDetails'] = self.commonService.get('user', `/usr/app/${self.appData._id}`, { noApp: true, count: -1 })
+        self.subscriptions['userDetails'] = self.commonService.get('user', `/${self.appData._id}/user`, { noApp: true, count: -1 })
             .subscribe(res => {
                 if (res.length > 0) {
                     self.userList = res;
@@ -127,7 +127,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
                 _id: { $nin: existingUserIds }
             }
         };
-        self.subscriptions['userlist'] = self.commonService.get('user', '/usr', config).subscribe((res: Array<UserDetails>) => {
+        self.subscriptions['userlist'] = self.commonService.get('user', '/admin/user', config).subscribe((res: Array<UserDetails>) => {
             if (res.length > 0) {
                 res.forEach(u => {
                     u.checked = false;
@@ -193,7 +193,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
                 app: `${app}`
             }
         };
-        self.commonService.get('serviceManager', '/service/count', options).subscribe(res => {
+        self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/count`, options).subscribe(res => {
             self.servicesCount = res;
         }, err => {
 
@@ -222,7 +222,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         if (!this.changesDone) {
             return;
         }
-        self.commonService.put('user', '/app/' + self.appData._id, self.appData).subscribe(res => {
+        self.commonService.put('user', '/admin/app/' + self.appData._id, self.appData).subscribe(res => {
             self.oldData = self.appService.cloneObject(self.appData);
             self.ts.success('App saved successfully');
             self.router.navigate(['/admin']);
@@ -235,7 +235,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         const self = this;
         self.deleteModalRef = self.commonService.modal(self.deleteModal);
         self.deleteModalRef.result.then(close => {
-            self.commonService.delete('user', '/app/' + self.appData._id).subscribe(res => {
+            self.commonService.delete('user', '/admin/app/' + self.appData._id).subscribe(res => {
                 self.ts.success('App deleted successfully');
                 self.router.navigate(['/admin']);
             }, err => {
@@ -282,7 +282,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.groupConfig.filter = {
             app: appId
         };
-        self.commonService.get('user', '/group', self.groupConfig).subscribe(res => {
+        self.commonService.get('user', `/${this.commonService.app._id}/group`, self.groupConfig).subscribe(res => {
             if (res.length > 0) {
                 self.groupList = res;
                 const index = self.groupList.findIndex(e => e.name === '#');
@@ -302,7 +302,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         if (self.selectedGroup && self.selectedGroup.length > 0) {
             self.userConfig.filter['_id'] = { $in: self.selectedGroup.users };
             // self.selectGroupuserList = [];
-            self.subscriptions['getuserlist'] = self.commonService.get('user', '/usr', self.userConfig).subscribe(res => {
+            self.subscriptions['getuserlist'] = self.commonService.get('user', '/admin/user', self.userConfig).subscribe(res => {
                 if (res.length > 0) {
                     self.groupUserList = res;
                 }

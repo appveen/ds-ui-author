@@ -254,9 +254,9 @@ export class GlobalSchemasComponent implements
         payload.app = self.commonService.app._id;
         self.appService.addKeyForDataStructure(payload.definition[0].definition, 'camelCase');
         if (self.edit.id) {
-            response = self.commonService.put('serviceManager', '/globalSchema/' + self.edit.id, payload);
+            response = self.commonService.put('serviceManager', `/${this.commonService.app._id}/globalSchema/` + self.edit.id, payload);
         } else {
-            response = self.commonService.post('serviceManager', '/globalSchema', payload);
+            response = self.commonService.post('serviceManager', `/${this.commonService.app._id}/globalSchema`, payload);
         }
         self.subscriptions['globalschema'] = response.subscribe(res => {
             self.commonService.commonSpinner = false;
@@ -324,7 +324,7 @@ export class GlobalSchemasComponent implements
         const self = this;
         self.showLazyLoader = true;
         self.subscriptions['fillDetails'] = self.commonService
-            .get('serviceManager', '/globalSchema/' + (id ? id : self.edit.id), { filter: { app: this.commonService.app._id } })
+            .get('serviceManager', `/${this.commonService.app._id}/globalSchema/` + (id ? id : self.edit.id), { filter: { app: this.commonService.app._id } })
             .subscribe(res => {
                 self.showLazyLoader = false;
                 let temp: any;

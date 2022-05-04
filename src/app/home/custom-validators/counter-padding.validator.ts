@@ -19,7 +19,7 @@ export function counterValidator(commonService: CommonService, id: string): Asyn
         return new Promise((resolve, reject) => {
             const counterLength = control.value;
             if (counterLength !== null && control.dirty && id) {
-                return commonService.get('serviceManager', '/' + id + '/' + commonService.app._id + '/idCount')
+                return commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/idCount/${id}`)
                     .toPromise().then(res => {
                         if (counterLength <= res) {
                             resolve({

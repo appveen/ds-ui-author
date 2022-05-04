@@ -113,7 +113,7 @@ export class LocalBotComponent implements OnInit {
       },
       noApp: true
     }
-    self.subscriptions['getUserList'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}`, options)
+    self.subscriptions['getUserList'] = self.commonService.get('user', `/${self.commonService.app._id}/bot`, options)
       .subscribe((users) => {
         self.showLazyLoader = false;
         if (users.length) {
@@ -138,7 +138,7 @@ export class LocalBotComponent implements OnInit {
       },
       noApp: true
     }
-    self.subscriptions['getUserCount'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}/count`, options)
+    self.subscriptions['getUserCount'] = self.commonService.get('user', `/${self.commonService.app._id}/bot/utils/count`, options)
       .subscribe((count) => {
         self.botCount = count;
 
@@ -164,7 +164,7 @@ export class LocalBotComponent implements OnInit {
       },
       noApp: true
     }
-    self.subscriptions['getUserList'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}`, options)
+    self.subscriptions['getUserList'] = self.commonService.get('user', `/${self.commonService.app._id}/bot`, options)
       .subscribe((users) => {
         self.showLazyLoader = false;
         if (users.length) {
@@ -197,7 +197,7 @@ export class LocalBotComponent implements OnInit {
           }
 
         }
-        self.commonService.post('user', `/usr/app/${self.commonService.app._id}/create?app=${this.commonService.app._id}`, payload)
+        self.commonService.post('user', `/${self.commonService.app._id}/bot`, payload)
           .subscribe((res) => {
             self.botForm.reset();
             self.getBotRecords();
@@ -236,7 +236,7 @@ export class LocalBotComponent implements OnInit {
         self.selectedBot.basicDetails.name = self.botForm.get('botName').value;
         self.selectedBot.description = self.botForm.get('desc').value;
 
-        self.subscriptions['userDtl'] = self.commonService.put('user', '/usr/' + self.selectedBot._id + '?app=' + this.commonService.app._id, self.selectedBot)
+        self.subscriptions['userDtl'] = self.commonService.put('user', `/${this.commonService.app._id}/bot/${this.selectedBot._id}`, self.selectedBot)
           .subscribe(res => {
             self.showLazyLoader = false;
 
@@ -267,7 +267,7 @@ export class LocalBotComponent implements OnInit {
         payload.expires = payload.expires * 1440;
         self.showLazyLoader = true;
 
-        self.commonService.post('user', `/bot/botKey/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
+        self.commonService.post('user', `/${self.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
           .subscribe((res) => {
             self.showLazyLoader = false;
             self.keyForm.reset();
@@ -316,7 +316,7 @@ export class LocalBotComponent implements OnInit {
     if (data) {
       self.showLazyLoader = true;
       self.subscriptions['removeUsers'] = self.commonService
-        .put('user', `/app/${self.commonService.app._id}/removeBots`, { userIds: [data._id] })
+        .put('user', `/${self.commonService.app._id}/user/utils/removeBots`, { userIds: [data._id] })
         .subscribe(() => {
           self.showLazyLoader = false;
           self.getBotRecords();
@@ -493,7 +493,7 @@ export class LocalBotComponent implements OnInit {
       });
       self.showLazyLoader = true;
 
-      self.commonService.put('user', `/usr/${self.selectedBot._id}?app=${this.commonService.app._id}`, self.selectedBot)
+      self.commonService.put('user', `/${this.commonService.app._id}/bot/${self.selectedBot._id}`, self.selectedBot)
         .subscribe(() => {
           self.showLazyLoader = false;
           self.ts.success('Added custom Details successfully');
@@ -538,8 +538,7 @@ export class LocalBotComponent implements OnInit {
           teamIds.push(team._id);
         });
         self.showLazyLoader = true;
-
-        self.commonService.put('user', `/usr/${self.selectedBot._id}/addToGroups?app=${this.commonService.app._id}`, { groups: teamIds })
+        self.commonService.put('user', `/${this.commonService.app._id}/user/utils/addToGroups/${self.selectedBot._id}`, { groups: teamIds })
           .subscribe(() => {
             self.showLazyLoader = false;
             self.getUserTeam();
@@ -581,7 +580,7 @@ export class LocalBotComponent implements OnInit {
   toggleStatus(event) {
     const self = this;
     self.showLazyLoader = true;
-    self.commonService.put('user', `/bot/${self.selectedBot._id}/status/${self.selectedBot.isActive ? 'disable' : 'enable'}?app=${this.commonService.app._id}`).subscribe((res) => {
+    self.commonService.put('user', `/${self.commonService.app._id}/bot/utils/status/${self.selectedBot._id}/${self.selectedBot.isActive ? 'disable' : 'enable'}?app=${this.commonService.app._id}`).subscribe((res) => {
       self.selectedBot = res;
       const index = self.botRecords.findIndex(e => e._id === res._id)
       self.botRecords[index] = res;

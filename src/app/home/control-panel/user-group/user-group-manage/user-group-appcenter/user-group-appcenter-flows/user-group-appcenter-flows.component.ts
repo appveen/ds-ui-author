@@ -86,7 +86,7 @@ export class UserGroupAppcenterFlowsComponent implements OnInit {
       app: self.commonService.app._id
     };
     self.showLazyLoader = true;
-    self.subscriptions['getPartners'] = self.commonService.get('partnerManager', '/partner', options)
+    self.subscriptions['getPartners'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/partner`, options)
       .subscribe(res => {
         self.showLazyLoader = false;
         if (res.length > 0) {
@@ -115,7 +115,7 @@ export class UserGroupAppcenterFlowsComponent implements OnInit {
       select: 'name'
     };
     self.showLazyLoader = true;
-    self.subscriptions['getFlows'] = self.commonService.get('partnerManager', '/flow', options)
+    self.subscriptions['getFlows'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, options)
       .subscribe(res => {
         self.showLazyLoader = false;
         self.flowList = res;

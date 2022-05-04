@@ -144,7 +144,7 @@ export class UserGroupBotsComponent implements OnInit, OnDestroy {
       noApp: true
     };
     self.subscriptions['getAllBots'] = self.commonService
-      .get('user', `/bot/app/${self.commonService.app._id}/`, options)
+      .get('user', `/${self.commonService.app._id}/bot/`, options)
       .subscribe(res => {
         self.allBots = res;
         self.allBots.forEach(bot => {

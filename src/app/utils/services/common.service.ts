@@ -7,7 +7,7 @@ import { Observable, Subject, interval, timer, of } from 'rxjs';
 import { delayWhen, filter, flatMap, map, switchMap, take } from 'rxjs/operators';
 import * as sh from 'shorthash';
 import * as uuid from 'uuid/v1';
-import * as io from 'socket.io-client';
+import { connect, io, Socket, ManagerOptions, SocketOptions } from "socket.io-client";
 
 import { UserDetails } from 'src/app/utils/interfaces/userDetails';
 import { environment } from 'src/environments/environment';
@@ -58,7 +58,7 @@ export class CommonService {
         status: EventEmitter<any>;
         delete: EventEmitter<any>;
     };
-    socket: SocketIOClient.Socket;
+    socket: Socket;
     permissions: Array<Permission>;
     rcvdKeys: any;
     sessionExpired: EventEmitter<void>;
@@ -221,7 +221,7 @@ export class CommonService {
             sort: '_id'
         };
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['getAllApps'] = self.get('user', '/app', options).subscribe(
+            self.subscriptions['getAllApps'] = self.get('user', '/admin/app', options).subscribe(
                 res => {
                     self.appList = res;
                     self.app = self.appList[0];
@@ -236,7 +236,7 @@ export class CommonService {
 
     private _fetchUserRolesApi_() {
         const self = this;
-        const URL = environment.url['user'] + `/usr/${self.userDetails._id}/allRoles`;
+        const URL = environment.url['user'] + `/data/${self.userDetails._id}/allRoles`;
         const filter: any = {
             'roles.type': 'author'
         };
@@ -309,7 +309,7 @@ export class CommonService {
             self.subscriptions['getAppDetails_' + app._id].unsubscribe();
         }
         return new Promise((resolve, reject) => {
-            self.subscriptions['getAppDetails_' + app._id] = self.get('user', '/app/' + app._id).subscribe(
+            self.subscriptions['getAppDetails_' + app._id] = self.get('user', '/data/app/' + app._id).subscribe(
                 (res: any) => {
                     app.logo = res.logo;
                     app.appCenterStyle = res.appCenterStyle;
@@ -354,7 +354,7 @@ export class CommonService {
             promises.push(
                 new Promise((resolve, reject) => {
                     self.subscriptions['getAppsDetails'] = self
-                        .get('user', '/app/', {
+                        .get('user', '/data/app/', {
                             noApp: true,
                             count: -1,
                             select: 'description,logo.thumbnail,defaultTimezone',
@@ -403,7 +403,7 @@ export class CommonService {
                 noApp: true
             };
             self.lastAppPrefId = null;
-            self.subscriptions['fetchLastActiveApp'] = self.get('user', '/preferences', options).subscribe(
+            self.subscriptions['fetchLastActiveApp'] = self.get('user', '/data/preferences', options).subscribe(
                 prefRes => {
                     if (prefRes && prefRes.length > 0) {
                         self.lastAppPrefId = prefRes[0]._id;
@@ -444,9 +444,9 @@ export class CommonService {
             };
             let response: Observable<any>;
             if (self.lastAppPrefId) {
-                response = self.put('user', '/preferences/' + self.lastAppPrefId, payload);
+                response = self.put('user', '/data/preferences/' + self.lastAppPrefId, payload);
             } else {
-                response = self.post('user', '/preferences', payload);
+                response = self.post('user', '/data/preferences', payload);
             }
             self.subscriptions['saveLastActiveApp'] = response.subscribe(
                 res => {
@@ -467,7 +467,7 @@ export class CommonService {
         }
         return new Promise<any>((resolve, reject) => {
             if (self.lastAppPrefId) {
-                self.subscriptions['deleteLastActiveApp'] = self.delete('user', '/preferences/' + self.lastAppPrefId).subscribe(
+                self.subscriptions['deleteLastActiveApp'] = self.delete('user', '/data/preferences/' + self.lastAppPrefId).subscribe(
                     res => {
                         self.lastAppPrefId = null;
                         resolve(null);
@@ -488,7 +488,7 @@ export class CommonService {
             self.subscriptions['closeAllSessions'].unsubscribe();
         }
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['closeAllSessions'] = self.delete('user', `/usr/${userId}/closeAllSessions`).subscribe(
+            self.subscriptions['closeAllSessions'] = self.delete('user', `/${this.app._id}/user/utils/closeAllSessions/${userId}`).subscribe(
                 res => {
                     resolve(res);
                 },
@@ -505,7 +505,7 @@ export class CommonService {
             self.subscriptions['login'].unsubscribe();
         }
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['login'] = self.http.post(environment.url.user + '/login', credentials).subscribe(
+            self.subscriptions['login'] = self.http.post(environment.url.user + '/auth/login', credentials).subscribe(
                 (response: any) => {
                     self.resetUserDetails(response);
                     resolve(response);
@@ -523,7 +523,7 @@ export class CommonService {
             self.subscriptions['login'].unsubscribe();
         }
         return new Promise<any>((resolve, reject) => {
-            self.subscriptions['login'] = self.http.post(environment.url.user + '/ldap/login', credentials)
+            self.subscriptions['login'] = self.http.post(environment.url.user + '/auth/ldap/login', credentials)
                 .subscribe((response: any) => {
                     self.resetUserDetails(response);
                     resolve(response);
@@ -545,7 +545,7 @@ export class CommonService {
         const httpHeaders = new HttpHeaders()
             .set('Content-Type', 'application/json')
             .set('Authorization', 'JWT ' + token);
-        return self.http.get(environment.url.user + '/extend', {
+        return self.http.get(environment.url.user + '/auth/extend', {
             headers: httpHeaders
         });
     }
@@ -749,7 +749,7 @@ export class CommonService {
 
     private _isAuthenticatedApi_(noLoader?: boolean) {
         const self = this;
-        const URL = environment.url['user'] + '/check';
+        const URL = environment.url['user'] + '/auth/check';
         return self.http.get(URL, { headers: self._getHeaders(false) })
     }
 
@@ -787,7 +787,7 @@ export class CommonService {
 
     checkAuthType() {
         const self = this;
-        const URL = environment.url['user'] + '/authType/' + self.userDetails._id;
+        const URL = environment.url['user'] + '/auth/authType/' + self.userDetails._id;
         if (self.subscriptions['checkAuthType']) {
             self.subscriptions['checkAuthType'].unsubscribe();
         }
@@ -824,7 +824,7 @@ export class CommonService {
                 if (type === 'boolean') {
                     if (returned) {
                         self.userLoggedOut.emit(true);
-                        self.subscriptions['logout'] = self.delete('user', '/logout').subscribe(
+                        self.subscriptions['logout'] = self.delete('user', '/auth/logout').subscribe(
                             res => {
                                 self.clearData();
                                 self.appService.setFocus.emit('username');
@@ -843,7 +843,7 @@ export class CommonService {
                         result => {
                             if (result) {
                                 self.userLoggedOut.emit(true);
-                                self.subscriptions['logout'] = self.delete('user', '/logout').subscribe(
+                                self.subscriptions['logout'] = self.delete('user', '/auth/logout').subscribe(
                                     res => {
                                         self.clearData();
                                         self.appService.setFocus.emit('username');
@@ -863,7 +863,7 @@ export class CommonService {
                 }
             } else {
                 self.userLoggedOut.emit(true);
-                self.subscriptions['logout'] = self.delete('user', '/logout').subscribe(
+                self.subscriptions['logout'] = self.delete('user', '/auth/logout').subscribe(
                     res => {
                         self.clearData();
                         if (!noRedirect) {
@@ -938,7 +938,7 @@ export class CommonService {
             .set('Authorization', 'JWT ' + token)
             .set('rToken', 'JWT ' + self.sessionService.getRefreshToken())
             .set('txnId', sh.unique(uuid() + '-' + self.appService.randomStr(5)));
-        const URL = environment.url.user + '/refresh';
+        const URL = environment.url.user + '/auth/refresh';
         return self.http.get(URL, { headers: httpHeaders });
     }
 
@@ -955,7 +955,7 @@ export class CommonService {
             .set('Content-Type', 'application/json')
             .set('Authorization', 'JWT ' + token)
             .set('txnId', sh.unique(uuid() + '-' + self.appService.randomStr(5)));
-        const URL = environment.url.user + '/usr/hb';
+        const URL = environment.url.user + '/auth/hb';
         const payload = {
             uuid: sessionStorage.getItem('ba-uuid')
         };
@@ -1044,14 +1044,14 @@ export class CommonService {
     connectSocket() {
         const self = this;
         if (!self.socket && self.app && self.app._id) {
-            const socketConfig: SocketIOClient.ConnectOpts = {
+            const socketConfig : Partial<ManagerOptions & SocketOptions> = {
                 query: {
                     app: self.app._id,
                     userId: self.userDetails._id,
                     portal: 'author'
                 }
             };
-            self.socket = io.connect(environment.production ? '/' : 'http://localhost', socketConfig);
+            self.socket = connect(environment.production ? '/' : 'http://localhost', socketConfig);
             self.socket.on('connected', data => {
                 self.socket.emit('authenticate', { token: self.userDetails.token });
             });
@@ -1253,7 +1253,7 @@ export class CommonService {
             const windowWidth = 620;
             const windowLeft = ((window.outerWidth - windowWidth) / 2) + window.screenLeft;
             const windowTop = ((window.outerHeight - windowHeight) / 2) + window.screenTop;
-            const url = '/api/a/rbac/azure/login';
+            const url = '/api/a/rbac/auth/azure/login';
             const windowOptions = [];
             windowOptions.push(`height=${windowHeight}`);
             windowOptions.push(`width=${windowWidth}`);
@@ -1284,7 +1284,7 @@ export class CommonService {
             if (self.serviceMap && self.serviceMap[serviceId]) {
                 resolve(self.serviceMap[serviceId]);
             } else {
-                self.get('serviceManager', '/service/' + serviceId + '?draft=true', { filter: { app: this.app._id } }).subscribe(
+                self.get('serviceManager', `/${this.app._id}/service/` + serviceId + '?draft=true', { filter: { app: this.app._id } }).subscribe(
                     res => {
                         self.serviceMap[serviceId] = res;
                         resolve(self.serviceMap[serviceId]);
@@ -1303,7 +1303,7 @@ export class CommonService {
             if (self.userMap && self.userMap[userId]) {
                 resolve(self.userMap[userId]);
             } else {
-                self.get('user', '/usr/' + userId).subscribe(
+                self.get('user', `/${this.app._id}/user/${userId}`).subscribe(
                     res => {
                         self.userMap[userId] = res;
                         resolve(self.userMap[userId]);

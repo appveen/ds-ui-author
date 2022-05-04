@@ -214,7 +214,7 @@ export class ManageBotKeyComponent implements OnInit {
         payload.keyId = key._id;
         self.showLazyLoader = true;
 
-        self.commonService.put('user', `/bot/botKey/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
+        self.commonService.put('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
           .subscribe((res) => {
             self.showLazyLoader = false;
             self.selectedBot = res;
@@ -252,7 +252,7 @@ export class ManageBotKeyComponent implements OnInit {
     const payload = { keyId: key._id }
     self.showLazyLoader = true;
 
-    self.commonService.delete('user', `/bot/botKey/session/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
+    self.commonService.delete('user', `/${this.commonService.app._id}/bot/utils/botKey/session/${self.selectedBot._id}`, payload)
       .subscribe((res) => {
         self.showLazyLoader = false;
         self.ts.success("Session ended");
@@ -269,7 +269,7 @@ export class ManageBotKeyComponent implements OnInit {
     payload.keyId = key._id;
     self.showLazyLoader = true;
 
-    self.commonService.put('user', `/bot/botKey/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
+    self.commonService.put('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
       .subscribe((res) => {
         self.showLazyLoader = false;
         self.selectedBot = res;
@@ -298,7 +298,7 @@ export class ManageBotKeyComponent implements OnInit {
       const payload = { keyId: data._id }
       self.showLazyLoader = true;
 
-      self.commonService.delete('user', `/bot/botKey/${self.selectedBot._id}?app=${this.commonService.app._id}`, payload)
+      self.commonService.delete('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
         .subscribe((res) => {
           self.showLazyLoader = false;
           self.selectedBot = res;

@@ -35,7 +35,7 @@ export class AgentsStreakComponent implements OnInit {
       sort: '-completedTimestamp',
       noApp: true
     };
-    self.commonService.get('partnerManager', `/${self.commonService.app._id}/interaction`, options).subscribe(res => {
+    self.commonService.get('partnerManager', `/${self.commonService.app._id}/agent/utils/interaction`, options).subscribe(res => {
       if (res.length === 0) {
         self.agent.interactions = [];
       } else {

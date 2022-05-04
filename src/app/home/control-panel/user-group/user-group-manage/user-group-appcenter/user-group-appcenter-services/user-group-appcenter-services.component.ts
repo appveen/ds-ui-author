@@ -46,10 +46,11 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
                 app: self.commonService.app._id
             }
         };
-        self.subscriptions['getServiceList'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
+        self.subscriptions['getServiceList'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options).subscribe(res => {
             self.serviceList = res.filter(data => !!data.role).map(data => {
                 data.role.workflowConfig = data.workflowConfig;
                 data.role.name = data.name;
+                data.role._id = data._id
                 return data.role;
             });
             if (self.serviceList.length > 0) {
