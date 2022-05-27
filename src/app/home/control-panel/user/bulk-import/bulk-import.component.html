@@ -1,0 +1,43 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="d-flex flex-column position-relative">
+    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+    <div class="options d-flex justify-content-between align-items-center w-100 border-bottom p-3">
+        <div class="font-weight-bold font-lg">List of Import Tasks</div>
+        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn-min-width btn btn-dark"
+            (click)="newUpload()">
+            <span class="fa fa-upload mr-2"></span>
+            <span class="text">New Bulk Task</span>
+        </button>
+    </div>
+    <div class="user-list w-100 p-3">
+        <div class="grid-container">
+            <div *nIf="!taskList || taskList.length == 0" class="alert alert-dark">No New Tasks Found</div>
+            <div *nIf="taskList && taskList.length > 0" class="list-group">
+                <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                    *ngFor="let item of taskList" [routerLink]="item._id">
+                    <div class="id">{{item._id}}</div>
+                    <div class="timestamp">{{item._metadata.createdAt | date:'dd/MM/yyyy HH:ss'}}</div>
+                    <div class="status">{{item.status}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="showUploadWindow" class="overlay position-fixed" (click)="showUploadWindow=false"></div>
+<div [ngClass]="{'show':showUploadWindow}" class="upload-window position-fixed border-left p-3 bg-white">
+    <h3>Bulk Create Users</h3>
+    <hr>
+    <form>
+        <div class="form-group">
+            <label for="file">Select File</label>
+            <input class="form-control-file" type="file" id="file" name="file" (change)="onChange($event)">
+            <small *ngIf="fileAdded" class="form-text text-success">File Selected</small>
+        </div>
+        <button type="button" class="btn btn-dark" (click)="startProcess()">Start Import Process</button>
+    </form>
+</div>

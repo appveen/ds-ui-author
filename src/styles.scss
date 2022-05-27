@@ -27,13 +27,10 @@ $odp-ui-author-warn: mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$odp-ui-author-theme: mat-light-theme((
-  color: (
-    primary: $odp-ui-author-primary,
-    accent: $odp-ui-author-accent,
-    warn: $odp-ui-author-warn,
-  )
-));
+$odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
+        accent: $odp-ui-author-accent,
+        warn: $odp-ui-author-warn,
+      )));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -92,6 +89,7 @@ $odp-ui-author-theme: mat-light-theme((
 // adding a lighter shade of red background also to it.
 .is-invalid {
   background-color: rgba(150, 0, 0, 0.1);
+
   &:focus {
     background-color: rgba(150, 0, 0, 0.1);
   }
@@ -161,15 +159,19 @@ $odp-ui-author-theme: mat-light-theme((
   min-height: 32px;
   max-height: 32px;
   border-radius: 50%;
+
   &.create {
     background: rgba($create, 0.2);
   }
+
   &.delete {
     background: rgba($delete, 0.2);
   }
+
   &.modify {
     background: rgba($dark, 0.2);
   }
+
   &.modify-red {
     background: rgba(248, 220, 220, 1);
     color: $red;
@@ -186,6 +188,7 @@ $odp-ui-author-theme: mat-light-theme((
     left: 0;
     background: rgba($color: #000000, $alpha: 0.6);
   }
+
   &-content {
     position: absolute;
     top: 50%;
@@ -197,9 +200,11 @@ $odp-ui-author-theme: mat-light-theme((
     z-index: 25;
     background-color: $white;
     box-shadow: 0 2rem 4rem rgba($black, 0.2);
+
     label {
       width: 150px;
     }
+
     input.form-control {
       width: 60% !important;
     }
@@ -207,11 +212,13 @@ $odp-ui-author-theme: mat-light-theme((
 }
 
 .add-secret-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 360px !important;
     max-width: 360px !important;
   }
+
   .modal-content {
     min-height: 190px !important;
   }
@@ -232,6 +239,7 @@ $odp-ui-author-theme: mat-light-theme((
 // }
 
 .new-user-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 560px;
@@ -240,6 +248,7 @@ $odp-ui-author-theme: mat-light-theme((
 }
 
 .flow-modal-class {
+
   .modal-content,
   .modal-dialog {
     min-height: calc(100vh - 60px);
@@ -251,6 +260,7 @@ $odp-ui-author-theme: mat-light-theme((
 }
 
 .service-exception-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 680px;
@@ -280,23 +290,27 @@ $odp-ui-author-theme: mat-light-theme((
     min-width: 448px !important;
     max-width: 448px !important;
   }
+
   .modal-content {
     min-height: 178px !important;
   }
 }
 
 .download-agent-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 600px !important;
     max-width: 600px !important;
   }
+
   .modal-content {
     min-height: 300px !important;
   }
 }
 
 .custom-format-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 90vw;
@@ -305,7 +319,9 @@ $odp-ui-author-theme: mat-light-theme((
     max-height: 90vh;
   }
 }
+
 .conflict-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 824px;
@@ -313,6 +329,7 @@ $odp-ui-author-theme: mat-light-theme((
     min-height: 444px;
     max-height: 444px;
   }
+
   .circle {
     min-width: 16px;
     max-width: 16px;
@@ -324,6 +341,7 @@ $odp-ui-author-theme: mat-light-theme((
 }
 
 .search-user-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 560px;
@@ -334,11 +352,13 @@ $odp-ui-author-theme: mat-light-theme((
 .btn:not(.btn-link) {
   min-height: 30px;
   max-height: 30px;
+
   &.btn-sm {
     min-height: 24px;
     max-height: 24px;
   }
 }
+
 .audit-object-log {
   .min-height {
     min-height: 300px;
@@ -349,10 +369,12 @@ $odp-ui-author-theme: mat-light-theme((
   top: 7px;
   left: 92%;
 }
+
 .agent-arch-select {
   min-width: 120px;
   max-width: 120px;
 }
+
 .app-version {
   bottom: 6px;
   right: 8px;
@@ -392,32 +414,40 @@ $odp-ui-author-theme: mat-light-theme((
   border: 1px solid $data-grid-border;
   color: $heading-highlight;
   background: $white;
+
   &:not(.disabled) {
     cursor: pointer;
   }
+
   &.disabled {
     background: $light;
+
     .round-check {
       background: $light;
       color: $light;
     }
+
     &.checked {
       .round-check {
         background: #cccccc;
       }
     }
   }
+
   &:not(.disabled).checked {
     border: 1px solid $accent;
     color: $accent;
+
     .round-check {
       border: 1px solid $accent;
       background: $accent;
     }
   }
+
   .text {
     margin-left: 12px;
   }
+
   .round-check {
     margin-left: 8px;
     margin-right: 8px;
@@ -428,6 +458,7 @@ $odp-ui-author-theme: mat-light-theme((
     border-radius: 8px;
     border: 1px solid $data-grid-border;
     color: $white;
+
     .fa-check {
       font-size: 8px;
     }
@@ -455,43 +486,54 @@ $odp-ui-author-theme: mat-light-theme((
     min-height: 32px;
     max-height: 32px;
   }
+
   .text {
     font-size: 13px;
     min-width: 54px;
     font-weight: bold;
   }
+
   &.locked {
     cursor: default !important;
   }
+
   &.manage {
     border-color: $primary;
     background: $primary;
+
     &:hover {
       background: darken($primary, 10);
     }
   }
+
   &.view {
     border-color: $success;
     background: $success;
+
     &:hover {
       background: darken($success, 10);
     }
   }
+
   &.custom {
     border-color: $accent;
     background: $accent;
+
     &:hover {
       background: darken($accent, 10);
     }
   }
+
   &.blocked {
     border-color: $delete;
     background: $delete;
+
     &:hover {
       background: darken($delete, 10);
     }
   }
 }
+
 .rounded-dropdown {
   min-width: 104px;
   max-width: 104px;
@@ -502,33 +544,41 @@ $odp-ui-author-theme: mat-light-theme((
   overflow: hidden;
   background: $white;
   z-index: 3;
+
   .rounded-dropdown-item {
     min-height: 32px;
     max-height: 32px;
+
     &:hover {
       background: $light;
       cursor: pointer;
     }
+
     .icon {
       min-width: 32px;
       max-width: 32px;
       min-height: 32px;
       max-height: 32px;
+
       &.manage {
         color: $primary;
       }
+
       &.view {
         color: $success;
       }
+
       &.blocked {
         color: $delete;
       }
     }
+
     .text {
       font-size: 13px;
     }
   }
 }
+
 /*------ PERMISSION PAGE DROPDOWN END------*/
 
 .selector-dropdown {
@@ -539,12 +589,15 @@ $odp-ui-author-theme: mat-light-theme((
   left: 0px;
   margin-bottom: 30px;
   z-index: 10;
+
   .selector-list {
     max-height: 144px;
     overflow-y: auto;
+
     .selector-list-item {
       min-height: 36px;
       max-height: 36px;
+
       &:hover {
         background: $light;
       }
@@ -568,21 +621,25 @@ $odp-ui-author-theme: mat-light-theme((
   display: flex;
   align-items: center;
   justify-content: center;
+
   &.fill {
     .angle-box {
       background: $light;
     }
   }
+
   &.error {
     .angle-box {
       border: 1px solid $danger;
     }
+
     &.fill {
       .angle-box {
         background: rgba($danger, $alpha: 0.6);
       }
     }
   }
+
   .angle-box {
     border: 1px solid $border-color;
     min-width: 20px;
@@ -595,12 +652,15 @@ $odp-ui-author-theme: mat-light-theme((
 .row-options-dropdown {
   right: 18px;
 }
+
 .common-options-dropdown {
   left: 50px;
 }
+
 .value-options-dropdown {
   left: 0px;
 }
+
 .options-dropdown {
   z-index: 10;
   top: 26px;
@@ -617,6 +677,7 @@ $odp-ui-author-theme: mat-light-theme((
   border-right: 1px solid $border-color;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
+
   .page-info {
     color: $heading-highlight;
   }
@@ -627,6 +688,7 @@ $odp-ui-author-theme: mat-light-theme((
   flex-direction: column;
   margin: 0;
   font-family: "Lato";
+
   .data-grid-cell {
     min-width: 200px;
     max-width: 200px;
@@ -638,6 +700,7 @@ $odp-ui-author-theme: mat-light-theme((
     white-space: nowrap;
     font-size: 13px;
   }
+
   .data-grid-header {
     display: flex;
     flex-direction: column;
@@ -645,6 +708,7 @@ $odp-ui-author-theme: mat-light-theme((
     overflow: hidden;
     background: #ececec;
     border-bottom: 1px solid #ddd;
+
     .grid-filters {
       .data-grid-cell {
         background: #efefef;
@@ -653,39 +717,48 @@ $odp-ui-author-theme: mat-light-theme((
         max-height: 32px;
       }
     }
+
     .head-cell {
       background: #ececec;
       min-height: 32px;
       max-height: 32px;
     }
   }
+
   .data-grid-header,
   .data-grid-body {
     .data-grid-row {
       display: flex;
       align-items: center;
+
       .data-grid-cell.head-cell {
         color: #747e8d;
         border-bottom: 0px;
+
         .utility-icons {
           transition: 0.25s;
           opacity: 0;
         }
+
         &:hover {
           .utility-icons {
             opacity: 1;
+
             .resize-col {
               cursor: col-resize;
             }
+
             .move-col {
               cursor: move;
             }
           }
         }
       }
+
       .data-grid-cell:not(.head-cell):not(.no-padding) {
         padding-top: 4px;
       }
+
       &.full-row {
         .data-grid-cell {
           min-width: unset;
@@ -694,26 +767,32 @@ $odp-ui-author-theme: mat-light-theme((
       }
     }
   }
+
   .data-grid-body {
     overflow: auto;
+
     .data-grid-row {
       &:first-child {
         .data-grid-cell {
           border-top: 0px;
         }
       }
+
       &:not(.selected):hover {
         background: #f2f2f2;
+
         .data-grid-cell {
           background: #f2f2f2;
         }
       }
+
       .data-grid-cell {
         border-bottom: 1px solid $border-color;
       }
     }
   }
 }
+
 /*---- DATA GRID END ----*/
 
 // .high-zIndex {
@@ -725,7 +804,7 @@ $odp-ui-author-theme: mat-light-theme((
 }
 
 .focus-accent:focus {
-  border-color: $accent !important;
+  border-color: $accent  !important;
   box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
 }
 
@@ -733,25 +812,31 @@ $odp-ui-author-theme: mat-light-theme((
   margin: 8px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.24);
   border-radius: 4px;
+
   .title {
     min-height: 36px;
     max-height: 36px;
     font-size: 14px;
   }
+
   font-size: 13px;
+
   .form-control:not(.is-invalid):focus,
   .custom-select:not(.is-invalid):focus {
-    border-color: $accent !important;
+    border-color: $accent  !important;
     box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
   }
+
   .form-group {
     label {
       color: $heading-highlight;
     }
+
     .form-text {
       font-size: 10px;
       color: $border;
     }
+
     .input-group {
       .input-group-append {
         .btn-sm {
@@ -760,6 +845,7 @@ $odp-ui-author-theme: mat-light-theme((
         }
       }
     }
+
     .floating-btn-group {
       .btn-link {
         top: 5px;
@@ -769,6 +855,7 @@ $odp-ui-author-theme: mat-light-theme((
     }
   }
 }
+
 .round-radio-wrapper {
   border-radius: 50%;
   border: 1px solid $border;
@@ -776,6 +863,7 @@ $odp-ui-author-theme: mat-light-theme((
   max-width: 16px;
   min-height: 16px;
   max-height: 16px;
+
   .round-radio-inner {
     border-radius: 50%;
     min-width: 8px;
@@ -783,6 +871,7 @@ $odp-ui-author-theme: mat-light-theme((
     min-height: 8px;
     max-height: 8px;
   }
+
   &.checked {
     border: 1px solid $accent;
     background: $accent;
@@ -790,7 +879,7 @@ $odp-ui-author-theme: mat-light-theme((
 }
 
 .custom-control-input {
-  &:not(:disabled):active ~ .custom-control-label {
+  &:not(:disabled):active~.custom-control-label {
     &.accent {
       &::before {
         color: $accent;
@@ -799,8 +888,9 @@ $odp-ui-author-theme: mat-light-theme((
       }
     }
   }
+
   &:checked {
-    &:disabled ~ .custom-control-label {
+    &:disabled~.custom-control-label {
       &.accent {
         &::before {
           background-color: rgba($accent, 0.5);
@@ -809,26 +899,29 @@ $odp-ui-author-theme: mat-light-theme((
     }
   }
 
-  & ~ .custom-control-label {
+  &~.custom-control-label {
     &.accent {
       &::before {
         border-radius: 2px;
       }
     }
   }
-  &:checked ~ .custom-control-label {
+
+  &:checked~.custom-control-label {
     &.accent {
       &::before {
         background-color: $accent;
         border-color: $accent;
       }
+
       &::before,
       &::after {
         border-radius: 2px;
       }
     }
   }
-  &:focus ~ .custom-control-label {
+
+  &:focus~.custom-control-label {
     &.accent {
       &::before {
         box-shadow: 0 0 0 0.2rem rgba($accent, 0.25);
@@ -839,29 +932,37 @@ $odp-ui-author-theme: mat-light-theme((
 }
 
 .no-select {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
 }
+
 /*---- AG-GRID START ----*/
 .ag-theme-balham {
 
-  @include ag-theme-balham((
-    balham-active-color: $primary
-  ));
+  @include ag-theme-balham((balham-active-color: $primary ));
   font-family: "Lato";
   font-size: 13px;
+
   .ag-root {
     border: 0;
   }
+
   .ag-header {
     background: #fff;
-    .ag-header-row:last-child{
-      .ag-header-cell{
+
+    .ag-header-row:last-child {
+      .ag-header-cell {
         border-top: 0;
       }
     }
@@ -870,6 +971,7 @@ $odp-ui-author-theme: mat-light-theme((
   .ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right) {
     border-style: dashed !important;
   }
+
   .ag-floating-filter-button {
     display: none;
   }
@@ -877,6 +979,24 @@ $odp-ui-author-theme: mat-light-theme((
 
 .custom-style {
   .ag-header {
-    background: $data-grid-header !important;
+    background: $data-grid-header  !important;
+  }
+}
+
+
+.blink {
+  animation-name: blink;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes blink {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.4;
   }
 }

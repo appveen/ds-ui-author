@@ -12,6 +12,8 @@ import { RouteGuard } from 'src/app/utils/guards/route.guard';
 import { BookmarksComponent } from './bookmarks/bookmarks.component';
 import { BookmarkGuard } from 'src/app/utils/guards/bookmark.guard';
 import { WorkitemsComponent } from 'src/app/home/control-panel/workitems/workitems.component';
+import { BulkImportComponent } from './user/bulk-import/bulk-import.component';
+import { BulkImportStatusComponent } from './user/bulk-import-status/bulk-import-status.component';
 
 const controlPanelRoutes: Routes = [
   {
@@ -22,6 +24,8 @@ const controlPanelRoutes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'user' },
       { path: 'user', component: UserComponent, canActivate: [UserGuard] },
+      { path: 'user/bulk-import', component: BulkImportComponent, canActivate: [UserGuard] },
+      { path: 'user/bulk-import/:id', component: BulkImportStatusComponent, canActivate: [UserGuard] },
       { path: 'gr', component: UserGroupComponent, canActivate: [GroupGuard] },
       { path: 'gm/:id', component: UserGroupManageComponent, canActivate: [GroupGuard], canDeactivate: [RouteGuard] },
       { path: 'selectedaccess', component: SelectedAccessComponent },

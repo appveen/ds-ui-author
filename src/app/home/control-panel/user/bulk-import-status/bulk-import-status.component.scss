@@ -1,0 +1,7 @@
+@import 'src/assets/scss/bootstrap/_functions.scss';
+@import 'src/assets/scss/bootstrap/_variables.scss';
+
+.grid-container {
+    min-height: calc(100vh - 180px);
+    display: grid;
+}

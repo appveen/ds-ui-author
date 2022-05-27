@@ -64,6 +64,8 @@ import { AttributesCellRendererComponent } from './attributes-cell-renderer/attr
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 import { AgGridFilterModule } from 'src/app/utils/ag-grid-filter/ag-grid-filter.module';
 import { RadioChipModule } from 'src/app/utils/radio-chip/radio-chip.module';
+import { BulkImportComponent } from './user/bulk-import/bulk-import.component';
+import { BulkImportStatusComponent } from './user/bulk-import-status/bulk-import-status.component';
 
 @NgModule({
     imports: [
@@ -135,7 +137,9 @@ import { RadioChipModule } from 'src/app/utils/radio-chip/radio-chip.module';
         GroupAuthorNanoServicesComponent,
         GroupAuthorBookmarksComponent,
         GroupAuthorInsightsComponent,
-        AttributesCellRendererComponent
+        AttributesCellRendererComponent,
+        BulkImportComponent,
+        BulkImportStatusComponent
     ]
 })
 export class ControlPanelModule {}

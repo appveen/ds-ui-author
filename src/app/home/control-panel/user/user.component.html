@@ -8,11 +8,17 @@
     <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
     <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3">
         <div class="font-weight-bold font-lg">List of Users</div>
-        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn-min-width btn btn-primary"
-            (click)="newUser()">
-            <span class="fa fa-plus-circle mr-2"></span>
-            <span class="text">Add User</span>
-        </button>
+        <div class="btn-group">
+            <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn-min-width btn btn-dark" routerLink="bulk-import">
+                <span class="fa fa-upload mr-2"></span>
+                <span class="text">Bulk Import</span>
+            </button>
+            <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn-min-width btn btn-primary"
+                (click)="newUser()">
+                <span class="fa fa-plus-circle mr-2"></span>
+                <span class="text">Add User</span>
+            </button>
+        </div>
     </div>
     <div class="user-list w-100 px-3">
         <div class="grid-header my-2">
@@ -154,7 +160,8 @@
                                 *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"
                                 placement="right"></span>
                             <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
-                                *ngIf="invalidPasswordPattern" ngbTooltip="Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)"
+                                *ngIf="invalidPasswordPattern"
+                                ngbTooltip="Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)"
                                 placement="right"></span>
                         </div>
                         <span class="fas eye-icon position-absolute hover"
