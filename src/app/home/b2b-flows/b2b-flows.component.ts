@@ -217,6 +217,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   triggerFlowCreate() {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
+    payload.stages = [];
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
       this.form.reset();
       this.ts.success('Function has been created.');
