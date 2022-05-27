@@ -2,6 +2,7 @@ import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { CommonService } from 'src/app/utils/services/common.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'odp-bulk-import',
@@ -16,6 +17,7 @@ export class BulkImportComponent implements OnInit {
   showUploadWindow: boolean;
   fileAdded: boolean;
   fileInput: HTMLInputElement;
+  downloadUrl: string;
   constructor(private commonService: CommonService) {
     this.breadcrumbPaths = [];
     this.taskList = [];
@@ -33,6 +35,7 @@ export class BulkImportComponent implements OnInit {
       label: 'Bulk Import'
     });
     this.fetchFileTransfers();
+    this.downloadUrl = environment.url.user + `/${this.commonService.app._id}/user/utils/bulkCreate/template`;
   }
 
   fetchFileTransfers() {
