@@ -16,6 +16,7 @@ import { GridCheckboxComponent } from 'src/app/utils/grid-checkbox/grid-checkbox
 import { UserListCellRendererComponent } from 'src/app/utils/user-list-cell-renderer/user-list-cell-renderer.component';
 import { AgGridSharedFloatingFilterComponent } from 'src/app/utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.component';
 import { AgGridActionsRendererComponent } from 'src/app/utils/ag-grid-actions-renderer/ag-grid-actions-renderer.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'odp-user',
@@ -52,6 +53,7 @@ export class UserComponent implements OnInit, OnDestroy {
     breadcrumbPaths: Array<Breadcrumb>;
     bredcrumbSubject: Subject<string>;
     userInLocal: boolean;
+    userInAzureAD: boolean;
     showPassword;
     frameworkComponents: any;
     gridOptions: GridOptions;
@@ -62,7 +64,7 @@ export class UserComponent implements OnInit, OnDestroy {
     userToRemove: string;
     validAuthTypes: Array<any>;
     availableAuthTypes: Array<any>;
-
+    showNewUserWindow: boolean;
     constructor(
         private fb: FormBuilder,
         private commonService: CommonService,
@@ -145,6 +147,41 @@ export class UserComponent implements OnInit, OnDestroy {
         this.validAuthTypes = !!this.appService.validAuthTypes?.length
             ? this.availableAuthTypes.filter(at => this.appService.validAuthTypes.includes(at.value))
             : [{ label: 'Local', value: 'local' }];
+        if (this.validAuthTypes.findIndex(e=>e.value === 'azure')) {
+            this.checkAzureToken();
+        }
+    }
+
+    checkAzureToken() {
+        this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
+            console.log(res);
+        }, err => {
+            this.getNewAzureToken();
+        });
+    }
+
+    getNewAzureToken() {
+        try {
+            const url = `${environment.url.user}/${this.commonService.app._id}/user/utils/azure/token/new`
+            const self = this;
+            const windowHeight = 500;
+            const windowWidth = 620;
+            const windowLeft = ((window.outerWidth - windowWidth) / 2) + window.screenLeft;
+            const windowTop = ((window.outerHeight - windowHeight) / 2) + window.screenTop;
+            const windowOptions = [];
+            windowOptions.push(`height=${windowHeight}`);
+            windowOptions.push(`width=${windowWidth}`);
+            windowOptions.push(`left=${windowLeft}`);
+            windowOptions.push(`top=${windowTop}`);
+            windowOptions.push(`toolbar=no`);
+            windowOptions.push(`resizable=no`);
+            windowOptions.push(`menubar=no`);
+            windowOptions.push(`location=no`);
+            const childWindow = document.open(url, '_blank', windowOptions.join(',')) as any;
+            return self.appService.listenForChildClosed(childWindow);
+        } catch (e) {
+            throw e;
+        }
     }
 
     createUserForm() {
@@ -173,6 +210,7 @@ export class UserComponent implements OnInit, OnDestroy {
         });
         this.selectedTeamSize = 0;
         this.userInLocal = false;
+        this.userInAzureAD = false;
         this.userForm.get('userData.auth.authType').enable();
         this.userForm.get('userData.basicDetails.name').patchValue(null);
         if (this.hasPermission('PMUG')) {
@@ -516,32 +554,27 @@ export class UserComponent implements OnInit, OnDestroy {
         if (this.validAuthTypes?.length === 1) {
             this.userForm.get('userData.auth.authType').disable();
         }
-        this.newUserModalRef = this.commonService.modal(this.newUserModal, { centered: true, size: 'lg', windowClass: 'new-user-modal' });
-        this.newUserModalRef.result.then(
-            close => {
-                this.createUserForm();
-            },
-            dismiss => {
-                this.createUserForm();
-            }
-        );
+        this.showNewUserWindow = true;
+        this.createUserForm();
+        // this.newUserModalRef = this.commonService.modal(this.newUserModal, { centered: true, size: 'lg', windowClass: 'new-user-modal' });
+        // this.newUserModalRef.result.then(
+        //     close => {
+        //         this.createUserForm();
+        //     },
+        //     dismiss => {
+        //         this.createUserForm();
+        //     }
+        // );
     }
 
-    openNewUserModal() {
-        this.userInLocal = true;
-        this.newUserModalRef = this.commonService.modal(this.newUserModal, { centered: true, size: 'lg', windowClass: 'new-user-modal' });
-        this.newUserModalRef.result.then(
-            close => {
-                this.userInLocal = false;
-                this.userForm.reset();
-                this.userForm.get('userData.auth.authType').disable();
-            },
-            dismiss => {
-                this.userInLocal = false;
-                this.userForm.reset();
-                this.userForm.get('userData.auth.authType').disable();
-            }
-        );
+    closeWindow(reset?: boolean) {
+        if (reset) {
+            this.userInLocal = false;
+            this.userInAzureAD = false;
+            this.userForm.reset();
+            this.userForm.get('userData.auth.authType').disable();
+        }
+        this.showNewUserWindow = false;
     }
 
     addUser() {
@@ -582,12 +615,49 @@ export class UserComponent implements OnInit, OnDestroy {
                 this.ts.success('User Imported successfully');
                 this.selectedTeamSize = 0;
                 this.userInLocal = false;
+                this.userInAzureAD = false;
             },
             err => {
                 this.showLazyLoader = false;
                 this.commonService.errorToast(err);
                 this.selectedTeamSize = 0;
                 this.userInLocal = false;
+                this.userInAzureAD = false;
+            }
+        );
+    }
+
+    importUserFromAzure() {
+        this.userForm.get('userData.auth.authType').enable();
+        const teamData = [];
+        this.teamsArray.forEach((e, i) => {
+            if (e.value) {
+                teamData.push(this.teamList[i]._id);
+            }
+        });
+        const username = this.userForm.get('userData.username').value;
+        const payload = {
+            users: [username],
+            groups: teamData
+        };
+        this.showLazyLoader = true;
+        this.commonService.put('user', `/${this.commonService.app._id}/user/utils/azure/import`, payload).subscribe(
+            res => {
+                this.showLazyLoader = false;
+                this.newUserModalRef.close(true);
+                this.initConfig();
+                this.agGrid.api?.purgeInfiniteCache();
+                this.ts.success('User Imported successfully');
+                this.selectedTeamSize = 0;
+                this.userInLocal = false;
+                this.userInAzureAD = false;
+            },
+            err => {
+                this.showLazyLoader = false;
+                this.commonService.errorToast(err);
+                this.selectedTeamSize = 0;
+                this.userInLocal = false;
+                this.userInAzureAD = false;
             }
         );
     }
@@ -643,6 +713,7 @@ export class UserComponent implements OnInit, OnDestroy {
             res => {
                 this.showLazyLoader = false;
                 this.userInLocal = true;
+                this.userInAzureAD = false;
                 this.userForm.get('userData.auth.authType').patchValue(res.authType);
                 this.userForm.get('userData.auth.authType').disable();
                 setTimeout(() => {
@@ -653,13 +724,60 @@ export class UserComponent implements OnInit, OnDestroy {
             err => {
                 this.showLazyLoader = false;
                 this.userInLocal = false;
+                this.userInAzureAD = false;
                 this.userForm.get('userData.auth.authType').enable();
                 this.userForm.get('userData.basicDetails.name').patchValue(null);
                 this.userForm.get('userData.basicDetails.name').enable();
                 this.userForm.get('userData.basicDetails.alternateEmail').patchValue(null);
+                if (this.validAuthTypes.findIndex(e => e.value === 'azure') > -1) {
+                    this.checkForUserInAzure();
+                }
             }
         );
     }
+
+    checkForUserInAzure() {
+        const enteredUN = this.userForm.get('userData.username').value;
+        if (!enteredUN) {
+            return;
+        }
+        this.showLazyLoader = true;
+        this.commonService.put('user', `/${this.commonService.app._id}/user/utils/azure/search`, { users: [enteredUN] }).subscribe(
+            res => {
+                this.showLazyLoader = false;
+                this.userInLocal = false;
+                this.userInAzureAD = true;
+                let userData;
+                if (Array.isArray(res)) {
+                    userData = res[0].body;
+                } else {
+                    userData = res.body;
+                }
+                this.userForm.get('userData.auth.authType').patchValue(userData.authType);
+                this.userForm.get('userData.auth.authType').disable();
+                setTimeout(() => {
+                    this.userForm.get('userData.basicDetails.name').patchValue(userData.name);
+                    this.userForm.get('userData.basicDetails.name').disable();
+                }, 1000);
+            },
+            err => {
+                this.showLazyLoader = false;
+                this.userInLocal = false;
+                this.userInAzureAD = false;
+                this.userForm.get('userData.auth.authType').enable();
+                this.userForm.get('userData.basicDetails.name').patchValue(null);
+                this.userForm.get('userData.basicDetails.name').enable();
+                this.userForm.get('userData.basicDetails.alternateEmail').patchValue(null);
+                // if(this.validAuthTypes.findIndex(e=>e.value === 'ldap') > -1){
+                //     this.checkForUserInLDAP();
+                // }
+            }
+        );
+    }
+
+    // checkForUserInLDAP(){
+
+    // }
 
     /**
      * This method is used to initialize userForm. We are doing this inside this method so that
@@ -667,7 +785,7 @@ export class UserComponent implements OnInit, OnDestroy {
      */
     fetchTeams() {
         this.subscriptions['teamsList'] = this.commonService
-            .get('user', `/${this.commonService.app._id}/group`, { noApp: true, count: -1 })
+            .get('user', `/${this.commonService.app._id}/group`, { noApp: true, count: -1, select: 'name' })
             .subscribe(
                 teams => {
                     this.teamList = teams;
