@@ -122,13 +122,6 @@ export class BulkImportStatusComponent implements OnInit {
       {
         headerName: 'User Exists in Platform',
         field: 'existsInPlatform',
-        cellClass: (params) => {
-          if (params?.value == true) {
-            return 'text-success font-weight-bold';
-          } else {
-            return 'text-danger font-weight-bold';
-          }
-        },
         valueGetter: (params) => {
           if (params?.value == true) {
             return 'Yes';
@@ -140,13 +133,6 @@ export class BulkImportStatusComponent implements OnInit {
       {
         headerName: 'User Exists in App',
         field: 'existsInApp',
-        cellClass: (params) => {
-          if (params?.value == true) {
-            return 'text-success font-weight-bold';
-          } else {
-            return 'text-danger font-weight-bold';
-          }
-        },
         valueGetter: (params) => {
           if (params?.value == true) {
             return 'Yes';
@@ -158,13 +144,6 @@ export class BulkImportStatusComponent implements OnInit {
       {
         headerName: 'Duplicate',
         field: 'duplicate',
-        cellClass: (params) => {
-          if (params?.value == true) {
-            return 'text-success font-weight-bold';
-          } else {
-            return 'text-danger font-weight-bold';
-          }
-        },
         valueGetter: (params) => {
           if (params?.value == true) {
             return 'Yes';
@@ -177,7 +156,7 @@ export class BulkImportStatusComponent implements OnInit {
         headerName: 'Status',
         field: 'status',
         cellClass: (params) => {
-          if (params?.data?.status === 'Created') {
+          if (params?.data?.status === 'Created' || params?.data?.status === 'Success') {
             return 'text-success font-weight-bold';
           } else if (params?.data?.status === 'Error') {
             return 'text-danger font-weight-bold';
@@ -193,8 +172,8 @@ export class BulkImportStatusComponent implements OnInit {
         field: 'message',
         minWidth: 500,
         cellClass: (params) => {
-          if (params?.data?.status === 'Created') {
-            return 'text-success';
+          if (params?.data?.status === 'Created' || params?.data?.status === 'Success') {
+            return 'text-dark';
           } else if (params?.data?.status === 'Error') {
             return 'text-danger';
           } else if (params?.data?.status === 'Ignored') {
