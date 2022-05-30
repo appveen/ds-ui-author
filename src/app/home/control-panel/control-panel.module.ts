@@ -66,6 +66,7 @@ import { AgGridFilterModule } from 'src/app/utils/ag-grid-filter/ag-grid-filter.
 import { RadioChipModule } from 'src/app/utils/radio-chip/radio-chip.module';
 import { BulkImportComponent } from './user/bulk-import/bulk-import.component';
 import { BulkImportStatusComponent } from './user/bulk-import-status/bulk-import-status.component';
+import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 
 @NgModule({
     imports: [
@@ -104,7 +105,8 @@ import { BulkImportStatusComponent } from './user/bulk-import-status/bulk-import
         AgGridActionsRendererModule,
         DateFormatModule,
         AgGridFilterModule,
-        RadioChipModule
+        RadioChipModule,
+        CheckboxModule
     ],
     declarations: [
         ControlPanelComponent,

@@ -29,13 +29,13 @@
     justify-content: space-between;
     align-items: center;
     height: 30px;
-    
+
     .button-group {
       display: grid;
       grid-template-columns: auto auto;
       column-gap: 20px;
     }
-  
+
     .count-text {
       color: #747e8d;
     }
@@ -65,7 +65,7 @@
   }
 }
 
-.user-option-class > span {
+.user-option-class>span {
   padding-top: 3px;
 }
 
@@ -82,15 +82,19 @@
   border-radius: 4px;
   max-height: 19vh;
   z-index: 20;
+
   ul {
     list-style: none;
+
     li:not(:last-child) {
       border-bottom: $border-width solid $border-color;
     }
+
     li:hover {
       background-color: $light;
     }
   }
+
   &-newHeight {
     max-height: 46vh;
   }
@@ -101,6 +105,7 @@
     transform: rotate(0deg);
     transition: 0.25s;
   }
+
   &.open {
     .fa-angle-down {
       transform: rotate(180deg);
@@ -141,12 +146,12 @@
   }
 
   // On mouse-over, add a grey background color
-  &:hover input ~ .team-selected {
+  &:hover input~.team-selected {
     background-color: $gray-400;
   }
 
   // When the checkbox is checked, add a blue background
-  input:checked ~ .team-selected {
+  input:checked~.team-selected {
     background-color: $accent;
   }
 
@@ -158,7 +163,7 @@
   }
 
   // Show the checkmark when checked
-  input:checked ~ .team-selected:after {
+  input:checked~.team-selected:after {
     display: block;
   }
 
@@ -175,6 +180,7 @@
     transform: rotate(45deg);
   }
 }
+
 .label-width {
   min-width: 200px;
 }
@@ -187,14 +193,16 @@
   border-right: 1px solid #ccc !important;
   border-top: 1px solid #ccc !important;
 }
+
 .password-input {
   width: 90%;
   border-radius: 0.25em 0em 0em 0.25em;
 }
 
 .error-icon-password {
-  right: 13%;
-  top: 7px;
+  right: 26px;
+  top: 34px;
+  z-index: 1;
 }
 
 .create {
@@ -218,13 +226,31 @@
 
 .new-user-window {
   height: 100vh;
-  width: 300px;
+  width: 360px;
   top: 0;
-  right: -300px;
+  right: -360px;
   z-index: 2;
   transition: 0.2s;
+  overflow: auto;
 
   &.show {
-      right: 0px !important;
+    right: 0px !important;
+  }
+}
+
+.groups-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.azure-logo {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  background-position: center;
+  background-size: cover;
+
+  &:hover {
+    background: $light;
   }
 }

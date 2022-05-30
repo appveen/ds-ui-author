@@ -261,7 +261,7 @@
                     </div>
                 </div> -->
             </div>
-            <div *ngIf="hasPermission('PMG') && teamsArray.length>0">
+            <div *ngIf="hasPermission('PMG') && groupList.length>0">
                 <div class="d-flex w-100">
                     <div class="label-width text-secondary">Teams</div>
                     <div class="value-width position-relative w-100">
@@ -279,7 +279,7 @@
                                 class="teamList border mt-2 position-absolute w-100 ignore-outside"
                                 [ngClass]="{'teamList-newHeight':!userExist}">
                                 <ul class="p-0 mb-0 ignore-outside" formArrayName="teamData">
-                                    <li *ngFor="let team of teamsArray; index as teamIndex"
+                                    <li *ngFor="let team of groupList; index as teamIndex"
                                         class="p-2 hover ignore-outside">
                                         <label class="ignore-outside team-checkbox hover font-normal">
                                             {{teamList[teamIndex].name}}

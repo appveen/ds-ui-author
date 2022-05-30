@@ -36,7 +36,6 @@ export class UserComponent implements OnInit, OnDestroy {
     searchForm: FormGroup;
     userForm: FormGroup;
     apiConfig: GetOptions = {};
-    teamConfig: GetOptions = {};
     subscriptions: any = {};
     username: string;
     authType: string;
@@ -47,9 +46,8 @@ export class UserComponent implements OnInit, OnDestroy {
     appList = [];
     showUsrManage: boolean;
     selectedUser: any;
-    teamList: Array<any>;
-    displayTeamList: boolean;
-    selectedTeamSize: number;
+    groupList: Array<any>;
+    selectedGroups: Array<string>;
     breadcrumbPaths: Array<Breadcrumb>;
     bredcrumbSubject: Subject<string>;
     userInLocal: boolean;
@@ -65,6 +63,7 @@ export class UserComponent implements OnInit, OnDestroy {
     validAuthTypes: Array<any>;
     availableAuthTypes: Array<any>;
     showNewUserWindow: boolean;
+    showAzureLoginButton: boolean;
     constructor(
         private fb: FormBuilder,
         private commonService: CommonService,
@@ -75,10 +74,8 @@ export class UserComponent implements OnInit, OnDestroy {
         this.showUsrManage = false;
         this.selectedApp = this.commonService.app._id;
         this.apiConfig.filter = {};
-        this.teamConfig.filter = {};
-        this.teamList = [];
-        this.displayTeamList = false;
-        this.selectedTeamSize = 0;
+        this.groupList = [];
+        this.selectedGroups = [];
         this.breadcrumbPaths = [];
         this.bredcrumbSubject = new Subject<string>();
         this.showPassword = {};
@@ -117,7 +114,7 @@ export class UserComponent implements OnInit, OnDestroy {
             searchTerm: ['', Validators.required]
         });
         if (this.hasPermission('PMUG')) {
-            this.fetchTeams();
+            this.fetchGroups();
         }
         this.subscriptions['breadCrumbSubs'] = this.bredcrumbSubject.subscribe(usrName => {
             if (usrName) {
@@ -125,9 +122,36 @@ export class UserComponent implements OnInit, OnDestroy {
             }
         });
         this.setupGrid();
-        this.userForm.get('userData.auth.authType').valueChanges.subscribe(value => {
+        // this.userForm.get('userData.auth.authType').valueChanges.subscribe(value => {
+        //     if (value === 'azure') {
+        //         this.showAzureLoginButton = true;
+        //         this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
+        //             this.configureFormValidators();
+        //         }, err => {
+        //             this.showAzureLoginButton = true;
+        //             // this.getNewAzureToken();
+        //         });
+        //     } else {
+        //         this.configureFormValidators();
+        //     }
+        // });
+    }
+
+    onAuthTypeChange(value) {
+        this.showAzureLoginButton = false;
+        if (value === 'azure') {
+            this.showLazyLoader = true;
+            this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
+                this.showLazyLoader = false;
+                this.showAzureLoginButton = false;
+                this.configureFormValidators();
+            }, err => {
+                this.showLazyLoader = false;
+                this.showAzureLoginButton = true;
+            });
+        } else {
             this.configureFormValidators();
-        });
+        }
     }
 
     ngOnDestroy() {
@@ -147,16 +171,20 @@ export class UserComponent implements OnInit, OnDestroy {
         this.validAuthTypes = !!this.appService.validAuthTypes?.length
             ? this.availableAuthTypes.filter(at => this.appService.validAuthTypes.includes(at.value))
             : [{ label: 'Local', value: 'local' }];
-        if (this.validAuthTypes.findIndex(e=>e.value === 'azure')) {
-            this.checkAzureToken();
-        }
     }
 
-    checkAzureToken() {
-        this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
-            console.log(res);
-        }, err => {
-            this.getNewAzureToken();
+    triggerAzureToken() {
+        this.getNewAzureToken().then(() => {
+            this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
+                this.showLazyLoader = false;
+                this.showAzureLoginButton = false;
+                this.configureFormValidators();
+            }, err => {
+                this.showLazyLoader = false;
+                this.showAzureLoginButton = true;
+            });
+        }).catch(err => {
+            this.commonService.errorToast(err, 'Error while trying to login to Azure AD');
         });
     }
 
@@ -208,13 +236,12 @@ export class UserComponent implements OnInit, OnDestroy {
                 roles: [null]
             })
         });
-        this.selectedTeamSize = 0;
         this.userInLocal = false;
         this.userInAzureAD = false;
         this.userForm.get('userData.auth.authType').enable();
         this.userForm.get('userData.basicDetails.name').patchValue(null);
         if (this.hasPermission('PMUG')) {
-            this.fetchTeams();
+            this.fetchGroups();
         }
         this.configureFormValidators();
     }
@@ -467,8 +494,6 @@ export class UserComponent implements OnInit, OnDestroy {
         this.apiConfig.filter = {
             bot: false
         };
-        this.teamConfig.count = -1;
-        this.teamConfig.filter.app = this.commonService.app;
     }
 
     get isSelectAllDisabled(): boolean {
@@ -541,14 +566,6 @@ export class UserComponent implements OnInit, OnDestroy {
         );
     }
 
-    get invalidTeamSize() {
-        return this.userForm.get('teamData').dirty && this.userForm.get('teamData').hasError('required');
-    }
-
-    checkTeamSize() {
-        this.selectedTeamSize = this.teamsArray.filter(e => e.value).length;
-    }
-
     newUser() {
         this.showPassword = {};
         if (this.validAuthTypes?.length === 1) {
@@ -556,15 +573,6 @@ export class UserComponent implements OnInit, OnDestroy {
         }
         this.showNewUserWindow = true;
         this.createUserForm();
-        // this.newUserModalRef = this.commonService.modal(this.newUserModal, { centered: true, size: 'lg', windowClass: 'new-user-modal' });
-        // this.newUserModalRef.result.then(
-        //     close => {
-        //         this.createUserForm();
-        //     },
-        //     dismiss => {
-        //         this.createUserForm();
-        //     }
-        // );
     }
 
     closeWindow(reset?: boolean) {
@@ -595,14 +603,8 @@ export class UserComponent implements OnInit, OnDestroy {
 
     importUser() {
         this.userForm.get('userData.auth.authType').enable();
-        const teamData = [];
-        this.teamsArray.forEach((e, i) => {
-            if (e.value) {
-                teamData.push(this.teamList[i]._id);
-            }
-        });
         const payload = {
-            groups: teamData
+            groups: this.selectedGroups
         };
         const username = this.userForm.get('userData.username').value;
         this.showLazyLoader = true;
@@ -613,14 +615,12 @@ export class UserComponent implements OnInit, OnDestroy {
                 this.initConfig();
                 this.agGrid.api?.purgeInfiniteCache();
                 this.ts.success('User Imported successfully');
-                this.selectedTeamSize = 0;
                 this.userInLocal = false;
                 this.userInAzureAD = false;
             },
             err => {
                 this.showLazyLoader = false;
                 this.commonService.errorToast(err);
-                this.selectedTeamSize = 0;
                 this.userInLocal = false;
                 this.userInAzureAD = false;
             }
@@ -629,16 +629,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
     importUserFromAzure() {
         this.userForm.get('userData.auth.authType').enable();
-        const teamData = [];
-        this.teamsArray.forEach((e, i) => {
-            if (e.value) {
-                teamData.push(this.teamList[i]._id);
-            }
-        });
         const username = this.userForm.get('userData.username').value;
         const payload = {
             users: [username],
-            groups: teamData
+            groups: this.selectedGroups
         };
         this.showLazyLoader = true;
         this.commonService.put('user', `/${this.commonService.app._id}/user/utils/azure/import`, payload).subscribe(
@@ -648,37 +642,23 @@ export class UserComponent implements OnInit, OnDestroy {
                 this.initConfig();
                 this.agGrid.api?.purgeInfiniteCache();
                 this.ts.success('User Imported successfully');
-                this.selectedTeamSize = 0;
                 this.userInLocal = false;
                 this.userInAzureAD = false;
             },
             err => {
                 this.showLazyLoader = false;
                 this.commonService.errorToast(err);
-                this.selectedTeamSize = 0;
                 this.userInLocal = false;
                 this.userInAzureAD = false;
             }
         );
     }
 
-    get teamsArray() {
-        return this.userForm.get('teamData') ? (this.userForm.get('teamData') as FormArray).controls : [];
-    }
-
     createAndAddToGroup() {
         const userData = this.userForm.get('userData').value;
-        const teamData = [];
-        if (this.teamsArray) {
-            this.teamsArray.forEach((e, i) => {
-                if (e.value) {
-                    teamData.push(this.teamList[i]._id);
-                }
-            });
-        }
         const payload = {
             user: userData,
-            groups: teamData
+            groups: this.selectedGroups
         };
         this.showLazyLoader = true;
         this.commonService.post('user', `/${this.commonService.app._id}/user`, payload).subscribe(
@@ -688,12 +668,10 @@ export class UserComponent implements OnInit, OnDestroy {
                 this.initConfig();
                 this.agGrid.api?.purgeInfiniteCache();
                 this.ts.success('User created successfully');
-                this.selectedTeamSize = 0;
             },
             err => {
                 this.showLazyLoader = false;
                 this.commonService.errorToast(err);
-                this.selectedTeamSize = 0;
             }
         );
     }
@@ -779,25 +757,16 @@ export class UserComponent implements OnInit, OnDestroy {
 
     // }
 
-    /**
-     * This method is used to initialize userForm. We are doing this inside this method so that
-     * we can also  populate the team list for multiselect dropdown.
-     */
-    fetchTeams() {
-        this.subscriptions['teamsList'] = this.commonService
+    fetchGroups() {
+        this.subscriptions['fetchGroups'] = this.commonService
             .get('user', `/${this.commonService.app._id}/group`, { noApp: true, count: -1, select: 'name' })
-            .subscribe(
-                teams => {
-                    this.teamList = teams;
-                    const index = this.teamList.findIndex(e => e.name === '#');
-                    if (index >= 0) {
-                        this.teamList.splice(index, 1);
-                    }
-                    const controls = this.teamList.map(e => this.fb.control(false));
-                    this.userForm.addControl('teamData', this.fb.array(controls));
-                },
-                err => { }
-            );
+            .subscribe(groups => {
+                this.groupList = groups;
+                const index = this.groupList.findIndex(e => e.name === '#');
+                if (index >= 0) {
+                    this.groupList.splice(index, 1);
+                }
+            }, err => { });
     }
 
     getUserCount() {
@@ -939,5 +908,20 @@ export class UserComponent implements OnInit, OnDestroy {
     sortModelChange(model: any) {
         this.apiConfig.sort = this.appService.getSortQuery(model);
         this.agGrid.api.purgeInfiniteCache();
+    }
+
+
+    toggleGroup(flag: boolean, groupId: string) {
+        const index = this.selectedGroups.findIndex(e => e === groupId);
+        if (flag && index == -1) {
+            this.selectedGroups.push(groupId);
+        }
+        if (!flag && index > -1) {
+            this.selectedGroups.splice(index, 1);
+        }
+    }
+
+    isGroupSelected(groupId: string) {
+        return this.selectedGroups.includes(groupId);
     }
 }

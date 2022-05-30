@@ -180,7 +180,7 @@ export class BotsComponent implements OnInit, OnDestroy {
 
     checkTeamSize() {
         const self = this;
-        self.selectedTeamSize = self.teamsArray.filter(e => e.value).length;
+        self.selectedTeamSize = self.groupList.filter(e => e.value).length;
     }
 
     newBot() {
@@ -214,7 +214,7 @@ export class BotsComponent implements OnInit, OnDestroy {
         const self = this;
         // const payload = {};
         const teamData = [];
-        self.teamsArray.forEach((e, i) => {
+        self.groupList.forEach((e, i) => {
             if (e.value) {
                 teamData.push(self.teamList[i]._id);
             }
@@ -242,7 +242,7 @@ export class BotsComponent implements OnInit, OnDestroy {
         const self = this;
         const userData = self.userForm.get('userData').value;
         const teamData = [];
-        self.teamsArray.forEach((e, i) => {
+        self.groupList.forEach((e, i) => {
             if (e.value) {
                 teamData.push(self.teamList[i]._id);
             }
@@ -450,7 +450,7 @@ export class BotsComponent implements OnInit, OnDestroy {
 
     }
 
-    get teamsArray() {
+    get groupList() {
         const self = this;
         return self.userForm.get('teamData') ? (self.userForm.get('teamData') as FormArray).controls : [];
     }

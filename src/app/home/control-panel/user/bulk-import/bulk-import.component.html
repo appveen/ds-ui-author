@@ -41,6 +41,14 @@
                 <a [href]="downloadUrl" download="data-stack-user.template.csv" target="_blank">Download Template</a>
             </div>
         </div>
+        <div *ngIf="showAzureLoginButton" class="form-group">
+            <label for="azureLogin" class="text-secondary font-13">If you want to import azure users as well please Login to Azure</label>
+            <button type="button" class="mb-3 ng-star-inserted border bg-white d-flex align-items-center p-2"
+                (click)="triggerAzureToken()">
+                <span class="azure-logo mr-2"></span>
+                <span>Login to Azure</span>
+            </button>
+        </div>
         <button type="button" class="btn btn-dark" (click)="startProcess()">Start Import Process</button>
     </form>
 </div>

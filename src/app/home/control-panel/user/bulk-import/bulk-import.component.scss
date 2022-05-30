@@ -1,3 +1,6 @@
+@import 'src/assets/scss/bootstrap/_functions.scss';
+@import 'src/assets/scss/bootstrap/_variables.scss';
+
 .overlay {
     height: 100vh;
     width: 100vw;
@@ -17,5 +20,17 @@
 
     &.show {
         right: 0px !important;
+    }
+}
+
+.azure-logo {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    background-position: center;
+    background-size: cover;
+
+    &:hover {
+        background: $light;
     }
 }
