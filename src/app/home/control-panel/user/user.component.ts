@@ -29,9 +29,7 @@ export class UserComponent implements OnInit, OnDestroy {
     @ViewChild('deleteModal', { static: false }) deleteModal: TemplateRef<HTMLElement>;
     @ViewChild('searchUserInput', { static: false }) searchUserInput: ElementRef;
     @ViewChild('createEditTemplate', { static: false }) createEditTemplate;
-    @ViewChild('newUserModal', { static: false }) newUserModal: TemplateRef<HTMLElement>;
     @ViewChild('removeSelectedModal', { static: false }) removeSelectedModal: TemplateRef<HTMLElement>;
-    newUserModalRef: NgbModalRef;
     deleteModalRef: NgbModalRef;
     searchForm: FormGroup;
     userForm: FormGroup;
@@ -122,19 +120,6 @@ export class UserComponent implements OnInit, OnDestroy {
             }
         });
         this.setupGrid();
-        // this.userForm.get('userData.auth.authType').valueChanges.subscribe(value => {
-        //     if (value === 'azure') {
-        //         this.showAzureLoginButton = true;
-        //         this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
-        //             this.configureFormValidators();
-        //         }, err => {
-        //             this.showAzureLoginButton = true;
-        //             // this.getNewAzureToken();
-        //         });
-        //     } else {
-        //         this.configureFormValidators();
-        //     }
-        // });
     }
 
     onAuthTypeChange(value) {
@@ -158,9 +143,6 @@ export class UserComponent implements OnInit, OnDestroy {
         Object.keys(this.subscriptions).forEach(e => {
             this.subscriptions[e].unsubscribe();
         });
-        if (this.newUserModalRef) {
-            this.newUserModalRef.close();
-        }
         if (this.deleteModalRef) {
             this.deleteModalRef.close();
         }
@@ -580,7 +562,7 @@ export class UserComponent implements OnInit, OnDestroy {
             this.userInLocal = false;
             this.userInAzureAD = false;
             this.userForm.reset();
-            this.userForm.get('userData.auth.authType').disable();
+            this.userForm.get('userData.auth.authType').enable();
         }
         this.showNewUserWindow = false;
     }
@@ -611,7 +593,7 @@ export class UserComponent implements OnInit, OnDestroy {
         this.commonService.put('user', `/${this.commonService.app._id}/user/utils/import/${username}`, payload).subscribe(
             res => {
                 this.showLazyLoader = false;
-                this.newUserModalRef.close(true);
+                this.closeWindow(true);
                 this.initConfig();
                 this.agGrid.api?.purgeInfiniteCache();
                 this.ts.success('User Imported successfully');
@@ -638,7 +620,7 @@ export class UserComponent implements OnInit, OnDestroy {
         this.commonService.put('user', `/${this.commonService.app._id}/user/utils/azure/import`, payload).subscribe(
             res => {
                 this.showLazyLoader = false;
-                this.newUserModalRef.close(true);
+                this.closeWindow(true);
                 this.initConfig();
                 this.agGrid.api?.purgeInfiniteCache();
                 this.ts.success('User Imported successfully');
@@ -664,7 +646,7 @@ export class UserComponent implements OnInit, OnDestroy {
         this.commonService.post('user', `/${this.commonService.app._id}/user`, payload).subscribe(
             res => {
                 this.showLazyLoader = false;
-                this.newUserModalRef.close(true);
+                this.closeWindow(true);
                 this.initConfig();
                 this.agGrid.api?.purgeInfiniteCache();
                 this.ts.success('User created successfully');
@@ -731,12 +713,16 @@ export class UserComponent implements OnInit, OnDestroy {
                 } else {
                     userData = res.body;
                 }
-                this.userForm.get('userData.auth.authType').patchValue(userData.authType);
+                this.userForm.get('userData.auth.authType').patchValue('azure');
                 this.userForm.get('userData.auth.authType').disable();
-                setTimeout(() => {
-                    this.userForm.get('userData.basicDetails.name').patchValue(userData.name);
-                    this.userForm.get('userData.basicDetails.name').disable();
-                }, 1000);
+                this.userForm.get('userData.basicDetails.name').patchValue(userData.name);
+                this.userForm.get('userData.basicDetails.name').disable();
+                if (userData.phone) {
+                    this.userForm.get('userData.basicDetails.phone').patchValue(userData.phone);
+                }
+                if (userData.email) {
+                    this.userForm.get('userData.basicDetails.alternateEmail').patchValue(userData.email);
+                }
             },
             err => {
                 this.showLazyLoader = false;
