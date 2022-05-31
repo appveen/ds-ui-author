@@ -35,7 +35,7 @@
     <form>
         <div class="form-group">
             <label for="file">Select File</label>
-            <input class="form-control-file" type="file" id="file" name="file" (change)="onChange($event)">
+            <input class="form-control-file" type="file" id="file" name="file" (change)="onChange($event)" accept=".csv">
             <small *ngIf="fileAdded" class="form-text text-success">File Selected</small>
             <div class="mt-3">
                 <span class="mr-2 font-13">Please upload a .csv file, check the template for more info.</span>
