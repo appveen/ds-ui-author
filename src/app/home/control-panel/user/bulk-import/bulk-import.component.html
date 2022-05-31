@@ -38,11 +38,13 @@
             <input class="form-control-file" type="file" id="file" name="file" (change)="onChange($event)">
             <small *ngIf="fileAdded" class="form-text text-success">File Selected</small>
             <div class="mt-3">
+                <span class="mr-2 font-13">Please upload a .csv file, check the template for more info.</span>
                 <a [href]="downloadUrl" download="data-stack-user.template.csv" target="_blank">Download Template</a>
             </div>
         </div>
         <div *ngIf="showAzureLoginButton" class="form-group">
-            <label for="azureLogin" class="text-secondary font-13">If you want to import azure users as well please Login to Azure</label>
+            <label for="azureLogin" class="text-secondary font-13">If you want to import azure users as well please
+                Login to Azure</label>
             <button type="button" class="mb-3 ng-star-inserted border bg-white d-flex align-items-center p-2"
                 (click)="triggerAzureToken()">
                 <span class="azure-logo mr-2"></span>
