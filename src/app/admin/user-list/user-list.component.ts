@@ -111,9 +111,10 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.loadApps();
         this.setupGrid();
         this.configureFormValidators();
-        this.userForm.get('auth.authType').valueChanges.subscribe(value => {
-            this.configureFormValidators();
-        });
+        // this.userForm.get('auth.authType').valueChanges.subscribe(value => {
+        //     this.configureFormValidators();
+        // });
+        this.userForm.get('auth.authType').disable();
     }
 
     ngOnDestroy() {

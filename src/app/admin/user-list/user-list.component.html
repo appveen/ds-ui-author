@@ -28,9 +28,9 @@
             <div class="d-flex align-items-center ">
                 <div class="count-text mr-3">Showing {{ loadedCount }} of {{ totalCount }}</div>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-primary active" (click)="bulkUserUpload=true">
+                    <!-- <button type="button" class="btn btn-primary active" (click)="bulkUserUpload=true">
                         <span class="fa fa-cloud-upload-alt"></span>
-                    </button>
+                    </button> -->
                     <button type="button" class="add-new btn-min-width btn btn-primary" (click)="newUser()">
                         <span class="fa fa-plus-circle mr-2"></span>
                         <span class="text">Add New User</span>
@@ -49,9 +49,9 @@
         <odp-user-manage *ngIf="selectedUser" (backToList)="backToList()" (deleteUsr)="deleteUser($event)"
             [user]="selectedUser" [apps]="appList"></odp-user-manage>
     </div>
-    <div *ngIf="bulkUserUpload">
+    <!-- <div *ngIf="bulkUserUpload">
         <odp-user-bulk-upload (emitData)="hideBulkUserUpload($event)"></odp-user-bulk-upload>
-    </div>
+    </div> -->
 </div>
 
 <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
@@ -70,7 +70,7 @@
             <span class="fa fa-times text-muted hover ignore-click"
                 (click)="deleteSelectedModalRef.close(false)"></span>
         </div>
-        <ul class="font-weight-bold ml-4">
+        <ul class="font-weight-bold">
             <li *ngFor="let usr of (usersToDelete || selectedUsers)">{{usr.username}}</li>
         </ul>
         <div class="d-flex align-items-center justify-content-end mt-4">
