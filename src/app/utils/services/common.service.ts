@@ -884,10 +884,19 @@ export class CommonService {
         }
     }
 
+    deleteAllCookies() {
+        var cookies = document.cookie.split(";");
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+    }
+
     clearData(notCurrentApp?: boolean) {
         const self = this;
         self.sessionService.clearSession();
-
         if (self.autoRefreshRoutine) {
             clearTimeout(self.autoRefreshRoutine);
         }
@@ -914,6 +923,7 @@ export class CommonService {
         self.noAccess = false;
         self.disconnectSocket();
         self.ts.clear();
+        this.deleteAllCookies();
     }
 
     private _refreshToken_() {
@@ -1044,7 +1054,7 @@ export class CommonService {
     connectSocket() {
         const self = this;
         if (!self.socket && self.app && self.app._id) {
-            const socketConfig : Partial<ManagerOptions & SocketOptions> = {
+            const socketConfig: Partial<ManagerOptions & SocketOptions> = {
                 query: {
                     app: self.app._id,
                     userId: self.userDetails._id,
