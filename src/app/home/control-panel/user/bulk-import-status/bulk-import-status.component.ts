@@ -79,6 +79,7 @@ export class BulkImportStatusComponent implements OnInit {
   setupGrid() {
     const isEditable = this.hasPermission('PMUBD');
     this.gridOptions = {
+      overlayNoRowsTemplate: 'No records in the uploaded CSV',
       defaultColDef: {
         headerClass: 'hide-filter-icon',
         resizable: true,
@@ -209,6 +210,7 @@ export class BulkImportStatusComponent implements OnInit {
         }
         const sortString = this.appService.getSortFromModel(this.agGrid?.api?.getSortModel() || []);
         this.apiConfig.sort = sortString || 'data.name';
+        this.agGrid.api.hideOverlay();
         this.agGrid?.api?.showLoadingOverlay();
         if (!!this.subscriptions['data_userlist']) {
           this.subscriptions['data_userlist'].unsubscribe();
@@ -227,6 +229,7 @@ export class BulkImportStatusComponent implements OnInit {
             docs => {
               if (!!docs) {
                 this.loadedCount += docs.length;
+                this.agGrid?.api?.hideOverlay();
                 if (this.loadedCount < this.totalCount) {
                   params.successCallback(docs);
                 } else {
@@ -234,9 +237,9 @@ export class BulkImportStatusComponent implements OnInit {
                   params.successCallback(docs, this.totalCount);
                 }
               } else {
+                this.agGrid.api.showNoRowsOverlay();
                 params.successCallback([], 0);
               }
-              this.agGrid?.api?.hideOverlay();
             },
             err => {
               this.agGrid?.api?.hideOverlay();
