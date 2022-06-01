@@ -402,12 +402,12 @@
     <div class="d-flex align-items-center justify-content-between">
         <button type="button" class="btn btn-light btn-min-width" id="cancelNewUserYes"
             (click)="closeWindow(true)">Cancel</button>
-        <button *ngIf="!userInLocal && !userInAzureAD && hasPermission('PMUBC')" type="button"
-            class="btn btn-create btn-min-width" id="createNewUserYes" (click)="addUser()"
+        <button *ngIf="selectedAuthType=='local' && !userInLocal && !userInAzureAD && hasPermission('PMUBC')"
+            type="button" class="btn btn-create btn-min-width" id="createNewUserYes" (click)="addUser()"
             [disabled]="userForm.get('userData').invalid">Add</button>
-        <button *ngIf="userInLocal && hasPermission('PMUBC')" type="button" class="btn btn-dark btn-min-width"
-            id="importUser" (click)="importUser()">Import</button>
+        <button *ngIf="selectedAuthType=='local' && userInLocal && hasPermission('PMUBC')" type="button"
+            class="btn btn-dark btn-min-width" id="importUser" (click)="importUser()">Import</button>
         <button *ngIf="userInAzureAD && hasPermission('PMUBC')" type="button" class="btn btn-dark btn-min-width"
-            id="importUser" (click)="importUserFromAzure()">Import</button>
+            disableImportid="importUser" (click)="importUserFromAzure()" [disabled]="disableImport">Import</button>
     </div>
 </div>

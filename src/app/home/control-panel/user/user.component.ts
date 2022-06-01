@@ -124,6 +124,9 @@ export class UserComponent implements OnInit, OnDestroy {
 
     onAuthTypeChange(value) {
         this.showAzureLoginButton = false;
+        this.userForm.reset();
+        this.userForm.get('userData.auth.authType').patchValue(value);
+        this.userForm.get('userData.accessControl.accessLevel').patchValue('Selected');
         if (value === 'azure') {
             this.showLazyLoader = true;
             this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
@@ -706,13 +709,21 @@ export class UserComponent implements OnInit, OnDestroy {
             res => {
                 this.showLazyLoader = false;
                 this.userInLocal = false;
-                this.userInAzureAD = true;
                 let userData;
+                let statusCode;
                 if (Array.isArray(res)) {
                     userData = res[0].body;
+                    statusCode = res[0].statusCode;
                 } else {
                     userData = res.body;
+                    statusCode = res.statusCode;
                 }
+                if (statusCode != 200) {
+                    this.commonService.errorToast(null, 'User not found in Azure AD');
+                    this.userInAzureAD = false;
+                    return;
+                }
+                this.userInAzureAD = true;
                 this.userForm.get('userData.auth.authType').patchValue('azure');
                 this.userForm.get('userData.auth.authType').disable();
                 this.userForm.get('userData.basicDetails.name').patchValue(userData.name);
@@ -909,5 +920,17 @@ export class UserComponent implements OnInit, OnDestroy {
 
     isGroupSelected(groupId: string) {
         return this.selectedGroups.includes(groupId);
+    }
+
+    get disableImport() {
+        const authType = this.userForm.get('userData.auth.authType').value;
+        if (authType == 'azure' && !this.userInAzureAD && !this.userInLocal) {
+            return true;
+        }
+        return false;
+    }
+
+    get selectedAuthType() {
+        return this.userForm.get('userData.auth.authType').value;
     }
 }
