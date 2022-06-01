@@ -40,10 +40,12 @@ export class BulkImportStatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.breadcrumbPaths.push({
+      url: `/app/${this.commonService.app._id}/cp/user`,
       active: false,
       label: 'Users'
     });
     this.breadcrumbPaths.push({
+      url: `/app/${this.commonService.app._id}/cp/user/bulk-import`,
       active: false,
       label: 'Bulk Import'
     });

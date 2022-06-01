@@ -21,7 +21,7 @@
                 <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
                     *ngFor="let item of taskList" [routerLink]="item._id">
                     <div class="id">{{item._id}}</div>
-                    <div class="timestamp">{{item._metadata.createdAt | date:'dd/MM/yyyy HH:ss'}}</div>
+                    <div class="timestamp">{{item._metadata.createdAt | date:'dd/MM/yyyy HH:mm'}}</div>
                     <div class="status">{{item.status}}</div>
                 </div>
             </div>

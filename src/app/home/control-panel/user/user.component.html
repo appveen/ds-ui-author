@@ -9,8 +9,8 @@
     <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3">
         <div class="font-weight-bold font-lg">List of Users</div>
         <div class="btn-group">
-            <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-dark"
-                routerLink="bulk-import" ngbTooltip="Bulk Import">
+            <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-dark" routerLink="bulk-import"
+                ngbTooltip="Bulk Import">
                 <span class="fa fa-upload"></span>
                 <!-- <span class="text">Bulk Import</span> -->
             </button>
@@ -270,7 +270,7 @@
         <span class="fa fa-times text-secondary hover" (click)="closeWindow(true)"></span>
     </div>
     <form class="d-flex flex-column" [formGroup]="userForm" odpFocusNext>
-        <div formGroupName="userData">
+        <div *ngIf="userForm.get('userData')" formGroupName="userData">
             <div class="form-group" formGroupName="auth" *ngIf="validAuthTypes?.length > 1">
                 <label for="authType">Authentication Method</label>
                 <select id="authType" class="form-control" formControlName="authType"
@@ -382,7 +382,7 @@
                     <div class="form-group">
                         <label for="groups">Groups</label><br>
                         <div class="groups-list border rounded bg-white">
-                            <ul class="list-group list-group-flush" formArrayName="groupData">
+                            <ul class="list-group list-group-flush">
                                 <li *ngFor="let group of groupList; index as groupIndex" class="list-group-item py-2">
                                     <label [attr.for]="groupList[groupIndex]._id"
                                         class="d-flex align-items-center justify-content-between m-0">
