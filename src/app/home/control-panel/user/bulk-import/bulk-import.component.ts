@@ -113,6 +113,10 @@ export class BulkImportComponent implements OnInit {
   }
 
   startProcess() {
+    if (!this.fileInput || !this.fileInput.files || !this.fileInput.files[0]) {
+      this.commonService.errorToast(null, 'Please select a file to Start Import Process');
+      return;
+    }
     const formData = new FormData();
     formData.append('file', this.fileInput.files[0]);
     this.commonService.uploadFile('user', `/${this.commonService.app._id}/user/utils/bulkCreate/upload`, formData).subscribe((res: HttpEvent<any>) => {
