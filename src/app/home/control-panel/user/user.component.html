@@ -405,8 +405,8 @@
         <button *ngIf="selectedAuthType=='local' && !userInLocal && !userInAzureAD && hasPermission('PMUBC')"
             type="button" class="btn btn-create btn-min-width" id="createNewUserYes" (click)="addUser()"
             [disabled]="userForm.get('userData').invalid">Add</button>
-        <button *ngIf="selectedAuthType=='local' && userInLocal && hasPermission('PMUBC')" type="button"
-            class="btn btn-dark btn-min-width" id="importUser" (click)="importUser()">Import</button>
+        <button *ngIf="userInLocal && hasPermission('PMUBC')" type="button" class="btn btn-dark btn-min-width"
+            id="importUser" (click)="importUser()">Import</button>
         <button *ngIf="userInAzureAD && hasPermission('PMUBC')" type="button" class="btn btn-dark btn-min-width"
             disableImportid="importUser" (click)="importUserFromAzure()" [disabled]="disableImport">Import</button>
     </div>
