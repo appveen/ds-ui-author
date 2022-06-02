@@ -123,10 +123,26 @@ export class UserComponent implements OnInit, OnDestroy {
     }
 
     onAuthTypeChange(value) {
+        console.log(value);
         this.showAzureLoginButton = false;
-        this.userForm.reset();
-        this.userForm.get('userData.auth.authType').patchValue(value);
-        this.userForm.get('userData.accessControl.accessLevel').patchValue('Selected');
+        if(this.userForm.get('password')){
+            this.userForm.get('password').patchValue(null);
+        }
+        if(this.userForm.get('cpassword')){
+            this.userForm.get('cpassword').patchValue(null);
+        }
+        if(this.userForm.get('basicDetails.name:')){
+            this.userForm.get('basicDetails.name:').patchValue(null);
+        }
+        if(this.userForm.get('basicDetails.phone')){
+            this.userForm.get('basicDetails.phone').patchValue(null);
+        }
+        if(this.userForm.get('basicDetails.alternateEmail')){
+            this.userForm.get('basicDetails.alternateEmail').patchValue(null);
+        }
+        if(this.userForm.get('basicDetails.description')){
+            this.userForm.get('basicDetails.description').patchValue(null);
+        }
         if (value === 'azure') {
             this.showLazyLoader = true;
             this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
