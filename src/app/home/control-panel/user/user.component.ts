@@ -583,6 +583,7 @@ export class UserComponent implements OnInit, OnDestroy {
             this.userInAzureAD = false;
             this.userForm.reset();
             this.userForm.get('userData.auth.authType').enable();
+            this.selectedGroups = [];
         }
         this.showNewUserWindow = false;
     }
