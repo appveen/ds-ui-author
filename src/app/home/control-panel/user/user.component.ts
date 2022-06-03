@@ -143,6 +143,7 @@ export class UserComponent implements OnInit, OnDestroy {
         if (this.userForm.get('basicDetails.description')) {
             this.userForm.get('basicDetails.description').patchValue(null);
         }
+        this.selectedGroups = [];
         if (value === 'azure') {
             this.showLazyLoader = true;
             this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
