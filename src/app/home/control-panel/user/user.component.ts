@@ -125,22 +125,22 @@ export class UserComponent implements OnInit, OnDestroy {
     onAuthTypeChange(value) {
         console.log(value);
         this.showAzureLoginButton = false;
-        if(this.userForm.get('password')){
+        if (this.userForm.get('password')) {
             this.userForm.get('password').patchValue(null);
         }
-        if(this.userForm.get('cpassword')){
+        if (this.userForm.get('cpassword')) {
             this.userForm.get('cpassword').patchValue(null);
         }
-        if(this.userForm.get('basicDetails.name:')){
+        if (this.userForm.get('basicDetails.name:')) {
             this.userForm.get('basicDetails.name:').patchValue(null);
         }
-        if(this.userForm.get('basicDetails.phone')){
+        if (this.userForm.get('basicDetails.phone')) {
             this.userForm.get('basicDetails.phone').patchValue(null);
         }
-        if(this.userForm.get('basicDetails.alternateEmail')){
+        if (this.userForm.get('basicDetails.alternateEmail')) {
             this.userForm.get('basicDetails.alternateEmail').patchValue(null);
         }
-        if(this.userForm.get('basicDetails.description')){
+        if (this.userForm.get('basicDetails.description')) {
             this.userForm.get('basicDetails.description').patchValue(null);
         }
         if (value === 'azure') {
@@ -708,7 +708,7 @@ export class UserComponent implements OnInit, OnDestroy {
                 this.userForm.get('userData.basicDetails.name').patchValue(null);
                 this.userForm.get('userData.basicDetails.name').enable();
                 this.userForm.get('userData.basicDetails.alternateEmail').patchValue(null);
-                if (this.validAuthTypes.findIndex(e => e.value === 'azure') > -1) {
+                if (this.selectedAuthType == 'azure' && this.validAuthTypes.findIndex(e => e.value === 'azure') > -1) {
                     this.checkForUserInAzure();
                 }
             }
