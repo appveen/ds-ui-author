@@ -32,6 +32,8 @@ export class SchemaStructurePipe implements PipeTransform {
                     temp[i] = properties[i];
                 }  else if (i === 'password' && properties['_detailedType'] === 'long') {
                     temp[i] = properties[i];
+                } else if (i === 'password' && properties['_type'] === 'File') {
+                    temp[i] = properties[i];
                 } 
                 else if (i === 'natural' && properties['_detailedType'] === 'natural') {
                     temp[i] = properties[i];
