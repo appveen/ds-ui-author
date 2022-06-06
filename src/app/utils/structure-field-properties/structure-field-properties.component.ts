@@ -97,6 +97,8 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     return false;
   }
 
+ 
+
   collectForms() {
     const self = this;
     self.formList = [];
@@ -247,6 +249,16 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
           self.commonService.errorToast(err, 'Unable to fetch unique status');
         });
     }
+  }
+
+  showSecureText(formItem){
+    let props = formItem.get('properties');
+    if(formItem.get('type').value == 'String'){
+      if (!(props.get('email').value || (props.get('_detailedType') && props.get('_detailedType').value === 'enum'))){
+        return true;
+      }
+    }
+    return false;
   }
 
   clearValue() {

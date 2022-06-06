@@ -25,9 +25,15 @@ export class SchemaStructurePipe implements PipeTransform {
                     temp[i] = properties[i];
                 } else if (i === 'richText' && properties['_detailedType'] === 'rich') {
                     temp[i] = properties[i];
-                } else if (i === 'longText' && properties['_detailedType'] === 'long') {
+                } else if (i === 'password' && properties['_detailedType'] === 'rich') {
                     temp[i] = properties[i];
-                } else if (i === 'natural' && properties['_detailedType'] === 'natural') {
+                }
+                else if (i === 'longText' && properties['_detailedType'] === 'long') {
+                    temp[i] = properties[i];
+                }  else if (i === 'password' && properties['_detailedType'] === 'long') {
+                    temp[i] = properties[i];
+                } 
+                else if (i === 'natural' && properties['_detailedType'] === 'natural') {
                     temp[i] = properties[i];
                 } else if (i === 'max'
                     || i === 'min'

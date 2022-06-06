@@ -57,15 +57,16 @@ export class FieldTypeComponent {
       if (field.properties.email) {
         return 'Email';
       }
-      if (field.properties.password) {
-        return 'Secure Text';
-      }
+      
       if (field.properties.longText) {
         return 'Long Text';
       }
       if (field.properties.richText) {
         return 'Rich Text';
       }
+      // if (field.properties.password) {
+      //   return 'Secure Text';
+      // }
       if (field.properties._detailedType && field.properties._detailedType === 'enum') {
         return 'List of values';
       }
