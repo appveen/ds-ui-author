@@ -257,6 +257,8 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       if (!(props.get('email').value || (props.get('_detailedType') && props.get('_detailedType').value === 'enum'))){
         return true;
       }
+    } else if(formItem.get('type').value == 'File'){
+      return true;
     }
     return false;
   }

@@ -101,7 +101,7 @@
         </div>
         <ng-container *ngIf="showCommonFields && formItem.get('key').value !== '_self'" class="mb-4">
           <div *ngIf="!idField && showSecureText(formItem)" class="d-flex w-100 ">
-            <div class="label-width text-secondary">Secure Text</div>
+            <div class="label-width text-secondary">Secure</div>
             <div class="value-width">
               <select [attr.disabled]="!canEdit ? '' : null" class="form-control" formControlName="password">
                 <option [ngValue]="true">True</option>
