@@ -251,16 +251,25 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     }
   }
 
-  showSecureText(formItem){
+  showSecureLongRichTextFile(formItem){
     let props = formItem.get('properties');
     if(formItem.get('type').value == 'String'){
-      if (!(props.get('email').value || (props.get('_detailedType') && props.get('_detailedType').value === 'enum'))){
+      if (props.get('richText').value || (props.get('longText').value)){
         return true;
       }
     } else if(formItem.get('type').value == 'File'){
       return true;
     }
     return false;
+  }
+
+  showSecureText(formItem){
+    let props = formItem.get('properties');
+    if(formItem.get('type').value == 'String'){
+      if (!props.get('richText').value && !(props.get('longText').value) &&  !(props.get('email').value) && !(props.get('_detailedType') && props.get('_detailedType').value === 'enum') ){
+        return true;
+      }
+    }
   }
 
   clearValue() {

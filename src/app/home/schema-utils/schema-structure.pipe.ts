@@ -28,6 +28,9 @@ export class SchemaStructurePipe implements PipeTransform {
                 } else if (i === 'password' && properties['_detailedType'] === 'rich') {
                     temp[i] = properties[i];
                 }
+                else if (!properties['richText'] && !properties['longText'] && !properties['email'] && properties['_detailedType'] != 'enum' && properties['_type'] == 'String' && i == 'password'){
+                    temp[i] = properties[i];
+                }
                 else if (i === 'longText' && properties['_detailedType'] === 'long') {
                     temp[i] = properties[i];
                 }  else if (i === 'password' && properties['_detailedType'] === 'long') {
