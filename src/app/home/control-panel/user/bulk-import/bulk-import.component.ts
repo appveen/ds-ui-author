@@ -43,12 +43,18 @@ export class BulkImportComponent implements OnInit {
     if (this.appService.validAuthTypes && this.appService.validAuthTypes.indexOf('azure') == -1) {
       this.showAzureLoginButton = false;
     }
+    this.commonService.bulkUpload.status.subscribe(data => {
+      this.fetchFileTransfers();
+    });
   }
 
   fetchFileTransfers() {
+    this.showLazyLoader = true;
     this.commonService.get('user', `/${this.commonService.app._id}/user/utils/bulkCreate/fileTransfers`).subscribe(res => {
+      this.showLazyLoader = false;
       this.taskList = res;
     }, err => {
+      this.showLazyLoader = false;
       console.error(err);
     });
   }

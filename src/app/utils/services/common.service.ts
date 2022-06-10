@@ -58,6 +58,9 @@ export class CommonService {
         status: EventEmitter<any>;
         delete: EventEmitter<any>;
     };
+    bulkUpload: {
+        status: EventEmitter<any>;
+    };
     socket: Socket;
     permissions: Array<Permission>;
     rcvdKeys: any;
@@ -111,6 +114,9 @@ export class CommonService {
             new: new EventEmitter(),
             status: new EventEmitter(),
             delete: new EventEmitter()
+        };
+        self.bulkUpload = {
+            status: new EventEmitter()
         };
         self.sessionExpired = new EventEmitter<void>();
         self.currentAppUpdated = new Subject<string>();
@@ -1110,6 +1116,11 @@ export class CommonService {
             self.socket.on('faasCreated', data => {
                 if (data.app === self.app._id) {
                     self.faas.new.emit(data);
+                }
+            });
+            self.socket.on('bulk-upload', data => {
+                if (data.app === self.app._id) {
+                    self.bulkUpload.status.emit(data);
                 }
             });
         }
