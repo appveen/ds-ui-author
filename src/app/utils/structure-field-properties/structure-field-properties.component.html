@@ -99,6 +99,41 @@
             <span *ngIf="!canEdit">{{formItem.get('properties.fieldLength').value}}</span>
           </div>
         </div>
+        <div *ngIf="!idField && showSecureLongRichTextFile(formItem)" class="d-flex w-100 mb-4">
+          <div class="label-width text-secondary">Secure</div>
+          <!-- <div class="value-width">
+            <select [attr.disabled]="!canEdit ? '' : null" class="form-control" formControlName="password">
+              <option [ngValue]="true">True</option>
+              <option [ngValue]="false">False</option>
+            </select> -->
+          <div class="value-width position-relative">
+            <ng-container *ngIf="canEdit">
+              <label *ngIf="canEdit" class="switch accent">
+                <input type="checkbox" formControlName="password">
+                <span class="slider"></span>
+                <span class="toggler"></span>
+                <span class="ml-3">{{formItem.get('properties.password')?.value ? 'Yes' : 'No'}}</span>
+              </label>
+            </ng-container>
+            <ng-container *ngIf="!canEdit">
+              <span class="text d-flex" *ngIf=" formItem.get('properties.password').value === true">
+                <span
+                  class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
+                  <span class="fa fa-check text-white"></span>
+                </span>
+                <span class="text">Yes</span>
+              </span>
+              <span class="text d-flex" *ngIf="formItem.get('properties.password').value === false">
+                <span
+                  class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1">
+                </span>
+                <span class="text">No</span>
+              </span>
+            </ng-container>
+          </div>
+
+          <!-- </div> -->
+        </div>
         <odp-relation-property *ngIf="formItem.get('type').value=='Relation'" [form]="formItem" [edit]="edit"
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [type]='type'>
         </odp-relation-property>
@@ -177,7 +212,7 @@
           </div>
         </div>
         <ng-container *ngIf="showCommonFields && formItem.get('key').value !== '_self'" class="mb-4">
-       
+
 
           <div *ngIf="!idField" class="d-flex w-100 mt-4">
             <div class="label-width text-secondary">Custom Label</div>
@@ -199,41 +234,6 @@
                 [attr.disabled]="(checkStateModel() || (formItem.get('type').value =='Boolean')) ? true : null">
               <span *ngIf="!canEdit">{{formItem.get('properties.errorMessage').value}}</span>
             </div>
-          </div>
-          <div *ngIf="!idField && showSecureLongRichTextFile(formItem)" class="d-flex w-100 mb-4">
-            <div class="label-width text-secondary">Secure</div>
-            <!-- <div class="value-width">
-              <select [attr.disabled]="!canEdit ? '' : null" class="form-control" formControlName="password">
-                <option [ngValue]="true">True</option>
-                <option [ngValue]="false">False</option>
-              </select> -->
-              <div class="value-width position-relative">
-                <ng-container *ngIf="canEdit">
-                  <label *ngIf="canEdit" class="switch accent">
-                    <input type="checkbox" formControlName="password">
-                    <span class="slider"></span>
-                    <span class="toggler"></span>
-                    <span class="ml-3">{{formItem.get('properties.password')?.value ? 'Yes' : 'No'}}</span>
-                  </label>
-                </ng-container>
-                <ng-container *ngIf="!canEdit">
-                  <span class="text d-flex" *ngIf=" formItem.get('properties.password').value === true">
-                    <span
-                      class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
-                      <span class="fa fa-check text-white"></span>
-                    </span>
-                    <span class="text">Yes</span>
-                  </span>
-                  <span class="text d-flex" *ngIf="formItem.get('properties.password').value === false">
-                    <span
-                      class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1">
-                    </span>
-                    <span class="text">No</span>
-                  </span>
-                </ng-container>
-              </div>
-             
-            <!-- </div> -->
           </div>
         </ng-container>
 
