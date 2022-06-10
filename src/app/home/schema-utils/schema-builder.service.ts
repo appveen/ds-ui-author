@@ -247,6 +247,8 @@ export class SchemaBuilderService {
         if (value.type === 'File') {
             temp.addControl('fileType', new FormControl(value.properties
                 && value.properties.fileType ? value.properties.fileType : 'All'));
+            temp.addControl('password', new FormControl(value.properties
+                && value.properties.password ? value.properties.password : false));
             // temp.removeControl('required');
         }
 
