@@ -120,6 +120,9 @@ export class UserComponent implements OnInit, OnDestroy {
             }
         });
         this.setupGrid();
+        if (this.appService.validAuthTypes && this.appService.validAuthTypes.indexOf('azure') == -1) {
+            this.showAzureLoginButton = false;
+        }
     }
 
     onAuthTypeChange(value) {

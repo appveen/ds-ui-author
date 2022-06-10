@@ -40,6 +40,9 @@ export class BulkImportComponent implements OnInit {
     });
     this.fetchFileTransfers();
     this.downloadUrl = environment.url.user + `/${this.commonService.app._id}/user/utils/bulkCreate/template`;
+    if (this.appService.validAuthTypes && this.appService.validAuthTypes.indexOf('azure') == -1) {
+      this.showAzureLoginButton = false;
+    }
   }
 
   fetchFileTransfers() {
