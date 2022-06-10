@@ -635,9 +635,9 @@ export class UserComponent implements OnInit, OnDestroy {
 
     importUserFromAzure() {
         this.userForm.get('userData.auth.authType').enable();
-        const username = this.userForm.get('userData.username').value;
+        const user = this.userForm.get('userData').value;
         const payload = {
-            users: [username],
+            users: [user],
             groups: this.selectedGroups
         };
         this.showLazyLoader = true;
