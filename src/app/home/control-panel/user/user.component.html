@@ -361,23 +361,23 @@
                         <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
                             *ngIf="invalidPasswordMatch" ngbTooltip="Passwords do not match"></span>
                     </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <div class="w-100" formGroupName="basicDetails">
+                            <input id="phone" class="form-control" type="text" placeholder="Enter Phone Number"
+                                formControlName="phone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Alternate Email</label>
+                        <div class="w-100" formGroupName="basicDetails">
+                            <input id="email" class="form-control" type="text" placeholder="Enter Alternate Email"
+                                formControlName="alternateEmail">
+                            <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                                *ngIf="invalidEmailPattern" ngbTooltip="Invalid Alternate Email"></span>
+                        </div>
+                    </div>
                 </ng-container>
-                <div class="form-group">
-                    <label for="phone">Phone</label>
-                    <div class="w-100" formGroupName="basicDetails">
-                        <input id="phone" class="form-control" type="text" placeholder="Enter Phone Number"
-                            formControlName="phone">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="email">Alternate Email</label>
-                    <div class="w-100" formGroupName="basicDetails">
-                        <input id="email" class="form-control" type="text" placeholder="Enter Alternate Email"
-                            formControlName="alternateEmail">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                            *ngIf="invalidEmailPattern" ngbTooltip="Invalid Alternate Email"></span>
-                    </div>
-                </div>
                 <div *ngIf="hasPermission('PMUG') && groupList.length>0">
                     <div class="form-group">
                         <label for="groups">Groups</label><br>
