@@ -283,23 +283,23 @@ export class SchemaBuilderService {
         tempForm.addControl('properties', this.getPropertiesStructure(options));
         if (value && value.properties && value.properties.relatedTo) {
             tempForm.get('type').patchValue('Relation');
-        }
-        if (value && value.properties && value.properties.schema) {
+        } else if (value && value.properties && value.properties.schema) {
             value.type = 'Global';
             tempForm.get('type').patchValue('Global');
             delete value.definition;
-        }
-        if (value && value.properties && value.properties.relatedTo) {
+        } else if (value && value.properties && value.properties.relatedTo) {
             value.type = 'Relation';
             tempForm.get('type').patchValue('Relation');
             delete value.definition;
-        }
-        if (value && value.properties && value.properties.password) {
+        } else if (value && value.properties && value.properties.fileType) {
+            value.type = 'File';
+            tempForm.get('type').patchValue('File');
+            delete value.definition;
+        } else if (value && value.properties && value.properties.password) {
             value.type = 'String';
             tempForm.get('type').patchValue('String');
             delete value.definition;
-        }
-        if (value && value.type && value.type === 'User') {
+        } else if (value && value.type && value.type === 'User') {
             tempForm.get('type').patchValue('User');
             delete value.definition;
         }
