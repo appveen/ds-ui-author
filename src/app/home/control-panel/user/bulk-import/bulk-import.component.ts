@@ -26,6 +26,7 @@ export class BulkImportComponent implements OnInit {
     this.taskList = [];
     this.showUploadWindow = false;
     this.fileAdded = false;
+    this.showAzureLoginButton = false;
   }
 
   ngOnInit(): void {
@@ -40,9 +41,6 @@ export class BulkImportComponent implements OnInit {
     });
     this.fetchFileTransfers();
     this.downloadUrl = environment.url.user + `/${this.commonService.app._id}/user/utils/bulkCreate/template`;
-    if (this.appService.validAuthTypes && this.appService.validAuthTypes.indexOf('azure') == -1) {
-      this.showAzureLoginButton = false;
-    }
     this.commonService.bulkUpload.status.subscribe(data => {
       this.fetchFileTransfers();
     });
@@ -69,14 +67,16 @@ export class BulkImportComponent implements OnInit {
     if (this.fileInput) {
       this.fileInput.value = null;
     }
-    this.showLazyLoader = true;
-    this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
-      this.showLazyLoader = false;
-      this.showAzureLoginButton = false;
-    }, err => {
-      this.showLazyLoader = false;
-      this.showAzureLoginButton = true;
-    });
+    if (this.azureAuthTypeEnabled) {
+      this.showLazyLoader = true;
+      this.commonService.get('user', `/${this.commonService.app._id}/user/utils/azure/token`).subscribe(res => {
+        this.showLazyLoader = false;
+        this.showAzureLoginButton = false;
+      }, err => {
+        this.showLazyLoader = false;
+        this.showAzureLoginButton = true;
+      });
+    }
   }
 
   triggerAzureToken() {
@@ -143,5 +143,8 @@ export class BulkImportComponent implements OnInit {
     }, err => {
       console.error(err);
     });
+  }
+  get azureAuthTypeEnabled() {
+    return (this.appService.validAuthTypes && this.appService.validAuthTypes.indexOf('azure') > -1) || false;
   }
 }
