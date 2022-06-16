@@ -99,7 +99,7 @@
             <span *ngIf="!canEdit">{{formItem.get('properties.fieldLength').value}}</span>
           </div>
         </div>
-    
+
         <odp-relation-property *ngIf="formItem.get('type').value=='Relation'" [form]="formItem" [edit]="edit"
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [type]='type'>
         </odp-relation-property>
@@ -233,7 +233,7 @@
                 </span>
               </ng-container>
             </div>
-  
+
             <!-- </div> -->
           </div>
         </ng-container>

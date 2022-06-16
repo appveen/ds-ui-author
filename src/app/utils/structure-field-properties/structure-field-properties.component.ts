@@ -97,7 +97,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     return false;
   }
 
- 
+
 
   collectForms() {
     const self = this;
@@ -251,13 +251,13 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     }
   }
 
-  showSecureText(formItem){
+  showSecureText(formItem) {
     let props = formItem.get('properties');
-    if(formItem.get('type').value == 'String'){
-      if (props.get('richText').value || (props.get('longText').value)){
+    if (formItem.get('type').value == 'String') {
+      if (props.get('richText').value || (props.get('longText').value)) {
         return true;
       }
-    } else if(formItem.get('type').value == 'File'){
+    } else if (formItem.get('type').value == 'File') {
       return true;
     }
     return false;
