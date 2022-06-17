@@ -97,7 +97,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     return false;
   }
 
- 
+
 
   collectForms() {
     const self = this;
@@ -251,25 +251,16 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     }
   }
 
-  showSecureLongRichTextFile(formItem){
+  showSecureText(formItem) {
     let props = formItem.get('properties');
-    if(formItem.get('type').value == 'String'){
-      if (props.get('richText').value || (props.get('longText').value)){
+    if (formItem.get('type').value == 'String') {
+      if (props.get('richText').value || (props.get('longText').value)) {
         return true;
       }
-    } else if(formItem.get('type').value == 'File'){
+    } else if (formItem.get('type').value == 'File') {
       return true;
     }
     return false;
-  }
-
-  showSecureText(formItem){
-    let props = formItem.get('properties');
-    if(formItem.get('type').value == 'String'){
-      if (!props.get('richText').value && !(props.get('longText').value) &&  !(props.get('email').value) && !(props.get('_detailedType') && props.get('_detailedType').value === 'enum') ){
-        return true;
-      }
-    }
   }
 
   clearValue() {
