@@ -82,12 +82,31 @@ export class TextPropertyComponent implements OnDestroy {
     }
   }
 
-  showSecureText(formItem) {
-    let props = formItem.get('properties');
-    if (formItem.get('type').value == 'String') {
+
+  collectionSecureText() {
+    const self = this;
+    let props = self.form.get('properties');
+
+    if (self.form.get('key')?.value == '_self' && self.form.get('type')?.value == 'String') {
+      if (props.get('richText').value || (props.get('longText').value)) {
+        return true;
+      }
+    }
+  }
+
+  showSecureText() {
+    const self = this;
+    let props = self.form.get('properties');
+    if (self.collectionSecureText()) {
+      return true
+    }
+    if (self.form.get('type').value == 'String') {
       if (!props.get('richText').value && !(props.get('longText').value) && !(props.get('email').value) && !(props.get('_detailedType') && props.get('_detailedType').value === 'enum')) {
         return true;
       }
+    }
+    else {
+      return false;
     }
   }
 
