@@ -257,7 +257,13 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       if (props.get('richText').value || (props.get('longText').value)) {
         return true;
       }
-    } else if (formItem.get('type').value == 'File') {
+    }
+    return false;
+
+  }
+
+  showSecureFile(formItem) {
+    if (formItem.get('type').value == 'File') {
       return true;
     }
     return false;
