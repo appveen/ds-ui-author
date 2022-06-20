@@ -203,19 +203,18 @@
                     </div>
                     <span *ngIf="wfRoute.isActive" class="fa fa-angle-right mr-3"></span>
                 </div>-->
-                <div *ngIf="hasBookmarkPermission" #bookmarkRoute="routerLinkActive"
+                <!-- <div *ngIf="hasBookmarkPermission" #bookmarkRoute="routerLinkActive"
                     class="icon-block hover d-flex align-items-center justify-content-between my-2"
                     routerLinkActive="text-accent bg-white active" [routerLink]="['cp/bookmarks']" id="bookmark"
                     (mouseover)="hover.bookmark = true" (mouseleave)="hover.bookmark = false">
                     <div class="d-flex align-items-center ml-1">
-                        <!-- <span class="bookmarkNew mx-2 ic-name" *ngIf="!bookmarkRoute.isActive"></span>
-                        <span class="bookmark-active mx-2  ic-name" *ngIf="bookmarkRoute.isActive"></span> -->
+                       
                         <odp-bookmark-icon class="mx-2 " [color]="hover.bookmark?'0082C9':'222'" size="18"
                             [active]="bookmarkRoute.isActive"></odp-bookmark-icon>
                         <span class="text" [ngClass]="{'text-accent':hover.bookmark}">Bookmarks</span>
                     </div>
                     <span *ngIf="bookmarkRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
+                </div> -->
                 <div *ngIf="hasUsersPermission" #userRoute="routerLinkActive"
                     class="icon-block hover d-flex align-items-center justify-content-between my-2"
                     routerLinkActive="text-accent bg-white active" [routerLink]="['cp/user']" id="_usersMng"
