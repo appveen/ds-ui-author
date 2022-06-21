@@ -29,7 +29,7 @@ const controlPanelRoutes: Routes = [
       { path: 'gr', component: UserGroupComponent, canActivate: [GroupGuard] },
       { path: 'gm/:id', component: UserGroupManageComponent, canActivate: [GroupGuard], canDeactivate: [RouteGuard] },
       { path: 'selectedaccess', component: SelectedAccessComponent },
-      { path: 'bookmarks', component: BookmarksComponent, canActivate: [BookmarkGuard] },
+      // { path: 'bookmarks', component: BookmarksComponent, canActivate: [BookmarkGuard] },
       { path: 'workflow', component: WorkitemsComponent }
     ]
   }
