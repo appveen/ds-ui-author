@@ -51,11 +51,11 @@ export class GroupAuthorGroupsComponent implements OnInit {
         segment: 'GAA',
         entity: 'GROUP'
       },
-      {
-        label: 'Bookmarks',
-        segment: 'GABM',
-        entity: 'GROUP'
-      },
+      // {
+      //   label: 'Bookmarks',
+      //   segment: 'GABM',
+      //   entity: 'GROUP'
+      // },
       {
         label: 'Users',
         segment: 'GAU',
@@ -88,11 +88,11 @@ export class GroupAuthorGroupsComponent implements OnInit {
         segment: 'GCI',
         entity: 'GROUP'
       },
-      {
-        label: 'Bookmarks',
-        segment: 'GCBM',
-        entity: 'GROUP'
-      },
+      // {
+      //   label: 'Bookmarks',
+      //   segment: 'GCBM',
+      //   entity: 'GROUP'
+      // },
     ];
   }
 
