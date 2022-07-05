@@ -70,6 +70,8 @@ export class SchemaValuePipe implements PipeTransform {
                     } else {
                         temp[definition[i].key] = faker.name.findName();
                     }
+                } else if (definition[i].properties.password) {
+                    temp[definition[i].key] = { value: faker.internet.password() };
                 } else {
                     temp[definition[i].key] = faker.fake('{{random.words}}');
                 }
@@ -89,6 +91,18 @@ export class SchemaValuePipe implements PipeTransform {
                 temp[definition[i].key] = this._fillValue(definition[i].definition);
             } else if (definition[i].type === 'Array') {
                 temp[definition[i].key] = [this._fillValue(definition[i].definition)._self];
+            } else if (definition[i].type === 'Relation') {
+                temp[definition[i].key] = { _id: "DOCID" };
+            } else if (definition[i].type === 'File') {
+                temp[definition[i].key] = {
+                    length: 2018913,
+                    uploadDate: new Date().toISOString(),
+                    filename: "5937ef88d203d30c07414e55c133e7fa.csv",
+                    contentType: "text/csv",
+                    metadata: { filename: "original file name.csv" },
+                    md5: "22d108fc1677d6fd1ec74db360dd8d11",
+                    _id: "62c3e03b29b011a0b9aa9d07"
+                };
             }
         }
         return temp;
