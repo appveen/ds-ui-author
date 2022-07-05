@@ -378,7 +378,7 @@
                             </button>
                             <div ngbDropdownMenu>
                                 <div class="dropdown-itm px-2 py-1" *ngFor="let type of types" (click)="setUserAttributeType(type,i);listDropdown.close();">
-                                    <odp-field-type [label]="true" [field]="{type:type.value,properties:{}}">
+                                    <odp-field-type [label]="true" [field]="{type:type.value,properties:{}}" [basic]="true">
                                     </odp-field-type>
                                 </div>
                             </div>
