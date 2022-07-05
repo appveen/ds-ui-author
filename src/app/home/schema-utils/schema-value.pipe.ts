@@ -37,7 +37,9 @@ export class SchemaValuePipe implements PipeTransform {
             if (definition[i].id) {
                 temp['_id'] = this.idPreview(definition[i].id);
             } else if (definition[i].type === 'String') {
-                if (definition[i].key.match(/^.*(phone|contact|mobile|cell).*$/i)) {
+                if (definition[i].properties.password) {
+                    temp[definition[i].key] = { value: faker.internet.password() };
+                } if (definition[i].key.match(/^.*(phone|contact|mobile|cell).*$/i)) {
                     temp[definition[i].key] = faker.phone.phoneNumber('##########');
                 } else if (definition[i].properties.name &&
                     definition[i].properties.name.split(' ').map(e => e.toLowerCase()).indexOf('data') > -1) {
@@ -70,8 +72,6 @@ export class SchemaValuePipe implements PipeTransform {
                     } else {
                         temp[definition[i].key] = faker.name.findName();
                     }
-                } else if (definition[i].properties.password) {
-                    temp[definition[i].key] = { value: faker.internet.password() };
                 } else {
                     temp[definition[i].key] = faker.fake('{{random.words}}');
                 }
