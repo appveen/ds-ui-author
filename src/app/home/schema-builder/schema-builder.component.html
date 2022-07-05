@@ -75,9 +75,9 @@
           *ngIf="!edit.status && hasPermissionStartsWith('PVDSA','SM')">
           Audit
         </div>
-        <div class="text-dark px-3 py-2 hover" (click)="activeTab=10" [ngClass]="{'active':activeTab==10}"
+        <div class="text-dark px-3 py-2 hover" (click)="generateData();activeTab=10" [ngClass]="{'active':activeTab==10}"
           *ngIf="clickCount>9">JSON</div>
-        <div class="text-dark px-3 py-2 hover" (click)="activeTab=11" [ngClass]="{'active':activeTab==11}"
+        <div class="text-dark px-3 py-2 hover" (click)="generateData();activeTab=11" [ngClass]="{'active':activeTab==11}"
           *ngIf="clickCount>9">Schema</div>
       </div>
       <div class="builder-body d-flex flex-column w-100" *ngIf="hasAnyTabPermission">

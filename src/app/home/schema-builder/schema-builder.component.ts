@@ -311,12 +311,6 @@ export class SchemaBuilderComponent implements
                 }
             }
         });
-        self.form.valueChanges.subscribe(val => {
-            if (val && val.definition) {
-                self.exampleJSON = self.schemaValuePipe.transform(val.definition);
-                self.exampleSchema = self.schemaStructurePipe.transform(val);
-            }
-        });
     }
 
     ngOnDestroy() {
@@ -345,6 +339,11 @@ export class SchemaBuilderComponent implements
         if (self.schemaName) {
             self.schemaName.nativeElement.focus();
         }
+    }
+
+    generateData() {
+        this.exampleJSON = this.schemaValuePipe.transform(this.form.get('definition').value);
+        this.exampleSchema = this.schemaStructurePipe.transform(this.form.value);
     }
 
     fetchPermissions(id) {
