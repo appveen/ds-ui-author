@@ -7,10 +7,6 @@
                 <span class="text">Add New</span>
             </span>
         </div>
-        <!-- <div class="d-flex flex-row search">
-          <span class="fa fa-search m-t-75 m-r-10 ml-2 position-absolute"></span>
-          <input type="text" class="form-control ml-1 inpunt-indent rounded-0 border-0" placeholder="Search" [(ngModel)]="searchRole">
-        </div> -->
         <div class="role-list">
             <div class="d-flex flex-column">
                 <div class="d-flex flex-column roles-list-item border-bottom hover" (click)="onSelectRole(role,i)"
@@ -91,10 +87,10 @@
                             (click)="activeTab=1">
                             Permission
                         </div>
-                        <!-- <div class="tab px-3" [ngClass]="{'text-accent border-accent':activeTab === 2}"
+                        <div class="tab px-3" [ngClass]="{'text-accent border-accent':activeTab === 2}"
                             (click)="activeTab=2" *ngIf="!schemaFree">
-                            Condition
-                        </div> -->
+                            Dynamic Filters
+                        </div>
                     </div>
                     <div class="tab-container d-flex align-items-start border-bottom w-100">
                         <div id="tab-1" *ngIf="activeTab === 1">
@@ -188,73 +184,53 @@
                         </div>
                         <div id="tab-2" *ngIf="activeTab === 2">
                             <div class="d-flex w-100 my-3">
-                                <span class="text-dark font-weight-bold first-column">Enable Conditions</span>
+                                <span class="text-dark font-weight-bold first-column">Enable Filters</span>
                                 <div class="d-flex flex-column">
                                     <odp-switch [(checked)]="hasConditions" [edit]="edit"></odp-switch>
                                     <small class="text-muted role-control-right mb-3 mt-2">
                                         Data Will be fine grained based on the condition you provide here.
                                     </small>
-                                </div>
-                            </div>
-                            <div *ngIf="rule.length>0" class="rule-wrapper border rounded p-3 bg-white">
-                                <ng-container *ngFor="let item of rule;let i=index;let l=last">
-                                    <div tabindex="1" class="rule-block d-flex align-items-stretch px-3 rounded"
-                                        [ngClass]="{'focus':blockFocus[i] && (edit.status) }" odpClickOutside
-                                        [ignore]="['.selector-list-item','.common-options-item','.selected-data-service']"
-                                        (inside)="blockFocus[i]=true" (outside)="blockFocus[i]=false">
-                                        <div class="rule-block-gutter d-flex flex-column align-items-center">
-                                            <div class="border-border gutter-16" [ngClass]="{'border-right':i>0}"></div>
-                                            <div class="badge p-2"
-                                                [ngClass]="{'badge-danger':blockInvalidRole[i],'badge-light':!blockInvalidRole[i]}">
-                                                ANS=</div>
-                                            <div class="border-border border-right h-100"></div>
+                                    <div *ngIf="hasConditions" class="d-flex align-items-center">
+                                        <div class="mode d-flex align-items-center mr-2" (click)="changeSelectedMode('Basic')">
+                                            <odp-round-radio id="modeBasic" (checkedChange)="changeSelectedMode('Basic')"
+                                                [checked]="selectedMode=='Basic'"></odp-round-radio>
+                                            <label class="mb-0 ml-2" for="modeBasic">Basic</label>
                                         </div>
-                                        <div class="rule-block-query d-flex flex-column align-items-start ml-2 py-3">
-                                            <odp-select-block *ngIf="item.type==='Condition'" [edit]="edit"
-                                                [(rules)]="rule" (isInvalid)="onInvalidRole($event, i)" [index]="i">
-                                            </odp-select-block>
-                                            <odp-traverse-block *ngIf="item.type==='Traverse'" [edit]="edit"
-                                                [(rules)]="rule" (isInvalid)="onInvalidRole($event, i)" [index]="i">
-                                            </odp-traverse-block>
+                                        <div class="mode d-flex align-items-center mr-2" (click)="changeSelectedMode('Advance')">
+                                            <odp-round-radio id="modeAdvance" (checkedChange)="changeSelectedMode('Advance')"
+                                                [checked]="selectedMode=='Advance'"></odp-round-radio>
+                                            <label class="mb-0 ml-2" for="modeAdvance">Advance</label>
+                                        </div>
+                                        <div class="mode d-flex align-items-center mr-2" (click)="changeSelectedMode('Expert')">
+                                            <odp-round-radio id="modeExpert" (checkedChange)="changeSelectedMode('Expert')"
+                                                [checked]="selectedMode=='Expert'"></odp-round-radio>
+                                            <label class="mb-0 ml-2" for="modeExpert">Expert</label>
                                         </div>
                                     </div>
-                                </ng-container>
-                                <div class="rule-block d-flex align-items-stretch px-3">
-                                    <div class="rule-block-gutter d-flex flex-column align-items-center">
-                                        <div class="border-border border-right gutter-16"></div>
-                                        <div *ngIf="edit.status"
-                                            class="d-flex flex-column align-items-start position-relative">
-                                            <button type="button" class="btn btn-sm btn-light ignore-outside"
-                                                (click)="toggleDropdown['BLOCK']=!toggleDropdown['BLOCK']">
-                                                <span class="fa fa-plus"></span>
-                                            </button>
-                                            <div *ngIf="toggleDropdown['BLOCK']"
-                                                class="value-options-dropdown options-dropdown position-absolute bg-white rounded"
-                                                odpClickOutside (outside)="toggleDropdown['BLOCK']=false">
-                                                <div class="d-flex align-items-center p-2">
-                                                    <span class="mx-2 text-accent add-step">Add step:</span>
-                                                </div>
-                                                <div class="d-flex align-items-center hover p-2"
-                                                    (click)="addRule('Condition')">
-                                                    <span class="mx-2 text-dark">SELECT</span>
-                                                </div>
-                                                <!-- <div class="d-flex align-items-center hover p-2"
-                                                    (click)="addRule('Traverse')">
-                                                    <span class="mx-2 text-dark">TRAVERSE</span>
-                                                </div> -->
+                                </div>
+                            </div>
+                            <ng-container *ngIf="hasConditions">
+                                <div *ngIf="selectedMode=='Basic'" class="rule-wrapper border rounded p-3 bg-white">
+                                    <ng-container *ngFor="let item of rule;let i=index;let l=last">
+                                        <div class="rule-block d-flex align-items-stretch" odpClickOutside
+                                            [ignore]="['.selector-list-item','.common-options-item','.selected-data-service']">
+                                            <div class="rule-block-query d-flex flex-column align-items-start">
+                                                <odp-dynamic-condition [edit]="edit" [(rules)]="rule" [definition]="definition"
+                                                    (isInvalid)="onInvalidRole($event, i)" [index]="i">
+                                                </odp-dynamic-condition>
                                             </div>
                                         </div>
-                                        <div class="border-border border-right gutter-16"></div>
-                                        <div class="badge p-2"
-                                            [ngClass]="{'badge-success':ruleBlocksValid,'badge-danger':!ruleBlocksValid}">
-                                            <span class="odp-exit-right"></span>
-                                        </div>
-                                    </div>
-                                    <div class="rule-block-query d-flex flex-column align-self-end ml-2 pb-1">
-                                        <span class="font-weight-bold">ANS</span>
-                                    </div>
+                                    </ng-container>
                                 </div>
-                            </div>
+                                <div *ngIf="selectedMode=='Advance'" class="rule-wrapper border rounded p-3 bg-white">
+                                    <p>Write your filter in JSON</p>
+                                    <odp-monotype-editor class="editor-wrapper" [edit]="edit"></odp-monotype-editor>
+                                </div>
+                                <div *ngIf="selectedMode=='Expert'" class="rule-wrapper border rounded p-3 bg-white">
+                                    <p>Write your Code</p>
+                                    <odp-monotype-editor class="editor-wrapper" [edit]="edit"></odp-monotype-editor>
+                                </div>
+                            </ng-container>
                         </div>
                     </div>
                 </ng-container>
@@ -267,9 +243,6 @@
     <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 border-bottom">
         <div class="d-flex align-items-center">
             <span class="spacer border-right border-secondary" [ngStyle]="getSpacing(level)"></span>
-            <!-- <span class="icon mr-2" (dragenter)="dragEnterEvent($event)">
-                    <span class="fa fa-bars text-muted hover" draggable="true" (dragstart)="dragStartEvent($event)" *ngIf="!idField && edit.status"></span>
-                </span> -->
             <span class="icon odp-pin text-muted mr-2 fa-xs mt-1" *ngIf="idField(def)"></span>
             <span class="icon d-flex align-items-center mr-2" *ngIf="!idField(def)">
                 <span class="fa text-secondary fa-lg hover"

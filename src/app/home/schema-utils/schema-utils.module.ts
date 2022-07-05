@@ -1,7 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SortablejsModule } from 'ngx-sortablejs';
+
 import { SchemaBuilderService } from './schema-builder.service';
 import { SchemaStructurePipe } from './schema-structure.pipe';
 import { SchemaValuePipe } from './schema-value.pipe';
@@ -22,23 +28,19 @@ import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { FocusNextModule } from 'src/app/utils/focus-next/focus-next.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
-import { SelectBlockComponent } from './manage-permissions/select-block/select-block.component';
-import { TraverseBlockComponent } from './manage-permissions/traverse-block/traverse-block.component';
 import { SearchTermModule } from 'src/app/utils/search-term/search-term.module';
 import { PathCreatorComponent } from './manage-permissions/path-creator/path-creator.component';
 import { FilterDefinitionModule } from 'src/app/utils/pipes/filter-definition/filter-definition.module';
 import { LogicalConditionComponent } from './manage-permissions/logical-condition/logical-condition.component';
 import { LoadingPlaceholderModule } from 'src/app/utils/loading-placeholder/loading-placeholder.module';
-import { SortablejsModule } from 'ngx-sortablejs';
-import { RoundCheckModule } from 'src/app/utils/round-check/round-check.module';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { StateModelComponent } from './state-model/state-model.component';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { FilterNextStatePipe } from './filter-next-state.pipe';
 import { MakerCheckerComponent } from './maker-checker/maker-checker.component';
+import { DynamicConditionComponent } from './manage-permissions/dynamic-condition/dynamic-condition.component';
+import { RadioChipModule } from 'src/app/utils/radio-chip/radio-chip.module';
+import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
+import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-editor.module';
 
 @NgModule({
     imports: [
@@ -65,6 +67,8 @@ import { MakerCheckerComponent } from './maker-checker/maker-checker.component';
         MatSelectModule,
         MatAutocompleteModule,
         MatChipsModule,
+        RoundRadioModule,
+        MonotypeEditorModule
     ],
     declarations: [
         SchemaStructurePipe,
@@ -76,13 +80,12 @@ import { MakerCheckerComponent } from './maker-checker/maker-checker.component';
         WizardsComponent,
         IntegrationComponent,
         ConfigurationComponent,
-        SelectBlockComponent,
-        TraverseBlockComponent,
         PathCreatorComponent,
         LogicalConditionComponent,
         StateModelComponent,
         FilterNextStatePipe,
         MakerCheckerComponent,
+        DynamicConditionComponent
     ],
     exports: [
         SchemaStructurePipe,
@@ -94,12 +97,11 @@ import { MakerCheckerComponent } from './maker-checker/maker-checker.component';
         WizardsComponent,
         IntegrationComponent,
         ConfigurationComponent,
-        SelectBlockComponent,
-        TraverseBlockComponent,
         PathCreatorComponent,
         LogicalConditionComponent,
         StateModelComponent,
-        MakerCheckerComponent
+        MakerCheckerComponent,
+        DynamicConditionComponent
     ],
     providers: [SchemaBuilderService]
 })

@@ -1,0 +1,128 @@
+<div class="rule-block-select d-flex flex-column align-items-start position-relative">
+    <div class="d-flex mb-3">
+        <span class="text-right font-13">Show Document When :-</span>
+    </div>
+    <div class="d-flex align-items-center mb-2 position-relative"
+        *ngFor="let cond of conditions;let i=index;let f=first;let l=last">
+        <div class="text-right left-side">
+            <ng-container *ngIf="!f">
+                <span *ngIf="cond.type === '$and'" class="text-success hover">and</span>
+                <span *ngIf="cond.type === '$or'" class="text-success hover">or</span>
+            </ng-container>
+        </div>
+        <div *ngIf="loading" class="data-key-selector border rounded mx-2 d-flex align-items-center bg-white">
+            <odp-loading-placeholder height="26" width="80"></odp-loading-placeholder>
+        </div>
+        <div *ngIf="!loading" class="data-key-selector border rounded mx-2 d-flex align-items-center bg-white"
+            [ngClass]="{'invalid':pathInvalid[i+'_key']}">
+            <!-- <div class="data-key-path d-flex align-items-center px-2">
+                <odp-service-icon size="16" color="0082C9"></odp-service-icon>
+                <span class="selector-name ml-2">{{dataService.name}}</span>
+            </div>
+            <div class="angle-block fill">
+                <div class="angle-box"></div>
+            </div> -->
+            <odp-path-creator [edit]="edit" [definition]="definition" [(path)]="cond.key"
+                (isInvalid)="pathInvalid[i+'_key'] = $event" (pathChange)="cond.value=null;constructFilter()"
+                (field)="cond.field = $event">
+            </odp-path-creator>
+        </div>
+        <div class="condition-selector text-success px-2">
+            <odp-logical-condition [edit]="edit" [(condition)]="conditions[i]" [field]="cond.field"
+                (conditionChange)="constructFilter()"></odp-logical-condition>
+        </div>
+        <div *ngIf="loading" class="data-key-selector border rounded mx-2 d-flex align-items-center bg-white">
+            <odp-loading-placeholder height="26" width="80"></odp-loading-placeholder>
+        </div>
+        <div *ngIf="!loading"
+            class="data-key-selector border rounded mx-2 d-flex align-items-center position-relative bg-white"
+            [ngClass]="{'invalid':pathInvalid[i+'_value']}">
+            <div class="data-key-path d-flex align-items-center px-2 ignore-outside bg-white hover"
+                (click)="!edit.status ? $event.stopPropagation() : cond._typeDropdown=!cond._typeDropdown">
+                <ng-container *ngIf="cond.valueType == 'user'">
+                    <span class="far fa-user text-accent"></span>
+                    <span class="selector-name ml-2">Logged In User</span>
+                </ng-container>
+                <ng-container *ngIf="cond.valueType == 'dataservice'">
+                    <span class="far fa-bookmark text-accent"></span>
+                    <span class="selector-name ml-2">Data Service</span>
+                </ng-container>
+                <ng-container *ngIf="cond.valueType == 'value'">
+                    <span class="far fa-bookmark text-accent"></span>
+                    <span class="selector-name ml-2">Value</span>
+                </ng-container>
+            </div>
+            <div class="angle-block">
+                <div class="angle-box bg-white"></div>
+            </div>
+            <odp-path-creator *ngIf="cond.valueType == 'user'" [edit]="edit" [definition]="getValueDefinition(i)"
+                [(path)]="cond.value" (isInvalid)="pathInvalid[i+'_value'] = $event" (pathChange)="constructFilter()">
+            </odp-path-creator>
+            <odp-path-creator *ngIf="cond.valueType == 'dataservice'" [edit]="edit" [(path)]="cond.value"
+                (isInvalid)="pathInvalid[i+'_value'] = $event" (pathChange)="constructFilter()">
+            </odp-path-creator>
+            <ng-container *ngIf="cond.valueType == 'value'">
+                <input [attr.disabled]="!edit.status ? true : null" *ngIf="!cond?.field?.type || cond?.field?.type == 'String'  || cond?.field?.type == 'User' 
+                    || cond?.field?.type == 'Relation' || cond?.field?.type == 'Geojson' || cond?.field?.type == 'Array' || cond?.field?.type == 'File'
+                    || cond?.field?.type == 'id'" type="text" class="form-control" [(ngModel)]="cond.value"
+                    (ngModelChange)="constructFilter()">
+                <input [attr.disabled]="!edit.status ? true : null" *ngIf="cond?.field?.type == 'Number'" type="number"
+                    class="form-control" [(ngModel)]="cond.value" (ngModelChange)="constructFilter()">
+                <input [attr.disabled]="!edit.status ? true : null" *ngIf="cond?.field?.type == 'Date'" type="date"
+                    class="form-control" [(ngModel)]="cond.value" (ngModelChange)="constructFilter()">
+                <odp-switch *ngIf="cond?.field?.type == 'Boolean'" [(checked)]="cond.value"
+                    (checkedChange)="constructFilter()" [edit]="edit"></odp-switch>
+                <!-- <input *ngIf="cond?.field?.type == 'Boolean'" type="checkbox" class="form-control" [(ngModel)]="cond.value"> -->
+            </ng-container>
+            <div *ngIf="cond._typeDropdown"
+                class="value-options-dropdown options-dropdown position-absolute bg-white rounded" odpClickOutside
+                (outside)="cond._typeDropdown=false">
+                <div class="d-flex align-items-center hover p-2"
+                    (click)="cond.valueType='user';cond._typeDropdown=false;cond.value=null;constructFilter()">
+                    <span class="mx-2 text-secondary">Logged In User</span>
+                </div>
+                <div class="d-flex align-items-center hover p-2"
+                    (click)="cond.valueType='dataservice';cond._typeDropdown=false;cond.value=null;constructFilter()">
+                    <span class="mx-2 text-secondary">Data Service</span>
+                </div>
+                <div class="d-flex align-items-center hover p-2"
+                    (click)="cond.valueType='value';cond._typeDropdown=false;cond.value=null;constructFilter();pathInvalid[i+'_value']=false">
+                    <span class="mx-2 text-secondary">Value</span>
+                </div>
+            </div>
+        </div>
+        <button *ngIf="!f && edit.status" type="button" class="btn btn-sm btn-link mx-3 text-secondary ignore-outside"
+            (click)="cond._rowDropDown=!cond._rowDropDown">
+            <span class="fa fa-ellipsis-v"></span>
+        </button>
+        <div *ngIf="cond._rowDropDown" class="row-options-dropdown options-dropdown position-absolute bg-white rounded"
+            odpClickOutside (outside)="cond._rowDropDown=false">
+            <div class="d-flex align-items-center hover p-2" (click)="removeCondition(i)">
+                <span class="mx-2 text-secondary">Delete</span>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="edit.status" class="d-flex align-items-center mb-2 position-relative">
+        <div class="text-right left-side">
+            <!-- <button type="button" class="btn btn-sm btn-light ignore-outside"
+                (click)="optionsDropDown=!optionsDropDown">
+                <span class="fa fa-plus"></span>
+            </button> -->
+        </div>
+        <div class="text-right right-side">
+            <button type="button" class="btn btn-sm btn-light ignore-outside mx-2"
+                (click)="optionsDropDown=!optionsDropDown">
+                <span class="fa fa-plus"></span>
+            </button>
+        </div>
+        <div *ngIf="optionsDropDown" class="common-options-dropdown options-dropdown position-absolute bg-white rounded"
+            odpClickOutside (outside)="optionsDropDown=false">
+            <div class="common-options-item d-flex align-items-center hover p-2" (click)="addCondition('$and')">
+                <span class="mx-2 text-success">AND</span>
+            </div>
+            <div class="common-options-item d-flex align-items-center hover p-2" (click)="addCondition('$or')">
+                <span class="mx-2 text-success">OR</span>
+            </div>
+        </div>
+    </div>
+</div>
