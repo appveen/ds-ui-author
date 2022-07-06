@@ -459,7 +459,7 @@
             <label for="key">Type</label>
             <div class="form-control hover ignore-click"
                 (click)="toggleFieldTypeSelector['edit']=!toggleFieldTypeSelector['edit']">
-                <odp-field-type [label]="true" [field]="{type:editAttribute.type,properties:{}}">
+                <odp-field-type [label]="true" [field]="{type:editAttribute.type,properties:{}}" [basic]="true">
                 </odp-field-type>
             </div>
             <div *ngIf="toggleFieldTypeSelector['edit']"

@@ -32,6 +32,6 @@
   <ng-container *ngIf="['label', 'value'].includes(field)">
     {{ params.value }}
   </ng-container>
-  <odp-field-type *ngIf="field === 'type'" [label]="true" [field]="{type:params.value,properties:{}}">
+  <odp-field-type *ngIf="field === 'type'" [label]="true" [field]="{type:params.value,properties:{}}" [basic]="true">
   </odp-field-type>
 </ng-container>
