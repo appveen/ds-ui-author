@@ -37,7 +37,7 @@ export class SchemaValuePipe implements PipeTransform {
             if (definition[i].id) {
                 temp['_id'] = this.idPreview(definition[i].id);
             } else if (definition[i].type === 'String') {
-                if (definition[i].properties.password) {
+                if (definition[i].properties.password && !definition[i].properties.longText && !definition[i].properties.richText && !definition[i].properties.fileType) {
                     temp[definition[i].key] = { value: faker.internet.password() };
                 } else if (definition[i].key.match(/^.*(phone|contact|mobile|cell).*$/i)) {
                     temp[definition[i].key] = faker.phone.phoneNumber('##########');
