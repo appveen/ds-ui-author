@@ -13,14 +13,14 @@
 }
 .app-switcher-window {
   //transform: scale(0);
-  min-width: 382px;
-  max-width: 382px;
-  min-height: 465px;
-  max-height: 465px;
+  min-width: 330px;
+  max-width: 330px;
+  min-height: 376px;
+  max-height: 376px;
   position: fixed;
   z-index: 1073;
-  bottom: calc(100vh - 525px);
-  right: 65px;
+  bottom: calc(100vh - 436px);
+  right: 66px;
   background: #fff;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
@@ -29,17 +29,23 @@
   box-shadow: 4px 4px 10px rgba($color: #000, $alpha: 0.4);
   .active-app {
     top: -40px;
-    left: 35%;
-    width: 217px;
+    left: 27%;
+    width: 220px;
+    img {
+      min-width: 20px;
+      max-width: 20px;
+      min-height: 20px;
+      max-height: 20px;
+      border-radius: 50%;
+    }
   }
   .search-label {
     min-width: 100px;
     max-width: 100px;
   }
   .search-box {
-    min-width: 220px;
-    max-width: 220px;
-    border-radius: 50px;
+    min-width: 283px;
+    max-width: 283px;
     padding-left: 35px;
   }
   .d-flex.flex-wrap {
@@ -57,29 +63,32 @@
       }
     }
     .app-thumbnail {
-      min-width: 48px;
-      max-width: 48px;
-      min-height: 48px;
-      max-height: 48px;
-      border-radius: 8px;
+      min-width: 32px;
+      max-width: 32px;
+      min-height: 32px;
+      max-height: 32px;
+      border-radius: 50%;
       overflow: hidden;
       transition: 0.25s;
       border: 3px solid transparent;
       outline: 0;
       img {
-        min-width: 50px;
-        max-width: 50px;
-        min-height: 50px;
-        max-height: 50px;
+        min-width: 32px;
+        max-width: 32px;
+        min-height: 32px;
+        max-height: 32px;
       }
     }
     .app-name {
-        max-width: 50px;
-        word-break: break-all;
+      max-width: 210px;
+      word-break: break-all;
     }
   }
+  .app-card:last-child {
+    margin-bottom: 1.5rem;
+  }
   &::before {
-    content: '';
+    content: "";
     display: inline-block;
     height: 46px;
     width: 236px;
@@ -97,12 +106,14 @@
   color: $gray-500;
 }
 
-:-moz-placeholder { /* Firefox 18- */
+:-moz-placeholder {
+  /* Firefox 18- */
   text-align: center;
   color: $gray-500;
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
+::-moz-placeholder {
+  /* Firefox 19+ */
   text-align: center;
   color: $gray-500;
 }
