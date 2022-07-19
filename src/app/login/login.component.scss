@@ -1,39 +1,82 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.login-img-wrapper{
+.login-img{
+    background-position: left;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 40% !important;
+    height: 40% !important;
     position: absolute;
-    z-index: 0;
-    left: 0;
-    top: 0;
-    .login-img{
-        background-position: left;
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: -16%;
-    }
+    left: 10%;
+    right: 75%;
+    top: 15%;
+    bottom: 45%;
+}
+.page {
+    height: 100vh;
 }
 .login-bg{
     .welcome{
-        margin-top: 30vh;
-        margin-left: 10vw;
+        // margin-top: 30vh;
+        margin-left: 8vw;
         >.title{
-            font-size: 26px;
+            font-size: 36px;
+                font-weight: 600;
+                font-size: 36px;
+                line-height: 44px;
+                font-family: 'Inter';
+                font-style: normal;
+                display: flex;
+                letter-spacing: 0.01em;
+            }
+        .text {
+            width: 610px;
         }
+            }
+
+    .login-text {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 24px !important;
+        line-height: 40px;               
     }
+    .sign-in{
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 22px;
+        color: #6C7584;
+    }
+    .input-text{
+        padding: 14px 10px 14px 15px;
+        gap: 40px;
+        width: 360px;
+        height: 48px;
+    }
+    .login-button{
+        padding: 15px 21px;
+        gap: 10px;
+        border-radius: 6px;
+        min-height: 48px;
+    }
+    .btn-text {
+        width: 38px;
+        height: 18px;
+    }
+    
     .product{
         width: 340px;
-        margin: 0 auto;
-        margin-top: 16vh;
+        margin-top: 10vh;
         .logo{
             width: 284px;
             height: 84px;
-            background-size: 360px;
+            background-size: 250px;
             background-position: center;
         }
         .title{
             font-size: 22px;
-            color: rgba(0,0,0,0.6);
+            color: #181818;
             margin-top: 4px;
         }
         .sub-title{
@@ -56,4 +99,24 @@
 .footer{
     position: absolute;
     bottom:0;
+    justify-content: center;
+}
+
+.col-4half, .col-7half {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+@media (min-width: 768px) {
+    .col-4half, .col-7half {
+        float: left;
+    }
+    .col-4half {
+        width: 35%;
+    }
+    .col-7half {
+        width: 65%;
+    }
 }
