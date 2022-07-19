@@ -191,21 +191,27 @@
                                         Data Will be fine grained based on the condition you provide here.
                                     </small>
                                     <div *ngIf="hasConditions" class="d-flex align-items-center">
-                                        <div class="mode d-flex align-items-center mr-2" (click)="changeSelectedMode('Basic')">
-                                            <odp-round-radio id="modeBasic" (checkedChange)="changeSelectedMode('Basic')"
+                                        <!-- <div class="mode d-flex align-items-center mr-2"
+                                            (click)="changeSelectedMode('Basic')">
+                                            <odp-round-radio id="modeBasic"
+                                                (checkedChange)="changeSelectedMode('Basic')"
                                                 [checked]="selectedMode=='Basic'"></odp-round-radio>
                                             <label class="mb-0 ml-2" for="modeBasic">Basic</label>
-                                        </div>
-                                        <div class="mode d-flex align-items-center mr-2" (click)="changeSelectedMode('Advance')">
-                                            <odp-round-radio id="modeAdvance" (checkedChange)="changeSelectedMode('Advance')"
+                                        </div> -->
+                                        <div class="mode d-flex align-items-center mr-2"
+                                            (click)="changeSelectedMode('Advance')">
+                                            <odp-round-radio id="modeAdvance"
+                                                (checkedChange)="changeSelectedMode('Advance')"
                                                 [checked]="selectedMode=='Advance'"></odp-round-radio>
                                             <label class="mb-0 ml-2" for="modeAdvance">Advance</label>
                                         </div>
-                                        <div class="mode d-flex align-items-center mr-2" (click)="changeSelectedMode('Expert')">
-                                            <odp-round-radio id="modeExpert" (checkedChange)="changeSelectedMode('Expert')"
+                                        <!-- <div class="mode d-flex align-items-center mr-2"
+                                            (click)="changeSelectedMode('Expert')">
+                                            <odp-round-radio id="modeExpert"
+                                                (checkedChange)="changeSelectedMode('Expert')"
                                                 [checked]="selectedMode=='Expert'"></odp-round-radio>
                                             <label class="mb-0 ml-2" for="modeExpert">Expert</label>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -215,8 +221,9 @@
                                         <div class="rule-block d-flex align-items-stretch" odpClickOutside
                                             [ignore]="['.selector-list-item','.common-options-item','.selected-data-service']">
                                             <div class="rule-block-query d-flex flex-column align-items-start">
-                                                <odp-dynamic-condition [edit]="edit" [(rules)]="rule" [definition]="definition"
-                                                    (isInvalid)="onInvalidRole($event, i)" [index]="i">
+                                                <odp-dynamic-condition [edit]="edit" [(rules)]="rule"
+                                                    [definition]="definition" (isInvalid)="onInvalidRole($event, i)"
+                                                    [index]="i">
                                                 </odp-dynamic-condition>
                                             </div>
                                         </div>
@@ -224,7 +231,8 @@
                                 </div>
                                 <div *ngIf="selectedMode=='Advance'" class="rule-wrapper border rounded p-3 bg-white">
                                     <p>Write your filter in JSON</p>
-                                    <odp-monotype-editor class="editor-wrapper" [edit]="edit"></odp-monotype-editor>
+                                    <odp-monotype-editor class="editor-wrapper" [edit]="edit" [(code)]="dynamicFilter">
+                                    </odp-monotype-editor>
                                 </div>
                                 <div *ngIf="selectedMode=='Expert'" class="rule-wrapper border rounded p-3 bg-white">
                                     <p>Write your Code</p>

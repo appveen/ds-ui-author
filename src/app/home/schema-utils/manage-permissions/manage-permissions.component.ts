@@ -67,7 +67,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     self.roleChange = new EventEmitter();
     self.firstInitChange = new EventEmitter();
     self.blockFocus = {};
-    this.selectedMode = 'Basic';
+    this.selectedMode = 'Advance';
   }
 
   ngOnInit() {
@@ -126,6 +126,9 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     });
     self.selectedRole = self.roles[0];
     self.selectedRoleIndex = 0;
+    if (self.selectedRole.rule && self.selectedRole.rule.length > 0) {
+      this.selectedMode = self.selectedRole.rule[0].type;
+    }
     self.oldData = self.appService.cloneObject(self.role);
     self.fields = self.flattenPermission(self.role.fields);
     self.selectedFieldsCopy = self.appService.cloneObject(self.fields);
@@ -242,6 +245,11 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     const self = this;
     self.selectedRole = role;
     self.selectedRoleIndex = index;
+    if (self.selectedRole.rule && self.selectedRole.rule.length > 0) {
+      this.selectedMode = self.selectedRole.rule[0].type;
+    } else {
+      this.selectedMode = 'Advance';
+    }
     self.selectedRole.operations.forEach(item => {
       if (item.method === 'POST') {
         self.canCreateFlag = true;
@@ -322,6 +330,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
   changeSelectedMode(mode: string) {
     this.selectedMode = mode;
     this.rule[0].type = mode;
+    this.rule[0].conditions = [];
   }
 
   addRule(type: string) {
@@ -574,6 +583,21 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     self.selectedRole.rule = val;
   }
 
+  get dynamicFilter() {
+    const self = this;
+    if (self.selectedRole.rule && self.selectedRole.rule[0]) {
+      return self.selectedRole.rule[0].filter || null;
+    }
+    return null;
+  }
+
+  set dynamicFilter(val) {
+    const self = this;
+    if (self.selectedRole.rule && self.selectedRole.rule[0]) {
+      self.selectedRole.rule[0].filter = val;
+    }
+  }
+
   getSpacing(level) {
     let width = level * 7;
     if (level > 1) {
@@ -648,8 +672,8 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
 
   onInvalidRole(data, key) {
     const self = this;
-    self.blockInvalidRole[key] = data;
-    self.blockInvalidRoleChange.emit(self.blockInvalidRole);
+    // self.blockInvalidRole[key] = data;
+    // self.blockInvalidRoleChange.emit(self.blockInvalidRole);
   }
 }
 
@@ -670,4 +694,6 @@ export interface Rule {
   type?: string;
   dataService?: string;
   conditions?: any;
+  filter?: any;
+  code?: any;
 }
