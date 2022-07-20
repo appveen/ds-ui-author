@@ -19,13 +19,13 @@
                 </div>
             </ng-container>
             <div class="current-app d-flex align-items-center bg-light mr-3 hover" (click)="toggleAppOptions()">
-                <div class="current-app-thumbnail d-flex align-items-center justify-content-center mr-2"
+                <div class="current-app-thumbnail d-flex align-items-center justify-content-center "
                     ngbTooltip="Switch App" placement="bottom"
                     [ngClass]="{'img-app':selectedApp.logo && selectedApp.logo.thumbnail}">
                     <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail"
                         alt="Logo">
-                    <odp-app-icon class="pt-1" *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail" color="aaa"
-                        size="24"></odp-app-icon>
+                    <odp-app-icon *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail" color="aaa"
+                        size="20"></odp-app-icon>
                 </div>
                 <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" placement="bottom">
                     {{selectedApp._id}}
