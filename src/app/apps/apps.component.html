@@ -5,9 +5,14 @@
     <div
       class="left d-flex align-items-center"
       [ngClass]="{ 'add-blur': addBlur }"
+      [ngStyle]="{ width: showSideNav ? '15vw' : '4vw' }"
     >
-      <span class="fa fa-bars fa-lg hover mr-3" (click)="toggleNav()"></span>
-      <div class="logo"></div>
+      <!-- <span class="fa fa-bars fa-lg hover mr-3" (click)="toggleNav()"></span> -->
+      <div *ngIf="showSideNav" class="logo" (click)="toggleNav()"></div>
+      <div *ngIf="!showSideNav" class="logo-mini" (click)="toggleNav()"></div>
+    </div>
+    <div style="flex: 1 0 0">
+      <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
     </div>
     <div class="w-50 d-flex align-items-center justify-content-end">
       <ng-container *ngIf="isSuperAdmin">
@@ -175,6 +180,7 @@
           id="_entities"
           (mouseover)="hover.service = true"
           (mouseleave)="hover.service = false"
+          (click)="getBreadcrumbs()"
           Data
         >
           <div class="d-flex align-items-center">

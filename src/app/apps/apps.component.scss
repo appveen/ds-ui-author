@@ -52,6 +52,16 @@
     }
   }
 }
+
+.logo-mini{
+  min-height: 42px;
+  max-height: 42px;
+  min-width: 45px;
+  max-width: 45px;
+  background-repeat: no-repeat;
+  background-size: 45px;
+  background-position: center;
+}
 .sidenav {
   min-width: 60px;
   max-width: 260px;

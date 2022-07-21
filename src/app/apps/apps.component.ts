@@ -24,6 +24,7 @@ import { CommonService } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
 import { App } from 'src/app/utils/interfaces/app';
 import { AppService } from 'src/app/utils/services/app.service';
+import { Breadcrumb } from '../utils/interfaces/breadcrumb';
 
 @Component({
   selector: 'odp-apps',
@@ -108,6 +109,7 @@ export class AppsComponent implements OnInit, OnDestroy {
     integration: true,
     management: true,
   };
+  breadcrumbPaths: Array<Breadcrumb>;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -131,6 +133,7 @@ export class AppsComponent implements OnInit, OnDestroy {
     const self = this;
     self.agentConfig.arch = 'amd64';
     self.agentConfig.os = 'windows';
+    this.breadcrumbPaths = self.commonService.getBreadcrumbs();
     self.route.params.subscribe((params) => {
       if (params.app) {
         const tempApp = self.commonService.appList.find(
@@ -463,5 +466,10 @@ export class AppsComponent implements OnInit, OnDestroy {
   }
   togglePanel(panel) {
     this.openPanel[panel] = !this.openPanel[panel];
+  }
+
+  getBreadcrumbs() {
+    this.breadcrumbPaths = this.commonService.getBreadcrumbs();
+    console.log(this.breadcrumbPaths);
   }
 }
