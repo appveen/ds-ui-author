@@ -200,12 +200,15 @@ export class CommonService {
     self.apiCalls.afterAuthentication = true;
     return new Promise((resolve, reject) => {
       if (!self.userDetails.isSuperAdmin) {
-        self.fetchUserRoles().then(
+        const arr = [];
+        arr.push(self.fetchUserRoles());
+        arr.push(self.getUserApps());
+        Promise.all(arr).then(
           (res1) => {
             self.fetchLastActiveApp().then(
               (app) => {
                 self.apiCalls.afterAuthentication = false;
-                resolve(res1);
+                resolve(res1[0]);
               },
               (err: any) => {
                 self.apiCalls.afterAuthentication = false;
@@ -254,6 +257,30 @@ export class CommonService {
     return new Promise<any>((resolve, reject) => {
       self.subscriptions['getAllApps'] = self
         .get('user', '/admin/app', options)
+        .subscribe(
+          (res) => {
+            self.appList = res;
+            self.app = self.appList[0];
+            resolve(res);
+          },
+          (err: any) => {
+            reject(err);
+          }
+        );
+    });
+  }
+
+  getUserApps() {
+    const self = this;
+    const options: GetOptions = {
+      count: -1,
+      noApp: true,
+      select: 'description,logo.thumbnail,defaultTimezone',
+      sort: '_id',
+    };
+    return new Promise<any>((resolve, reject) => {
+      self.subscriptions['getAllApps'] = self
+        .get('user', '/data/app', options)
         .subscribe(
           (res) => {
             self.appList = res;
@@ -777,7 +804,7 @@ export class CommonService {
     let httpParams = new HttpParams();
     httpParams = httpParams.set(
       'filter',
-      JSON.stringify({ app: this.app._id })
+      JSON.stringify({ app: this.app?._id })
     );
     return self.http.request(
       new HttpRequest('DELETE', URL, data, {
