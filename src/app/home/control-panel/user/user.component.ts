@@ -19,7 +19,7 @@ import {
 } from 'ag-grid-community';
 import { ToastrService } from 'ngx-toastr';
 import { of, Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import {
@@ -93,6 +93,9 @@ export class UserComponent implements OnInit, OnDestroy {
   showPasswordSide: boolean = false;
   resetPasswordForm: FormGroup;
   showAddAttribute: boolean = false;
+  attributesForm: FormGroup;
+  editMode: boolean = false;
+  types: Array<any>;
 
   constructor(
     private fb: FormBuilder,
@@ -110,6 +113,12 @@ export class UserComponent implements OnInit, OnDestroy {
     this.breadcrumbPaths = [];
     this.bredcrumbSubject = new Subject<string>();
     this.showPassword = {};
+    this.types = [
+      { class: 'odp-abc', value: 'String', label: 'Text' },
+      { class: 'odp-123', value: 'Number', label: 'Number' },
+      { class: 'odp-boolean', value: 'Boolean', label: 'True/False' },
+      { class: 'odp-calendar', value: 'Date', label: 'Date' },
+    ];
     this.availableAuthTypes = [
       {
         label: 'Local',
@@ -124,6 +133,12 @@ export class UserComponent implements OnInit, OnDestroy {
         value: 'ldap',
       },
     ];
+
+    this.attributesForm = this.fb.group({
+      label: [null],
+      type: [null],
+      value: [null],
+    });
 
     this.resetPasswordForm = this.fb.group({
       password: [null],
@@ -172,6 +187,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.searchForm = this.fb.group({
       searchTerm: ['', Validators.required],
     });
+
     if (this.hasPermission('PMUG')) {
       this.fetchGroups();
     }
@@ -201,7 +217,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   onAuthTypeChange(value) {
-    console.log(value);
     this.showAzureLoginButton = false;
     if (this.userForm.get('password')) {
       this.userForm.get('password').patchValue(null);
@@ -408,146 +423,6 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userForm.get('userData.cpassword').updateValueAndValidity();
   }
 
-  setupGrid() {
-    const isEditable = this.hasPermission('PMUBD');
-    this.frameworkComponents = {
-      customCheckboxCellRenderer: GridCheckboxComponent,
-      customCellRenderer: UserListCellRendererComponent,
-      actionCellRenderer: AgGridActionsRendererComponent,
-    };
-    this.gridOptions = {
-      defaultColDef: {
-        cellRenderer: 'customCellRenderer',
-        headerClass: 'hide-filter-icon',
-        resizable: true,
-        minWidth: 80,
-        sortable: true,
-        filter: 'agTextColumnFilter',
-        suppressMenu: true,
-        floatingFilter: true,
-        floatingFilterComponentFramework: AgGridSharedFloatingFilterComponent,
-        filterParams: {
-          caseSensitive: true,
-          suppressAndOrCondition: true,
-          suppressFilterButton: true,
-        },
-      },
-      columnDefs: [
-        {
-          headerName: 'Name',
-          field: 'username',
-          filter: false,
-        },
-        {
-          headerName: 'Author',
-          field: 'author',
-          filter: false,
-        },
-
-        {
-          headerName: 'Appcenter',
-          field: 'author',
-          filter: false,
-        },
-
-        {
-          headerName: 'Actions',
-          pinned: 'right',
-          cellRenderer: 'actionCellRenderer',
-          sortable: false,
-          filter: false,
-          minWidth: this.hasPermission('PMUBD') ? 130 : 94,
-          maxWidth: this.hasPermission('PMUBD') ? 130 : 94,
-          refData: {
-            actionsButtons: this.hasPermission('PMUBD')
-              ? 'View,Remove'
-              : 'View',
-            actionCallbackFunction: 'onGridAction',
-          },
-        },
-      ],
-      getRowNodeId: (data) => {
-        return data.username;
-      },
-      suppressColumnVirtualisation: true,
-      context: this,
-      animateRows: true,
-      rowSelection: 'multiple',
-      rowDeselection: true,
-      rowMultiSelectWithClick: true,
-      onGridReady: this.onGridReady.bind(this),
-      onRowDataChanged: this.autoSizeAllColumns.bind(this),
-      onGridSizeChanged: this.forceResizeColumns.bind(this),
-      onRowDoubleClicked: this.onRowDoubleClick.bind(this),
-      suppressCellSelection: !isEditable,
-      suppressRowClickSelection: !isEditable,
-    };
-    this.dataSource = {
-      getRows: (params: IGetRowsParams) => {
-        this.apiConfig.page = Math.ceil(params.endRow / 30);
-        if (this.apiConfig.page === 1) {
-          this.loadedCount = 0;
-        }
-        if (!this.apiConfig.filter) {
-          this.apiConfig.filter = {
-            bot: false,
-          };
-        }
-        const filterModel = this.agGrid?.api?.getFilterModel();
-        const filterModelKeys = Object.keys(filterModel || {});
-        if (!!filterModelKeys.length) {
-          this.apiConfig.filter.$and = filterModelKeys.map((key) => {
-            if (typeof filterModel[key].filter === 'string') {
-              filterModel[key].filter = JSON.parse(filterModel[key].filter);
-            }
-            return filterModel[key].filter;
-          });
-        } else {
-          delete this.apiConfig.filter.$and;
-        }
-        const sortString = this.appService.getSortFromModel(
-          this.agGrid?.api?.getSortModel() || []
-        );
-        this.apiConfig.sort = sortString || 'basicDetails.name';
-        this.agGrid.api.showLoadingOverlay();
-        if (!!this.subscriptions['data_userlist']) {
-          this.subscriptions['data_userlist'].unsubscribe();
-        }
-        this.subscriptions['data_userlist'] = this.getUserCount()
-          .pipe(
-            switchMap((count) => {
-              this.totalCount = count;
-              if (!count) {
-                return of(null);
-              }
-              return this.getUserList();
-            })
-          )
-          .subscribe(
-            (docs) => {
-              if (!!docs) {
-                this.loadedCount += docs.length;
-                if (this.loadedCount < this.totalCount) {
-                  params.successCallback(docs);
-                } else {
-                  this.totalCount = this.loadedCount;
-                  params.successCallback(docs, this.totalCount);
-                }
-              } else {
-                params.successCallback([], 0);
-              }
-              this.agGrid?.api?.hideOverlay();
-            },
-            (err) => {
-              this.agGrid?.api?.hideOverlay();
-              console.error(err);
-              params.failCallback();
-            }
-          );
-      },
-    };
-  }
-
   onGridAction(buttonName: string, rowNode: RowNode) {
     switch (buttonName) {
       case 'View':
@@ -742,6 +617,20 @@ export class UserComponent implements OnInit, OnDestroy {
     }
   }
 
+  getLabelError() {
+    return (
+      this.attributesForm.get('label').touched &&
+      this.attributesForm.get('label').hasError('required')
+    );
+  }
+
+  getValError() {
+    return (
+      this.attributesForm.get('value').touched &&
+      this.attributesForm.get('value').hasError('required')
+    );
+  }
+
   newUser() {
     this.showSettings = false;
     this.showPassword = {};
@@ -762,6 +651,7 @@ export class UserComponent implements OnInit, OnDestroy {
     }
     this.showNewUserWindow = false;
     this.showPasswordSide = false;
+    this.showAddAttribute = false;
   }
 
   addUser() {
@@ -1370,7 +1260,6 @@ export class UserComponent implements OnInit, OnDestroy {
               }
             },
           };
-    console.log(this.dataSource);
     this.gridApi.setDatasource(this.dataSource);
     // this.gridApi.refreshCells();
   }
@@ -1425,5 +1314,61 @@ export class UserComponent implements OnInit, OnDestroy {
 
   showAttributeSide() {
     this.showAddAttribute = true;
+    this.attributesForm.reset();
+    this.attributesForm = this.fb.group({
+      key: [''],
+      type: ['String', [Validators.required]],
+      value: ['', [Validators.required]],
+      label: ['', [Validators.required]],
+    });
+    this.attributesForm
+      .get('label')
+      .valueChanges.pipe(filter(() => !this.editMode))
+      .subscribe((val: any) => {
+        this.attributesForm
+          .get('key')
+          .patchValue(this.appService.toCamelCase(val));
+      });
+  }
+
+  onAttributeFormTypeChange(type: any) {
+    this.attributesForm.get('type').setValue(type);
+    this.attributesForm
+      .get('value')
+      .setValue(type === 'Boolean' ? false : null);
+  }
+
+  addAttribute() {
+    const { key, ...rest } = this.attributesForm.getRawValue();
+    this.details.attributes[key] = this.appService.cloneObject(rest);
+    delete this.details.attributesData;
+    this.commonService
+      .put(
+        'user',
+        `/${this.commonService.app._id}/user/${this.details._id}`,
+        this.details
+      )
+      .subscribe(
+        () => {
+          this.getUserList().subscribe((users) => {
+            this.userList = users;
+            this.details = users.find((user) => user._id === this.details._id);
+            this.selectedUser = this.details;
+            this.showLazyLoader = false;
+            this.isLoading = false;
+            this.configureGridSettings();
+            this.configureGrid();
+          });
+          this.showAddAttribute = false;
+          this.ts.success('Custom Details Saved Successfully');
+        },
+        (err) => {
+          this.ts.error(err.error.message);
+        }
+      );
+  }
+
+  set setUserAttributeValue(val) {
+    this.attributesForm.get('value').patchValue(val);
   }
 }

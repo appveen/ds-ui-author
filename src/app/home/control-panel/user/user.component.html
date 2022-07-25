@@ -72,10 +72,10 @@
         </div>
         <div class="col-8 users" style="padding: 20px">
           <div class="details">
-            <span class="name">{{ details.basicDetails.name }}</span>
-            <span class="email">{{ details.username }}</span>
+            <span class="name">{{ details?.basicDetails.name }}</span>
+            <span class="email">{{ details?.username }}</span>
             <span class="time">{{
-              formatLastLogin(details.lastLogin, true)
+              formatLastLogin(details?.lastLogin, true)
             }}</span>
           </div>
           <odp-user-manage
@@ -146,8 +146,7 @@
               <div
                 class="no-attribute"
                 *ngIf="
-                  (!details.attributeData ||
-                    details.attributesData?.length === 0) &&
+                  !(details.attributesData?.length > 0) &&
                   currentTab === 'Attributes'
                 "
               >
@@ -212,17 +211,19 @@
     </ng-template>
 
     <div
-      *ngIf="showNewUserWindow || showPasswordSide"
+      *ngIf="showNewUserWindow || showPasswordSide || showAddAttribute"
       class="overlay position-fixed"
     ></div>
 
     <div
-      [ngClass]="{ show: showNewUserWindow || showPasswordSide }"
+      [ngClass]="{
+        show: showNewUserWindow || showPasswordSide || showAddAttribute
+      }"
       class="new-user-window position-fixed bg-white border-left p-4"
     >
       <span
         class="fa fa-times text-secondary hover close"
-        (click)="showPasswordSide ? closeWindow() : closeWindow(true)"
+        (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"
       ></span>
       <div *ngIf="showPasswordSide && !showNewUserWindow">
         <div class="d-flex align-items-center justify-content-between mb-4">
@@ -618,6 +619,133 @@
             Import
           </button>
         </div>
+      </div>
+
+      <div *ngIf="showAddAttribute && !showNewUserWindow && !showPasswordSide">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="d-flex align-items-center">
+            <h5 class="font-weight-bold">
+              {{ editMode ? 'Edit Attribute' : 'Add Attribute' }}
+            </h5>
+          </div>
+        </div>
+        <form
+          class="d-flex flex-column"
+          [formGroup]="attributesForm"
+          odpFocusNext
+        >
+          <div class="form-group position-relative">
+            <label for="label">
+              Label
+              <sup class="text-danger">*</sup>
+            </label>
+            <div class="input-group">
+              <input
+                id="label"
+                class="form-control pr-4 input-text"
+                type="text"
+                placeholder="Label name"
+                formControlName="label"
+                [ngClass]="{ 'is-invalid': getLabelError }"
+                autocomplete="autocomplete_off_hack"
+              />
+              <span
+                class="fas fa-question-circle text-danger error-icon position-absolute"
+                *ngIf="
+                  attributesForm.get('label').dirty &&
+                  attributesForm.get('label').hasError('required')
+                "
+                ngbTooltip="This is a required field"
+              ></span>
+            </div>
+          </div>
+          <div class="form-group position-relative">
+            <label for="type">
+              Type
+              <sup class="text-danger">*</sup>
+            </label>
+            <div class="input-group">
+              <select
+                id="type"
+                class="form-control input-text"
+                formControlName="type"
+                (ngModelChange)="onAttributeFormTypeChange($event)"
+              >
+                <option *ngFor="let item of types" [value]="item.value">
+                  {{ item.label }}
+                </option>
+              </select>
+              <span
+                class="fas fa-question-circle text-danger error-icon position-absolute"
+                *ngIf="
+                  attributesForm.get('type').dirty &&
+                  attributesForm.get('type').hasError('required')
+                "
+                ngbTooltip="This is a required field"
+              ></span>
+            </div>
+          </div>
+          <div class="form-group position-relative">
+            <label for="label">
+              Value
+              <sup class="text-danger">*</sup>
+            </label>
+            <div class="input-group">
+              <input
+                id="value"
+                class="form-control pr-4 input-text"
+                type="text"
+                placeholder="Value"
+                formControlName="value"
+                [ngClass]="{ 'is-invalid': getValError }"
+                autocomplete="autocomplete_off_hack"
+                *ngIf="attributesForm.get('type').value === 'String'"
+              />
+              <input
+                id="value"
+                class="form-control pr-4 input-text"
+                type="number"
+                placeholder="Value"
+                formControlName="value"
+                [ngClass]="{ 'is-invalid': getValError }"
+                autocomplete="autocomplete_off_hack"
+                *ngIf="attributesForm.get('type').value === 'Number'"
+              />
+              <odp-switch
+                [edit]="{ status: true }"
+                [(checked)]="setUserAttributeValue"
+                *ngIf="attributesForm.get('type').value === 'Boolean'"
+              ></odp-switch>
+
+              <input
+                id="value"
+                class="form-control pr-4 input-text"
+                type="date"
+                placeholder="Value"
+                formControlName="value"
+                [ngClass]="{ 'is-invalid': getValError }"
+                autocomplete="autocomplete_off_hack"
+                *ngIf="attributesForm.get('type').value === 'Date'"
+              />
+              <span
+                class="fas fa-question-circle text-danger error-icon position-absolute"
+                *ngIf="
+                  attributesForm.get('value').dirty &&
+                  attributesForm.get('value').hasError('required')
+                "
+                ngbTooltip="This is a required field"
+              ></span>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary add-button input-text"
+            id="addAttributes"
+            (click)="addAttribute()"
+          >
+            Add
+          </button>
+        </form>
       </div>
     </div>
   </div>
