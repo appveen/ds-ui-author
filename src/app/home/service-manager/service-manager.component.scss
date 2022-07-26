@@ -8,10 +8,18 @@
 .options {
   min-height: 50px;
   max-height: 50px;
+
+  .ds-settings{
+    border: 1px solid #DFE1E2;
+  }
+}
+
+.service-listing-section{
+  padding: 32px
 }
 
 .card-container {
-  height: calc(100vh - 152px);
+  height: calc(100vh - 111px);
   overflow: auto;
 }
 

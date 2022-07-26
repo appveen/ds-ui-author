@@ -241,6 +241,16 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
   }
 
+  get isAppAdmin() {
+    const self = this;
+    return self.commonService.isAppAdmin;
+  }
+
+  get isSuperAdmin() {
+    const self = this;
+    return self.commonService.userDetails.isSuperAdmin;
+  }
+
   newService() {
     const self = this;
     self.newServiceModalRef = self.commonService.modal(self.newServiceModal, {

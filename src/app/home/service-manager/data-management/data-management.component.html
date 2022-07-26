@@ -1,0 +1,160 @@
+<div class="settings-page page-padding bg-light-gray" *ngIf="!showLazyLoader">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+            <i class="fa fa-arrow-left text-secondary mr-3 fa-lg hover" aria-hidden="true" [routerLink]="['../']"></i>
+            <div class="fw-600 font-xxl">Settings</div>
+        </div>
+        <div>
+            <button class="btn btn-primary btn-min-width fs-13 fw-600" [disabled]="!changesDone" (click)="save()">
+                Save</button>
+        </div>
+    </div>
+    <div class="mt-3 bg-white rounded p-4">
+        <div class="fw-600 font-xxl mb-4">Data Management</div>
+        <div class="ds-stats d-flex justify-content-start">
+            <div class="service-details p-3 bg-info">
+                <div class="fw-600 font-xl">{{serviceStatus.Total?serviceStatus.Total:0}}</div>
+                <div class="pt-4 font-xsm text-secondary">TOTAL SERVICES</div>
+            </div>
+            <div class="service-details p-3 bg-success">
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="fw-600 font-xl"> {{serviceStatus.Active?serviceStatus.Active:0}} </span>
+                    <button class="btn btn-sm btn-danger font-11 hover" [disabled]="!serviceStatus.Active"
+                        (click)="startStopServiceModel('Stop')">Stop All</button>
+                </div>
+                <div class="pt-4 font-xsm text-secondary">RUNNING SERVICES</div>
+            </div>
+            <div class="service-details p-3 bg-primary">
+                <div class="fw-600 font-xl">{{serviceStatus.Draft?serviceStatus.Draft:0}}</div>
+                <div class="pt-4 font-xsm text-secondary">IN DRAFTS</div>
+            </div>
+            <div class="service-details p-3 bg-danger">
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="fw-600 font-xl"> {{serviceStatus.Undeployed?serviceStatus.Undeployed:0}} </span>
+                    <button class="btn btn-sm btn-success font-11 hover" [disabled]="!serviceStatus.Undeployed"
+                        (click)="startStopServiceModel('Start')">Start All</button>
+                </div>
+                <div class="pt-4 font-xsm text-secondary">STOPPED SERVICES</div>
+            </div>
+            <div class="service-details p-3 bg-secondary">
+                <div class="fw-600 font-xl">{{serviceStatus.Pending?serviceStatus.Pending:0}}</div>
+                <div class="pt-4 font-xsm text-secondary">MAINTAINANCE</div>
+            </div>
+        </div>
+        <div class="data-settings">
+            <div class="fw-600 font-xl">Data Settings</div>
+            <div class="row my-4">
+                <h6 class="col font-weight-bolder">Keep history of data when data is changed </h6>
+                <div class="col-9 switch-container">
+                    <label class="switch success mb-0 mr-2">
+                        <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="retainDataHistory"
+                            (ngModelChange)="onVersionChange($event)">
+                        <span class="slider"></span>
+                        <span class="toggler"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="row" *ngIf="retainDataHistory">
+                <div class="col-3">
+                    <h6 class="font-weight-bolder"> Retain Data by</h6>
+                    <div class="text-secondary">select method to retain data by version or duration</div>
+                </div>
+                <div class="col-9">
+                    <div class="btn-group btn-group-toggle" (change)="patchVersionValue(true)" ngbRadioGroup
+                        [ngModelOptions]="{standalone: true}" [(ngModel)]="versionConfig.type">
+                        <label ngbButtonLabel class="btn btn-outline-dark">
+                            <input ngbButton type="radio" value="count"> Versions
+                        </label>
+                        <label ngbButtonLabel class="btn btn-outline-dark">
+                            <input ngbButton type="radio" value="time"> Duration
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="retain-data-options mt-4" *ngIf="retainDataHistory">
+                <select *ngIf="appData.serviceVersionValidity.validityType == 'time'" class="form-control my-2"
+                    [(ngModel)]="versionConfig.value" [ngModelOptions]="{standalone: true}"
+                    (change)="patchVersionValue()">
+                    <option value="">All</option>
+                    <option value="custom">Custom</option>
+                    <option value="1 months">1 Month</option>
+                    <option value="3 months">3 Month</option>
+                    <option value="6 months">6 Month</option>
+                    <option value="1 years">1 Year</option>
+                </select>
+                <select *ngIf="appData.serviceVersionValidity.validityType == 'count'" class="form-control my-2"
+                    (change)="patchVersionValue()" [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="versionConfig.value">
+                    <option value="-1" selected>All</option>
+                    <option value="custom">Custom</option>
+                    <option value="10">Last 10</option>
+                    <option value="25">Last 25</option>
+                    <option value="50">Last 50</option>
+                    <option value="100">Last 100</option>
+                </select>
+                <div *ngIf="versionConfig.isCustomValue" class="custom-input-number position-relative">
+                    <input type="number" class="form-control" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="versionConfig.customValue" #vcCustomval="ngModel" (change)="patchVersionValue()"
+                        min="1">
+                    <span class="fa fa-xs fa-circle text-danger position-absolute version-error-symbol"
+                        ngbTooltip="Custom value should not be less than '1'" placement="right" container="body"
+                        *ngIf="!validityValidator && vcCustomval.touched"></span>
+                    <select class="embeded-select position-absolute text-accent bg-white border-0"
+                        *ngIf="appData.serviceVersionValidity.validityType == 'time'"
+                        [ngModelOptions]="{standalone: true}" [(ngModel)]="versionConfig.customValueSuffix"
+                        (change)="patchVersionValue()">
+                        <option value="minutes">Minutes</option>
+                        <option value="hour">Hour</option>
+                        <option value="days">Days</option>
+                        <option value="months">Months</option>
+                        <option value="years">Years</option>
+                    </select>
+                </div>
+            </div>
+            <hr class="hr">
+        </div>
+        <div class="insights-settings">
+            <div class="fw-600 font-xl">Insights Settings</div>
+            <div class="row my-4">
+                <div class="col-3">
+                    <h6 class="font-weight-bolder"> Disable insights</h6>
+                    <div class="text-secondary">It will disable all insights related ot the data service </div>
+                </div>
+                <div class="col-9 switch-container">
+                    <label class="switch success mb-0 mr-2">
+                        <input type="checkbox" [ngModelOptions]="{standalone: true}"
+                            [(ngModel)]="appData.disableInsights">
+                        <span class="slider"></span>
+                        <span class="toggler"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+
+<ng-template #startStopServiceModalTemplate>
+    <div class="modal-body p-4">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
+                    <odp-service-icon [size]="18" color="DD5151" class="mt-1"></odp-service-icon>
+                </span>
+                <span class="font-weight-bold mb-1">{{startStopServiceModal.title}}</span>
+            </div>
+            <span class="fa fa-times text-secondary hover " (click)="startStopServiceModalRef.close(false)"></span>
+        </div>
+        <p class="text-secondary text-center my-5">{{startStopServiceModal.message}}</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-delete" (click)="startStopServiceModalRef.close(true)"
+                id="sbDeleteModalYes">Yes</button>
+        </div>
+    </div>
+</ng-template>

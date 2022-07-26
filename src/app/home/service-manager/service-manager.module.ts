@@ -15,10 +15,14 @@ import { LoadingPlaceholderModule } from 'src/app/utils/loading-placeholder/load
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { CheckboxBtnModule } from 'src/app/utils/checkbox-btn/checkbox-btn.module';
+import { DataManagementComponent } from './data-management/data-management.component';
+import { FormsModule } from '@angular/forms';
 
 
 const routes = [
     { path: '', component: ServiceManagerComponent },
+    { path: 'settings', component: DataManagementComponent },
+
 ];
 
 @NgModule({
@@ -26,6 +30,7 @@ const routes = [
         CommonModule,
         RouterModule.forChild(routes),
         NgbModule,
+        FormsModule,
         ReactiveFormsModule,
         LoadingModule,
         BreadcrumbModule,
@@ -41,7 +46,8 @@ const routes = [
         RouterModule
     ],
     declarations: [
-        ServiceManagerComponent
+        ServiceManagerComponent,
+        DataManagementComponent
     ]
 })
 export class ServiceManagerModule { }
