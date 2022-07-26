@@ -8,7 +8,7 @@
       <div class="text-secondary mt-2">Processing...</div>
     </div>
   </div>
-  <div class="d-flex flex-column position-relative">
+  <div class="d-flex flex-column position-relative" style="height: 100vh">
     <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
     <div
       class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3"
@@ -114,8 +114,12 @@
                 </li>
               </ul>
             </div>
-
-            <div style="margin-top: 30px; display: grid">
+            <div *ngIf="isDataLoading">
+              <span
+                class="spinner-big-icon fa-pulse my-4 d-flex align-items-center justify-content-center"
+              ></span>
+            </div>
+            <div style="margin-top: 30px; display: grid" *ngIf="!isDataLoading">
               <label class="tab-header">{{ currentTab }}</label>
               <div *ngIf="currentTab === 'Attributes'" style="display: flex">
                 <label style="color: #6c7584; font-weight: 400"
@@ -129,26 +133,39 @@
                   <label style="font-weight: 500">Add Attribute</label>
                 </div>
               </div>
-              <div
-                *ngIf="
-                  details.attributesData && details.attributesData.length > 0
-                "
-              >
+              <div *ngIf="currentTab === 'Groups'" style="display: flex">
+                <label style="color: #6c7584; font-weight: 400"
+                  >All groups in which the user has been added
+                </label>
+                <div class="add-attribute">
+                  <i class="fa fa-plus-circle" (click)="openGroupModal()"></i>
+                  <label style="font-weight: 500">Add to Groups</label>
+                </div>
+              </div>
+              <div *ngIf="showTable" class="mt-4">
                 <ag-grid-angular
-                  style="height: 300px"
+                  *ngIf="currentTab === 'Groups'"
+                  style="height: 300px; overflow-x: hidden"
                   #agGrid
                   class="ag-theme-balham"
-                  [gridOptions]="gridOptions"
+                  [gridOptions]="gridGroupOptions"
                   (gridReady)="onGridReady($event)"
                 >
+                </ag-grid-angular>
+                <ag-grid-angular
+                  *ngIf="currentTab === 'Attributes'"
+                  style="height: 300px; overflow-x: hidden"
+                  #agGrid
+                  class="ag-theme-balham"
+                  [gridOptions]="gridAttrOptions"
+                  (gridReady)="onGridReady($event)"
+                >
+                  >
                 </ag-grid-angular>
               </div>
               <div
                 class="no-attribute"
-                *ngIf="
-                  !(details.attributesData?.length > 0) &&
-                  currentTab === 'Attributes'
-                "
+                *ngIf="!showTable && currentTab === 'Attributes'"
               >
                 <label class="no-attr-label"
                   >No attributes are configured</label
@@ -164,6 +181,24 @@
                   (click)="showAttributeSide()"
                 >
                   Add Attributes
+                </button>
+              </div>
+              <div
+                class="no-attribute"
+                *ngIf="!showTable && currentTab === 'Groups'"
+              >
+                <label class="no-attr-label">Not assigned to any groups</label>
+                <label class="no-attr-sub">
+                  The user is not assigned to any groups</label
+                >
+                <button
+                  type="button"
+                  style="width: auto; margin: auto"
+                  class="btn btn-primary add-button input-text"
+                  id="createNewUserYes"
+                  (click)="openGroupModal()"
+                >
+                  Assign to group
                 </button>
               </div>
             </div>
@@ -646,13 +681,12 @@
                 type="text"
                 placeholder="Label name"
                 formControlName="label"
-                [ngClass]="{ 'is-invalid': getLabelError }"
                 autocomplete="autocomplete_off_hack"
               />
               <span
                 class="fas fa-question-circle text-danger error-icon position-absolute"
                 *ngIf="
-                  attributesForm.get('label').dirty &&
+                  attributesForm.get('type').touched &&
                   attributesForm.get('label').hasError('required')
                 "
                 ngbTooltip="This is a required field"
@@ -678,7 +712,7 @@
               <span
                 class="fas fa-question-circle text-danger error-icon position-absolute"
                 *ngIf="
-                  attributesForm.get('type').dirty &&
+                  attributesForm.get('type').touched &&
                   attributesForm.get('type').hasError('required')
                 "
                 ngbTooltip="This is a required field"
@@ -697,7 +731,6 @@
                 type="text"
                 placeholder="Value"
                 formControlName="value"
-                [ngClass]="{ 'is-invalid': getValError }"
                 autocomplete="autocomplete_off_hack"
                 *ngIf="attributesForm.get('type').value === 'String'"
               />
@@ -707,13 +740,13 @@
                 type="number"
                 placeholder="Value"
                 formControlName="value"
-                [ngClass]="{ 'is-invalid': getValError }"
                 autocomplete="autocomplete_off_hack"
                 *ngIf="attributesForm.get('type').value === 'Number'"
               />
               <odp-switch
                 [edit]="{ status: true }"
-                [(checked)]="setUserAttributeValue"
+                [checked]="attributesForm.get('value').value"
+                (checkedChange)="setUserAttributeValue($event)"
                 *ngIf="attributesForm.get('type').value === 'Boolean'"
               ></odp-switch>
 
@@ -723,7 +756,6 @@
                 type="date"
                 placeholder="Value"
                 formControlName="value"
-                [ngClass]="{ 'is-invalid': getValError }"
                 autocomplete="autocomplete_off_hack"
                 *ngIf="attributesForm.get('type').value === 'Date'"
               />
@@ -743,7 +775,7 @@
             id="addAttributes"
             (click)="addAttribute()"
           >
-            Add
+            {{ editMode ? 'Save' : 'Add' }}
           </button>
         </form>
       </div>

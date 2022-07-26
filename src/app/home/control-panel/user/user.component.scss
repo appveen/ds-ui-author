@@ -402,6 +402,13 @@
   margin: auto auto 15px auto;
   color: $sub-headings;
 }
+
+
+.icons{
+  color: #6C7584; 
+  cursor: pointer
+}
+
 ::ng-deep .ag-theme-balham{
   font-family: "Inter";
   font-size: 14px;
@@ -414,6 +421,10 @@
   .ag-row{
     padding: 10px ;
   }
+
+  .ag-layout-normal{
+    overflow-x: hidden
+  }
  
 }
 
@@ -424,4 +435,18 @@
     background-color: FBFBFB;
   }
   
+
+}
+
+
+::ng-deep .ag-theme-balham .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected), .ag-theme-balham .ag-ltr .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected), .ag-theme-balham .ag-ltr .ag-has-focus .ag-full-width-row.ag-row-focus .ag-cell-wrapper.ag-row-group, .ag-theme-balham .ag-ltr .ag-cell-range-single-cell, .ag-theme-balham .ag-ltr .ag-cell-range-single-cell.ag-cell-range-handle, .ag-theme-balham .ag-rtl .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected), .ag-theme-balham .ag-rtl .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected), .ag-theme-balham .ag-rtl .ag-has-focus .ag-full-width-row.ag-row-focus .ag-cell-wrapper.ag-row-group, .ag-theme-balham .ag-rtl .ag-cell-range-single-cell, .ag-theme-balham .ag-rtl .ag-cell-range-single-cell.ag-cell-range-handle {
+  border: none  ;
+  border-color: none;
+  outline: none;
+}
+
+
+
+.mat-dialog-container{
+  overflow: hidden !important;
 }

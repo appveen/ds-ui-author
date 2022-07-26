@@ -1,12 +1,12 @@
 import {
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild,
   TemplateRef,
-  ElementRef,
+  ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModalRef, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
 import {
@@ -15,26 +15,26 @@ import {
   GridReadyEvent,
   IDatasource,
   IGetRowsParams,
-  RowNode,
 } from 'ag-grid-community';
-import { ToastrService } from 'ngx-toastr';
-import { of, Subject } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
+import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
+import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
+import { UserDetails } from 'src/app/utils/interfaces/userDetails';
+import { AppService } from 'src/app/utils/services/app.service';
 import {
   CommonService,
   GetOptions,
 } from 'src/app/utils/services/common.service';
-import { AppService } from 'src/app/utils/services/app.service';
-import { UserDetails } from 'src/app/utils/interfaces/userDetails';
-import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
-import { GridCheckboxComponent } from 'src/app/utils/grid-checkbox/grid-checkbox.component';
-import { UserListCellRendererComponent } from 'src/app/utils/user-list-cell-renderer/user-list-cell-renderer.component';
-import { AgGridSharedFloatingFilterComponent } from 'src/app/utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.component';
-import { AgGridActionsRendererComponent } from 'src/app/utils/ag-grid-actions-renderer/ag-grid-actions-renderer.component';
 import { environment } from 'src/environments/environment';
 import { SessionService } from '../../../utils/services/session.service';
+import { UserGridActionRendererComponent } from './user-grid-action.component';
+import * as _ from 'lodash';
+import { MatDialog } from '@angular/material/dialog';
+import { UserToGroupModalComponent } from './user-to-group-modal/user-to-group-modal.component';
+import { UserGridAppsRendererComponent } from './user-grid-apps.component ';
 
 @Component({
   selector: 'odp-user',
@@ -47,6 +47,7 @@ export class UserComponent implements OnInit, OnDestroy {
   deleteModal: TemplateRef<HTMLElement>;
   @ViewChild('searchUserInput', { static: false }) searchUserInput: ElementRef;
   @ViewChild('createEditTemplate', { static: false }) createEditTemplate;
+  @ViewChild('newGroupModal') newGroupModal: TemplateRef<HTMLElement>;
   @ViewChild('removeSelectedModal', { static: false })
   removeSelectedModal: TemplateRef<HTMLElement>;
   deleteModalRef: NgbModalRef;
@@ -71,7 +72,8 @@ export class UserComponent implements OnInit, OnDestroy {
   userInAzureAD: boolean;
   showPassword;
   frameworkComponents: any;
-  gridOptions: GridOptions;
+  gridAttrOptions: GridOptions;
+  gridGroupOptions: GridOptions;
   dataSource: IDatasource;
   loadedCount: number;
   totalCount: number;
@@ -86,6 +88,7 @@ export class UserComponent implements OnInit, OnDestroy {
   details: any = {};
   checked: boolean = false;
   isLoading: boolean = true;
+  isDataLoading: boolean = true;
   currentTab: string = 'Groups';
   gridApi: GridApi;
   showSettings: boolean = false;
@@ -96,6 +99,10 @@ export class UserComponent implements OnInit, OnDestroy {
   attributesForm: FormGroup;
   editMode: boolean = false;
   types: Array<any>;
+  userGroups: Array<any> = [];
+  showTable: boolean = false;
+  private context;
+  newGroupModalRef: NgbModalRef;
 
   constructor(
     private fb: FormBuilder,
@@ -103,8 +110,10 @@ export class UserComponent implements OnInit, OnDestroy {
     private ngbToolTipConfig: NgbTooltipConfig,
     private ts: ToastrService,
     private appService: AppService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private dialog: MatDialog
   ) {
+    this.context = { componentParent: this };
     this.showUsrManage = true;
     this.selectedApp = this.commonService.app._id;
     this.apiConfig.filter = {};
@@ -134,16 +143,15 @@ export class UserComponent implements OnInit, OnDestroy {
       },
     ];
 
-    this.attributesForm = this.fb.group({
-      label: [null],
-      type: [null],
-      value: [null],
-    });
-
     this.resetPasswordForm = this.fb.group({
       password: [null],
       cpassword: [null, [Validators.required]],
     });
+
+    this.frameworkComponents = {
+      actionRenderer: UserGridActionRendererComponent,
+      appCheckRenderer: UserGridAppsRendererComponent,
+    };
 
     if (this.commonService.userDetails?.rbacPasswordComplexity) {
       this.resetPasswordForm
@@ -208,11 +216,12 @@ export class UserComponent implements OnInit, OnDestroy {
     this.showLazyLoader = true;
     this.getUserList().subscribe((users) => {
       this.userList = users;
-      this.details = users[0];
       this.selectedUser = users[0];
+      this.showDetails(users[0]);
       this.showLazyLoader = false;
       this.isLoading = false;
     });
+
     this.configureGridSettings();
   }
 
@@ -423,20 +432,20 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userForm.get('userData.cpassword').updateValueAndValidity();
   }
 
-  onGridAction(buttonName: string, rowNode: RowNode) {
-    switch (buttonName) {
-      case 'View':
-        {
-          this.onRowDoubleClick(rowNode);
-        }
-        break;
-      case 'Remove':
-        {
-          this.removeUsers({ userIds: [rowNode.data._id], single: true });
-        }
-        break;
-    }
-  }
+  // onGridAction(buttonName: string, rowNode: RowNode) {
+  //   switch (buttonName) {
+  //     case 'View':
+  //       {
+  //         this.onRowDoubleClick(rowNode);
+  //       }
+  //       break;
+  //     case 'Remove':
+  //       {
+  //         this.removeUsers({ userIds: [rowNode.data._id], single: true });
+  //       }
+  //       break;
+  //   }
+  // }
 
   onGridReady(event: GridReadyEvent) {
     this.gridApi = event.api;
@@ -446,37 +455,39 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private forceResizeColumns() {
     this.agGrid.api.sizeColumnsToFit();
-    this.autoSizeAllColumns();
+    // if (this.agGrid.columnApi) {
+    //   this.autoSizeAllColumns();
+    // }
   }
 
-  private autoSizeAllColumns() {
-    const pinnedContentSize = this.hasPermission('PMUBD') ? 170 : 94;
-    if (!!this.agGrid.api && !!this.agGrid.columnApi) {
-      setTimeout(() => {
-        const container = document.querySelector('.grid-container');
-        const availableWidth = !!container
-          ? container.clientWidth - pinnedContentSize
-          : 1070;
-        const allColumns = this.agGrid.columnApi.getAllColumns();
-        allColumns.forEach((col) => {
-          this.agGrid.columnApi.autoSizeColumn(col);
-          if (
-            col.getActualWidth() > 200 ||
-            this.agGrid.api.getDisplayedRowCount() === 0
-          ) {
-            col.setActualWidth(200);
-          }
-        });
-        const occupiedWidth = allColumns.reduce(
-          (pv, cv) => pv + cv.getActualWidth(),
-          -pinnedContentSize
-        );
-        if (occupiedWidth < availableWidth) {
-          this.agGrid.api.sizeColumnsToFit();
-        }
-      }, 2000);
-    }
-  }
+  // private autoSizeAllColumns() {
+  //   const pinnedContentSize = this.hasPermission('PMUBD') ? 170 : 94;
+  //   if (!!this.agGrid.api && !!this.agGrid.columnApi) {
+  //     setTimeout(() => {
+  //       const container = document.querySelector('.grid-container');
+  //       const availableWidth = !!container
+  //         ? container.clientWidth - pinnedContentSize
+  //         : 1070;
+  //       const allColumns = this.agGrid?.columnApi?.getAllColumns() || [];
+  //       allColumns.forEach((col) => {
+  //         this.agGrid.columnApi.autoSizeColumn(col);
+  //         if (
+  //           col.getActualWidth() > 200 ||
+  //           this.agGrid.api.getDisplayedRowCount() === 0
+  //         ) {
+  //           col.setActualWidth(200);
+  //         }
+  //       });
+  //       const occupiedWidth = allColumns.reduce(
+  //         (pv, cv) => pv + cv.getActualWidth(),
+  //         -pinnedContentSize
+  //       );
+  //       if (occupiedWidth < availableWidth) {
+  //         this.agGrid.api.sizeColumnsToFit();
+  //       }
+  //     }, 2000);
+  //   }
+  // }
 
   private onRowDoubleClick(row: any) {
     this.editUser(row);
@@ -617,19 +628,19 @@ export class UserComponent implements OnInit, OnDestroy {
     }
   }
 
-  getLabelError() {
-    return (
-      this.attributesForm.get('label').touched &&
-      this.attributesForm.get('label').hasError('required')
-    );
-  }
+  // getLabelError() {
+  //   return (
+  //     this.attributesForm.get('label').touched &&
+  //     this.attributesForm.get('label').hasError('required')
+  //   );
+  // }
 
-  getValError() {
-    return (
-      this.attributesForm.get('value').touched &&
-      this.attributesForm.get('value').hasError('required')
-    );
-  }
+  // getValError() {
+  //   return (
+  //     this.attributesForm.get('value').touched &&
+  //     this.attributesForm.get('value').hasError('required')
+  //   );
+  // }
 
   newUser() {
     this.showSettings = false;
@@ -877,7 +888,6 @@ export class UserComponent implements OnInit, OnDestroy {
       .get('user', `/${this.commonService.app._id}/group`, {
         noApp: true,
         count: -1,
-        select: 'name',
       })
       .subscribe(
         (groups) => {
@@ -1141,11 +1151,15 @@ export class UserComponent implements OnInit, OnDestroy {
     if (user.attributes && user.attributes !== null) {
       user.attributesData = Object.values(user.attributes);
     }
-    this.details = user;
-    this.configureGridSettings();
-    if (this.gridApi) {
-      this.configureGrid();
+    if (this.details._id !== user._id) {
+      this.isDataLoading = true;
+      this.details = user;
+      this.fetchUserGroups();
     }
+    {
+      this.details = user;
+    }
+
     // this.gridApi.refreshCells();
   }
   clickCheckbox(event, user) {
@@ -1159,57 +1173,71 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   switchTab(tab) {
+    this.isDataLoading = true;
     this.currentTab = tab;
+    this.showTable = false;
     this.configureGridSettings();
     if (this.gridApi) {
       this.configureGrid();
     }
+    this.checkShowTable();
+    this.isDataLoading = false;
   }
 
   configureGridSettings() {
     const self = this;
 
-    const columnDefs =
-      self.currentTab === 'Groups'
-        ? [
-            {
-              headerName: 'NAME',
-              field: 'label',
-              filter: false,
-            },
-            {
-              headerName: 'AUHTOR',
-              field: 'type',
-              filter: false,
-            },
-            {
-              headerName: 'APPCENTER',
-              field: 'value',
-              filter: false,
-            },
-          ]
-        : [
-            {
-              headerName: 'LABEL',
-              field: 'label',
-              filter: false,
-            },
-            {
-              headerName: 'TYPE',
-              field: 'type',
-              filter: false,
-            },
-            {
-              headerName: 'VALUE',
-              field: 'value',
-              filter: false,
-            },
-          ];
-    self.gridOptions = {
-      frameworkComponents: this.frameworkComponents,
-      rowDeselection: false,
-      suppressPaginationPanel: true,
-      columnDefs: columnDefs,
+    const groupColumnDefs = [
+      {
+        headerName: 'NAME',
+        field: 'name',
+        filter: false,
+      },
+      {
+        headerName: 'AUHTOR',
+        field: 'roles',
+        cellRenderer: 'appCheckRenderer',
+        cellRendererParams: {
+          checkApp: 'author',
+        },
+      },
+      {
+        headerName: 'APPCENTER',
+        field: 'roles',
+        cellRenderer: 'appCheckRenderer',
+        cellRendererParams: {
+          checkApp: 'author',
+        },
+      },
+      {
+        headerName: '',
+        cellRenderer: 'actionRenderer',
+      },
+    ];
+
+    const attrColumnDefs = [
+      {
+        headerName: 'LABEL',
+        field: 'label',
+        filter: false,
+      },
+      {
+        headerName: 'TYPE',
+        field: 'type',
+        filter: false,
+      },
+      {
+        headerName: 'VALUE',
+        field: 'value',
+        filter: false,
+      },
+      {
+        headerName: '',
+        cellRenderer: 'actionRenderer',
+      },
+    ];
+
+    const gridOpts = {
       paginationPageSize: 30,
       suppressRowClickSelection: true,
       rowSelection: 'single',
@@ -1221,47 +1249,47 @@ export class UserComponent implements OnInit, OnDestroy {
       pagination: false,
       animateRows: true,
       rowHeight: 48,
+      headerHeight: 48,
+      frameworkComponents: this.frameworkComponents,
+      rowDeselection: false,
+      suppressPaginationPanel: true,
+      context: this.context,
+    };
+
+    self.gridGroupOptions = {
+      ...gridOpts,
+      columnDefs: groupColumnDefs,
+    };
+    self.gridAttrOptions = {
+      ...gridOpts,
+      columnDefs: attrColumnDefs,
     };
   }
 
   configureGrid() {
     const self = this;
-    self.dataSource =
-      this.currentTab === 'Attributes'
-        ? {
-            getRows: (params: IGetRowsParams) => {
-              this.gridApi.showLoadingOverlay();
-              params.successCallback(
-                self.details.attributesData,
-                self.details.attributesData.length
-              );
-              if (self.details.attributesData.length < 1 && this.gridApi) {
-                this.gridApi.showNoRowsOverlay();
-              } else {
-                if (self.details.attributesData.length !== 0 && this.gridApi) {
-                  this.gridApi.hideOverlay();
-                }
-              }
-            },
+    self.dataSource = {
+      getRows: (params: IGetRowsParams) => {
+        this.gridApi.showLoadingOverlay();
+        let data = [];
+        if (this.currentTab === 'Attributes') {
+          data = self.details.attributesData || [];
+        } else {
+          data = self.userGroups || [];
+        }
+        params.successCallback(data, data.length);
+        if (data.length < 1 && this.gridApi) {
+          this.gridApi.showNoRowsOverlay();
+        } else {
+          if (data.length !== 0 && this.gridApi) {
+            this.gridApi.hideOverlay();
           }
-        : {
-            getRows: (params: IGetRowsParams) => {
-              this.gridApi.showLoadingOverlay();
-              params.successCallback(
-                self.details.attributesData,
-                self.details.attributesData.length
-              );
-              if (self.details.attributesData.length < 1 && this.gridApi) {
-                this.gridApi.showNoRowsOverlay();
-              } else {
-                if (self.details.attributesData.length !== 0 && this.gridApi) {
-                  this.gridApi.hideOverlay();
-                }
-              }
-            },
-          };
+        }
+      },
+    };
     this.gridApi.setDatasource(this.dataSource);
-    // this.gridApi.refreshCells();
+    this.gridApi.hideOverlay();
+    this.gridApi.redrawRows();
   }
 
   togglePasswordChange() {
@@ -1312,23 +1340,28 @@ export class UserComponent implements OnInit, OnDestroy {
     }
   }
 
-  showAttributeSide() {
-    this.showAddAttribute = true;
-    this.attributesForm.reset();
+  showAttributeSide(data = {}) {
+    // this.attributesForm.reset();
     this.attributesForm = this.fb.group({
       key: [''],
       type: ['String', [Validators.required]],
       value: ['', [Validators.required]],
       label: ['', [Validators.required]],
     });
-    this.attributesForm
-      .get('label')
-      .valueChanges.pipe(filter(() => !this.editMode))
-      .subscribe((val: any) => {
-        this.attributesForm
-          .get('key')
-          .patchValue(this.appService.toCamelCase(val));
-      });
+    // this.attributesForm
+    //   .get('label')
+    //   .valueChanges.pipe(filter(() => !this.editMode))
+    //   .subscribe((val: any) => {
+    //     this.attributesForm
+    //       .get('key')
+    //       .patchValue(this.appService.toCamelCase(val));
+    //   });
+    if (!_.isEmpty(data)) {
+      this.editMode = true;
+      this.attributesForm.setValue({ key: data['label'], ...data });
+      this.attributesForm.markAsUntouched();
+    }
+    this.showAddAttribute = true;
   }
 
   onAttributeFormTypeChange(type: any) {
@@ -1350,14 +1383,20 @@ export class UserComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         () => {
+          this.isDataLoading = true;
           this.getUserList().subscribe((users) => {
             this.userList = users;
-            this.details = users.find((user) => user._id === this.details._id);
-            this.selectedUser = this.details;
-            this.showLazyLoader = false;
-            this.isLoading = false;
+            this.selectedUser = users.find(
+              (user) => user._id === this.details._id
+            );
+            this.showDetails(this.selectedUser);
+
+            this.isDataLoading = false;
             this.configureGridSettings();
-            this.configureGrid();
+            if (this.gridApi) {
+              this.configureGrid();
+            }
+            this.checkShowTable();
           });
           this.showAddAttribute = false;
           this.ts.success('Custom Details Saved Successfully');
@@ -1368,7 +1407,125 @@ export class UserComponent implements OnInit, OnDestroy {
       );
   }
 
-  set setUserAttributeValue(val) {
+  setUserAttributeValue(val) {
     this.attributesForm.get('value').patchValue(val);
+  }
+  fetchUserGroups() {
+    const self = this;
+    const filter = {
+      count: -1,
+      filter: { users: self.details._id },
+    };
+    if (this.gridApi) {
+      this.gridApi.showLoadingOverlay();
+    }
+    self.subscriptions['userTeams'] = self.commonService
+      .get('user', `/${self.commonService.app._id}/group/`, filter)
+      .subscribe((resp) => {
+        this.userGroups = resp.filter((ele) => ele.name !== '#') || [];
+        this.isDataLoading = false;
+        this.configureGridSettings();
+        if (this.gridApi) {
+          this.configureGrid();
+        }
+        this.checkShowTable();
+      });
+  }
+
+  checkShowTable() {
+    if (this.currentTab === 'Groups' && this.userGroups.length > 0) {
+      this.showTable = true;
+    } else if (
+      this.currentTab === 'Attributes' &&
+      this.details?.attributesData?.length > 0
+    ) {
+      this.showTable = true;
+    } else {
+      this.showTable = false;
+    }
+  }
+
+  editAttribute(data) {
+    this.showAttributeSide(data);
+  }
+  deleteAttribute(data) {
+    this.details['attributes'] = this.details.attributes.filter(
+      (attr) => attr.key !== data.key
+    );
+    delete this.details.attributesData;
+    this.commonService
+      .put(
+        'user',
+        `/${this.commonService.app._id}/user/${this.details._id}`,
+        this.details
+      )
+      .subscribe(
+        () => {
+          this.isDataLoading = true;
+          this.getUserList().subscribe((users) => {
+            this.userList = users;
+            this.selectedUser = users.find(
+              (user) => user._id === this.details._id
+            );
+            this.showDetails(this.selectedUser);
+
+            this.isDataLoading = false;
+            this.configureGridSettings();
+            if (this.gridApi) {
+              this.configureGrid();
+            }
+            this.checkShowTable();
+          });
+          this.showAddAttribute = false;
+          this.ts.success('Custom Details Saved Successfully');
+        },
+        (err) => {
+          this.ts.error(err.error.message);
+        }
+      );
+  }
+
+  deleteGroup(data) {
+    this.isDataLoading = true;
+    this.commonService
+      .put(
+        'user',
+        `/${this.commonService.app._id}/user/utils/removeFromGroups/${this.details._id}`,
+        { groups: [data._id], app: this.commonService.app._id }
+      )
+      .subscribe(
+        () => {
+          this.ts.success(
+            `${data.name} Group has been removed for user ${this.details.basicDetails.name}`
+          );
+          this.isDataLoading = true;
+          this.fetchUserGroups();
+          // this.getUserTeam();
+        },
+        (err) => {
+          data.loading = false;
+          this.isDataLoading = true;
+          this.commonService.errorToast(err);
+        }
+      );
+  }
+
+  openGroupModal() {
+    const dialogRef = this.dialog.open(UserToGroupModalComponent, {
+      width: '60vw',
+      height: '65vh',
+      data: {
+        groupList: this.groupList,
+        userGroups: this.userGroups,
+        user: this.details,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((apiHit) => {
+      if (apiHit) {
+        this.isDataLoading = true;
+        this.fetchUserGroups();
+      }
+    });
   }
 }

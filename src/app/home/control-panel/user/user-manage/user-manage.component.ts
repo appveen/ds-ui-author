@@ -157,9 +157,9 @@ export class UserManageComponent implements OnInit, OnDestroy {
       value.attributes = {};
     }
     self._user = value;
-    if (!!self.allTeams) {
-      self.getUserTeam();
-    }
+    // if (!!self.allTeams) {
+    //   self.getUserTeam();
+    // }
   }
 
   get user() {
@@ -263,7 +263,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
       self.commonService.userDetails.isSuperAdmin || self.isThisUser(self.user);
     self.ngbToolTipConfig.container = 'body';
     self.commonService.apiCalls.componentLoading = false;
-    self.getAllTeams();
+    // self.getAllTeams();
     self.setupUserAttrsGrid();
     self.subscriptions['sessionExpired'] =
       self.commonService.sessionExpired.subscribe(() => {
@@ -832,69 +832,69 @@ export class UserManageComponent implements OnInit, OnDestroy {
     }
   }
 
-  getAllTeams() {
-    const self = this;
-    self.teamOptions.filter = { app: self.commonService.app._id };
-    self.teamOptions.count = -1;
-    self.subscriptions['allTeams'] = self.commonService
-      .get('user', `/${self.commonService.app._id}/group/`, self.teamOptions)
-      .subscribe(
-        (_teams) => {
-          const allTeams = _teams;
-          const index = allTeams.findIndex((e) => e.name === '#');
-          if (index >= 0) {
-            allTeams.splice(index, 1);
-          }
-          self.allTeams = [...allTeams];
-          self.getUserTeam();
-        },
-        (err) => {
-          self.ts.error(err.error.message);
-        }
-      );
-  }
+  // getAllTeams() {
+  //   const self = this;
+  //   self.teamOptions.filter = { app: self.commonService.app._id };
+  //   self.teamOptions.count = -1;
+  //   self.subscriptions['allTeams'] = self.commonService
+  //     .get('user', `/${self.commonService.app._id}/group/`, self.teamOptions)
+  //     .subscribe(
+  //       (_teams) => {
+  //         const allTeams = _teams;
+  //         const index = allTeams.findIndex((e) => e.name === '#');
+  //         if (index >= 0) {
+  //           allTeams.splice(index, 1);
+  //         }
+  //         self.allTeams = [...allTeams];
+  //         self.getUserTeam();
+  //       },
+  //       (err) => {
+  //         self.ts.error(err.error.message);
+  //       }
+  //     );
+  // }
 
-  getUserTeam() {
-    const self = this;
-    if (self.manageGroup || self.viewGroup) {
-      self.userGroupConfig.filter.users = self.user._id;
-      self.userGroupConfig.count = -1;
-      self.subscriptions['userTeams'] = self.commonService
-        .get(
-          'user',
-          `/${self.commonService.app._id}/group/`,
-          self.userGroupConfig
-        )
-        .subscribe((_teams) => {
-          const userTeams = _teams;
-          const index = userTeams.findIndex((e) => e.name === '#');
-          if (index >= 0) {
-            userTeams.splice(index, 1);
-          }
-          self.userTeams = [...userTeams];
-          const otherTeams = self.allTeams.filter((team) =>
-            self.userTeams.every((uTeam) => uTeam._id !== team._id)
-          );
-          const teamSortFn = (a, b) => {
-            return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
-          };
-          self.toggleGroups = [
-            ...[...self.userTeams].sort(teamSortFn).map((team) => ({
-              _id: team._id,
-              name: team.name,
-              userCount: team.users?.length || 0,
-              checked: true,
-            })),
-            ...otherTeams.sort(teamSortFn).map((team) => ({
-              _id: team._id,
-              name: team.name,
-              userCount: team.users?.length || 0,
-              checked: false,
-            })),
-          ];
-        });
-    }
-  }
+  // getUserTeam() {
+  //   const self = this;
+  //   if (self.manageGroup || self.viewGroup) {
+  //     self.userGroupConfig.filter.users = self.user._id;
+  //     self.userGroupConfig.count = -1;
+  //     self.subscriptions['userTeams'] = self.commonService
+  //       .get(
+  //         'user',
+  //         `/${self.commonService.app._id}/group/`,
+  //         self.userGroupConfig
+  //       )
+  //       .subscribe((_teams) => {
+  //         const userTeams = _teams;
+  //         const index = userTeams.findIndex((e) => e.name === '#');
+  //         if (index >= 0) {
+  //           userTeams.splice(index, 1);
+  //         }
+  //         self.userTeams = [...userTeams];
+  //         const otherTeams = self.allTeams.filter((team) =>
+  //           self.userTeams.every((uTeam) => uTeam._id !== team._id)
+  //         );
+  //         const teamSortFn = (a, b) => {
+  //           return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+  //         };
+  //         self.toggleGroups = [
+  //           ...[...self.userTeams].sort(teamSortFn).map((team) => ({
+  //             _id: team._id,
+  //             name: team.name,
+  //             userCount: team.users?.length || 0,
+  //             checked: true,
+  //           })),
+  //           ...otherTeams.sort(teamSortFn).map((team) => ({
+  //             _id: team._id,
+  //             name: team.name,
+  //             userCount: team.users?.length || 0,
+  //             checked: false,
+  //           })),
+  //         ];
+  //       });
+  //   }
+  // }
 
   onGroupToggle(group: any, selected: boolean) {
     group.loading = true;
@@ -908,7 +908,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
         .subscribe(
           () => {
             this.ts.success('User has been added to group successfully');
-            this.getUserTeam();
+            // this.getUserTeam();
           },
           (err) => {
             group.loading = false;
@@ -931,7 +931,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
             this.ts.success(
               `${group.name} Group has been removed for user ${this.user.basicDetails.name}`
             );
-            this.getUserTeam();
+            // this.getUserTeam();
           },
           (err) => {
             group.loading = false;
