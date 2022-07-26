@@ -63,6 +63,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   serviceRecordCounts: Array<any>;
   serviceYaml: any;
   deploymentYaml: any;
+  toggleImportWizard: boolean;
   constructor(
     public commonService: CommonService,
     private appService: AppService,
@@ -312,7 +313,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
           );
         }
       },
-      (dismiss) => {}
+      (dismiss) => { }
     );
   }
 
@@ -799,7 +800,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             );
         }
       },
-      (dismiss) => {}
+      (dismiss) => { }
     );
   }
 
@@ -841,7 +842,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             );
         }
       },
-      (dismiss) => {}
+      (dismiss) => { }
     );
   }
 

@@ -15,6 +15,7 @@ import { LoadingPlaceholderModule } from 'src/app/utils/loading-placeholder/load
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { CheckboxBtnModule } from 'src/app/utils/checkbox-btn/checkbox-btn.module';
+import { ServiceImportWizardModule } from 'src/app/utils/service-import-wizard/service-import-wizard.module';
 
 
 const routes = [
@@ -35,7 +36,8 @@ const routes = [
         LoadingPlaceholderModule,
         AutoFocusModule,
         ClickOutsideModule,
-        CheckboxBtnModule
+        CheckboxBtnModule,
+        ServiceImportWizardModule
     ],
     exports: [
         RouterModule

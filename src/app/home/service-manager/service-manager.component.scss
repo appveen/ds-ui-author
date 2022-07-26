@@ -5,6 +5,7 @@
   min-height: 50px;
   max-height: 50px;
 }
+
 .options {
   min-height: 50px;
   max-height: 50px;
@@ -21,36 +22,45 @@
   overflow: hidden;
   height: 200px;
   border-radius: 10px;
+
   .card-title,
-  .draft-options{
+  .draft-options {
     span {
       vertical-align: middle;
     }
+
     .status {
       font-size: 32px;
       line-height: 0;
       vertical-align: middle;
+
       &.active {
         color: $green;
       }
+
       &.pending {
         color: $orange;
       }
+
       &.maintenance {
         color: $light;
       }
+
       &.stopped {
         color: $red;
       }
+
       &.draft {
         color: $accent;
       }
+
       .symbol {
         margin-top: 11px;
         display: inline-block;
         height: 20px;
         width: 20px;
       }
+
       .fa {
         font-size: 12px;
         margin: 0;
@@ -59,25 +69,30 @@
         line-height: 20px;
       }
     }
+
     .name {
       width: 130px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
+
     .version {
       font-size: 12px;
     }
+
     [class^="odp-"],
     [class*=" odp-"] {
       font-size: 32px;
       line-height: 0;
     }
   }
+
   .card-body {
     span {
       vertical-align: middle;
     }
+
     [class^="odp-"],
     [class*=" odp-"] {
       font-size: 14px;
@@ -85,6 +100,7 @@
       margin-right: 5px;
     }
   }
+
   &.add-card {
     .circle {
       width: 75px;
@@ -92,12 +108,14 @@
       border-radius: 100%;
     }
   }
+
   .draft-options {
     width: 230px;
     height: 200px;
     top: -200px;
     z-index: 1050;
     transition: 0.25s;
+
     &.show {
       top: 0;
     }
@@ -109,19 +127,24 @@
     bottom: 0 !important;
     width: 100%;
   }
+
   &.some-manage {
     bottom: -34px;
   }
+
   &.has-deploy {
     bottom: -104px;
+
     &.some-manage {
       bottom: -68px;
     }
   }
+
   position: absolute;
   bottom: -68px;
   border-top: 1px solid #ccc;
   transition: 0.25s;
+
   .toggler {
     padding: 0px;
     margin: 0 auto;
@@ -137,10 +160,12 @@
     background: #fff;
     box-shadow: 0px 0px 4px rgba(#000, 0.16);
     border-radius: 10px;
+
     &:hover {
       cursor: pointer;
       box-shadow: none;
     }
+
     .fa {
       transition: 0.25s;
       position: absolute;
@@ -148,17 +173,21 @@
       left: 34%;
     }
   }
+
   .button {
     .icon {
       width: 20px;
       display: inline-block;
     }
+
     &:hover {
       text-shadow: 0px 0px 2px rgba(#000, 0.16);
     }
   }
+
   &.active {
     bottom: 0;
+
     .toggler {
       .fa {
         margin-top: 0px;
@@ -167,10 +196,12 @@
       }
     }
   }
+
   &:focus {
     outline: none;
   }
-  & > div:focus {
+
+  &>div:focus {
     outline: none;
   }
 }
@@ -178,11 +209,13 @@
 .button-grid1 {
   border-top: 1px solid #ccc;
   transition: 0.25s;
+
   .button {
     .icon {
       width: 20px;
       display: inline-block;
     }
+
     &:hover {
       text-shadow: 0px 0px 2px rgba(#000, 0.16);
     }
@@ -193,6 +226,7 @@
   label {
     min-width: 100px;
   }
+
   .icon-wrapper {
     min-width: 32px;
     max-width: 32px;
@@ -200,6 +234,7 @@
     max-height: 32px;
     background: rgba($create, 0.2);
   }
+
   #description {
     resize: none;
   }
@@ -211,6 +246,28 @@
     right: 5px;
   }
 }
+
 .sup-top {
-  top:0px;
+  top: 0px;
+}
+
+
+
+.overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba($color: #000000, $alpha: 0.6);
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.wizard-window {
+  position: fixed;
+  width: calc(100vw - 40%);
+  height: calc(100vh - 40%);
+  top: 20%;
+  left: 20%;
+  z-index: 1;
 }
