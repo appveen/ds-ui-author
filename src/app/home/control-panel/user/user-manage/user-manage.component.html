@@ -1,22 +1,25 @@
 <div class="settings">
-  <i class="fa fa-cog" style="margin-right: 5px"></i>
-  <label style="margin-right: 10px">Profile Settings</label>
-  <i
-    class="fa-point fa"
-    [ngClass]="{
-      'fa-chevron-down': !showSettings,
-      'fa-chevron-up': showSettings
-    }"
-    (click)="showSettings = !showSettings"
-  ></i>
+  <div class="hover" (click)="showSettings = !showSettings">
+    <i class="fa fa-cog" style="margin-right: 5px"></i>
+    <label style="margin-right: 10px">Profile Settings</label>
+    <i
+      class="fa-point fa"
+      [ngClass]="{
+        'fa-chevron-down': !showSettings,
+        'fa-chevron-up': showSettings
+      }"
+    ></i>
+  </div>
   <div class="popover" *ngIf="showSettings">
     <span
+      id="closesession"
       (click)="closeAllSessions(user)"
       class="popover-options"
       *ngIf="!isThisUser(user) && hasPermission('PMUA')"
       >End Session</span
     >
     <span
+      id="removeaccess"
       (click)="isAppAdmin ? removeAdminAccess() : makeAppAdmin()"
       class="popover-options"
       *ngIf="isElevatedUser && hasPermission('PMUG')"
@@ -25,6 +28,7 @@
     >
     <span
       class="popover-options"
+      id="resetpassowrd"
       (click)="resetPassword()"
       *ngIf="
         showResetPassword &&
@@ -35,6 +39,7 @@
       >Reset Password</span
     >
     <span
+      id="removefromapp"
       class="popover-options"
       [ngClass]="{
         'disable-option': isThisUser(user)

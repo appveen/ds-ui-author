@@ -23,12 +23,18 @@
   <div class="mt-2" style="float: right">
     <button
       type="button"
-      class="btn btn-secondary mr-4"
+      class="btn btn-outline-primary mr-4"
       (click)="closeDialog()"
+      id="closedialog"
     >
       Cancel
     </button>
-    <button type="button" class="btn btn-primary" (click)="addGroups()">
+    <button
+      id="addgroup"
+      type="button"
+      class="btn btn-primary"
+      (click)="addGroups()"
+    >
       Add
     </button>
   </div>

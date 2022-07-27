@@ -7,8 +7,8 @@
 }
 
 .options {
-  min-height: 50px;
-  max-height: 50px;
+  min-height: 100px;
+  padding: 40px;
 }
 
 .fill-empty-space {
@@ -252,7 +252,9 @@
 }
 
 .users{
-  overflow-y: auto; max-height: inherit
+  overflow-y: auto; max-height: inherit;
+  padding: 20px 0 20px 20px
+
 }
 
 .list{
@@ -376,8 +378,7 @@
 
 .fa-plus-circle {
   color: $primary;
-  margin-right: 10px;
- 
+  margin-right: 5px;
 }
 
 .add-attribute{
