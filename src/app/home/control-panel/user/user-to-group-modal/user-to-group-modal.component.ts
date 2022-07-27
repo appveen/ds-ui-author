@@ -52,7 +52,7 @@ export class UserToGroupModalComponent implements OnInit {
       {
         headerName: '',
         field: '',
-        width: 40,
+        width: 50,
         headerCheckboxSelection: true,
         checkboxSelection: true,
         headerCheckboxSelectionFilteredOnly: false,
@@ -60,11 +60,12 @@ export class UserToGroupModalComponent implements OnInit {
       {
         headerName: 'NAME',
         field: 'name',
+        width: 300,
       },
       {
         headerName: 'MEMBERS',
         field: 'users',
-        width: 100,
+        width: 150,
         valueFormatter: (params) => {
           return params?.value?.length || 0;
         },

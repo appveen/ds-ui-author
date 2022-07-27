@@ -35,11 +35,13 @@ import * as _ from 'lodash';
 import { MatDialog } from '@angular/material/dialog';
 import { UserToGroupModalComponent } from './user-to-group-modal/user-to-group-modal.component';
 import { UserGridAppsRendererComponent } from './user-grid-apps.component ';
+import { FilterPipe } from 'src/app/utils/pipes/filter.pipe';
 
 @Component({
   selector: 'odp-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
+  providers: [FilterPipe],
 })
 export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('agGrid') agGrid: AgGridAngular;
@@ -103,6 +105,9 @@ export class UserComponent implements OnInit, OnDestroy {
   showTable: boolean = false;
   private context;
   newGroupModalRef: NgbModalRef;
+  searchTerm: string = '';
+  search: boolean = false;
+  ogUsersList: any;
 
   constructor(
     private fb: FormBuilder,
@@ -111,7 +116,8 @@ export class UserComponent implements OnInit, OnDestroy {
     private ts: ToastrService,
     private appService: AppService,
     private sessionService: SessionService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private userFilter: FilterPipe
   ) {
     this.context = { componentParent: this };
     this.showUsrManage = true;
@@ -216,6 +222,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.showLazyLoader = true;
     this.getUserList().subscribe((users) => {
       this.userList = users;
+      this.ogUsersList = users;
       this.selectedUser = users[0];
       this.showDetails(users[0]);
       this.showLazyLoader = false;
@@ -950,23 +957,23 @@ export class UserComponent implements OnInit, OnDestroy {
     this.updateBreadCrumb(this.selectedUser?.basicDetails?.name || '');
   }
 
-  search(event) {
-    if (
-      !this.searchForm.value.searchTerm ||
-      this.searchForm.value.searchTerm.trim() === ''
-    ) {
-      this.apiConfig.filter = {
-        bot: false,
-      };
-    } else {
-      this.apiConfig.filter = {
-        username: '/' + this.searchForm.value.searchTerm + '/',
-        'basicDetails.name': '/' + this.searchForm.value.searchTerm + '/',
-        bot: false,
-      };
-    }
-    this.agGrid.api.purgeInfiniteCache();
-  }
+  // search(event) {
+  //   if (
+  //     !this.searchForm.value.searchTerm ||
+  //     this.searchForm.value.searchTerm.trim() === ''
+  //   ) {
+  //     this.apiConfig.filter = {
+  //       bot: false,
+  //     };
+  //   } else {
+  //     this.apiConfig.filter = {
+  //       username: '/' + this.searchForm.value.searchTerm + '/',
+  //       'basicDetails.name': '/' + this.searchForm.value.searchTerm + '/',
+  //       bot: false,
+  //     };
+  //   }
+  //   this.agGrid.api.purgeInfiniteCache();
+  // }
 
   canEdit(user: UserDetails) {
     if (
@@ -1132,16 +1139,18 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   formatLastLogin(timestamp, isDetails = false) {
-    if (isDetails) {
-      return moment(timestamp).format('hh:mm A , DD/MM/YYYY');
-    } else {
-      if (
-        moment(timestamp).format('DD/MM/YYYY') ===
-        moment(new Date()).format('DD/MM/YYYY')
-      ) {
-        return moment(timestamp).format('hh:mm A');
+    if (timestamp) {
+      if (isDetails) {
+        return moment(timestamp).format('hh:mm A , DD/MM/YYYY');
       } else {
-        return moment(timestamp).format('DD/MM/YYYY');
+        if (
+          moment(timestamp).format('DD/MM/YYYY') ===
+          moment(new Date()).format('DD/MM/YYYY')
+        ) {
+          return moment(timestamp).format('hh:mm A');
+        } else {
+          return moment(timestamp).format('DD/MM/YYYY');
+        }
       }
     }
   }
@@ -1155,8 +1164,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.isDataLoading = true;
       this.details = user;
       this.fetchUserGroups();
-    }
-    {
+    } else {
       this.details = user;
     }
 
@@ -1389,6 +1397,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.isDataLoading = true;
           this.getUserList().subscribe((users) => {
             this.userList = users;
+            this.ogUsersList = users;
             this.selectedUser = users.find(
               (user) => user._id === this.details._id
             );
@@ -1466,6 +1475,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.isDataLoading = true;
           this.getUserList().subscribe((users) => {
             this.userList = users;
+            this.ogUsersList = users;
             this.selectedUser = users.find(
               (user) => user._id === this.details._id
             );
@@ -1529,5 +1539,28 @@ export class UserComponent implements OnInit, OnDestroy {
         this.fetchUserGroups();
       }
     });
+  }
+
+  enterToSelect(event) {
+    if (event === 'reset') {
+      this.searchTerm = '';
+      this.userList = this.ogUsersList;
+      this.details = {};
+      this.showDetails(this.ogUsersList[0]);
+    } else {
+      const self = this;
+      if (self.searchTerm) {
+        const returnedUsers = self.userFilter.transform(
+          self.ogUsersList,
+          self.searchTerm
+        );
+        self.userList = returnedUsers;
+        if (returnedUsers.length > 0) {
+          self.showDetails(returnedUsers[0]);
+        } else {
+          self.details = {};
+        }
+      }
+    }
   }
 }

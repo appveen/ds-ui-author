@@ -328,9 +328,14 @@ export class AppListComponent implements OnInit, OnDestroy {
   }
 
   appColor() {
-    let x = Math.floor(Math.random() * 256);
-    let y = Math.floor(Math.random() * 256);
-    let z = Math.floor(Math.random() * 256);
-    return 'rgb(' + x + ',' + y + ',' + z + ')';
+    const colorArray = [
+      '#5CA469',
+      '#3466A1',
+      '#A64A46',
+      '#D0A051',
+      '#959A91',
+      '#E76779',
+    ];
+    return _.sample(colorArray);
   }
 }

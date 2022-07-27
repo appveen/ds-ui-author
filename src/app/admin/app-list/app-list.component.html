@@ -29,7 +29,7 @@
       *ngIf="isSuperadmin"
     >
       <span class="fa fa-plus mr-2"></span>
-      <span class="text">Add New App</span>
+      <span class="text">Add App</span>
     </button>
   </div>
   <div class="apps-container d-flex flex-wrap">
@@ -62,10 +62,13 @@
           *ngIf="isSuperadmin"
         >
           <div class="ml-3 hover ignore-outside">
-            <span class="fas fa-ellipsis-h text-primary ignore-outside"></span>
+            <span
+              class="fas fa-trash text-primary ignore-outside"
+              (click)="deleteApp(app, appIndex)"
+            ></span>
           </div>
         </div>
-        <div
+        <!-- <div
           class="position-absolute hover app-options p-2 bg-white"
           (outside)="appOptions[appIndex] = false"
           [ngClass]="{
@@ -79,7 +82,7 @@
           <div class="text-primary" (click)="deleteApp(app, appIndex)">
             Delete App
           </div>
-        </div>
+        </div> -->
         <div
           class="settings-wrapper d-flex flex-column align-items-center px-4 pt-2 position-relative"
         >
