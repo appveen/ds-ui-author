@@ -1212,6 +1212,9 @@ export class UserComponent implements OnInit, OnDestroy {
       {
         headerName: '',
         cellRenderer: 'actionRenderer',
+        cellRendererParams: {
+          user: this.details,
+        },
       },
     ];
 
@@ -1234,6 +1237,9 @@ export class UserComponent implements OnInit, OnDestroy {
       {
         headerName: '',
         cellRenderer: 'actionRenderer',
+        cellRendererParams: {
+          user: this.details,
+        },
       },
     ];
 
@@ -1341,24 +1347,22 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   showAttributeSide(data = {}) {
-    // this.attributesForm.reset();
     this.attributesForm = this.fb.group({
       key: [''],
       type: ['String', [Validators.required]],
       value: ['', [Validators.required]],
       label: ['', [Validators.required]],
     });
-    // this.attributesForm
-    //   .get('label')
-    //   .valueChanges.pipe(filter(() => !this.editMode))
-    //   .subscribe((val: any) => {
-    //     this.attributesForm
-    //       .get('key')
-    //       .patchValue(this.appService.toCamelCase(val));
-    //   });
+    this.attributesForm
+      .get('label')
+      .valueChanges.pipe(filter(() => !this.editMode))
+      .subscribe((val: any) => {
+        this.attributesForm
+          .get('key')
+          .patchValue(this.appService.toCamelCase(val));
+      });
     if (!_.isEmpty(data)) {
       this.editMode = true;
-      this.attributesForm.setValue({ key: data['label'], ...data });
       this.attributesForm.markAsUntouched();
     }
     this.showAddAttribute = true;
@@ -1372,9 +1376,8 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   addAttribute() {
-    const { key, ...rest } = this.attributesForm.getRawValue();
+    const { key, ...rest } = this.attributesForm.value;
     this.details.attributes[key] = this.appService.cloneObject(rest);
-    delete this.details.attributesData;
     this.commonService
       .put(
         'user',
@@ -1448,11 +1451,10 @@ export class UserComponent implements OnInit, OnDestroy {
   editAttribute(data) {
     this.showAttributeSide(data);
   }
+
   deleteAttribute(data) {
-    this.details['attributes'] = this.details.attributes.filter(
-      (attr) => attr.key !== data.key
-    );
-    delete this.details.attributesData;
+    const key = Object.keys(data)[0];
+    delete this.details.attributes[key];
     this.commonService
       .put(
         'user',
