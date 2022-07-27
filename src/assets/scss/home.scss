@@ -249,8 +249,12 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 
+.font-xxl {
+  font-size: 24px;
+}
+
 .font-xl {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .font-lg {
@@ -295,6 +299,12 @@ input[type="number"]::-webkit-outer-spin-button {
   &.accent {
     input:checked ~ .slider {
       background: $accent !important;
+    }
+  }
+
+  &.success {
+    input:checked ~ .slider {
+      background: $success !important;
     }
   }
 }
@@ -722,10 +732,9 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
     padding: 0;
     display: inline-block;
-    border: 1px solid #ccc;
-    width: 30px;
-    height: 12px;
-    border-radius: 6px;
+    width: 40px;
+    height: 24px;
+    border-radius: 12px;
     background: #ccc;
     transition: 0.25s;
   }
@@ -738,9 +747,8 @@ input[type="number"]::-webkit-outer-spin-button {
     height: 18px;
     border-radius: 9px;
     background: #fff;
-    border: 1px solid $border;
-    left: 0px;
-    top: 1px;
+    left: 3px;
+    top: 3px;
     transition: 0.25s;
     position: absolute;
   }
@@ -750,7 +758,7 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 
   input:checked ~ .toggler {
-    left: 12px;
+    left: 20px;
   }
 
   .switch {

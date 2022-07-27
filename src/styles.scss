@@ -5,10 +5,9 @@
 @import "~ag-grid-community/src/styles/ag-grid.scss";
 @import "~ag-grid-community/src/styles/ag-theme-balham/sass/ag-theme-balham-mixin";
 
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@import '~@angular/material/theming';
+@import "~@angular/material/theming";
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -27,10 +26,15 @@ $odp-ui-author-warn: mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
-        accent: $odp-ui-author-accent,
-        warn: $odp-ui-author-warn,
-      )));
+$odp-ui-author-theme: mat-light-theme(
+  (
+    color: (
+      primary: $odp-ui-author-primary,
+      accent: $odp-ui-author-accent,
+      warn: $odp-ui-author-warn,
+    ),
+  )
+);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -115,8 +119,16 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   font-size: 13px;
 }
 
+.font-11 {
+  font-size: 11px;
+}
+
 .font-xs {
   font-size: 10px;
+}
+
+.fw-600 {
+  font-weight: 600 !important;
 }
 
 .k8s-icon {
@@ -212,7 +224,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .add-secret-modal {
-
   .modal-content,
   .modal-dialog {
     min-width: 360px !important;
@@ -239,7 +250,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 // }
 
 .new-user-modal {
-
   .modal-content,
   .modal-dialog {
     min-width: 560px;
@@ -248,7 +258,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .flow-modal-class {
-
   .modal-content,
   .modal-dialog {
     min-height: calc(100vh - 60px);
@@ -260,7 +269,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .service-exception-modal {
-
   .modal-content,
   .modal-dialog {
     min-width: 680px;
@@ -297,7 +305,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .download-agent-modal {
-
   .modal-content,
   .modal-dialog {
     min-width: 600px !important;
@@ -310,7 +317,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .custom-format-modal {
-
   .modal-content,
   .modal-dialog {
     min-width: 90vw;
@@ -321,7 +327,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .conflict-modal {
-
   .modal-content,
   .modal-dialog {
     min-width: 824px;
@@ -341,7 +346,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .search-user-modal {
-
   .modal-content,
   .modal-dialog {
     min-width: 560px;
@@ -350,8 +354,8 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .btn:not(.btn-link) {
-  min-height: 30px;
-  max-height: 30px;
+  min-height: 32px;
+  max-height: 32px;
 
   &.btn-sm {
     min-height: 24px;
@@ -379,6 +383,10 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   bottom: 6px;
   right: 8px;
   font-size: 10px;
+}
+
+.page-padding {
+  padding: 32px !important;
 }
 
 // // Custom scrollbar
@@ -804,7 +812,7 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .focus-accent:focus {
-  border-color: $accent  !important;
+  border-color: $accent !important;
   box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
 }
 
@@ -823,7 +831,7 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
   .form-control:not(.is-invalid):focus,
   .custom-select:not(.is-invalid):focus {
-    border-color: $accent  !important;
+    border-color: $accent !important;
     box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
   }
 
@@ -879,7 +887,7 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .custom-control-input {
-  &:not(:disabled):active~.custom-control-label {
+  &:not(:disabled):active ~ .custom-control-label {
     &.accent {
       &::before {
         color: $accent;
@@ -890,7 +898,7 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   }
 
   &:checked {
-    &:disabled~.custom-control-label {
+    &:disabled ~ .custom-control-label {
       &.accent {
         &::before {
           background-color: rgba($accent, 0.5);
@@ -899,7 +907,7 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
     }
   }
 
-  &~.custom-control-label {
+  & ~ .custom-control-label {
     &.accent {
       &::before {
         border-radius: 2px;
@@ -907,7 +915,7 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
     }
   }
 
-  &:checked~.custom-control-label {
+  &:checked ~ .custom-control-label {
     &.accent {
       &::before {
         background-color: $accent;
@@ -921,7 +929,7 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
     }
   }
 
-  &:focus~.custom-control-label {
+  &:focus ~ .custom-control-label {
     &.accent {
       &::before {
         box-shadow: 0 0 0 0.2rem rgba($accent, 0.25);
@@ -949,8 +957,11 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
 /*---- AG-GRID START ----*/
 .ag-theme-balham {
-
-  @include ag-theme-balham((balham-active-color: $primary ));
+  @include ag-theme-balham(
+    (
+      balham-active-color: $primary,
+    )
+  );
   font-family: "Lato";
   font-size: 13px;
 
@@ -979,10 +990,9 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
 .custom-style {
   .ag-header {
-    background: $data-grid-header  !important;
+    background: $data-grid-header !important;
   }
 }
-
 
 .blink {
   animation-name: blink;
