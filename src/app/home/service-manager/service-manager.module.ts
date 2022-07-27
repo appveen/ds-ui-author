@@ -17,6 +17,7 @@ import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click
 import { CheckboxBtnModule } from 'src/app/utils/checkbox-btn/checkbox-btn.module';
 import { DataManagementComponent } from './data-management/data-management.component';
 import { FormsModule } from '@angular/forms';
+import { ServiceImportWizardModule } from 'src/app/utils/service-import-wizard/service-import-wizard.module';
 
 
 const routes = [
@@ -40,7 +41,8 @@ const routes = [
         LoadingPlaceholderModule,
         AutoFocusModule,
         ClickOutsideModule,
-        CheckboxBtnModule
+        CheckboxBtnModule,
+        ServiceImportWizardModule
     ],
     exports: [
         RouterModule

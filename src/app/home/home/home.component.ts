@@ -1,13 +1,4 @@
 import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  OnDestroy,
-  TemplateRef,
-} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
   trigger,
   transition,
   query,
@@ -17,20 +8,25 @@ import {
   keyframes,
   state,
 } from '@angular/animations';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-
-import { environment } from 'src/environments/environment';
 import {
-  CommonService,
-  GetOptions,
-} from 'src/app/utils/services/common.service';
-import { AppService } from 'src/app/utils/services/app.service';
-import { App } from 'src/app/utils/interfaces/app';
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '../../../environments/environment';
+import { App } from '../../models/app';
+import { AppService } from '../../utils/services/app.service';
+import { CommonService } from '../../utils/services/common.service';
 
 @Component({
-  selector: 'odp-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss'],
+  selector: 'odp-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
   animations: [
     trigger('userProfile', [
       transition('void=>*', [
@@ -101,7 +97,7 @@ import { App } from 'src/app/utils/interfaces/app';
     ]),
   ],
 })
-export class AdminComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('searchAppInput', { static: false }) searchAppInput: ElementRef;
   @ViewChild('downloadAgentModalTemplate', { static: false })
   downloadAgentModalTemplate: TemplateRef<HTMLElement>;
@@ -136,7 +132,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     self.version = environment.version;
     self.subscriptions = {};
     self.showSideNav = true;
-    self.selectedApp = {};
     self.roleList = [];
     self.agentConfig = {};
   }
@@ -144,39 +139,14 @@ export class AdminComponent implements OnInit, OnDestroy {
     const self = this;
     self.agentConfig.arch = 'amd64';
     self.agentConfig.os = 'windows';
-    // if (!self.commonService.userDetails.isSuperAdmin) {
-    //   self.router.navigate(['/app/', self.commonService.appList[0]._id, 'sm']);
-    //   return;
-    // }
 
-    self.route.params.subscribe((params) => {
-      if (params.app) {
-        const tempApp = self.commonService.appList.find(
-          (d) => d._id === params.app
-        );
-        if (tempApp) {
-          self.commonService.app = tempApp;
-          self.selectedApp = tempApp;
-          self.commonService.appChange.emit(params.app);
-          self.init();
-        } else {
-          self.router.navigate([
-            '/app/',
-            self.commonService.appList[0]._id,
-            'sm',
-          ]);
-        }
-      } else {
-        self.router.navigate(['/admin/']);
-      }
-    });
+    //   self.
     self.addBlur = self.commonService.addBlur;
     self.commonService.apiCalls.componentLoading = false;
-    self.username = self.commonService.userDetails.username;
-    if (
-      self.commonService.userDetails.basicDetails &&
-      self.commonService.userDetails.basicDetails.name
-    ) {
+    self.username =
+      self.commonService.userDetails?.username ||
+      JSON.parse(localStorage.getItem('ba-user')).username;
+    if (self.commonService.userDetails?.basicDetails?.name) {
       self.name = self.commonService.userDetails.basicDetails.name;
     }
     self.appService.toggleSideNav.subscribe((val) => {
@@ -186,11 +156,9 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   init() {
     const self = this;
-    const options2: GetOptions = {
-      select: 'name app',
-      filter: {},
-    };
-    self.isSuperAdmin = self.commonService.userDetails.isSuperAdmin;
+    self.isSuperAdmin =
+      self.commonService.userDetails?.isSuperAdmin ||
+      JSON.parse(localStorage.getItem('ba-user')).isSuperAdmin;
     self.commonService.connectSocket();
   }
 
@@ -239,11 +207,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   hasPermission(type: string) {
     const self = this;
     return self.commonService.hasPermission(type);
-  }
-
-  loadAdminPage() {
-    const self = this;
-    self.router.navigate(['/admin/']);
   }
 
   onAppChange(app: App) {
@@ -321,10 +284,13 @@ export class AdminComponent implements OnInit, OnDestroy {
   get authType() {
     const self = this;
     if (
-      self.commonService.userDetails.auth &&
-      self.commonService.userDetails.auth.authType
+      self.commonService.userDetails?.auth?.authType ||
+      JSON.parse(localStorage.getItem('ba-user')).auth?.authType
     ) {
-      return self.commonService.userDetails.auth.authType;
+      return (
+        self.commonService.userDetails?.auth?.authType ||
+        JSON.parse(localStorage.getItem('ba-user')).auth.authType
+      );
     } else {
       return null;
     }
@@ -332,6 +298,19 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   get lastLogin() {
     const self = this;
-    return self.commonService.userDetails.lastLogin;
+    return (
+      self.commonService.userDetails?.lastLogin ||
+      JSON.parse(localStorage.getItem('ba-user')).lastLogin
+    );
   }
 }
+
+// })
+// export class HomeComponent implements OnInit {
+
+//   constructor() { }
+
+//   ngOnInit() {
+//   }
+
+// }

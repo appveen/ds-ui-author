@@ -33,6 +33,12 @@ import { SortablejsModule } from 'ngx-sortablejs';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { HomeComponent } from './home/home/home.component';
+import { DateFormatModule } from './utils/date-format/date-format.module';
+import { AuthUsersModule } from './auth-users/auth-users.module';
+import { ChangePasswordModule } from './utils/change-password/change-password.module';
+import { ClickOutsideModule } from './utils/directives/click-outside/click-outside.module';
+import { AdminModule } from './admin/admin.module';
 
 // enableProdMode();
 
@@ -42,6 +48,7 @@ import { MatSelectModule } from '@angular/material/select';
     LoginComponent,
     NotFoundComponent,
     AutoLogoutDirective,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,21 +65,25 @@ import { MatSelectModule } from '@angular/material/select';
       positionClass: 'toast-top-center',
       maxOpened: 1,
       autoDismiss: true,
-      preventDuplicates: true
+      preventDuplicates: true,
     }),
     LoadingModule,
     ShortcutModule,
     IconsModule,
-    AutoFocusModule,
     SortablejsModule.forRoot({ animation: 150 }),
     MatChipsModule,
     MatFormFieldModule,
-    MatSelectModule
+    MatSelectModule,
+    DateFormatModule,
+    AuthUsersModule,
+    ClickOutsideModule,
+    AdminModule,
+    ChangePasswordModule,
   ],
   providers: [
     {
       provide: ErrorHandler,
-      useClass: ErrorService
+      useClass: ErrorService,
     },
     CommonService,
     AppService,
@@ -89,15 +100,11 @@ import { MatSelectModule } from '@angular/material/select';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ReqResInterceptorService,
-      multi: true
-    }
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-
 export class AppModule {
-
-  constructor() {
-
-  }
+  constructor() {}
 }
