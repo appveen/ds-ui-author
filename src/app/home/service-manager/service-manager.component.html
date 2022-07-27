@@ -18,7 +18,7 @@
         <button type="button" class="btn btn-dark" (click)="toggleImportWizard=true">
           <span class="fa fa-upload"></span>
         </button>
-        <button type="button" class="add-new btn-min-width btn btn-primary" (click)="newService()"
+        <button type="button" id="addNewDS" class="add-new btn-min-width btn btn-primary" (click)="newService()"
           *ngIf="hasCreatePermission('SM')">
           <span class="fa fa-plus mr-2"></span>
           <span class="text">Data Service</span>
