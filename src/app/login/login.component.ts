@@ -231,7 +231,7 @@ export class LoginComponent
               self.loader = false;
               if (data.status === 200 && !self.commonService.noAccess) {
                 self.commonService.apiCalls.componentLoading = true;
-                self.router.navigate(['/app']);
+                self.router.navigate(['/home']);
               } else {
                 self.message = "You don't have enough permissions";
                 self.commonService.logout(true);

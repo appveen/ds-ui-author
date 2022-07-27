@@ -14,11 +14,16 @@
         [routerLink]="['settings']" *ngIf="isAppAdmin || isSuperAdmin">
         <i class="fa fa-md fa-cog" aria-hidden="true"></i>
       </button>
-
-      <button class="add-new btn-min-width btn btn-primary" (click)="newService()" *ngIf="hasCreatePermission('SM')">
-        <span class="fa fa-plus mr-2"></span>
-        <span class="fs-13 fw-600">New Data Service</span>
-      </button>
+      <div class="btn-group">
+        <button type="button" class="btn btn-dark" (click)="toggleImportWizard=true">
+          <span class="fa fa-upload"></span>
+        </button>
+        <button type="button" class="add-new btn-min-width btn btn-primary" (click)="newService()"
+          *ngIf="hasCreatePermission('SM')">
+          <span class="fa fa-plus mr-2"></span>
+          <span class="text">Data Service</span>
+        </button>
+      </div>
     </div>
   </div>
   <div class="d-flex flex-column w-100">
@@ -527,3 +532,8 @@
     </div>
   </div>
 </ng-template>
+
+<div *ngIf="toggleImportWizard" class="overlay"></div>
+<div *ngIf="toggleImportWizard" class="wizard-window bg-white rounded">
+  <odp-service-import-wizard (close)="toggleImportWizard=false"></odp-service-import-wizard>
+</div>

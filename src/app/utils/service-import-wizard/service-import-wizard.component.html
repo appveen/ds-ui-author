@@ -1,0 +1,82 @@
+<div class="header w-100 d-flex align-items-center justify-content-between p-3 border-bottom">
+    <h5 class="m-0">Import Data Services</h5>
+    <button type="button" class="btn btn-link" (click)="closeWindow()">Close</button>
+</div>
+<ng-container *ngIf="step==1">
+    <div class="content p-3 w-50 mx-auto clearfix">
+        <div class="form-group">
+            <label for="file">Select an XLS/XLSX file</label>
+            <div class="custom-file">
+                <input id="file" type="file" class="custom-file-input" name="file" (change)="onFileChange($event)">
+                <label for="file" class="custom-file-label">{{file && file.name ? file.name :'Choose File'}}</label>
+            </div>
+        </div>
+        <div *ngIf="!progress" class="mt-4 float-right">
+            <button type="button" class="btn btn-link mr-3" (click)="closeWindow()">Cancel</button>
+            <button type="button" class="btn btn-dark" (click)="uploadFile()" [disabled]="!file">Upload</button>
+        </div>
+        <div *ngIf="progress" class="mt-4">
+            <ngb-progressbar type="info" [value]="(progress.loaded/progress.total)*100" [striped]="true"
+                [animated]="true">
+            </ngb-progressbar>
+        </div>
+    </div>
+    <div class="">
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>Import ID</th>
+                    <th>File Name</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of fileUploads;let i=index">
+                    <td>
+                        <a href="#" (click)="$event.preventDefault();selectImport(item)">{{item._id}}</a>
+                    </td>
+                    <td>{{item.fileName}}</td>
+                    <td>{{item.status}}</td>
+                    <td>
+                        <button type="button" class="btn btn-link" (click)="clear(item._id)">Clear</button>
+                    </td>
+                </tr>
+                <tr *ngIf="fileUploads.length==0">
+                    <td colspan="4">No Imports</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ng-container>
+<div *ngIf="step==2" class="content p-4">
+    <p>
+        <span class="text-muted mr-2">Selected File:</span>
+        <span class="text-accent">{{selectedData.fileName}}</span>
+    </p>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Sheet Name</th>
+                <th>No Of Records</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of selectedData.result;let i=index">
+                <td>
+                    <input [ngModel]="isItemSelected(item.name)" (ngModelChange)="selectItem($event,item.name)"
+                        type="checkbox" name="item.name" [id]="'ID_'+i">
+                </td>
+                <td>{{item.name}}</td>
+                <td>{{item.count}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div *ngIf="!progress" class="mt-4 float-right">
+        <button type="button" class="btn btn-link mr-3" (click)="back()">Back</button>
+        <button type="button" class="btn btn-dark" (click)="startImport()" [disabled]="selectedSheets.length==0">
+            Start Import
+        </button>
+    </div>
+</div>
