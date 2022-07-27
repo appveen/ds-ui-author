@@ -170,6 +170,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         self.router.navigate(['/admin/']);
       }
     });
+    self.isSuperAdmin = self.commonService.userDetails.isSuperAdmin;
     self.addBlur = self.commonService.addBlur;
     self.commonService.apiCalls.componentLoading = false;
     self.username = self.commonService.userDetails.username;
@@ -190,7 +191,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       select: 'name app',
       filter: {},
     };
-    self.isSuperAdmin = self.commonService.userDetails.isSuperAdmin;
     self.commonService.connectSocket();
   }
 

@@ -3,7 +3,7 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 @font-face {
-  font-family: "Lato";
+  font-family: "Inter";
   src: url("../fonts/default/Lato-Regular.woff") format("woff"),
     /* Pretty Modern Browsers */ url("../fonts/default/Lato-Light.woff")
       format("woff"),
@@ -836,4 +836,27 @@ input[type="number"]::-webkit-outer-spin-button {
   background: $white;
   border: 1px solid $secondary;
   cursor: pointer;
+}
+
+.input-text{
+  padding: 10px;
+  gap: 40px;
+  width: 310px;
+  height: 40px;
+}
+
+.btn-secondary{
+background: #FFFFFF;
+box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.06);
+border-radius: 8px;
+width: 140px;
+height: 50px;
+color: $orange;
+}
+
+.btn-primary{
+border-radius: 8px;
+width: 140px;
+height: 50px;
+background: $orange;
 }

@@ -1,0 +1,82 @@
+@import 'src/assets/scss/bootstrap/_functions.scss';
+@import 'src/assets/scss/bootstrap/_variables.scss';
+
+
+
+.mat-dialog-container{
+    overflow: hidden !important;
+  }
+
+
+.title{
+    font-weight: 600;
+font-size: 20px;
+line-height: 24px;
+color: $headings;
+}
+
+
+.sub-title{
+    margin-top: 20px;
+    font-weight: 400;
+font-size: 14px;
+line-height: 20px;
+color: $sub-headings;
+}
+
+.grid{
+    height: 600px;
+    overflow-x: hidden; 
+    padding: 10px;
+}
+
+::ng-deep .ag-theme-balham{
+    font-family: "Inter";
+    font-size: 14px;
+  
+    .ag-root-wrapper{
+      border: 1px solid #ECECEC;
+      border-radius: 8px;
+    }
+  
+    .ag-row{
+      padding: 10px ;
+    }
+  
+    .ag-layout-normal{
+      overflow-x: hidden
+    }
+   
+  }
+  
+  ::ng-deep .ag-theme-balham .ag-header {
+    font-size: 11px;
+    color: $lightgrey;
+    .ag-header-container{
+      background-color: #FBFBFB;
+    }
+    
+  
+  }
+
+  ::ng-deep .ag-theme-balham {
+    .ag-checkbox  {
+        padding-bottom: 15px !important;
+      }
+
+      .ag-row-selected{
+        background-color: #fff;
+      }
+
+      .ag-ltr .ag-header-select-all{
+        padding-top: 15px;
+      }
+    .ag-checkbox-input-wrapper.ag-checked::after {
+    color: white !important;
+    background: $headings !important;
+    border-radius: 4px;
+  }
+}
+//   ::ng-deep .ag-theme-balham .ag-checkbox  {
+//     padding-bottom: 15px !important;
+//   }
