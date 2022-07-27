@@ -190,14 +190,14 @@
                                     <small class="text-muted role-control-right mb-3 mt-2">
                                         Data Will be fine grained based on the condition you provide here.
                                     </small>
-                                    <div *ngIf="hasConditions" class="d-flex align-items-center">
-                                        <!-- <div class="mode d-flex align-items-center mr-2"
+                                    <!-- <div *ngIf="hasConditions" class="d-flex align-items-center">
+                                        <div class="mode d-flex align-items-center mr-2"
                                             (click)="changeSelectedMode('Basic')">
                                             <odp-round-radio id="modeBasic"
                                                 (checkedChange)="changeSelectedMode('Basic')"
                                                 [checked]="selectedMode=='Basic'"></odp-round-radio>
                                             <label class="mb-0 ml-2" for="modeBasic">Basic</label>
-                                        </div> -->
+                                        </div>
                                         <div class="mode d-flex align-items-center mr-2"
                                             (click)="changeSelectedMode('Advance')">
                                             <odp-round-radio id="modeAdvance"
@@ -205,14 +205,14 @@
                                                 [checked]="selectedMode=='Advance'"></odp-round-radio>
                                             <label class="mb-0 ml-2" for="modeAdvance">Advance</label>
                                         </div>
-                                        <!-- <div class="mode d-flex align-items-center mr-2"
+                                        <div class="mode d-flex align-items-center mr-2"
                                             (click)="changeSelectedMode('Expert')">
                                             <odp-round-radio id="modeExpert"
                                                 (checkedChange)="changeSelectedMode('Expert')"
                                                 [checked]="selectedMode=='Expert'"></odp-round-radio>
                                             <label class="mb-0 ml-2" for="modeExpert">Expert</label>
-                                        </div> -->
-                                    </div>
+                                        </div>
+                                    </div> -->
                                 </div>
                             </div>
                             <ng-container *ngIf="hasConditions">

@@ -127,7 +127,8 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     self.selectedRole = self.roles[0];
     self.selectedRoleIndex = 0;
     if (self.selectedRole.rule && self.selectedRole.rule.length > 0) {
-      this.selectedMode = self.selectedRole.rule[0].type;
+      // this.selectedMode = self.selectedRole.rule[0].type;
+      this.selectedMode = 'Advance';
     }
     self.oldData = self.appService.cloneObject(self.role);
     self.fields = self.flattenPermission(self.role.fields);
@@ -245,11 +246,13 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     const self = this;
     self.selectedRole = role;
     self.selectedRoleIndex = index;
-    if (self.selectedRole.rule && self.selectedRole.rule.length > 0) {
-      this.selectedMode = self.selectedRole.rule[0].type;
-    } else {
-      this.selectedMode = 'Advance';
-    }
+    self.activeTab = 1;
+    // if (self.selectedRole.rule && self.selectedRole.rule.length > 0) {
+    //   this.selectedMode = self.selectedRole.rule[0].type;
+    // } else {
+    //   this.selectedMode = 'Advance';
+    // }
+    this.selectedMode = 'Advance';
     self.selectedRole.operations.forEach(item => {
       if (item.method === 'POST') {
         self.canCreateFlag = true;
@@ -472,7 +475,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
 
   get hasConditions() {
     const self = this;
-    if (self.selectedRole && self.selectedRole.rule && self.selectedRole.rule.length > 0) {
+    if (self.selectedRole && self.selectedRole.enableFilter) {
       return true;
     }
     return false;
@@ -484,6 +487,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
       return;
     }
     if (val) {
+      self.selectedRole.enableFilter = true;
       if (!self.selectedRole.rule) {
         self.selectedRole.rule = [];
       }
@@ -494,7 +498,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     } else {
       self.blockInvalidRole = {};
       self.blockInvalidRoleChange.emit(self.blockInvalidRole);
-      self.selectedRole.rule = [];
+      self.selectedRole.enableFilter = false;
     }
     self.updateRole();
   }
@@ -688,6 +692,7 @@ export interface RoleModel {
   viewRole?: boolean;
   skipReviewRole?: boolean;
   rule?: Array<Rule>;
+  enableFilter?: boolean;
 }
 
 export interface Rule {
