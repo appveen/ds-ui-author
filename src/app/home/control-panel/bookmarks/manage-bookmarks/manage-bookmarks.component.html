@@ -1,15 +1,24 @@
 <div class="bookmark-container" odpClickOutside (outside)="hideToggleManage()">
   <div class="d-flex align-items-center justify-content-between pt-4 ml-4">
     <div class="d-flex align-items-center">
-      <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
+      <span
+        class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2"
+      >
         <span class="ic-name"></span>
         <!-- <odp-partner-icon size="16" color="1CAD49" class="mt-1"></odp-partner-icon> -->
       </span>
-      <span class="font-weight-bold mb-1 text-muted" *ngIf="!_edit.id">Create New Bookmark</span>
-      <span class="font-weight-bold mb-1 text-muted" *ngIf="_edit.id">Edit Bookmark</span>
+      <span class="font-weight-bold mb-1 text-muted" *ngIf="!_edit.id"
+        >Create New Bookmark</span
+      >
+      <span class="font-weight-bold mb-1 text-muted" *ngIf="_edit.id"
+        >Edit Bookmark</span
+      >
       <!-- <span class="font-weight-bold mb-1 text-muted" *ngIf="_edit.id && !_edit.status">View Bookmark</span> -->
     </div>
-    <span class="fa fa-times text-muted hover mr-4" (click)="hideToggleManage()"></span>
+    <span
+      class="fa fa-times text-muted hover mr-4"
+      (click)="hideToggleManage()"
+    ></span>
   </div>
   <form class="w-100 pl-3 pr-4 bookmark-prop" [formGroup]="bookmarkForm">
     <label for="name" class="font-sm text-secondary mt-3">
@@ -18,10 +27,19 @@
     </label>
 
     <div class="input-group">
-      <div class="image-div bg-light border-top border-left border-bottom input-group-prepend align-items-center pl-2">
+      <div
+        class="image-div bg-light border-top border-left border-bottom input-group-prepend align-items-center pl-2"
+      >
         <span class="ic-name"></span>
       </div>
-      <input newPartnerName type="text" class="form-control" id="name" formControlName="name" placeholder="Name">
+      <input
+        newPartnerName
+        type="text"
+        class="form-control"
+        id="name"
+        formControlName="name"
+        placeholder="Name"
+      />
     </div>
     <label for="url" class="font-sm text-secondary mt-3">
       <span class="text">Target URL</span>
@@ -29,21 +47,53 @@
     </label>
     <div class="name-wrapper position-relative">
       <!-- <span *ngIf="!_edit.status">{{bookmarkForm.get('url').value}}</span> -->
-      <textarea #newPartnerTextarea class="form-control" id="url" rows="3" formControlName="url" placeholder="URL"></textarea>
-      <span class="fas fa-question-circle text-danger position-absolute error-icon" *ngIf="bookmarkForm.get('url').dirty && bookmarkForm.get('url').hasError('pattern')"
-        ngbTooltip="URL should be of format either http://&lt;hostname&gt;:&lt;port&gt;/&lt;path or https://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;" placement="left"></span>
+      <textarea
+        #newPartnerTextarea
+        class="form-control"
+        id="url"
+        rows="3"
+        formControlName="url"
+        placeholder="URL"
+      ></textarea>
+      <span
+        class="fas fa-question-circle text-danger position-absolute error-icon"
+        *ngIf="
+          bookmarkForm.get('url').dirty &&
+          bookmarkForm.get('url').hasError('pattern')
+        "
+        ngbTooltip="URL should be of format either http://&lt;hostname&gt;:&lt;port&gt;/&lt;path or https://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;"
+        placement="left"
+      ></span>
     </div>
     <div class="d-flex mt-2">
-      <label class="font-sm text-secondary ">Open in New Tab</label>
-      <label class="switch accent mb-0 ml-2 " for="options">
-        <input type="checkbox" value="NEW_TAB" [(ngModel)]="option" [ngModelOptions]="{standalone: true}" id="options">
+      <label class="font-sm text-secondary">Open in New Tab</label>
+      <label class="switch accent mb-0 ml-2" for="options">
+        <input
+          type="checkbox"
+          value="NEW_TAB"
+          [(ngModel)]="option"
+          [ngModelOptions]="{ standalone: true }"
+          id="options"
+        />
         <span class="slider"></span>
         <span class="toggler"></span>
-        <span class="ml-3">{{bookmarkForm.get('options').value=='NEW_TAB' ? 'Yes' : 'No'}}</span>
-        <span *ngIf="option" class="fa fa-exclamation-circle text-info1  ml-2  field-error-symbol font-lg" ngbTooltip="Link will open in new tab "
-          placement="bottom" container="body"></span>
-        <span *ngIf="!option" class="fa fa-exclamation-circle text-info1  ml-2  field-error-symbol font-lg" ngbTooltip="Link will open in iFrame, websites where embeded option has been disabled cannot be opened in iFrame "
-          placement="bottom" container="body"></span>
+        <span class="ml-3">{{
+          bookmarkForm.get('options').value == 'NEW_TAB' ? 'Yes' : 'No'
+        }}</span>
+        <span
+          *ngIf="option"
+          class="fa fa-exclamation-circle text-info1 ml-2 field-error-symbol font-lg"
+          ngbTooltip="Link will open in new tab "
+          placement="bottom"
+          container="body"
+        ></span>
+        <span
+          *ngIf="!option"
+          class="fa fa-exclamation-circle text-info1 ml-2 field-error-symbol font-lg"
+          ngbTooltip="Link will open in iFrame, websites where embeded option has been disabled cannot be opened in iFrame "
+          placement="bottom"
+          container="body"
+        ></span>
       </label>
       <!-- <span class="text d-flex ml-3" *ngIf="!_edit.status && bookmarkForm.get('options').value=='NEW_TAB'">
         <span class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
@@ -57,85 +107,143 @@
       </span> -->
     </div>
 
-
     <ng-container formGroupName="parameters">
       <div class="my-3">URL Parameters</div>
       <div class="d-flex mt-1">
         <label class="font-sm text-secondary sub-level-width">Token</label>
-        <label class="switch accent mb-0 ml-2 " for="token">
-          <input type="checkbox" value="true" id="token" formControlName="token">
+        <label class="switch accent mb-0 ml-2" for="token">
+          <input
+            type="checkbox"
+            value="true"
+            id="token"
+            formControlName="token"
+          />
           <span class="slider"></span>
           <span class="toggler"></span>
-          <span class="ml-3">{{bookmarkForm.get('parameters.token').value ? 'Yes' : 'No'}}</span>
+          <span class="ml-3">{{
+            bookmarkForm.get('parameters.token').value ? 'Yes' : 'No'
+          }}</span>
         </label>
       </div>
       <div class="d-flex mt-3">
         <label class="font-sm text-secondary sub-level-width">App Name</label>
-        <label class="switch accent mb-0 ml-2 " for="appName">
-          <input type="checkbox" value="true" id="appName" formControlName="appname">
+        <label class="switch accent mb-0 ml-2" for="appName">
+          <input
+            type="checkbox"
+            value="true"
+            id="appName"
+            formControlName="appname"
+          />
           <span class="slider"></span>
           <span class="toggler"></span>
-          <span class="ml-3">{{bookmarkForm.get('parameters.appname').value ? 'Yes' : 'No'}}</span>
+          <span class="ml-3">{{
+            bookmarkForm.get('parameters.appname').value ? 'Yes' : 'No'
+          }}</span>
         </label>
-
       </div>
       <div class="d-flex mt-3">
         <label class="font-sm text-secondary sub-level-width">User ID</label>
-        <label class="switch accent mb-0 ml-2 " for="userId">
-          <input type="checkbox" value="true" id="userId" formControlName="username">
+        <label class="switch accent mb-0 ml-2" for="userId">
+          <input
+            type="checkbox"
+            value="true"
+            id="userId"
+            formControlName="username"
+          />
           <span class="slider"></span>
           <span class="toggler"></span>
-          <span class="ml-3">{{bookmarkForm.get('parameters.username').value ? 'Yes' : 'No'}}</span>
-
+          <span class="ml-3">{{
+            bookmarkForm.get('parameters.username').value ? 'Yes' : 'No'
+          }}</span>
         </label>
-
       </div>
       <div class="border-top w-100 mt-3"></div>
       <div class="d-flex justify-content-between my-3">
-        <div>Additional Parameters </div>
+        <div>Additional Parameters</div>
         <div class="d-flex align-items-center">
-          <button class="add-new btn-min-width btn btn-link" type="button" (click)="addKeyValue()">
+          <button
+            class="add-new btn-min-width btn btn-link"
+            type="button"
+            (click)="addKeyValue()"
+          >
             <span class="fa fa-plus mr-2"></span>
-            <span class="text">Add New</span>
+            <span class="text">Add</span>
           </button>
         </div>
       </div>
     </ng-container>
-    <ng-container *ngFor="let value of bookmarkForm.get('parameters.custom').value;let i=index">
-      <div class="d-flex justify-content-between  py-2 pl-3 font-md align-items-center hover ignore-outside" *ngIf="i!=editIndex else keyValueModal">
-        <div class="d-flex text-secondary ignore-outside " (click)="editkeyValue(i)">
-          <div>{{i+1}}</div>
-          <div class="ml-3 sub-width text-truncate ignore-outside" [ngbTooltip]="value.key">{{value.key}}</div>
+    <ng-container
+      *ngFor="
+        let value of bookmarkForm.get('parameters.custom').value;
+        let i = index
+      "
+    >
+      <div
+        class="d-flex justify-content-between py-2 pl-3 font-md align-items-center hover ignore-outside"
+        *ngIf="i != editIndex; else keyValueModal"
+      >
+        <div
+          class="d-flex text-secondary ignore-outside"
+          (click)="editkeyValue(i)"
+        >
+          <div>{{ i + 1 }}</div>
+          <div
+            class="ml-3 sub-width text-truncate ignore-outside"
+            [ngbTooltip]="value.key"
+          >
+            {{ value.key }}
+          </div>
         </div>
-        <div class="sub-width text-truncate ignore-outside" [ngbTooltip]="value.value" (click)="editkeyValue(i)">{{value.value}}</div>
-        <span class="fa fa-times-circle text-muted hover mr-4 ignore-outside" (click)="removekeyValue(i)"></span>
+        <div
+          class="sub-width text-truncate ignore-outside"
+          [ngbTooltip]="value.value"
+          (click)="editkeyValue(i)"
+        >
+          {{ value.value }}
+        </div>
+        <span
+          class="fa fa-times-circle text-muted hover mr-4 ignore-outside"
+          (click)="removekeyValue(i)"
+        ></span>
       </div>
-
     </ng-container>
     <div *ngIf="addNewKeyValue">
       <ng-container *ngTemplateOutlet="keyValueModal"></ng-container>
     </div>
   </form>
   <div class="d-flex justify-content-between p-3">
-    <button class="add-new btn-min-width btn btn-link" type="button" (click)="hideToggleManage()">
+    <button
+      class="add-new btn-min-width btn btn-link"
+      type="button"
+      (click)="hideToggleManage()"
+    >
       <span class="text">Cancel</span>
     </button>
-    <button class="add-new btn-min-width btn btn-dark" type="button" (click)="saveBookmark()" [disabled]="bookmarkForm.invalid"
-      *ngIf=" _edit.id">
+    <button
+      class="add-new btn-min-width btn btn-dark"
+      type="button"
+      (click)="saveBookmark()"
+      [disabled]="bookmarkForm.invalid"
+      *ngIf="_edit.id"
+    >
       <span class="text">Save</span>
     </button>
-    <button class="add-new btn-min-width btn btn-dark" type="button" (click)="saveBookmark()" *ngIf="!_edit.id"
-      [disabled]="bookmarkForm.invalid">
+    <button
+      class="add-new btn-min-width btn btn-dark"
+      type="button"
+      (click)="saveBookmark()"
+      *ngIf="!_edit.id"
+      [disabled]="bookmarkForm.invalid"
+    >
       <span class="text">Create</span>
     </button>
-
   </div>
 </div>
 
 <ng-template #keyValueModal>
   <div class="d-flex flex-column py-2 pl-3 kv-container bg-light">
-    <div class="d-flex align-items-center justify-content-between ">
-      <div class="d-flex text-secondary ">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex text-secondary">
         <!-- <div>1</div> -->
         <div class="ml-3">keyname</div>
       </div>
@@ -146,49 +254,104 @@
       <div class="d-flex position-relative">
         <label for="key" class="font-sm text-secondary mt-3 sub-level-width">
           <span class="text">Key</span>
-          <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+          <sup class="text-danger font-normal" ngbTooltip="Mandatory field"
+            >*</sup
+          >
         </label>
-        <input class="form-control mt-2 key-input" id="key" [(ngModel)]="keyValuePair.key">
-        <span class="fas fa-question-circle text-danger position-absolute duplicate-err-icon" *ngIf="isDuplicate"
-        ngbTooltip="Duplicate key" placement="left"></span>
+        <input
+          class="form-control mt-2 key-input"
+          id="key"
+          [(ngModel)]="keyValuePair.key"
+        />
+        <span
+          class="fas fa-question-circle text-danger position-absolute duplicate-err-icon"
+          *ngIf="isDuplicate"
+          ngbTooltip="Duplicate key"
+          placement="left"
+        ></span>
       </div>
-      <div class="d-flex ">
+      <div class="d-flex">
         <label for="value" class="font-sm text-secondary mt-3 sub-level-width">
           <span class="text">Value</span>
-          <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+          <sup class="text-danger font-normal" ngbTooltip="Mandatory field"
+            >*</sup
+          >
         </label>
-        <input class="form-control mt-2 key-input" id="value" [(ngModel)]="keyValuePair.value">
+        <input
+          class="form-control mt-2 key-input"
+          id="value"
+          [(ngModel)]="keyValuePair.value"
+        />
       </div>
       <div class="d-flex justify-content-between ignore-outside mt-2">
-        <button class="btn btn-link ignore-outside" type="button" (click)="removekeyValue();addNewKeyValue=false">Delete</button>
+        <button
+          class="btn btn-link ignore-outside"
+          type="button"
+          (click)="removekeyValue(); addNewKeyValue = false"
+        >
+          Delete
+        </button>
         <div class="d-flex ignore-outside">
-          <button class="btn btn-link ignore-outside" type="button" (click)="back()">Back</button>
-          <button class="btn btn-primary ignore-outside" type="button" (click)="done()" [disabled]="!(keyValuePair.key && keyValuePair.value) || isDuplicate">Done</button>
+          <button
+            class="btn btn-link ignore-outside"
+            type="button"
+            (click)="back()"
+          >
+            Back
+          </button>
+          <button
+            class="btn btn-primary ignore-outside"
+            type="button"
+            (click)="done()"
+            [disabled]="
+              !(keyValuePair.key && keyValuePair.value) || isDuplicate
+            "
+          >
+            Done
+          </button>
         </div>
       </div>
     </div>
   </div>
 </ng-template>
 
-
 <ng-template #pageChangeModalTemplate>
   <div class="modal-body p-4 ignore-outside">
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
-        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-          <odp-partner-icon [size]="18" color="202a36" class="mt-1"></odp-partner-icon>
+        <span
+          class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2"
+        >
+          <odp-partner-icon
+            [size]="18"
+            color="202a36"
+            class="mt-1"
+          ></odp-partner-icon>
         </span>
         <span class="font-weight-bold mb-1">Unsaved Changes</span>
       </div>
-      <span class="fa fa-times text-secondary hover" (click)="pageChangeModalTemplateRef.close(false)"></span>
+      <span
+        class="fa fa-times text-secondary hover"
+        (click)="pageChangeModalTemplateRef.close(false)"
+      ></span>
     </div>
-    <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
+    <p class="text-secondary text-center my-5">
+      You have unsaved changes, are you sure you want to leave?
+    </p>
     <div class="d-flex align-items-center justify-content-end">
-      <button type="button" class="btn btn-min-width btn-dark" (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+      <button
+        type="button"
+        class="btn btn-min-width btn-dark"
+        (click)="pageChangeModalTemplateRef.close(true)"
+      >
+        Yes
+      </button>
     </div>
   </div>
 </ng-template>
 <ng-template #tipContent>
-  <div class="abc">Link will open in iFrame, websites where embeded option has been disabled cannot be opened in iFrame
+  <div class="abc">
+    Link will open in iFrame, websites where embeded option has been disabled
+    cannot be opened in iFrame
   </div>
 </ng-template>

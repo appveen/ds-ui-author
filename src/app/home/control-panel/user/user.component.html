@@ -25,10 +25,31 @@
             <span class="text">Remove Users ({{ checkedUsers.length }})</span>
           </button>
         </ng-container>
+        <div class="mr-2">
+          <odp-search-box
+            *ngIf="search"
+            (enteredText)="searchTerm = $event"
+            (reset)="enterToSelect('reset')"
+            [selectOnEnter]="true"
+            (enteredPressed)="enterToSelect($event)"
+          ></odp-search-box>
+        </div>
+        <button
+          *ngIf="!search"
+          type="button"
+          class="add-new btn mr-2 bg-white"
+          ngbTooltip="Search"
+          id="search"
+          (click)="search = !search"
+        >
+          <span class="fa fa-search"></span>
+          <!-- <span class="text">Bulk Import</span> -->
+        </button>
         <button
           *ngIf="hasPermission('PMUBC')"
           type="button"
           class="add-new btn btn-dark mr-2"
+          style="margin: auto 0"
           routerLink="bulk-import"
           ngbTooltip="Bulk Import"
           id="bulkimport"
@@ -41,6 +62,7 @@
           type="button"
           id="newUser"
           class="add-new btn-min-width btn btn-primary"
+          style="margin: auto 0"
           (click)="newUser()"
         >
           <span class="fa fa-user-plus mr-2"></span>
@@ -49,35 +71,57 @@
       </div>
     </div>
 
-    <div class="bg-white list" style="max-height: 80vh" *ngIf="!isLoading">
-      <div class="row" style="max-height: inherit">
+    <div
+      class="bg-white list"
+      style="max-height: 80vh; min-height: 80vh"
+      *ngIf="!isLoading"
+    >
+      <div
+        class="d-flex justify-content-center align-items-center h-100 font-xxl fw-600 heading"
+        *ngIf="userList.length === 0"
+      >
+        No users found
+      </div>
+      <div class="row" style="max-height: inherit" *ngIf="userList.length > 0">
         <div class="col-4 users">
           <div
             *ngFor="let user of userList; let usrIndex = index"
-            class="userList"
+            class="d-flex"
             [id]="'user' + usrIndex"
             (click)="showDetails(user)"
           >
-            <div style="display: flex">
-              <input
-                type="checkbox"
-                value="false"
-                [attr.id]="'checkbox' + usrIndex"
-                class="mr-3"
-                style="margin-top: 5px"
-                (change)="clickCheckbox($event, user)"
-              />
-              <span class="name"> {{ user.basicDetails.name }}</span>
-              <span class="time"> {{ formatLastLogin(user.lastLogin) }}</span>
+            <div
+              class="selectedTab"
+              [ngStyle]="{
+                background: user._id === details?._id ? '#ff6f00' : 'none'
+              }"
+            ></div>
+            <div
+              class="userList"
+              style="flex-grow: 1"
+              [ngClass]="{ selected: user._id === details?._id }"
+            >
+              <div style="display: flex">
+                <input
+                  type="checkbox"
+                  value="false"
+                  [attr.id]="'checkbox' + usrIndex"
+                  class="mr-3"
+                  style="margin-top: 5px"
+                  (change)="clickCheckbox($event, user)"
+                />
+                <span class="name"> {{ user.basicDetails?.name }}</span>
+                <span class="time"> {{ formatLastLogin(user.lastLogin) }}</span>
+              </div>
+              <span class="email">{{ user.username }}</span>
             </div>
-            <span class="email">{{ user.username }}</span>
           </div>
         </div>
         <div class="col-8 users" style="padding: 20px">
           <div class="details">
-            <span class="name">{{ details?.basicDetails.name }}</span>
+            <span class="name">{{ details?.basicDetails?.name }}</span>
             <span class="email">{{ details?.username }}</span>
-            <span class="time">{{
+            <span class="time" ngbTooltip="Last login">{{
               formatLastLogin(details?.lastLogin, true)
             }}</span>
           </div>
@@ -125,10 +169,8 @@
                 </li>
               </ul>
             </div>
-            <div *ngIf="isDataLoading">
-              <span
-                class="spinner-big-icon fa-pulse my-4 d-flex align-items-center justify-content-center"
-              ></span>
+            <div style="margin: 0 auto" *ngIf="isDataLoading">
+              <span class="fa fa-spinner fa-pulse fa-3x"></span>
             </div>
             <div style="margin-top: 30px; display: grid" *ngIf="!isDataLoading">
               <label class="tab-header">{{ currentTab }}</label>
@@ -482,7 +524,7 @@
                   <span
                     *ngIf="
                       userForm
-                        .get('userData.basicDetails.name')
+                        .get('userData.basicDetails?.name')
                         .hasError('pattern')
                     "
                     class="text-danger position-absolute fa fa-exclamation-circle error-icon-password"

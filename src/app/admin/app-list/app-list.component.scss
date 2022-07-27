@@ -53,16 +53,18 @@
 .app-card {
   border: 1px solid transparent;
   transition: 0.25s;
-  min-width: 120px;
-  max-width: 120px;
-  min-height: 136px;
-  max-height: 136px;
+  min-width: 90px;
+  max-width: 90px;
+  min-height: 90px;
+  max-height: 90px;
+  margin-top: 30px !important;
+  margin-right: 30px !important;
   .delete-option{
     visibility: hidden;
   }
   &:hover{
-    border-color: $white;
-    box-shadow: 0 1px 3px rgba($black, .24);
+    // border-color: $white;
+    // box-shadow: 0 1px 3px rgba($black, .24);
     .delete-option{
       visibility: visible;
       align-self: flex-end;

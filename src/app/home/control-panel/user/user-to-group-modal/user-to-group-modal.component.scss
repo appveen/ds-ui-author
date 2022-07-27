@@ -3,7 +3,7 @@
 
 
 
-.mat-dialog-container{
+::ng-deep .mat-dialog-container{
     overflow: hidden !important;
   }
 
@@ -25,9 +25,11 @@ color: $sub-headings;
 }
 
 .grid{
-    height: 600px;
+    height: 45vh;
+    max-height: 45vh;
     overflow-x: hidden; 
     padding: 10px;
+
 }
 
 ::ng-deep .ag-theme-balham{

@@ -262,6 +262,16 @@
   margin-right: 48px;
 }
 
+.selected{
+  background: rgba($orange, 0.04);
+}
+
+.selectedTab{
+  border-radius: 0px 8px 8px 0px;
+  width: 3px;
+  height: 60px;
+  margin: auto 0;
+}
 .userList{
   padding: 20px;
   display: block;
@@ -331,7 +341,7 @@
     &:hover{
       border-bottom: 2px solid $orange;
       border-width: medium;
-      width: 80%;
+      width: 60%;
     }
 }
 
@@ -339,7 +349,7 @@
   color: $headings;
   border-bottom: 2px solid $orange;
   border-width: medium;
-  width: 80%
+  width: 60%
 }
 
 .tab-header{
@@ -444,10 +454,4 @@
   border: none  ;
   border-color: none;
   outline: none;
-}
-
-
-
-.mat-dialog-container{
-  overflow: hidden !important;
 }

@@ -153,7 +153,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
 
   @Input() set user(value: any) {
     const self = this;
-    if (!value.attributes) {
+    if (value && !value.attributes) {
       value.attributes = {};
     }
     self._user = value;

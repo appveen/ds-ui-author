@@ -71,6 +71,7 @@ import { UserGridActionRendererComponent } from './user/user-grid-action.compone
 import { MatDialogModule } from '@angular/material/dialog';
 import { UserToGroupModalComponent } from './user/user-to-group-modal/user-to-group-modal.component';
 import { UserGridAppsRendererComponent } from './user/user-grid-apps.component ';
+import { FilterPipeModule } from '../../utils/pipes/filter.module';
 
 @NgModule({
   imports: [
@@ -112,6 +113,7 @@ import { UserGridAppsRendererComponent } from './user/user-grid-apps.component '
     RadioChipModule,
     CheckboxModule,
     MatDialogModule,
+    FilterPipeModule,
   ],
   declarations: [
     ControlPanelComponent,
