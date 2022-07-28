@@ -44,7 +44,10 @@
           </div>
         </div>
       </div>
-      <ng-container *ngFor="let service of serviceList; let i = index">
+      <ag-grid-angular *ngIf="serviceList.length > 0" #agGrid  class="ag-theme-balham grid w-100 h-100" [gridOptions]="gridOptions"
+        (gridReady)="onGridReady($event)">
+      </ag-grid-angular>
+      <!-- <ng-container *ngFor="let service of serviceList; let i = index">
         <div class="card m-2 position-relative" id="serviceManagerCard" *ngIf="hasPermissionForService(service._id)">
           <div class="card-header bg-white border-0 p-2">
             <div class="card-title m-0 d-flex align-items-center justify-content-between">
@@ -236,7 +239,7 @@
             </button>
           </div>
         </div>
-      </ng-container>
+      </ng-container> -->
       <ng-container *ngIf="showLazyLoader">
         <div class="card m-2" *ngFor="let item of dummyRows">
           <div class="card-header bg-white border-0 p-2">

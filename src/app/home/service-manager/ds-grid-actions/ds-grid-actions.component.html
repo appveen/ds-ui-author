@@ -1,0 +1,8 @@
+<div class="actions ">
+    <button id='stop{{params.rowIndex}}' type="button" class="btn btn-link text-dark fw-600 hover" (click)="toggleServiceStatus()">
+        <span *ngIf="params.value == 'Stopped'">Start</span>
+        <span *ngIf="params.value == 'Active'">Stop</span>
+    </button>
+    <button id='deploy{{params.rowIndex}}' type="button" class="btn btn-link text-dark fw-600">Deploy</button>
+    <i class="fa fas fa-ellipsis-v ml-2"></i>
+</div>
