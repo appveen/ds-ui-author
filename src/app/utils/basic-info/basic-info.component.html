@@ -3,7 +3,7 @@
     <div class="title-container">
       <div class="name-holder d-flex align-items-center">
         <input *ngIf="enableEdit" type="text" class="form-control input-width" [ngModel]="name"
-          (ngModelChange)="onNameChange($event)" odpClickOutside (outside)="enableEdit=false">
+          (ngModelChange)="onNameChange($event)" odpClickOutside (outside)="enableEdit=false" odpAutoFocus>
         <ng-container *ngIf="!enableEdit">
           <h4 class="name m-0">{{name}}</h4>
           <span *ngIf="edit.status" class="edit-icon fa fa-pen ml-2 ignore-outside hover" (click)="enableEdit=true"></span>
