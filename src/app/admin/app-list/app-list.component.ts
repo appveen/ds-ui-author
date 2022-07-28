@@ -329,12 +329,12 @@ export class AppListComponent implements OnInit, OnDestroy {
 
   appColor() {
     const colorArray = [
-      '#5CA469',
-      '#3466A1',
-      '#A64A46',
-      '#D0A051',
-      '#959A91',
-      '#E76779',
+      '#B2DFDB',
+      '#B2EBF2',
+      '#B3E5FC',
+      '#A5D6A7',
+      '#C5E1A5',
+      '#E6EE9C',
     ];
     return _.sample(colorArray);
   }

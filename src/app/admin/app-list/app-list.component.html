@@ -57,7 +57,7 @@
         class="app-card d-flex flex-column mt-3 mr-3 rounded position-relative"
         (click)="appOptions[appIndex] = true"
       >
-        <div
+        <!-- <div
           class="d-flex justify-content-end mt-2 mr-2 delete-option"
           *ngIf="isSuperadmin"
         >
@@ -67,7 +67,7 @@
               (click)="deleteApp(app, appIndex)"
             ></span>
           </div>
-        </div>
+        </div> -->
         <!-- <div
           class="position-absolute hover app-options p-2 bg-white"
           (outside)="appOptions[appIndex] = false"
@@ -102,9 +102,12 @@
             <div
               *ngIf="!app.logo"
               class="profileImage"
-              [ngStyle]="{ background: app.bg }"
+              [ngStyle]="{ 'background-color': app.bg }"
             >
               {{ app.firstLetter }}
+            </div>
+            <div class="delete-option border-right bg-danger d-flex align-items-center justify-content-center hover ignore-outside" (click)="$event.stopPropagation();deleteApp(app, appIndex)">
+              <span class="fas fa-trash text-white"></span>
             </div>
           </div>
           <!-- <div class="app-settings rounded-circle position-absolute bg-primary d-flex align-items-center justify-content-center align-self-end hover"

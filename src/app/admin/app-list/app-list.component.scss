@@ -6,6 +6,7 @@
     transform: translate(-10px, 10px) rotate(0);
     z-index: -1;
   }
+
   to {
     transform: translate(15px, -10px) rotate(270deg);
     z-index: 2;
@@ -17,19 +18,23 @@
     transform: translate(15px, -10px) rotate(270deg);
     z-index: -1;
   }
+
   to {
     transform: translate(-10px, 10px) rotate(0deg);
     z-index: -1;
   }
 }
-.app-list{
+
+.app-list {
   padding-left: 20vw;
   padding-right: 20vw;
 }
-.apps-container{
+
+.apps-container {
   min-height: 310px;
   max-height: calc(100vh - 180px);
 }
+
 .icon-circle {
   background: #D1EFDA;
   min-width: 32px;
@@ -38,13 +43,13 @@
   max-height: 32px;
   border-radius: 15px;
 }
-.app-form
-{
+
+.app-form {
   min-width: 272px;
   max-width: 272px;
 }
-.app-form-description
-{
+
+.app-form-description {
   @extend .app-form;
   min-height: 100px;
   max-height: 100px;
@@ -59,38 +64,55 @@
   max-height: 90px;
   margin-top: 30px !important;
   margin-right: 30px !important;
-  .delete-option{
-    visibility: hidden;
+
+  .delete-option {
+    position: absolute;
+    z-index: -1;
+    transition: 0.5s;
+    transition-delay: 0.5s;
+    width: 24px;
+    height: 24px;
+    border-bottom-right-radius: 12px;
+    border-top-right-radius: 12px;
+    right: 24px;
+    top: 20px;
   }
-  &:hover{
-    // border-color: $white;
-    // box-shadow: 0 1px 3px rgba($black, .24);
-    .delete-option{
-      visibility: visible;
+
+  &:hover {
+    .delete-option {
+      right: 0;
       align-self: flex-end;
+      z-index: 0;
+      right: -3px;
     }
   }
-  .app-options{
+
+  .app-options {
     top: 22px;
     right: -50px;
     z-index: 1;
     border: 1px solid #ECECEC;
     box-shadow: 0 1px 6px rgba($color: #000000, $alpha: 0.14);
- }
+  }
+
   .app-status:hover {
     .symbol {
       transform: translate(10px);
+
       .fa-angle-right {
         display: none;
       }
+
       .text {
         opacity: 1;
       }
     }
+
     .action {
       opacity: 1;
     }
   }
+
   .app-settings {
     min-width: 20px;
     max-width: 20px;
@@ -100,6 +122,7 @@
     z-index: -1;
     animation: rollHide 0.3s ease-out;
   }
+
   .app-thumbnail {
     min-width: 48px;
     max-width: 48px;
@@ -108,43 +131,55 @@
     border-radius: 8px;
     overflow: hidden;
     outline: none;
+    transition: 0.2s;
+
     img {
       min-width: 48px;
       max-width: 48px;
       min-height: 48px;
       max-height: 48px;
     }
+
+    &:hover {
+      box-shadow: 0px 0px 8px rgb(0 0 0 / 40%);
+    }
   }
+
   .app-status {
     min-height: 24px;
     max-height: 24px;
     min-width: 120px;
     border-radius: 12px;
     margin: 0px -10px;
+
     .symbol {
       transition: 0.25s;
       transform: translate(45px);
+
       .text {
         transition: 0.25s;
         opacity: 0;
       }
     }
+
     .action {
       transition: 0.25s;
       opacity: 0;
     }
   }
-  .app-name{
+
+  .app-name {
     min-width: 70px;
     max-width: 70px;
     word-break: break-all;
   }
-  
+
 }
-.name-wrapper{
-  .fa-exclamation-circle{
-      top: 7px;
-      right: 5px;
+
+.name-wrapper {
+  .fa-exclamation-circle {
+    top: 7px;
+    right: 5px;
   }
 }
 
