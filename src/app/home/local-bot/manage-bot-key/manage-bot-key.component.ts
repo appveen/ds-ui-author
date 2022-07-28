@@ -22,6 +22,7 @@ export class ManageBotKeyComponent implements OnInit {
   @ViewChild('agGrid') agGrid: AgGridAngular;
   @Input() selectedBot: any;
   @Output() dataChange: EventEmitter<any>;
+  @Output() editKey: EventEmitter<any> = new EventEmitter();
   openDeleteBotKeyModal: EventEmitter<any>;
   editKeyModalRef: NgbModalRef
   showLazyLoader: boolean;
@@ -69,10 +70,10 @@ export class ManageBotKeyComponent implements OnInit {
         field: 'expires',
         cellRenderer: (params) => {
           if (!params.data.isActive) {
-            return `<div style="color: '#FF9052'">Deactivated</div>`
+            return `<div style="color: #FF9052">Deactivated</div>`
           }
           else {
-            return `<div>${params.value}</div>`
+            return `<div>${params.value / (24 * 60)}</div>`
           }
         }
       },
@@ -87,7 +88,7 @@ export class ManageBotKeyComponent implements OnInit {
         }
       },
       {
-        headerName: 'LAST LOGIN',
+        headerName: 'CREATED AT',
         field: 'createdAt',
         width: 250,
         valueFormatter: (params) => {
@@ -144,7 +145,7 @@ export class ManageBotKeyComponent implements OnInit {
       setTimeout(() => {
         const container = document.querySelector('.grid-container');
         const availableWidth = !!container ? container.clientWidth - fixedSize : 730;
-        const allColumns = this.agGrid.columnApi.getAllColumns();
+        const allColumns = this.agGrid.columnApi.getAllColumns() || [];
         allColumns.forEach(col => {
           this.agGrid.columnApi.autoSizeColumn(col);
           if (col.getActualWidth() > 200 || this.agGrid.api.getDisplayedRowCount() === 0) {
@@ -209,34 +210,35 @@ export class ManageBotKeyComponent implements OnInit {
 
   editBotKey(key: any) {
     const self = this;
-    self.keyForm.get('label').patchValue(key.label)
-    self.keyForm.get('expires').patchValue(key.expires / 1440)
-    self.editKeyModalRef = self.commonService.modal(self.newKeyModal, { size: 'sm' });
-    self.editKeyModalRef.result.then(close => {
-      if (close) {
-        const payload = self.keyForm.value;
-        payload.expires = payload.expires * 1440;
-        payload.keyId = key._id;
-        self.showLazyLoader = true;
+    this.editKey.emit(key);
+    // self.keyForm.get('label').patchValue(key.label)
+    // self.keyForm.get('expires').patchValue(key.expires / 1440)
+    // self.editKeyModalRef = self.commonService.modal(self.newKeyModal, { size: 'sm' });
+    // self.editKeyModalRef.result.then(close => {
+    //   if (close) {
+    //     const payload = self.keyForm.value;
+    //     payload.expires = payload.expires * 1440;
+    //     payload.keyId = key._id;
+    //     self.showLazyLoader = true;
 
-        self.commonService.put('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
-          .subscribe((res) => {
-            self.showLazyLoader = false;
-            self.selectedBot = res;
-            self.dataChange.emit(res);
-            if (this.gridApi) {
-              this.gridApi.refreshCells({ force: true })
-            }
-          }, err => {
-            self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
-          });
-      } else {
-        self.showLazyLoader = false;
-        self.keyForm.reset();
-      }
-    }, dismiss => {
-      self.keyForm.reset();
-    });
+    //     self.commonService.put('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
+    //       .subscribe((res) => {
+    //         self.showLazyLoader = false;
+    //         self.selectedBot = res;
+    //         self.dataChange.emit(res);
+    //         if (this.gridApi) {
+    //           this.gridApi.redrawRows()
+    //         }
+    //       }, err => {
+    //         self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
+    //       });
+    //   } else {
+    //     self.showLazyLoader = false;
+    //     self.keyForm.reset();
+    //   }
+    // }, dismiss => {
+    //   self.keyForm.reset();
+    // });
   }
 
   getDate(key) {
@@ -265,7 +267,7 @@ export class ManageBotKeyComponent implements OnInit {
         self.showLazyLoader = false;
         self.ts.success("Session ended");
         if (this.gridApi) {
-          this.gridApi.refreshCells()
+          this.gridApi.redrawRows()
         }
       }, err => {
         self.showLazyLoader = false;
@@ -286,7 +288,7 @@ export class ManageBotKeyComponent implements OnInit {
         self.selectedBot = res;
         self.dataChange.emit(res);
         if (this.gridApi) {
-          this.gridApi.refreshCells()
+          this.gridApi.redrawRows()
         }
       }, err => {
         self.showLazyLoader = false;
@@ -318,7 +320,7 @@ export class ManageBotKeyComponent implements OnInit {
           self.selectedBot = res;
           self.dataChange.emit(res);
           if (this.gridApi) {
-            this.gridApi.refreshCells()
+            this.gridApi.redrawRows()
           }
         }, err => {
           self.showLazyLoader = false;
@@ -334,6 +336,12 @@ export class ManageBotKeyComponent implements OnInit {
   formatLastLogin(timestamp) {
     if (timestamp) {
       return moment(timestamp).utc().format('hh:mm A , DD/MM/YYYY' + '(UTC)');
+    }
+  }
+
+  refreshCell() {
+    if (this.gridApi) {
+      this.gridApi.redrawRows();
     }
   }
 }

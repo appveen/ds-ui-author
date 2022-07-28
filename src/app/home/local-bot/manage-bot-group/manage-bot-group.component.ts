@@ -8,6 +8,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { UserGridAppsRendererComponent } from '../../control-panel/user/user-grid-apps.component ';
 import { UserToGroupModalComponent } from '../../control-panel/user/user-to-group-modal/user-to-group-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'odp-manage-bot-group',
@@ -17,8 +18,10 @@ import { MatDialog } from '@angular/material/dialog';
 export class ManageBotGroupComponent implements OnInit {
   @Input() selectedBot: any;
   @Input() userTeams: any;
+  @Input() allTeams: any;
   openDeleteModal: EventEmitter<any>;
   @Output() dataChange: EventEmitter<any>;
+  @Output() assign: EventEmitter<any> = new EventEmitter();
   showLazyLoader: boolean;
   frameworkComponents: any;
   @ViewChild('agGrid') agGrid: AgGridAngular;
@@ -97,7 +100,7 @@ export class ManageBotGroupComponent implements OnInit {
     switch (buttonName) {
       case 'Delete':
         {
-          // this.removeGroupForUser();
+          this.removeGroupForUser(rowNode.data);
         }
         break;
     }
@@ -123,7 +126,7 @@ export class ManageBotGroupComponent implements OnInit {
         const availableWidth = !!container
           ? container.clientWidth - fixedSize
           : 730;
-        const allColumns = this.agGrid.columnApi.getAllColumns();
+        const allColumns = this.agGrid.columnApi.getAllColumns() || [];
         allColumns.forEach((col) => {
           this.agGrid.columnApi.autoSizeColumn(col);
           if (
@@ -144,9 +147,10 @@ export class ManageBotGroupComponent implements OnInit {
     }
   }
 
-  removeGroupForUser(teamName, teamId) {
+  removeGroupForUser(data) {
     const self = this;
-
+    const teamName = data.name;
+    const teamId = data._id;
     const alertModal: any = {};
     alertModal.title = `Remove Group ${teamName}`;
     alertModal.message = `Are you sure you want to remove group <span class="text-delete font-weight-bold">
@@ -166,6 +170,9 @@ export class ManageBotGroupComponent implements OnInit {
       .subscribe(() => {
         self.showLazyLoader = false
         self.dataChange.emit();
+        if (this.agGrid.api) {
+          this.agGrid.api.refreshCells()
+        }
         self.ts.success(`${data.teamName} Group has been removed for user ${self.selectedBot.basicDetails.name}`);
       }, err => {
         self.ts.error(err.error.message);
@@ -181,16 +188,18 @@ export class ManageBotGroupComponent implements OnInit {
       width: '60vw',
       height: '65vh',
       data: {
-        groupList: this.userTeams,
+        groupList: this.allTeams,
         userGroups: this.userTeams,
-        // user: this.details,
+        user: this.selectedBot,
       },
     });
 
     dialogRef.afterClosed().subscribe((apiHit) => {
       if (apiHit) {
-        // this.isDataLoading = true;
-        // this.fetchUserGroups();
+        this.assign.emit();
+        if (this.agGrid.api) {
+          this.agGrid.api.refreshCells()
+        }
       }
     });
   }

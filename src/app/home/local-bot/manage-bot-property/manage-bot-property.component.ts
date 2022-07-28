@@ -31,6 +31,7 @@ export class ManageBotPropertyComponent implements OnInit {
   editAttributeModal: TemplateRef<HTMLElement>;
   @ViewChild('agGrid') agGrid: AgGridAngular;
   @Output() dataChange: EventEmitter<any>;
+  @Output() editProperty: EventEmitter<any> = new EventEmitter();
   private _selecteBot;
   openDeleteModal: EventEmitter<any>;
   showLazyLoader: boolean;
@@ -170,7 +171,7 @@ export class ManageBotPropertyComponent implements OnInit {
         const availableWidth = !!container
           ? container.clientWidth - fixedSize
           : 730;
-        const allColumns = this.agGrid.columnApi.getAllColumns();
+        const allColumns = this.agGrid.columnApi.getAllColumns() || [];
         allColumns.forEach((col) => {
           this.agGrid.columnApi.autoSizeColumn(col);
           if (
@@ -206,130 +207,6 @@ export class ManageBotPropertyComponent implements OnInit {
     }
   }
 
-  onFilterChanged(event) {
-    this.filtering = true;
-    this.filterModel = this.agGrid?.api?.getFilterModel();
-    setTimeout(() => {
-      this.filtering = false;
-    }, 1000);
-  }
-
-  get userAttributes() {
-    const self = this;
-    return (self.additionalDetails.get('extraInfo') as FormArray).controls;
-  }
-
-  // To Add additional information for user
-  addNewDetail() {
-    const self = this;
-    const newData = self.getAttributesFormGroup();
-    (self.additionalDetails.get('extraInfo') as FormArray).push(newData);
-  }
-
-  getAttributesFormGroup() {
-    return this.fb.group({
-      label: ['', [Validators.required, Validators.maxLength(30)]],
-      key: ['', [Validators.required]],
-      type: ['String', [Validators.required]],
-      value: ['', [Validators.required]],
-    });
-  }
-
-  getLabelError(i) {
-    const self = this;
-    return (
-      self.additionalDetails.get(['extraInfo', i, 'label']).touched &&
-      self.additionalDetails.get(['extraInfo', i, 'label']).dirty &&
-      self.additionalDetails.get(['extraInfo', i, 'label']).hasError('required')
-    );
-  }
-
-  getValError(formGroup: FormGroup) {
-    return (
-      formGroup.get('value').touched &&
-      formGroup.get('value').dirty &&
-      formGroup.get('value').hasError('required')
-    );
-  }
-
-  setKey(i) {
-    const self = this;
-    const val = self.additionalDetails.get(['extraInfo', i, 'label']).value;
-    self.additionalDetails
-      .get(['extraInfo', i, 'key'])
-      .patchValue(self.appService.toCamelCase(val));
-  }
-
-  newField(event) {
-    const self = this;
-    if (event.key === 'Enter') {
-      self.addNewDetail();
-    }
-  }
-  setUserAttributeType(type: any, index: number) {
-    const self = this;
-    self.toggleFieldTypeSelector[index] = false;
-    self.additionalDetails
-      .get(['extraInfo', index, 'type'])
-      .patchValue(type.value);
-    if (type.value === 'Boolean') {
-      self.additionalDetails
-        .get(['extraInfo', index, 'value'])
-        .patchValue(false);
-    } else {
-      self.additionalDetails
-        .get(['extraInfo', index, 'value'])
-        .patchValue(null);
-    }
-  }
-
-  addExtraDetails() {
-    const self = this;
-    let empty = false;
-    self.userAttributes.forEach((control) => {
-      const label = control.get('label').value;
-      const val = control.get('value').value;
-      empty = label === '' || val === '';
-    });
-    if (empty) {
-      self.ts.warning(
-        'Please check the form fields, looks like few fields are empty'
-      );
-    } else {
-      self.newAttributeModalRef.close();
-      self.userAttributes.forEach((data) => {
-        const payload = data.value;
-        const detailKey = payload.key;
-        delete payload.key;
-        if (!self.selectedBot.attributes) {
-          self.selectedBot.attributes = {};
-        }
-        self.selectedBot.attributes[detailKey] = payload;
-      });
-      self.showLazyLoader = true;
-
-      self.commonService
-        .put(
-          'user',
-          `/${this.commonService.app._id}/bot/${self.selectedBot._id}`,
-          self.selectedBot
-        )
-        .subscribe(
-          () => {
-            self.showLazyLoader = false;
-
-            self.ts.success('Added custom Details successfully');
-            self.resetAdditionDetailForm();
-          },
-          (err) => {
-            self.showLazyLoader = false;
-
-            self.ts.error(err.error.message);
-            self.resetAdditionDetailForm();
-          }
-        );
-    }
-  }
 
   closeDeleteModal(data) {
     const self = this;
@@ -376,49 +253,8 @@ export class ManageBotPropertyComponent implements OnInit {
   }
   openEditAttributeModal(item) {
     const self = this;
-    if (!self.editAttributeForm) {
-      self.editAttributeForm = this.getAttributesFormGroup();
-    }
-    self.editAttributeForm.patchValue(self.appService.cloneObject(item));
-    self.editAttributeForm.get('key').disable();
-    delete self.selectedBot.attributes[item.key];
-    self.editAttributeModalRef = self.commonService.modal(
-      self.editAttributeModal
-    );
-    self.editAttributeModalRef.result.then(
-      (close) => {
-        if (close) {
-          const key = self.editAttributeForm.get('key').value;
-          self.showLazyLoader = true;
-          self.selectedBot.attributes[key] = self.editAttributeForm.value;
-          self.commonService
-            .put(
-              'user',
-              `/${this.commonService.app._id}/bot/${self.selectedBot._id}`,
-              self.selectedBot
-            )
-            .subscribe(
-              (res) => {
-                self.showLazyLoader = false;
-                self.dataChange.emit(res);
-                self.ts.success('Custom Details Saved Successfully');
-                self.editAttributeForm.reset();
-              },
-              (err) => {
-                self.showLazyLoader = false;
-                self.ts.error(err.error.message);
-                self.editAttributeForm.reset();
-              }
-            );
-        } else {
-          const key = item.key;
-          self.selectedBot.attributes[key] = item;
-        }
-      },
-      (dismiss) => {
-        self.editAttributeForm.reset();
-      }
-    );
+    this.editProperty.emit(item)
+
   }
 
   deleteAdditionInfo(attrName) {
@@ -435,5 +271,11 @@ export class ManageBotPropertyComponent implements OnInit {
   hasPermission(type: string): boolean {
     const self = this;
     return self.commonService.hasPermission(type);
+  }
+
+  refreshCell() {
+    if (this.agGrid.api) {
+      this.agGrid.api.redrawRows()
+    }
   }
 }

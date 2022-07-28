@@ -38,8 +38,9 @@
         <div class="d-flex flex-column">
           <div class="d-flex flex-row">
             <span class="font-xl fw-600 heading mr-2 mt-2">{{ selectedBot?.basicDetails?.name }}</span>
-            <div class="col">
-              <odp-switch [edit]="{ status: true }" checkedText="" uncheckedText="">
+            <div class="col mt-2">
+              <odp-switch [edit]="{ status: true }" checkedText="" uncheckedText=""
+                (checkedChange)="toggleStatus($event)" [(checked)]="selectedBot.isActive">
               </odp-switch>
             </div>
             <button type="button" class="add-new btn bg-white border mr-2" id="delete" (click)="deleteUser()">
@@ -53,11 +54,11 @@
         <div class="d-grid">
           <div style="margin-top: 45px">
             <ul class="nav">
-              <li class="nav-item" (click)="switchTab('Key')" id="switchkey">
+              <li class="nav-item" (click)="switchTab('Keys')" id="switchkey">
                 <div class="tabs" [ngClass]="{
-                    active: currentTab === 'Key'
+                    active: currentTab === 'Keys'
                   }">
-                  Key
+                  Keys
                 </div>
               </li>
               <li class="nav-item mr-4" (click)="switchTab('Properties')" id="switchproperties">
@@ -80,10 +81,10 @@
             <span class="fa fa-spinner fa-pulse fa-3x"></span>
           </div> -->
           <div class="d-grid">
-            <div class="d-flex mt-2">
-              <odp-search-box (enteredText)="searchTerm = $event" (reset)="enterToSelect('reset', currentTab)"
+            <div class="d-flex">
+              <!-- <odp-search-box (enteredText)="searchTerm = $event" (reset)="enterToSelect('reset', currentTab)"
                 [selectOnEnter]="true" (enteredPressed)="enterToSelect($event,  currentTab)" *ngIf="showSearch()">
-              </odp-search-box>
+              </odp-search-box> -->
               <div class="d-flex ml-auto mr-2">
                 <div class="add-attribute hover" id="showAttributeSide" (click)="add(currentTab)">
                   <i class="fa fa-plus-circle font-xl icon-primary mr-2"></i>
@@ -93,19 +94,22 @@
               </div>
             </div>
 
-            <div *ngIf="currentTab === 'Key' && showSearch()" class="prop-container mt-4">
-              <odp-manage-bot-key [selectedBot]="selectedBot" (dataChange)="onDataChange($event)">
+            <div *ngIf="currentTab === 'Keys' " class="prop-container mt-4">
+              <odp-manage-bot-key #manageKeys [selectedBot]="selectedBot" (dataChange)="onDataChange($event)"
+                (editKey)="editKey($event)">
               </odp-manage-bot-key>
 
             </div>
-            <div *ngIf="currentTab === 'Properties' && showSearch()" class="prop-container mt-4">
-              <odp-manage-bot-property [selectedBot]="selectedBot" (dataChange)="onDataChange($event)">
+            <div *ngIf="currentTab === 'Properties'" class="prop-container mt-4">
+              <odp-manage-bot-property #manageProperty [selectedBot]="selectedBot" (dataChange)="onDataChange($event)"
+                (editProperty)="editAttribute($event)">
               </odp-manage-bot-property>
 
             </div>
-            <div *ngIf="currentTab === 'Groups' && showSearch()" class="prop-container mt-4">
-              <odp-manage-bot-group [selectedBot]="selectedBot" [userTeams]="userTeams"
-                (dataChange)="onDataChangeInGroup($event)"></odp-manage-bot-group>
+            <div *ngIf="currentTab === 'Groups' " class="prop-container mt-4">
+              <odp-manage-bot-group #manageGroups [selectedBot]="selectedBot" [userTeams]="userTeams"
+                [allTeams]="allTeams" (dataChange)="onDataChangeInGroup($event)" (assign)="assignTeam()">
+              </odp-manage-bot-group>
 
             </div>
           </div>
@@ -135,243 +139,12 @@
 
 
 
-    <ng-template #newKeyModal>
-      <div class="new-Bot-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="keyForm">
-        <div class="d-flex flex-column w-100">
-          <div class="d-flex align-items-center justify-content-between mb-3">
-            <div class="d-flex align-items-center">
-              <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
-                <span class="odp-bots font-xl text-success"></span>
-              </span>
-              <span *ngIf="isCreate" class="font-weight-bold">Add key</span>
-            </div>
-            <span class="fa fa-times text-muted hover" (click)="newKeyModalRef.close(false)"></span>
-          </div>
-          <div class="d-flex flex-column w-100">
-            <label for="name" class="font-sm text-secondary">
-              <span class="text">Key</span>
-              <sup class="text-danger font-normal sup-top" ngbTooltip="Mandatory field">*</sup>
-            </label>
-            <div class="name-wrapper position-relative">
-              <input newlabel type="text" class="form-control" id="name" placeholder="Give a label to identify"
-                formControlName="label" (keyup.enter)="newBotTextarea.focus()" odpAutoFocus [ngClass]="{
-                  'is-invalid':
-                    keyForm.get('label').invalid && keyForm.get('label').dirty
-                }" />
-              <ng-container *ngIf="keyForm.get('label').dirty">
-                <span *ngIf="keyForm.get('label').hasError('required')"
-                  class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                  ngbTooltip="Name is required"></span>
-                <span *ngIf="keyForm.get('label').hasError('maxlength')"
-                  class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                  ngbTooltip="Name should be within 30 characters"></span>
-                <span *ngIf="keyForm.get('label').hasError('pattern')"
-                  class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                  ngbTooltip="Name can be only alphanumeric ,spaces, _and - characters only"></span>
-              </ng-container>
-            </div>
-            <label for="description" class="font-sm text-secondary mt-3">
-              <span class="text">Expiry</span>
-              <sup class="text-danger font-normal sup-top" ngbTooltip="Mandatory field">*</sup>
-            </label>
-            <div class="name-wrapper expiry-container position-relative">
-              <input type="number" class="form-control" formControlName="expires"
-                (keyup.enter)="newKeyModalRef.close(true)" [ngClass]="{
-                  'is-invalid':
-                    keyForm.get('expires').invalid &&
-                    keyForm.get('expires').dirty
-                }" />
-              <ng-container *ngIf="keyForm.get('expires').dirty">
-                <span *ngIf="keyForm.get('expires').hasError('required')"
-                  class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                  ngbTooltip="Expiry is required"></span>
-                <span *ngIf="keyForm.get('expires').hasError('min')"
-                  class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                  ngbTooltip="Mininum value is 1"></span>
-                <span *ngIf="isInvalidDate" class="text-danger position-absolute fa fa-exclamation-circle"
-                  container="body" ngbTooltip="Please enter the No of days within September 13, 275760"></span>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-        <div class="d-flex align-self-end justify-content-end w-100 mt-3">
-          <!-- <button type="button" class="btn btn-link mr-3" id="newKeyModalNo" (click)="c(false)">Cancel</button> -->
-          <button *ngIf="isCreate" type="button" class="btn btn-min-width btn-create" id="newKeyModalYes"
-            [disabled]="keyForm.invalid || isInvalidDate" (click)="newKeyModalRef.close(true)">
-            Create
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template #newAttributeModal>
-      <div class="modal-body new-attribute-modal ignore-outside d-flex flex-column">
-        <div class="d-flex justify-content-between">
-          <div class="font-lg">
-            <strong class="">Manage property</strong>
-          </div>
-          <button type="button" class="btn btn-link" (click)="addNewDetail()">
-            + Add
-          </button>
-        </div>
-        <div class="pt-2 pb-4 w-100 form-table">
-          <div class="table-header bg-accent text-white">
-            <p class="m-0">Name</p>
-            <p class="m-0">Key</p>
-            <p class="m-0">Type</p>
-            <p class="m-0">Value</p>
-            <p class="m-0"></p>
-          </div>
-          <div class="table-body" [formGroup]="additionalDetails">
-            <ng-container formArrayName="extraInfo">
-              <ng-container *ngFor="let control of userAttributes; let i = index" [formGroupName]="i">
-                <div class="position-relative">
-                  <input type="text" id="new-label" (keypress)="newField($event)" class="form-control"
-                    formControlName="label" #newLabel [ngClass]="{ 'is-invalid': getLabelError(i) }" odpAutoFocus
-                    (change)="setKey(i)" />
-                  <ng-container *ngIf="
-                      !additionalDetails.get(['extraInfo', i, 'label']).pristine
-                    ">
-                    <span *ngIf="
-                        additionalDetails
-                          .get(['extraInfo', i, 'label'])
-                          .hasError('required')
-                      " class="text-danger position-absolute fa fa-exclamation-circle error-icon-attr" container="body"
-                      ngbTooltip="This is a required field"></span>
-                    <span *ngIf="
-                        additionalDetails
-                          .get(['extraInfo', i, 'label'])
-                          .hasError('maxlength')
-                      " class="text-danger position-absolute fa fa-exclamation-circle error-icon-attr" container="body"
-                      ngbTooltip="Name should be within 30 characters"></span>
-                  </ng-container>
-                </div>
-                <div class="position-relative">
-                  <input type="text" id="new-key" class="form-control" [readonly]="true" formControlName="key" />
-                </div>
-                <div ngbDropdown #listDropdown="ngbDropdown" class="w-100" container="body">
-                  <button class="btn bg-white border rounded w-100 d-flex justify-content-between align-items-center"
-                    ngbDropdownToggle>
-                    <odp-field-type [label]="true" [field]="{
-                        type: control.get('type').value,
-                        properties: {}
-                      }" [basic]="true">
-                    </odp-field-type>
-                  </button>
-                  <div ngbDropdownMenu>
-                    <div class="dropdown-itm px-2 py-1" *ngFor="let type of types" (click)="
-                        setUserAttributeType(type, i); listDropdown.close()
-                      ">
-                      <odp-field-type [label]="true" [field]="{ type: type.value, properties: {} }" [basic]="true">
-                      </odp-field-type>
-                    </div>
-                  </div>
-                </div>
-                <div class="val-input d-flex justify-content-center position-relative">
-                  <input *ngIf="control.get('type').value === 'String'" type="text" id="new-val"
-                    (keypress)="newField($event)" class="form-control" formControlName="value"
-                    [ngClass]="{ 'is-invalid': getValError(i) }" />
-                  <input *ngIf="control.get('type').value === 'Number'" type="number" id="new-val"
-                    (keypress)="newField($event)" class="form-control" formControlName="value"
-                    [ngClass]="{ 'is-invalid': getValError(i) }" />
-                  <input *ngIf="control.get('type').value === 'Date'" type="date" id="new-val"
-                    (keypress)="newField($event)" class="form-control" formControlName="value"
-                    [ngClass]="{ 'is-invalid': getValError(i) }" />
-                  <odp-switch style="min-width: 68px" *ngIf="control.get('type').value === 'Boolean'"
-                    [edit]="{ status: true }" [checked]="getUserAttributeValue(i)"
-                    (checkedChange)="setUserAttributeValue($event, i)"></odp-switch>
-                  <span class="fas fa-question-circle text-danger error-icon-attr position-absolute" *ngIf="
-                      control.get('type').value !== 'Boolean' && getValError(i)
-                    " ngbTooltip="This is a required field" placement="top"></span>
-                </div>
-                <div class="del-field hover" (click)="removeField(i); $event.stopPropagation()">
-                  <span class="fas fa-times-circle fa-lg text-secondary"></span>
-                </div>
-              </ng-container>
-            </ng-container>
-          </div>
-        </div>
-        <div class="d-flex align-items-end justify-content-end mt-auto">
-          <button type="button" class="btn btn-link" (click)="
-              newAttributeModalRef.close(false); $event.stopPropagation()
-            ">
-            Cancel
-          </button>
-          <button type="button" class="btn btn-min-width btn-dark ml-5"
-            (click)="addExtraDetails(); $event.stopPropagation()" [disabled]="
-              !additionalDetails.get('extraInfo')['controls']['length'] ||
-              additionalDetails.get('extraInfo').invalid
-            ">
-            Save
-          </button>
-        </div>
-      </div>
-    </ng-template>
-
-    <ng-template #assignTeamModal>
-      <div class="assignApp-modal ignore-outside">
-        <div class="modal-header ignore-outside p-4">
-          <div class="text-dark d-flex ignore-outside">
-            <label for="addApp" class="label-width ignore-outside">
-              <strong class="ignore-outside">Add Groups</strong>
-            </label>
-            <div class="position-relative ignore-outside">
-              <odp-search-box (enteredText)="teamSearch($event)" (reset)="resetTeams()" [ignoreOutside]="true">
-              </odp-search-box>
-            </div>
-          </div>
-        </div>
-        <div class="modal-body p-4 ignore-outside">
-          <div class="d-flex flex-wrap ignore-outside">
-            <div class="team-card d-flex flex-column my-3 mx-4 ignore-outside" *ngFor="
-                let team of allTeams | filterTeam: filterTeamStr;
-                index as teamIndex
-              ">
-              <div class="team-thumbnail d-flex align-items-center justify-content-center hover ignore-outside"
-                [ngClass]="{
-                  'team-selected': team['teamSelected'],
-                  'bg-white': !team['teamSelected']
-                }" (click)="addTeam(teamIndex)">
-                <figure
-                  class="d-flex flex-column align-items-center justify-content-center position-relative ignore-outside">
-                  <img *ngIf="team.logo && team.logo.thumbnail" [src]="team.logo.thumbnail" alt="team-logo" />
-                  <div *ngIf="!team.logo || !team.logo.thumbnail"
-                    class="d-flex flex-column justify-content-center align-items-center pt-4 ignore-outside">
-                    <span class="fas fa-users fa-lg mb-2 text-muted ignore-outside"></span>
-                    <strong class="team-strength ignore-outside" [ngClass]="{ 'text-secondary': team['teamSelected'] }">
-                      {{ team.users.length }}
-                    </strong>
-                  </div>
-                  <figcaption class="team-thumbnail-caption position-absolute ignore-outside"
-                    *ngIf="team['teamSelected']">
-                    <span class="fas fa-check ignore-outside"></span>
-                    <span class="text ignore-outside">Selected</span>
-                  </figcaption>
-                </figure>
-              </div>
-              <div class="app-name text-truncate text-center mt-2 ignore-outside">
-                {{ team.name }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer p-3 d-flex w-100 bg-white mt-auto justify-content-end align-items-center">
-          <button type="button" class="btn btn-link mr-3 ignore-outside" (click)="assignTeamModalRef.close(false)"
-            id="appAddModalNo">
-            Cancel
-          </button>
-          <button type="button" class="btn btn-dark btn-min-width ignore-outside"
-            (click)="assignTeamModalRef.close(true)" id="appAddModalYes">
-            Add
-          </button>
-        </div>
-      </div>
-    </ng-template>
 
     <odp-delete-modal [open]="openDeleteBotModal" (close)="closeDeleteBotModal($event)">
       <span class="odp-bots font-xl text-success"></span>
     </odp-delete-modal>
   </div>
-  <div *ngIf="isCreate" class="slide-overlay position-fixed"></div>
+  <div *ngIf="isCreate || addNewKey || addNewProperty" class="slide-overlay position-fixed"></div>
   <div *ngIf="isCreate" class="slide-window position-fixed bg-white border-left p-4">
     <span class="fa fa-times text-secondary hover close" id="closeicon" (click)="closeWindow()"></span>
     <div class="d-flex align-items-center justify-content-between mb-4">
@@ -418,4 +191,154 @@
       </button>
     </form>
   </div>
+  <div *ngIf="addNewKey && !isCreate" class="slide-window position-fixed bg-white border-left p-4">
+    <span class="fa fa-times text-secondary hover close" id="closeicon" (click)="closeWindow()"></span>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <div class="d-flex align-items-center">
+        <h5 class="font-weight-bold">{{ editMode ? 'Edit Key' : 'Create Key' }}</h5>
+      </div>
+    </div>
+    <form class="d-flex flex-column" [formGroup]="keyForm" odpFocusNext>
+      <div class="form-group position-relative">
+        <label for="botName">
+          Key Name
+          <sup class="text-danger">*</sup>
+        </label>
+
+        <div class="form-group position-relative">
+          <input newlabel type="text" class="form-control" id="name" placeholder="Give a label to identify"
+            formControlName="label" odpAutoFocus [ngClass]="{
+              'is-invalid':
+                keyForm.get('label').invalid && keyForm.get('label').dirty
+            }" />
+          <ng-container *ngIf="keyForm.get('label').dirty">
+            <span *ngIf="keyForm.get('label').hasError('required')"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Name is required"></span>
+            <span *ngIf="keyForm.get('label').hasError('maxlength')"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Name should be within 30 characters"></span>
+            <span *ngIf="keyForm.get('label').hasError('pattern')"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Name can be only alphanumeric ,spaces, _and - characters only"></span>
+          </ng-container>
+        </div>
+      </div>
+      <div class="form-group position-relative">
+        <label for="expires"> Expiry </label>
+        <div class="form-group position-relative">
+          <input type="number" class="form-control" formControlName="expires" [ngClass]="{
+              'is-invalid':
+                keyForm.get('expires').invalid &&
+                keyForm.get('expires').dirty
+            }" placeholder="Give an expiration period" />
+          <ng-container *ngIf="keyForm.get('expires').dirty">
+            <span *ngIf="keyForm.get('expires').hasError('required')"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Expiry is required"></span>
+            <span *ngIf="keyForm.get('expires').hasError('min')"
+              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Mininum value is 1"></span>
+            <span *ngIf="isInvalidDate" class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              ngbTooltip="Please enter the No of days within September 13, 275760"></span>
+          </ng-container>
+        </div>
+
+      </div>
+      <div class="form-group position-relative">
+        <label for="period"> Period </label>
+        <div class="input-group">
+          <select id="period" class="form-control input-text" formControlName="period"
+            (ngModelChange)="periodChange($event)" ngModel="days">
+            <option *ngFor="let item of expiryOptions" [value]="item.value">
+              {{ item.label }}
+            </option>
+          </select>
+          <span *ngIf="
+            (keyForm.get('period').touched || keyForm.get('period').dirty) &&
+            keyForm.get('period').hasError('required')
+          " class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
+            ngbTooltip="Period is required"></span>
+        </div>
+
+      </div>
+      <button type="button" class="btn btn-primary" id="createkey" (click)="createBotKey()">
+        {{ editMode ? 'Save' : 'Add' }}
+      </button>
+    </form>
+  </div>
+  <div *ngIf="addNewProperty && !isCreate" class="slide-window position-fixed bg-white border-left p-4">
+    <span class="fa fa-times text-secondary hover close" id="closeicon" (click)="closeWindow()"></span>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <div class="d-flex align-items-center">
+        <h5 class="font-weight-bold">
+          {{ editMode ? 'Edit Property' : 'Create Property' }}
+        </h5>
+      </div>
+    </div>
+    <form class="d-flex flex-column" [formGroup]="attributeForm" odpFocusNext>
+      <div class="form-group position-relative">
+        <label for="label">
+          Label
+          <sup class="text-danger">*</sup>
+        </label>
+        <div class="input-group">
+          <input id="label" class="form-control pr-4 input-text" type="text" placeholder="Label name"
+            formControlName="label" autocomplete="autocomplete_off_hack" />
+          <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
+              attributeForm.get('type').touched &&
+              attributeForm.get('label').hasError('required')
+            " ngbTooltip="This is a required field"></span>
+        </div>
+      </div>
+      <div class="form-group position-relative">
+        <label for="type">
+          Type
+          <sup class="text-danger">*</sup>
+        </label>
+        <div class="input-group">
+          <select id="type" class="form-control input-text" formControlName="type"
+            (ngModelChange)="onAttributeFormTypeChange($event)">
+            <option *ngFor="let item of types" [value]="item.value">
+              {{ item.label }}
+            </option>
+          </select>
+          <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
+              attributeForm.get('type').touched &&
+              attributeForm.get('type').hasError('required')
+            " ngbTooltip="This is a required field"></span>
+        </div>
+      </div>
+      <div class="form-group position-relative">
+        <label for="label">
+          Value
+          <sup class="text-danger">*</sup>
+        </label>
+        <div class="input-group">
+          <input id="value" class="form-control pr-4 input-text" type="text" placeholder="Value" formControlName="value"
+            autocomplete="autocomplete_off_hack" *ngIf="attributeForm.get('type').value === 'String'" />
+          <input id="value" class="form-control pr-4 input-text" type="number" placeholder="Value"
+            formControlName="value" autocomplete="autocomplete_off_hack"
+            *ngIf="attributeForm.get('type').value === 'Number'" />
+          <odp-switch [edit]="{ status: true }" [checked]="attributeForm.get('value').value"
+            (checkedChange)="setUserAttributeValue($event)" *ngIf="attributeForm.get('type').value === 'Boolean'">
+          </odp-switch>
+
+          <input id="value" class="form-control pr-4 input-text" type="date" placeholder="Value" formControlName="value"
+            autocomplete="autocomplete_off_hack" *ngIf="attributeForm.get('type').value === 'Date'" />
+          <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
+              attributeForm.get('value').dirty &&
+              attributeForm.get('value').hasError('required')
+            " ngbTooltip="This is a required field"></span>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary add-button" id="addAttributes" (click)="addAttribute()">
+        {{ editMode ? 'Save' : 'Add' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- <div *ngIf="isLatest" class="msg">
+    * Please Copy the key. The key cannot be retrived once you navigate away from the screen
+  </div> -->
 </div>

@@ -23,6 +23,11 @@ import {
 } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
 import { FilterPipe } from 'src/app/utils/pipes/filter.pipe';
+import { ManageBotGroupComponent } from './manage-bot-group/manage-bot-group.component';
+import { ManageBotKeyComponent } from './manage-bot-key/manage-bot-key.component';
+import { ManageBotPropertyComponent } from './manage-bot-property/manage-bot-property.component';
+import { filter } from 'rxjs/operators';
+
 
 @Component({
   selector: 'odp-local-bot',
@@ -54,11 +59,15 @@ export class LocalBotComponent implements OnInit {
   newAttributeModal: TemplateRef<HTMLElement>;
   @ViewChild('assignTeamModal', { static: false })
   assignTeamModal: TemplateRef<HTMLElement>;
+  @ViewChild('manageGroups') manageGroups: ManageBotGroupComponent;
+  @ViewChild('manageKeys') manageKeys: ManageBotKeyComponent;
+  @ViewChild('manageProperty') manageProperty: ManageBotPropertyComponent;
   @ViewChild('editAttributeModal', { static: false })
   editAttributeModal: TemplateRef<HTMLElement>;
   botRecords: Array<any>;
   botForm: FormGroup;
   keyForm: FormGroup;
+  attributeForm: FormGroup;
   newBotModalRef: NgbModalRef;
   editBotModalRef: NgbModalRef;
   newKeyModalRef: NgbModalRef;
@@ -84,10 +93,16 @@ export class LocalBotComponent implements OnInit {
   botCount = 0;
   ignoreOutside: boolean;
   isInvalidDate: boolean;
+  addNewKey: boolean;
+  addNewProperty: boolean;
   isLoading: boolean = false;
   isDataLoading: boolean = false;
   currentTab: string;
   ogKeys: any[];
+  expiryOptions: Array<any> = [{ label: 'Days', value: 'days' }, { label: 'months', value: 'months' }, { label: 'years', value: 'years' }];
+  editMode: boolean = false;
+  keyId: string;
+  isLatest: boolean = false;
 
 
   constructor(
@@ -96,7 +111,7 @@ export class LocalBotComponent implements OnInit {
     private router: Router,
     private ts: ToastrService,
     private fb: FormBuilder,
-    private filter: FilterPipe
+    private filterTerm: FilterPipe
   ) {
     const self = this;
     self.botRecords = [];
@@ -133,10 +148,23 @@ export class LocalBotComponent implements OnInit {
         ],
       ],
       expires: [null, [Validators.required, Validators.min(1)]],
+      period: [null]
     });
-    self.additionalDetails = self.fb.group({
-      extraInfo: self.fb.array([]),
+    self.attributeForm = self.fb.group({
+      key: ['', Validators.required],
+      type: ['String', Validators.required],
+      value: ['', Validators.required],
+      label: ['', [Validators.required, Validators.maxLength(30)]],
     });
+    this.attributeForm
+      .get('label')
+      .valueChanges.pipe(filter(() => !this.editMode))
+      .subscribe((val: any) => {
+        this.attributeForm
+          .get('key')
+          .patchValue(this.appService.toCamelCase(val));
+      });
+
   }
 
   ngOnInit() {
@@ -146,7 +174,7 @@ export class LocalBotComponent implements OnInit {
     this.keyForm.get('expires').valueChanges.subscribe((value) => {
       self.onDaysChange(value);
     });
-    this.currentTab = 'Key'
+    this.currentTab = 'Keys'
   }
 
   getBotRecords() {
@@ -276,48 +304,11 @@ export class LocalBotComponent implements OnInit {
           }
         );
     }
-    // self.newBotModalRef = self.commonService.modal(self.newBotModal, {
-    //   size: 'sm',
-    // });
-    // self.newBotModalRef.result.then(
-    //   (close) => {
-    //     if (close) {
-    //       const payload = {
-    //         user: {
-    //           bot: true,
-    //           basicDetails: {
-    //             name: self.botForm.get('botName').value,
-    //           },
-    //           description: self.botForm.get('desc').value,
-    //         },
-    //       };
-    //       self.commonService
-    //         .post('user', `/${self.commonService.app._id}/bot`, payload)
-    //         .subscribe(
-    //           (res) => {
-    //             self.botForm.reset();
-    //             self.getBotRecords();
-    //             self.getBotCount();
-    //             self.userTeams = [];
-    //           },
-    //           (err) => {
-    //             self.commonService.errorToast(
-    //               err,
-    //               'Oops, something went wrong. Please try again later.'
-    //             );
-    //           }
-    //         );
-    //     } else {
-    //       self.botForm.reset();
-    //     }
-    //   },
-    //   (dismiss) => {
-    //     self.botForm.reset();
-    //   }
-    // );
+
   }
   selectRecord(bot) {
     const self = this;
+
     if (bot && bot.botKeys) {
       self.selectedBot.botKeys.forEach((key) => {
         key.isNew = false;
@@ -325,6 +316,7 @@ export class LocalBotComponent implements OnInit {
     }
     self.selectedBot = bot;
     self.ogKeys = bot.botKeys;
+    self.getAllTeams();
     self.getUserTeam();
   }
   editBot() {
@@ -374,60 +366,60 @@ export class LocalBotComponent implements OnInit {
       }
     );
   }
+
+  createKey() {
+    this.addNewKey = true;
+  }
   createBotKey() {
     const self = this;
-    self.isCreate = true;
-    self.newKeyModalRef = self.commonService.modal(self.newKeyModal, {
-      size: 'sm',
-    });
-    self.newKeyModalRef.result.then(
-      (close) => {
-        if (close) {
-          if (self.keyForm.invalid || this.isInvalidDate) {
-            return;
-          }
-          const payload = self.keyForm.value;
-          payload.expires = payload.expires * 1440;
-          self.showLazyLoader = true;
+    if (self.keyForm.invalid || this.isInvalidDate) {
+      return;
+    }
+    const payload = self.keyForm.value;
+    if (payload.period == 'days') {
+      payload.expires = payload.expires * 1440
+    }
+    if (payload.period == 'months') {
+      payload.expires = payload.expires * 30 * 1440
+    }
+    if (payload.period == 'years') {
+      payload.expires = payload.expires * 365 * 1440
+    }
 
-          self.commonService
-            .post(
-              'user',
-              `/${self.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`,
-              payload
-            )
-            .subscribe(
-              (res) => {
-                self.showLazyLoader = false;
-                self.keyForm.reset();
-                if (!self.selectedBot.botKeys) {
-                  self.selectedBot.botKeys = [];
-                }
-                res.isNew = true;
-                res.isLatest = true;
-                self.selectedBot.botKeys = [res, ...self.selectedBot.botKeys];
-                setTimeout(() => {
-                  self.selectedBot.botKeys.forEach((key) => {
-                    key.isLatest = false;
-                  });
-                }, 10000);
-              },
-              (err) => {
-                self.showLazyLoader = false;
-                self.commonService.errorToast(
-                  err,
-                  'Oops, something went wrong. Please try again later.'
-                );
-              }
-            );
-        } else {
+    if (this.editMode) {
+      payload['keyId'] = this.keyId
+    }
+    self.showLazyLoader = true;
+
+    const call = this.editMode ? self.commonService.put('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload) : self.commonService
+      .post(
+        'user',
+        `/${self.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`,
+        payload
+      )
+
+    call
+      .subscribe(
+        (res) => {
+          self.showLazyLoader = false;
+          this.addNewKey = false;
           self.keyForm.reset();
-        }
-      },
-      (dismiss) => {
-        self.keyForm.reset();
-      }
-    );
+          if (!self.selectedBot.botKeys) {
+            self.selectedBot.botKeys = [];
+          }
+          res.isNew = true;
+          res.isLatest = true;
+          this.isLatest = true;
+          self.selectedBot.botKeys = [res, ...self.selectedBot.botKeys];
+          setTimeout(() => {
+            self.selectedBot.botKeys.forEach((key) => {
+              key.isLatest = false;
+            });
+            this.editMode = false
+            this.addNewKey = false
+            this.manageKeys.refreshCell()
+          }, 10000);
+        })
   }
 
   getColor(bot) {
@@ -472,40 +464,44 @@ export class LocalBotComponent implements OnInit {
     }
   }
 
-  createNewProperty() {
-    const self = this;
-    if (self.userAttributeList.length) {
-      self.userAttributeList.forEach((element) => {
-        let form = self.fb.group({
-          key: ['', Validators.required],
-          type: ['String', Validators.required],
-          value: ['', Validators.required],
-          label: ['', [Validators.required, Validators.maxLength(30)]],
-        });
-        form.patchValue(element);
-        (self.additionalDetails.get('extraInfo') as FormArray).push(form);
-      });
-    } else {
-      const form = self.fb.group({
-        label: ['', [Validators.required, Validators.maxLength(30)]],
-        key: ['', [Validators.required]],
-        type: ['String', [Validators.required]],
-        value: ['', [Validators.required]],
-      });
-      (self.additionalDetails.get('extraInfo') as FormArray).push(form);
+  onAttributeFormTypeChange(type: any) {
+    this.attributeForm.get('type').setValue(type);
+    this.attributeForm
+      .get('value')
+      .setValue(type === 'Boolean' ? false : null);
+  }
+
+
+  addAttribute() {
+    const { key, ...rest } = this.attributeForm.value;
+    if (!this.selectedBot.attributes) {
+      this.selectedBot['attributes'] = {}
     }
-    self.newAttributeModalRef = self.commonService.modal(
-      self.newAttributeModal,
-      { size: 'lg' }
-    );
-    self.newAttributeModalRef.result.then(
-      (close) => {
-        self.resetAdditionDetailForm();
-      },
-      (dismiss) => {
-        self.resetAdditionDetailForm();
-      }
-    );
+    this.selectedBot.attributes[key] = this.appService.cloneObject(rest);
+    this.commonService
+      .put(
+        'user',
+        `/${this.commonService.app._id}/user/${this.selectedBot._id}`,
+        this.selectedBot
+      )
+      .subscribe(
+        () => {
+          this.isDataLoading = true;
+          this.getBotRecords()
+          this.addNewProperty = false;
+          this.manageProperty.refreshCell()
+          this.attributeForm.reset()
+          this.editMode = false
+          this.ts.success('Custom Details Saved Successfully');
+        },
+        (err) => {
+          this.ts.error(err.error.message);
+        }
+      );
+  }
+
+  setUserAttributeValue(val) {
+    this.attributeForm.get('value').patchValue(val);
   }
 
   teamSearch(event) {
@@ -696,41 +692,8 @@ export class LocalBotComponent implements OnInit {
   }
   assignTeam() {
     const self = this;
-    self.getAllTeams();
-    self.assignTeamModalRef = self.commonService.modal(self.assignTeamModal, {
-      windowClass: 'assignApp-modal',
-      centered: true,
-    });
-    self.assignTeamModalRef.result.then(
-      (close) => {
-        if (close && self.selectedGroups.length > 0) {
-          const teamIds = [];
-          self.selectedGroups.forEach((team) => {
-            delete team.teamSelected;
-            team.users.push(self.selectedBot._id);
-            teamIds.push(team._id);
-          });
-          self.showLazyLoader = true;
-          self.commonService
-            .put(
-              'user',
-              `/${this.commonService.app._id}/user/utils/addToGroups/${self.selectedBot._id}`,
-              { groups: teamIds }
-            )
-            .subscribe(
-              () => {
-                self.showLazyLoader = false;
-                self.getUserTeam();
-                self.ts.success('Bot has been added to group successfully');
-              },
-              (err) => {
-                self.ts.error(err.error.message);
-              }
-            );
-        }
-      },
-      (dismiss) => { }
-    );
+    // self.getAllTeams();
+    self.getUserTeam();
   }
   getUserTeam() {
     const self = this;
@@ -794,14 +757,7 @@ export class LocalBotComponent implements OnInit {
         }
       );
   }
-  getUserAttributeValue(index: number) {
-    const self = this;
-    return self.additionalDetails.get(['extraInfo', index, 'value']).value;
-  }
-  setUserAttributeValue(val: boolean, index: number) {
-    const self = this;
-    self.additionalDetails.get(['extraInfo', index, 'value']).patchValue(val);
-  }
+
   hasPermission(type: string): boolean {
     const self = this;
     return self.commonService.hasPermission(type);
@@ -858,23 +814,23 @@ export class LocalBotComponent implements OnInit {
   }
 
   enterToSelect(event, currentTab) {
-    if (currentTab === 'Key') {
-      if (event === 'reset') {
-        this.searchTerm = '';
-        this.selectRecord['botkeys'] = this.ogKeys;
-        this.selectedBot = {};
-        this.selectRecord(this.selectedBot);
-      } else {
-        const self = this;
-        if (self.searchTerm) {
-          const returnedData = self.filter.transform(
-            self.selectedBot.botKeys,
-            self.searchTerm
-          );
-          this.selectRecord['botkeys'] = returnedData;
-        }
-      }
-    }
+    // if (currentTab === 'Keys') {
+    //   if (event === 'reset') {
+    //     this.searchTerm = '';
+    //     this.selectRecord['botkeys'] = this.ogKeys;
+    //     this.selectedBot = {};
+    //     this.selectRecord(this.selectedBot);
+    //   } else {
+    //     const self = this;
+    //     if (self.searchTerm) {
+    //       const returnedData = self.filterTerm.transform(
+    //         self.selectedBot.botKeys,
+    //         self.searchTerm
+    //       );
+    //       this.selectRecord['botkeys'] = returnedData;
+    //     }
+    //   }
+    // }
   }
 
   showSearch() {
@@ -882,9 +838,36 @@ export class LocalBotComponent implements OnInit {
   }
 
   add(tab) {
-
+    if (tab === 'Groups') {
+      this.manageGroups.openGroupModal()
+    }
+    if (tab === 'Keys') {
+      this.addNewKey = true;
+    }
+    if (tab === 'Properties') {
+      this.addNewProperty = true;
+    }
   }
   closeWindow() {
     this.isCreate = false;
+    this.addNewKey = false;
+  }
+
+  periodChange(event) {
+    this.attributeForm.get('period').setValue(event);
+  }
+
+  editAttribute(data) {
+    this.attributeForm.setValue(data);
+    this.editMode = true
+    this.addNewProperty = true;
+  }
+
+  editKey(data) {
+    this.keyForm.get('label').patchValue(data.label)
+    this.keyForm.get('expires').patchValue(data.expires / 1440)
+    this.editMode = true
+    this.keyId = data._id;
+    this.addNewKey = true;
   }
 }
