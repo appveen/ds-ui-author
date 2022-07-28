@@ -3,7 +3,6 @@
 
 
 .options {
-  min-height: 50px;
   padding: 40px;
 }
 
@@ -23,6 +22,11 @@
 
   .group-actions {
     min-width: 100px;
+  }
+
+  .scroll-pane {
+    height: 100%;
+    overflow: auto;
   }
 }
 

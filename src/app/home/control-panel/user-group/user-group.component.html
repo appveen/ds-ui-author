@@ -5,95 +5,69 @@
   </div>
 </div>
 <div class="group-page d-flex flex-column bg-light">
-  <!-- <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb> -->
-  <div class="options d-flex justify-content-between align-items-center w-100 px-3">
+  <div class="options d-flex justify-content-between align-items-center w-100 px-4">
     <div class="font-xxl">
       <span class="fw-600 mr-2">Groups</span>
-      <span>({{groupList.length}})</span>
+      <span>({{totalRecords - 1}})</span>
     </div>
-    <!--<odp-search-box (enteredText)="searchGroup($event)" (reset)="resetSearch();"></odp-search-box>-->
     <div class="d-flex align-items-center">
-      <odp-search-box (enteredText)="searchGroup($event)" (reset)="resetSearch()"></odp-search-box>
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+      <!-- <odp-search-box (enteredText)="searchGroup($event)" (reset)="resetSearch()"></odp-search-box> -->
       <button class="add-new btn btn-primary ml-3" (click)="addNewGroup()" *ngIf="hasPermission('PMGBC')">
         <span class="fa fa-plus"></span>
       </button>
     </div>
   </div>
-  <!-- <div class="d-flex flex-column w-100 pl-3">
-    <div class="card-container pt-3 d-flex flex-wrap" (scroll)="loadMore($event)">
-      <div class="group-card m-3 text-center hover" (click)="addNewGroup()" *ngIf="hasPermission('PMGBC')">
-        <div class="group-card-circle bg-white d-flex flex-column justify-content-center align-items-center mb-2">
-          <div class="align-self-center text-center bg-primary p-3 circle">
-            <span class="fa fa-plus fa-lg text-white"></span>
+
+  <div class="scroll-pane">
+    <div class="list-group mx-4 mb-4">
+      <div class="list-group-item header py-0 bg-light text-secondary text-uppercase">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="group-name">Group Name</div>
+          <div class="d-flex align-items-center">
+            <div class="group-users-count">Users</div>
+            <div class="group-bots-count">Bots</div>
+            <div class="group-author-flag">Author</div>
+            <div class="group-appcenter-flag">Appcenter</div>
           </div>
+          <div class="group-actions"></div>
         </div>
-        <span class="text-primary">Add Group</span>
       </div>
-      <ng-container *ngFor="let group of groupList">
-        <div class="group-card text-center m-3 hover">
-          <div
-            class="group-card-circle bg-white d-flex flex-column justify-content-center align-items-center mb-2 hover"
-            [routerLink]="['../gm', group._id]">
-            <span class="odp-users fa-2x"></span>
-            <div class="d-flex align-items-center mt-2">
-              <span class="font-weight-bold">{{ group.users.length }}</span>
+      <div class="list-group-item" *ngFor="let group of groupList|filterTeam:searchTerm">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="group-name">{{group.name}}</div>
+          <div class="d-flex align-items-center">
+            <div class="group-users-count">{{group.membersCount}}</div>
+            <div class="group-bots-count">{{group.botsCount}}</div>
+            <div class="group-author-flag d-flex align-items-center">
+              <ng-container *ngIf="group.hasAuthorRoles">
+                <span class="fa fa-circle fa-xs text-success mr-2"></span>
+                <span class="text-dark">Active</span>
+              </ng-container>
+              <ng-container *ngIf="!group.hasAuthorRoles">
+                <span class="fa fa-circle fa-xs text-muted mr-2"></span>
+                <span class="text-muted">Inactive</span>
+              </ng-container>
+            </div>
+            <div class="group-appcenter-flag d-flex align-items-center">
+              <ng-container *ngIf="group.hasAppcenterRoles">
+                <span class="fa fa-circle fa-xs text-success mr-2"></span>
+                <span class="text-dark">Active</span>
+              </ng-container>
+              <ng-container *ngIf="!group.hasAppcenterRoles">
+                <span class="fa fa-circle fa-xs text-muted mr-2"></span>
+                <span class="text-muted">Inactive</span>
+              </ng-container>
             </div>
           </div>
-          <div class="text-truncate" [ngbTooltip]="group.name">
-            {{ group.name }}
+          <div class="group-actions">
+            <button type="button" class="btn btn-light bg-white mr-2" [routerLink]="['../gm', group._id]">
+              <span class="fa fa-pen text-secondary"></span>
+            </button>
+            <button type="button" class="btn btn-light bg-white">
+              <span class="fa fa-trash text-secondary"></span>
+            </button>
           </div>
-        </div>
-      </ng-container>
-    </div>
-  </div> -->
-
-  <div class="list-group m-4">
-    <div class="list-group-item header py-0 bg-light text-secondary text-uppercase">
-      <div class="d-flex align-items-center justify-content-between">
-        <div class="group-name">Group Name</div>
-        <div class="d-flex align-items-center">
-          <div class="group-users-count">Users</div>
-          <div class="group-bots-count">Bots</div>
-          <div class="group-author-flag">Author</div>
-          <div class="group-appcenter-flag">Appcenter</div>
-        </div>
-        <div class="group-actions"></div>
-      </div>
-    </div>
-    <div class="list-group-item" *ngFor="let group of groupList">
-      <div class="d-flex align-items-center justify-content-between">
-        <div class="group-name">{{group.name}}</div>
-        <div class="d-flex align-items-center">
-          <div class="group-users-count">{{group.membersCount}}</div>
-          <div class="group-bots-count">{{group.botsCount}}</div>
-          <div class="group-author-flag d-flex align-items-center">
-            <ng-container *ngIf="group.hasAuthorRoles">
-              <span class="fa fa-circle fa-xs text-success mr-2"></span>
-              <span class="text-dark">Active</span>
-            </ng-container>
-            <ng-container *ngIf="!group.hasAuthorRoles">
-              <span class="fa fa-circle fa-xs text-muted mr-2"></span>
-              <span class="text-muted">Inactive</span>
-            </ng-container>
-          </div>
-          <div class="group-appcenter-flag d-flex align-items-center">
-            <ng-container *ngIf="group.hasAppcenterRoles">
-              <span class="fa fa-circle fa-xs text-success mr-2"></span>
-              <span class="text-dark">Active</span>
-            </ng-container>
-            <ng-container *ngIf="!group.hasAppcenterRoles">
-              <span class="fa fa-circle fa-xs text-muted mr-2"></span>
-              <span class="text-muted">Inactive</span>
-            </ng-container>
-          </div>
-        </div>
-        <div class="group-actions">
-          <button type="button" class="btn btn-light bg-white mr-2" [routerLink]="['../gm', group._id]">
-            <span class="fa fa-pen text-secondary"></span>
-          </button>
-          <button type="button" class="btn btn-light bg-white">
-            <span class="fa fa-trash text-secondary"></span>
-          </button>
         </div>
       </div>
     </div>

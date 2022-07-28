@@ -18,13 +18,10 @@ export class UserGroupComponent implements OnInit, OnDestroy {
     showLazyLoader: boolean;
     groupList: Array<Group>;
     searchTerm: string;
-    newGroupModalRef: NgbModalRef;
     newGroup: Group;
-    breadcrumbPaths: Array<Breadcrumb>;
     filterGroupText = '';
     totalRecords: number;
     form: FormGroup;
-
     showNewGroupWindow: boolean;
 
     constructor(private commonService: CommonService,
@@ -33,7 +30,6 @@ export class UserGroupComponent implements OnInit, OnDestroy {
         this.subscriptions = {};
         this.groupList = [];
         this.newGroup = {};
-        this.breadcrumbPaths = [];
         this.form = this.fb.group({
             name: ["", [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
             description: ["", [Validators.maxLength(240), Validators.pattern(/\w+/)]]
@@ -41,18 +37,11 @@ export class UserGroupComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.breadcrumbPaths.push({
-            active: true,
-            label: 'Groups'
-        });
         this.resetSearch();
 
     }
 
     ngOnDestroy() {
-        if (this.newGroupModalRef) {
-            this.newGroupModalRef.close();
-        }
     }
 
     getGroupCount() {
@@ -118,7 +107,7 @@ export class UserGroupComponent implements OnInit, OnDestroy {
     resetSearch() {
         this.apiConfig = {
             page: 1,
-            count: 30,
+            count: -1,
             filter: {},
             select: 'name users roles.id',
             noApp: true
@@ -148,7 +137,7 @@ export class UserGroupComponent implements OnInit, OnDestroy {
             this.subscriptions['createGroup'] = this.commonService.post('user', `/${this.commonService.app._id}/group/`, payload).subscribe(res => {
                 this.newGroup = {};
                 this.showLazyLoader = false;
-                this.newGroupModalRef.close();
+                this.showNewGroupWindow = false;
                 this.router.navigate(['/app', this.commonService.app._id, 'cp', 'gm', res._id]);
             }, err => {
                 this.showLazyLoader = false;
