@@ -40,10 +40,10 @@ export class RoundRadioComponent {
   get styleInner() {
     const self = this;
     return {
-      'min-width': self.size / 2 + 'px',
-      'max-width': self.size / 2 + 'px',
-      'min-height': self.size / 2 + 'px',
-      'max-height': self.size / 2 + 'px'
+      'min-width': self.size / 2.5 + 'px',
+      'max-width': self.size / 2.5 + 'px',
+      'min-height': self.size / 2.5 + 'px',
+      'max-height': self.size / 2.5 + 'px'
     };
   }
 
