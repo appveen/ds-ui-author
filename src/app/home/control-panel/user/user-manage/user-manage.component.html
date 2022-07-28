@@ -1,5 +1,5 @@
 <div class="settings">
-  <div class="hover" (click)="showSettings = !showSettings">
+  <div class="hover ignore-outside" (click)="showSettings = !showSettings">
     <i class="fa fa-cog font-xl" style="margin-right: 5px"></i>
     <label style="margin-right: 10px">Profile Settings</label>
     <i
@@ -10,7 +10,7 @@
       }"
     ></i>
   </div>
-  <div class="popover" *ngIf="showSettings">
+  <div class="popover" *ngIf="showSettings" odpClickOutside (outside)="showSettings=false">
     <span
       id="closesession"
       (click)="closeAllSessions(user)"

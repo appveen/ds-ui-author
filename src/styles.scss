@@ -356,15 +356,15 @@ $odp-ui-author-theme: mat-light-theme(
   }
 }
 
-.btn:not(.btn-link) {
-  min-height: 32px;
-  max-height: 32px;
+// .btn:not(.btn-link) {
+//   min-height: 32px;
+//   max-height: 32px;
 
-  &.btn-sm {
-    min-height: 24px;
-    max-height: 24px;
-  }
-}
+//   &.btn-sm {
+//     min-height: 24px;
+//     max-height: 24px;
+//   }
+// }
 
 .audit-object-log {
   .min-height {

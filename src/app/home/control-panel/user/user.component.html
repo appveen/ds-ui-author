@@ -1,8 +1,5 @@
 <div class="bg-light w-100 h-100">
-  <div
-    class="default-loader d-flex justify-content-center w-100 h-100"
-    *ngIf="showLazyLoader"
-  >
+  <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
       <span class="fa fa-spinner fa-pulse fa-3x"></span>
       <div class="text-secondary mt-2">Processing...</div>
@@ -12,106 +9,54 @@
     <!-- <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb> -->
     <div class="options d-flex">
       <div class="fw-600 font-xxl">Users</div>
-      <div class="btn-group ml-auto">
+      <div class="d-flex align-items-center ml-auto">
         <ng-container *ngIf="hasPermission('PMUBD')">
-          <button
-            *ngIf="checkedUsers.length > 0"
-            type="button"
-            class="btn btn-link text-delete"
-            (click)="removeUsers()"
-            id="removeusers"
-          >
+          <button *ngIf="checkedUsers.length > 0" type="button" class="btn btn-link text-delete" (click)="removeUsers()"
+            id="removeusers">
             <span class="fa fa-trash mr-2"></span>
             <span class="text">Remove Users ({{ checkedUsers.length }})</span>
           </button>
         </ng-container>
         <div class="mr-2">
-          <odp-search-box
-            *ngIf="search"
-            (enteredText)="searchTerm = $event"
-            (reset)="enterToSelect('reset')"
-            [selectOnEnter]="true"
-            (enteredPressed)="enterToSelect($event)"
-          ></odp-search-box>
+          <odp-search-box *ngIf="search" (enteredText)="searchTerm = $event" (reset)="enterToSelect('reset')"
+            [selectOnEnter]="true" (enteredPressed)="enterToSelect($event)"></odp-search-box>
+          <button *ngIf="!search" type="button" class="add-new btn bg-white" ngbTooltip="Search" id="search"
+            (click)="search = !search">
+            <span class="fa fa-search"></span>
+            <!-- <span class="text">Bulk Import</span> -->
+          </button>
         </div>
-        <button
-          *ngIf="!search"
-          type="button"
-          class="add-new btn mr-2 bg-white"
-          ngbTooltip="Search"
-          id="search"
-          (click)="search = !search"
-        >
-          <span class="fa fa-search"></span>
-          <!-- <span class="text">Bulk Import</span> -->
-        </button>
-        <button
-          *ngIf="hasPermission('PMUBC')"
-          type="button"
-          class="add-new btn btn-dark mr-2"
-          style="margin: auto 0"
-          routerLink="bulk-import"
-          ngbTooltip="Bulk Import"
-          id="bulkimport"
-        >
+        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-dark mr-2"
+          routerLink="bulk-import" ngbTooltip="Bulk Import" id="bulkimport">
           <span class="fa fa-upload"></span>
           <!-- <span class="text">Bulk Import</span> -->
         </button>
-        <button
-          *ngIf="hasPermission('PMUBC')"
-          type="button"
-          id="newUser"
-          class="add-new btn-min-width btn btn-primary"
-          style="margin: auto 0"
-          (click)="newUser()"
-        >
-          <span class="fa fa-user-plus mr-2"></span>
-          <span class="text">Add User</span>
+        <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary"
+         (click)="newUser()">
+          <span class="fa fa-plus"></span>
+          <!-- <span class="text">Add User</span> -->
         </button>
       </div>
     </div>
 
-    <div
-      class="bg-white list"
-      style="max-height: 80vh; min-height: 80vh"
-      *ngIf="!isLoading"
-    >
-      <div
-        class="d-flex justify-content-center align-items-center h-100 font-xxl fw-600 heading"
-        *ngIf="userList.length === 0"
-      >
+    <div class="bg-white list" style="max-height: 80vh; min-height: 80vh" *ngIf="!isLoading">
+      <div class="d-flex justify-content-center align-items-center h-100 font-xxl fw-600 heading"
+        *ngIf="userList.length === 0">
         No users found
       </div>
       <div class="row" style="max-height: inherit" *ngIf="userList.length > 0">
         <div class="col-4 users">
-          <div
-            *ngFor="let user of userList; let usrIndex = index"
-            class="d-flex"
-            [id]="'user' + usrIndex"
-            (click)="showDetails(user)"
-          >
-            <div
-              class="selectedTab"
-              [ngStyle]="{
+          <div *ngFor="let user of userList; let usrIndex = index" class="d-flex" [id]="'user' + usrIndex"
+            (click)="showDetails(user)">
+            <div class="selectedTab" [ngStyle]="{
                 background: user._id === details?._id ? '#ff6f00' : 'none'
-              }"
-            ></div>
-            <div
-              class="userList"
-              style="flex-grow: 1"
-              [ngClass]="{ selected: user._id === details?._id }"
-            >
+              }"></div>
+            <div class="userList" style="flex-grow: 1" [ngClass]="{ selected: user._id === details?._id }">
               <div style="display: flex">
-                <input
-                  type="checkbox"
-                  value="false"
-                  [attr.id]="'checkbox' + usrIndex"
-                  class="mr-3"
-                  style="margin-top: 5px"
-                  (change)="clickCheckbox($event, user)"
-                />
+                <input type="checkbox" value="false" [attr.id]="'checkbox' + usrIndex" class="mr-3"
+                  style="margin-top: 5px" (change)="clickCheckbox($event, user)" />
                 <span class="name"> {{ user.basicDetails?.name }}</span>
-                <span class="time"> {{ formatLastLogin(user.lastLogin) }}</span>
+                <span class="time mr-auto"> {{ formatLastLogin(user.lastLogin) }}</span>
               </div>
               <span class="email">{{ user.username }}</span>
             </div>
@@ -121,49 +66,28 @@
           <div class="details">
             <span class="name">{{ details?.basicDetails?.name }}</span>
             <span class="email">{{ details?.username }}</span>
-            <span class="time" ngbTooltip="Last login">{{
+            <span class="time mr-auto" ngbTooltip="Last login">{{
               formatLastLogin(details?.lastLogin, true)
-            }}</span>
+              }}</span>
           </div>
-          <odp-user-manage
-            [toggleUserMng]="showUsrManage"
-            [bredcrumbSub]="bredcrumbSubject"
-            (toggleUserMngChange)="
+          <odp-user-manage [toggleUserMng]="showUsrManage" [bredcrumbSub]="bredcrumbSubject" (toggleUserMngChange)="
               showUsrManage = $event; breadcrumbPaths.pop()
-            "
-            [user]="details"
-            (removeUser)="removeSelectedUsers($event)"
-            (changePassword)="togglePasswordChange()"
-          >
+            " [user]="details" (removeUser)="removeSelectedUsers($event)" (changePassword)="togglePasswordChange()">
           </odp-user-manage>
           <div style="display: grid">
             <div style="margin-top: 45px">
               <ul class="nav">
-                <li
-                  class="nav-item"
-                  (click)="switchTab('Groups')"
-                  id="switchgroup"
-                >
-                  <div
-                    class="tabs"
-                    [ngClass]="{
+                <li class="nav-item" (click)="switchTab('Groups')" id="switchgroup">
+                  <div class="tabs" [ngClass]="{
                       active: currentTab === 'Groups'
-                    }"
-                  >
+                    }">
                     Groups
                   </div>
                 </li>
-                <li
-                  class="nav-item"
-                  (click)="switchTab('Attributes')"
-                  id="switchattribute"
-                >
-                  <div
-                    class="tabs"
-                    [ngClass]="{
+                <li class="nav-item" (click)="switchTab('Attributes')" id="switchattribute">
+                  <div class="tabs" [ngClass]="{
                       active: currentTab === 'Attributes'
-                    }"
-                  >
+                    }">
                     Attributes
                   </div>
                 </li>
@@ -175,91 +99,44 @@
             <div style="margin-top: 30px; display: grid" *ngIf="!isDataLoading">
               <label class="tab-header">{{ currentTab }}</label>
               <div *ngIf="currentTab === 'Attributes'" style="display: flex">
-                <label style="color: #6c7584; font-weight: 400"
-                  >All attributes in which the user has been added</label
-                >
-                <div
-                  class="add-attribute hover"
-                  (click)="showAttributeSide()"
-                  id="showAttributeSide"
-                >
+                <label style="color: #6c7584; font-weight: 400">All attributes in which the user has been added</label>
+                <div class="add-attribute hover" (click)="showAttributeSide()" id="showAttributeSide">
                   <i class="fa fa-plus-circle font-xl"></i>
-                  <label class="fw-500 font-normal heading"
-                    >Add Attribute</label
-                  >
+                  <label class="fw-500 font-normal heading">Add Attribute</label>
                 </div>
               </div>
               <div *ngIf="currentTab === 'Groups'" style="display: flex">
-                <label style="color: #6c7584; font-weight: 400"
-                  >All groups in which the user has been added
+                <label style="color: #6c7584; font-weight: 400">All groups in which the user has been added
                 </label>
-                <div
-                  class="add-attribute hover"
-                  (click)="openGroupModal()"
-                  id="openModal"
-                >
+                <div class="add-attribute hover" (click)="openGroupModal()" id="openModal">
                   <i class="fa fa-plus-circle font-xl"></i>
-                  <label class="fw-500 font-normal heading"
-                    >Add to Groups</label
-                  >
+                  <label class="fw-500 font-normal heading">Add to Groups</label>
                 </div>
               </div>
               <div *ngIf="showTable" class="mt-4">
-                <ag-grid-angular
-                  *ngIf="currentTab === 'Groups'"
-                  style="height: 300px; overflow-x: hidden"
-                  #agGrid
-                  class="ag-theme-balham"
-                  [gridOptions]="gridGroupOptions"
-                  (gridReady)="onGridReady($event)"
-                >
+                <ag-grid-angular *ngIf="currentTab === 'Groups'" style="height: 300px; overflow-x: hidden" #agGrid
+                  class="ag-theme-balham" [gridOptions]="gridGroupOptions" (gridReady)="onGridReady($event)">
                 </ag-grid-angular>
-                <ag-grid-angular
-                  *ngIf="currentTab === 'Attributes'"
-                  style="height: 300px; overflow-x: hidden"
-                  #agGrid
-                  class="ag-theme-balham"
-                  [gridOptions]="gridAttrOptions"
-                  (gridReady)="onGridReady($event)"
-                >
+                <ag-grid-angular *ngIf="currentTab === 'Attributes'" style="height: 300px; overflow-x: hidden" #agGrid
+                  class="ag-theme-balham" [gridOptions]="gridAttrOptions" (gridReady)="onGridReady($event)">
                   >
                 </ag-grid-angular>
               </div>
-              <div
-                class="no-attribute"
-                *ngIf="!showTable && currentTab === 'Attributes'"
-              >
-                <label class="no-attr-label"
-                  >No attributes are configured</label
-                >
+              <div class="no-attribute" *ngIf="!showTable && currentTab === 'Attributes'">
+                <label class="no-attr-label">No attributes are configured</label>
                 <label class="no-attr-sub">
-                  The user is not assigned to any attribute</label
-                >
-                <button
-                  type="button"
-                  style="width: auto; margin: auto"
-                  class="btn btn-primary add-button input-text"
-                  id="showAttributeSide"
-                  (click)="showAttributeSide()"
-                >
+                  The user is not assigned to any attribute</label>
+                <button type="button" style="width: auto; margin: auto" class="btn btn-primary add-button"
+                  id="showAttributeSide" (click)="showAttributeSide()">
                   Add Attributes
                 </button>
               </div>
-              <div
-                class="no-attribute"
-                *ngIf="!showTable && currentTab === 'Groups'"
-              >
+              <div class="no-attribute" *ngIf="!showTable && currentTab === 'Groups'">
                 <label class="no-attr-label">Not assigned to any groups</label>
                 <label class="no-attr-sub">
-                  The user is not assigned to any groups</label
-                >
-                <button
-                  type="button"
-                  style="width: auto; margin: auto"
-                  class="btn btn-primary add-button input-text"
-                  id="addToGroup"
-                  (click)="openGroupModal()"
-                >
+                  The user is not assigned to any groups</label>
+                <button type="button" class="btn btn-primary add-button mx-auto"
+                  id="addToGroup" (click)="openGroupModal()">
                   Assign to group
                 </button>
               </div>
@@ -273,20 +150,13 @@
       <div class="modal-body p-4">
         <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center align-self-start mb-3">
-            <span
-              class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2"
-            >
+            <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
               <odp-user-icon [size]="18" color="DD5151"></odp-user-icon>
             </span>
-            <span class="font-weight-bold"
-              >Remove user(s) from {{ selectedApp }}</span
-            >
+            <span class="font-weight-bold">Remove user(s) from {{ selectedApp }}</span>
           </div>
-          <span
-            class="fa fa-times text-muted hover ignore-click mb-3"
-            id="removeSelectedModalRef"
-            (click)="removeSelectedModalRef.close(false)"
-          ></span>
+          <span class="fa fa-times text-muted hover ignore-click mb-3" id="removeSelectedModalRef"
+            (click)="removeSelectedModalRef.close(false)"></span>
         </div>
         <ul class="font-weight-bold ml-4">
           <ng-container *ngIf="!!userToRemove">
@@ -297,85 +167,50 @@
           </ng-container>
         </ul>
         <div class="d-flex align-items-center justify-content-end mt-4">
-          <button
-            type="button"
-            id="removemodal"
-            class="btn btn-min-width btn-delete"
-            (click)="removeSelectedModalRef.close(true)"
-          >
+          <button type="button" id="removemodal" class="btn btn-min-width btn-delete"
+            (click)="removeSelectedModalRef.close(true)">
             Remove
           </button>
         </div>
       </div>
     </ng-template>
 
-    <div
-      *ngIf="showNewUserWindow || showPasswordSide || showAddAttribute"
-      class="overlay position-fixed"
-    ></div>
+    <div *ngIf="showNewUserWindow || showPasswordSide || showAddAttribute" class="overlay position-fixed"></div>
 
-    <div
-      [ngClass]="{
+    <div [ngClass]="{
         show: showNewUserWindow || showPasswordSide || showAddAttribute
-      }"
-      class="new-user-window position-fixed bg-white border-left p-4"
-    >
-      <span
-        class="fa fa-times text-secondary hover close"
-        id="closeicon"
-        (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"
-      ></span>
+      }" class="new-user-window position-fixed bg-white border-left p-4">
+      <span class="fa fa-times text-secondary hover close" id="closeicon"
+        (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
       <div *ngIf="showPasswordSide && !showNewUserWindow">
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div class="d-flex align-items-center">
             <h5 class="font-weight-bold">Reset Password</h5>
           </div>
         </div>
-        <form
-          class="d-flex flex-column"
-          [formGroup]="resetPasswordForm"
-          odpFocusNext
-        >
+        <form class="d-flex flex-column" [formGroup]="resetPasswordForm" odpFocusNext>
           <div class="form-group position-relative">
             <label for="password">
               New Password
               <sup class="text-danger">*</sup>
             </label>
             <div class="input-group">
-              <input
-                class="form-control input-text"
-                [type]="showPassword['new'] ? 'text' : 'password'"
-                placeholder="Password"
-                formControlName="password"
-                [ngClass]="{ 'is-invalid': pwdError }"
-                autocomplete="new-password"
-              />
-              <span
-                id="showPass"
-                class="fas eye-icon position-absolute hover"
-                [ngClass]="{
+              <input class="form-control input-text" [type]="showPassword['new'] ? 'text' : 'password'"
+                placeholder="Password" formControlName="password" [ngClass]="{ 'is-invalid': pwdError }"
+                autocomplete="new-password" />
+              <span id="showPass" class="fas eye-icon position-absolute hover" [ngClass]="{
                   'fa-eye': !showPassword['new'],
                   'fa-eye-slash': showPassword['new']
-                }"
-                (click)="showPassword['new'] = !showPassword['new']"
-              ></span>
+                }" (click)="showPassword['new'] = !showPassword['new']"></span>
             </div>
-            <span
-              class="fas fa-question-circle text-danger error-icon-password position-absolute"
-              *ngIf="
+            <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="
                 resetPasswordForm.get('password').dirty &&
                 resetPasswordForm.get('password').hasError('required')
-              "
-              ngbTooltip="This is a required field"
-            ></span>
-            <span
-              class="fas fa-question-circle text-danger error-icon-password position-absolute"
-              *ngIf="
+              " ngbTooltip="This is a required field"></span>
+            <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="
                 resetPasswordForm.get('password').dirty &&
                 resetPasswordForm.get('password').hasError('minlength')
-              "
-              ngbTooltip="Password should be minimum 8 chars long"
-            ></span>
+              " ngbTooltip="Password should be minimum 8 chars long"></span>
           </div>
           <div class="form-group position-relative">
             <label for="cPassword">
@@ -383,46 +218,25 @@
               <sup class="text-danger">*</sup>
             </label>
             <div class="input-group">
-              <input
-                id="cPassword"
-                class="form-control input-text"
-                [type]="showPassword['confirm'] ? 'text' : 'password'"
-                placeholder="Confirm Password"
-                formControlName="cpassword"
-                [ngClass]="{ 'is-invalid': cPwdError }"
-              />
-              <span
-                class="fas eye-icon position-absolute hover"
-                [ngClass]="{
+              <input id="cPassword" class="form-control input-text"
+                [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"
+                formControlName="cpassword" [ngClass]="{ 'is-invalid': cPwdError }" />
+              <span class="fas eye-icon position-absolute hover" [ngClass]="{
                   'fa-eye': !showPassword['confirm'],
                   'fa-eye-slash': showPassword['confirm']
-                }"
-                (click)="showPassword['confirm'] = !showPassword['confirm']"
-                id="showPassword"
-              ></span>
+                }" (click)="showPassword['confirm'] = !showPassword['confirm']" id="showPassword"></span>
             </div>
-            <span
-              class="fas fa-question-circle text-danger error-icon-password position-absolute"
-              *ngIf="
+            <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="
                 resetPasswordForm.get('cpassword').dirty &&
                 resetPasswordForm.get('cpassword').hasError('required')
-              "
-              ngbTooltip="This is a required field"
-            ></span>
-            <span
-              class="fas fa-question-circle text-danger error-icon-password position-absolute"
-              *ngIf="resetPasswordForm.get('cpassword').dirty && matchPwd"
-              [ngbTooltip]="'Passwords don\'t match'"
-              placement="right"
-            ></span>
+              " ngbTooltip="This is a required field"></span>
+            <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+              *ngIf="resetPasswordForm.get('cpassword').dirty && matchPwd" [ngbTooltip]="'Passwords don\'t match'"
+              placement="right"></span>
           </div>
           <div class="d-flex align-items-center justify-content-between">
-            <button
-              type="button"
-              class="btn btn-primary add-button input-text"
-              id="resetpassowrd"
-              (click)="resetPassword()"
-            >
+            <button type="button" class="btn btn-primary add-button input-text" id="resetpassowrd"
+              (click)="resetPassword()">
               Save
             </button>
           </div>
@@ -436,38 +250,20 @@
         </div>
         <form class="d-flex flex-column" [formGroup]="userForm" odpFocusNext>
           <div *ngIf="userForm.get('userData')" formGroupName="userData">
-            <div
-              class="form-group"
-              formGroupName="auth"
-              *ngIf="validAuthTypes?.length > 1"
-            >
+            <div class="form-group" formGroupName="auth" *ngIf="validAuthTypes?.length > 1">
               <label for="authType">Authentication Method</label>
-              <select
-                id="authType"
-                class="form-control input-text"
-                formControlName="authType"
-                (ngModelChange)="onAuthTypeChange($event)"
-              >
-                <option
-                  *ngFor="let item of validAuthTypes"
-                  [value]="item.value"
-                >
+              <select id="authType" class="form-control input-text" formControlName="authType"
+                (ngModelChange)="onAuthTypeChange($event)">
+                <option *ngFor="let item of validAuthTypes" [value]="item.value">
                   {{ item.label }}
                 </option>
               </select>
-              <span
-                class="fas fa-question-circle text-danger error-icon position-absolute"
-                *ngIf="invalidAuthType"
-                ngbTooltip="This is a required field"
-              ></span>
+              <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidAuthType"
+                ngbTooltip="This is a required field"></span>
             </div>
             <ng-container *ngIf="showAzureLoginButton">
-              <button
-                type="button"
-                class="mb-3 ng-star-inserted border bg-white d-flex align-items-center p-2"
-                (click)="triggerAzureToken()"
-                id="getAzuretoken"
-              >
+              <button type="button" class="mb-3 ng-star-inserted border bg-white d-flex align-items-center p-2"
+                (click)="triggerAzureToken()" id="getAzuretoken">
                 <span class="azure-logo mr-2"></span>
                 <span>Login to Azure</span>
               </button>
@@ -478,28 +274,14 @@
                   Username
                   <sup class="text-danger">*</sup>
                 </label>
-                <input
-                  id="username"
-                  class="form-control input-text"
-                  type="text"
-                  placeholder="Enter Username"
-                  formControlName="username"
-                  odpAutoFocus
-                  (blur)="checkForDuplicate()"
-                  [ngClass]="{
+                <input id="username" class="form-control input-text" type="text" placeholder="Enter Username"
+                  formControlName="username" odpAutoFocus (blur)="checkForDuplicate()" [ngClass]="{
                     'is-invalid': invalidUsername || invalidUsernamePattern
-                  }"
-                />
-                <span
-                  class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                  *ngIf="invalidUsername"
-                  ngbTooltip="This is a required field"
-                ></span>
-                <span
-                  class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                  *ngIf="invalidUsernamePattern"
-                  ngbTooltip="Username must be of email format"
-                ></span>
+                  }" />
+                <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                  *ngIf="invalidUsername" ngbTooltip="This is a required field"></span>
+                <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                  *ngIf="invalidUsernamePattern" ngbTooltip="Username must be of email format"></span>
               </div>
               <div class="form-group position-relative">
                 <label for="name">
@@ -507,82 +289,50 @@
                   <sup class="text-danger">*</sup>
                 </label>
                 <div class="w-100" formGroupName="basicDetails">
-                  <input
-                    id="name"
-                    class="form-control pr-4 input-text"
-                    type="text"
-                    placeholder="Enter Name"
-                    formControlName="name"
-                    [ngClass]="{ 'is-invalid': invalidName }"
-                    autocomplete="autocomplete_off_hack"
-                  />
-                  <span
-                    class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                    *ngIf="invalidName"
-                    ngbTooltip="This is a required field"
-                  ></span>
-                  <span
-                    *ngIf="
+                  <input id="name" class="form-control pr-4 input-text" type="text" placeholder="Enter Name"
+                    formControlName="name" [ngClass]="{ 'is-invalid': invalidName }"
+                    autocomplete="autocomplete_off_hack" />
+                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                    *ngIf="invalidName" ngbTooltip="This is a required field"></span>
+                  <span *ngIf="
                       userForm
                         .get('userData.basicDetails?.name')
                         .hasError('pattern')
-                    "
-                    class="text-danger position-absolute fa fa-exclamation-circle error-icon-password"
+                    " class="text-danger position-absolute fa fa-exclamation-circle error-icon-password"
                     container="body"
-                    ngbTooltip="Name can contain alphanumeric and  _ ,- , @ , # and . characters only"
-                  ></span>
+                    ngbTooltip="Name can contain alphanumeric and  _ ,- , @ , # and . characters only"></span>
                 </div>
               </div>
-              <ng-container
-                *ngIf="
+              <ng-container *ngIf="
                   !userInLocal &&
                   !userInAzureAD &&
                   userForm.get('userData.auth.authType').value === 'local'
-                "
-              >
+                ">
                 <div class="form-group position-relative">
                   <label for="password">
                     Password
                     <sup class="text-danger">*</sup>
                   </label>
                   <div class="input-group">
-                    <input
-                      class="form-control input-text"
-                      [type]="showPassword['new'] ? 'text' : 'password'"
-                      placeholder="Password"
-                      formControlName="password"
-                      [ngClass]="{
+                    <input class="form-control input-text" [type]="showPassword['new'] ? 'text' : 'password'"
+                      placeholder="Password" formControlName="password" [ngClass]="{
                         'is-invalid':
                           invalidPassword ||
                           invalidPasswordLength ||
                           invalidPasswordPattern
-                      }"
-                      autocomplete="new-password"
-                    />
-                    <span
-                      class="fas eye-icon position-absolute hover"
-                      [ngClass]="{
+                      }" autocomplete="new-password" />
+                    <span class="fas eye-icon position-absolute hover" [ngClass]="{
                         'fa-eye': !showPassword['new'],
                         'fa-eye-slash': showPassword['new']
-                      }"
-                      (click)="showPassword['new'] = !showPassword['new']"
-                    ></span>
+                      }" (click)="showPassword['new'] = !showPassword['new']"></span>
                   </div>
-                  <span
-                    class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                    *ngIf="invalidPassword"
-                    ngbTooltip="This is a required field"
-                  ></span>
-                  <span
-                    class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                    *ngIf="invalidPasswordLength"
-                    ngbTooltip="Password should be minimum 8 chars long"
-                  ></span>
-                  <span
-                    class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                    *ngIf="invalidPassword" ngbTooltip="This is a required field"></span>
+                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                    *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"></span>
+                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
                     *ngIf="invalidPasswordPattern"
-                    ngbTooltip="Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)"
-                  ></span>
+                    ngbTooltip="Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)"></span>
                 </div>
                 <div class="form-group position-relative">
                   <label for="cPassword">
@@ -590,65 +340,37 @@
                     <sup class="text-danger">*</sup>
                   </label>
                   <div class="input-group">
-                    <input
-                      id="cPassword"
-                      class="form-control input-text"
-                      [type]="showPassword['confirm'] ? 'text' : 'password'"
-                      placeholder="Confirm Password"
-                      formControlName="cpassword"
-                      [ngClass]="{
+                    <input id="cPassword" class="form-control input-text"
+                      [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"
+                      formControlName="cpassword" [ngClass]="{
                         'is-invalid': invalidCPassword || invalidPasswordMatch
-                      }"
-                    />
-                    <span
-                      class="fas eye-icon position-absolute hover"
-                      [ngClass]="{
+                      }" />
+                    <span class="fas eye-icon position-absolute hover" [ngClass]="{
                         'fa-eye': !showPassword['confirm'],
                         'fa-eye-slash': showPassword['confirm']
-                      }"
-                      (click)="
+                      }" (click)="
                         showPassword['confirm'] = !showPassword['confirm']
-                      "
-                    ></span>
+                      "></span>
                   </div>
-                  <span
-                    class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                    *ngIf="invalidCPassword"
-                    ngbTooltip="This is a required field"
-                  ></span>
-                  <span
-                    class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                    *ngIf="invalidPasswordMatch"
-                    ngbTooltip="Passwords do not match"
-                  ></span>
+                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                    *ngIf="invalidCPassword" ngbTooltip="This is a required field"></span>
+                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                    *ngIf="invalidPasswordMatch" ngbTooltip="Passwords do not match"></span>
                 </div>
                 <div class="form-group">
                   <label for="phone">Phone</label>
                   <div class="w-100" formGroupName="basicDetails">
-                    <input
-                      id="phone"
-                      class="form-control input-text"
-                      type="text"
-                      placeholder="Enter Phone Number"
-                      formControlName="phone"
-                    />
+                    <input id="phone" class="form-control input-text" type="text" placeholder="Enter Phone Number"
+                      formControlName="phone" />
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="email">Alternate Email</label>
                   <div class="w-100" formGroupName="basicDetails">
-                    <input
-                      id="email"
-                      class="form-control input-text"
-                      type="text"
-                      placeholder="Enter Alternate Email"
-                      formControlName="alternateEmail"
-                    />
-                    <span
-                      class="fas fa-question-circle text-danger error-icon position-absolute"
-                      *ngIf="invalidEmailPattern"
-                      ngbTooltip="Invalid Alternate Email"
-                    ></span>
+                    <input id="email" class="form-control input-text" type="text" placeholder="Enter Alternate Email"
+                      formControlName="alternateEmail" />
+                    <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                      *ngIf="invalidEmailPattern" ngbTooltip="Invalid Alternate Email"></span>
                   </div>
                 </div>
               </ng-container>
@@ -658,24 +380,14 @@
 
                   <div class="groups-list border rounded bg-white">
                     <ul class="list-group list-group-flush">
-                      <li
-                        *ngFor="let group of groupList; index as groupIndex"
-                        class="list-group-item py-2"
-                      >
-                        <label
-                          [attr.for]="groupList[groupIndex]._id"
-                          class="d-flex align-items-center justify-content-between m-0"
-                        >
-                          <odp-checkbox
-                            [id]="groupList[groupIndex]._id"
-                            [edit]="{ status: canEdit }"
-                            (checkedChange)="
+                      <li *ngFor="let group of groupList; index as groupIndex" class="list-group-item py-2">
+                        <label [attr.for]="groupList[groupIndex]._id"
+                          class="d-flex align-items-center justify-content-between m-0">
+                          <odp-checkbox [id]="groupList[groupIndex]._id" [edit]="{ status: canEdit }" (checkedChange)="
                               toggleGroup($event, groupList[groupIndex]._id)
-                            "
-                            [checked]="
+                            " [checked]="
                               isGroupSelected(groupList[groupIndex]._id)
-                            "
-                          ></odp-checkbox>
+                            "></odp-checkbox>
                           <span>{{ groupList[groupIndex].name }}</span>
                         </label>
                       </li>
@@ -687,38 +399,22 @@
           </div>
         </form>
         <div class="d-flex align-items-center justify-content-between">
-          <button
-            *ngIf="
+          <button *ngIf="
               selectedAuthType == 'local' &&
               !userInLocal &&
               !userInAzureAD &&
               hasPermission('PMUBC')
-            "
-            type="button"
-            class="btn btn-primary add-button input-text"
-            id="createNewUserYes"
-            (click)="addUser()"
-            [disabled]="userForm.get('userData').invalid"
-          >
+            " type="button" class="btn btn-primary add-button input-text" id="createNewUserYes" (click)="addUser()"
+            [disabled]="userForm.get('userData').invalid">
             Add
           </button>
-          <button
-            *ngIf="userInLocal && hasPermission('PMUBC')"
-            type="button"
-            class="btn btn-primary add-button input-text"
-            id="importUser"
-            (click)="importUser()"
-          >
+          <button *ngIf="userInLocal && hasPermission('PMUBC')" type="button"
+            class="btn btn-primary add-button input-text" id="importUser" (click)="importUser()">
             Import
           </button>
-          <button
-            *ngIf="userInAzureAD && hasPermission('PMUBC')"
-            type="button"
-            class="btn btn-primary add-button input-text"
-            disableImportid="importUser"
-            (click)="importUserFromAzure()"
-            [disabled]="disableImport"
-          >
+          <button *ngIf="userInAzureAD && hasPermission('PMUBC')" type="button"
+            class="btn btn-primary add-button input-text" disableImportid="importUser" (click)="importUserFromAzure()"
+            [disabled]="disableImport">
             Import
           </button>
         </div>
@@ -732,33 +428,19 @@
             </h5>
           </div>
         </div>
-        <form
-          class="d-flex flex-column"
-          [formGroup]="attributesForm"
-          odpFocusNext
-        >
+        <form class="d-flex flex-column" [formGroup]="attributesForm" odpFocusNext>
           <div class="form-group position-relative">
             <label for="label">
               Label
               <sup class="text-danger">*</sup>
             </label>
             <div class="input-group">
-              <input
-                id="label"
-                class="form-control pr-4 input-text"
-                type="text"
-                placeholder="Label name"
-                formControlName="label"
-                autocomplete="autocomplete_off_hack"
-              />
-              <span
-                class="fas fa-question-circle text-danger error-icon position-absolute"
-                *ngIf="
+              <input id="label" class="form-control pr-4 input-text" type="text" placeholder="Label name"
+                formControlName="label" autocomplete="autocomplete_off_hack" />
+              <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('type').touched &&
                   attributesForm.get('label').hasError('required')
-                "
-                ngbTooltip="This is a required field"
-              ></span>
+                " ngbTooltip="This is a required field"></span>
             </div>
           </div>
           <div class="form-group position-relative">
@@ -767,24 +449,16 @@
               <sup class="text-danger">*</sup>
             </label>
             <div class="input-group">
-              <select
-                id="type"
-                class="form-control input-text"
-                formControlName="type"
-                (ngModelChange)="onAttributeFormTypeChange($event)"
-              >
+              <select id="type" class="form-control input-text" formControlName="type"
+                (ngModelChange)="onAttributeFormTypeChange($event)">
                 <option *ngFor="let item of types" [value]="item.value">
                   {{ item.label }}
                 </option>
               </select>
-              <span
-                class="fas fa-question-circle text-danger error-icon position-absolute"
-                *ngIf="
+              <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('type').touched &&
                   attributesForm.get('type').hasError('required')
-                "
-                ngbTooltip="This is a required field"
-              ></span>
+                " ngbTooltip="This is a required field"></span>
             </div>
           </div>
           <div class="form-group position-relative">
@@ -793,56 +467,27 @@
               <sup class="text-danger">*</sup>
             </label>
             <div class="input-group">
-              <input
-                id="value"
-                class="form-control pr-4 input-text"
-                type="text"
-                placeholder="Value"
-                formControlName="value"
-                autocomplete="autocomplete_off_hack"
-                *ngIf="attributesForm.get('type').value === 'String'"
-              />
-              <input
-                id="value"
-                class="form-control pr-4 input-text"
-                type="number"
-                placeholder="Value"
-                formControlName="value"
-                autocomplete="autocomplete_off_hack"
-                *ngIf="attributesForm.get('type').value === 'Number'"
-              />
-              <odp-switch
-                [edit]="{ status: true }"
-                [checked]="attributesForm.get('value').value"
-                (checkedChange)="setUserAttributeValue($event)"
-                *ngIf="attributesForm.get('type').value === 'Boolean'"
-              ></odp-switch>
+              <input id="value" class="form-control pr-4 input-text" type="text" placeholder="Value"
+                formControlName="value" autocomplete="autocomplete_off_hack"
+                *ngIf="attributesForm.get('type').value === 'String'" />
+              <input id="value" class="form-control pr-4 input-text" type="number" placeholder="Value"
+                formControlName="value" autocomplete="autocomplete_off_hack"
+                *ngIf="attributesForm.get('type').value === 'Number'" />
+              <odp-switch [edit]="{ status: true }" [checked]="attributesForm.get('value').value"
+                (checkedChange)="setUserAttributeValue($event)" *ngIf="attributesForm.get('type').value === 'Boolean'">
+              </odp-switch>
 
-              <input
-                id="value"
-                class="form-control pr-4 input-text"
-                type="date"
-                placeholder="Value"
-                formControlName="value"
-                autocomplete="autocomplete_off_hack"
-                *ngIf="attributesForm.get('type').value === 'Date'"
-              />
-              <span
-                class="fas fa-question-circle text-danger error-icon position-absolute"
-                *ngIf="
+              <input id="value" class="form-control pr-4 input-text" type="date" placeholder="Value"
+                formControlName="value" autocomplete="autocomplete_off_hack"
+                *ngIf="attributesForm.get('type').value === 'Date'" />
+              <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('value').dirty &&
                   attributesForm.get('value').hasError('required')
-                "
-                ngbTooltip="This is a required field"
-              ></span>
+                " ngbTooltip="This is a required field"></span>
             </div>
           </div>
-          <button
-            type="button"
-            class="btn btn-primary add-button input-text"
-            id="addAttributes"
-            (click)="addAttribute()"
-          >
+          <button type="button" class="btn btn-primary add-button" id="addAttributes"
+            (click)="addAttribute()">
             {{ editMode ? 'Save' : 'Add' }}
           </button>
         </form>

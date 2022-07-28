@@ -1,15 +1,15 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.settings{
+.settings {
   padding-right: 20px;
   position: absolute;
   top: 25px;
   right: 20px;
 }
 
-.popover{
-  margin-top: 30px; 
+.popover {
+  margin-top: 30px;
   border: 1px solid #ECECEC;
   display: grid;
   width: 150px;
@@ -20,12 +20,14 @@
   padding: 15px;
   cursor: pointer;
   color: $headings;
-  &:hover{
+  font-size: 14px;
+
+  &:hover {
     background: #F7F7F7;
   }
 }
 
-.disable-option{
+.disable-option {
   pointer-events: none;
   background-color: $input-disabled-bg;
   color: $lightgrey;

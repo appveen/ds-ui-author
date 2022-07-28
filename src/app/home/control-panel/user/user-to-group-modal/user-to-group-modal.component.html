@@ -1,40 +1,19 @@
 <div style="padding: 20px">
   <div class="d-flex align-items-center">
     <div class="title">Add user to the group</div>
-    <i
-      class="fa fa-times ml-auto"
-      style="cursor: pointer"
-      (click)="closeDialog()"
-    ></i>
+    <i class="fa fa-times ml-auto" style="cursor: pointer" (click)="closeDialog()"></i>
   </div>
-  <label class="sub-title"
-    >Select users from the list below to add them to the follwoing group</label
-  >
+  <label class="sub-title">Select users from the list below to add them to the follwoing group</label>
   <div>
-    <ag-grid-angular
-      #agGrid
-      class="ag-theme-balham grid"
-      [gridOptions]="gridOptions"
-      (gridReady)="onGridReady($event)"
-    >
+    <ag-grid-angular #agGrid class="ag-theme-balham grid" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)">
     </ag-grid-angular>
   </div>
 
   <div class="mt-2" style="float: right">
-    <button
-      type="button"
-      class="btn btn-outline-primary mr-4"
-      (click)="closeDialog()"
-      id="closedialog"
-    >
+    <button type="button" class="btn btn-outline-primary mr-4 btn-min-width" (click)="closeDialog()" id="closedialog">
       Cancel
     </button>
-    <button
-      id="addgroup"
-      type="button"
-      class="btn btn-primary"
-      (click)="addGroups()"
-    >
+    <button id="addgroup" type="button" class="btn btn-primary btn-min-width" (click)="addGroups()">
       Add
     </button>
   </div>
