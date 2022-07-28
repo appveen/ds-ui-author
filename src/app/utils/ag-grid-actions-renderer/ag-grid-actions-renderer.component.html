@@ -1,5 +1,12 @@
-<ng-container *ngFor="let button of buttons">
-    <button class="btn btn-link text-accent mr-2 p-0" (click)="handleButtonClick(button, $event)">
-        {{ button }}
-    </button>
+<ng-container *ngFor="let button of buttons" class="float-right">
+    <i *ngIf="button === 'End Session'" class="fa fa-ban mr-2" (click)="handleButtonClick(button, $event)">
+    </i>
+    <i *ngIf="button === 'Deactivate'" class="fa fa-minus-circle mr-2" (click)="handleButtonClick(button, $event)">
+    </i>
+    <i *ngIf="button === 'Activate'" class="fa fa-plus-circle mr-2" (click)="handleButtonClick(button, $event)">
+    </i>
+    <i *ngIf="button === 'Edit'" class="fa fa-edit mr-2" (click)="handleButtonClick(button, $event)">
+    </i>
+    <i *ngIf="button === 'Delete'" class="fa fa-trash" (click)="handleButtonClick(button, $event)">
+    </i>
 </ng-container>

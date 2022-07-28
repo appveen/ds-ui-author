@@ -1,20 +1,25 @@
 <div class="d-flex align-items-center" *ngIf="edit.status">
-    <label tabindex="0" class="switch mb-0 mr-3 mt-1" [ngClass]="{'accent':type=='accent','primary':type=='primary'}" (keyup.enter)="switch.click()">
+    <label tabindex="0" class="switch mb-0 mr-3 mt-1" [ngClass]="{'accent':type=='accent','primary':type=='primary'}"
+        (keyup.enter)="switch.click()">
         <input #switch type="checkbox" [ngModel]="checked" (ngModelChange)="onChange($event)" [disabled]="disabled">
         <span class="slider"></span>
         <span class="toggler"></span>
     </label>
-    <span class="text">{{ checked ? 'Yes' : 'No' }}</span>
+    <span class="text">{{ checked ? (checkedText || checkedText == '') ? checkedText : 'Yes' : (uncheckedText ||
+        uncheckedText == '') ?
+        uncheckedText
+        : 'No'}}</span>
 </div>
 <div class="d-flex align-items-center" *ngIf="!edit.status">
     <span class="text d-flex" *ngIf="checked">
         <span class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
             <span class="fa fa-check text-white"></span>
         </span>
-        <span class="text">Yes</span>
+        <span class="text">{{checkedText ? checkedText : 'Yes'}}</span>
     </span>
     <span class="text d-flex" *ngIf="!checked">
-        <span class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1"></span>
-        <span class="text">No</span>
+        <span
+            class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1"></span>
+        <span class="text">{{uncheckedText ? uncheckedText : 'No'}}</span>
     </span>
 </div>

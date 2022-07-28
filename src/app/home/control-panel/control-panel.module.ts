@@ -153,5 +153,6 @@ import { FilterPipeModule } from '../../utils/pipes/filter.module';
     UserToGroupModalComponent,
     UserGridAppsRendererComponent,
   ],
+  exports: [UserGridAppsRendererComponent, UserToGroupModalComponent]
 })
-export class ControlPanelModule {}
+export class ControlPanelModule { }

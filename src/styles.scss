@@ -26,15 +26,11 @@ $odp-ui-author-warn: mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$odp-ui-author-theme: mat-light-theme(
-  (
-    color: (
-      primary: $odp-ui-author-primary,
-      accent: $odp-ui-author-accent,
-      warn: $odp-ui-author-warn,
-    ),
-  )
-);
+$odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
+        accent: $odp-ui-author-accent,
+        warn: $odp-ui-author-warn,
+      ),
+    ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -130,8 +126,13 @@ $odp-ui-author-theme: mat-light-theme(
 .fw-600 {
   font-weight: 600 !important;
 }
+
 .fw-500 {
   font-weight: 500 !important;
+}
+
+.fw-400 {
+  font-weight: 400 !important;
 }
 
 .k8s-icon {
@@ -227,6 +228,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .add-secret-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 360px !important;
@@ -253,6 +255,7 @@ $odp-ui-author-theme: mat-light-theme(
 // }
 
 .new-user-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 560px;
@@ -261,6 +264,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .flow-modal-class {
+
   .modal-content,
   .modal-dialog {
     min-height: calc(100vh - 60px);
@@ -272,6 +276,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .service-exception-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 680px;
@@ -308,6 +313,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .download-agent-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 600px !important;
@@ -320,6 +326,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .custom-format-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 90vw;
@@ -330,6 +337,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .conflict-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 824px;
@@ -349,6 +357,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .search-user-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 560px;
@@ -815,7 +824,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .focus-accent:focus {
-  border-color: $accent !important;
+  border-color: $accent  !important;
   box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
 }
 
@@ -834,7 +843,7 @@ $odp-ui-author-theme: mat-light-theme(
 
   .form-control:not(.is-invalid):focus,
   .custom-select:not(.is-invalid):focus {
-    border-color: $accent !important;
+    border-color: $accent  !important;
     box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
   }
 
@@ -890,7 +899,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .custom-control-input {
-  &:not(:disabled):active ~ .custom-control-label {
+  &:not(:disabled):active~.custom-control-label {
     &.accent {
       &::before {
         color: $accent;
@@ -901,7 +910,7 @@ $odp-ui-author-theme: mat-light-theme(
   }
 
   &:checked {
-    &:disabled ~ .custom-control-label {
+    &:disabled~.custom-control-label {
       &.accent {
         &::before {
           background-color: rgba($accent, 0.5);
@@ -910,7 +919,7 @@ $odp-ui-author-theme: mat-light-theme(
     }
   }
 
-  & ~ .custom-control-label {
+  &~.custom-control-label {
     &.accent {
       &::before {
         border-radius: 2px;
@@ -918,7 +927,7 @@ $odp-ui-author-theme: mat-light-theme(
     }
   }
 
-  &:checked ~ .custom-control-label {
+  &:checked~.custom-control-label {
     &.accent {
       &::before {
         background-color: $accent;
@@ -932,7 +941,7 @@ $odp-ui-author-theme: mat-light-theme(
     }
   }
 
-  &:focus ~ .custom-control-label {
+  &:focus~.custom-control-label {
     &.accent {
       &::before {
         box-shadow: 0 0 0 0.2rem rgba($accent, 0.25);
@@ -960,26 +969,45 @@ $odp-ui-author-theme: mat-light-theme(
 
 /*---- AG-GRID START ----*/
 .ag-theme-balham {
-  @include ag-theme-balham(
-    (
-      balham-active-color: $primary,
-    )
-  );
-  font-family: "Lato";
-  font-size: 13px;
+  @include ag-theme-balham((balham-active-color: $primary,
+    ));
+  font-family: "Inter";
+  font-size: 14px;
+
 
   .ag-root {
     border: 0;
   }
 
+  .ag-root-wrapper {
+    border: 1px solid #ECECEC;
+    border-radius: 8px;
+  }
+
+
   .ag-header {
     background: #fff;
+    font-size: 11px;
+    color: $lightgrey;
+
+    .ag-header-container {
+      background-color: #FBFBFB;
+    }
+
 
     .ag-header-row:last-child {
       .ag-header-cell {
         border-top: 0;
       }
     }
+  }
+
+  .ag-row {
+    padding: 10px;
+  }
+
+  .ag-layout-normal {
+    overflow-x: hidden
   }
 
   .ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right) {
@@ -989,13 +1017,47 @@ $odp-ui-author-theme: mat-light-theme(
   .ag-floating-filter-button {
     display: none;
   }
+
+  .ag-checkbox {
+    padding-bottom: 15px !important;
+  }
+
+  .ag-row-selected {
+    background-color: #fff;
+  }
+
+  .ag-ltr .ag-header-select-all {
+    padding-top: 15px;
+  }
+
+  .ag-checkbox-input-wrapper.ag-checked::after {
+    color: white !important;
+    background: $headings  !important;
+    border-radius: 4px;
+  }
+
+  .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected),
+  .ag-theme-balham .ag-ltr .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected),
+  .ag-theme-balham .ag-ltr .ag-has-focus .ag-full-width-row.ag-row-focus .ag-cell-wrapper.ag-row-group,
+  .ag-theme-balham .ag-ltr .ag-cell-range-single-cell,
+  .ag-theme-balham .ag-ltr .ag-cell-range-single-cell.ag-cell-range-handle,
+  .ag-theme-balham .ag-rtl .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected),
+  .ag-theme-balham .ag-rtl .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected),
+  .ag-theme-balham .ag-rtl .ag-has-focus .ag-full-width-row.ag-row-focus .ag-cell-wrapper.ag-row-group,
+  .ag-theme-balham .ag-rtl .ag-cell-range-single-cell,
+  .ag-theme-balham .ag-rtl .ag-cell-range-single-cell.ag-cell-range-handle {
+    border: none;
+    border-color: none;
+    outline: none;
+  }
 }
 
 .custom-style {
   .ag-header {
-    background: $data-grid-header !important;
+    background: $data-grid-header  !important;
   }
 }
+
 
 .blink {
   animation-name: blink;
@@ -1012,4 +1074,54 @@ $odp-ui-author-theme: mat-light-theme(
   to {
     opacity: 0.4;
   }
+}
+
+
+.heading {
+  color: $headings
+}
+
+.sub-heading {
+  color: $sub-headings
+}
+
+.fa-search {
+  color: $lightgrey;
+}
+
+.slide-overlay {
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: rgba($color: #000000, $alpha: 0.6);
+}
+
+.slide-window {
+  height: 100vh;
+  width: 360px;
+  top: 0;
+  right: 0px;
+  z-index: 2;
+  transition: 0.2s;
+  overflow: auto;
+  padding-top: 40px !important;
+
+  &.show {
+    right: 0px !important;
+  }
+}
+
+.selected {
+  background: rgba($orange, 0.04);
+}
+
+.selectedTab {
+  border-radius: 0px 8px 8px 0px;
+  width: 3px;
+}
+
+.icon-primary {
+  color: $orange
 }

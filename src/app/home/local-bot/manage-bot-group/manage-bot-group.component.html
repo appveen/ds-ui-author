@@ -1,10 +1,17 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
-        <div class="align-self-center text-center">
-            <span class="fa fa-spinner fa-pulse fa-3x"></span>
-            <div class="text-secondary mt-2">Processing...</div>
-        </div>
+    <div class="align-self-center text-center">
+        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="text-secondary mt-2">Processing...</div>
     </div>
-<div class="d-flex flex-wrap team-container">
+</div>
+
+
+<div class="grid-container">
+    <ag-grid-angular style="height: 300px; overflow-x: hidden" #agGrid class="ag-theme-balham"
+        [gridOptions]="gridOptions" (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+</div>
+<!-- <div class="d-flex flex-wrap team-container">
     <div *ngFor="let team of userTeams"
         class="d-flex flex-column align-items-center mb-3 py-2 team-overview position-relative">
         <div *ngIf="hasPermission('PMBG')" class="position-absolute text-secondary remove-group" placement="left" ngbTooltip="Remove this group"  (click)="removeGroupForUser(team.name, team._id)">
@@ -16,7 +23,7 @@
         </div>
         <span>{{team.name}}</span>
     </div>
-</div>
+</div> -->
 
 <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
     <odp-user-icon [size]="18" color="202A36" class="mt-1"></odp-user-icon>

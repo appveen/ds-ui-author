@@ -5,20 +5,18 @@
     </div>
 </div>
 
-<div class="grid-container">
-    <ag-grid-angular #agGrid class="ag-theme-balham" [gridOptions]="gridOptions" [rowData]="selectedBot.botKeys | agGridFilter:filterModel"
-        [frameworkComponents]="frameworkComponents" (filterModified)="!filtering && onFilterChanged($event)">
+<div>
+    <ag-grid-angular #agGrid class="ag-theme-balham" style="height: 300px; overflow-x: hidden"
+        [gridOptions]="gridOptions" (gridReady)="onGridReady($event)" [frameworkComponents]="frameworkComponents">
     </ag-grid-angular>
 </div>
 
-<ng-template #newKeyModal>
+<!-- <ng-template #newKeyModal>
     <div class="new-Bot-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="keyForm">
         <div class="d-flex flex-column w-100">
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <div class="d-flex align-items-center">
-                    <!-- <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
-                        <odp-user-icon size="16" color="1CAD49" class="mt-1"></odp-user-icon>
-                    </span> -->
+                    
                     <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
                         <span class="odp-bots font-xl text-success"></span>
                     </span>
@@ -69,6 +67,8 @@
         </div>
     </div>
 </ng-template>
+
+ -->
 
 <odp-delete-modal [open]="openDeleteBotKeyModal" (close)="closeDeleteBotKeyModal($event)">
     <span class="odp-bots  font-xl text-success"></span>

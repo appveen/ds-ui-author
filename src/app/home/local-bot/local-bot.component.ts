@@ -22,11 +22,13 @@ import {
   GetOptions,
 } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
+import { FilterPipe } from 'src/app/utils/pipes/filter.pipe';
 
 @Component({
   selector: 'odp-local-bot',
   templateUrl: './local-bot.component.html',
   styleUrls: ['./local-bot.component.scss'],
+  providers: [FilterPipe],
   animations: [
     trigger('slide', [
       state(
@@ -55,7 +57,6 @@ export class LocalBotComponent implements OnInit {
   @ViewChild('editAttributeModal', { static: false })
   editAttributeModal: TemplateRef<HTMLElement>;
   botRecords: Array<any>;
-  activeTab;
   botForm: FormGroup;
   keyForm: FormGroup;
   newBotModalRef: NgbModalRef;
@@ -83,15 +84,21 @@ export class LocalBotComponent implements OnInit {
   botCount = 0;
   ignoreOutside: boolean;
   isInvalidDate: boolean;
+  isLoading: boolean = false;
+  isDataLoading: boolean = false;
+  currentTab: string;
+  ogKeys: any[];
+
+
   constructor(
     public commonService: CommonService,
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private filter: FilterPipe
   ) {
     const self = this;
-    self.activeTab = 0;
     self.botRecords = [];
     self.selectedBot = {};
     self.openDeleteModal = new EventEmitter();
@@ -139,6 +146,7 @@ export class LocalBotComponent implements OnInit {
     this.keyForm.get('expires').valueChanges.subscribe((value) => {
       self.onDaysChange(value);
     });
+    this.currentTab = 'Key'
   }
 
   getBotRecords() {
@@ -160,9 +168,11 @@ export class LocalBotComponent implements OnInit {
           self.showLazyLoader = false;
           if (users.length) {
             self.selectedBot = users[0];
+            self.selectRecord(self.selectedBot)
             self.getUserTeam();
           }
           self.botRecords = users;
+
         },
         (err) => {
           self.showLazyLoader = false;
@@ -233,56 +243,88 @@ export class LocalBotComponent implements OnInit {
   }
   createBot() {
     const self = this;
-    self.isCreate = true;
-    self.newBotModalRef = self.commonService.modal(self.newBotModal, {
-      size: 'sm',
-    });
-    self.newBotModalRef.result.then(
-      (close) => {
-        if (close) {
-          const payload = {
-            user: {
-              bot: true,
-              basicDetails: {
-                name: self.botForm.get('botName').value,
-              },
-              description: self.botForm.get('desc').value,
-            },
-          };
-          self.commonService
-            .post('user', `/${self.commonService.app._id}/bot`, payload)
-            .subscribe(
-              (res) => {
-                self.botForm.reset();
-                self.getBotRecords();
-                self.getBotCount();
-                self.userTeams = [];
-              },
-              (err) => {
-                self.commonService.errorToast(
-                  err,
-                  'Oops, something went wrong. Please try again later.'
-                );
-              }
-            );
-        } else {
-          self.botForm.reset();
-        }
+    this.botForm.markAllAsTouched()
+    this.botForm.dirty;
+    const payload = {
+      user: {
+        bot: true,
+        basicDetails: {
+          name: self.botForm.get('botName').value,
+        },
+        description: self.botForm.get('desc').value,
       },
-      (dismiss) => {
-        self.botForm.reset();
-      }
-    );
+    };
+    if (this.botForm.valid) {
+      self.isLoading = true
+      self.commonService
+        .post('user', `/${self.commonService.app._id}/bot`, payload)
+        .subscribe(
+          (res) => {
+            self.botForm.reset();
+            self.getBotRecords();
+            self.getBotCount();
+            self.userTeams = [];
+            self.isCreate = false;
+            self.isLoading = false
+          },
+          (err) => {
+            self.isLoading = false
+            self.commonService.errorToast(
+              err,
+              'Oops, something went wrong. Please try again later.'
+            );
+          }
+        );
+    }
+    // self.newBotModalRef = self.commonService.modal(self.newBotModal, {
+    //   size: 'sm',
+    // });
+    // self.newBotModalRef.result.then(
+    //   (close) => {
+    //     if (close) {
+    //       const payload = {
+    //         user: {
+    //           bot: true,
+    //           basicDetails: {
+    //             name: self.botForm.get('botName').value,
+    //           },
+    //           description: self.botForm.get('desc').value,
+    //         },
+    //       };
+    //       self.commonService
+    //         .post('user', `/${self.commonService.app._id}/bot`, payload)
+    //         .subscribe(
+    //           (res) => {
+    //             self.botForm.reset();
+    //             self.getBotRecords();
+    //             self.getBotCount();
+    //             self.userTeams = [];
+    //           },
+    //           (err) => {
+    //             self.commonService.errorToast(
+    //               err,
+    //               'Oops, something went wrong. Please try again later.'
+    //             );
+    //           }
+    //         );
+    //     } else {
+    //       self.botForm.reset();
+    //     }
+    //   },
+    //   (dismiss) => {
+    //     self.botForm.reset();
+    //   }
+    // );
   }
-  selectRecord(index) {
+  selectRecord(bot) {
     const self = this;
-    if (self.selectedBot && self.selectedBot.botKeys) {
+    if (bot && bot.botKeys) {
       self.selectedBot.botKeys.forEach((key) => {
         key.isNew = false;
       });
     }
-    self.selectedBot = this.botRecords[index];
-    console.log(self.selectedBot);
+    self.selectedBot = bot;
+    self.ogKeys = bot.botKeys;
     self.getUserTeam();
   }
   editBot() {
@@ -687,7 +729,7 @@ export class LocalBotComponent implements OnInit {
             );
         }
       },
-      (dismiss) => {}
+      (dismiss) => { }
     );
   }
   getUserTeam() {
@@ -719,7 +761,7 @@ export class LocalBotComponent implements OnInit {
   }
   onDataChange(event) {
     const self = this;
-    self.selectedBot = event;
+    this.selectRecord(event)
   }
   onDataChangeInGroup(event) {
     const self = this;
@@ -731,10 +773,8 @@ export class LocalBotComponent implements OnInit {
     self.commonService
       .put(
         'user',
-        `/${self.commonService.app._id}/bot/utils/status/${
-          self.selectedBot._id
-        }/${self.selectedBot.isActive ? 'disable' : 'enable'}?app=${
-          this.commonService.app._id
+        `/${self.commonService.app._id}/bot/utils/status/${self.selectedBot._id
+        }/${self.selectedBot.isActive ? 'disable' : 'enable'}?app=${this.commonService.app._id
         }`
       )
       .subscribe(
@@ -744,8 +784,7 @@ export class LocalBotComponent implements OnInit {
           self.botRecords[index] = res;
           self.showLazyLoader = false;
           self.ts.success(
-            `The ${res?.basicDetails?.name || ''} bot is ${
-              res?.isActive ? 'enabled' : 'disabled'
+            `The ${res?.basicDetails?.name || ''} bot is ${res?.isActive ? 'enabled' : 'disabled'
             }.`
           );
         },
@@ -810,5 +849,42 @@ export class LocalBotComponent implements OnInit {
     } else if (self.editBotModalRef) {
       self.editBotModalRef.close(true);
     }
+  }
+
+  switchTab(tab) {
+    this.isDataLoading = true;
+    this.currentTab = tab;
+    this.isDataLoading = false;
+  }
+
+  enterToSelect(event, currentTab) {
+    if (currentTab === 'Key') {
+      if (event === 'reset') {
+        this.searchTerm = '';
+        this.selectRecord['botkeys'] = this.ogKeys;
+        this.selectedBot = {};
+        this.selectRecord(this.selectedBot);
+      } else {
+        const self = this;
+        if (self.searchTerm) {
+          const returnedData = self.filter.transform(
+            self.selectedBot.botKeys,
+            self.searchTerm
+          );
+          this.selectRecord['botkeys'] = returnedData;
+        }
+      }
+    }
+  }
+
+  showSearch() {
+    return this.ogKeys?.length > 0
+  }
+
+  add(tab) {
+
+  }
+  closeWindow() {
+    this.isCreate = false;
   }
 }

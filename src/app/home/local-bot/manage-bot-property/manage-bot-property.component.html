@@ -6,12 +6,12 @@
 </div>
 
 <div class="grid-container">
-    <ag-grid-angular #agGrid class="ag-theme-balham" [gridOptions]="gridOptions" [rowData]="userAttributeList | agGridFilter:filterModel"
-        [frameworkComponents]="frameworkComponents" (filterModified)="!filtering && onFilterChanged($event)">
+    <ag-grid-angular #agGrid class="ag-theme-balham" style="height: 300px; overflow-x: hidden"
+        [gridOptions]="gridOptions" (gridReady)="onGridReady($event)" [frameworkComponents]="frameworkComponents">
     </ag-grid-angular>
 </div>
 
-<ng-template #editAttributeModal>
+<!-- <ng-template #editAttributeModal>
     <div class="modal-body p-4 ignore-outside">
         <div class="d-flex justify-content-between">
             <div class="font-lg mb-3">
@@ -75,8 +75,8 @@
                 (click)="editAttributeModalRef.close(true)">Save</button>
         </div>
     </div>
-</ng-template>
-
+</ng-template> -->
+<!-- 
 <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
     <odp-user-icon [size]="18" color="202A36" class="mt-1"></odp-user-icon>
-</odp-delete-modal>
+</odp-delete-modal> -->

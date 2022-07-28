@@ -101,80 +101,60 @@ export class ManageBotPropertyComponent implements OnInit {
       customCellRenderer: LocalBotCellRendererComponent,
       actionCellRenderer: AgGridActionsRendererComponent,
     };
-    this.gridOptions = {
-      defaultColDef: {
-        cellRenderer: 'customCellRenderer',
-        headerClass: 'hide-filter-icon',
-        resizable: true,
-        sortable: true,
-        filter: 'agTextColumnFilter',
-        suppressMenu: true,
-        floatingFilter: true,
-        floatingFilterComponentFramework: AgGridSharedFloatingFilterComponent,
-        filterParams: {
-          caseSensitive: true,
-          suppressAndOrCondition: true,
-          suppressFilterButton: true,
-        },
+
+    const columnDefs = [
+      {
+        headerName: 'Label',
+        field: 'label',
       },
-      columnDefs: [
-        {
-          headerName: 'Label',
-          field: 'label',
-          refData: {
-            filterType: 'text',
-            namespace: 'properties',
+      {
+        headerName: 'Type',
+        field: 'type',
+      },
+      {
+        headerName: 'Value',
+        field: 'value',
+        filter: false,
+      },
+      ...(this.hasPermission('PMBBU')
+        ? [
+          {
+            headerName: '',
+            cellRenderer: 'actionCellRenderer',
+            refData: {
+              actionsButtons: 'Edit,Delete',
+              actionCallbackFunction: 'onGridAction',
+            },
           },
-        },
-        {
-          headerName: 'Type',
-          field: 'type',
-          refData: {
-            filterType: 'list_of_values',
-            mapperFunction: 'gridTypesMapper',
-            namespace: 'properties',
-          },
-        },
-        {
-          headerName: 'Value',
-          field: 'value',
-          filter: false,
-          refData: {
-            namespace: 'properties',
-          },
-        },
-        ...(this.hasPermission('PMBBU')
-          ? [
-              {
-                headerName: 'Actions',
-                pinned: 'right',
-                cellRenderer: 'actionCellRenderer',
-                sortable: false,
-                filter: false,
-                minWidth: 94,
-                maxWidth: 94,
-                refData: {
-                  actionsButtons: 'Edit,Delete',
-                  actionCallbackFunction: 'onGridAction',
-                },
-              },
-            ]
-          : []),
-      ],
+        ]
+        : []),
+    ];
+    this.gridOptions = {
+
+      columnDefs: columnDefs,
       context: this,
+      rowData: this.userAttributeList,
+      paginationPageSize: 30,
+      cacheBlockSize: 30,
+      floatingFilter: false,
       animateRows: true,
-      onGridReady: this.onGridReady.bind(this),
-      onRowDataChanged: this.autoSizeAllColumns.bind(this),
-      onGridSizeChanged: this.forceResizeColumns.bind(this),
+      rowHeight: 48,
+      headerHeight: 48,
+      frameworkComponents: this.frameworkComponents,
+      suppressPaginationPanel: true,
     };
+
+
   }
 
   gridTypesMapper(data: any[]) {
     return this.types.map((type) => ({ label: type.label, value: type.value }));
   }
 
-  private onGridReady(event: GridReadyEvent) {
-    this.forceResizeColumns();
+  onGridReady(event: GridReadyEvent) {
+    if (this.agGrid.api && this.agGrid.columnApi) {
+      this.forceResizeColumns()
+    }
   }
 
   private forceResizeColumns() {
