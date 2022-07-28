@@ -20,7 +20,7 @@
 }
 
 .card-container {
-  height: calc(100vh - 111px);
+  height: calc(100vh - 178px);
   overflow: auto;
 }
 
@@ -278,4 +278,54 @@
   top: 20%;
   left: 20%;
   z-index: 1;
+}
+
+::ng-deep .ag-theme-balham{
+  font-family: "Inter";
+  font-size: 14px;
+  .ag-root-wrapper{
+    border: 1px solid #ECECEC;
+    border-radius: 8px;
+  }
+
+
+  .ag-cell {
+    padding: 12px !important;
+    line-height: 22px;
+    color: $sub-headings;
+  }
+
+  .ag-layout-normal{
+    overflow-x: hidden
+  }
+ 
+}
+
+::ng-deep .ag-theme-balham .ag-header {
+  font-size: 11px;
+  color: $lightgrey;
+  .ag-header-container{
+    background-color: #FBFBFB;
+  }
+  
+
+}
+
+::ng-deep .ag-theme-balham {
+  // .ag-checkbox  {
+  //     padding-bottom: 15px !important;
+  //   }
+
+    .ag-row-selected{
+      background-color: #fff;
+    }
+
+    .ag-ltr .ag-header-select-all{
+      // padding: 17px;
+    }
+  .ag-checkbox-input-wrapper.ag-checked::after {
+  color: white !important;
+  background: $headings !important;
+  border-radius: 4px;
+}
 }

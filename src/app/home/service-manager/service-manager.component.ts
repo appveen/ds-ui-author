@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
+import { AgGridAngular } from 'ag-grid-angular';
 
 import {
   CommonService,
@@ -19,13 +20,20 @@ import {
 import { environment } from 'src/environments/environment';
 import { AppService } from 'src/app/utils/services/app.service';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
-
+import { GridApi, GridOptions, IDatasource } from 'ag-grid-community';
+import { DsGridStatusComponent } from './ds-grid-status/ds-grid-status.component'
+import { DsGridActionsComponent } from './ds-grid-actions/ds-grid-actions.component'
 @Component({
   selector: 'odp-service-manager',
   templateUrl: './service-manager.component.html',
   styleUrls: ['./service-manager.component.scss'],
 })
 export class ServiceManagerComponent implements OnInit, OnDestroy {
+  @ViewChild('agGrid') agGrid: AgGridAngular;
+  gridApi: GridApi;
+  gridOptions: GridOptions;
+  dataSource: IDatasource;
+  context: any;
   @ViewChild('alertModalTemplate', { static: false })
   alertModalTemplate: TemplateRef<HTMLElement>;
   @ViewChild('newServiceModal', { static: false })
@@ -64,6 +72,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   serviceYaml: any;
   deploymentYaml: any;
   toggleImportWizard: boolean;
+  frameworkComponents: any;
   constructor(
     public commonService: CommonService,
     private appService: AppService,
@@ -72,6 +81,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     private ts: ToastrService
   ) {
     const self = this;
+    this.context = { componentParent: this };
     self.serviceSearchForm = self.fb.group({
       searchTerm: ['', [Validators.required]],
       searchField: ['name', [Validators.required]],
@@ -89,6 +99,10 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         url: null,
       },
     ];
+    this.frameworkComponents = {
+      statusRenderer: DsGridStatusComponent,
+      actionRenderer: DsGridActionsComponent
+    };
     self.commonService.setBreadcrumbs(self.breadcrumbPaths);
     self.openDeleteModal = new EventEmitter();
     self.form = self.fb.group({
@@ -241,6 +255,110 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       self.cloneServiceModalRef.close();
     }
   }
+
+  onGridReady(event) {
+    this.gridApi = event.api;
+    this.forceResizeColumns();
+    // this.setupGrid();
+  }
+
+  private forceResizeColumns() {
+    this.agGrid.api.sizeColumnsToFit();
+    this.autoSizeAllColumns();
+  }
+
+  private autoSizeAllColumns() {
+    if (!!this.agGrid.api && !!this.agGrid.columnApi) {
+      setTimeout(() => {
+        const container = document.querySelector('.grid-container');
+        const availableWidth = !!container ? container.clientWidth - 170 : 1350;
+        const allColumns = this.agGrid.columnApi.getAllColumns();
+        allColumns.forEach(col => {
+          this.agGrid.columnApi.autoSizeColumn(col);
+          if (col.getActualWidth() > 200 || this.agGrid.api.getDisplayedRowCount() === 0) {
+            col.setActualWidth(200);
+          }
+        });
+        const occupiedWidth = allColumns.reduce((pv, cv) => pv + cv.getActualWidth(), -170);
+        if (occupiedWidth < availableWidth) {
+          this.agGrid.api.sizeColumnsToFit();
+        }
+      }, 2000);
+    }
+  }
+
+
+  configureGridSettings() {
+    // const list = _.differenceBy(this.groupList, this.userGroups, '_id');
+    const groupColumnDefs = [
+      {
+        headerName: '',
+        field: '',
+        width: 40,
+        headerCheckboxSelection: true,
+        checkboxSelection: true,
+        headerCheckboxSelectionFilteredOnly: false,
+      },
+      {
+        headerName: 'SERVICE NAME',
+        field: 'name',
+        cellStyle: { 'font-weight': 500, 'font-style': 'normal', color: '#181818' }
+      },
+      {
+        headerName: 'RECORDS',
+        field: '_records',
+      },
+      {
+        headerName: 'ATTRIBUTES',
+        field: '_attributes',
+      },
+      {
+        headerName: 'REFERENCES',
+        field: '_references',
+      },
+      {
+        headerName: 'HOOKS',
+        field: '_webHooks',
+      },
+      // {
+      //   headerName: 'STATUS',
+      //   field: 'status',
+      //   cellRenderer: 'statusRenderer',
+      // },
+      {
+        headerName: '',
+        field: 'status',
+        cellRenderer: 'actionRenderer',
+      }
+    ];
+
+    this.gridOptions = {
+      paginationPageSize: 30,
+      cacheBlockSize: 30,
+      floatingFilter: false,
+      // datasource: this.dataSource,
+      rowData: this.serviceList,
+      columnDefs: groupColumnDefs,
+      animateRows: true,
+      rowHeight: 56,
+      headerHeight: 38,
+      frameworkComponents: this.frameworkComponents,
+      suppressPaginationPanel: true,
+      context: this.context,
+      rowSelection: 'multiple',
+      onRowDoubleClicked: this.onRowDoubleClick.bind(this)
+      // onSelectionChanged: (event) => this.onSelectionChanged(event),
+      // onCellValueChanged: this.onCellValueChanged,
+    };
+  }
+
+  private onRowDoubleClick(row: any) {
+    const self = this;
+    console.log(row)
+    self.router.navigate(['/app',self.app,'sb', row.data._id]);
+
+  }
+
 
   get isAppAdmin() {
     const self = this;
@@ -591,6 +709,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                 );
               }
             );
+            self.configureGridSettings();
           }
         },
         (err) => {
@@ -864,6 +983,19 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
     return false;
   }
+
+  isDeploy(index) {
+    const self = this;
+    return self.showDeploy(index) && self.canDeployService(self.serviceList[index]) && self.serviceList[index].type != 'internal'
+  }
+
+
+  isStartStopService(index){
+    const self = this;
+    return self.canStartStopService(self.serviceList[index]._id) &&
+    self.serviceList[index].type != 'internal'
+  }
+
 
   hasPermissionForService(id: string) {
     const self = this;

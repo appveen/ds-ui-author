@@ -1,0 +1,25 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.icons {
+    font-size: 10px;
+}
+.active {
+  color: $green;
+}
+
+.pending {
+  color: $orange;
+}
+
+.maintenance {
+  color: $light;
+}
+
+.stopped {
+  color: $red;
+}
+
+.draft {
+  color: $accent;
+}
