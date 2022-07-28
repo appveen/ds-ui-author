@@ -289,26 +289,6 @@ input[type="number"]::-webkit-outer-spin-button {
   width: max-content;
 }
 
-.switch {
-  &.primary {
-    input:checked ~ .slider {
-      background: $primary !important;
-    }
-  }
-
-  &.accent {
-    input:checked ~ .slider {
-      background: $accent !important;
-    }
-  }
-
-  &.success {
-    input:checked ~ .slider {
-      background: $success !important;
-    }
-  }
-}
-
 .dropdown .dropdown-item {
   &:hover {
     color: $primary !important;

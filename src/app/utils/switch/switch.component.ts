@@ -14,7 +14,7 @@ export class SwitchComponent implements OnInit {
     @Output() checkedChange: EventEmitter<boolean>;
     constructor() {
         this.checkedChange = new EventEmitter();
-        this.type = 'accent';
+        this.type = 'dark';
         this.edit = {};
     }
 
@@ -27,5 +27,11 @@ export class SwitchComponent implements OnInit {
         }
         this.checked = val;
         this.checkedChange.emit(val);
+    }
+
+    get sliderClass() {
+        if (this.checked) {
+            return 'bg-' + this.type;
+        }
     }
 }
