@@ -81,6 +81,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     private ts: ToastrService
   ) {
     const self = this;
+    this.context = { componentParent: this };
     self.serviceSearchForm = self.fb.group({
       searchTerm: ['', [Validators.required]],
       searchField: ['name', [Validators.required]],
@@ -982,6 +983,19 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
     return false;
   }
+
+  isDeploy(index) {
+    const self = this;
+    return self.showDeploy(index) && self.canDeployService(self.serviceList[index]) && self.serviceList[index].type != 'internal'
+  }
+
+
+  isStartStopService(index){
+    const self = this;
+    return self.canStartStopService(self.serviceList[index]._id) &&
+    self.serviceList[index].type != 'internal'
+  }
+
 
   hasPermissionForService(id: string) {
     const self = this;

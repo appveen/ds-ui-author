@@ -24,4 +24,16 @@ export class DsGridActionsComponent  implements AgRendererComponent  {
     this.params.context.componentParent.toggleServiceStatus(this.params.rowIndex);
   }
 
+  deployService() {
+    this.params.context.componentParent.deployService(this.params.rowIndex);
+  }
+
+  isDeploy(){
+    return this.params.context.componentParent.isDeploy(this.params.rowIndex);
+  }
+
+  isStartStop(){
+    return this.params.context.componentParent.isStartStopService(this.params.rowIndex);
+  }
+
 }
