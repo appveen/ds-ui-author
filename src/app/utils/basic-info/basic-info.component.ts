@@ -21,6 +21,8 @@ export class BasicInfoComponent implements OnInit {
   nameMessage: string;
   descMessage: string;
 
+  enableEdit: boolean;
+
   constructor() {
     this.nameChange = new EventEmitter();
     this.descriptionChange = new EventEmitter();

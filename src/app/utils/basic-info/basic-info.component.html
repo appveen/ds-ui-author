@@ -1,10 +1,13 @@
 <div class="wrapper d-flex align-items-start justify-content-between">
   <div class="left-side w-100 d-flex">
     <div class="title-container">
-      <div class="d-flex align-items-center">
-        <input *ngIf="edit.status" type="text" class="form-control input-width" [ngModel]="name"
-          (ngModelChange)="onNameChange($event)">
-        <h4 *ngIf="!edit.status">{{name}}</h4>
+      <div class="name-holder d-flex align-items-center">
+        <input *ngIf="enableEdit" type="text" class="form-control input-width" [ngModel]="name"
+          (ngModelChange)="onNameChange($event)" odpClickOutside (outside)="enableEdit=false">
+        <ng-container *ngIf="!enableEdit">
+          <h4 class="name m-0">{{name}}</h4>
+          <span *ngIf="edit.status" class="edit-icon fa fa-pen ml-2 ignore-outside hover" (click)="enableEdit=true"></span>
+        </ng-container>
       </div>
     </div>
   </div>
