@@ -1,42 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'odp-basic-info',
   templateUrl: './basic-info.component.html',
-  styleUrls: ['./basic-info.component.scss'],
-  animations: [
-    trigger('moveFields', [
-      state('closed', style({ transform: 'translateY(0px)' })),
-      state('opened', style({ transform: 'translateY(85px)' })),
-      transition('closed<=>opened', [
-        animate('0.25s')
-      ])
-    ]),
-    trigger('toggleWindow', [
-      state('hidden', style({
-        opacity: '0',
-        'min-height': '0px',
-        'max-height': '0px'
-      })),
-      state('visible', style({
-        opacity: '1',
-        'min-height': '240px',
-        'max-height': 'unset'
-      })),
-      transition('void<=>*', [
-        animate('0.25s')
-      ])
-    ])
-  ]
+  styleUrls: ['./basic-info.component.scss']
 })
 export class BasicInfoComponent implements OnInit {
 
-  @ViewChild('logoInput', { static: false }) logoInput: ElementRef;
-  @ViewChild('thumbnail', { static: false }) thumbnail: ElementRef;
-  @Input() holderStyle: string;
-  @Input() logo: string;
-  @Output() logoChange: EventEmitter<string>;
   @Input() name: string;
   @Output() nameChange: EventEmitter<string>;
   @Input() description: string;
@@ -52,103 +22,47 @@ export class BasicInfoComponent implements OnInit {
   descMessage: string;
 
   constructor() {
-    const self = this;
-    self.logoChange = new EventEmitter();
-    self.nameChange = new EventEmitter();
-    self.descriptionChange = new EventEmitter();
-    self.holderStyle = 'circle';
-    self.edit = {
+    this.nameChange = new EventEmitter();
+    this.descriptionChange = new EventEmitter();
+    this.edit = {
       status: false
     };
-    
+
   }
 
   ngOnInit() {
-    const self = this;
-    if (!self.descCharLimit) {
-      self.descCharLimit = 240;
+    if (!this.descCharLimit) {
+      this.descCharLimit = 240;
     }
-    if (!self.nameCharLimit) {
-      self.nameCharLimit = 40;
+    if (!this.nameCharLimit) {
+      this.nameCharLimit = 40;
     }
   }
+
   onNameChange(val) {
-    const self = this;
-    self.nameMessage = null;
-    if (val && val.length > self.nameCharLimit) {
-      self.nameMessage = `Name cannot exceed ${self.nameCharLimit} characters. It will be truncated to ${self.nameCharLimit} characters`;
+    this.nameMessage = null;
+    if (val && val.length > this.nameCharLimit) {
+      this.nameMessage = `Name cannot exceed ${this.nameCharLimit} characters. It will be truncated to ${this.nameCharLimit} characters`;
       setTimeout(() => {
-        self.nameMessage = null;
+        this.nameMessage = null;
       }, 3000);
-      val = val.substr(0, self.nameCharLimit);
+      val = val.substr(0, this.nameCharLimit);
     }
-    self.name = val;
-    self.nameChange.emit(val);
+    this.name = val;
+    this.nameChange.emit(val);
   }
 
   onDescriptionChange(val: string) {
-    const self = this;
-    self.descMessage = null;
-    if (val && val.length > self.descCharLimit) {
-      self.descMessage = `Description cannot exceed ${self.descCharLimit} characters. It will be truncated to ${self.descCharLimit} characters`;
+    this.descMessage = null;
+    if (val && val.length > this.descCharLimit) {
+      this.descMessage = `Description cannot exceed ${this.descCharLimit} characters. It will be truncated to ${this.descCharLimit} characters`;
       setTimeout(() => {
-        self.descMessage = null;
+        this.descMessage = null;
       }, 3000);
-      val = val.substr(0, self.descCharLimit);
+      val = val.substr(0, this.descCharLimit);
     }
-    self.description = val;
-    self.descriptionChange.emit(val);
+    this.description = val;
+    this.descriptionChange.emit(val);
   }
 
-  changeLogo(data: { message?: string, image?: string }) {
-    if (data.message) {
-      this.message = data.message;
-      return;
-    }
-    this.logo = data.image;
-    this.logoChange.emit(data.image);
-  }
-
-  removeLogo() {
-    const self = this;
-    self.logo = null;
-    self.logoChange.emit(null);
-    self.logoInput.nativeElement.value = null;
-  }
-
-  get logoAsBackground() {
-    const self = this;
-    if (self.logo) {
-      return {
-        'background-image': `url('${self.logo}')`,
-        'background-position': 'center',
-        'background-size': 'contain',
-        'background-repeat': 'no-repeat'
-      };
-    } else {
-      return null;
-    }
-  }
-
-  get initials() {
-    const self = this;
-    if (self.name && self.name.trim()) {
-      const parts = self.name.trim().split(' ');
-      if (parts.length > 1) {
-        return parts[0][0] + parts[1][0];
-      } else {
-        return parts[0][0] + parts[0][0];
-      }
-    }
-    return 'UN';
-  }
-
-  get style() {
-    const self = this;
-    const temp: HTMLElement = self.thumbnail.nativeElement;
-    return {
-      top: (temp.offsetTop - 16) + 'px',
-      left: (temp.offsetLeft - 16) + 'px'
-    };
-  }
 }
