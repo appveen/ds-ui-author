@@ -1,144 +1,87 @@
-<div class="d-flex flex-column groups-content w-100">
-    <div class="top-bar d-flex align-items-center justify-content-between bg-light pl-3">
-      <span class="font-weight-bold">Insights Access Settings</span>
+<div class="d-flex flex-column groups-content w-100 p-4">
+  <div class="top-bar d-flex align-items-center justify-content-between">
+    <div class="w-100">
+      <h5 class="font-weight-bolder">Insights</h5>
     </div>
-    <div class="text-accent p-3">Data Service</div>
-    <div class="basic-settings d-flex align-items-start w-100 p-3 ">
-      <div class="label">
-        <span class="font-weight-bold mr-1">
-          <span class="text">Access Level</span>
-          <br>
-          <span class="text-muted font-13">
-            Permission to view Data service logs.
-          </span>
-        </span>
-      </div>
-      <div class="value pl-4 d-flex flex-column">
-        <div class="level-one position-relative mb-3">
-          <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
-            (click)="dropdownToggle['dataService']=hasPermission('PMGAIS')?(!dropdownToggle['dataService']):false"
-            [ngClass]="{'blocked':dataserviceTabPermission === 'blocked','view':dataserviceTabPermission === 'view','hover':hasPermission('PMGAIS')}">
-            <div class="icon d-flex align-items-center justify-content-center">
-              <span *ngIf="dataserviceTabPermission === 'blocked'" class="fa fa-lock"></span>
-              <span *ngIf="dataserviceTabPermission === 'view'" class="fa fa-eye"></span>
-            </div>
-            <div *ngIf="dataserviceTabPermission === 'blocked'" class="text">Blocked</div>
-            <div *ngIf="dataserviceTabPermission === 'view'" class="text">View</div>
-            <span *ngIf="hasPermission('PMGAIS')" class="fa fa-angle-down fa-sm"></span>
-          </div>
-          <div *ngIf="dropdownToggle['dataService']" class="rounded-dropdown" odpClickOutside
-            (outside)="dropdownToggle['dataService']=false">
-            <div class="rounded-dropdown-item d-flex align-items-center"
-              (click)="dropdownToggle['dataService']=false;dataserviceTabPermission='PNISDS'">
-              <div class="icon d-flex align-items-center justify-content-center blocked">
-                <span class="fa fa-lock"></span>
-              </div>
-              <div class="text">Blocked</div>
-            </div>
-            <div class="rounded-dropdown-item d-flex align-items-center"
-              (click)="dropdownToggle['dataService']=false;dataserviceTabPermission='PVISDS'">
-              <div class="icon d-flex align-items-center justify-content-center view">
-                <span class="fa fa-eye"></span>
-              </div>
-              <div class="text">View</div>
-            </div>
-            
-          </div>
-        </div>
-       
-      </div>
-    </div>
-    <div class="text-accent p-3">Users</div>
-    <div class="basic-settings d-flex align-items-start w-100 p-3 ">
-      <div class="label">
-        <span class="font-weight-bold mr-1">
-          <span class="text">Access Level</span>
-          <br>
-          <span class="text-muted font-13">
-            Permission to view user logs.
-          </span>
-        </span>
-      </div>
-      <div class="value pl-4 d-flex flex-column">
-        <div class="level-one position-relative mb-3">
-          <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
-            (click)="dropdownToggle['userInfo']=hasPermission('PMGAIS')?(!dropdownToggle['userInfo']):false"
-            [ngClass]="{'blocked':userTabPermission === 'blocked','view':userTabPermission === 'view','manage':userTabPermission === 'manage','hover':hasPermission('PMGAIS')}">
-            <div class="icon d-flex align-items-center justify-content-center">
-              <span *ngIf="userTabPermission === 'blocked'" class="fa fa-lock"></span>
-              <span *ngIf="userTabPermission === 'view'" class="fa fa-eye"></span>
-            </div>
-            <div *ngIf="userTabPermission === 'blocked'" class="text">Blocked</div>
-            <div *ngIf="userTabPermission === 'view'" class="text">View</div>
-            <span *ngIf="hasPermission('PMGAIS')" class="fa fa-angle-down fa-sm"></span>
-          </div>
-          <div *ngIf="dropdownToggle['userInfo']" class="rounded-dropdown" odpClickOutside
-            (outside)="dropdownToggle['userInfo']=false">
-            <div class="rounded-dropdown-item d-flex align-items-center"
-              (click)="dropdownToggle['userInfo']=false;userTabPermission='PNISU'">
-              <div class="icon d-flex align-items-center justify-content-center blocked">
-                <span class="fa fa-lock"></span>
-              </div>
-              <div class="text">Blocked</div>
-            </div>
-            <div class="rounded-dropdown-item d-flex align-items-center"
-              (click)="dropdownToggle['userInfo']=false;userTabPermission='PVISU'">
-              <div class="icon d-flex align-items-center justify-content-center view">
-                <span class="fa fa-eye"></span>
-              </div>
-              <div class="text">View</div>
-            </div>
-            
-          </div>
-        </div>
-       
-      </div>
-    </div>
-    <div class="text-accent p-3">Groups</div>
-    <div class="basic-settings d-flex align-items-start w-100 p-3 ">
-      <div class="label">
-        <span class="font-weight-bold mr-1">
-          <span class="text">Access Level</span>
-          <br>
-          <span class="text-muted font-13">
-            Permission to view group logs.
-          </span>
-        </span>
-      </div>
-      <div class="value pl-4 d-flex flex-column">
-        <div class="level-one position-relative mb-3">
-          <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
-            (click)="dropdownToggle['groupInfo']=hasPermission('PMGAIS')?(!dropdownToggle['groupInfo']):false"
-            [ngClass]="{'blocked':groupTabPermission === 'blocked','view':groupTabPermission === 'view','manage':groupTabPermission === 'manage','hover':hasPermission('PMGAIS')}">
-            <div class="icon d-flex align-items-center justify-content-center">
-              <span *ngIf="groupTabPermission === 'blocked'" class="fa fa-lock"></span>
-              <span *ngIf="groupTabPermission === 'view'" class="fa fa-eye"></span>
-            </div>
-            <div *ngIf="groupTabPermission === 'blocked'" class="text">Blocked</div>
-            <div *ngIf="groupTabPermission === 'view'" class="text">View</div>
-            <span *ngIf="hasPermission('PMGAIS')" class="fa fa-angle-down fa-sm"></span>
-          </div>
-          <div *ngIf="dropdownToggle['groupInfo']" class="rounded-dropdown" odpClickOutside
-            (outside)="dropdownToggle['groupInfo']=false">
-            <div class="rounded-dropdown-item d-flex align-items-center"
-              (click)="dropdownToggle['groupInfo']=false;groupTabPermission='PNISG'">
-              <div class="icon d-flex align-items-center justify-content-center blocked">
-                <span class="fa fa-lock"></span>
-              </div>
-              <div class="text">Blocked</div>
-            </div>
-            <div class="rounded-dropdown-item d-flex align-items-center"
-              (click)="dropdownToggle['groupInfo']=false;groupTabPermission='PVISG'">
-              <div class="icon d-flex align-items-center justify-content-center view">
-                <span class="fa fa-eye"></span>
-              </div>
-              <div class="text">View</div>
-            </div>
-            
-          </div>
-        </div>
-       
-      </div>
-    </div>
- 
+    <!-- <select name="permissions" id="permissions" class="all-permissions-selector custom-select"
+      [ngModel]="globalPermission" (ngModelChange)="changeAllPermissions($event)">
+      <option value="custom">Custom</option>
+      <option value="blocked">None</option>
+      <option value="view">View</option>
+      <option value="manage">Manage</option>
+    </select> -->
   </div>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex justify-content-between border-bottom mt-4">
+      <div>
+        <div class="p-3 text-dark">
+          <div class="font-weight-bold">Data Services</div>
+          <span class="text-muted font-13">
+            Permission to view Data Service Logs.
+          </span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio id="insightDataServicesBlocked" name="insightDataServices" size="20"
+            [checked]="dataserviceTabPermission=='blocked'" (checkedChange)="dataserviceTabPermission='PNISDS'">
+          </odp-round-radio>
+          <span class="text-dark ml-2">Blocked</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio id="insightDataServicesView" name="insightDataServices" size="20"
+            [checked]="dataserviceTabPermission=='view'" (checkedChange)="dataserviceTabPermission='PVISDS'">
+          </odp-round-radio>
+          <span class="text-dark ml-2">View</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end"></div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between border-bottom mt-4">
+      <div>
+        <div class="p-3 text-dark">
+          <div class="font-weight-bold">Users</div>
+          <span class="text-muted font-13">
+            Permission to view Users Logs.
+          </span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio id="insightUsersBlocked" name="insightUsers" size="20"
+            [checked]="userTabPermission=='blocked'" (checkedChange)="userTabPermission='PNISU'"></odp-round-radio>
+          <span class="text-dark ml-2">Blocked</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio id="insightUsersView" name="insightUsers" size="20" [checked]="userTabPermission=='view'"
+            (checkedChange)="userTabPermission='PVISU'"></odp-round-radio>
+          <span class="text-dark ml-2">View</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end"></div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between border-bottom mt-4">
+      <div>
+        <div class="p-3 text-dark">
+          <div class="font-weight-bold">Groups</div>
+          <span class="text-muted font-13">
+            Permission to view Groups Logs.
+          </span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio id="insightGroupsBlocked" name="insightGroups" size="20"
+            [checked]="groupTabPermission=='blocked'" (checkedChange)="groupTabPermission='PNISG'"></odp-round-radio>
+          <span class="text-dark ml-2">Blocked</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio id="insightGroupsView" name="insightGroups" size="20" [checked]="groupTabPermission=='view'"
+            (checkedChange)="groupTabPermission='PVISG'"></odp-round-radio>
+          <span class="text-dark ml-2">View</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end"></div>
+      </div>
+    </div>
+  </div>
+</div>
