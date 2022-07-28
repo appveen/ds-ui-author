@@ -1,0 +1,10 @@
+<div class="status">
+    <i class="fa fa-circle icons mr-2" [ngClass]="{
+        pending: params.value == 'Pending',
+        maintenance: params.value == 'Maintenance',
+        active: params.value == 'Active',
+        stopped: params.value == 'Stopped',
+        draft: params.value == 'Draft'
+      }"></i>
+    <span class="text-dark"> {{params.value == 'Active' ? 'Running' : params.value}} </span>
+</div>

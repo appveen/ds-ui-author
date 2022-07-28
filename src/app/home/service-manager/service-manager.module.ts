@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
 
 import { ServiceManagerComponent } from './service-manager.component';
 
@@ -18,6 +19,8 @@ import { CheckboxBtnModule } from 'src/app/utils/checkbox-btn/checkbox-btn.modul
 import { DataManagementComponent } from './data-management/data-management.component';
 import { FormsModule } from '@angular/forms';
 import { ServiceImportWizardModule } from 'src/app/utils/service-import-wizard/service-import-wizard.module';
+import { DsGridStatusComponent } from './ds-grid-status/ds-grid-status.component';
+import { DsGridActionsComponent } from './ds-grid-actions/ds-grid-actions.component';
 
 
 const routes = [
@@ -34,6 +37,7 @@ const routes = [
         FormsModule,
         ReactiveFormsModule,
         LoadingModule,
+        AgGridModule,
         BreadcrumbModule,
         SearchBoxModule,
         DeleteModalModule,
@@ -49,7 +53,9 @@ const routes = [
     ],
     declarations: [
         ServiceManagerComponent,
-        DataManagementComponent
+        DataManagementComponent,
+        DsGridStatusComponent,
+        DsGridActionsComponent
     ]
 })
 export class ServiceManagerModule { }
