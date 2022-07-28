@@ -1,11 +1,12 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
 .wrapper {
-  min-height: calc(100vh - 224px);
-  max-height: calc(100vh - 224px);
+  min-height: calc(100vh - 260px);
+  max-height: calc(100vh - 260px);
   overflow-y: auto;
 }
+
 .sub-menu {
-  min-width: 128px;
-  max-width: 128px;
-  min-height: calc(100vh - 224px);
-  overflow: auto;
+  width: 200px;
 }

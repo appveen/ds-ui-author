@@ -81,6 +81,9 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     }
 
     hasMethod(role: any, method: string) {
+        if (method === 'RULE' && role.enableFilter) {
+            return true;
+        }
         if (role.operations.find(e => e.method === method)) {
             return true;
         }
