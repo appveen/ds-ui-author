@@ -4,6 +4,7 @@
 .switch {
   position: relative;
   cursor: pointer;
+
   &:focus {
     outline: none;
   }
@@ -12,10 +13,10 @@
     margin: 0;
     padding: 0;
     display: inline-block;
-    border: 1px solid #ccc;
-    width: 30px;
-    height: 12px;
-    border-radius: 6px;
+    // border: 1px solid #ccc;
+    width: 40px;
+    height: 24px;
+    border-radius: 12px;
     background: #ccc;
     transition: 0.25s;
   }
@@ -28,39 +29,41 @@
     height: 18px;
     border-radius: 9px;
     background: #fff;
-    border: 1px solid #eee;
-    left: 0px;
-    top: -2px;
+    // border: 1px solid #eee;
+    left: 3px;
+    top: 3px;
     transition: 0.25s;
     position: absolute;
-    box-shadow: 0 3px 5px $border !important;
+    // box-shadow: 0 3px 5px $border  !important;
   }
 
   input {
     display: none;
   }
 
-  input:checked ~ .toggler {
-    left: 12px;
+  input:checked~.toggler {
+    left: 18px;
   }
 
-  &.accent {
-    input:checked ~ .toggler {
-      border: 1px solid $accent;
-    }
-  }
+  // &.accent {
+  //   input:checked~.toggler {
+  //     border: 1px solid $accent;
+  //   }
+  // }
 
-  &.primary {
-    input:checked ~ .toggler {
-      border: 1px solid $primary;
-    }
-  }
+  // &.primary {
+  //   input:checked~.toggler {
+  //     border: 1px solid $primary;
+  //   }
+  // }
 }
+
 .check-circle {
   max-width: 16px;
   max-height: 16px;
   min-width: 16px;
   min-height: 16px;
+
   .fa {
     font-size: 10px;
   }

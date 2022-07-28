@@ -13,22 +13,19 @@ export class SwitchComponent implements OnInit {
     @Input() checked: boolean;
     @Output() checkedChange: EventEmitter<boolean>;
     constructor() {
-        const self = this;
-        self.checkedChange = new EventEmitter();
-        self.type = 'accent';
-        self.edit = {};
+        this.checkedChange = new EventEmitter();
+        this.type = 'accent';
+        this.edit = {};
     }
 
     ngOnInit() {
-        const self = this;
     }
 
     onChange(val: any) {
-        const self = this;
-        if (self.disabled) {
+        if (this.disabled) {
             return;
         }
-        self.checked = val;
-        self.checkedChange.emit(val);
+        this.checked = val;
+        this.checkedChange.emit(val);
     }
 }
