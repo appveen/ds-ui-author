@@ -43,6 +43,9 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   @ViewChild('yamlModalTemplate', { static: false })
   yamlModalTemplate: TemplateRef<HTMLElement>;
   app: string;
+  selectedRowEvent: any;
+  selectedRowIndex: any;
+  showContextMenu: boolean;
   serviceSearchForm: FormGroup;
   serviceList: Array<any> = [];
   service: GetOptions;
@@ -256,6 +259,31 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
   }
 
+  clickContextMenu(event, selectedRowIndex) {
+    const self = this;
+    self.selectedRowEvent = event;
+    self.selectedRowIndex = selectedRowIndex
+    self.showContextMenu = true;
+  }
+  closeContextMenu() {
+    const self = this;
+    self.showContextMenu = false;
+  }
+
+  getPosition() {
+    const self = this;
+    let position = {};
+    let top = 145;
+
+    if (self.selectedRowEvent) {
+      position = {
+        top: self.selectedRowEvent.y - top + 'px',
+        left: self.selectedRowEvent.x - 240 + 'px'
+      };
+    }
+    return position;
+  }
+
   onGridReady(event) {
     this.gridApi = event.api;
     this.forceResizeColumns();
@@ -355,7 +383,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   private onRowDoubleClick(row: any) {
     const self = this;
     console.log(row)
-    self.router.navigate(['/app',self.app,'sb', row.data._id]);
+    self.router.navigate(['/app', self.app, 'sb', row.data._id]);
 
   }
 
@@ -990,10 +1018,10 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
 
-  isStartStopService(index){
+  isStartStopService(index) {
     const self = this;
     return self.canStartStopService(self.serviceList[index]._id) &&
-    self.serviceList[index].type != 'internal'
+      self.serviceList[index].type != 'internal'
   }
 
 
