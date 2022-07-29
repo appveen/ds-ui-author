@@ -1,4 +1,4 @@
-<ng-container *ngFor="let button of buttons" class="float-right">
+<ng-container *ngFor="let button of buttons">
     <i *ngIf="button === 'End Session'" class="fa fa-ban mr-2" (click)="handleButtonClick(button, $event)">
     </i>
     <i *ngIf="button === 'Deactivate'" class="fa fa-minus-circle mr-2" (click)="handleButtonClick(button, $event)">

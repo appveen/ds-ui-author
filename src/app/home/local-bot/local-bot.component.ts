@@ -851,6 +851,7 @@ export class LocalBotComponent implements OnInit {
   closeWindow() {
     this.isCreate = false;
     this.addNewKey = false;
+    this.addNewProperty = false;
   }
 
   periodChange(event) {

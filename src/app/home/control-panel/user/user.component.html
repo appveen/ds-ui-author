@@ -187,7 +187,7 @@
           <div class="d-flex align-items-center">
             <h5 class="font-weight-bold">Reset Password</h5>
           </div>
-          <span class="fa fa-times text-secondary hover close" id="closeicon"
+          <span class="fa fa-times text-secondary hover" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
         <form class="d-flex flex-column" [formGroup]="resetPasswordForm" odpFocusNext>
@@ -207,11 +207,11 @@
             </div>
             <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                 resetPasswordForm.get('password').dirty &&
-                resetPasswordForm.get('password').hasError('required')
+                resetPasswordForm.get('password')?.hasError('required')
               " ngbTooltip="This is a required field"></span>
             <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                 resetPasswordForm.get('password').dirty &&
-                resetPasswordForm.get('password').hasError('minlength')
+                resetPasswordForm.get('password')?.hasError('minlength')
               " ngbTooltip="Password should be minimum 8 chars long"></span>
           </div>
           <div class="form-group position-relative">
@@ -230,7 +230,7 @@
             </div>
             <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                 resetPasswordForm.get('cpassword').dirty &&
-                resetPasswordForm.get('cpassword').hasError('required')
+                resetPasswordForm.get('cpassword')?.hasError('required')
               " ngbTooltip="This is a required field"></span>
             <span class="fas fa-question-circle text-danger error-icon position-absolute"
               *ngIf="resetPasswordForm.get('cpassword').dirty && matchPwd" [ngbTooltip]="'Passwords don\'t match'"
@@ -249,7 +249,7 @@
           <div class="d-flex align-items-center">
             <h5 class="font-weight-bold">Create User</h5>
           </div>
-          <span class="fa fa-times text-secondary hover close" id="closeicon"
+          <span class="fa fa-times text-secondary hover" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
         <form class="d-flex flex-column" [formGroup]="userForm" odpFocusNext>
@@ -301,7 +301,7 @@
                   <span *ngIf="
                       userForm
                         .get('userData.basicDetails?.name')
-                        .hasError('pattern')
+                        ?.hasError('pattern')
                     " class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
                     ngbTooltip="Name can contain alphanumeric and  _ ,- , @ , # and . characters only"></span>
                 </div>
@@ -430,7 +430,7 @@
               {{ editMode ? 'Edit Attribute' : 'Add Attribute' }}
             </h5>
           </div>
-          <span class="fa fa-times text-secondary hover close" id="closeicon"
+          <span class="fa fa-times text-secondary hover" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
         <form class="d-flex flex-column" [formGroup]="attributesForm" odpFocusNext>
@@ -444,7 +444,7 @@
                 formControlName="label" autocomplete="autocomplete_off_hack" />
               <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('type').touched &&
-                  attributesForm.get('label').hasError('required')
+                  attributesForm.get('label')?.hasError('required')
                 " ngbTooltip="This is a required field"></span>
             </div>
           </div>
@@ -462,7 +462,7 @@
               </select>
               <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('type').touched &&
-                  attributesForm.get('type').hasError('required')
+                  attributesForm.get('type')?.hasError('required')
                 " ngbTooltip="This is a required field"></span>
             </div>
           </div>
@@ -487,7 +487,7 @@
                 *ngIf="attributesForm.get('type').value === 'Date'" />
               <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('value').dirty &&
-                  attributesForm.get('value').hasError('required')
+                  attributesForm.get('value')?.hasError('required')
                 " ngbTooltip="This is a required field"></span>
             </div>
           </div>
