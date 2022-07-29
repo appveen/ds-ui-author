@@ -104,10 +104,9 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
         return false;
     }
 
-    toggleRole(event: Event, role: any, service: any) {
+    toggleRole(flag: boolean, role: any, service: any) {
         const self = this;
-        const target: HTMLInputElement = <HTMLInputElement>event.target;
-        if (target.checked) {
+        if (flag) {
             self.roles.push({
                 id: role.id,
                 entity: self.selectedDS._id,
