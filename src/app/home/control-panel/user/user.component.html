@@ -1,4 +1,4 @@
-<div class="bg-light w-100 h-100">
+<div class="bg-light-gray w-100 h-100">
   <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
       <span class="fa fa-spinner fa-pulse fa-3x"></span>
@@ -11,10 +11,10 @@
       <div class="fw-600 font-xxl">Users</div>
       <div class="d-flex align-items-center ml-auto">
         <ng-container *ngIf="hasPermission('PMUBD')">
-          <button *ngIf="checkedUsers.length > 0" type="button" class="btn btn-link text-delete" (click)="removeUsers()"
-            id="removeusers">
-            <span class="fa fa-trash mr-2"></span>
-            <span class="text">Remove Users ({{ checkedUsers.length }})</span>
+          <button *ngIf="checkedUsers.length > 0" type="button" class="btn btn-outline-light border text-danger mr-3"
+            (click)="removeUsers()" id="removeusers" [ngbTooltip]="'Delete '+checkedUsers.length+' Users'">
+            <span class="fa fa-trash"></span>
+            <!-- <span class="text">Remove Users ({{ checkedUsers.length }})</span> -->
           </button>
         </ng-container>
         <div class="mr-2">
@@ -31,10 +31,9 @@
           <span class="fa fa-upload"></span>
           <!-- <span class="text">Bulk Import</span> -->
         </button>
-        <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary"
+        <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary ml-3"
           (click)="newUser()">
           <span class="fa fa-plus"></span>
-          <!-- <span class="text">Add User</span> -->
         </button>
       </div>
     </div>
@@ -150,20 +149,17 @@
       <div class="modal-body p-4">
         <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center align-self-start mb-3">
-            <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
-              <odp-user-icon [size]="18" color="DD5151"></odp-user-icon>
-            </span>
             <span class="font-weight-bold">Remove user(s) from {{ selectedApp }}</span>
           </div>
           <span class="fa fa-times text-muted hover ignore-click mb-3" id="removeSelectedModalRef"
             (click)="removeSelectedModalRef.close(false)"></span>
         </div>
-        <ul class="font-weight-bold ml-4">
+        <ul class="ml-4">
           <ng-container *ngIf="!!userToRemove">
             <li>{{ userToRemove }}</li>
           </ng-container>
           <ng-container *ngIf="!userToRemove">
-            <li *ngFor="let usr of selectedUsers">{{ usr.username }}</li>
+            <li *ngFor="let usr of checkedUsers">{{ usr.username }}</li>
           </ng-container>
         </ul>
         <div class="d-flex align-items-center justify-content-end mt-4">

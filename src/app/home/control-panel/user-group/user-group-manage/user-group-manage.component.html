@@ -4,17 +4,17 @@
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="d-flex flex-column w-100 h-100 position-relative bg-light">
+<div class="d-flex flex-column w-100 h-100 position-relative bg-light-gray">
   <div class="wrapper">
     <div class="w-100 position-relative px-4 py-5">
       <odp-basic-info hideLogo="true" [(name)]="group.name" [(description)]="group.description" [hideLogo]="true"
         [edit]="{status:editBasicDetails}">
         <div class="d-flex align-items-end align-self-start">
-          <button *ngIf="hasPermission('PMGBD')" type="button" class="btn btn-outline-danger mr-3"
+          <button *ngIf="hasPermission('PMGBD')" type="button" class="btn btn-outline-light text-danger border mr-3"
             (click)="deleteGroup()">
             <span class="fa fa-trash"></span>
           </button>
-          <button class="btn btn-outline-primary btn-min-width mr-3" routerLink="../../gr">
+          <button class="btn btn-outline-light border text-secondary btn-min-width mr-3" routerLink="../../gr">
             <span>Cancel</span>
           </button>
           <button *ngIf="hasPermissionStartsWith('PMG')" class="btn btn-primary btn-min-width" (click)="saveGroup()">

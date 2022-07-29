@@ -28,6 +28,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   @Output() reset: EventEmitter<string>;
   searchTerm: string;
   slideState: string;
+  openSearchBox: boolean;
   constructor() {
     const self = this;
     self.slideState = 'blur';
