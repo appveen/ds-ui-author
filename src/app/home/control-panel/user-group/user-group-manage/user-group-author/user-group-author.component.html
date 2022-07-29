@@ -1,32 +1,32 @@
 <div class="wrapper d-flex align-items-start">
   <div class="d-flex flex-column sub-menu p-3">
-    <div class="d-flex flex-column text-muted font-weight-bold font-14">
+    <div class="d-flex flex-column text-muted font-14">
       <div *ngIf="hasPermission('PVGADS') || hasPermission('PMGADS')" class="px-3 py-2 hover"
-        [ngClass]="{'text-dark': activeSubTab==0}" (click)="activeSubTab=0">
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==0}" (click)="activeSubTab=0">
         <span class="">Data Services</span>
       </div>
       <div *ngIf="hasPermission('PVGAL') || hasPermission('PMGAL')" class="px-3 py-2 hover"
-        [ngClass]="{'text-dark': activeSubTab==1}" (click)="activeSubTab=1">
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==1}" (click)="activeSubTab=1">
         <span class="">Library</span>
       </div>
       <div *ngIf="hasPermission('PVGAF') || hasPermission('PMGAF')" class="px-3 py-2 hover"
-        [ngClass]="{'text-dark': activeSubTab==2}" (click)="activeSubTab=2">
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==2}" (click)="activeSubTab=2">
         <span class="">Functions</span>
       </div>
       <div *ngIf="hasPermission('PVGAU') || hasPermission('PMGAU')" class="px-3 py-2 hover"
-        [ngClass]="{'text-dark': activeSubTab==8}" (click)="activeSubTab=8">
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==8}" (click)="activeSubTab=8">
         <span class="">Users</span>
       </div>
       <div *ngIf="(hasPermission('PVGAB') || hasPermission('PMGAB'))" class="px-3 py-2 hover"
-        [ngClass]="{'text-dark': activeSubTab==9}" (click)="activeSubTab=9">
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==9}" (click)="activeSubTab=9">
         <span class="">Bots</span>
       </div>
       <div *ngIf="hasPermission('PVGAG') || hasPermission('PMGAG')" class="px-3 py-2 hover"
-        [ngClass]="{'text-dark': activeSubTab==10}" (click)="activeSubTab=10">
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==10}" (click)="activeSubTab=10">
         <span class="">Groups</span>
       </div>
       <div *ngIf="hasPermission('PVGAIS') || hasPermission('PMGAIS')" class="px-3 py-2 hover"
-        [ngClass]="{'text-dark': activeSubTab==11}" (click)="activeSubTab=11">
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==11}" (click)="activeSubTab=11">
         <span class="">Insights</span>
       </div>
     </div>

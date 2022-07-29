@@ -44,7 +44,7 @@
         <div class="data-settings">
             <div class="fw-600 font-xl">Data Settings</div>
             <div class="row my-4">
-                <h6 class="col font-weight-bolder">Keep history of data when data is changed </h6>
+                <h6 class="col font-weight-bold">Keep history of data when data is changed </h6>
                 <div class="col-9 switch-container">
                     <label class="switch success mb-0 mr-2">
                         <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="retainDataHistory"
@@ -56,7 +56,7 @@
             </div>
             <div class="row" *ngIf="retainDataHistory">
                 <div class="col-3">
-                    <h6 class="font-weight-bolder"> Retain Data by</h6>
+                    <h6 class="font-weight-bold"> Retain Data by</h6>
                     <div class="text-secondary">select method to retain data by version or duration</div>
                 </div>
                 <div class="col-9">
@@ -117,7 +117,7 @@
             <div class="fw-600 font-xl">Insights Settings</div>
             <div class="row my-4">
                 <div class="col-3">
-                    <h6 class="font-weight-bolder"> Disable insights</h6>
+                    <h6 class="font-weight-bold"> Disable insights</h6>
                     <div class="text-secondary">It will disable all insights related ot the data service </div>
                 </div>
                 <div class="col-9 switch-container">
