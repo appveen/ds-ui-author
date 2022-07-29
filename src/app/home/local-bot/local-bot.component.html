@@ -39,8 +39,8 @@
           <div class="d-flex flex-row">
             <span class="font-xl fw-600 heading mr-2 mt-2">{{ selectedBot?.basicDetails?.name }}</span>
             <div class="col mt-2">
-              <odp-switch [edit]="{ status: true }" checkedText="" uncheckedText=""
-                (checkedChange)="toggleStatus($event)" [(checked)]="selectedBot.isActive">
+              <odp-switch [edit]="{ status: true }" type="accent" (checkedChange)="toggleStatus($event)"
+                [(checked)]="selectedBot.isActive">
               </odp-switch>
             </div>
             <button type="button" class="add-new btn bg-white border mr-2" id="delete" (click)="deleteUser()">
@@ -80,38 +80,29 @@
           <!-- <div style="margin: 0 auto" *ngIf="isDataLoading">
             <span class="fa fa-spinner fa-pulse fa-3x"></span>
           </div> -->
-          <div class="d-grid">
-            <div class="d-flex">
-              <!-- <odp-search-box (enteredText)="searchTerm = $event" (reset)="enterToSelect('reset', currentTab)"
-                [selectOnEnter]="true" (enteredPressed)="enterToSelect($event,  currentTab)" *ngIf="showSearch()">
-              </odp-search-box> -->
-              <div class="d-flex ml-auto mr-2">
-                <div class="add-attribute hover" id="showAttributeSide" (click)="add(currentTab)">
-                  <i class="fa fa-plus-circle font-xl icon-primary mr-2"></i>
-                  <label class="fw-500 font-normal heading">Add {{currentTab}}</label>
+          <div class="d-grid" *ngIf="!showLazyLoader">
 
-                </div>
-              </div>
-            </div>
 
-            <div *ngIf="currentTab === 'Keys' " class="prop-container mt-4">
+            <div *ngIf="currentTab === 'Keys' " class="mt-4">
               <odp-manage-bot-key #manageKeys [selectedBot]="selectedBot" (dataChange)="onDataChange($event)"
-                (editKey)="editKey($event)">
+                (editKey)="editKey($event)" (onAdd)="add($event)">
               </odp-manage-bot-key>
 
             </div>
-            <div *ngIf="currentTab === 'Properties'" class="prop-container mt-4">
+            <div *ngIf="currentTab === 'Properties'" class="mt-4">
               <odp-manage-bot-property #manageProperty [selectedBot]="selectedBot" (dataChange)="onDataChange($event)"
-                (editProperty)="editAttribute($event)">
+                (editProperty)="editAttribute($event)" (onAdd)="add($event)">
               </odp-manage-bot-property>
 
             </div>
-            <div *ngIf="currentTab === 'Groups' " class="prop-container mt-4">
+            <div *ngIf="currentTab === 'Groups' " class="mt-4">
               <odp-manage-bot-group #manageGroups [selectedBot]="selectedBot" [userTeams]="userTeams"
-                [allTeams]="allTeams" (dataChange)="onDataChangeInGroup($event)" (assign)="assignTeam()">
+                [allTeams]="allTeams" (dataChange)="onDataChangeInGroup($event)" (assign)="assignTeam()"
+                (onAdd)="add($event)">
               </odp-manage-bot-group>
 
             </div>
+
           </div>
         </div>
       </div>
@@ -334,7 +325,7 @@
             " ngbTooltip="This is a required field"></span>
         </div>
       </div>
-      <button type="button" class="btn btn-primary add-button" id="addAttributes" (click)="addAttribute()">
+      <button type="button" class="btn btn-primary add-button" id="addPropertys" (click)="addProperty()">
         {{ editMode ? 'Save' : 'Add' }}
       </button>
     </form>

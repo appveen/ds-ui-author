@@ -96,24 +96,8 @@ table {
   display: grid;
 }
 
-::ng-deep .swal2-title {
-  font-weight: 600;
-  font-size: 20px;
-  color: $headings;
-  margin-bottom: 28px;
-  position: absolute;
-  width: 148px;
-  height: 28px;
-  left: 501px;
-  top: 318px
-}
-
-.swal2-html-container {
-  position: absolute;
-  width: 403px;
-  height: 44px;
-  left: 501px;
-  top: 354px;
-  font-weight: 400;
-  font-size: 14px;
+.table {
+  height: 400px;
+  max-height: 400px;
+  overflow-x: hidden
 }

@@ -32,7 +32,7 @@ export class UserToGroupModalComponent implements OnInit {
     private ts: ToastrService,
     private dialogRef: MatDialogRef<UserToGroupModalComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.frameworkComponents = {
       appCheckRenderer: UserGridAppsRendererComponent,
@@ -102,6 +102,8 @@ export class UserToGroupModalComponent implements OnInit {
       suppressPaginationPanel: true,
       context: this.context,
       rowSelection: 'multiple',
+      suppressCellSelection: true,
+
 
       onSelectionChanged: (event) => this.onSelectionChanged(event),
 

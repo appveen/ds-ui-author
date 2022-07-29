@@ -40,6 +40,9 @@ export class ManageBotPropertyComponent implements OnInit {
   frameworkComponents: any;
   filterModel: any;
   filtering: boolean;
+  @Output() onAdd: EventEmitter<any> = new EventEmitter();
+  searchTerm: any;
+
 
   get selectedBot() {
     const self = this;
@@ -143,6 +146,8 @@ export class ManageBotPropertyComponent implements OnInit {
       headerHeight: 48,
       frameworkComponents: this.frameworkComponents,
       suppressPaginationPanel: true,
+      suppressCellSelection: true,
+
     };
 
 
@@ -277,5 +282,23 @@ export class ManageBotPropertyComponent implements OnInit {
     if (this.agGrid.api) {
       this.agGrid.api.redrawRows()
     }
+  }
+
+  enterToSelect(event) {
+    this.searchTerm = event;
+    let filtered;
+    if (event === '' || event === 'reset') {
+      filtered = this.userAttributeList;
+    }
+    else {
+      filtered = this.userAttributeList.filter(ele => ele.label.indexOf(event) > -1)
+    }
+
+    this.gridOptions.api.setRowData(filtered)
+
+  }
+
+  add() {
+    this.onAdd.emit('Properties')
   }
 }

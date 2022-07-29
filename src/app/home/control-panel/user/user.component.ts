@@ -1271,6 +1271,8 @@ export class UserComponent implements OnInit, OnDestroy {
       rowDeselection: false,
       suppressPaginationPanel: true,
       context: this.context,
+      suppressCellSelection: true,
+
     };
 
     self.gridGroupOptions = {
@@ -1545,6 +1547,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   enterToSelect(event) {
+
     if (event === 'reset') {
       this.searchTerm = '';
       this.userList = this.ogUsersList;
@@ -1552,6 +1555,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.showDetails(this.ogUsersList[0]);
     } else {
       const self = this;
+      self.searchTerm = event
       if (self.searchTerm) {
         const returnedUsers = self.userFilter.transform(
           self.ogUsersList,

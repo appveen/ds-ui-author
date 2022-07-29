@@ -18,7 +18,7 @@
           </button>
         </ng-container>
         <div class="mr-2">
-          <odp-search-box *ngIf="search" (enteredText)="searchTerm = $event" (reset)="enterToSelect('reset')"
+          <odp-search-box *ngIf="search" (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')"
             [selectOnEnter]="true" (enteredPressed)="enterToSelect($event)"></odp-search-box>
           <button *ngIf="!search" type="button" class="add-new btn bg-white" ngbTooltip="Search" id="search"
             (click)="search = !search">

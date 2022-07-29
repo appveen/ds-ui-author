@@ -22,8 +22,12 @@ export class ManageBotGroupComponent implements OnInit {
   openDeleteModal: EventEmitter<any>;
   @Output() dataChange: EventEmitter<any>;
   @Output() assign: EventEmitter<any> = new EventEmitter();
+  @Output() onAdd: EventEmitter<any> = new EventEmitter();
+
   showLazyLoader: boolean;
   frameworkComponents: any;
+  searchTerm: any;
+
   @ViewChild('agGrid') agGrid: AgGridAngular;
   gridOptions: GridOptions;
   constructor(
@@ -91,6 +95,8 @@ export class ManageBotGroupComponent implements OnInit {
       headerHeight: 48,
       frameworkComponents: this.frameworkComponents,
       suppressPaginationPanel: true,
+      suppressCellSelection: true,
+
     };
 
 
@@ -202,6 +208,24 @@ export class ManageBotGroupComponent implements OnInit {
         }
       }
     });
+  }
+
+  enterToSelect(event) {
+    this.searchTerm = event;
+    let filtered;
+    if (this.searchTerm === '' || this.searchTerm === 'reset') {
+      filtered = this.userTeams
+    } else {
+      filtered = this.userTeams.filter(ele => ele.name.indexOf(event) > -1)
+
+
+    }
+    this.gridOptions.api.setRowData(filtered)
+
+  }
+
+  add() {
+    this.onAdd.emit('Groups')
   }
 
 }

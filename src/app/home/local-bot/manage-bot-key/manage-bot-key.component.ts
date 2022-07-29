@@ -23,6 +23,7 @@ export class ManageBotKeyComponent implements OnInit {
   @Input() selectedBot: any;
   @Output() dataChange: EventEmitter<any>;
   @Output() editKey: EventEmitter<any> = new EventEmitter();
+  @Output() onAdd: EventEmitter<any> = new EventEmitter();
   openDeleteBotKeyModal: EventEmitter<any>;
   editKeyModalRef: NgbModalRef
   showLazyLoader: boolean;
@@ -32,7 +33,7 @@ export class ManageBotKeyComponent implements OnInit {
   filterModel: any;
   filtering: boolean;
   gridApi: GridApi;
-
+  searchTerm: string;
   constructor(
     private fb: FormBuilder,
     public commonService: CommonService,
@@ -122,7 +123,9 @@ export class ManageBotKeyComponent implements OnInit {
       rowHeight: 48,
       headerHeight: 48,
       frameworkComponents: this.frameworkComponents,
+      suppressCellSelection: true,
       suppressPaginationPanel: true,
+
     };
   }
 
@@ -340,8 +343,26 @@ export class ManageBotKeyComponent implements OnInit {
   }
 
   refreshCell() {
-    if (this.gridApi) {
-      this.gridApi.redrawRows();
+    if (this.agGrid.api) {
+      this.agGrid.api.redrawRows()
     }
+  }
+
+  enterToSelect(event) {
+    this.searchTerm = event;
+    let filtered;
+    if (event === '' || event === 'reset') {
+      filtered = this.selectedBot.botKeys;
+    }
+    else {
+      filtered = this.selectedBot.botKeys.filter(ele => ele.label.indexOf(event) > -1)
+    }
+
+    this.gridOptions.api.setRowData(filtered)
+
+  }
+
+  add() {
+    this.onAdd.emit('Keys')
   }
 }

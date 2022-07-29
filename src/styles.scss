@@ -1035,21 +1035,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
     background: $headings  !important;
     border-radius: 4px;
   }
-
-  .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected),
-  .ag-theme-balham .ag-ltr .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected),
-  .ag-theme-balham .ag-ltr .ag-has-focus .ag-full-width-row.ag-row-focus .ag-cell-wrapper.ag-row-group,
-  .ag-theme-balham .ag-ltr .ag-cell-range-single-cell,
-  .ag-theme-balham .ag-ltr .ag-cell-range-single-cell.ag-cell-range-handle,
-  .ag-theme-balham .ag-rtl .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected),
-  .ag-theme-balham .ag-rtl .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected),
-  .ag-theme-balham .ag-rtl .ag-has-focus .ag-full-width-row.ag-row-focus .ag-cell-wrapper.ag-row-group,
-  .ag-theme-balham .ag-rtl .ag-cell-range-single-cell,
-  .ag-theme-balham .ag-rtl .ag-cell-range-single-cell.ag-cell-range-handle {
-    border: none;
-    border-color: none;
-    outline: none;
-  }
 }
 
 .custom-style {

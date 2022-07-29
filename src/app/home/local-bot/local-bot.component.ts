@@ -197,6 +197,7 @@ export class LocalBotComponent implements OnInit {
           if (users.length) {
             self.selectedBot = users[0];
             self.selectRecord(self.selectedBot)
+
             self.getUserTeam();
           }
           self.botRecords = users;
@@ -404,20 +405,26 @@ export class LocalBotComponent implements OnInit {
           self.showLazyLoader = false;
           this.addNewKey = false;
           self.keyForm.reset();
-          if (!self.selectedBot.botKeys) {
-            self.selectedBot.botKeys = [];
+          if (this.editMode) {
+            self.selectedBot.botKeys = res.botKeys
           }
-          res.isNew = true;
-          res.isLatest = true;
-          this.isLatest = true;
-          self.selectedBot.botKeys = [res, ...self.selectedBot.botKeys];
+          else {
+            if (!self.selectedBot.botKeys) {
+              self.selectedBot.botKeys = [];
+            }
+            res.isNew = true;
+            res.isLatest = true;
+            this.isLatest = true;
+            self.selectedBot.botKeys = [res, ...self.selectedBot.botKeys];
+          }
+
           setTimeout(() => {
             self.selectedBot.botKeys.forEach((key) => {
               key.isLatest = false;
             });
             this.editMode = false
             this.addNewKey = false
-            this.manageKeys.refreshCell()
+
           }, 10000);
         })
   }
@@ -472,11 +479,12 @@ export class LocalBotComponent implements OnInit {
   }
 
 
-  addAttribute() {
+  addProperty() {
     const { key, ...rest } = this.attributeForm.value;
     if (!this.selectedBot.attributes) {
       this.selectedBot['attributes'] = {}
     }
+    this.showLazyLoader = true;
     this.selectedBot.attributes[key] = this.appService.cloneObject(rest);
     this.commonService
       .put(
@@ -485,13 +493,13 @@ export class LocalBotComponent implements OnInit {
         this.selectedBot
       )
       .subscribe(
-        () => {
-          this.isDataLoading = true;
-          this.getBotRecords()
+        (res) => {
+
+          this.selectedBot.attributes = res.attributes
           this.addNewProperty = false;
-          this.manageProperty.refreshCell()
           this.attributeForm.reset()
           this.editMode = false
+          this.showLazyLoader = false;
           this.ts.success('Custom Details Saved Successfully');
         },
         (err) => {
@@ -795,17 +803,17 @@ export class LocalBotComponent implements OnInit {
     return self.commonService.hasPermission('PVBG');
   }
 
-  closeBotModals() {
-    const self = this;
-    if (self.botForm.invalid) {
-      return;
-    }
-    if (self.newBotModalRef) {
-      self.newBotModalRef.close(true);
-    } else if (self.editBotModalRef) {
-      self.editBotModalRef.close(true);
-    }
-  }
+  // closeBotModals() {
+  //   const self = this;
+  //   if (self.botForm.invalid) {
+  //     return;
+  //   }
+  //   if (self.newBotModalRef) {
+  //     self.newBotModalRef.close(true);
+  //   } else if (self.editBotModalRef) {
+  //     self.editBotModalRef.close(true);
+  //   }
+  // }
 
   switchTab(tab) {
     this.isDataLoading = true;
@@ -814,6 +822,7 @@ export class LocalBotComponent implements OnInit {
   }
 
   enterToSelect(event, currentTab) {
+    this.searchTerm = event
     // if (currentTab === 'Keys') {
     //   if (event === 'reset') {
     //     this.searchTerm = '';
@@ -832,6 +841,7 @@ export class LocalBotComponent implements OnInit {
     //   }
     // }
   }
+
 
   showSearch() {
     return this.ogKeys?.length > 0
@@ -871,4 +881,8 @@ export class LocalBotComponent implements OnInit {
     this.keyId = data._id;
     this.addNewKey = true;
   }
+
+  // externalFilterChanged(event){
+  //   this.searchTerm = event
+  // }
 }
