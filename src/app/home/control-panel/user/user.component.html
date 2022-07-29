@@ -17,21 +17,16 @@
             <!-- <span class="text">Remove Users ({{ checkedUsers.length }})</span> -->
           </button>
         </ng-container>
-        <div class="mr-2">
-          <odp-search-box *ngIf="search" (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')"
+        <div class="mr-3">
+          <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')"
             [selectOnEnter]="true" (enteredPressed)="enterToSelect($event)"></odp-search-box>
-          <button *ngIf="!search" type="button" class="add-new btn bg-white" ngbTooltip="Search" id="search"
-            (click)="search = !search">
-            <span class="fa fa-search"></span>
-            <!-- <span class="text">Bulk Import</span> -->
-          </button>
         </div>
-        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-dark mr-2" routerLink="bulk-import"
+        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-dark mr-3" routerLink="bulk-import"
           ngbTooltip="Bulk Import" id="bulkimport">
           <span class="fa fa-upload"></span>
           <!-- <span class="text">Bulk Import</span> -->
         </button>
-        <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary ml-3"
+        <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary"
           (click)="newUser()">
           <span class="fa fa-plus"></span>
         </button>
