@@ -13,14 +13,16 @@
 .tabs {
   div {
     transition: 0.25s;
-    border-bottom: 4px solid transparent;
-    min-height: 40px;
+    min-height: 56px;
+    line-height: 56px;
+    font-weight: 700;
+    color: #B5B8BC;
     &.active,
     &:hover {
-      border-bottom: 4px solid $accent;
+      color: $link-color !important;
     }
     &.active {
-      color: $accent !important;
+      color: $link-color !important;
       font-weight: bold;
     }
     .fa {

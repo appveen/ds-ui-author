@@ -156,7 +156,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         setTimeout(() => {
             if (self.first) {
                 self.schemaService.selectedFieldId = self.fieldId;
-                self.schemaService.activeField.emit(self.fieldId);
+                // self.schemaService.activeField.emit(self.fieldId);
             }
         }, 200);
     }
@@ -182,7 +182,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 if (self.active && r.key === 'status' && r.currentValue === true) {
                     setTimeout(() => {
                         self.schemaService.selectedFieldId = self.fieldId;
-                        self.schemaService.activeField.emit(self.fieldId);
+                        // self.schemaService.activeField.emit(self.fieldId);
                     }, 200);
                 }
             });
@@ -234,7 +234,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         (self.all as FormArray).insert(self.index + 1, temp);
         setTimeout(() => {
             self.schemaService.selectedFieldId = temp.value._fieldId;
-            self.schemaService.activeField.emit(temp.value._fieldId);
+            // self.schemaService.activeField.emit(temp.value._fieldId);
         }, 200);
     }
 
@@ -246,7 +246,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         const temp = self.schemaService.getDefinitionStructure(val);
         (self.all as FormArray).insert(self.index + 1, temp);
         self.schemaService.selectedFieldId = temp.value._fieldId;
-        self.schemaService.activeField.emit(temp.value._fieldId);
+        // self.schemaService.activeField.emit(temp.value._fieldId);
     }
 
     deleteField(event: KeyboardEvent) {
@@ -450,7 +450,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         } else {
             self.schemaService.selectedFieldId = self.all.at(self.index - 1).get('_fieldId').value;
         }
-        self.schemaService.activeField.emit(self.schemaService.selectedFieldId);
+        // self.schemaService.activeField.emit(self.schemaService.selectedFieldId);
         if (self.all.at(self.index).get('key').value == self.stateModelAttr?.value && self.all.at(self.index).get(['properties', '_detailedType']).value == 'enum') {
             self.deleteStateModel.emit(true);
         }

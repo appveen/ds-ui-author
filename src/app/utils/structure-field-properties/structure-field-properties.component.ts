@@ -18,6 +18,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
   @Input() formatType: string;
   @Input() edit: any;
   @Input() type: string;
+  showProperties: boolean;
   @ViewChild('typeChangeModalTemplate', { static: false }) typeChangeModalTemplate: TemplateRef<any>;
   showDatePicker: boolean;
   showLazyLoader: boolean;
@@ -51,6 +52,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     self.showLazyLoader = false;
     self.showDataTypes = {};
     self.showCommonFields = true;
+    self.showProperties = false;
   }
 
   ngAfterViewInit(): void {
@@ -60,6 +62,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       self.formList = [];
       if (form) {
         self.form = form;
+        self.showProperties = true;
         self.collectForms();
       }
     });

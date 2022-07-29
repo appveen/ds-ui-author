@@ -2,20 +2,28 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 .schemaProperties {
-  min-width: 428px;
-  max-width: 428px;
+  height: 100vh;
+  width: 364px;
+  top: 0;
+  right: -360px;
+  z-index: 2;
+  transition: 0.2s;
+  overflow: auto;
+  padding-top: 40px !important;
+  &.show {
+    right: 0px !important;
+  }
   .schemaProperties-header {
-    min-height: 40px;
-    max-height: 40px;
+    font-size: 20px;
   }
-  .schemaProperties-wrapper {
-    overflow-y: auto;
-    min-height: calc(100vh - 310px);
-    max-height: calc(100vh - 310px);
-  }
+  // .schemaProperties-wrapper {
+  //   overflow-y: auto;
+  //   min-height: calc(100vh - 310px);
+  //   max-height: calc(100vh - 310px);
+  // }
 
   .toggler {
-    top: 0px;
+    top: 3px;
   }
 
   .label-width {
@@ -119,7 +127,7 @@
     left: 90%;
   }
 
-  .field-info-symbol{
+  .field-info-symbol {
     top: 7px;
     left: 80%;
   }
@@ -139,10 +147,6 @@
   }
 }
 
-.sub-heading{
-  margin: 0px -16px;
-}
-
 .example {
   min-width: 80px;
   max-width: 80px;
@@ -156,7 +160,7 @@
   cursor: default !important;
 }
 
-.edit-icon{
+.edit-icon {
   font-size: 12px;
 }
 .checkbox-container {
@@ -172,74 +176,80 @@
   -ms-user-select: none;
   user-select: none;
   input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-      &:checked~.checkmark {
-          background-color: $capiot;
-          border: 1px solid $capiot;
-          &::after {
-              display: block;
-          }
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    &:checked ~ .checkmark {
+      background-color: $capiot;
+      border: 1px solid $capiot;
+      &::after {
+        display: block;
       }
-      &:focus:not(:checked)~.checkmark {
-          background-color: #eee;
-      }
+    }
+    &:focus:not(:checked) ~ .checkmark {
+      background-color: #eee;
+    }
   }
   .checkmark {
     border-radius: 18px !important;
-      transition: 0.25s;  
+    transition: 0.25s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: #fff;
+    // border-radius: 2px;
+    border: 1px solid #bdbdbd;
+    &::after {
+      content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      height: 18px;
-      width: 18px;
-      background-color: #fff;
-      // border-radius: 2px;
-      border: 1px solid #BDBDBD;
-      &::after {
-          content: "";
-          position: absolute;
-          display: none;
-          left: 5px;
-          top: 2px;
-          width: 5px;
-          height: 10px;
-          border: solid white;
-          border-width: 0 2px 2px 0;
-          -webkit-transform: rotate(45deg);
-          -ms-transform: rotate(45deg);
-          transform: rotate(45deg);
-      }
+      display: none;
+      left: 5px;
+      top: 2px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
   }
-  &:hover{
-      input:not(:checked)~.checkmark {
-          background-color: #eee;
-      }
+  &:hover {
+    input:not(:checked) ~ .checkmark {
+      background-color: #eee;
+    }
   }
-
- 
 }
-.checkbox{
+.checkbox {
   min-height: 40px;
   max-height: 40px;
-  min-width: 100px;
-  max-width: 120px;
+  // min-width: 100px;
+  // max-width: 120px;
   border-radius: 4px;
   box-shadow: 0px 1px 3px rgba($color: #000000, $alpha: 0.23);
   border: 1px solid transparent;
-
 }
-.selected-checkbox{
-  border: #0082C9 solid 1px;
-  box-shadow: 0px 3px 9px rgba($capiot, .3);
+.selected-checkbox {
+  border: #0082c9 solid 1px;
+  box-shadow: 0px 3px 9px rgba($capiot, 0.3);
 }
 
-.pattern{
+.pattern {
   border-radius: 4px;
 }
 
-// input[type="range"] { 
+.overlay {
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: rgba($color: #000000, $alpha: 0.6);
+}
+
+// input[type="range"] {
 //   margin: auto;
 //   -webkit-appearance: none;
 //   position: relative;
