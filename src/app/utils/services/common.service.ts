@@ -1,4 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
+import * as _ from 'lodash';
+
 import {
   NgbModalRef,
   NgbModal,
@@ -260,6 +262,10 @@ export class CommonService {
         .subscribe(
           (res) => {
             self.appList = res;
+            self.appList.forEach(app => {
+              app.firstLetter = app._id.charAt(0);
+              app.bg = this.appColor();
+            })
             self.app = self.appList[0];
             resolve(res);
           },
@@ -479,8 +485,8 @@ export class CommonService {
                   self.app = temp;
                 } else {
                   self.deleteLastActiveApp().then(
-                    (res) => {},
-                    (err) => {}
+                    (res) => { },
+                    (err) => { }
                   );
                 }
               }
@@ -952,7 +958,7 @@ export class CommonService {
                   );
               }
             },
-            (err) => {}
+            (err) => { }
           );
         }
       } else {
@@ -1131,7 +1137,7 @@ export class CommonService {
         self.subscriptions['sendHeartBeat'] = interval(resolveIn)
           .pipe(flatMap((e) => self.sendHeartBeat()))
           .subscribe(
-            (res2: any) => {},
+            (res2: any) => { },
             (err) => self.logout()
           );
       },
@@ -1484,6 +1490,18 @@ export class CommonService {
   }
   getBreadcrumbs() {
     return this.breadcrumbPaths;
+  }
+
+  appColor() {
+    const colorArray = [
+      '#B2DFDB',
+      '#B2EBF2',
+      '#B3E5FC',
+      '#A5D6A7',
+      '#C5E1A5',
+      '#E6EE9C',
+    ];
+    return _.sample(colorArray);
   }
 }
 

@@ -166,8 +166,8 @@ export class AppListComponent implements OnInit, OnDestroy {
         self.appList = [];
         self.commonService.appList = [];
         res.forEach((item) => {
-          item.firstLetter = item._id.charAt(0);
-          item.bg = this.appColor();
+          // item.firstLetter = item._id.charAt(0);
+          // item.bg = this.appColor();
           if (_.isEmpty(item.logo)) {
             delete item.logo;
           }

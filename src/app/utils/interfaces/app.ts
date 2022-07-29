@@ -23,6 +23,7 @@ export interface App {
     };
     disableInsights?: boolean;
     defaultTimezone?: string;
+    [key: string]: any;
 }
 
 export interface AppCenterStyle {

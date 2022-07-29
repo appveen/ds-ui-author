@@ -11,6 +11,26 @@
   background: rgba($color: #000000, $alpha: 0.6);
   opacity: 0;
 }
+
+.app-thumbnail {
+  min-width: 32px;
+  max-width: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: 0.25s;
+  border: 3px solid transparent;
+  outline: 0;
+
+  img {
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+  }
+}
+
 .app-switcher-window {
   //transform: scale(0);
   min-width: 330px;
@@ -27,78 +47,73 @@
   border-bottom-right-radius: 4px;
   box-sizing: border-box;
   box-shadow: 4px 4px 10px rgba($color: #000, $alpha: 0.4);
+
   .active-app {
     top: -40px;
     left: 27%;
     width: 220px;
+
     img {
       min-width: 20px;
       max-width: 20px;
       min-height: 20px;
       max-height: 20px;
-      border-radius: 50%;
+      border-radius: 6px;
     }
   }
+
   .search-label {
     min-width: 100px;
     max-width: 100px;
   }
+
   .search-box {
     min-width: 283px;
     max-width: 283px;
     padding-left: 35px;
   }
+
   .d-flex.flex-wrap {
     overflow-y: auto;
   }
+
   .app-card {
     &.active {
       .app-thumbnail {
-        border-color: rgba($primary, 0.5);
+        border-color: rgba($dark, 0.5);
       }
     }
+
     &:hover {
-      .app-thumbnail {
-        box-shadow: 0 0 10px rgba($color: #000000, $alpha: 0.2);
-      }
+      background: #f7f7f7;
+      // .app-thumbnail {
+      //   // box-shadow: 0 0 10px rgba($color: #000000, $alpha: 0.2);
+      //   border-color: rgba($white, 0.5);
+      // }
     }
-    .app-thumbnail {
-      min-width: 32px;
-      max-width: 32px;
-      min-height: 32px;
-      max-height: 32px;
-      border-radius: 50%;
-      overflow: hidden;
-      transition: 0.25s;
-      border: 3px solid transparent;
-      outline: 0;
-      img {
-        min-width: 32px;
-        max-width: 32px;
-        min-height: 32px;
-        max-height: 32px;
-      }
-    }
+
     .app-name {
       max-width: 210px;
       word-break: break-all;
     }
   }
+
   .app-card:last-child {
     margin-bottom: 1.5rem;
   }
-  &::before {
-    content: "";
-    display: inline-block;
-    height: 46px;
-    width: 236px;
-    background-color: $white;
-    position: absolute;
-    top: -46px;
-    right: 0;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-  }
+
+  // &::before {
+  //   content: "";
+  //   display: inline-block;
+  //   height: 46px;
+  //   width: 236px;
+  //   background-color: $white;
+  //   position: absolute;
+  //   top: -46px;
+  //   right: 0;
+  //   border-top-left-radius: 4px;
+  //   border-top-right-radius: 4px;
+  // }
 }
 
 ::-webkit-input-placeholder {

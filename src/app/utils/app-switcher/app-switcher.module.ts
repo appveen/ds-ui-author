@@ -7,6 +7,7 @@ import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { FilterPipeModule } from '../pipes/filter.module';
 import { OrderByModule } from '../pipes/order-by/order-by.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ClickOutsideModule } from '../directives/click-outside/click-outside.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     RouterModule,
     IconsModule,
     FilterPipeModule,
-    OrderByModule
+    OrderByModule,
+    ClickOutsideModule
   ],
   declarations: [AppSwitcherComponent],
   exports: [AppSwitcherComponent]
