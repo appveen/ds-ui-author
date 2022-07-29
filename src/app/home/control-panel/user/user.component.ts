@@ -1045,6 +1045,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   removeUsers(params?: { userIds?: Array<string>; single?: boolean }) {
+    this.userToRemove = null;
     if (!!params?.single) {
       this.userToRemove = !!params.userIds?.length ? params.userIds[0] : null;
     }

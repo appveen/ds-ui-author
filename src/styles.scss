@@ -26,15 +26,11 @@ $odp-ui-author-warn: mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$odp-ui-author-theme: mat-light-theme(
-  (
-    color: (
-      primary: $odp-ui-author-primary,
-      accent: $odp-ui-author-accent,
-      warn: $odp-ui-author-warn,
-    ),
-  )
-);
+$odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
+        accent: $odp-ui-author-accent,
+        warn: $odp-ui-author-warn,
+      ),
+    ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -130,6 +126,7 @@ $odp-ui-author-theme: mat-light-theme(
 .fw-600 {
   font-weight: 600 !important;
 }
+
 .fw-500 {
   font-weight: 500 !important;
 }
@@ -227,6 +224,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .add-secret-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 360px !important;
@@ -253,6 +251,7 @@ $odp-ui-author-theme: mat-light-theme(
 // }
 
 .new-user-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 560px;
@@ -261,6 +260,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .flow-modal-class {
+
   .modal-content,
   .modal-dialog {
     min-height: calc(100vh - 60px);
@@ -272,6 +272,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .service-exception-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 680px;
@@ -308,6 +309,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .download-agent-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 600px !important;
@@ -320,6 +322,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .custom-format-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 90vw;
@@ -330,6 +333,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .conflict-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 824px;
@@ -349,6 +353,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .search-user-modal {
+
   .modal-content,
   .modal-dialog {
     min-width: 560px;
@@ -815,7 +820,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .focus-accent:focus {
-  border-color: $accent !important;
+  border-color: $accent  !important;
   box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
 }
 
@@ -834,7 +839,7 @@ $odp-ui-author-theme: mat-light-theme(
 
   .form-control:not(.is-invalid):focus,
   .custom-select:not(.is-invalid):focus {
-    border-color: $accent !important;
+    border-color: $accent  !important;
     box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
   }
 
@@ -890,7 +895,7 @@ $odp-ui-author-theme: mat-light-theme(
 }
 
 .custom-control-input {
-  &:not(:disabled):active ~ .custom-control-label {
+  &:not(:disabled):active~.custom-control-label {
     &.accent {
       &::before {
         color: $accent;
@@ -901,7 +906,7 @@ $odp-ui-author-theme: mat-light-theme(
   }
 
   &:checked {
-    &:disabled ~ .custom-control-label {
+    &:disabled~.custom-control-label {
       &.accent {
         &::before {
           background-color: rgba($accent, 0.5);
@@ -910,7 +915,7 @@ $odp-ui-author-theme: mat-light-theme(
     }
   }
 
-  & ~ .custom-control-label {
+  &~.custom-control-label {
     &.accent {
       &::before {
         border-radius: 2px;
@@ -918,7 +923,7 @@ $odp-ui-author-theme: mat-light-theme(
     }
   }
 
-  &:checked ~ .custom-control-label {
+  &:checked~.custom-control-label {
     &.accent {
       &::before {
         background-color: $accent;
@@ -932,7 +937,7 @@ $odp-ui-author-theme: mat-light-theme(
     }
   }
 
-  &:focus ~ .custom-control-label {
+  &:focus~.custom-control-label {
     &.accent {
       &::before {
         box-shadow: 0 0 0 0.2rem rgba($accent, 0.25);
@@ -960,11 +965,8 @@ $odp-ui-author-theme: mat-light-theme(
 
 /*---- AG-GRID START ----*/
 .ag-theme-balham {
-  @include ag-theme-balham(
-    (
-      balham-active-color: $primary,
-    )
-  );
+  @include ag-theme-balham((balham-active-color: $primary,
+    ));
   font-family: "Lato";
   font-size: 13px;
 
@@ -993,7 +995,7 @@ $odp-ui-author-theme: mat-light-theme(
 
 .custom-style {
   .ag-header {
-    background: $data-grid-header !important;
+    background: $data-grid-header  !important;
   }
 }
 
@@ -1012,4 +1014,9 @@ $odp-ui-author-theme: mat-light-theme(
   to {
     opacity: 0.4;
   }
+}
+
+
+.input-text {
+  width: 320px;
 }
