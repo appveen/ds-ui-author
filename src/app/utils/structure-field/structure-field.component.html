@@ -1,6 +1,6 @@
 <div class="d-flex flex-column w-100">
-    <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 border-bottom"
-        [ngClass]="{'active bg-light':active}" [formGroup]="form" (click)="activateProperty()">
+    <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 rounded"
+        [ngClass]="{'active bg-light':active}" [formGroup]="form" >
         <div class="d-flex align-items-center" formGroupName="properties">
             <span class="spacer border-right border-secondary" [ngStyle]="getSpacing()"></span>
             <span class="icon mr-2">
@@ -14,10 +14,10 @@
                     *ngIf="form.get('properties.required') && form.get('properties.required').value"></span>
             </span>
             <div class="input-control position-relative mr-3">
-                <span class="field form-control-plaintext word-elipsis" *ngIf="!edit.status || type==='internal'"
+                <span class="d-flex align-items-center field form-control-plaintext word-elipsis" *ngIf="!edit.status || type==='internal'"
                     [ngbTooltip]="form.get('properties.name').value"
                     #tooltip="ngbTooltip">{{form.get('properties.name').value}}</span>
-                <input #inputField *ngIf="edit.status && type!=='internal'" (focus)="activateProperty()" placement="top"
+                <input #inputField *ngIf="edit.status && type!=='internal'" placement="top"
                     [ngbTooltip]="tipContent" #tooltip="ngbTooltip" triggers="manual"
                     (blur)="checkType(inputField.value);searchService();" (keyup.enter)="addField()"
                     (shift.delete)="deleteField($event)" type="text" class="field" formControlName="name"
@@ -51,8 +51,8 @@
             && form.get('type').value !== 'Object') && form.get('properties.readonly')?.value &&  !edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
                 <span class="odp-no-edit"></span>
             </div>
-            <span *ngIf="canDelete && edit.status && type!=='internal'" class="fa hover"
-                [ngClass]="{'fa-times-circle text-danger fa-lg':active,'fa-times text-muted mr-1':!active}"
+            <span *ngIf="edit.status && type!=='internal'" class="fa fa-pencil-alt text-secondary hover mr-4" (click)="activateProperty()"> </span>
+            <span *ngIf="canDelete && edit.status && type!=='internal'" class="fa fa-trash text-secondary hover"
                 (click)="remove()"></span>
         </div>
     </div>

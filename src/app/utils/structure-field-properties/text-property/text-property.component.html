@@ -2,10 +2,10 @@
 
   <div class="d-flex w-100  flex-column mb-4" *ngIf="form.get('properties.default') && !form.get('properties.longText')?.value &&
     !form.get('properties.richText')?.value && !isLibrary && !isDataFormat">
-    <div class="d-flex">
-      <div class="label-width text-secondary">Default Value
+    <div >
+      <div class=" text-secondary">Default Value
       </div>
-      <div class="value-width position-relative">
+      <div class=" position-relative">
         <ng-container *ngIf="canEdit">
           <input *ngIf="isPlainString(form.get('properties'))" class="form-control" type="text"
             formControlName="default" [ngClass]="{'is-invalid':form.get('properties.default').errors}" id="_default"
@@ -15,7 +15,7 @@
             [ngClass]="{'is-invalid':form.get('properties.default').hasError('DefaultEmail')}" formControlName="default"
             id="_default" placeholder="Default Value email"
             (blur)="validateEmail('DefaultEmail',form.get('properties.default').value,form.get('properties'))">
-          <div class="value-width" *ngIf=" form.get('properties._detailedType').value === 'enum'">
+          <div  *ngIf=" form.get('properties._detailedType').value === 'enum'">
             <select class="form-control" formControlName="default" (change)="changeDefault($event)"
               [attr.disabled]="checkStateModel() ? '' : null">
               <option [value]=null selected>Select Value</option>
@@ -30,9 +30,9 @@
       </div>
     </div>
 
-    <div class="d-flex">
-      <div class="label-width"></div>
-      <div class="value-width ml-2">
+    <div>
+      <div ></div>
+      <div class="ml-2">
         <span class="text-danger" *ngIf="form.get('properties.default').hasError('minlength')"><span
             class="fa fa-times mr-1"></span>{{form.get('properties.name').value}}
           should have min. length {{form.get('properties.minlength').value}}
@@ -50,14 +50,14 @@
       </div>
     </div>
   </div>
-  <div *ngIf=" showSecureText()" class="d-flex w-100 mt-4" [ngClass]="{'mb-4': collectionSecureText()}">
-    <div class="label-width text-secondary">Secure</div>
-    <!-- <div class="value-width">
+  <div *ngIf=" showSecureText()" class="w-100 mt-4" [ngClass]="{'mb-4': collectionSecureText()}">
+    <div class=" text-secondary">Secure</div>
+    <!-- <div >
       <select [attr.disabled]="!canEdit ? '' : null" class="form-control" formControlName="password">
         <option [ngValue]="true">True</option>
         <option [ngValue]="false">False</option>
       </select> -->
-    <div class="value-width position-relative">
+    <div class=" position-relative">
       <ng-container *ngIf="canEdit">
         <label *ngIf="canEdit" class="switch accent">
           <input type="checkbox" formControlName="password">
@@ -85,9 +85,9 @@
   </div>
   <div class="d-flex flex-column w-100 mt-4" *ngIf="form.get('properties.pattern') && (form.get('properties._detailedType').value ==='' ||
           form.get('properties._detailedType').value === 'password')">
-    <div class="d-flex position-relative ">
-      <div class="label-width text-secondary">Pattern</div>
-      <div class="value-width">
+    <div class="position-relative ">
+      <div class=" text-secondary">Pattern</div>
+      <div >
         <input *ngIf="canEdit" class="form-control" type="text" formControlName="pattern" id="_pattern"
           placeholder="Regular Expression"
           [ngClass]="{'is-invalid':form.get('properties.pattern').hasError('patternValidator')}"
@@ -102,8 +102,8 @@
 
     <!-- <div class="d-flex w-100 my-2"
       *ngIf="sampleRegexValue.length || form.get('properties.pattern').hasError('patternValidator') ">
-      <div class="label-width"></div>
-      <div class="value-width bg-light py-2 pattern font-sm mr-3 text-center">
+      <div ></div>
+      <div class=" bg-light py-2 pattern font-sm mr-3 text-center">
         <ng-container *ngIf="!form.get('properties.pattern').hasError('patternValidator') && sampleRegexValue.length">
           <span class="text-secondary">Sample :</span>
           <span class="text-accent">{{sampleRegexValue}}</span>
@@ -117,8 +117,8 @@
   </div>
   <div class="d-flex w-100 mb-4"
     *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
-    <div class="label-width text-secondary">Values</div>
-    <div class="value-width position-relative">
+    <div class=" text-secondary">Values</div>
+    <div class=" position-relative">
       <ng-container *ngIf="edit.status">
         <input class="form-control pr-4"
           [ngClass]="{'invalid-enum' : form.get('properties.enum').hasError('emptyEnum') }"
@@ -166,8 +166,8 @@
 
   <div class="d-flex w-100 mb-4" *ngIf="form.get('properties.hasTokens') && (form.get('properties.longText').value
                   || form.get('properties.richText').value)">
-    <div class="label-width text-secondary">Tokens</div>
-    <div class="value-width position-relative" *ngIf="canEdit; else show_list">
+    <div class=" text-secondary">Tokens</div>
+    <div class=" position-relative" *ngIf="canEdit; else show_list">
       <input class="form-control" *ngIf="form.get('properties._type').value == 'String'"
         (paste)="pasteOnList($event,'hasTokens','string')" type="text" formControlName="_listInput"
         (keyup.enter)="listEnterKey($event,'hasTokens')">
@@ -199,14 +199,14 @@
     <div class="d-flex flex-column w-100 mb-4 mt-4"
       *ngIf="form.get('properties.minlength') && form.get('properties._detailedType').value==''">
       <div class="d-flex flex-row mb-4">
-        <div class="label-width text-secondary">Length</div>
-        <div class="value-width text-accent">Min and max lengths of the value</div>
+        <div class=" text-secondary">Length</div>
+        <div class=" text-accent">Min and max lengths of the value</div>
       </div>
       <div class="border-left d-flex flex-column">
         <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-column position-relative">
           <div class="d-flex">
             <div class="sub-level-width text-secondary">Min.</div>
-            <input *ngIf="canEdit" class="value-width form-control short" placeholder="Minimum length"
+            <input *ngIf="canEdit" class=" form-control short" placeholder="Minimum length"
               [ngClass]="{'is-invalid':form.get('properties.minlength').dirty && form.hasError('minMaxLength')}"
               type="text" min="0" #minlengthEle formControlName="minlength" id="_minLength"
               (blur)="reCalibrateTextDefaultValue('minlength', form.get('properties.minlength').value, form.get('properties'))">
@@ -216,7 +216,7 @@
           </div>
           <div class="d-flex ml-2">
             <div class="sub-level-width"></div>
-            <span class="value-width text-danger"
+            <span class=" text-danger"
               *ngIf="form.get('properties.minlength').dirty && form.get('properties').hasError('minMaxLength')"><span
                 class="fa fa-times mr-1"></span>Min
               Length value cannot be greater then Max Length value</span>
@@ -226,7 +226,7 @@
           *ngIf="form.get('properties.maxlength') && form.get('properties._detailedType').value==''">
           <div class="d-flex">
             <div class="sub-level-width text-secondary">Max.</div>
-            <input *ngIf="canEdit" class="value-width form-control short mb-2" placeholder="Maximum length"
+            <input *ngIf="canEdit" class=" form-control short mb-2" placeholder="Maximum length"
               [ngClass]="{'is-invalid':form.get('properties.maxlength').dirty && form.hasError('minMaxLength')}"
               type="text" min="0" #maxlengthEle formControlName="maxlength" id="_maxLength"
               (blur)="reCalibrateTextDefaultValue('maxlength', form.get('properties.maxlength').value, form.get('properties'))">
@@ -236,7 +236,7 @@
           </div>
           <div class="d-flex ml-2">
             <div class="sub-level-width"></div>
-            <span class="value-width text-danger"
+            <span class=" text-danger"
               *ngIf="form.get('properties.maxlength').dirty && form.get('properties').hasError('minMaxLength')"><span
                 class="fa fa-times mr-1"></span>Max
               Length value cannot be lesser then Min Length value</span>
