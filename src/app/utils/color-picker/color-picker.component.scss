@@ -1,18 +1,25 @@
 .palette {
-  min-width: 240px;
-  max-width: 240px;
+  min-width: 300px;
+  max-width: 300px;
+
   .color {
     min-width: 28px;
     max-width: 28px;
     min-height: 28px;
     max-height: 28px;
-    margin: 6px;
+    margin: 10px;
     border-radius: 14px;
+
     &:hover {
       cursor: pointer;
     }
+
     &.active {
       border: 3px solid rgba(#FFF, 0.5);
     }
   }
+}
+
+.fa-check {
+  font-size: 10px;
 }

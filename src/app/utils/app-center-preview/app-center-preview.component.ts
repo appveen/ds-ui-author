@@ -51,12 +51,12 @@ export class AppCenterPreviewComponent implements AfterViewInit, AfterContentChe
     } else {
       this.themeBackground = 'fff';
     }
-    const background: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect') as SVGElement;
-    background.setAttribute('height', `300px`);
-    background.setAttribute('width', `100%`);
-    background.setAttribute('class', 'background');
-    background.setAttribute('fill', `${this.lighten(this.color, 20)}`);
-    this.canvas.appendChild(background);
+    // const background: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect') as SVGElement;
+    // background.setAttribute('height', `300px`);
+    // background.setAttribute('width', `100%`);
+    // background.setAttribute('class', 'background');
+    // background.setAttribute('fill', `${this.lighten(this.color, 20)}`);
+    // this.canvas.appendChild(background);
     const app: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect') as SVGElement;
     app.setAttribute('x', `80px`);
     app.setAttribute('y', `30px`);

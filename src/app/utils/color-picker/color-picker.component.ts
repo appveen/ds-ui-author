@@ -10,6 +10,7 @@ export class ColorPickerComponent implements OnInit {
   @Input() color: string;
   @Output() colorChange: EventEmitter<string>;
   colors: Array<string>;
+  selected: string;
   prevColor: string;
   constructor() {
     this.colorChange = new EventEmitter();
@@ -27,6 +28,7 @@ export class ColorPickerComponent implements OnInit {
   }
 
   selectColor(color: string) {
+    this.selected = color;
     this.colorChange.emit(color);
   }
 
