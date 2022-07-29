@@ -134,7 +134,6 @@
   }
 
   .state-name {
-    font-family: "Lato", sans-serif !important;
     max-width: 130px;
     white-space: nowrap;
     overflow: hidden;
@@ -172,7 +171,6 @@
 .mat-form-field {
   background-color: transparent !important;
   padding: 0 !important;
-  font-family: "Lato", sans-serif !important;
 
   &:hover {
     .mat-form-field-wrapper {

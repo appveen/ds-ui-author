@@ -687,137 +687,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.24);
 }
 
-/*---- DATA GRID START ----*/
-.data-grid-options {
-  min-height: 40px;
-  max-height: 40px;
-  background: #ececec;
-  border-top: 1px solid $border-color;
-  border-left: 1px solid $border-color;
-  border-right: 1px solid $border-color;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-
-  .page-info {
-    color: $heading-highlight;
-  }
-}
-
-.data-grid {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  font-family: "Lato";
-
-  .data-grid-cell {
-    min-width: 200px;
-    max-width: 200px;
-    min-height: 40px;
-    max-height: 40px;
-    padding: 0 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 13px;
-  }
-
-  .data-grid-header {
-    display: flex;
-    flex-direction: column;
-    max-height: 62px;
-    overflow: hidden;
-    background: #ececec;
-    border-bottom: 1px solid #ddd;
-
-    .grid-filters {
-      .data-grid-cell {
-        background: #efefef;
-        padding-top: 0px;
-        min-height: 32px;
-        max-height: 32px;
-      }
-    }
-
-    .head-cell {
-      background: #ececec;
-      min-height: 32px;
-      max-height: 32px;
-    }
-  }
-
-  .data-grid-header,
-  .data-grid-body {
-    .data-grid-row {
-      display: flex;
-      align-items: center;
-
-      .data-grid-cell.head-cell {
-        color: #747e8d;
-        border-bottom: 0px;
-
-        .utility-icons {
-          transition: 0.25s;
-          opacity: 0;
-        }
-
-        &:hover {
-          .utility-icons {
-            opacity: 1;
-
-            .resize-col {
-              cursor: col-resize;
-            }
-
-            .move-col {
-              cursor: move;
-            }
-          }
-        }
-      }
-
-      .data-grid-cell:not(.head-cell):not(.no-padding) {
-        padding-top: 4px;
-      }
-
-      &.full-row {
-        .data-grid-cell {
-          min-width: unset;
-          max-width: unset;
-        }
-      }
-    }
-  }
-
-  .data-grid-body {
-    overflow: auto;
-
-    .data-grid-row {
-      &:first-child {
-        .data-grid-cell {
-          border-top: 0px;
-        }
-      }
-
-      &:not(.selected):hover {
-        background: #f2f2f2;
-
-        .data-grid-cell {
-          background: #f2f2f2;
-        }
-      }
-
-      .data-grid-cell {
-        border-bottom: 1px solid $border-color;
-      }
-    }
-  }
-}
-
-/*---- DATA GRID END ----*/
-
-// .high-zIndex {
-//   //z-index: 1071;
-// }
 
 .label-color {
   color: $heading-highlight;
@@ -916,8 +785,7 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
 /*---- AG-GRID START ----*/
 .ag-theme-balham {
-  @include ag-theme-balham((balham-active-color: $primary,
-    ));
+  @include ag-theme-balham((balham-active-color: $primary));
   font-family: "Inter";
   font-size: 14px;
 
