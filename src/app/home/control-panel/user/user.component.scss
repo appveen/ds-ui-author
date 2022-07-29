@@ -229,6 +229,7 @@
   transition: 0.2s;
   overflow: auto;
   padding-top: 40px !important;
+
   &.show {
     right: 0px !important;
   }
@@ -251,63 +252,57 @@
   }
 }
 
-.users{
-  overflow-y: auto; max-height: inherit;
+.users {
+  overflow-y: auto;
+  max-height: inherit;
   padding: 20px 0 20px 20px
-
 }
 
-.list{
+.list {
   margin-left: 48px;
   margin-right: 48px;
 }
 
-.selected{
-  background: rgba($orange, 0.04);
-}
 
-.selectedTab{
-  border-radius: 0px 8px 8px 0px;
-  width: 3px;
-  height: 60px;
-  margin: auto 0;
-}
-.userList{
+.userList {
   padding: 20px;
   display: block;
 
   [type=checkbox] {
-    opacity: 0.5;    
+    opacity: 0.5;
     border: 1px solid $lightgrey;
     border-radius: 4px
   }
 
-  .name{
-    font-size: 14px; 
+  .name {
+    font-size: 14px;
     font-weight: 500;
     color: $headings;
-    flex: 1 ;
+    flex: 1;
   }
-  .email{
+
+  .email {
     margin-left: 32px;
     margin-top: 10px;
   }
-  
+
   &:hover {
     background: rgba($orange, 0.04);
   }
 }
-.details{
+
+.details {
   display: flex;
   flex-direction: column;
 
-  .name{
-    font-size: 20px; 
+  .name {
+    font-size: 20px;
     font-weight: 600;
     color: $headings;
-    flex: 1 ;
+    flex: 1;
     margin-bottom: 18px;
   }
+
   .time {
     margin-top: 12px;
     font-size: 12px;
@@ -315,62 +310,62 @@
 }
 
 
-.email{
+.email {
   font-weight: 400;
   font-size: 12px;
   color: $sub-headings;
 }
 
-.time{
+.time {
   font-style: normal;
   font-weight: 400;
   font-size: 11px;
   color: $lightgrey;
 }
 
-.nav-item{
+.nav-item {
   width: 100px;
 }
 
-.tabs{
+.tabs {
   padding-bottom: 5px;
   font-weight: 500;
   font-size: 14px;
   color: $lightgrey;
   cursor: pointer;
-    &:hover{
-      border-bottom: 2px solid $orange;
-      border-width: medium;
-      width: 60%;
-    }
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    text-decoration-color: $orange;
+  }
 }
 
-.active{
-  color: $headings;
-  border-bottom: 2px solid $orange;
-  border-width: medium;
-  width: 60%
+.active {
+  text-decoration: underline;
+  text-underline-offset: 10px;
+  text-decoration-color: $orange;
 }
 
-.tab-header{
+.tab-header {
   font-weight: 500;
-  font-size: 16px;  
+  font-size: 16px;
   color: $headings;
 }
 
-.input-text{
+.input-text {
   padding: 10px;
   gap: 40px;
   width: 310px;
   height: 40px;
 }
 
-.form-group{
+.form-group {
   margin-bottom: 20px;
 }
 
 
-.text{
+.text {
   font-size: 12px;
 }
 
@@ -379,23 +374,25 @@
   margin-right: 5px;
 }
 
-.add-attribute{
+.add-attribute {
   margin-left: auto;
   margin-right: 20px;
 }
 
-.no-attribute{
-  display: grid; margin: 0 auto; margin-top: 100px
+.no-attribute {
+  display: grid;
+  margin: 0 auto;
+  margin-top: 100px
 }
 
-.no-attr-label{
+.no-attr-label {
   font-weight: 700;
   font-size: 14px;
   margin: auto auto 15px auto;
   color: $headings;
 }
 
-.no-attr-sub{
+.no-attr-sub {
   font-weight: 400;
   font-size: 12px;
   margin: auto auto 15px auto;
@@ -403,43 +400,53 @@
 }
 
 
-.icons{
-  color: #6C7584; 
+.icons {
+  color: #6C7584;
   cursor: pointer
 }
 
-::ng-deep .ag-theme-balham{
+::ng-deep .ag-theme-balham {
   font-family: "Inter";
   font-size: 14px;
 
-  .ag-root-wrapper{
+  .ag-root-wrapper {
     border: 1px solid #ECECEC;
     border-radius: 8px;
   }
 
-  .ag-row{
-    padding: 10px ;
+  .ag-row {
+    padding: 10px;
   }
 
-  .ag-layout-normal{
+  .ag-layout-normal {
     overflow-x: hidden
   }
- 
+
 }
 
 ::ng-deep .ag-theme-balham .ag-header {
   font-size: 11px;
   color: $lightgrey;
-  .ag-header-container{
+
+  .ag-header-container {
     background-color: FBFBFB;
   }
-  
+
 
 }
 
 
-::ng-deep .ag-theme-balham .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected), .ag-theme-balham .ag-ltr .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected), .ag-theme-balham .ag-ltr .ag-has-focus .ag-full-width-row.ag-row-focus .ag-cell-wrapper.ag-row-group, .ag-theme-balham .ag-ltr .ag-cell-range-single-cell, .ag-theme-balham .ag-ltr .ag-cell-range-single-cell.ag-cell-range-handle, .ag-theme-balham .ag-rtl .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected), .ag-theme-balham .ag-rtl .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected), .ag-theme-balham .ag-rtl .ag-has-focus .ag-full-width-row.ag-row-focus .ag-cell-wrapper.ag-row-group, .ag-theme-balham .ag-rtl .ag-cell-range-single-cell, .ag-theme-balham .ag-rtl .ag-cell-range-single-cell.ag-cell-range-handle {
-  border: none  ;
+::ng-deep .ag-theme-balham .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected),
+.ag-theme-balham .ag-ltr .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected),
+.ag-theme-balham .ag-ltr .ag-has-focus .ag-full-width-row.ag-row-focus .ag-cell-wrapper.ag-row-group,
+.ag-theme-balham .ag-ltr .ag-cell-range-single-cell,
+.ag-theme-balham .ag-ltr .ag-cell-range-single-cell.ag-cell-range-handle,
+.ag-theme-balham .ag-rtl .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected),
+.ag-theme-balham .ag-rtl .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected),
+.ag-theme-balham .ag-rtl .ag-has-focus .ag-full-width-row.ag-row-focus .ag-cell-wrapper.ag-row-group,
+.ag-theme-balham .ag-rtl .ag-cell-range-single-cell,
+.ag-theme-balham .ag-rtl .ag-cell-range-single-cell.ag-cell-range-handle {
+  border: none;
   border-color: none;
   outline: none;
 }

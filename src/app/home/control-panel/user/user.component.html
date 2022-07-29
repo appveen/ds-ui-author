@@ -17,11 +17,19 @@
             <!-- <span class="text">Remove Users ({{ checkedUsers.length }})</span> -->
           </button>
         </ng-container>
-        <odp-search-box (enteredText)="searchTerm = $event" (reset)="enterToSelect('reset')" [selectOnEnter]="true"
-          (enteredPressed)="enterToSelect($event)"></odp-search-box>
-        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-outline-light border ml-3"
-          routerLink="bulk-import" ngbTooltip="Bulk Import" id="bulkimport">
-          <span class="fa fa-upload text-secondary"></span>
+        <div class="mr-2">
+          <odp-search-box *ngIf="search" (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')"
+            [selectOnEnter]="true" (enteredPressed)="enterToSelect($event)"></odp-search-box>
+          <button *ngIf="!search" type="button" class="add-new btn bg-white" ngbTooltip="Search" id="search"
+            (click)="search = !search">
+            <span class="fa fa-search"></span>
+            <!-- <span class="text">Bulk Import</span> -->
+          </button>
+        </div>
+        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-dark mr-2" routerLink="bulk-import"
+          ngbTooltip="Bulk Import" id="bulkimport">
+          <span class="fa fa-upload"></span>
+          <!-- <span class="text">Bulk Import</span> -->
         </button>
         <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary ml-3"
           (click)="newUser()">
@@ -36,18 +44,18 @@
         No users found
       </div>
       <div class="row" style="max-height: inherit" *ngIf="userList.length > 0">
-        <div class="col-4 users">
+        <div class="col-4 border-right users">
           <div *ngFor="let user of userList; let usrIndex = index" class="d-flex" [id]="'user' + usrIndex"
             (click)="showDetails(user)">
             <div class="selectedTab" [ngStyle]="{
                 background: user._id === details?._id ? '#ff6f00' : 'none'
               }"></div>
             <div class="userList" style="flex-grow: 1" [ngClass]="{ selected: user._id === details?._id }">
-              <div style="display: flex">
+              <div style="d-flex">
                 <input type="checkbox" value="false" [attr.id]="'checkbox' + usrIndex" class="mr-3"
                   style="margin-top: 5px" (change)="clickCheckbox($event, user)" />
                 <span class="name"> {{ user.basicDetails?.name }}</span>
-                <span class="time mr-auto"> {{ formatLastLogin(user.lastLogin) }}</span>
+                <span class="time float-right"> {{ formatLastLogin(user.lastLogin) }}</span>
               </div>
               <span class="email">{{ user.username }}</span>
             </div>
@@ -175,7 +183,7 @@
           <div class="d-flex align-items-center">
             <h5 class="font-weight-bold">Reset Password</h5>
           </div>
-          <span class="fa fa-times text-secondary hover close" id="closeicon"
+          <span class="fa fa-times text-secondary hover" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
         <form class="d-flex flex-column" [formGroup]="resetPasswordForm" odpFocusNext>
@@ -193,13 +201,13 @@
                   'fa-eye-slash': showPassword['new']
                 }" (click)="showPassword['new'] = !showPassword['new']"></span>
             </div>
-            <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="
+            <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                 resetPasswordForm.get('password').dirty &&
-                resetPasswordForm.get('password').hasError('required')
+                resetPasswordForm.get('password')?.hasError('required')
               " ngbTooltip="This is a required field"></span>
-            <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="
+            <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                 resetPasswordForm.get('password').dirty &&
-                resetPasswordForm.get('password').hasError('minlength')
+                resetPasswordForm.get('password')?.hasError('minlength')
               " ngbTooltip="Password should be minimum 8 chars long"></span>
           </div>
           <div class="form-group position-relative">
@@ -216,11 +224,11 @@
                   'fa-eye-slash': showPassword['confirm']
                 }" (click)="showPassword['confirm'] = !showPassword['confirm']" id="showPassword"></span>
             </div>
-            <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="
+            <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                 resetPasswordForm.get('cpassword').dirty &&
-                resetPasswordForm.get('cpassword').hasError('required')
+                resetPasswordForm.get('cpassword')?.hasError('required')
               " ngbTooltip="This is a required field"></span>
-            <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+            <span class="fas fa-question-circle text-danger error-icon position-absolute"
               *ngIf="resetPasswordForm.get('cpassword').dirty && matchPwd" [ngbTooltip]="'Passwords don\'t match'"
               placement="right"></span>
           </div>
@@ -237,7 +245,7 @@
           <div class="d-flex align-items-center">
             <h5 class="font-weight-bold">Create User</h5>
           </div>
-          <span class="fa fa-times text-secondary hover close" id="closeicon"
+          <span class="fa fa-times text-secondary hover" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
         <form class="d-flex flex-column" [formGroup]="userForm" odpFocusNext>
@@ -270,9 +278,9 @@
                   formControlName="username" odpAutoFocus (blur)="checkForDuplicate()" [ngClass]="{
                     'is-invalid': invalidUsername || invalidUsernamePattern
                   }" />
-                <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                  *ngIf="invalidUsername" ngbTooltip="This is a required field"></span>
-                <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidUsername"
+                  ngbTooltip="This is a required field"></span>
+                <span class="fas fa-question-circle text-danger error-icon position-absolute"
                   *ngIf="invalidUsernamePattern" ngbTooltip="Username must be of email format"></span>
               </div>
               <div class="form-group position-relative">
@@ -284,14 +292,13 @@
                   <input id="name" class="form-control pr-4 input-text" type="text" placeholder="Enter Name"
                     formControlName="name" [ngClass]="{ 'is-invalid': invalidName }"
                     autocomplete="autocomplete_off_hack" />
-                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                    *ngIf="invalidName" ngbTooltip="This is a required field"></span>
+                  <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidName"
+                    ngbTooltip="This is a required field"></span>
                   <span *ngIf="
                       userForm
                         .get('userData.basicDetails?.name')
-                        .hasError('pattern')
-                    " class="text-danger position-absolute fa fa-exclamation-circle error-icon-password"
-                    container="body"
+                        ?.hasError('pattern')
+                    " class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
                     ngbTooltip="Name can contain alphanumeric and  _ ,- , @ , # and . characters only"></span>
                 </div>
               </div>
@@ -318,11 +325,11 @@
                         'fa-eye-slash': showPassword['new']
                       }" (click)="showPassword['new'] = !showPassword['new']"></span>
                   </div>
-                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                    *ngIf="invalidPassword" ngbTooltip="This is a required field"></span>
-                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                  <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidPassword"
+                    ngbTooltip="This is a required field"></span>
+                  <span class="fas fa-question-circle text-danger error-icon position-absolute"
                     *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"></span>
-                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                  <span class="fas fa-question-circle text-danger error-icon position-absolute"
                     *ngIf="invalidPasswordPattern"
                     ngbTooltip="Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)"></span>
                 </div>
@@ -344,9 +351,9 @@
                         showPassword['confirm'] = !showPassword['confirm']
                       "></span>
                   </div>
-                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                    *ngIf="invalidCPassword" ngbTooltip="This is a required field"></span>
-                  <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                  <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidCPassword"
+                    ngbTooltip="This is a required field"></span>
+                  <span class="fas fa-question-circle text-danger error-icon position-absolute"
                     *ngIf="invalidPasswordMatch" ngbTooltip="Passwords do not match"></span>
                 </div>
                 <div class="form-group">
@@ -419,7 +426,7 @@
               {{ editMode ? 'Edit Attribute' : 'Add Attribute' }}
             </h5>
           </div>
-          <span class="fa fa-times text-secondary hover close" id="closeicon"
+          <span class="fa fa-times text-secondary hover" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
         <form class="d-flex flex-column" [formGroup]="attributesForm" odpFocusNext>
@@ -433,7 +440,7 @@
                 formControlName="label" autocomplete="autocomplete_off_hack" />
               <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('type').touched &&
-                  attributesForm.get('label').hasError('required')
+                  attributesForm.get('label')?.hasError('required')
                 " ngbTooltip="This is a required field"></span>
             </div>
           </div>
@@ -451,7 +458,7 @@
               </select>
               <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('type').touched &&
-                  attributesForm.get('type').hasError('required')
+                  attributesForm.get('type')?.hasError('required')
                 " ngbTooltip="This is a required field"></span>
             </div>
           </div>
@@ -476,7 +483,7 @@
                 *ngIf="attributesForm.get('type').value === 'Date'" />
               <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('value').dirty &&
-                  attributesForm.get('value').hasError('required')
+                  attributesForm.get('value')?.hasError('required')
                 " ngbTooltip="This is a required field"></span>
             </div>
           </div>

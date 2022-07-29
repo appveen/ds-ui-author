@@ -11,6 +11,8 @@ export class SwitchComponent implements OnInit {
     @Input() type: string;
     @Input() disabled: boolean;
     @Input() checked: boolean;
+    @Input() checkedText: string;
+    @Input() uncheckedText: string;
     @Output() checkedChange: EventEmitter<boolean>;
     constructor() {
         this.checkedChange = new EventEmitter();

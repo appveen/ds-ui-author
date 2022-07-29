@@ -286,8 +286,8 @@ export class UserComponent implements OnInit, OnDestroy {
     this.authType = this.commonService.userDetails.auth.authType;
     this.validAuthTypes = !!this.appService.validAuthTypes?.length
       ? this.availableAuthTypes.filter((at) =>
-          this.appService.validAuthTypes.includes(at.value)
-        )
+        this.appService.validAuthTypes.includes(at.value)
+      )
       : [{ label: 'Local', value: 'local' }];
   }
 
@@ -608,7 +608,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.userForm.get('userData.cpassword').dirty &&
       this.userForm.get('userData.password').dirty &&
       this.userForm.get('userData.cpassword').value !==
-        this.userForm.get('userData.password').value
+      this.userForm.get('userData.password').value
     );
   }
 
@@ -904,7 +904,7 @@ export class UserComponent implements OnInit, OnDestroy {
             this.groupList.splice(index, 1);
           }
         },
-        (err) => {}
+        (err) => { }
       );
   }
 
@@ -1159,7 +1159,10 @@ export class UserComponent implements OnInit, OnDestroy {
   showDetails(user) {
     this.showSettings = false;
     if (user.attributes && user.attributes !== null) {
-      user.attributesData = Object.values(user.attributes);
+      user.attributesData = Object.values(user.attributes).map((ele: Object, i) => {
+        const key = Object.keys(user.attributes)[i];
+        return { ...ele, key }
+      });
     }
     if (this.details._id !== user._id) {
       this.isDataLoading = true;
@@ -1269,6 +1272,8 @@ export class UserComponent implements OnInit, OnDestroy {
       rowDeselection: false,
       suppressPaginationPanel: true,
       context: this.context,
+      suppressCellSelection: true,
+
     };
 
     self.gridGroupOptions = {
@@ -1370,9 +1375,8 @@ export class UserComponent implements OnInit, OnDestroy {
           .get('key')
           .patchValue(this.appService.toCamelCase(val));
       });
-    if (!_.isEmpty(data)) {
-      this.editMode = true;
-      this.attributesForm.markAsUntouched();
+    if (this.editMode) {
+      this.attributesForm.setValue(data)
     }
     this.showAddAttribute = true;
   }
@@ -1403,7 +1407,7 @@ export class UserComponent implements OnInit, OnDestroy {
               (user) => user._id === this.details._id
             );
             this.showDetails(this.selectedUser);
-
+            this.editMode = false
             this.isDataLoading = false;
             this.configureGridSettings();
             if (this.gridApi) {
@@ -1459,6 +1463,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   editAttribute(data) {
+    this.editMode = true;
     this.showAttributeSide(data);
   }
 
@@ -1543,6 +1548,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   enterToSelect(event) {
+
     if (event === 'reset') {
       this.searchTerm = '';
       this.userList = this.ogUsersList;
@@ -1550,6 +1556,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.showDetails(this.ogUsersList[0]);
     } else {
       const self = this;
+      self.searchTerm = event
       if (self.searchTerm) {
         const returnedUsers = self.userFilter.transform(
           self.ogUsersList,

@@ -159,5 +159,6 @@ import { UserGroupMembersSearchComponent } from './user-group/user-group-manage/
     UserGroupUsersComponent,
     UserGroupMembersSearchComponent
   ],
+  exports: [UserGridAppsRendererComponent, UserToGroupModalComponent]
 })
-export class ControlPanelModule {}
+export class ControlPanelModule { }

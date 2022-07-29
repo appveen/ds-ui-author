@@ -22,6 +22,7 @@ import { AgGridSharedFloatingFilterModule } from 'src/app/utils/ag-grid-shared-f
 import { LocalBotCellRendererComponent } from './local-bot-cell-renderer/local-bot-cell-renderer.component';
 import { AgGridFilterModule } from 'src/app/utils/ag-grid-filter/ag-grid-filter.module';
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const routes: Routes = [{ path: '', component: LocalBotComponent, canActivate: [BotGuard] }];
 @NgModule({
@@ -49,7 +50,8 @@ const routes: Routes = [{ path: '', component: LocalBotComponent, canActivate: [
     AgGridModule,
     AgGridSharedFloatingFilterModule,
     AgGridFilterModule,
-    DateFormatModule
+    DateFormatModule,
+    MatDialogModule
   ]
 })
-export class LocalBotModule {}
+export class LocalBotModule { }
