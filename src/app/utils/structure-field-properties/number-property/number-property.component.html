@@ -1,16 +1,16 @@
 <div [formGroup]="form.get('properties')">
   <div class="d-flex w-100  flex-column mb-4" *ngIf="!isDataFormat && !isLibrary ">
-    <div class="d-flex">
-      <div class="label-width text-secondary">Default Value
+    <div>
+      <div class=" text-secondary">Default Value
       </div>
-      <div class="value-width position-relative">
+      <div class=" position-relative">
         <ng-container *ngIf="edit.status">
           <input class="form-control" *ngIf="isNumber(form.get('properties'))" type="number"
             [ngClass]="{'is-invalid':form.get('properties.default').errors}"
             (blur)="validateNumbDefaultValue(form.get('properties.default').value,form.get('properties'))"
             formControlName="default" id="_default" placeholder="Default Value">
           <!-- <p>{{test(form.get('properties.default').value)}}</p> -->
-          <div class="value-width" *ngIf=" form.get('properties._detailedType').value === 'enum'">
+          <div class="" *ngIf=" form.get('properties._detailedType').value === 'enum'">
             <select class="form-control" formControlName="default" id="_currency"
               (change)="setEnumValue(form.get('properties'))" [attr.disabled]="checkStateModel() ? '' : null">
               <option [value]=null selected>Select Value</option>
@@ -28,8 +28,8 @@
         </ng-container>
       </div>
     </div>
-    <div class="d-flex">
-      <div class="label-width"></div>
+    <div>
+      <div></div>
       <span class="text-danger" *ngIf="form.get('properties.default').hasError('min')"><span
           class="fa fa-times mr-1"></span>
         {{form.get('properties.name').value}} should have min {{form.get('properties.min').value}}
@@ -46,8 +46,8 @@
   </div>
   <div class="d-flex w-100 mb-4"
     *ngIf="form.get('properties.currency') && form.get('properties._detailedType').value === 'currency'">
-    <div class="label-width text-secondary">Currency</div>
-    <div class="value-width">
+    <div class=" text-secondary">Currency</div>
+    <div class="">
       <select *ngIf="edit.status" class="form-control" formControlName="currency" id="_currency">
         <option value="EUR">EUR</option>
         <option value="INR">INR</option>
@@ -57,8 +57,8 @@
   </div>
   <div class="d-flex w-100 mb-4"
     *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
-    <div class="label-width text-secondary">Values</div>
-    <div class="value-width position-relative">
+    <div class=" text-secondary">Values</div>
+    <div class=" position-relative">
       <ng-container *ngIf="edit.status">
         <input class="form-control pr-4" (paste)="pasteOnList($event,'enum','number')"
           [ngClass]="{'invalid-enum' : form.get('properties.enum').hasError('emptyEnum') }"
@@ -101,11 +101,11 @@
       (click)="clearList('enum')">Clear All
     </button>
   </div>
-  <div class="d-flex flex-column w-100 mb-4"
+  <div class="w-100 mb-4"
     *ngIf="form.get('properties.precision') && (form.get('properties._detailedType').value === '' || form.get('properties._detailedType').value === 'currency')">
-    <div class="d-flex flex-row align-items-center mb-2">
-      <div class="label-width text-secondary">Precision</div>
-      <div class="value-width d-flex align-items-center">
+    <div class="mb-2">
+      <div class=" text-secondary">Precision</div>
+      <div class=" d-flex align-items-center">
         <div class="d-flex align-items-center p-2 rounded" [ngClass]="{'border slidecontainer':edit.status}">
           <span class="font-weight-bold mr-2"
             [ngClass]="{'text-accent':edit.status}">{{form.get('properties.precision').value}}</span>
@@ -122,14 +122,14 @@
                    && (form.get('properties._detailedType').value === '' ||form.get('properties._detailedType').value === 'natural' ||
                    form.get('properties._detailedType').value === 'currency') && formatType!='FLATFILE' ">
     <div class="d-flex flex-row mb-2">
-      <div class="label-width text-secondary">Limit</div>
-      <div class="value-width text-accent">Min and max limit of the value number</div>
+      <div class=" text-secondary">Limit</div>
+      <div class=" text-accent">Min and max limit of the value number</div>
     </div>
     <div class="border-left d-flex flex-column">
       <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-column position-relative">
         <div class="d-flex">
           <div class="sub-level-width text-secondary">Min.</div>
-          <input *ngIf="edit.status" class="value-width form-control short" placeholder="Min"
+          <input *ngIf="edit.status" class=" form-control short" placeholder="Min"
             [ngClass]="{'is-invalid': minMaxErr('min')}" type="number" #minEle min="0" formControlName="min"
             id="_minNumber"
             (blur)="setValue('min'); reCalibrateDefaultValue('min',form.get('properties.min').value,form.get('properties'))">
@@ -139,7 +139,7 @@
         </div>
         <div class="d-flex ml-2" *ngIf="form.get('properties.min').dirty && form.get('properties').hasError('minMax')">
           <div class="sub-level-width "></div>
-          <span class="value-width text-danger"><span class="fa fa-times mr-1"></span>Min value
+          <span class=" text-danger"><span class="fa fa-times mr-1"></span>Min value
             cannot be greater than or equal to the
             Max value</span>
         </div>
@@ -150,7 +150,7 @@
         <div class="d-flex">
           <div class="sub-level-width text-secondary">Max.</div>
           <div class="d-flex flex-row">
-            <input *ngIf="edit.status" class="value-width form-control short " placeholder="Max" type="number" min="0"
+            <input *ngIf="edit.status" class=" form-control short " placeholder="Max" type="number" min="0"
               (blur)="setValue('max');reCalibrateDefaultValue('max',form.get('properties.max').value,form.get('properties')) "
               [ngClass]="{'is-invalid': minMaxErr('max')}" #maxEle formControlName="max" id="_maxNumber">
             <span *ngIf="!edit.status && form.get('properties.max')">{{form.get('properties.max').value}}</span>
@@ -160,7 +160,7 @@
         </div>
         <div class="d-flex ml-2" *ngIf="form.get('properties.max').dirty && form.get('properties').hasError('minMax')">
           <div class="sub-level-width "></div>
-          <span class="value-width text-danger"><span class="fa fa-times mr-1"></span>Max value
+          <span class=" text-danger"><span class="fa fa-times mr-1"></span>Max value
             cannot be lesser than or equal to
             Min value</span>
         </div>
