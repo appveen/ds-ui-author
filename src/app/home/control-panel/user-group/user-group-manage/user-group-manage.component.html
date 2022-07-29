@@ -25,19 +25,18 @@
     </div>
     <div class="d-flex flex-column px-4 pb-4">
       <div class="d-flex flex-column w-100 h-100 bg-white rounded border">
-        <div
-          class="tabs-wrapper d-flex justify-content-between border-bottom text-uppercase text-muted font-weight-bold font-13">
+        <div class="tabs-wrapper d-flex justify-content-between border-bottom text-uppercase text-muted font-13">
           <div class="tabs d-flex align-items-center p-3">
             <div *ngIf="showAuthorTab" class="px-3 hover" (click)="activeTab=0"
-              [ngClass]="{'text-accent':activeTab==0}">
+              [ngClass]="{'text-accent font-weight-bold':activeTab==0}">
               <span>Author Roles </span>
             </div>
             <div *ngIf="showAppcenterTab" class="px-3 hover" (click)="activeTab=1"
-              [ngClass]="{'text-accent':activeTab==1}">
+              [ngClass]="{'text-accent font-weight-bold':activeTab==1}">
               <span>App Center Roles </span>
             </div>
             <div *ngIf="showMembersTab" class="px-3 hover" (click)="activeTab=2"
-              [ngClass]="{'text-accent':activeTab==2}">
+              [ngClass]="{'text-accent font-weight-bold':activeTab==2}">
               <span>Members </span>
             </div>
             <!-- <div *ngIf="showBotsTab" class="px-3 hover" (click)="activeTab=3" [ngClass]="{'text-accent':activeTab==3}">
@@ -89,13 +88,13 @@
       <div class="circle bg-dark">
         <span class="fa fa-exclamation-triangle text-white"></span>
       </div>
-      <p class="text-dark font-weight-bold text-center">Unsaved change</p>
+      <p class="text-dark font-weight-bold text-center">Unsaved changes</p>
       <p class="text-secondary text-center">You have unsaved changes, are you sure you want to leave?</p>
-    </div>
-    <div class="modal-footer p-3 bg-light">
-      <button type="button" class="btn btn-min-width btn-link w-50 mx-3"
-        (click)="pageChangeModalTemplateRef.close(false)">No</button>
-      <button type="button" class="btn btn-min-width btn-primary w-50 mx-3"
-        (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+      <div class="d-flex align-items-center justify-content-end">
+        <button type="button" class="btn btn-min-width btn-outline-primary mx-3"
+          (click)="pageChangeModalTemplateRef.close(false)">No</button>
+        <button type="button" class="btn btn-min-width btn-primary mx-3"
+          (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+      </div>
     </div>
   </ng-template>

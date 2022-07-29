@@ -1,7 +1,7 @@
 <div class="position-relative d-flex justify-content-center align-items-center"
   [ngClass]="{'ignore-outside': ignoreOutside}">
-  <div *ngIf="openSearchBox" class="search-box position-relative d-flex justify-content-center align-items-center" odpClickOutside
-    (outside)="openSearchBox=false">
+  <div *ngIf="openSearchBox" class="search-box position-relative d-flex justify-content-center align-items-center"
+    odpClickOutside (outside)="open ? '': openSearchBox=false">
     <input type="text" name="searchTerm" id="searchTerm" maxlength="40" #searchInput [ngModel]="searchTerm"
       (ngModelChange)="onChange($event)" (keyup.enter)="onEnterKey($event)" (keyup.backspace)="onBackspaceKey($event)"
       (keydown.control.backspace)="onCtrlBackspace($event)" (focus)="onFocus($event)" autocomplete="off"
@@ -18,7 +18,8 @@
     <span *ngIf="searchInput.value" class="fa fa-times-circle text-danger position-absolute hover high-zIndex"
       (click)="clear()" ngbTooltip="Clear Search" container="body" [placement]="toolTipDirection"></span>
   </div>
-  <button *ngIf="!openSearchBox" type="button" class="btn btn-outline-light border ignore-outside" (click)="openSearchBox=true">
+  <button *ngIf="!openSearchBox" type="button" class="btn btn-outline-light border ignore-outside"
+    (click)="openSearchBox=true">
     <span class="fa fa-search text-secondary"></span>
   </button>
 </div>

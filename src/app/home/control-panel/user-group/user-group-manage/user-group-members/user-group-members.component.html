@@ -1,12 +1,12 @@
 <div class="wrapper d-flex align-items-start">
   <div class="d-flex flex-column sub-menu p-3">
-    <div class="d-flex flex-column text-muted font-weight-bold font-14">
+    <div class="d-flex flex-column text-muted font-14">
       <div *ngIf="hasPermission('PVGCDS') || hasPermission('PMGCDS')" class="px-3 py-2 hover" (click)="activeSubTab=0"
-        [ngClass]="{'text-dark': activeSubTab==0}">
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==0}">
         <span class="">Users</span>
       </div>
       <div *ngIf="hasPermission('PVGCI') || hasPermission('PMGCI')" class="px-3 py-2 hover" (click)="activeSubTab=1"
-        [ngClass]="{'text-dark': activeSubTab==1}">
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==1}">
         <span class="">Bots</span>
       </div>
     </div>
