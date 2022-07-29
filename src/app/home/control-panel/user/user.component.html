@@ -18,8 +18,8 @@
           </button>
         </ng-container>
         <div class="mr-3">
-          <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')"
-            [selectOnEnter]="true" (enteredPressed)="enterToSelect($event)"></odp-search-box>
+          <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')" [selectOnEnter]="true"
+            (enteredPressed)="enterToSelect($event)"></odp-search-box>
         </div>
         <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-dark mr-3" routerLink="bulk-import"
           ngbTooltip="Bulk Import" id="bulkimport">
@@ -187,7 +187,7 @@
               New Password
               <sup class="text-danger">*</sup>
             </label>
-            <div class="input-group">
+            <div class="input-wrapper position-relative">
               <input class="form-control input-text" [type]="showPassword['new'] ? 'text' : 'password'"
                 placeholder="Password" formControlName="password" [ngClass]="{ 'is-invalid': pwdError }"
                 autocomplete="new-password" />
@@ -195,22 +195,22 @@
                   'fa-eye': !showPassword['new'],
                   'fa-eye-slash': showPassword['new']
                 }" (click)="showPassword['new'] = !showPassword['new']"></span>
-            </div>
-            <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
+              <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="
                 resetPasswordForm.get('password').dirty &&
                 resetPasswordForm.get('password')?.hasError('required')
               " ngbTooltip="This is a required field"></span>
-            <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
+              <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="
                 resetPasswordForm.get('password').dirty &&
                 resetPasswordForm.get('password')?.hasError('minlength')
               " ngbTooltip="Password should be minimum 8 chars long"></span>
+            </div>
           </div>
           <div class="form-group position-relative">
             <label for="cPassword">
               Re-enter New Password
               <sup class="text-danger">*</sup>
             </label>
-            <div class="input-group">
+            <div class="input-wrapper position-relative">
               <input id="cPassword" class="form-control input-text"
                 [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"
                 formControlName="cpassword" [ngClass]="{ 'is-invalid': cPwdError }" />
@@ -218,14 +218,14 @@
                   'fa-eye': !showPassword['confirm'],
                   'fa-eye-slash': showPassword['confirm']
                 }" (click)="showPassword['confirm'] = !showPassword['confirm']" id="showPassword"></span>
-            </div>
-            <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
+              <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="
                 resetPasswordForm.get('cpassword').dirty &&
                 resetPasswordForm.get('cpassword')?.hasError('required')
               " ngbTooltip="This is a required field"></span>
-            <span class="fas fa-question-circle text-danger error-icon position-absolute"
-              *ngIf="resetPasswordForm.get('cpassword').dirty && matchPwd" [ngbTooltip]="'Passwords don\'t match'"
-              placement="right"></span>
+              <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                *ngIf="resetPasswordForm.get('cpassword').dirty && matchPwd"
+                [ngbTooltip]="'Passwords don\'t match'"></span>
+            </div>
           </div>
           <div class="d-flex align-items-center justify-content-between">
             <button type="button" class="btn btn-primary add-button input-text" id="resetpassowrd"
@@ -247,14 +247,16 @@
           <div *ngIf="userForm.get('userData')" formGroupName="userData">
             <div class="form-group" formGroupName="auth" *ngIf="validAuthTypes?.length > 1">
               <label for="authType">Authentication Method</label>
-              <select id="authType" class="form-control input-text" formControlName="authType"
-                (ngModelChange)="onAuthTypeChange($event)">
-                <option *ngFor="let item of validAuthTypes" [value]="item.value">
-                  {{ item.label }}
-                </option>
-              </select>
-              <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidAuthType"
-                ngbTooltip="This is a required field"></span>
+              <div class="position-relative">
+                <select id="authType" class="form-control input-text" formControlName="authType"
+                  (ngModelChange)="onAuthTypeChange($event)">
+                  <option *ngFor="let item of validAuthTypes" [value]="item.value">
+                    {{ item.label }}
+                  </option>
+                </select>
+                <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidAuthType"
+                  ngbTooltip="This is a required field"></span>
+              </div>
             </div>
             <ng-container *ngIf="showAzureLoginButton">
               <button type="button" class="mb-3 ng-star-inserted border bg-white d-flex align-items-center p-2"
@@ -264,26 +266,28 @@
               </button>
             </ng-container>
             <ng-container *ngIf="!showAzureLoginButton">
-              <div class="form-group position-relative">
+              <div class="form-group">
                 <label for="username">
                   Username
                   <sup class="text-danger">*</sup>
                 </label>
-                <input id="username" class="form-control input-text" type="text" placeholder="Enter Username"
-                  formControlName="username" odpAutoFocus (blur)="checkForDuplicate()" [ngClass]="{
+                <div class="position-relative">
+                  <input id="username" class="form-control input-text" type="text" placeholder="Enter Username"
+                    formControlName="username" odpAutoFocus (blur)="checkForDuplicate()" [ngClass]="{
                     'is-invalid': invalidUsername || invalidUsernamePattern
                   }" />
-                <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidUsername"
-                  ngbTooltip="This is a required field"></span>
-                <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                  *ngIf="invalidUsernamePattern" ngbTooltip="Username must be of email format"></span>
+                  <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidUsername"
+                    ngbTooltip="This is a required field"></span>
+                  <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                    *ngIf="invalidUsernamePattern" ngbTooltip="Username must be of email format"></span>
+                </div>
               </div>
-              <div class="form-group position-relative">
+              <div class="form-group">
                 <label for="name">
                   Name
                   <sup class="text-danger">*</sup>
                 </label>
-                <div class="w-100" formGroupName="basicDetails">
+                <div class="w-100 position-relative" formGroupName="basicDetails">
                   <input id="name" class="form-control pr-4 input-text" type="text" placeholder="Enter Name"
                     formControlName="name" [ngClass]="{ 'is-invalid': invalidName }"
                     autocomplete="autocomplete_off_hack" />
@@ -302,12 +306,12 @@
                   !userInAzureAD &&
                   userForm.get('userData.auth.authType').value === 'local'
                 ">
-                <div class="form-group position-relative">
+                <div class="form-group">
                   <label for="password">
                     Password
                     <sup class="text-danger">*</sup>
                   </label>
-                  <div class="input-group">
+                  <div class="position-relative">
                     <input class="form-control input-text" [type]="showPassword['new'] ? 'text' : 'password'"
                       placeholder="Password" formControlName="password" [ngClass]="{
                         'is-invalid':
@@ -319,21 +323,21 @@
                         'fa-eye': !showPassword['new'],
                         'fa-eye-slash': showPassword['new']
                       }" (click)="showPassword['new'] = !showPassword['new']"></span>
+                    <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                      *ngIf="invalidPassword" ngbTooltip="This is a required field"></span>
+                    <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                      *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"></span>
+                    <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                      *ngIf="invalidPasswordPattern"
+                      ngbTooltip="Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)"></span>
                   </div>
-                  <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidPassword"
-                    ngbTooltip="This is a required field"></span>
-                  <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                    *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"></span>
-                  <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                    *ngIf="invalidPasswordPattern"
-                    ngbTooltip="Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)"></span>
                 </div>
-                <div class="form-group position-relative">
+                <div class="form-group">
                   <label for="cPassword">
                     Confirm Password
                     <sup class="text-danger">*</sup>
                   </label>
-                  <div class="input-group">
+                  <div class="position-relative">
                     <input id="cPassword" class="form-control input-text"
                       [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"
                       formControlName="cpassword" [ngClass]="{
@@ -345,11 +349,11 @@
                       }" (click)="
                         showPassword['confirm'] = !showPassword['confirm']
                       "></span>
+                    <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                      *ngIf="invalidCPassword" ngbTooltip="This is a required field"></span>
+                    <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                      *ngIf="invalidPasswordMatch" ngbTooltip="Passwords do not match"></span>
                   </div>
-                  <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="invalidCPassword"
-                    ngbTooltip="This is a required field"></span>
-                  <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                    *ngIf="invalidPasswordMatch" ngbTooltip="Passwords do not match"></span>
                 </div>
                 <div class="form-group">
                   <label for="phone">Phone</label>
@@ -360,7 +364,7 @@
                 </div>
                 <div class="form-group">
                   <label for="email">Alternate Email</label>
-                  <div class="w-100" formGroupName="basicDetails">
+                  <div class="w-100 position-relative" formGroupName="basicDetails">
                     <input id="email" class="form-control input-text" type="text" placeholder="Enter Alternate Email"
                       formControlName="alternateEmail" />
                     <span class="fas fa-question-circle text-danger error-icon position-absolute"
@@ -430,7 +434,7 @@
               Label
               <sup class="text-danger">*</sup>
             </label>
-            <div class="input-group">
+            <div class="position-relative">
               <input id="label" class="form-control pr-4 input-text" type="text" placeholder="Label name"
                 formControlName="label" autocomplete="autocomplete_off_hack" />
               <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
@@ -444,7 +448,7 @@
               Type
               <sup class="text-danger">*</sup>
             </label>
-            <div class="input-group">
+            <div class="position-relative">
               <select id="type" class="form-control input-text" formControlName="type"
                 (ngModelChange)="onAttributeFormTypeChange($event)">
                 <option *ngFor="let item of types" [value]="item.value">
@@ -462,7 +466,7 @@
               Value
               <sup class="text-danger">*</sup>
             </label>
-            <div class="input-group">
+            <div class="position-relative">
               <input id="value" class="form-control pr-4 input-text" type="text" placeholder="Value"
                 formControlName="value" autocomplete="autocomplete_off_hack"
                 *ngIf="attributesForm.get('type').value === 'String'" />

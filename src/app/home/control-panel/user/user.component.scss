@@ -188,6 +188,7 @@
 .eye-icon {
   padding: 12px;
   right: -1px;
+  top: 0;
 }
 
 .password-input {
@@ -197,7 +198,7 @@
 
 .error-icon-password {
   right: 32px;
-  top: 37px;
+  top: 12px;
   z-index: 1;
 }
 
@@ -354,10 +355,7 @@
 }
 
 .input-text {
-  padding: 10px;
-  gap: 40px;
   width: 310px;
-  height: 40px;
 }
 
 .form-group {
