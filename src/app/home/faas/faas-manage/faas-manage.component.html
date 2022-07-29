@@ -4,139 +4,80 @@
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
-<div class="d-flex flex-column w-100 h-100">
-    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
-    <odp-basic-info hideLogo="true" [(name)]="faasData.name" [(description)]="faasData.description" [edit]="edit">
-        <div class="d-flex justify-content-end align-items-center">
-            <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link"
-                id="cancelNanoServiceBtn">
-                <span class="fa fa-close mr-2"></span>
-                <span class="text">Cancel</span>
-            </button>
-            <button *ngIf="edit.id && !edit.status && hasManagePermission" (click)="enableEditing()" type="button"
-                class="edit-button btn btn-min-width btn-primary ml-3" id="editNanoServiceBtn">
-                <span class="odp-edit mr-2"></span>
-                <span *ngIf="!faasData?.draftVersion" class="text">Edit</span>
-                <span *ngIf="faasData?.draftVersion" class="text">Edit Draft</span>
-            </button>
-            <div class="btn-group mr-3" *ngIf="edit.status">
-                <button class="btn btn-primary btn-min-width" (click)="saveDummyCode();" type="button">Save</button>
-                <div *ngIf="faasData?.draftVersion || faasData.status=='Draft'" ngbDropdown class="btn-group">
-                    <button class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle type="button"></button>
-                    <div  ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                        <button *ngIf="faasData?.draftVersion || faasData.status=='Draft'" ngbDropdownItem
-                            (click)="discardDraft()" type="button">Discard
-                            Draft</button>
+<div class="d-flex flex-column w-100 h-100 px-4 bg-light-gray position-relative">
+    <div class="py-5">
+        <odp-basic-info hideLogo="true" [(name)]="faasData.name" [(description)]="faasData.description" [edit]="edit">
+            <div class="d-flex justify-content-end align-items-center">
+                <button (click)="cancel()" type="button"
+                    class="edit-button btn btn-min-width btn-outline-light border text-secondary mr-3"
+                    id="cancelNanoServiceBtn">
+                    <span class="text">Cancel</span>
+                </button>
+                <button *ngIf="edit.id && !edit.status && hasManagePermission" (click)="enableEditing()" type="button"
+                    class="edit-button btn btn-min-width btn-primary mr-3" id="editNanoServiceBtn">
+                    <span *ngIf="!faasData?.draftVersion" class="text">Edit</span>
+                    <span *ngIf="faasData?.draftVersion" class="text">Edit Draft</span>
+                </button>
+                <div class="btn-group mr-3" *ngIf="edit.status">
+                    <button class="btn btn-outline-primary btn-min-width" (click)="saveDummyCode();"
+                        type="button">Save</button>
+                    <div *ngIf="faasData?.draftVersion || faasData.status=='Draft'" ngbDropdown class="btn-group">
+                        <button class="btn btn-outline-primary dropdown-toggle-split" ngbDropdownToggle
+                            type="button"></button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <button *ngIf="faasData?.draftVersion || faasData.status=='Draft'" ngbDropdownItem
+                                (click)="discardDraft()" type="button">
+                                Discard Draft
+                            </button>
+                        </div>
                     </div>
                 </div>
+                <button *ngIf="edit.status && hasDeployPermission" class="btn btn-primary btn-min-width"
+                    [disabled]="!isValidSchema" (click)="save(true);edit.status=false" type="button">Save &amp;
+                    Deploy</button>
             </div>
-            <button *ngIf="edit.status && hasDeployPermission" class="btn btn-dark btn-min-width" [disabled]="!isValidSchema"
-                (click)="save(true);edit.status=false" type="button">Save &amp; Deploy</button>
-            <!-- <div class="btn-group mr-3" *ngIf="edit.status">
-                <button class="btn btn-primary btn-min-width" (click)="saveDummyCode();" type="button">Save</button>
-                <div ngbDropdown class="btn-group">
-                    <button class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle type="button"></button>
-                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                        <button ngbDropdownItem [disabled]="!isValidSchema" (click)="save(true);edit.status=false"
-                            type="button">Save &amp; Deploy</button>
-                        <button *ngIf="faasData?.draftVersion || faasData.status=='Draft'" ngbDropdownItem (click)="discardDraft()" type="button">Discard
-                            Draft</button>
-                    </div>
-                </div>
-            </div> -->
-            <!-- <button *ngIf="edit.status" (click)="saveDummyCode();" type="button"
-                class="edit-button btn btn-min-width btn-primary" id="saveBtn">
-                <span class="fa fa-save mr-2"></span>
-                <span class="text">Save</span>
-            </button>
-            <button *ngIf="edit.status" [disabled]="!isValidSchema" (click)="save(true);edit.status=false"
-                type="button" class="edit-button btn btn-min-width btn-dark" id="sbButtonSaveAndDeploy">
-                <span class="fa fa-save mr-2"></span>
-                <span class="text">Save &amp; Deploy</span>
-            </button> -->
-        </div>
-    </odp-basic-info>
-    <div class="border-top border-bottom px-3 py-2 d-flex align-items-center justify-content-between bg-light">
-        <div class="url-info d-flex align-items-center">
-            <!-- <button type="button" class="btn btn-dark btn-sm mr-3" (click)="testRun()">
-                <span class="fa fa-flask mr-2"></span>
-                <span>Test</span>
-            </button> -->
-            <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
-            <span class="url text-accent">{{faasData.url || 'N.A.'}}</span>
-        </div>
-        <div class="editor-theme-selection d-flex align-items-center col-4">
-            <button type="button" class="btn btn-dark rounded-0 mr-3 d-flex align-items-center" (click)="showConsole=!showConsole;toggleConsole()">
-                <span class="fa fa-terminal mr-2"></span>
-                <span class="text">Console</span>
-            </button>
-            <span class="label text-dark font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span>
-            <select class="custom-select mr-3" name="fontSize" id="fontSize" [(ngModel)]="selectedFontSize">
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="16">16</option>
-                <option value="18">18</option>
-                <option value="20">20</option>
-            </select>
-            <span class="label text-dark font-weight-bold mr-2">Theme&nbsp;:</span>
-            <select class="custom-select" name="theme" id="theme" [(ngModel)]="selectedEditorTheme">
-                <option value="vs-dark">Dark</option>
-                <option value="vs-light">Light</option>
-            </select>
-        </div>
+        </odp-basic-info>
+        <pre class="text-secondary m-0">https://{{fqdn}}{{faasData.url}}</pre>
     </div>
-    <div class="d-flex align-items-stretch h-100 w-100">
-        <div [ngClass]="{'show':showConsole}" class="console position-absolute bg-dark text-white p-3">
-            <p *ngIf="logs.length==0">No Logs</p>
-            <pre *ngFor="let log of logs" class="text-white"><span style="color:{{log.level.colour}}">[{{log.startTime}}] [{{log.level.levelStr}}] </span> {{log.data.join(' ')}}</pre>
+    <div class="rounded-lg border bg-white">
+        <div class="d-flex align-items-center justify-content-between border-bottom p-3">
+            <div class="d-flex align-items-center">
+                <span class="text-uppercase font-weight-bold text-accent">Function Code</span>
+            </div>
+            <div class="editor-theme-selection d-flex align-items-center">
+                <button type="button" class="btn btn-outline-light border text-secondary mr-3 d-flex align-items-center"
+                    (click)="showConsole=!showConsole;toggleConsole()">
+                    <span class="fa fa-terminal mr-2"></span>
+                    <span class="text">Console</span>
+                </button>
+                <!-- <span class="label text-secondary font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span> -->
+                <select class="custom-select text-secondary mr-3" name="fontSize" id="fontSize"
+                    [(ngModel)]="selectedFontSize">
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="16">16</option>
+                    <option value="18">18</option>
+                    <option value="20">20</option>
+                </select>
+                <!-- <span class="label text-secondary font-weight-bold mr-2">Theme&nbsp;:</span> -->
+                <select class="custom-select text-secondary" name="theme" id="theme" [(ngModel)]="selectedEditorTheme">
+                    <option value="vs-dark">Dark</option>
+                    <option value="vs-light">Light</option>
+                </select>
+            </div>
         </div>
-        <div class="editor-wrapper h-100">
-            <!-- <div class="monaco-editor no-user-select {{selectedEditorTheme}} p-3">
-                <div class="view-lines monaco-mouse-cursor-text"
-                    style="font-family: Menlo, Monaco, 'Courier New', monospace; font-weight: normal; font-size: 12px; font-feature-settings: 'liga' 0, 'calt' 0; line-height: 18px; letter-spacing: 0px; width: 1078px; height: 336px;">
-                    <div style="height:18px;" class="view-line"><span><span class="mtk8">function</span><span
-                                class="mtk1">&nbsp;process</span><span class="mtk9">(</span><span
-                                class="mtk1 squiggly-inline-unnecessary">req</span><span class="mtk9">,</span><span
-                                class="mtk1">&nbsp;</span><span class="mtk1 squiggly-inline-unnecessary">res</span><span
-                                class="mtk9">)</span><span class="mtk1">&nbsp;</span><span
-                                class="mtk9">{{'{'}}</span></span>
-                    </div>
-                </div>
-            </div> -->
-            <odp-code-editor *ngIf="showCodeEditor" class="code-editor" [edit]="edit" [theme]="selectedEditorTheme"
-                [fontSize]="selectedFontSize" [(code)]="faasData.code"></odp-code-editor>
-            <!-- <div class="monaco-editor no-user-select {{selectedEditorTheme}} p-3">
-                <div class="view-lines monaco-mouse-cursor-text"
-                    style="font-family: Menlo, Monaco, 'Courier New', monospace; font-weight: normal; font-size: 12px; font-feature-settings: 'liga' 0, 'calt' 0; line-height: 18px; letter-spacing: 0px; width: 1078px; height: 336px;">
-                    <div style="height:18px;" class="view-line"><span><span class="mtk9">{{'}'}}</span></span></div>
-                </div>
-            </div> -->
-        </div>
-        <div class="helper-panel bg-light">
-            <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0" closeOthers="true">
-                <!-- <ngb-panel>
-                    <ng-template ngbPanelTitle>
-                        <span>Documentation</span>
-                    </ng-template>
-                    <ng-template ngbPanelContent>
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
-                        3 wolf moon officia
-                        aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch
-                        3 wolf moon tempor,
-                        sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil
-                        anim keffiyeh helvetica,
-                        craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
-                        vice lomo. Leggings
-                        occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard
-                        of them accusamus
-                        labore sustainable VHS.
-                    </ng-template>
-                </ngb-panel> -->
-                <ngb-panel>
-                    <ng-template ngbPanelTitle>
+        <div class="d-flex align-items-stretch h-100 w-100">
+            <div class="editor-wrapper h-100 p-3">
+                <odp-code-editor *ngIf="showCodeEditor" class="code-editor" [edit]="edit" [theme]="selectedEditorTheme"
+                    [fontSize]="selectedFontSize" [(code)]="faasData.code"></odp-code-editor>
+            </div>
+            <div class="helper-panel border-left">
+                <div class="accordian-block border-bottom">
+                    <div class="accordian-header border-bottom p-4 d-flex align-items-center justify-content-between">
                         <span>Libraries</span>
-                    </ng-template>
-                    <ng-template ngbPanelContent>
+                        <span class="fas fa-chevron-down"></span>
+                    </div>
+                    <div class="accordian-body p-4">
                         <table class="table table-bordered env-vars">
                             <thead>
                                 <tr class="thead-light">
@@ -176,63 +117,55 @@
                                 <td>moment</td>
                             </tr>
                         </table>
-                    </ng-template>
-                </ngb-panel>
-                <ngb-panel>
-                    <ng-template ngbPanelTitle>
+                    </div>
+                </div>
+                <div class="accordian-block border-bottom">
+                    <div class="accordian-header border-bottom p-4 d-flex align-items-center justify-content-between">
                         <span>ENV Variables</span>
-                    </ng-template>
-                    <ng-template ngbPanelContent>
+                        <span class="fas fa-chevron-down"></span>
+                    </div>
+                    <div class="accordian-body p-4">
                         <table class="table table-bordered env-vars">
                             <thead>
                                 <tr class="thead-light">
                                     <th>ENV Variable</th>
                                     <th>Value</th>
-                                    <!-- <th>Description</th> -->
                                 </tr>
                             </thead>
                             <tr>
                                 <td>DATA_STACK_NAMESPACE</td>
                                 <td class="text-center">{{namespace}}</td>
-                                <!-- <td>The Namespace of Data Stack</td> -->
                             </tr>
                             <tr>
                                 <td>FQDN</td>
                                 <td class="text-center">{{fqdn}}</td>
-                                <!-- <td>FQDN</td> -->
                             </tr>
                             <tr>
                                 <td>DATA_STACK_APP_NAMESPACE</td>
                                 <td class="text-center">{{faasData.namespace}}</td>
-                                <!-- <td>The Namespace of Current App</td> -->
                             </tr>
                             <tr>
                                 <td>LOG_LEVEL</td>
                                 <td class="text-center">info</td>
-                                <!-- <td>Log Level for logging</td> -->
                             </tr>
                         </table>
-                    </ng-template>
-                </ngb-panel>
-                <!-- <ngb-panel>
-                    <ng-template ngbPanelTitle>
-                        <span>Examples</span>
-                    </ng-template>
-                    <ng-template ngbPanelContent>
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
-                        3 wolf moon officia
-                        aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch
-                        3 wolf moon tempor,
-                        sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil
-                        anim keffiyeh helvetica,
-                        craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
-                        vice lomo. Leggings
-                        occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard
-                        of them accusamus
-                        labore sustainable VHS.
-                    </ng-template>
-                </ngb-panel> -->
-            </ngb-accordion>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    <div [ngClass]="{'show':showConsole}" class="console position-absolute bg-dark text-white">
+        <div class="border-bottom d-flex align-items-center justify-content-between p-3">
+            <div class="d-flex align-items-center">
+                <span class="fa fa-terminal mr-2"></span>
+                <span class="text">Console</span>
+            </div>
+            <button type="button" class="close" (click)="showConsole=false">
+                <span class="text-white">&times;</span>
+            </button>
+        </div>
+        <p class="p-3" *ngIf="logs.length==0">No Logs</p>
+        <pre class="p-3" *ngFor="let log of logs"
+            class="text-white"><span [ngStyle]="{color:log.level.colour}">[{{log.startTime}}] [{{log.level.levelStr}}] </span> {{log.data.join(' ')}}</pre>
     </div>
 </div>

@@ -4,6 +4,7 @@
 
 .monaco-editor {
   height: 42px;
+
   .view-line {
     font-size: 14px !important;
   }
@@ -19,23 +20,29 @@
 
 .helper-panel {
   width: 360px;
-  width: 360px;
-  height: calc(100vh - 230px);
+  height: calc(100vh - 292px);
   overflow: auto;
 }
+
 .env-vars {
   font-size: 10px;
   overflow: auto;
 }
 
 .console {
-  height: calc(100vh - 230px) !important;
-  width: 600px !important;
-  right: -600px;
+  left: 0;
+  height: 360px !important;
+  width: 100% !important;
+  bottom: -360px;
   z-index: 2;
   transition: 0.2s;
   overflow: auto;
+
   &.show {
-    right: 0;
+    bottom: 0;
   }
+}
+
+.custom-select {
+  min-width: 100px;
 }

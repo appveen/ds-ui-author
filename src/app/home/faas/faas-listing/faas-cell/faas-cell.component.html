@@ -7,7 +7,8 @@
 <ng-container *ngIf="value">
     <span *ngIf="field == 'name'" class="d-flex align-items-center">
         <a [routerLink]="data?._id" class="text-accent font-weight-bold ml-3">{{value}}</a>
-        <span *ngIf="data?.draftVersion" class="badge badge-accent ml-2" ngbTooltip="Draft Version" container="body">v{{data.draftVersion}}</span>
+        <span *ngIf="data?.draftVersion" class="badge badge-accent ml-2" ngbTooltip="Draft Version"
+            container="body">v{{data.draftVersion}}</span>
     </span>
     <code *ngIf="field == 'url'">{{fqdn}}{{value}}</code>
     <button *ngIf="field == 'url'" type="button" class="btn btn-link text-accent btn-sm ml-2" (click)="copyUrl()">
@@ -37,25 +38,28 @@
 <ng-container *ngIf="!value && field != '_options'">
     <span class="text-muted">N.A.</span>
 </ng-container>
-<span *ngIf="field == '_options' && data?._id">
-    <a *ngIf="data?.status === 'Undeployed' && hasStartStopPermission" href="#" class="text-accent mr-2"
-        (click)="$event.preventDefault();startFaas(data)">
-        Start
-    </a>
-    <a *ngIf="data?.status === 'Active' && hasStartStopPermission" href="#" class="text-accent mr-2"
-        (click)="$event.preventDefault();stopFaas(data)">
-        Stop
-    </a>
-    <a href="#" class="text-accent mr-2" (click)="$event.preventDefault();redirectToManage()">
-        View
-    </a>
-    <a href="#" class="text-accent mr-2" *ngIf="hasManagePermission" (click)="$event.preventDefault();redirectToManage(true)">
-        Edit
-    </a>
-    <a href="#" class="text-accent mr-2" *ngIf="hasManagePermission" (click)="$event.preventDefault();deleteFaas()">
-        Delete
-    </a>
-</span>
+<div *ngIf="field == '_options' && data?._id" class="float-right">
+    <button type="button" *ngIf="data?.status === 'Undeployed' && hasStartStopPermission"
+        class="btn btn-outline-light text-secondary border mr-3" (click)="$event.preventDefault();startFaas(data)">
+        <span class="fa fa-start"></span>
+    </button>
+    <button type="button" *ngIf="data?.status === 'Active' && hasStartStopPermission"
+        class="btn btn-outline-light text-secondary border mr-3" (click)="$event.preventDefault();stopFaas(data)">
+        <span class="fa fa-stop"></span>
+    </button>
+    <button type="button" class="btn btn-outline-light text-secondary border mr-3"
+        (click)="$event.preventDefault();redirectToManage()">
+        <span class="fa fa-eye"></span>
+    </button>
+    <button type="button" class="btn btn-outline-light text-secondary border mr-3" *ngIf="hasManagePermission"
+        (click)="$event.preventDefault();redirectToManage(true)">
+        <span class="fa fa-pen"></span>
+    </button>
+    <button type="button" class="btn btn-outline-light text-secondary border mr-3" *ngIf="hasManagePermission"
+        (click)="$event.preventDefault();deleteFaas()">
+        <span class="fa fa-trash"></span>
+    </button>
+</div>
 
 <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
     <odp-function-icon [size]="18" color="DD5151" class="mt-1"></odp-function-icon>

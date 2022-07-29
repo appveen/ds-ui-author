@@ -13,14 +13,15 @@ export class FaasFilterComponent implements IFloatingFilter, AgFrameworkComponen
   field: string;
   value: any;
   filterInstance: TextFilter | NumberFilter;
-  constructor(private ele: ElementRef) { }
+  constructor(private ele: ElementRef) {
+
+  }
   agInit(params: IFloatingFilterParams): void {
     this.params = params;
     this.field = params.column.getColDef().field;
     this.params.parentFilterInstance((instance: IFilterComp) => {
       this.filterInstance = (instance as (TextFilter | NumberFilter));
     });
-    // this.ele.nativeElement.classList.push('w-100');
   }
 
   onParentModelChanged(parentModel: any, filterChangedEvent?: FilterChangedEvent): void {

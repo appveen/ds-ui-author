@@ -23,11 +23,9 @@ import { environment } from 'src/environments/environment';
 export class FaasListingComponent implements OnInit, OnDestroy {
 
   @ViewChild('agGrid') agGrid: AgGridAngular;
-  @ViewChild('newFaasModal', { static: false }) newFaasModal: TemplateRef<HTMLElement>;
   form: FormGroup;
   apiConfig: GetOptions;
   subscriptions: any;
-  newFaasModalRef: NgbModalRef;
   columnDefs: Array<AgGridColumn>;
   dataSource: IDatasource;
   sortModel: any;
@@ -35,6 +33,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   totalCount: number;
   loadedCount: number;
   noRowsTemplate: string;
+  showNewFaasWindow: boolean;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -126,9 +125,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     Object.keys(this.subscriptions).forEach(e => {
       this.subscriptions[e].unsubscribe();
     });
-    if (this.newFaasModalRef) {
-      this.newFaasModalRef.close();
-    }
   }
 
   configureColumns() {
@@ -136,7 +132,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     let col = new AgGridColumn();
     col.headerName = 'Name';
     col.field = 'name';
-    col.pinned = 'left';
+    // col.pinned = 'left';
     col.lockPinned = true;
     col.width = 180;
     col.sort = 'asc';
@@ -145,10 +141,10 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     col.headerName = 'URL';
     col.field = 'url';
     columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'Description';
-    col.field = 'description';
-    columns.push(col);
+    // col = new AgGridColumn();
+    // col.headerName = 'Description';
+    // col.field = 'description';
+    // columns.push(col);
     col = new AgGridColumn();
     col.headerName = 'Status';
     col.field = 'status';
@@ -162,7 +158,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     col = new AgGridColumn();
     col.headerName = 'Options';
     col.field = '_options';
-    col.pinned = 'right';
+    // col.pinned = 'right';
     col.lockPinned = true;
     columns.push(col);
     columns.forEach((item: AgGridColumn) => {
@@ -180,14 +176,8 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   }
 
   newFaas() {
-    this.newFaasModalRef = this.commonService.modal(this.newFaasModal, { size: 'sm' });
-    this.newFaasModalRef.result.then(close => {
-      if (close && this.form.valid) {
-        this.triggerFaasCreate();
-      }
-    }, dismiss => {
-      this.form.reset();
-    });
+    this.form.reset({});
+    this.showNewFaasWindow = true;
   }
 
   triggerFaasCreate() {
