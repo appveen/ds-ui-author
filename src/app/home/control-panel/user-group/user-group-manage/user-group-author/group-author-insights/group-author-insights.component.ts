@@ -9,19 +9,11 @@ import { CommonService } from 'src/app/utils/services/common.service';
 export class GroupAuthorInsightsComponent implements OnInit {
   @Input() roles: Array<any>;
   @Output() rolesChange: EventEmitter<Array<any>>;
-  dropdownToggle: {
-    [key: string]: boolean;
-  };
-  toggleDropdown: any;
-  subscriptions: any;
   constructor(
     private commonService: CommonService
   ) {
-    this.toggleDropdown = {};
-    this.subscriptions = {};
     this.roles = [];
     this.rolesChange = new EventEmitter();
-    this.dropdownToggle = {};
   }
 
   ngOnInit(): void {
@@ -31,6 +23,19 @@ export class GroupAuthorInsightsComponent implements OnInit {
   hasPermission(type: string) {
     const self = this;
     return this.commonService.hasPermission(type);
+  }
+
+  getPermissionObject(id: string) {
+    const self = this;
+    if (id === null || id.length === 0) {
+      return {};
+    }
+    return {
+      id,
+      app: self.commonService.app._id,
+      entity: 'INS',
+      type: 'author'
+    };
   }
 
   get userTabPermission() {
@@ -125,23 +130,5 @@ export class GroupAuthorInsightsComponent implements OnInit {
     }
 
   }
-
-
-
-  getPermissionObject(id: string) {
-    const self = this;
-    if (id === null || id.length === 0) {
-      return {};
-    }
-    return {
-      id,
-      app: self.commonService.app._id,
-      entity: 'INS',
-      type: 'author'
-    };
-  }
-
-
-
 
 }

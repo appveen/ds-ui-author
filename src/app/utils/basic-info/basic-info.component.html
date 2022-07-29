@@ -1,72 +1,17 @@
-<div class="wrapper d-flex align-items-start justify-content-between px-3">
-  <div class="left-side w-100 d-flex px-3 py-2" [ngClass]="{'hover-class':edit.status}"
-    (click)="$event.stopPropagation();edit.status ? toggleEdit=!toggleEdit : toggleEdit=false">
-    <div #thumbnail class="d-flex">
-      <div *ngIf="!logo"
-        class="thumbnail bg-secondary rounded-circle text-white d-flex align-items-center justify-content-center font-xl mr-3">
-        {{initials}}
-      </div>
-      <div *ngIf="logo" class="thumbnail  text-white d-flex align-items-center justify-content-center font-xl mr-3"
-        [ngStyle]="logoAsBackground"
-        [ngClass]="{'rounded-circle':holderStyle==='circle','rounded':holderStyle==='square'}">
-      </div>
-    </div>
-    <div class="title-container ml-3" [@moveFields]="toggleEdit?'opened':'closed'">
-      <div class="input-name w-100 font-weight-bold mb-1" [ngClass]="{'text-muted':!name}">
-        {{name ? name : 'Untitled name'}}
-      </div>
-      <span class="fa fa-pen edit-pen font-sm text-dark"
-        (click)="$event.stopPropagation();toggleEdit=!toggleEdit"></span>
-      <div class="input-description font-sm text-secondary w-100" *ngIf="description">
-        {{description}}
+<div class="wrapper d-flex align-items-start justify-content-between">
+  <div class="left-side w-100 d-flex">
+    <div class="title-container">
+      <div class="name-holder d-flex align-items-center">
+        <input *ngIf="enableEdit" type="text" class="form-control input-width" [ngModel]="name"
+          (ngModelChange)="onNameChange($event)" odpClickOutside (outside)="enableEdit=false" odpAutoFocus>
+        <ng-container *ngIf="!enableEdit">
+          <h4 class="name m-0">{{name}}</h4>
+          <span *ngIf="edit.status" class="edit-icon fa fa-pen ml-2 ignore-outside hover" (click)="enableEdit=true"></span>
+        </ng-container>
       </div>
     </div>
   </div>
   <div class="right-side d-flex align-items-start justify-content-end">
     <ng-content></ng-content>
   </div>
-</div>
-<div *ngIf="toggleEdit" class="backdrop position-fixed d-flex w-100 h-100"
-  (click)="toggleEdit=false;message=null;nameMessage=null;descMessage=null">
-</div>
-<div *ngIf="toggleEdit"
-  class="editable-window position-absolute d-flex bg-white p-3 align-items-start justify-content-start" odpClickOutside
-  (outside)="toggleEdit=false" [ngStyle]="style" [@toggleWindow]="toggleEdit?'visible':'hidden'">
-  <!-- <div class="thumbnail bg-secondary rounded-circle text-white d-flex align-items-center justify-content-center font-xl mr-3">{{initials}}</div> -->
-  <div *ngIf="!logo"
-    class="thumbnail bg-secondary rounded-circle text-white d-flex align-items-center justify-content-center font-xl mr-3">
-    {{initials}}
-  </div>
-  <div *ngIf="logo"
-    class="thumbnail rounded-circle text-white d-flex align-items-center justify-content-center font-xl mr-3"
-    [ngClass]="{'rounded-circle':holderStyle==='circle','rounded':holderStyle==='square'}" [ngStyle]="logoAsBackground">
-  </div>
-  <div class="details d-flex flex-column">
-    <div class="d-flex align-items-center image-options" *ngIf="edit.status && !hideLogo">
-      <!-- <input #logoInput type="file" name="logo" id="logo" class="d-none" odpUploadImage> -->
-      <!-- <button type="button" class="btn btn-link" (click)="logoInput.click()">Update Image</button> -->
-      <label for="logo" class="btn btn-link mb-0">
-        Upload Image
-        <input #logoInput type="file" name="logo" id="logo" class="d-none" (odpUploadImage)="changeLogo($event)">
-      </label>
-      <button type="button" class="btn btn-link text-danger" *ngIf="logo" (click)="removeLogo()">Clear Image</button>
-    </div>
-    <label for="name" class="font-sm text-secondary">Name<sup class="text-danger">*</sup></label>
-    <div class="name-wrapper position-relative">
-      <input #nameModel="ngModel" type="text" name="name" id="name" [disabled]="holderStyle==='square'?true:false"
-        class="form-control font-weight-bold" placeholder="Untitled name" [(ngModel)]="name" required
-        (ngModelChange)="onNameChange($event)" odpAutoFocus (keyup.enter)="toggleEdit=false" [pattern]="pattern">
-      <span *ngIf="nameModel?.errors?.pattern" class="text-danger position-absolute fa fa-exclamation-circle"
-        container="body" ngbTooltip="Name can be only alphanumeric and can only contain spaces">
-      </span>
-    </div>
-    <span class="text-danger font-sm">{{ nameMessage }}&nbsp;</span>
-    <label for="description" class="mt-3 font-sm text-secondary">Description</label>
-    <textarea name="description" id="description" class="form-control" rows="3" placeholder="No description"
-      [(ngModel)]="description" (ngModelChange)="onDescriptionChange($event)"></textarea>
-    <span class="text-danger font-sm">{{ descMessage }}&nbsp;</span>
-  </div>
-  <button *ngIf="edit.status" [disabled]="nameModel.invalid" type="button" class="btn btn-dark ml-auto"
-    (click)="toggleEdit=false">Save
-    Changes</button>
 </div>

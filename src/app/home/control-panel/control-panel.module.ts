@@ -72,6 +72,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { UserToGroupModalComponent } from './user/user-to-group-modal/user-to-group-modal.component';
 import { UserGridAppsRendererComponent } from './user/user-grid-apps.component ';
 import { FilterPipeModule } from '../../utils/pipes/filter.module';
+import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 
 @NgModule({
   imports: [
@@ -114,6 +115,7 @@ import { FilterPipeModule } from '../../utils/pipes/filter.module';
     CheckboxModule,
     MatDialogModule,
     FilterPipeModule,
+    RoundRadioModule
   ],
   declarations: [
     ControlPanelComponent,

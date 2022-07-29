@@ -1,5 +1,5 @@
 <input #checkbox [attr.id]="id" class="d-none" [ngModel]="checked" (ngModelChange)="toggle($event)">
 <div [attr.for]="id" class="round-radio-wrapper d-flex align-items-center justify-content-center hover"
-  [ngClass]="{'checked':checked}" (click)="toggle(!checked)" [ngStyle]="style">
+  [ngClass]="{'checked':checked}" (click)="toggle(true)" [ngStyle]="style">
   <div class="round-radio-inner bg-white" [ngStyle]="styleInner"></div>
 </div>

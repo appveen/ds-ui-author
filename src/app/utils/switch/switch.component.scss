@@ -13,12 +13,16 @@
     margin: 0;
     padding: 0;
     display: inline-block;
-    border: 1px solid #ccc;
+    <<<<<<< HEAD border: 1px solid #ccc;
     width: 40px;
     height: 24px;
     border-radius: 12px;
     background: $lightgrey;
-    transition: 0.25s;
+    =======width: 40px;
+    height: 24px;
+    border-radius: 12px;
+    background: #ccc;
+    >>>>>>>dev transition: 0.25s;
   }
 
   .toggler {
