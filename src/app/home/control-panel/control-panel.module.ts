@@ -33,7 +33,7 @@ import { RoundCheckModule } from 'src/app/utils/round-check/round-check.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 import { LoadingPlaceholderModule } from 'src/app/utils/loading-placeholder/loading-placeholder.module';
 import { FocusNextModule } from 'src/app/utils/focus-next/focus-next.module';
-import { UserGroupBotsComponent } from './user-group/user-group-manage/user-group-bots/user-group-bots.component';
+import { UserGroupBotsComponent } from './user-group/user-group-manage/user-group-members/user-group-bots/user-group-bots.component';
 import { BookmarksComponent } from './bookmarks/bookmarks.component';
 import { ManageBookmarksComponent } from './bookmarks/manage-bookmarks/manage-bookmarks.component';
 import { FilterFlowPipeModule } from 'src/app/utils/pipes/filter-flow.module';
@@ -73,6 +73,8 @@ import { UserToGroupModalComponent } from './user/user-to-group-modal/user-to-gr
 import { UserGridAppsRendererComponent } from './user/user-grid-apps.component ';
 import { FilterPipeModule } from '../../utils/pipes/filter.module';
 import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
+import { UserGroupUsersComponent } from './user-group/user-group-manage/user-group-members/user-group-users/user-group-users.component';
+import { UserGroupMembersSearchComponent } from './user-group/user-group-manage/user-group-members/user-group-members-search/user-group-members-search.component';
 
 @NgModule({
   imports: [
@@ -154,6 +156,8 @@ import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
     UserGridActionRendererComponent,
     UserToGroupModalComponent,
     UserGridAppsRendererComponent,
+    UserGroupUsersComponent,
+    UserGroupMembersSearchComponent
   ],
 })
 export class ControlPanelModule {}

@@ -1,0 +1,57 @@
+<div class="wrapper">
+    <div class="grid-header d-flex align-items-center justify-content-between p-4">
+        <div class="d-flex align-items-center" *ngIf="hasPermission('PMGMUD')">
+            <h5>Users ({{userList.length}})</h5>
+            <!-- <div class="d-flex align-items-center" (click)="!isSelectAllDisabled && checkAllUser(!isAllUserChecked)">
+                <odp-round-check [edit]="{ status: !isSelectAllDisabled }" class="mr-2 pl-1"
+                    [checked]="isAllUserChecked" (checkedChange)="!isSelectAllDisabled && checkAllUser($event)">
+                </odp-round-check>
+                <button type="button" class="btn btn-link text-dark px-0" [class.text-secondary]="isSelectAllDisabled"
+                    [disabled]="isSelectAllDisabled">
+                    Select All
+                </button>
+            </div> -->
+        </div>
+        <div class="d-flex align-items-center">
+            <button *ngIf="selectedUsers.length > 0" type="button" class="btn btn-outline-light border text-danger mr-3"
+                (click)="removeUsers()">
+                <span class="fa fa-trash" [ngbTooltip]="'Remove Users '+ selectedUsers.length"></span>
+            </button>
+            <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+            <button *ngIf="hasPermission('PMGMUC')" type="button" class="btn btn-primary ml-3" id="addNewMember"
+                (click)="openUsersModal()">
+                <span class="fa fa-plus"></span>
+            </button>
+        </div>
+    </div>
+    <div class="grid-container px-4">
+        <ng-container *ngIf="
+            hasPermission('PMGMUD') ||
+            hasPermission('PMGMUC') ||
+            hasPermission('PVGMUU') ||
+            hasPermission('PVGM') || 
+            hasPermission('PVGMU')
+        ">
+            <div *ngIf="userList && userList.length>0" class="list-group">
+                <div class="list-group-item d-flex align-items-center bg-light text-secondary">
+                    <div class="user-check">
+                        <odp-checkbox [edit]="{status:true}" [(checked)]="checkAll"></odp-checkbox>
+                    </div>
+                    <div class="user-name text-uppercase">Name</div>
+                    <div class="user-username text-uppercase">Username</div>
+                </div>
+                <div class="list-group-item d-flex align-items-center " *ngFor="let user of userList">
+                    <div class="user-check">
+                        <odp-checkbox [edit]="{status:true}" [(checked)]="user._selected"></odp-checkbox>
+                    </div>
+                    <div class="user-name">{{user?.basicDetails?.name}}</div>
+                    <div class="user-username">{{user?._id}}</div>
+                </div>
+            </div>
+            <p *ngIf="!userList || userList.length==0">No Users Added to this Group</p>
+        </ng-container>
+    </div>
+</div>
+
+
+<odp-user-group-members-search [open]="openSearch" (close)="onSearchModalClose($event)"></odp-user-group-members-search>

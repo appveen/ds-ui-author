@@ -30,72 +30,63 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   slideState: string;
   openSearchBox: boolean;
   constructor() {
-    const self = this;
-    self.slideState = 'blur';
-    self.enteredText = new EventEmitter<string>();
-    self.enteredPressed = new EventEmitter<string>();
-    self.reset = new EventEmitter<string>();
+    this.slideState = 'blur';
+    this.enteredText = new EventEmitter<string>();
+    this.enteredPressed = new EventEmitter<string>();
+    this.reset = new EventEmitter<string>();
   }
   ngOnInit() {
-    const self = this;
   }
   ngAfterViewInit() {
-    const self = this;
-    self.searchInput.nativeElement.focus();
+    if (this.searchInput && this.searchInput.nativeElement) {
+      this.searchInput.nativeElement.focus();
+    }
   }
   clear() {
-    const self = this;
-    self.reset.emit();
-    self.searchTerm = null;
+    this.reset.emit();
+    this.searchTerm = null;
   }
   onChange(value: string) {
-    const self = this;
-    self.searchTerm = value;
-    if (self.selectOnEnter) {
-      self.enteredText.emit(value);
+    this.searchTerm = value;
+    if (this.selectOnEnter) {
+      this.enteredText.emit(value);
     } else if (value && value.length > 2) {
-      self.enteredText.emit(value);
+      this.enteredText.emit(value);
     }
   }
 
   onEnterKey(event: KeyboardEvent) {
-    const self = this;
-    if (self.selectOnEnter) {
-      self.enteredPressed.emit(event);
+    if (this.selectOnEnter) {
+      this.enteredPressed.emit(event);
     } else {
       const element: HTMLInputElement = event.target as HTMLInputElement;
       if (element.value && element.value.length > 0) {
-        self.enteredText.emit(element.value);
+        this.enteredText.emit(element.value);
       }
     }
   }
 
   onBackspaceKey(event: KeyboardEvent) {
-    const self = this;
     const element: HTMLInputElement = event.target as HTMLInputElement;
     if (!element.value) {
-      self.reset.emit();
+      this.reset.emit();
     }
   }
   onCtrlBackspace(event: KeyboardEvent) {
-    const self = this;
     const element: HTMLInputElement = event.target as HTMLInputElement;
     if (element.value) {
-      self.reset.emit();
+      this.reset.emit();
     }
   }
   onFocus(event: Event) {
-    const self = this;
-    self.slideState = 'focus';
+    this.slideState = 'focus';
   }
   onBlur(event: Event) {
-    const self = this;
-    self.slideState = 'blur';
+    this.slideState = 'blur';
   }
 
   get info() {
-    const self = this;
-    if (self.onEnter) {
+    if (this.onEnter) {
       return 'Search will be executed on Enter Pressed';
     } else {
       return 'Enter 3 or more characters to auto search';
@@ -103,9 +94,8 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   get toolTipDirection() {
-    const self = this;
-    if (self.tooltipDir) {
-      return self.tooltipDir;
+    if (this.tooltipDir) {
+      return this.tooltipDir;
     }
     return 'right';
   }

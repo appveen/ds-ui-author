@@ -894,59 +894,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   }
 }
 
-.custom-control-input {
-  &:not(:disabled):active~.custom-control-label {
-    &.accent {
-      &::before {
-        color: $accent;
-        background-color: $accent;
-        border-color: $accent;
-      }
-    }
-  }
-
-  &:checked {
-    &:disabled~.custom-control-label {
-      &.accent {
-        &::before {
-          background-color: rgba($accent, 0.5);
-        }
-      }
-    }
-  }
-
-  &~.custom-control-label {
-    &.accent {
-      &::before {
-        border-radius: 2px;
-      }
-    }
-  }
-
-  &:checked~.custom-control-label {
-    &.accent {
-      &::before {
-        background-color: $accent;
-        border-color: $accent;
-      }
-
-      &::before,
-      &::after {
-        border-radius: 2px;
-      }
-    }
-  }
-
-  &:focus~.custom-control-label {
-    &.accent {
-      &::before {
-        box-shadow: 0 0 0 0.2rem rgba($accent, 0.25);
-        border-color: $accent;
-      }
-    }
-  }
-}
-
 .no-select {
   -webkit-touch-callout: none;
   /* iOS Safari */
@@ -1019,4 +966,8 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
 .input-text {
   width: 320px;
+}
+
+.hover {
+  cursor: pointer;
 }

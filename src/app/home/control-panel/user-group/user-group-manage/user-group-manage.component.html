@@ -40,9 +40,9 @@
               [ngClass]="{'text-accent':activeTab==2}">
               <span>Members </span>
             </div>
-            <div *ngIf="showBotsTab" class="px-3 hover" (click)="activeTab=3" [ngClass]="{'text-accent':activeTab==3}">
+            <!-- <div *ngIf="showBotsTab" class="px-3 hover" (click)="activeTab=3" [ngClass]="{'text-accent':activeTab==3}">
               <span>Bots </span>
-            </div>
+            </div> -->
           </div>
           <div class="d-flex align-items-center justify-content-end">
             <span *ngIf="changesMadeinAuthorTab && !changesMadeinAppcenterTab && !changesMadeinUsersTab"
@@ -74,7 +74,7 @@
           <odp-user-group-appcenter *ngIf="activeTab===1 && showAppcenterTab" [roles]="group.roles">
           </odp-user-group-appcenter>
           <odp-user-group-members *ngIf="activeTab===2 && showMembersTab" [users]="allUsers"></odp-user-group-members>
-          <odp-user-group-bots *ngIf="activeTab===3 && showBotsTab" [users]="allUsers"></odp-user-group-bots>
+          <!-- <odp-user-group-bots *ngIf="activeTab===3 && showBotsTab" [users]="allUsers"></odp-user-group-bots> -->
         </div>
       </div>
     </div>
