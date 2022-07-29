@@ -5,70 +5,29 @@
     </div>
 </div>
 
-<div class="grid-container">
-    <ag-grid-angular #agGrid class="ag-theme-balham" [gridOptions]="gridOptions" [rowData]="selectedBot.botKeys | agGridFilter:filterModel"
-        [frameworkComponents]="frameworkComponents" (filterModified)="!filtering && onFilterChanged($event)">
+
+
+<div class="d-flex mb-4">
+    <div>
+        <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')" [selectOnEnter]="true">
+        </odp-search-box>
+    </div>
+    <div class="d-flex ml-auto mr-2">
+        <div class="add-attribute hover" (click)="add()">
+            <i class="fa fa-plus-circle font-xl icon-primary mr-2"></i>
+            <label class="fw-500 font-normal heading">Add Keys</label>
+
+        </div>
+    </div>
+</div>
+
+<div>
+    <ag-grid-angular #agGrid class="ag-theme-balham table" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+        [frameworkComponents]="frameworkComponents">
     </ag-grid-angular>
 </div>
 
-<ng-template #newKeyModal>
-    <div class="new-Bot-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="keyForm">
-        <div class="d-flex flex-column w-100">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <div class="d-flex align-items-center">
-                    <!-- <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
-                        <odp-user-icon size="16" color="1CAD49" class="mt-1"></odp-user-icon>
-                    </span> -->
-                    <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
-                        <span class="odp-bots font-xl text-success"></span>
-                    </span>
-                    <span class="font-weight-bold">Edit key</span>
-                </div>
-                <span class="fa fa-times text-muted hover" (click)="editKeyModalRef.close(false)"></span>
-            </div>
-            <div class="d-flex flex-column w-100">
-                <label for="name" class="font-sm text-secondary">
-                    <span class="text">Key</span>
-                    <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
-                </label>
-                <div class="name-wrapper position-relative">
-                    <input newlabel type="text" class="form-control" id="name" placeholder="Give a label to identify"
-                        formControlName="label" (keyup.enter)="newBotexpiry.focus()" odpAutoFocus
-                        [ngClass]="{'is-invalid':keyForm.get('label').invalid && keyForm.get('label').dirty}">
-                    <ng-container *ngIf="keyForm.get('label').dirty">
-                        <span *ngIf="keyForm.get('label').hasError('required')"
-                            class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
-                            ngbTooltip="Name is required"></span>
-                        <span *ngIf="keyForm.get('label').hasError('maxlength')"
-                            class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
-                            ngbTooltip="Name should be within 30 characters"></span>
-                        <span *ngIf="keyForm.get('label').hasError('pattern')"
-                            class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
-                            ngbTooltip="Name can be only alphanumeric ,spaces, _ and - characters only"></span>
-                    </ng-container>
-                </div>
-                <label for="description" class="font-sm text-secondary mt-3">Expiry</label>
-                <div class="name-wrapper expiry-container position-relative">
-                    <input #newBotexpiry type="number" class="form-control" id="name" placeholder=""
-                        formControlName="expires" (keyup.enter)="editKeyModalRef.close(true)"
-                        [ngClass]="{'is-invalid':keyForm.get('expires').invalid && keyForm.get('expires').dirty}">
-                    <ng-container *ngIf="keyForm.get('expires').dirty">
-                        <span *ngIf="keyForm.get('expires').hasError('required')"
-                            class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
-                            ngbTooltip="Expiry is required"></span>
-                        <span *ngIf="keyForm.get('expires').hasError('min')"
-                            class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
-                            ngbTooltip="Mininum value is 1"></span>
-                    </ng-container>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex align-self-end justify-content-end w-100 mt-3">
-            <button type="button" class="btn btn-min-width btn-dark" id="newKeyModalYes" [disabled]="keyForm.invalid"
-                (click)="editKeyModalRef.close(true)">Save</button>
-        </div>
-    </div>
-</ng-template>
+
 
 <odp-delete-modal [open]="openDeleteBotKeyModal" (close)="closeDeleteBotKeyModal($event)">
     <span class="odp-bots  font-xl text-success"></span>

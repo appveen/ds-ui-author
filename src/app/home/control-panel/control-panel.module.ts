@@ -155,5 +155,6 @@ import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
     UserToGroupModalComponent,
     UserGridAppsRendererComponent,
   ],
+  exports: [UserGridAppsRendererComponent, UserToGroupModalComponent]
 })
-export class ControlPanelModule {}
+export class ControlPanelModule { }
