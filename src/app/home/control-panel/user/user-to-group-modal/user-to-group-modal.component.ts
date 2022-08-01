@@ -127,17 +127,17 @@ export class UserToGroupModalComponent implements OnInit {
         { groups: ids, app: this.commonService.app._id }
       )
       .subscribe(
-        () => {
+        (res) => {
           this.ts.success('User has been added to groups successfully');
           // this.getUserTeam();
-          this.closeDialog(true);
+          this.closeDialog(res);
         },
         (err) => {
           this.commonService.errorToast(err);
         }
       );
   }
-  closeDialog(add = false) {
-    this.dialogRef.close(add);
+  closeDialog(res = {}) {
+    this.dialogRef.close(res);
   }
 }

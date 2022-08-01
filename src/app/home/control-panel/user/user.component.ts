@@ -36,6 +36,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserToGroupModalComponent } from './user-to-group-modal/user-to-group-modal.component';
 import { UserGridAppsRendererComponent } from './user-grid-apps.component ';
 import { FilterPipe } from 'src/app/utils/pipes/filter.pipe';
+import { S } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'odp-user',
@@ -456,16 +457,19 @@ export class UserComponent implements OnInit, OnDestroy {
 
   onGridReady(event: GridReadyEvent) {
     this.gridApi = event.api;
-    this.forceResizeColumns();
-    this.configureGrid();
+    if (this.gridApi) {
+      this.gridApi.sizeColumnsToFit();
+    }
+    // this.forceResizeColumns();
+    // this.configureGrid();
   }
 
-  private forceResizeColumns() {
-    this.agGrid.api.sizeColumnsToFit();
-    // if (this.agGrid.columnApi) {
-    //   this.autoSizeAllColumns();
-    // }
-  }
+  // private forceResizeColumns() {
+  //   this.agGrid.api.sizeColumnsToFit();
+  //   if (this.agGrid.columnApi && this.agGrid.api) {
+  //     this.autoSizeAllColumns();
+  //   }
+  // }
 
   // private autoSizeAllColumns() {
   //   const pinnedContentSize = this.hasPermission('PMUBD') ? 170 : 94;
@@ -496,9 +500,9 @@ export class UserComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  private onRowDoubleClick(row: any) {
-    this.editUser(row);
-  }
+  // private onRowDoubleClick(row: any) {
+  //   this.editUser(row);
+  // }
 
   checkAllUser(val) {
     this.agGrid.api.forEachNode((row) => {
@@ -1189,9 +1193,6 @@ export class UserComponent implements OnInit, OnDestroy {
     this.currentTab = tab;
     this.showTable = false;
     this.configureGridSettings();
-    if (this.gridApi) {
-      this.configureGrid();
-    }
     this.checkShowTable();
     this.isDataLoading = false;
   }
@@ -1258,18 +1259,13 @@ export class UserComponent implements OnInit, OnDestroy {
     const gridOpts = {
       paginationPageSize: 30,
       suppressRowClickSelection: true,
-      rowSelection: 'single',
-      rowModelType: 'infinite',
       cacheBlockSize: 30,
-      floatingFilter: false,
-      overlayLoadingTemplate: '<div class="mini-loader"></div>',
-      datasource: this.dataSource,
+      rowData: this.currentTab === 'Groups' ? self.userGroups || [] : self.details.attributesData || [],
       pagination: false,
       animateRows: true,
       rowHeight: 48,
       headerHeight: 48,
       frameworkComponents: this.frameworkComponents,
-      rowDeselection: false,
       suppressPaginationPanel: true,
       context: this.context,
       suppressCellSelection: true,
@@ -1286,31 +1282,31 @@ export class UserComponent implements OnInit, OnDestroy {
     };
   }
 
-  configureGrid() {
-    const self = this;
-    self.dataSource = {
-      getRows: (params: IGetRowsParams) => {
-        this.gridApi.showLoadingOverlay();
-        let data = [];
-        if (this.currentTab === 'Attributes') {
-          data = self.details.attributesData || [];
-        } else {
-          data = self.userGroups || [];
-        }
-        params.successCallback(data, data.length);
-        if (data.length < 1 && this.gridApi) {
-          this.gridApi.showNoRowsOverlay();
-        } else {
-          if (data.length !== 0 && this.gridApi) {
-            this.gridApi.hideOverlay();
-          }
-        }
-      },
-    };
-    this.gridApi.setDatasource(this.dataSource);
-    this.gridApi.hideOverlay();
-    this.gridApi.redrawRows();
-  }
+  // configureGrid() {
+  // const self = this;
+  // self.dataSource = {
+  //   getRows: (params: IGetRowsParams) => {
+  //     this.gridApi.showLoadingOverlay();
+  //     let data = [];
+  //     if (this.currentTab === 'Attributes') {
+  //       data = self.details.attributesData || [];
+  //     } else {
+  //       data = self.userGroups || [];
+  //     }
+  //     params.successCallback(data, data.length);
+  //     if (data.length < 1 && this.gridApi) {
+  //       this.gridApi.showNoRowsOverlay();
+  //     } else {
+  //       if (data.length !== 0 && this.gridApi) {
+  //         this.gridApi.hideOverlay();
+  //       }
+  //     }
+  //   },
+  // };
+  // this.gridApi.setDatasource(this.dataSource);
+  // this.gridApi.hideOverlay();
+  // this.gridApi.redrawRows();
+  // }
 
   togglePasswordChange() {
     this.showPasswordSide = true;
@@ -1391,6 +1387,7 @@ export class UserComponent implements OnInit, OnDestroy {
   addAttribute() {
     const { key, ...rest } = this.attributesForm.value;
     this.details.attributes[key] = this.appService.cloneObject(rest);
+    this.isDataLoading = true;
     this.commonService
       .put(
         'user',
@@ -1398,24 +1395,15 @@ export class UserComponent implements OnInit, OnDestroy {
         this.details
       )
       .subscribe(
-        () => {
-          this.isDataLoading = true;
-          this.getUserList().subscribe((users) => {
-            this.userList = users;
-            this.ogUsersList = users;
-            this.selectedUser = users.find(
-              (user) => user._id === this.details._id
-            );
-            this.showDetails(this.selectedUser);
-            this.editMode = false
-            this.isDataLoading = false;
-            this.configureGridSettings();
-            if (this.gridApi) {
-              this.configureGrid();
-            }
-            this.checkShowTable();
-          });
+        (res) => {
+
+          this.details['attributes'] = res.attributes;
+          this.showTable = true;
+          this.showDetails(this.details);
+          this.editMode = false;
+          this.isDataLoading = false;
           this.showAddAttribute = false;
+          this.configureGridSettings()
           this.ts.success('Custom Details Saved Successfully');
         },
         (err) => {
@@ -1433,18 +1421,15 @@ export class UserComponent implements OnInit, OnDestroy {
       count: -1,
       filter: { users: self.details._id },
     };
-    if (this.gridApi) {
-      this.gridApi.showLoadingOverlay();
-    }
+    // if (this.gridApi) {
+    //   this.gridApi.showLoadingOverlay();
+    // }
     self.subscriptions['userTeams'] = self.commonService
       .get('user', `/${self.commonService.app._id}/group/`, filter)
       .subscribe((resp) => {
         this.userGroups = resp.filter((ele) => ele.name !== '#') || [];
+        this.configureGridSettings()
         this.isDataLoading = false;
-        this.configureGridSettings();
-        if (this.gridApi) {
-          this.configureGrid();
-        }
         this.checkShowTable();
       });
   }
@@ -1468,8 +1453,9 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   deleteAttribute(data) {
-    const key = Object.keys(data)[0];
+    const key = data['key'];
     delete this.details.attributes[key];
+    this.isDataLoading = true;
     this.commonService
       .put(
         'user',
@@ -1477,23 +1463,27 @@ export class UserComponent implements OnInit, OnDestroy {
         this.details
       )
       .subscribe(
-        () => {
-          this.isDataLoading = true;
-          this.getUserList().subscribe((users) => {
-            this.userList = users;
-            this.ogUsersList = users;
-            this.selectedUser = users.find(
-              (user) => user._id === this.details._id
-            );
-            this.showDetails(this.selectedUser);
+        (res) => {
 
-            this.isDataLoading = false;
-            this.configureGridSettings();
-            if (this.gridApi) {
-              this.configureGrid();
-            }
-            this.checkShowTable();
-          });
+          this.details.attributes = res.attributes || [];
+          this.showDetails(this.details)
+          this.configureGridSettings()
+          this.isDataLoading = false
+          // this.getUserList().subscribe((users) => {
+          //   this.userList = users;
+          //   this.ogUsersList = users;
+          //   this.selectedUser = users.find(
+          //     (user) => user._id === this.details._id
+          //   );
+          //   this.showDetails(this.selectedUser);
+
+          //   this.isDataLoading = false;
+          //   this.configureGridSettings();
+          //   if (this.gridApi) {
+          //     this.configureGrid();
+          //   }
+          //   this.checkShowTable();
+          // });
           this.showAddAttribute = false;
           this.ts.success('Custom Details Saved Successfully');
         },
@@ -1516,13 +1506,12 @@ export class UserComponent implements OnInit, OnDestroy {
           this.ts.success(
             `${data.name} Group has been removed for user ${this.details.basicDetails.name}`
           );
-          this.isDataLoading = true;
           this.fetchUserGroups();
           // this.getUserTeam();
         },
         (err) => {
           data.loading = false;
-          this.isDataLoading = true;
+          this.isDataLoading = false;
           this.commonService.errorToast(err);
         }
       );
@@ -1539,8 +1528,8 @@ export class UserComponent implements OnInit, OnDestroy {
       },
     });
 
-    dialogRef.afterClosed().subscribe((apiHit) => {
-      if (apiHit) {
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) {
         this.isDataLoading = true;
         this.fetchUserGroups();
       }

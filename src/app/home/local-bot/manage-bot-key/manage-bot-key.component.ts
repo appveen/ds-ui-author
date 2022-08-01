@@ -11,6 +11,7 @@ import { AgGridSharedFloatingFilterComponent } from 'src/app/utils/ag-grid-share
 import { AgGridActionsRendererComponent } from 'src/app/utils/ag-grid-actions-renderer/ag-grid-actions-renderer.component';
 import { LocalBotCellRendererComponent } from '../local-bot-cell-renderer/local-bot-cell-renderer.component';
 import * as moment from 'moment';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'odp-manage-bot-key',
@@ -34,6 +35,7 @@ export class ManageBotKeyComponent implements OnInit {
   filtering: boolean;
   gridApi: GridApi;
   searchTerm: string;
+  action: any;
   constructor(
     private fb: FormBuilder,
     public commonService: CommonService,
@@ -84,17 +86,28 @@ export class ManageBotKeyComponent implements OnInit {
         field: 'keyValue',
         width: 250,
         cellRenderer: 'customCellRenderer',
+        colSpan: (params) => {
+          if (params.data && params.data.isNew) {
+            return 2
+          }
+          else {
+            return 1
+          }
+        },
         refData: {
           namespace: 'keys'
         }
       },
       {
-        headerName: 'CREATED AT',
-        field: 'createdAt',
+        headerName: 'LAST LOGIN AT',
+        field: 'lastLogin',
         width: 250,
         valueFormatter: (params) => {
           if (params.value) {
             return this.formatLastLogin(params.value)
+          }
+          else {
+            return '-'
           }
         }
       },
@@ -103,6 +116,7 @@ export class ManageBotKeyComponent implements OnInit {
           {
             headerName: '',
             cellRenderer: 'actionCellRenderer',
+            type: 'rightAligned',
             refData: {
               actionButtonsMapperFn: 'actionButtonsMapperFn',
               actionCallbackFunction: 'onGridAction'
@@ -132,36 +146,35 @@ export class ManageBotKeyComponent implements OnInit {
   onGridReady(event: GridReadyEvent) {
     this.gridApi = event.api;
     if (this.gridApi) {
-      this.forceResizeColumns();
-    }
-    this.gridApi.hideOverlay()
-  }
-
-  private forceResizeColumns() {
-    this.agGrid.api.sizeColumnsToFit();
-    this.autoSizeAllColumns();
-  }
-
-  private autoSizeAllColumns() {
-    const fixedSize = (this.hasPermission('PMBBU') ? 94 : 0) + (this.hasPermission('PMBA') ? 164 : 0);
-    if (!!this.agGrid.api && !!this.agGrid.columnApi) {
-      setTimeout(() => {
-        const container = document.querySelector('.grid-container');
-        const availableWidth = !!container ? container.clientWidth - fixedSize : 730;
-        const allColumns = this.agGrid.columnApi.getAllColumns() || [];
-        allColumns.forEach(col => {
-          this.agGrid.columnApi.autoSizeColumn(col);
-          if (col.getActualWidth() > 200 || this.agGrid.api.getDisplayedRowCount() === 0) {
-            col.setActualWidth(200);
-          }
-        });
-        const occupiedWidth = allColumns.reduce((pv, cv) => pv + cv.getActualWidth(), -fixedSize);
-        if (occupiedWidth < availableWidth) {
-          this.agGrid.api.sizeColumnsToFit();
-        }
-      }, 2000);
+      this.gridApi.sizeColumnsToFit()
     }
   }
+
+  // private forceResizeColumns() {
+  //   this.agGrid.api.sizeColumnsToFit();
+  //   this.autoSizeAllColumns();
+  // }
+
+  // private autoSizeAllColumns() {
+  //   const fixedSize = (this.hasPermission('PMBBU') ? 94 : 0) + (this.hasPermission('PMBA') ? 164 : 0);
+  //   if (!!this.agGrid.api && !!this.agGrid.columnApi) {
+  //     setTimeout(() => {
+  //       const container = document.querySelector('.grid-container');
+  //       const availableWidth = !!container ? container.clientWidth - fixedSize : 730;
+  //       const allColumns = this.agGrid.columnApi.getAllColumns() || [];
+  //       allColumns.forEach(col => {
+  //         this.agGrid.columnApi.autoSizeColumn(col);
+  //         if (col.getActualWidth() > 200 || this.agGrid.api.getDisplayedRowCount() === 0) {
+  //           col.setActualWidth(200);
+  //         }
+  //       });
+  //       const occupiedWidth = allColumns.reduce((pv, cv) => pv + cv.getActualWidth(), -fixedSize);
+  //       if (occupiedWidth < availableWidth) {
+  //         this.agGrid.api.sizeColumnsToFit();
+  //       }
+  //     }, 2000);
+  //   }
+  // }
 
   actionButtonsMapperFn(data: any) {
     const buttons = [];
@@ -186,18 +199,26 @@ export class ManageBotKeyComponent implements OnInit {
         break;
       case 'End Session':
         {
-          this.endSession(rowNode.data);
+          this.action = 'End Session';
+          this.confirmEndSession(rowNode.data);
         }
         break;
       case 'Delete':
         {
+          this.action = 'Delete'
           this.deleteBotKey(rowNode.data);
         }
         break;
       case 'Activate':
+        {
+          this.action = 'Reactivate';
+          this.confirmReactivate(rowNode.data)
+        }
+        break;
       case 'Deactivate':
         {
-          this.deactivateKey(rowNode.data);
+          this.action = 'Deactivate';
+          this.confirmDeactivate(rowNode.data);
         }
         break;
     }
@@ -310,25 +331,68 @@ export class ManageBotKeyComponent implements OnInit {
     self.openDeleteBotKeyModal.emit(alertModal);
   }
 
+  confirmDeactivate(key) {
+    const self = this;
+    const alertModal: any = {};
+    alertModal.statusChange = false;
+    alertModal.title = 'Deactivate Key';
+    alertModal.message = 'Would you like to deactivate the key selected, It will stop all the action being performed unitl the key reactivated';
+    alertModal._id = key._id;
+    alertModal.key = key;
+    alertModal.btnText = 'Deactivate'
+    self.openDeleteBotKeyModal.emit(alertModal);
+  }
+  confirmReactivate(key) {
+    const self = this;
+    const alertModal: any = {};
+    alertModal.statusChange = false;
+    alertModal.usePrimaryButton = true;
+    alertModal.title = 'Reactivate Key';
+    alertModal.message = 'Would you like to reactivate the key selected, It will start  performing all the functions attached to it.';
+    alertModal._id = key._id;
+    alertModal.key = key;
+    alertModal.btnText = 'Reactivate'
+    self.openDeleteBotKeyModal.emit(alertModal);
+  }
+  confirmEndSession(key) {
+    const self = this;
+    const alertModal: any = {};
+    alertModal.statusChange = false;
+    alertModal.title = 'End Session';
+    alertModal.message = 'Would you like to end the session of the key selected.';
+    alertModal._id = key._id;
+    alertModal.key = key;
+    alertModal.btnText = 'End Session'
+    self.openDeleteBotKeyModal.emit(alertModal);
+  }
 
-  closeDeleteBotKeyModal(data) {
-    if (data) {
-      const self = this;
-      const payload = { keyId: data._id }
-      self.showLazyLoader = true;
 
-      self.commonService.delete('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
-        .subscribe((res) => {
-          self.showLazyLoader = false;
-          self.selectedBot = res;
-          self.dataChange.emit(res);
-          if (this.gridApi) {
-            this.gridApi.redrawRows()
-          }
-        }, err => {
-          self.showLazyLoader = false;
-          self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
-        });
+  closeDeleteBotKeyModal(event) {
+    if (event.data) {
+      if (event.action === 'Delete') {
+        const self = this;
+        const payload = { keyId: event.data._id }
+        self.showLazyLoader = true;
+
+        self.commonService.delete('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
+          .subscribe((res) => {
+            self.showLazyLoader = false;
+            self.selectedBot = res;
+            self.dataChange.emit(res);
+            if (this.gridApi) {
+              this.gridApi.redrawRows()
+            }
+          }, err => {
+            self.showLazyLoader = false;
+            self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
+          });
+      }
+      if (event.action === 'Deactivate' || event.action === 'Reactivate') {
+        this.deactivateKey(event.data.key)
+      }
+      if (event.action === 'End Session') {
+        this.endSession(event.data.key)
+      }
     }
   }
   hasPermission(type: string): boolean {
