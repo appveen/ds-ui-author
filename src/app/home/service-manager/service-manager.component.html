@@ -1,6 +1,8 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
   <div class="align-self-center text-center">
-    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="spinner-border text-dark" role="status">
+      <span class="sr-only">Processing...</span>
+    </div>
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
@@ -14,7 +16,8 @@
         *ngIf="isAppAdmin || isSuperAdmin">
         <span class="dsi dsi-settings text-secondary"></span>
       </button>
-      <button type="button" class="btn btn-outline-light border ml-3" (click)="toggleImportWizard=true">
+      <button *ngIf="isExperimental" type="button" class="btn btn-outline-light border ml-3"
+        (click)="toggleImportWizard=true">
         <span class="dsi dsi-upload text-secondary"></span>
       </button>
       <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3" (click)="newService()"
@@ -239,56 +242,7 @@
           </div>
         </div>
       </ng-container> -->
-      <ng-container *ngIf="showLazyLoader">
-        <div class="card m-2" *ngFor="let item of dummyRows">
-          <div class="card-header bg-white border-0 p-2">
-            <div class="card-title m-0">
-              <span class="name pl-2 d-flex mt-2">
-                <odp-loading-placeholder width="120" height="14"></odp-loading-placeholder>
-              </span>
-            </div>
-          </div>
-          <div class="card-body pt-3">
-            <div class="d-flex align-items-center my-2">
-              <div class="d-flex flex-column">
-                <div class="mb-1">
-                  <odp-loading-placeholder width="50" height="30"></odp-loading-placeholder>
-                </div>
-                <div>
-                  <odp-loading-placeholder width="80" height="10"></odp-loading-placeholder>
-                </div>
-              </div>
-              <div class="d-flex flex-column ml-4">
-                <div class="mb-1">
-                  <odp-loading-placeholder width="50" height="30"></odp-loading-placeholder>
-                </div>
-                <div>
-                  <odp-loading-placeholder width="80" height="10"></odp-loading-placeholder>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex align-items-center my-2">
-              <div class="d-flex flex-column">
-                <div class="mb-1">
-                  <odp-loading-placeholder width="50" height="30"></odp-loading-placeholder>
-                </div>
-                <div>
-                  <odp-loading-placeholder width="80" height="10"></odp-loading-placeholder>
-                </div>
-              </div>
-              <div class="d-flex flex-column ml-4">
-                <div class="mb-1">
-                  <odp-loading-placeholder width="50" height="30"></odp-loading-placeholder>
-                </div>
-                <div>
-                  <odp-loading-placeholder width="80" height="10"></odp-loading-placeholder>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-      <div class="d-flex flex-column w-100 justify-content-center align-items-center p-3" *ngIf="!serviceList.length">
+      <div class="d-flex flex-column w-100 justify-content-center align-items-center p-3" *ngIf="!showLazyLoader && !serviceList.length">
         <h5 class="my-4 text-secondary">zero. zip. zilch. nada.</h5>
       </div>
     </div>

@@ -1164,4 +1164,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     arr.fill(1);
     return arr;
   }
+
+  get isExperimental(){
+    return this.commonService.userDetails.experimentalFeatures;
+  }
 }
