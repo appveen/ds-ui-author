@@ -15,8 +15,8 @@
 }
 
 .content {
-  margin-left: 48px;
-  margin-right: 48px;
+  margin-left: 32px;
+  margin-right: 32px;
 }
 
 .status-card {
@@ -339,8 +339,7 @@
 }
 
 .error-icon {
-  right: 32px;
-  top: 37px;
+
   z-index: 1;
 }
 
@@ -353,7 +352,6 @@
 
 .bots {
   overflow-y: auto;
-  padding: 20px 0 20px 20px;
   min-height: 53vw;
 }
 

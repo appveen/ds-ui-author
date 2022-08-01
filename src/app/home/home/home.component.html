@@ -1,97 +1,57 @@
 <div class="d-flex flex-column w-100 h-100">
-  <div
-    class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white border-bottom border-dark"
-  >
-    <div
-      class="left d-flex align-items-center"
-      [ngClass]="{ 'add-blur': addBlur }"
-    >
+  <div class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white border-bottom border-dark">
+    <div class="left d-flex align-items-center" [ngClass]="{ 'add-blur': addBlur }">
       <div class="logo"></div>
     </div>
     <div class="w-50 d-flex align-items-center justify-content-end">
       <div class="d-flex align-items-center mr-3"></div>
-      <div
-        [@userProfileIcon]="showProfileOptions"
+      <div [@userProfileIcon]="showProfileOptions"
         class="profile-icon d-flex align-items-center justify-content-center rounded-circle bg-light border border-border hover"
-        (click)="showProfileOptions = !showProfileOptions"
-        ngbTooltip="User Profile"
-        placement="bottom"
-      >
+        (click)="showProfileOptions = !showProfileOptions" ngbTooltip="User Profile" placement="bottom">
         <span class="far fa-user fa-lg text-secondary"></span>
       </div>
-      <div
-        [@userProfile]
-        class="profile position-absolute bg-white border border-border"
-        *ngIf="showProfileOptions"
-        odpClickOutside
-        [ignore]="['.profile-icon', '.fa-user']"
-        (outside)="showProfileOptions = false"
-      >
-        <div
-          class="profile-container position-relative d-flex align-items-center h-100 w-100"
-        >
+      <div [@userProfile] class="profile position-absolute bg-white border border-border" *ngIf="showProfileOptions"
+        odpClickOutside [ignore]="['.profile-icon', '.fa-user']" (outside)="showProfileOptions = false">
+        <div class="profile-container position-relative d-flex align-items-center h-100 w-100">
           <div
-            class="user-icon d-flex align-items-center justify-content-center position-absolute rounded-circle bg-light border border-border"
-          >
+            class="user-icon d-flex align-items-center justify-content-center position-absolute rounded-circle bg-light border border-border">
             <span class="far fa-user fa-lg text-secondary"></span>
           </div>
           <div
-            class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-border mx-4"
-          >
+            class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-border mx-4">
             <span class="far fa-user fa-2x text-secondary"></span>
           </div>
           <div class="profile-data d-flex flex-column">
             <h4 class="profile-data-name font-weight-bold">{{ name }}</h4>
             <div class="profile-data-more d-flex align-items-center">
-              <div
-                class="text-secondary profile-data-more-item pr-3 username-holder text-truncate"
-              >
+              <div class="text-secondary profile-data-more-item pr-3 username-holder text-truncate">
                 {{ username }}
               </div>
-              <div
-                class="profile-data-more-item px-1"
-                *ngIf="authType && authType === 'local'"
-              >
-                <button
-                  type="button"
-                  class="btn btn-link btn-sm"
-                  (click)="toggleChangePassword = true"
-                >
+              <div class="profile-data-more-item px-1" *ngIf="authType && authType === 'local'">
+                <button type="button" class="btn btn-link btn-sm" (click)="toggleChangePassword = true">
                   Change Password
                 </button>
               </div>
               <div class="profile-data-more-item px-1">
-                <button
-                  type="button"
-                  class="btn btn-link btn-sm"
-                  (click)="logout()"
-                  id="logout"
-                >
+                <button type="button" class="btn btn-link btn-sm" (click)="logout()" id="logout">
                   Logout
                 </button>
               </div>
             </div>
           </div>
-          <small class="position-absolute text-border app-version"
-            >v{{ version }}</small
-          >
-          <small class="last-login text-muted"
-            >Last Login:
+          <small class="position-absolute text-border app-version">v{{ version }}</small>
+          <small class="last-login text-muted">Last Login:
             {{
-              lastLogin | dateFormat: 'DD-MMM-YYYY, hh:mm:ss A, z':'Etc/Zulu'
-            }}</small
-          >
+            lastLogin | dateFormat: 'DD-MMM-YYYY, hh:mm:ss A, z':'Etc/Zulu'
+            }}</small>
         </div>
       </div>
     </div>
   </div>
   <div style="overflow-y: auto">
-    <odp-app-list [isHome]="true"></odp-app-list>
+    <odp-app-list [isHome]="true" [navToApp]="navToApp"></odp-app-list>
   </div>
   <div>
-    <odp-change-password
-      *ngIf="toggleChangePassword"
-      [(toggleModal)]="toggleChangePassword"
-    ></odp-change-password>
+    <odp-change-password *ngIf="toggleChangePassword" [(toggleModal)]="toggleChangePassword"></odp-change-password>
   </div>
 </div>
