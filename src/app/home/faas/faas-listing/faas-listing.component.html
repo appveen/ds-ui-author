@@ -1,5 +1,5 @@
-<div class="d-flex flex-column w-100 h-100 bg-light-gray">
-  <div class="options d-flex justify-content-between align-items-center w-100 px-4">
+<div class="d-flex flex-column w-100 h-100 bg-light-gray page-padding">
+  <div class="options d-flex justify-content-between align-items-center w-100 pt-2 pb-4">
     <div class="font-22">
       <span class="fw-600 mr-2">Functions ({{totalCount}})</span>
       <span></span>
@@ -11,7 +11,7 @@
       </button>
     </div>
   </div>
-  <div class="card-container d-flex flex-column w-100 px-4 pb-4">
+  <div class="card-container d-flex flex-column w-100 mb-3">
     <ag-grid-angular #agGrid *ngIf="columnDefs" class="ag-theme-balham ag-grid-container custom-style h-100"
       [columnDefs]="columnDefs" floatingFilter="true" rowModelType="infinite" [rowHeight]="56"
       (filterModified)="filterModified($event)" [datasource]="dataSource" cacheBlockSize="30" headerHeight="36"
