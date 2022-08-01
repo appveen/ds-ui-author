@@ -1,10 +1,14 @@
-<div class="actions" [ngStyle]="showAction()">
-    <button *ngIf="isStartStop()" id='stop{{params.rowIndex}}' type="button" class="btn btn-link text-dark fw-600 hover"
-        (click)="toggleServiceStatus()">
-        <span *ngIf="params.value == 'Stopped'">Start</span>
-        <span *ngIf="params.value == 'Active'">Stop</span>
-    </button>
-    <button *ngIf="isDeploy()" id='deploy{{params.rowIndex}}' type="button" class="btn btn-link text-dark fw-600"
-        (click)="deployService()">Deploy</button>
-    <i class="fa fas fa-ellipsis-v ml-2" (click)="selectContextMenu($event)"></i>
+<div class="actions d-flex justify-content-center hover align-items-center"
+    *ngIf="params.value != 'Pending' && params.value != 'Maintainance' ">
+    <small class="fa fa-play text-success hover mr-2" *ngIf="params.value == 'Stopped' && isStartStop()"
+        (click)="toggleServiceStatus()"></small>
+    <small class="fa fa-stop text-danger hover mr-2" *ngIf="params.value == 'Active' && isStartStop()"
+        (click)="toggleServiceStatus()"></small>
+    <small class="fa fa-pencil-alt hover mr-2" *ngIf="canEditService()" (click)="editService()"></small>
+    <small class="fa fa-eye hover mr-2" *ngIf="canEditService()" (click)="viewService()"></small>
+    <small class="fa fa-clone hover mr-2" *ngIf="canCloneService()" (click)="cloneService()"></small>
+    <small class="fa fa-trash hover mr-2" *ngIf="canDeleteService()" (click)="deleteService()"></small>
+    <small class="hover mr-2 font-xsm" (click)="openDocs()">API</small>
+    <span *ngIf="isDeploy()" id='deploy{{params.rowIndex}}' class="fas fa-play-circle text-primary"
+        (click)="deployService()"></span>
 </div>

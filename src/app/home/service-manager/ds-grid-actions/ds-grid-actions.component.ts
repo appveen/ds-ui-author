@@ -11,47 +11,76 @@ import { ICellRendererParams } from 'ag-grid-community';
 export class DsGridActionsComponent implements AgRendererComponent {
   params: any;
   selectedRow: any;
+  parent: any;
   refresh(): boolean {
     return false;
   }
 
   agInit(params: ICellRendererParams): void {
-    this.params = params;
+    const self = this;
+    self.params = params;
+    self.parent = self.params.context.componentParent;
   }
 
 
   toggleServiceStatus() {
-    this.params.context.componentParent.toggleServiceStatus(this.params.rowIndex);
+    const self = this;
+    self.parent.toggleServiceStatus(this.params.rowIndex);
   }
 
   deployService() {
-    this.params.context.componentParent.deployService(this.params.rowIndex);
+    const self = this;
+    self.parent.deployService(this.params.rowIndex);
   }
 
   isDeploy() {
-    return this.params.context.componentParent.isDeploy(this.params.rowIndex);
+    const self = this;
+    self.parent.isDeploy(this.params.rowIndex);
   }
 
   isStartStop() {
-    return this.params.context.componentParent.isStartStopService(this.params.rowIndex);
+    const self = this;
+    return self.parent.isStartStopService(this.params.rowIndex);
   }
 
-  selectContextMenu($event) {
-    console.log($event);
-    this.params.context.componentParent.clickContextMenu($event, this.params.rowIndex);
+  canEditService() {
+    const self = this;
+    return self.parent.canEditService(self.parent.serviceList[self.params.rowIndex]._id) && self.parent.serviceList[self.params.rowIndex].type != 'internal'
   }
 
-  showContextMenu() {
-    return this.params.context.componentParent.showContextMenu;
+  canDeleteService() {
+    const self = this;
+    return self.parent.canDeleteService(self.parent.serviceList[self.params.rowIndex]._id) && self.parent.serviceList[self.params.rowIndex].type != 'internal'
   }
 
-  showAction() {
-    if (this.showContextMenu() && this.params.rowIndex == this.params.context.componentParent.selectedRow) {
-      return { 'display': 'initial' }
-    }
-    else {
-      { }
-    }
+  canCloneService() {
+    const self = this;
+    return self.parent.canCloneService(self.parent.serviceList[self.params.rowIndex]._id) && self.parent.serviceList[self.params.rowIndex].type != 'internal'
+  }
+
+  viewService(){
+    const self = this;
+    self.parent.viewService(self.params.rowIndex);
+  }
+
+  editService(){
+    const self = this;
+    self.parent.editService(self.params.rowIndex);
+  }
+
+  cloneService(){
+    const self = this;
+    self.parent.cloneService(self.params.rowIndex);
+  }
+
+  deleteService(){
+    const self = this;
+    self.parent.deleteService(self.params.rowIndex);
+  }
+
+  openDocs(){
+    const self = this;
+    self.parent.openDocs(self.params.rowIndex);
   }
 
 }

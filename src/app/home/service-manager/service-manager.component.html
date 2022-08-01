@@ -10,8 +10,8 @@
     <div class="fw-600 font-xxl">Data Services</div>
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="search($event)" (reset)="resetSearch(); getServices()"></odp-search-box>
-      <button type="button" id="data-management" class="btn btn-outline-light border ml-3"
-        [routerLink]="['settings']" *ngIf="isAppAdmin || isSuperAdmin">
+      <button type="button" id="data-management" class="btn btn-outline-light border ml-3" [routerLink]="['settings']"
+        *ngIf="isAppAdmin || isSuperAdmin">
         <span class="fa fa-cog text-secondary"></span>
       </button>
       <button type="button" class="btn btn-outline-light border ml-3" (click)="toggleImportWizard=true">
@@ -25,7 +25,7 @@
     </div>
   </div>
   <div class="d-flex flex-column w-100  position-relative">
-    <div class="card-container pt-3 " (scroll)="loadMore($event)" odpClickOutside (outside)="showContextMenu = false">
+    <div class="card-container pt-3 " (scroll)="loadMore($event)">
       <div class="card m-2 add-card hover" (click)="newService()" id="createEntity" *ngIf="
           hasCreatePermission('SM') &&
           (!serviceList || serviceList.length == 0) &&
@@ -43,25 +43,9 @@
         </div>
       </div>
       <ag-grid-angular *ngIf="serviceList.length > 0" #agGrid class="ag-theme-balham grid w-100 h-100"
-        [gridOptions]="gridOptions" (gridReady)="onGridReady($event)" (scroll)="showContextMenu = false">
+        [gridOptions]="gridOptions" (gridReady)="onGridReady($event)">
       </ag-grid-angular>
-      <div class="  d-flex flex-column position-absolute context-menu"
-        *ngIf="showContextMenu && serviceList[selectedRowIndex].status != 'Pending' && serviceList[selectedRowIndex].status != 'Maintenance'"
-        [ngStyle]="getPosition()">
-        <button class="btn btn-link d-flex w-100 text-dark"
-          [routerLink]="['/app', app, 'sb', serviceList[selectedRowIndex]._id]" id="_viewEntity"> View</button>
-        <button class="btn btn-link d-flex w-100 text-dark"
-          *ngIf="canEditService(serviceList[selectedRowIndex]._id) && serviceList[selectedRowIndex].type != 'internal'"
-          (click)="editService(selectedRowIndex)"> Edit</button>
-        <button class="btn btn-link d-flex w-100 text-dark" *ngIf="canCloneService(serviceList[selectedRowIndex]._id)"
-          (click)="cloneService(selectedRowIndex);closeContextMenu();"> Clone</button>
-        <button class="btn btn-link d-flex w-100 text-dark" *ngIf="canDeleteService(serviceList[selectedRowIndex]._id) &&
-        serviceList[selectedRowIndex].type != 'internal'"
-          (click)="deleteService(selectedRowIndex);closeContextMenu();"> Delete</button>
-        <button class="btn btn-link d-flex w-100 text-dark" (click)="openDocs(selectedRowIndex);closeContextMenu();">
-          API</button>
 
-      </div>
       <!-- <ng-container *ngFor="let service of serviceList; let i = index">
         <div class="card m-2 position-relative" id="serviceManagerCard" *ngIf="hasPermissionForService(service._id)">
           <div class="card-header bg-white border-0 p-2">
