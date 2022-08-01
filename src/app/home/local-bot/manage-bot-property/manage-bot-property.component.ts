@@ -82,10 +82,10 @@ export class ManageBotPropertyComponent implements OnInit {
   ) {
     const self = this;
     self.types = [
-      { class: 'odp-abc', value: 'String', label: 'Text' },
-      { class: 'odp-123', value: 'Number', label: 'Number' },
-      { class: 'odp-boolean', value: 'Boolean', label: 'True/False' },
-      { class: 'odp-calendar', value: 'Date', label: 'Date' },
+      { class: 'dsi-text', value: 'String', label: 'Text' },
+      { class: 'dsi-number', value: 'Number', label: 'Number' },
+      { class: 'dsi-boolean', value: 'Boolean', label: 'True/False' },
+      { class: 'dsi-calendar', value: 'Date', label: 'Date' },
     ];
     self.toggleFieldTypeSelector = {};
     self.openDeleteModal = new EventEmitter();
