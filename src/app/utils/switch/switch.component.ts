@@ -11,6 +11,7 @@ export class SwitchComponent implements OnInit {
     @Input() type: string;
     @Input() disabled: boolean;
     @Input() checked: boolean;
+    @Input() showLabel: boolean;
     @Input() checkedText: string;
     @Input() uncheckedText: string;
     @Output() checkedChange: EventEmitter<boolean>;
@@ -18,6 +19,7 @@ export class SwitchComponent implements OnInit {
         this.checkedChange = new EventEmitter();
         this.type = 'dark';
         this.edit = {};
+        this.showLabel = false;
     }
 
     ngOnInit() {
