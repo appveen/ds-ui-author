@@ -99,24 +99,28 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   font-size: 22px;
 }
 
-.font-12 {
-  font-size: 12px;
-}
-
 .font-20 {
   font-size: 20px;
+}
+
+.font-18 {
+  font-size: 18px;
 }
 
 .font-16 {
   font-size: 16px;
 }
 
+.font-14 {
+  font-size: 14px;
+}
+
 .font-13 {
   font-size: 13px;
 }
 
-.font-14 {
-  font-size: 14px;
+.font-12 {
+  font-size: 12px;
 }
 
 .font-11 {
@@ -133,6 +137,14 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
 .fw-400 {
   font-weight: 400 !important;
+}
+
+.fw-300 {
+  font-weight: 300 !important;
+}
+
+.fw-200 {
+  font-weight: 200 !important;
 }
 
 .k8s-icon {
