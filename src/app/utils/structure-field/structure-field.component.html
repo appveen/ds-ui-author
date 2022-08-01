@@ -51,7 +51,7 @@
             && form.get('type').value !== 'Object') && form.get('properties.readonly')?.value &&  !edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
                 <span class="odp-no-edit"></span>
             </div>
-            <span *ngIf="edit.status && type!=='internal'" class="dsi dsi-editcil-alt text-secondary hover mr-4" (click)="activateProperty()"> </span>
+            <span *ngIf="edit.status && type!=='internal'" class="dsi dsi-edit text-secondary hover mr-4" (click)="activateProperty()"> </span>
             <span *ngIf="canDelete && edit.status && type!=='internal'" class="dsi dsi-trash text-secondary hover"
                 (click)="remove()"></span>
         </div>

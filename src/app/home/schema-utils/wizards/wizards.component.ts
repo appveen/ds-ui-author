@@ -462,7 +462,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         if (temp) {
             return temp.class;
         } else {
-            return 'odp-abc';
+            return 'dsi-text';
         }
     }
 

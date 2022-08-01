@@ -9,8 +9,8 @@
   <ng-container *ngIf="field === 'keyValue'">
     <span *ngIf="!data.isNew">****************</span>
     <span *ngIf="data.isNew" (click)="copyKey(data)">
-      <span class="fa fa-copy mr-2"></span>
       <span>{{ data.keyValue }}</span>
+      <span class="fa fa-copy mr-2"></span>
     </span>
   </ng-container>
 </ng-container>
