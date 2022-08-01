@@ -10,7 +10,7 @@
     <div class="options d-flex">
       <div class="fw-600 font-22">Bots</div>
       <button class="btn btn-primary mt-2 ml-auto" (click)="isCreate = true" *ngIf="hasPermission('PMBBC')">
-        <span class="fa fa-plus mr-2"></span>
+        <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New Bot</span>
       </button>
 
@@ -44,7 +44,7 @@
               </odp-switch>
             </div>
             <button type="button" class="add-new btn bg-white border mr-2" id="delete" (click)="deleteUser()">
-              <span class="fa fa-trash"></span>
+              <span class="dsi dsi-trash"></span>
               <!-- <span class="text">Bulk Import</span> -->
             </button>
           </div>
@@ -120,7 +120,7 @@
               Click on Add bots, to start creating bots for the app
             </div>
             <button class="btn mt-3 btn-primary" (click)="createBot()" *ngIf="hasPermission('PMBBC')">
-              <span class="fa fa-plus mr-2"></span>
+              <span class="dsi dsi-plus mr-2"></span>
               <span class="text">Add Bot</span>
             </button>
           </div>

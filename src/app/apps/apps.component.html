@@ -95,7 +95,7 @@
         <span *ngIf="showSideNav">DATA</span>
         <div *ngIf="showSideNav" class="fa-point fa" [ngClass]="{
             'fa-chevron-down': openPanel['data'],
-            'fa-chevron-up': !openPanel['data']
+            'dsi-drop-up': !openPanel['data']
           }" (click)="togglePanel('data')"></div>
       </div>
       <div *ngIf="openPanel['data']">
@@ -162,7 +162,7 @@
           <span *ngIf="showSideNav">INTEGRATION</span>
           <div *ngIf="showSideNav" class="fa-point fa" [ngClass]="{
               'fa-chevron-down': openPanel['integration'],
-              'fa-chevron-up': !openPanel['integration']
+              'dsi-drop-up': !openPanel['integration']
             }" (click)="togglePanel('integration')"></div>
         </div>
         <!-- <div *ngIf="hasPartnerPermission" #partnerRoute="routerLinkActive"
@@ -251,7 +251,7 @@
           <span *ngIf="showSideNav">MANAGEMENT</span>
           <div *ngIf="showSideNav" class="fa-point fa" [ngClass]="{
               'fa-chevron-down': openPanel['management'],
-              'fa-chevron-up': !openPanel['management']
+              'dsi-drop-up': !openPanel['management']
             }" (click)="togglePanel('management')"></div>
         </div>
         <div *ngIf="openPanel['management']">
@@ -457,9 +457,9 @@
     <div class="d-flex align-items-center w-100 px-4 font-13">
       <span class="text-secondary ml-2">Password</span>
       <div class="d-flex align-items-center justify-content-center mx-3">
-        <span *ngIf="!agentConfig.showPassword" class="fa fa-eye mr-2"
+        <span *ngIf="!agentConfig.showPassword" class="dsi dsi-view mr-2"
           (click)="agentConfig.showPassword = true; getAgentPassword()"></span>
-        <span *ngIf="agentConfig.showPassword" class="fa fa-eye-slash mr-2"
+        <span *ngIf="agentConfig.showPassword" class="dsi dsi-hide mr-2"
           (click)="agentConfig.showPassword = false"></span>
         <span *ngIf="!agentConfig.showPassword" class="text-dark">******</span>
         <span *ngIf="agentConfig.showPassword" class="text-dark d-flex align-items-center">

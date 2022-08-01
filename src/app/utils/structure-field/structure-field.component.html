@@ -51,8 +51,8 @@
             && form.get('type').value !== 'Object') && form.get('properties.readonly')?.value &&  !edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
                 <span class="odp-no-edit"></span>
             </div>
-            <span *ngIf="edit.status && type!=='internal'" class="fa fa-pencil-alt text-secondary hover mr-4" (click)="activateProperty()"> </span>
-            <span *ngIf="canDelete && edit.status && type!=='internal'" class="fa fa-trash text-secondary hover"
+            <span *ngIf="edit.status && type!=='internal'" class="dsi dsi-editcil-alt text-secondary hover mr-4" (click)="activateProperty()"> </span>
+            <span *ngIf="canDelete && edit.status && type!=='internal'" class="dsi dsi-trash text-secondary hover"
                 (click)="remove()"></span>
         </div>
     </div>
@@ -61,7 +61,7 @@
 <div class="add-attribute d-flex align-items-center text-muted" *ngIf="edit.status && canAdd && type!=='internal'"
     [ngStyle]="style">
     <span class="d-flex align-items-center hover" (click)="addField()" id="schemaFieldObjectAddField">
-        <span class="fa fa-plus fa-xs mr-1"></span>
+        <span class="dsi dsi-plus fa-xs mr-1"></span>
         <span class="text">New Attribute</span>
     </span>
 </div>

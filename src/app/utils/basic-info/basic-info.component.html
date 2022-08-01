@@ -6,7 +6,7 @@
           (ngModelChange)="onNameChange($event)" odpClickOutside (outside)="enableEdit=false" odpAutoFocus>
         <ng-container *ngIf="!enableEdit">
           <h4 class="name m-0">{{name}}</h4>
-          <span *ngIf="edit.status" class="edit-icon fa fa-pen ml-2 ignore-outside hover" (click)="enableEdit=true"></span>
+          <span *ngIf="edit.status" class="edit-icon dsi dsi-edit ml-2 ignore-outside hover" (click)="enableEdit=true"></span>
         </ng-container>
       </div>
     </div>

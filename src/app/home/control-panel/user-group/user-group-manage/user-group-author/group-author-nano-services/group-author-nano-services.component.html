@@ -26,7 +26,7 @@
             (click)="openExceptionModal()"
             *ngIf="hasPermission('PMGANS')"
           >
-            <span class="fa fa-plus mr-2"></span>
+            <span class="dsi dsi-plus mr-2"></span>
             <span>Add</span>
           </button>
         </div>
@@ -113,8 +113,8 @@
 								     class="rounded-dropdown-toggle d-flex align-items-center ignore-outside">
 									<div class="icon d-flex align-items-center justify-content-center">
 										<span *ngIf="getSelectedPermission(srvc) === 'Hide'" class="fa fa-lock"></span>
-										<span *ngIf="getSelectedPermission(srvc) === 'View'" class="fa fa-eye"></span>
-										<span *ngIf="getSelectedPermission(srvc) === 'Manage'" class="fa fa-pen"></span>
+										<span *ngIf="getSelectedPermission(srvc) === 'View'" class="dsi dsi-view"></span>
+										<span *ngIf="getSelectedPermission(srvc) === 'Manage'" class="dsi dsi-edit"></span>
 									</div>
 									<div *ngIf="getSelectedPermission(srvc) === 'Hide'" class="text">Blocked</div>
 									<div *ngIf="getSelectedPermission(srvc) === 'View'" class="text">View</div>
@@ -134,14 +134,14 @@
 									<div (click)="togglePermission('PVNS',srvc);toggleDropdown[srvc._id]=false"
 									     class="rounded-dropdown-item d-flex align-items-center">
 										<div class="icon d-flex align-items-center justify-content-center view">
-											<span class="fa fa-eye"></span>
+											<span class="dsi dsi-view"></span>
 										</div>
 										<div class="text">View</div>
 									</div>
 									<div (click)="togglePermission('PMNS',srvc);toggleDropdown[srvc._id]=false"
 									     class="rounded-dropdown-item d-flex align-items-center">
 										<div class="icon d-flex align-items-center justify-content-center manage">
-											<span class="fa fa-pen"></span>
+											<span class="dsi dsi-edit"></span>
 										</div>
 										<div class="text">Manage</div>
 									</div>
@@ -200,11 +200,11 @@
                 ></span>
                 <span
                   *ngIf="basicPermission === 'view'"
-                  class="fa fa-eye"
+                  class="dsi dsi-view"
                 ></span>
                 <span
                   *ngIf="basicPermission === 'manage'"
-                  class="fa fa-pen"
+                  class="dsi dsi-edit"
                 ></span>
               </div>
               <div *ngIf="basicPermission === 'blocked'" class="text">
@@ -247,7 +247,7 @@
                 <div
                   class="icon d-flex align-items-center justify-content-center view"
                 >
-                  <span class="fa fa-eye"></span>
+                  <span class="dsi dsi-view"></span>
                 </div>
                 <div class="text">View</div>
               </div>
@@ -261,7 +261,7 @@
                 <div
                   class="icon d-flex align-items-center justify-content-center manage"
                 >
-                  <span class="fa fa-pen"></span>
+                  <span class="dsi dsi-edit"></span>
                 </div>
                 <div class="text">Manage</div>
               </div>
@@ -430,8 +430,8 @@
 			[ngClass]="{'blocked':globalPermissionType === 'Hide','view':globalPermissionType === 'View','manage':globalPermissionType === 'Manage','hover':hasPermission('PMGANS')}">
 			<div class="icon d-flex align-items-center justify-content-center">
 			  <span *ngIf="globalPermissionType === 'Hide'" class="fa fa-lock"></span>
-			  <span *ngIf="globalPermissionType === 'View'" class="fa fa-eye"></span>
-			  <span *ngIf="globalPermissionType === 'Manage'" class="fa fa-pen"></span>
+			  <span *ngIf="globalPermissionType === 'View'" class="dsi dsi-view"></span>
+			  <span *ngIf="globalPermissionType === 'Manage'" class="dsi dsi-edit"></span>
 			</div>
 			<div *ngIf="globalPermissionType === 'Hide'" class="text">Blocked</div>
 			<div *ngIf="globalPermissionType === 'View'" class="text">View</div>
@@ -450,14 +450,14 @@
 			<div class="rounded-dropdown-item d-flex align-items-center"
 			  (click)="togglePermission('PVNS');toggleDropdown['GLOBAL']=false">
 			  <div class="icon d-flex align-items-center justify-content-center view">
-				<span class="fa fa-eye"></span>
+				<span class="dsi dsi-view"></span>
 			  </div>
 			  <div class="text">View</div>
 			</div>
 			<div class="rounded-dropdown-item d-flex align-items-center"
 			  (click)="togglePermission('PMNS');toggleDropdown['GLOBAL']=false">
 			  <div class="icon d-flex align-items-center justify-content-center manage">
-				<span class="fa fa-pen"></span>
+				<span class="dsi dsi-edit"></span>
 			  </div>
 			  <div class="text">Manage</div>
 			</div>

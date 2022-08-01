@@ -33,7 +33,7 @@
                     <div class="border-bottom fixed-width-line"></div>
                     <div id="addStep" (click)="addStepAfter()" *ngIf="edit.status"
                         class="circle d-inline-block bg-primary border border-secondary text-center hover">
-                        <span class="fa fa-plus text-white"></span>
+                        <span class="dsi dsi-plus text-white"></span>
                     </div>
                     <div class="border-bottom fixed-width-line"></div>
                 </div>
@@ -292,7 +292,7 @@
                 <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 border-bottom border-top action-list"
                     *ngIf="field">
                     <span *ngIf="edit.status && !isHookAdded(field)"
-                        class="fa fa-plus-circle hover text-success fa-lg pl-1 pr-1 action-icon"
+                        class="dsi dsi-plus-circle hover text-success fa-lg pl-1 pr-1 action-icon"
                         (click)="addHookToStep(field)"></span>
                     <span *ngIf="edit.status && isHookAdded(field)"
                         class="fas fa-check-circle text-secondary fa-lg pl-1 pr-1 action-icon"></span>
@@ -325,7 +325,7 @@
 <ng-template #deleteModalTemplate>
     <div class="modal-body p-4">
         <div class="circle bg-dark d-flex justify-content-center align-items-center">
-            <span class="fa fa-trash fa-lg text-white"></span>
+            <span class="dsi dsi-trash fa-lg text-white"></span>
         </div>
         <p class="text-dark font-weight-bold text-center" [ngClass]="{'text-truncate': deleteModal.title.length > 65}">
             {{deleteModal.title}}</p>

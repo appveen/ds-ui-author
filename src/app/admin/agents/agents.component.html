@@ -314,9 +314,9 @@
         <div class="d-flex align-items-center w-100 px-4 font-13">
             <span class="text-secondary ml-2">Password</span>
             <div class="d-flex align-items-center justify-content-center mx-3">
-                <span *ngIf="!agentConfig.showPassword" class="fa fa-eye mr-2"
+                <span *ngIf="!agentConfig.showPassword" class="dsi dsi-view mr-2"
                     (click)="agentConfig.showPassword=true;getAgentPassword()"></span>
-                <span *ngIf="agentConfig.showPassword" class="fa fa-eye-slash mr-2"
+                <span *ngIf="agentConfig.showPassword" class="dsi dsi-hide mr-2"
                     (click)="agentConfig.showPassword=false"></span>
                 <span *ngIf="!agentConfig.showPassword" class="text-dark">******</span>
                 <span *ngIf="agentConfig.showPassword" class="text-dark d-flex align-items-center">

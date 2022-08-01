@@ -42,7 +42,6 @@
             "styles": [
               "node_modules/ngx-toastr/toastr.css",
               "src/assets/fontawesome/css/all.min.css",
-              "src/assets/odp-icons.css",
               "src/assets/scss/bootstrap/bootstrap.scss",
               "src/assets/scss/login.scss",
               "src/assets/scss/home.scss",

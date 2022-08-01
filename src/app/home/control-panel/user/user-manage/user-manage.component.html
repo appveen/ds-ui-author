@@ -1,10 +1,10 @@
 <div class="settings">
   <div class="hover ignore-outside d-flex align-items-center p-2 border rounded-lg" (click)="showSettings = !showSettings">
-    <span class="fa fa-cog font-20"></span>
+    <span class="dsi dsi-settings font-20"></span>
     <label class="my-0 mx-2">Profile Settings</label>
     <span class="fa-point fa" [ngClass]="{
         'fa-chevron-down': !showSettings,
-        'fa-chevron-up': showSettings
+        'dsi-drop-up': showSettings
       }"></span>
   </div>
   <div class="popover" *ngIf="showSettings" odpClickOutside (outside)="showSettings=false">

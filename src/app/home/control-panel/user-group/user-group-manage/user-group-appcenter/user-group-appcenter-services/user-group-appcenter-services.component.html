@@ -37,28 +37,28 @@
             <div class="permissions d-flex align-items-center text-muted ">
               <div
                 class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2 border-dark text-dark">
-                <span class="fa fa-eye fa-xs"></span>
+                <span class="dsi dsi-view fa-xs"></span>
               </div>
               <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
                 [ngClass]="{'border-dark text-dark':hasMethod(role,'POST')}">
-                <span class="fa fa-plus fa-xs"></span>
+                <span class="dsi dsi-plus fa-xs"></span>
               </div>
               <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
                 [ngClass]="{'border-dark text-dark':hasMethod(role,'PUT')}">
-                <span class="fa fa-pen fa-xs"></span>
+                <span class="dsi dsi-edit fa-xs"></span>
               </div>
               <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
                 [ngClass]="{'border-dark text-dark':hasMethod(role,'DELETE')}">
-                <span class="fa fa-trash fa-xs"></span>
+                <span class="dsi dsi-trash fa-xs"></span>
               </div>
               <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
                 [ngClass]="{'border-dark text-dark':hasMethod(role,'RULE')}">
-                <span class="fa fa-filter fa-xs"></span>
+                <span class="dsi dsi-filter-alt fa-xs"></span>
               </div>
               <!-- <ng-container *ngIf="hasManage(role)">
                 <span class="d-flex align-items-center justify-content-center icon odp-manager text-primary"></span>
                 <span class="d-flex align-items-center justify-content-center fa fa-angle-right text-muted"></span>
-                <span class="d-flex align-items-center justify-content-center icon fa fa-plus-circle text-accent"
+                <span class="d-flex align-items-center justify-content-center icon dsi dsi-plus-circle text-accent"
                   *ngIf="hasMethod(role,'POST')"></span>
                 <span class="d-flex align-items-center justify-content-center icon odp-edit text-primary"
                   *ngIf="hasMethod(role,'PUT')"></span>

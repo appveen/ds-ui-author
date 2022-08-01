@@ -15,7 +15,7 @@
     <!-- <button class="add-new btn-min-width btn btn-primary" *ngIf="hasManagePermission('GS')" [routerLink]="['/app',app,'gs']"> -->
     <button class="add-new btn-min-width btn btn-primary" *ngIf="hasManagePermission('GS')"
       (click)="newLibrary()">
-    <span class="fa fa-plus mr-2"></span>
+    <span class="dsi dsi-plus mr-2"></span>
     <span class="text">New Library</span>
     </button>
   </div>
@@ -27,7 +27,7 @@
         <div class="card-body bg-light d-flex w-100 h-100">
           <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
             <div class="align-self-center text-center bg-primary p-3 circle">
-              <span class="fa fa-plus fa-lg mt-2 text-white"></span>
+              <span class="dsi dsi-plus fa-lg mt-2 text-white"></span>
             </div>
             <div class="align-self-center text-dark mt-3 font-weight-bold">New Library</div>
           </div>
@@ -70,11 +70,11 @@
               </div>
               <div class="button float-left w-50 pl-4 py-2 text-secondary hover" id="lib-view"
                 [routerLink]="['/app/',app,'gs',library._id]">
-                <span class="fa fa-eye mr-2"></span>
+                <span class="dsi dsi-view mr-2"></span>
                 <span class="text">View</span>
               </div>
               <div class="button float-left w-50 pl-4 py-2 text-secondary hover" (click)="editLibrary(i)" id="lib-edit">
-                <span class="fa fa-pencil-alt mr-2"></span>
+                <span class="dsi dsi-editcil-alt mr-2"></span>
                 <span class="text">Edit</span>
               </div>
               <div *ngIf="hasManagePermission('GS')" class="button float-left w-50 pl-4 py-2 text-secondary hover"
@@ -84,7 +84,7 @@
               </div>
               <div class="button float-left w-50 pl-4 py-2 text-secondary hover" id="lib-delete"
                 (click)="deleteLibrary(i);showCardMenu[i]=false">
-                <span class="fa fa-trash mr-2"></span>
+                <span class="dsi dsi-trash mr-2"></span>
                 <span class="text">Delete</span>
               </div>
             </div>
@@ -92,7 +92,7 @@
               *ngIf="!canEditLibrary(library._id)">
               <div class="button float-left w-50 pl-4 py-2 text-secondary hover"
                 [routerLink]="['/app/',app,'gs',library._id]">
-                <span class="fa fa-eye mr-2"></span>
+                <span class="dsi dsi-view mr-2"></span>
                 <span class="text">View</span>
               </div>
             </div>

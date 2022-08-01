@@ -22,7 +22,7 @@
                 (click)="openChangePasswordModel(agentLogObject[0])">Change Password</button>
             <button *ngIf="hasPermission('PMA')" type="button" class="btn btn-link p-0"
                 (click)="editAgent(agentLogObject[0])">
-                <span class="fa fa-cog"></span>
+                <span class="dsi dsi-settings"></span>
             </button>
         </div>
         <div class="ml-auto font-normal text-primary hover text-nowrap" [routerLink]="['../../../../agent']">
@@ -38,7 +38,7 @@
             <div class="d-flex p-3" style="justify-content: space-evenly">
                 <span class="d-flex"><span class="font-13 text-secondary">Password</span><span class="font-13  ml-2">
                         <span class="d-flex align-items-center">
-                            <span class="fa fa-eye text-accent mr-2 hover" (click)="showPassword()"></span>
+                            <span class="dsi dsi-view text-accent mr-2 hover" (click)="showPassword()"></span>
                             <span class="text-secondary mt-1">
                                 **********
                             </span>
@@ -105,7 +105,7 @@
                     <div class="data-grid-row">
                         <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort no-grip"
                             id="_checkbox">
-                            <span class="fa fa-search text-accent open-search"></span>
+                            <span class="dsi dsi-search text-accent open-search"></span>
                         </div>
                         <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="timeStamp">
                             Time</div>

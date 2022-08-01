@@ -13,7 +13,7 @@
         <ng-container *ngIf="hasPermission('PMUBD')">
           <button *ngIf="checkedUsers.length > 0" type="button" class="btn btn-outline-light border text-danger mr-3"
             (click)="removeUsers()" id="removeusers" [ngbTooltip]="'Delete '+checkedUsers.length+' Users'">
-            <span class="fa fa-trash"></span>
+            <span class="dsi dsi-trash"></span>
             <!-- <span class="text">Remove Users ({{ checkedUsers.length }})</span> -->
           </button>
         </ng-container>
@@ -28,7 +28,7 @@
         </button>
         <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary"
           (click)="newUser()">
-          <span class="fa fa-plus"></span>
+          <span class="dsi dsi-plus"></span>
         </button>
       </div>
     </div>
@@ -95,7 +95,7 @@
               <div *ngIf="currentTab === 'Attributes'" style="display: flex">
                 <label style="color: #6c7584; font-weight: 400">All attributes in which the user has been added</label>
                 <div class="add-attribute hover" (click)="showAttributeSide()" id="showAttributeSide">
-                  <i class="fa fa-plus-circle font-20"></i>
+                  <i class="dsi dsi-plus-circle font-20"></i>
                   <label class="fw-500 font-normal heading">Add Attribute</label>
                 </div>
               </div>
@@ -103,7 +103,7 @@
                 <label style="color: #6c7584; font-weight: 400">All groups in which the user has been added
                 </label>
                 <div class="add-attribute hover" (click)="openGroupModal()" id="openModal">
-                  <i class="fa fa-plus-circle font-20"></i>
+                  <i class="dsi dsi-plus-circle font-20"></i>
                   <label class="fw-500 font-normal heading">Add to Groups</label>
                 </div>
               </div>

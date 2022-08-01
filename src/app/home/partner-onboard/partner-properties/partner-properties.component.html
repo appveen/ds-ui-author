@@ -9,7 +9,7 @@
       <!-- <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box> -->
       <button type="button" class="btn btn-sm btn-link" (click)="openPropertiesModal()"
         *ngIf="edit.status && edit.id && canCreateHeaders()">
-        <span class="fa fa-plus-circle mr-2"></span>
+        <span class="dsi dsi-plus-circle mr-2"></span>
         <span class="text">New Header</span>
       </button>
     </div>
@@ -34,7 +34,7 @@
               <td class="text-right">
                 <span class="text-secondary" *ngIf="edit.status && edit.id && canDeleteHeaders()">
                   <button type="button" class="btn btn-link" (click)="removeProperty(item.key)">
-                    <span class="fa fa-trash text-muted"></span>
+                    <span class="dsi dsi-trash text-muted"></span>
                   </button>
                 </span>
               </td>
@@ -46,7 +46,7 @@
                     <div class="text">No Headers has been created.</div>
                     <button type="button" class="btn btn-create mt-2" (click)="openPropertiesModal()"
                       *ngIf="edit.status && edit.id && canCreateHeaders()">
-                      <span class="fa fa-plus-circle mr-2"></span>
+                      <span class="dsi dsi-plus-circle mr-2"></span>
                       <span class="text">Create New</span>
                     </button>
                   </div>
@@ -99,7 +99,7 @@
             <td class="text-right" *ngIf="edit.status && edit.id && canUpdateHeaders()">
               <span class="text-secondary">
                 <button type="button" class="btn btn-link" (click)="removeIP(i)">
-                  <span class="fa fa-trash text-muted"></span>
+                  <span class="dsi dsi-trash text-muted"></span>
                 </button>
               </span>
             </td>
@@ -111,7 +111,7 @@
                   <div class="text">No IP Address Added.</div>
                   <button type="button" class="btn btn-create mt-2" (click)="addIP()"
                     *ngIf="edit.status && edit.id && canUpdateHeaders()">
-                    <span class="fa fa-plus-circle mr-2"></span>
+                    <span class="dsi dsi-plus-circle mr-2"></span>
                     <span class="text">Create New</span>
                   </button>
                 </div>
@@ -122,7 +122,7 @@
             <td colspan="2">
               <button type="button" class="btn btn-sm btn-link" (click)="addIP()"
                 *ngIf="edit.status && edit.id && enabledTrustedIP && canUpdateHeaders()">
-                <span class="fa fa-plus-circle mr-2"></span>
+                <span class="dsi dsi-plus-circle mr-2"></span>
                 <span class="text">New IP Address</span>
               </button>
             </td>

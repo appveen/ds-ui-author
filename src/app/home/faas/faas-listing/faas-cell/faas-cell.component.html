@@ -49,15 +49,15 @@
     </button>
     <button type="button" class="btn btn-outline-light text-secondary border mr-3"
         (click)="$event.preventDefault();redirectToManage()">
-        <span class="fa fa-eye"></span>
+        <span class="dsi dsi-view"></span>
     </button>
     <button type="button" class="btn btn-outline-light text-secondary border mr-3" *ngIf="hasManagePermission"
         (click)="$event.preventDefault();redirectToManage(true)">
-        <span class="fa fa-pen"></span>
+        <span class="dsi dsi-edit"></span>
     </button>
     <button type="button" class="btn btn-outline-light text-secondary border mr-3" *ngIf="hasManagePermission"
         (click)="$event.preventDefault();deleteFaas()">
-        <span class="fa fa-trash"></span>
+        <span class="dsi dsi-trash"></span>
     </button>
 </div>
 

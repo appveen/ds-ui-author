@@ -10,7 +10,7 @@
         id="addNewRole"
         *ngIf="edit.status"
       >
-        <i class="fa fa-plus mr-2"></i>
+        <i class="dsi dsi-plus mr-2"></i>
         <span class="text">Add</span>
       </span>
     </div>
@@ -27,7 +27,7 @@
               class="d-flex align-items-center justify-content-center text-secondary symbol-holder"
               id="viewRole"
             >
-              <span class="fa fa-eye mr-2" *ngIf="!canManage(i)"></span>
+              <span class="dsi dsi-view mr-2" *ngIf="!canManage(i)"></span>
               <span class="odp-manager mr-2" *ngIf="canManage(i)"></span>
             </div>
             <div class="d-flex flex-column">
@@ -212,11 +212,11 @@
                       >
                         <span
                           *ngIf="selectRoleType === 'view'"
-                          class="fa fa-eye"
+                          class="dsi dsi-view"
                         ></span>
                         <span
                           *ngIf="selectRoleType === 'manage'"
-                          class="fa fa-pen"
+                          class="dsi dsi-edit"
                         ></span>
                       </div>
                       <div *ngIf="selectRoleType === 'view'" class="text">
@@ -246,7 +246,7 @@
                         <div
                           class="icon d-flex align-items-center justify-content-center view"
                         >
-                          <span class="fa fa-eye"></span>
+                          <span class="dsi dsi-view"></span>
                         </div>
                         <div class="text">View</div>
                       </div>
@@ -260,7 +260,7 @@
                         <div
                           class="icon d-flex align-items-center justify-content-center manage"
                         >
-                          <span class="fa fa-pen"></span>
+                          <span class="dsi dsi-edit"></span>
                         </div>
                         <div class="text">Manage</div>
                       </div>
@@ -526,7 +526,7 @@
 <ng-template #deleteModal>
   <div class="modal-body p-4">
     <div class="circle bg-dark">
-      <span class="fa fa-trash text-white"></span>
+      <span class="dsi dsi-trash text-white"></span>
     </div>
     <p class="text-dark font-weight-bold text-center">{{ delete.title }}</p>
     <p class="text-secondary text-center">

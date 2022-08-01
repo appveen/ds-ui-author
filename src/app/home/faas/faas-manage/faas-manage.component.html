@@ -47,7 +47,7 @@
             <div class="editor-theme-selection d-flex align-items-center">
                 <button type="button" class="btn btn-outline-light border text-secondary mr-3 d-flex align-items-center"
                     (click)="showConsole=!showConsole;toggleConsole()">
-                    <span class="fa fa-terminal mr-2"></span>
+                    <span class="dsi dsi-console mr-2"></span>
                     <span class="text">Console</span>
                 </button>
                 <!-- <span class="label text-secondary font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span> -->
@@ -75,7 +75,7 @@
                 <div class="accordian-block border-bottom">
                     <div class="accordian-header border-bottom p-4 d-flex align-items-center justify-content-between">
                         <span>Libraries</span>
-                        <span class="fas fa-chevron-down"></span>
+                        <span class="dsi dsi-drop-down"></span>
                     </div>
                     <div class="accordian-body p-4">
                         <table class="table table-bordered env-vars">
@@ -122,7 +122,7 @@
                 <div class="accordian-block border-bottom">
                     <div class="accordian-header border-bottom p-4 d-flex align-items-center justify-content-between">
                         <span>ENV Variables</span>
-                        <span class="fas fa-chevron-down"></span>
+                        <span class="dsi dsi-drop-down"></span>
                     </div>
                     <div class="accordian-body p-4">
                         <table class="table table-bordered env-vars">
@@ -157,7 +157,7 @@
     <div [ngClass]="{'show':showConsole}" class="console position-absolute bg-dark text-white">
         <div class="border-bottom d-flex align-items-center justify-content-between p-3">
             <div class="d-flex align-items-center">
-                <span class="fa fa-terminal mr-2"></span>
+                <span class="dsi dsi-console mr-2"></span>
                 <span class="text">Console</span>
             </div>
             <button type="button" class="close" (click)="showConsole=false">

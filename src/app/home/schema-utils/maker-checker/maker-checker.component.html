@@ -26,7 +26,7 @@
               id="AddNewMakerChecker"
               (click)="addNewMakerChecker()"
             >
-              <span class="fa fa-plus mr-2"></span>
+              <span class="dsi dsi-plus mr-2"></span>
               <span class="text">Add</span>
             </button>
           </div>
@@ -56,10 +56,10 @@
               class="text-center rounded hover"
               (click)="deleteMakerChecker()"
             >
-              <span class="fa fa-trash align-middle text-gray"></span>
+              <span class="dsi dsi-trash align-middle text-gray"></span>
             </div>
             <!-- <button class="btn btn-outline-primary btn-min-width" id="AddNewMakerChecker" (click)='toggleMakerChecker(true)'>
-                            <span class="fa fa-plus mr-2"></span>
+                            <span class="dsi dsi-plus mr-2"></span>
                             <span class="text">Add</span>
                         </button> -->
           </div>
@@ -81,7 +81,7 @@
                     *ngIf="canMultiSelectDelete()"
                     (click)="deleteMultipleSteps()"
                   >
-                    <span class="fa fa-trash text-gray mr-1"></span>
+                    <span class="dsi dsi-trash text-gray mr-1"></span>
                     <span>Delete</span>
                   </div>
                   <div>
@@ -91,7 +91,7 @@
                       (click)="addStep()"
                     >
                       <span class="rounded-circle bg-primary align-middle">
-                        <span class="fa fa-plus text-white delete-steps"></span>
+                        <span class="dsi dsi-plus text-white delete-steps"></span>
                       </span>
                       <span class="ml-2 align-middle">Add Step</span>
                     </button>
@@ -249,7 +249,7 @@
                           </div>
                         </ng-container>
                         <span
-                          class="fa fa-trash text-gray hover"
+                          class="dsi dsi-trash text-gray hover"
                           *ngIf="edit.status && makerCheckerEnabled"
                           (click)="deleteStep(i)"
                         ></span>

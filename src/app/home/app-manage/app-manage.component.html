@@ -13,7 +13,7 @@
         </odp-basic-info>
       </div>
       <button class="btn btn-primary mt-2 ml-auto center-h" (click)="save()" [disabled]="!changesDone || isInvalid">
-        <span class="fa fa-plus mr-2"></span>
+        <span class="dsi dsi-plus mr-2"></span>
         <span class="text">Save</span>
       </button>
     </div>
@@ -616,7 +616,7 @@
               <span class="text">Properties</span>
             </div>
             <button type="button" class="btn btn-sm btn-link" (click)="openPropertiesModal()">
-              <span class="fa fa-plus-circle mr-2"></span>
+              <span class="dsi dsi-plus-circle mr-2"></span>
               <span class="text">New Property</span>
             </button>
           </div>
@@ -640,7 +640,7 @@
                   <td class="text-right">
                     <span class="text-secondary">
                       <button type="button" class="btn btn-link" (click)="removeProperty(item.key)">
-                        <span class="fa fa-trash text-muted"></span>
+                        <span class="dsi dsi-trash text-muted"></span>
                       </button>
                     </span>
                   </td>
@@ -653,7 +653,7 @@
                           No Properties has been created.
                         </div>
                         <button type="button" class="btn btn-create mt-2" (click)="openPropertiesModal()">
-                          <span class="fa fa-plus-circle mr-2"></span>
+                          <span class="dsi dsi-plus-circle mr-2"></span>
                           <span class="text">Create New</span>
                         </button>
                       </div>
@@ -710,7 +710,7 @@
                   <td class="text-right">
                     <span class="text-secondary">
                       <button type="button" class="btn btn-link" (click)="removeIP(i)">
-                        <span class="fa fa-trash text-muted"></span>
+                        <span class="dsi dsi-trash text-muted"></span>
                       </button>
                     </span>
                   </td>
@@ -721,7 +721,7 @@
                       <div class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
                         <div class="text">No IP Address Added.</div>
                         <button type="button" class="btn btn-create mt-2" (click)="addIP()" *ngIf="enabledTrustedIP">
-                          <span class="fa fa-plus-circle mr-2"></span>
+                          <span class="dsi dsi-plus-circle mr-2"></span>
                           <span class="text">Create New</span>
                         </button>
                       </div>
@@ -731,7 +731,7 @@
                 <tr *ngIf="ipList.length != 0">
                   <td colspan="2">
                     <button type="button" class="btn btn-sm btn-link" (click)="addIP()" *ngIf="enabledTrustedIP">
-                      <span class="fa fa-plus-circle mr-2"></span>
+                      <span class="dsi dsi-plus-circle mr-2"></span>
                       <span class="text">New IP Address</span>
                     </button>
                   </td>

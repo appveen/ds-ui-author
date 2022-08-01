@@ -8,7 +8,7 @@
         <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
         <button type="button" class="btn btn-sm btn-link" (click)="newMicroflow()"
             *ngIf="edit.status && edit.id && canCreateFlow()">
-            <span class="fa fa-plus-circle mr-2"></span>
+            <span class="dsi dsi-plus-circle mr-2"></span>
             <span class="text">New Integration Flows</span>
         </button>
     </div>
@@ -223,7 +223,7 @@
                                 <div class="text">No Integration Flows has been created.</div>
                                 <button type="button" class="btn btn-create mt-2" (click)="newMicroflow()"
                                     *ngIf="edit.status && edit.id && canCreateFlow()">
-                                    <span class="fa fa-plus-circle mr-2"></span>
+                                    <span class="dsi dsi-plus-circle mr-2"></span>
                                     <span class="text">Create New</span>
                                 </button>
                             </div>

@@ -30,7 +30,7 @@
             type="button"
             (click)="openExceptionModal()"
           >
-            <span class="fa fa-plus mr-2"></span><span class="text">Add </span>
+            <span class="dsi dsi-plus mr-2"></span><span class="text">Add </span>
           </button>
         </div>
         <div class="d-flex flex-column">
@@ -105,11 +105,11 @@
                 ></span>
                 <span
                   *ngIf="basicPermission === 'view'"
-                  class="fa fa-eye"
+                  class="dsi dsi-view"
                 ></span>
                 <span
                   *ngIf="basicPermission === 'manage'"
-                  class="fa fa-pen"
+                  class="dsi dsi-edit"
                 ></span>
               </div>
               <div *ngIf="basicPermission === 'blocked'" class="text">
@@ -154,7 +154,7 @@
                 <div
                   class="icon d-flex align-items-center justify-content-center view"
                 >
-                  <span class="fa fa-eye"></span>
+                  <span class="dsi dsi-view"></span>
                 </div>
                 <div class="text">View</div>
               </div>
@@ -168,7 +168,7 @@
                 <div
                   class="icon d-flex align-items-center justify-content-center manage"
                 >
-                  <span class="fa fa-pen"></span>
+                  <span class="dsi dsi-edit"></span>
                 </div>
                 <div class="text">Manage</div>
               </div>
@@ -280,11 +280,11 @@
                   ></span>
                   <span
                     *ngIf="flowPermission === 'manage'"
-                    class="fa fa-pen"
+                    class="dsi dsi-edit"
                   ></span>
                   <span
                     *ngIf="flowPermission === 'view'"
-                    class="fa fa-eye"
+                    class="dsi dsi-view"
                   ></span>
                 </div>
                 <div *ngIf="flowPermission === 'blocked'" class="text">
@@ -331,7 +331,7 @@
                   <div
                     class="icon d-flex align-items-center justify-content-center view"
                   >
-                    <span class="fa fa-eye"></span>
+                    <span class="dsi dsi-view"></span>
                   </div>
                   <div class="text">View</div>
                 </div>
@@ -346,7 +346,7 @@
                   <div
                     class="icon d-flex align-items-center justify-content-center manage"
                   >
-                    <span class="fa fa-pen"></span>
+                    <span class="dsi dsi-edit"></span>
                   </div>
                   <div class="text">Manage</div>
                 </div>
@@ -445,7 +445,7 @@
                   ></span>
                   <span
                     *ngIf="powerPermissionDeploy === 'manage'"
-                    class="fa fa-pen"
+                    class="dsi dsi-edit"
                   ></span>
                 </div>
                 <div *ngIf="powerPermissionDeploy === 'blocked'" class="text">
@@ -489,7 +489,7 @@
                   <div
                     class="icon d-flex align-items-center justify-content-center manage"
                   >
-                    <span class="fa fa-pen"></span>
+                    <span class="dsi dsi-edit"></span>
                   </div>
                   <div class="text">Manage</div>
                 </div>
@@ -533,7 +533,7 @@
                   ></span>
                   <span
                     *ngIf="powerPermissionsStartStop === 'manage'"
-                    class="fa fa-pen"
+                    class="dsi dsi-edit"
                   ></span>
                 </div>
                 <div
@@ -583,7 +583,7 @@
                   <div
                     class="icon d-flex align-items-center justify-content-center manage"
                   >
-                    <span class="fa fa-pen"></span>
+                    <span class="dsi dsi-edit"></span>
                   </div>
                   <div class="text">Manage</div>
                 </div>
@@ -639,11 +639,11 @@
                 ></span>
                 <span
                   *ngIf="profilePermission === 'view'"
-                  class="fa fa-eye"
+                  class="dsi dsi-view"
                 ></span>
                 <span
                   *ngIf="profilePermission === 'manage'"
-                  class="fa fa-pen"
+                  class="dsi dsi-edit"
                 ></span>
               </div>
               <div *ngIf="profilePermission === 'blocked'" class="text">
@@ -686,7 +686,7 @@
                 <div
                   class="icon d-flex align-items-center justify-content-center view"
                 >
-                  <span class="fa fa-eye"></span>
+                  <span class="dsi dsi-view"></span>
                 </div>
                 <div class="text">View</div>
               </div>
@@ -700,7 +700,7 @@
                 <div
                   class="icon d-flex align-items-center justify-content-center manage"
                 >
-                  <span class="fa fa-pen"></span>
+                  <span class="dsi dsi-edit"></span>
                 </div>
                 <div class="text">Manage</div>
               </div>
@@ -791,11 +791,11 @@
                   ></span>
                   <span
                     *ngIf="headerPermission === 'manage'"
-                    class="fa fa-pen"
+                    class="dsi dsi-edit"
                   ></span>
                   <span
                     *ngIf="headerPermission === 'view'"
-                    class="fa fa-eye"
+                    class="dsi dsi-view"
                   ></span>
                 </div>
                 <div *ngIf="headerPermission === 'blocked'" class="text">
@@ -840,7 +840,7 @@
                   <div
                     class="icon d-flex align-items-center justify-content-center view"
                   >
-                    <span class="fa fa-eye"></span>
+                    <span class="dsi dsi-view"></span>
                   </div>
                   <div class="text">View</div>
                 </div>
@@ -854,7 +854,7 @@
                   <div
                     class="icon d-flex align-items-center justify-content-center manage"
                   >
-                    <span class="fa fa-pen"></span>
+                    <span class="dsi dsi-edit"></span>
                   </div>
                   <div class="text">Manage</div>
                 </div>
@@ -881,8 +881,8 @@
                 [ngClass]="{'blocked':iPPermission === 'blocked','manage':iPPermission === 'manage','view':iPPermission === 'view','hover':hasPermission('PMGAP')}">
                 <div class="icon d-flex align-items-center justify-content-center">
                   <span *ngIf="iPPermission === 'blocked'" class="fa fa-lock"></span>
-                  <span *ngIf="iPPermission === 'manage'" class="fa fa-pen"></span>
-                  <span *ngIf="iPPermission === 'view'" class="fa fa-eye"></span>
+                  <span *ngIf="iPPermission === 'manage'" class="dsi dsi-edit"></span>
+                  <span *ngIf="iPPermission === 'view'" class="dsi dsi-view"></span>
                 </div>
                 <div *ngIf="iPPermission === 'blocked'" class="text">Blocked</div>
                 <div *ngIf="iPPermission === 'manage'" class="text">Manage</div>
@@ -901,14 +901,14 @@
                 <div class="rounded-dropdown-item d-flex align-items-center"
                   (click)="dropdownToggle['IP']=false;commonPermission={id:'PVPIP',type:'IP'}">
                   <div class="icon d-flex align-items-center justify-content-center view">
-                    <span class="fa fa-eye"></span>
+                    <span class="dsi dsi-view"></span>
                   </div>
                   <div class="text">View</div>
                 </div>
                 <div class="rounded-dropdown-item d-flex align-items-center"
                   (click)="dropdownToggle['IP']=false;commonPermission={id:'PMPIP',type:'IP'}">
                   <div class="icon d-flex align-items-center justify-content-center manage">
-                    <span class="fa fa-pen"></span>
+                    <span class="dsi dsi-edit"></span>
                   </div>
                   <div class="text">Manage</div>
                 </div>
@@ -964,7 +964,7 @@
                   ></span>
                   <span
                     *ngIf="ManagementPermission === 'manage'"
-                    class="fa fa-pen"
+                    class="dsi dsi-edit"
                   ></span>
                 </div>
                 <div *ngIf="ManagementPermission === 'blocked'" class="text">
@@ -1008,7 +1008,7 @@
                   <div
                     class="icon d-flex align-items-center justify-content-center manage"
                   >
-                    <span class="fa fa-pen"></span>
+                    <span class="dsi dsi-edit"></span>
                   </div>
                   <div class="text">Manage</div>
                 </div>
@@ -1061,7 +1061,7 @@
               (click)="addException = !addException"
             >
               <span
-                class="fa fa-plus fa-sm mr-1 ignore-outside"
+                class="dsi dsi-plus fa-sm mr-1 ignore-outside"
                 *ngIf="!addException"
               ></span>
               <span class="text ignore-outside"
@@ -1186,11 +1186,11 @@
                     ></span>
                     <span
                       *ngIf="basicFlowExpPermission === 'view'"
-                      class="fa fa-eye"
+                      class="dsi dsi-view"
                     ></span>
                     <span
                       *ngIf="basicFlowExpPermission === 'manage'"
-                      class="fa fa-pen"
+                      class="dsi dsi-edit"
                     ></span>
                   </div>
                   <div
@@ -1240,7 +1240,7 @@
                     <div
                       class="icon d-flex align-items-center justify-content-center view"
                     >
-                      <span class="fa fa-eye"></span>
+                      <span class="dsi dsi-view"></span>
                     </div>
                     <div class="text">View</div>
                   </div>
@@ -1254,7 +1254,7 @@
                     <div
                       class="icon d-flex align-items-center justify-content-center manage"
                     >
-                      <span class="fa fa-pen"></span>
+                      <span class="dsi dsi-edit"></span>
                     </div>
                     <div class="text">Manage</div>
                   </div>
@@ -1361,7 +1361,7 @@
                       ></span>
                       <span
                         *ngIf="flowPermissionDeploy === 'manage'"
-                        class="fa fa-pen"
+                        class="dsi dsi-edit"
                       ></span>
                     </div>
                     <div
@@ -1410,7 +1410,7 @@
                       <div
                         class="icon d-flex align-items-center justify-content-center manage"
                       >
-                        <span class="fa fa-pen"></span>
+                        <span class="dsi dsi-edit"></span>
                       </div>
                       <div class="text">Manage</div>
                     </div>
@@ -1453,7 +1453,7 @@
                       ></span>
                       <span
                         *ngIf="flowPermissionsStartStop === 'manage'"
-                        class="fa fa-pen"
+                        class="dsi dsi-edit"
                       ></span>
                     </div>
                     <div
@@ -1505,7 +1505,7 @@
                       <div
                         class="icon d-flex align-items-center justify-content-center manage"
                       >
-                        <span class="fa fa-pen"></span>
+                        <span class="dsi dsi-edit"></span>
                       </div>
                       <div class="text">Manage</div>
                     </div>
@@ -1533,8 +1533,8 @@
                        [ngClass]="{'blocked':definitionPermission === 'blocked','manage':definitionPermission === 'manage','view':definitionPermission === 'view','hover':hasPermission('PMDSD')}">
                     <div class="icon d-flex align-items-center justify-content-center">
                       <span *ngIf="definitionPermission === 'blocked'" class="fa fa-lock"></span>
-                      <span *ngIf="definitionPermission === 'manage'" class="fa fa-pen"></span>
-                      <span *ngIf="definitionPermission === 'view'" class="fa fa-eye"></span>
+                      <span *ngIf="definitionPermission === 'manage'" class="dsi dsi-edit"></span>
+                      <span *ngIf="definitionPermission === 'view'" class="dsi dsi-view"></span>
                     </div>
                     <div *ngIf="definitionPermission === 'blocked'" class="text">Blocked</div>
                     <div *ngIf="definitionPermission === 'manage'" class="text">Manage</div>
@@ -1550,13 +1550,13 @@
                     </div>
                     <div class="rounded-dropdown-item d-flex align-items-center" (click)="dropdownToggle['definition']=false;commonPermission={id:'PVDSD',type:'D'}">
                       <div class="icon d-flex align-items-center justify-content-center view">
-                        <span class="fa fa-eye"></span>
+                        <span class="dsi dsi-view"></span>
                       </div>
                       <div class="text">View</div>
                     </div>
                     <div class="rounded-dropdown-item d-flex align-items-center" (click)="dropdownToggle['definition']=false;commonPermission={id:'PMDSD',type:'D'}">
                       <div class="icon d-flex align-items-center justify-content-center manage">
-                        <span class="fa fa-pen"></span>
+                        <span class="dsi dsi-edit"></span>
                       </div>
                       <div class="text">Manage</div>
                     </div>

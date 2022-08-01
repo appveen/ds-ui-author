@@ -65,7 +65,7 @@
           (keyup.enter)="listEnterKey($event,'enum')" type="number" formControlName="_listInput" id="_numberLovInput">
         <button type="button" class="list-add-button btn btn-link hover position-absolute p-0"
           [disabled]="form.get('properties._listInput').value===''" (click)="addToList('enum')">
-          <span class="fa fa-plus text-primary"></span>
+          <span class="dsi dsi-plus text-primary"></span>
         </button>
       </ng-container>
       <div *ngIf="form.get('properties.enum').hasError('emptyEnum')">

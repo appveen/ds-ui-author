@@ -3,35 +3,6 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 @font-face {
-  font-family: "Lato";
-  src: url("../fonts/default/Lato-Regular.woff") format("woff"),
-    /* Pretty Modern Browsers */
-    url("../fonts/default/Lato-Light.woff") format("woff"),
-    /* Pretty Modern Browsers */
-    url("../fonts/default/Lato-Italic.woff") format("woff"),
-    /* Pretty Modern Browsers */
-    url("../fonts/default/Lato-Bold.woff") format("woff"),
-    /* Pretty Modern Browsers */
-    url("../fonts/default/Lato-Regular.ttf") format("truetype"),
-    /* Safari, Android, iOS */
-    url("../fonts/default/Lato-Light.ttf") format("truetype"),
-    /* Safari, Android, iOS */
-    url("../fonts/default/Lato-Italic.ttf") format("truetype"),
-    /* Safari, Android, iOS */
-    url("../fonts/default/Lato-Bold.ttf") format("truetype"),
-    /* Safari, Android, iOS */
-    url("../fonts/default/Lato-Regular.svg#svgFontName") format("svg"),
-    /* Legacy iOS */
-    url("../fonts/default/Lato-Light.svg#svgFontName") format("svg"),
-    /* Legacy iOS */
-    url("../fonts/default/Lato-Italic.svg#svgFontName") format("svg"),
-    /* Legacy iOS */
-    url("../fonts/default/Lato-Bold.svg#svgFontName") format("svg");
-  /* Legacy iOS */
-}
-
-
-@font-face {
   font-family: "Inter";
   src: url("../fonts/inter/Inter-Regular.ttf") format("truetype");
   font-weight: 400;
