@@ -21,7 +21,7 @@ import * as _ from 'lodash';
 export class UserGridActionRendererComponent implements AgRendererComponent {
   params: any;
   currentTab: String = '';
-  constructor() {}
+  constructor() { }
 
   refresh(): boolean {
     return false;
@@ -37,18 +37,25 @@ export class UserGridActionRendererComponent implements AgRendererComponent {
   }
 
   deleteAttr() {
-    let data = {};
-    if (this.currentTab === 'Attributes') {
-      const user = this.params.user;
-      const arr = Object.entries(user.attributes);
-      const x = arr.find((ele) => _.isEqual(ele[1], this.params.data));
+    // let data = {};
+    // if (this.currentTab === 'Attributes') {
+    //   const user = this.params.user;
+    //   const arr = Object.entries(user.attributes);
 
-      data[x[0]] = x[1];
-    } else {
-      data = this.params.data;
-    }
+    //   if (user.attributes && user.attributes !== null) {
+    //     user.attributesData = Object.values(user.attributes).map((ele: Object, i) => {
+    //       const key = Object.keys(user.attributes)[i];
+    //       return { ...ele, key }
+    //     });
+    //   }
+    //   const x = arr.find((ele) => _.isEqual(ele[1], this.params.data));
+
+    //   data[x[0]] = x[1];
+    // } else {
+    //   data = this.params.data;
+    // }
     this.currentTab === 'Attributes'
-      ? this.params.context.componentParent.deleteAttribute(data)
+      ? this.params.context.componentParent.deleteAttribute(this.params.data)
       : this.params.context.componentParent.deleteGroup(this.params.data);
   }
 }

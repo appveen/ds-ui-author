@@ -848,6 +848,8 @@ export class LocalBotComponent implements OnInit {
       this.manageGroups.openGroupModal()
     }
     if (tab === 'Keys') {
+      this.keyForm.get('period').setValue('days')
+
       this.addNewKey = true;
     }
     if (tab === 'Properties') {
@@ -872,6 +874,7 @@ export class LocalBotComponent implements OnInit {
 
   editKey(data) {
     this.keyForm.get('label').patchValue(data.label)
+    this.keyForm.get('period').patchValue('days')
     this.keyForm.get('expires').patchValue(data.expires / 1440)
     this.editMode = true
     this.keyId = data._id;

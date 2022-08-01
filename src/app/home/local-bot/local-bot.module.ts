@@ -31,7 +31,7 @@ const routes: Routes = [{ path: '', component: LocalBotComponent, canActivate: [
     ManageBotKeyComponent,
     ManageBotPropertyComponent,
     ManageBotGroupComponent,
-    LocalBotCellRendererComponent
+    LocalBotCellRendererComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -52,6 +52,6 @@ const routes: Routes = [{ path: '', component: LocalBotComponent, canActivate: [
     AgGridFilterModule,
     DateFormatModule,
     MatDialogModule
-  ]
+  ],
 })
 export class LocalBotModule { }

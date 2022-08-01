@@ -95,7 +95,7 @@
               <div *ngIf="currentTab === 'Attributes'" style="display: flex">
                 <label style="color: #6c7584; font-weight: 400">All attributes in which the user has been added</label>
                 <div class="add-attribute hover d-flex" (click)="showAttributeSide()" id="showAttributeSide">
-                  <i class="dsi dsi-plus-circle font-20 icon-primary"></i>
+                  <i class="dsi dsi-plus-circle font-20 icon-primary mr-2"></i>
                   <label class="fw-500 font-normal heading">Add Attribute</label>
                 </div>
               </div>
@@ -240,7 +240,7 @@
           <div class="d-flex align-items-center">
             <h5 class="font-weight-bold">Create User</h5>
           </div>
-          <span class="fa fa-times text-secondary hover" id="closeicon"
+          <span class="dsi dsi-close text-secondary hover" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
         <form class="d-flex flex-column" [formGroup]="userForm" odpFocusNext>
