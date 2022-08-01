@@ -139,7 +139,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
             { class: 'dsi-text', value: 'String', label: 'Text' },
             { class: 'dsi-number', value: 'Number', label: 'Number' },
             { class: 'dsi-boolean', value: 'Boolean', label: 'True/False' },
-            { class: 'dsi-calendar', value: 'Date', label: 'Date' },
+            { class: 'dsi-date', value: 'Date', label: 'Date' },
         ];
         this.showPassword = {};
     }

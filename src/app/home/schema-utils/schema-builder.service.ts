@@ -441,12 +441,12 @@ export class SchemaBuilderService {
             { class: 'dsi-text', value: 'String', label: 'Text' },
             { class: 'dsi-number', value: 'Number', label: 'Number' },
             { class: 'dsi-boolean', value: 'Boolean', label: 'True/False' },
-            { class: 'dsi-calendar', value: 'Date', label: 'Date' },
-            { class: 'dsi-group', value: 'Object', label: 'Group' },
+            { class: 'dsi-date', value: 'Date', label: 'Date' },
+            { class: 'dsi-object', value: 'Object', label: 'Group' },
             { class: 'dsi-array', value: 'Array', label: 'Collection' },
             { class: 'dsi-location', value: 'Geojson', label: 'Location' },
             { class: 'dsi-attach', value: 'File', label: 'File' },
-            { class: 'dsi-references', value: 'Relation', label: 'Relation' },
+            { class: 'dsi-relation', value: 'Relation', label: 'Relation' },
             { class: 'dsi-library', value: 'Global', label: 'Library' },
             { class: 'far fa-user-circle', value: 'User', label: 'User' }
         ];
