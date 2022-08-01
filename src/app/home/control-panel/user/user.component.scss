@@ -256,7 +256,6 @@
 .users {
   overflow-y: auto;
   max-height: inherit;
-  padding: 20px 0 20px 20px
 }
 
 .list {
@@ -386,14 +385,14 @@
 .no-attr-label {
   font-weight: 700;
   font-size: 14px;
-  margin: auto auto 15px auto;
+  margin: auto auto 8px auto;
   color: $headings;
 }
 
 .no-attr-sub {
   font-weight: 400;
   font-size: 12px;
-  margin: auto auto 15px auto;
+  margin: auto auto 8px auto;
   color: $sub-headings;
 }
 

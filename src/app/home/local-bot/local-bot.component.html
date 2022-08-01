@@ -9,7 +9,7 @@
   <div class="d-flex flex-column position-relative">
     <div class="options d-flex">
       <div class="fw-600 font-22">Bots</div>
-      <button class="btn btn-primary mt-2 ml-auto" (click)="isCreate = true" *ngIf="hasPermission('PMBBC')">
+      <button class="btn btn-primary mt-2 ml-auto d-flex mr-2" (click)="isCreate = true" *ngIf="hasPermission('PMBBC')">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New Bot</span>
       </button>
@@ -23,7 +23,7 @@
       <span class="fa fa-spinner fa-pulse fa-3x"></span>
     </div>
     <div class="row" style="max-height: inherit" *ngIf="botCount > 0">
-      <div class="col-4 bots border-right">
+      <div class="col-3 bots border-right">
         <div *ngFor="let bot of botRecords; let i = index" class="d-flex" [id]="'bot' + i" (click)="selectRecord(bot)">
           <div class="selectedTab" [ngStyle]="{
               background: bot._id === selectedBot?._id ? '#ff6f00' : 'none'
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <div class="col-8 bots" style="padding: 20px">
+      <div class="col-9 bots" style="padding: 24px">
         <div class="d-flex flex-column">
           <div class="d-flex flex-row">
             <span class="font-20 fw-600 heading mr-2 mt-2">{{ selectedBot?.basicDetails?.name }}</span>
@@ -119,7 +119,7 @@
               applications/systems can use Bot credentials to access data.stack.
               Click on Add bots, to start creating bots for the app
             </div>
-            <button class="btn mt-3 btn-primary" (click)="createBot()" *ngIf="hasPermission('PMBBC')">
+            <button class="btn mt-3 btn-primary d-flex" (click)="isCreate = true" *ngIf="hasPermission('PMBBC')">
               <span class="dsi dsi-plus mr-2"></span>
               <span class="text">Add Bot</span>
             </button>
@@ -151,7 +151,7 @@
         </label>
 
         <div class="input-group">
-          <input class="form-control" type="text" formControlName="botName" placeholder="Type here" />
+          <input class="form-control" type="text" formControlName="botName" placeholder="Type here" odpAutoFocus />
           <span *ngIf="
             (botForm.get('botName').touched || botForm.get('botName').dirty) &&
             botForm.get('botName').hasError('required')
@@ -168,16 +168,6 @@
           " class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
             ngbTooltip="Name can contain alphanumeric and  _,- , @ , # and . characters only"></span>
         </div>
-      </div>
-      <div class="form-group position-relative">
-        <label for="desc"> Description </label>
-        <textarea class="form-control" style="height: 80px !important" type="textarea" formControlName="desc"
-          placeholder="Enter Description" rows="4"></textarea>
-        <span *ngIf="
-            (botForm.get('desc').touched || botForm.get('desc').dirty) &&
-            botForm.get('desc').hasError('maxlength')
-          " class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
-          ngbTooltip="Description should be within 240 characters"></span>
       </div>
       <button type="button" class="btn btn-primary" id="createbot" (click)="createBot()">
         Create
@@ -203,7 +193,7 @@
             formControlName="label" odpAutoFocus [ngClass]="{
               'is-invalid':
                 keyForm.get('label').invalid && keyForm.get('label').dirty
-            }" />
+            }" odpAutoFocus />
           <ng-container *ngIf="keyForm.get('label').dirty">
             <span *ngIf="keyForm.get('label').hasError('required')"
               class="text-danger position-absolute fa fa-exclamation-circle" container="body"
@@ -277,7 +267,7 @@
         </label>
         <div class="input-group">
           <input id="label" class="form-control pr-4 input-text" type="text" placeholder="Label name"
-            formControlName="label" autocomplete="autocomplete_off_hack" />
+            formControlName="label" autocomplete="autocomplete_off_hack" odpAutoFocus />
           <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
               attributeForm.get('type').touched &&
               attributeForm.get('label').hasError('required')

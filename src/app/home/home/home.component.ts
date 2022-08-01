@@ -120,8 +120,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   addBlur: boolean;
   toggleChangePassword: boolean;
   agentConfig: any;
+  navToApp: any;
   constructor(
-    private route: ActivatedRoute,
+    // private route: ActivatedRoute,
     private router: Router,
     public commonService: CommonService,
     private appService: AppService
@@ -139,8 +140,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const self = this;
     self.agentConfig.arch = 'amd64';
     self.agentConfig.os = 'windows';
-
-    //   self.
+    self.init()
     self.addBlur = self.commonService.addBlur;
     self.commonService.apiCalls.componentLoading = false;
     self.username =
@@ -152,6 +152,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     self.appService.toggleSideNav.subscribe((val) => {
       self.showSideNav = val;
     });
+
+    if (self.commonService.app) {
+      self.navToApp = self.commonService.app;
+    }
   }
 
   init() {
@@ -162,35 +166,35 @@ export class HomeComponent implements OnInit, OnDestroy {
     self.commonService.connectSocket();
   }
 
-  loadApps() {
-    const self = this;
-    self.searchAppInput.nativeElement.focus();
-    self.apps = [];
-    self.loadingApps = true;
-    self.commonService
-      .isAuthenticated()
-      .then((res) => {
-        self.loadingApps = false;
-        self.apps = res.apps;
-      })
-      .catch((err) => {
-        self.loadingApps = false;
-      });
-  }
+  // loadApps() {
+  //   const self = this;
+  //   self.searchAppInput.nativeElement.focus();
+  //   self.apps = [];
+  //   self.loadingApps = true;
+  //   self.commonService
+  //     .isAuthenticated()
+  //     .then((res) => {
+  //       self.loadingApps = false;
+  //       self.apps = res.apps;
+  //     })
+  //     .catch((err) => {
+  //       self.loadingApps = false;
+  //     });
+  // }
 
-  changeApp(name) {
-    const self = this;
-    self.showAppOptions = false;
-    self.showProfileOptions = false;
-    self.searchApp = '';
-    if (self.commonService.app._id === name) {
-      return;
-    }
-    const tempIndex = self.apps.findIndex((d) => d._id === name);
-    self.selectedApp = self.apps[tempIndex];
-    self.commonService.app = self.selectedApp;
-    self.router.navigate(['/app/', name]);
-  }
+  // changeApp(name) {
+  //   const self = this;
+  //   self.showAppOptions = false;
+  //   self.showProfileOptions = false;
+  //   self.searchApp = '';
+  //   if (self.commonService.app._id === name) {
+  //     return;
+  //   }
+  //   const tempIndex = self.apps.findIndex((d) => d._id === name);
+  //   self.selectedApp = self.apps[tempIndex];
+  //   self.commonService.app = self.selectedApp;
+  //   self.router.navigate(['/app/', name]);
+  // }
 
   logout() {
     const self = this;
@@ -209,77 +213,77 @@ export class HomeComponent implements OnInit, OnDestroy {
     return self.commonService.hasPermission(type);
   }
 
-  onAppChange(app: App) {
-    const self = this;
-    self.showProfileOptions = false;
-    self.commonService.app = app;
-    self.commonService.disconnectSocket();
-    self.commonService.connectSocket();
-    self.router.navigate(['/app', app._id]);
-  }
+  // onAppChange(app: App) {
+  //   const self = this;
+  //   self.showProfileOptions = false;
+  //   self.commonService.app = app;
+  //   self.commonService.disconnectSocket();
+  //   self.commonService.connectSocket();
+  //   self.router.navigate(['/app', app._id]);
+  // }
 
-  downloadIEG() {
-    const self = this;
-    self.downloadAgentModalTemplateRef = self.commonService.modal(
-      self.downloadAgentModalTemplate
-    );
-    self.downloadAgentModalTemplateRef.result.then(
-      (close) => {
-        if (close) {
-          self.agentConfig.os = close;
-          if (close === 'k8s') {
-            self.agentConfig.type = 'k8s';
-          } else {
-            self.agentConfig.type = 'others';
-          }
-          self.triggerAgentDownload();
-        }
-      },
-      (dismiss) => {}
-    );
-  }
+  // downloadIEG() {
+  //   const self = this;
+  //   self.downloadAgentModalTemplateRef = self.commonService.modal(
+  //     self.downloadAgentModalTemplate
+  //   );
+  //   self.downloadAgentModalTemplateRef.result.then(
+  //     (close) => {
+  //       if (close) {
+  //         self.agentConfig.os = close;
+  //         if (close === 'k8s') {
+  //           self.agentConfig.type = 'k8s';
+  //         } else {
+  //           self.agentConfig.type = 'others';
+  //         }
+  //         self.triggerAgentDownload();
+  //       }
+  //     },
+  //     (dismiss) => { }
+  //   );
+  // }
 
-  triggerAgentDownload() {
-    const self = this;
-    const ele: HTMLAnchorElement = document.createElement('a');
-    ele.target = '_blank';
-    let queryParams;
-    if (self.agentConfig.type !== 'k8s') {
-      queryParams =
-        `ieg/download/exec?` +
-        `os=${self.agentConfig.os}&arch=${self.agentConfig.arch}`;
-    } else {
-      queryParams = `ieg/download/k8s`;
-    }
-    if (environment.production) {
-      ele.href = `${environment.url.partnerManager}/${queryParams}`;
-    } else {
-      ele.href = `http://localhost/api/a/pm/${queryParams}`;
-    }
-    ele.click();
-    ele.remove();
-  }
+  // triggerAgentDownload() {
+  //   const self = this;
+  //   const ele: HTMLAnchorElement = document.createElement('a');
+  //   ele.target = '_blank';
+  //   let queryParams;
+  //   if (self.agentConfig.type !== 'k8s') {
+  //     queryParams =
+  //       `ieg/download/exec?` +
+  //       `os=${self.agentConfig.os}&arch=${self.agentConfig.arch}`;
+  //   } else {
+  //     queryParams = `ieg/download/k8s`;
+  //   }
+  //   if (environment.production) {
+  //     ele.href = `${environment.url.partnerManager}/${queryParams}`;
+  //   } else {
+  //     ele.href = `http://localhost/api/a/pm/${queryParams}`;
+  //   }
+  //   ele.click();
+  //   ele.remove();
+  // }
 
-  getAgentPassword() {
-    const self = this;
-    if (!self.agentConfig.password) {
-      self.commonService.get('partnerManager', '/agent/IEG/password').subscribe(
-        (res) => {
-          self.agentConfig.password = res.password;
-        },
-        (err) => {}
-      );
-    }
-  }
+  // getAgentPassword() {
+  //   const self = this;
+  //   if (!self.agentConfig.password) {
+  //     self.commonService.get('partnerManager', '/agent/IEG/password').subscribe(
+  //       (res) => {
+  //         self.agentConfig.password = res.password;
+  //       },
+  //       (err) => { }
+  //     );
+  //   }
+  // }
 
-  copyPassword() {
-    const self = this;
-    self.agentConfig.copied = true;
-    self.appService.copyToClipboard(self.agentConfig.password);
-    setTimeout(() => {
-      self.agentConfig.copied = false;
-    }, 3000);
-  }
+  // copyPassword() {
+  //   const self = this;
+  //   self.agentConfig.copied = true;
+  //   self.appService.copyToClipboard(self.agentConfig.password);
+  //   setTimeout(() => {
+  //     self.agentConfig.copied = false;
+  //   }, 3000);
+  // }
 
   get authType() {
     const self = this;

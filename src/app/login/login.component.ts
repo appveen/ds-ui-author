@@ -24,8 +24,7 @@ import { SessionService } from '../utils/services/session.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent
-  implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy
-{
+  implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy {
   @ViewChild('clearSessionModal', { static: false })
   clearSessionModal: TemplateRef<HTMLElement>;
   @ViewChild('usernameControl', { static: false }) usernameControl: ElementRef;

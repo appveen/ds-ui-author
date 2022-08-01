@@ -507,33 +507,38 @@ export class CommonService {
     if (self.subscriptions['saveLastActiveApp']) {
       self.subscriptions['saveLastActiveApp'].unsubscribe();
     }
-    return new Promise<any>((resolve, reject) => {
-      const payload = {
-        userId: self.userDetails._id,
-        type: 'last-app',
-        key: 'author',
-        value: self.app._id,
-      };
-      let response: Observable<any>;
-      if (self.lastAppPrefId) {
-        response = self.put(
-          'user',
-          '/data/preferences/' + self.lastAppPrefId,
-          payload
-        );
-      } else {
-        response = self.post('user', '/data/preferences', payload);
-      }
-      self.subscriptions['saveLastActiveApp'] = response.subscribe(
-        (res) => {
-          self.lastAppPrefId = res._id;
-          resolve(res._id);
-        },
-        (err) => {
-          resolve(null);
+    if (self.app?._id) {
+      return new Promise<any>((resolve, reject) => {
+        const payload = {
+          userId: self.userDetails._id,
+          type: 'last-app',
+          key: 'author',
+          value: self.app._id,
+        };
+        let response: Observable<any>;
+        if (self.lastAppPrefId) {
+          response = self.put(
+            'user',
+            '/data/preferences/' + self.lastAppPrefId,
+            payload
+          );
+        } else {
+          response = self.post('user', '/data/preferences', payload);
         }
-      );
-    });
+        self.subscriptions['saveLastActiveApp'] = response.subscribe(
+          (res) => {
+            self.lastAppPrefId = res._id;
+            resolve(res._id);
+          },
+          (err) => {
+            resolve(null);
+          }
+        );
+      });
+    }
+    else {
+      return
+    }
   }
 
   deleteLastActiveApp(): Promise<any> {

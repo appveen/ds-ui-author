@@ -258,7 +258,9 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   onGridReady(event) {
     this.gridApi = event.api;
-    this.forceResizeColumns();
+    if (this.gridApi && this.agGrid.columnApi) {
+      this.forceResizeColumns();
+    }
     // this.setupGrid();
   }
 
