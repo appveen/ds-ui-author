@@ -92,19 +92,19 @@
                 [ngClass]="{'b-right':uploadObj.uploadProgress >30,'b-bottom':uploadObj.uploadProgress >90}">
               </div>
               <div class="mapper-warning" *ngIf="uploadObj.uploadError"></div>
-              <span class="text-accent text-accent d-flex align-items-center font-sm ml-1"
+              <span class="text-accent text-accent d-flex align-items-center font-13 ml-1"
                 *ngIf="uploadObj.showUploadSpinner">Uploading...</span>
-              <span class="text-danger text-accent d-flex align-items-center font-sm ml-1"
+              <span class="text-danger text-accent d-flex align-items-center font-13 ml-1"
                 *ngIf="!uploadObj.showUploadSpinner">{{uploadObj.errorMsg?uploadObj.errorMsg:uploadError}}</span>
             </div>
-            <div class="text-muted font-sm" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
-            <div class="text-accent font-sm" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
+            <div class="text-muted font-13" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
+            <div class="text-accent font-13" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
           </div>
           <span class="text-accent hover" *ngIf="!uploadObj.showUploadTag && !parseObj.showParseTag ">Re-Upload</span>
         </label>
         <div class="d-flex justify-content-between messsage ml-3">
-          <span class="text-muted font-sm">Supported file types(csv,xslx)</span>
-          <span class="text-muted font-sm">Having issue ?Click here to select file using the explorer</span>
+          <span class="text-muted font-13">Supported file types(csv,xslx)</span>
+          <span class="text-muted font-13">Having issue ?Click here to select file using the explorer</span>
         </div>
       </div>
     </div>
@@ -137,15 +137,15 @@
             <div class="d-flex">
               <div class="spinner mr-2" *ngIf="parseObj.showParseSpinner"></div>
               <div class="mapper-warning" *ngIf="parseObj.parseError"></div>
-              <span class="text-accent text-accent d-flex align-items-center font-sm ml-1"
+              <span class="text-accent text-accent d-flex align-items-center font-13 ml-1"
                 *ngIf="parseObj.showParseSpinner">Parseing
                 file...</span>
-              <span class="text-danger text-accent d-flex align-items-center font-sm ml-1"
+              <span class="text-danger text-accent d-flex align-items-center font-13 ml-1"
                 *ngIf="!parseObj.showParseSpinner">Parseing
                 failed...</span>
             </div>
-            <!-- <div class="text-muted font-sm" *ngIf="parseObj.showParseSpinner">362 found</div> -->
-            <div class="text-accent font-sm" *ngIf="!parseObj.showParseSpinner">Retry</div>
+            <!-- <div class="text-muted font-13" *ngIf="parseObj.showParseSpinner">362 found</div> -->
+            <div class="text-accent font-13" *ngIf="!parseObj.showParseSpinner">Retry</div>
           </div>
           <div class="d-flex justify-content-between align-items-center px-2 tags bg-light spinner-tag"
             *ngIf="uploadObj.showUploadTag" [ngClass]="{'bg-danger1':uploadObj.uploadError }">
@@ -154,13 +154,13 @@
                 [ngClass]="{'b-right':uploadObj.uploadProgress >30,'b-bottom':uploadObj.uploadProgress >90}">
               </div>
               <div class="mapper-warning" *ngIf="uploadObj.uploadError"></div>
-              <span class="text-accent text-accent d-flex align-items-center font-sm ml-1"
+              <span class="text-accent text-accent d-flex align-items-center font-13 ml-1"
                 *ngIf="uploadObj.showUploadSpinner">Uploading...</span>
-              <span class="text-danger text-accent d-flex align-items-center font-sm ml-1"
+              <span class="text-danger text-accent d-flex align-items-center font-13 ml-1"
                 *ngIf="!uploadObj.showUploadSpinner">{{uploadObj.errorMsg}}</span>
             </div>
-            <div class="text-muted font-sm" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
-            <div class="text-accent font-sm" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
+            <div class="text-muted font-13" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
+            <div class="text-accent font-13" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
           </div>
           <span class="text-accent hover" *ngIf="!uploadObj.showUploadTag && !parseObj.showParseTag ">Re-Upload</span>
         </label>
@@ -251,13 +251,13 @@
               <div class="spinner mr-2" *ngIf="uploadObj.showUploadSpinner"
                 [ngClass]="{'b-right':uploadObj.uploadProgress >30,'b-bottom':uploadObj.uploadProgress >90}"></div>
               <div class="mapper-warning" *ngIf="uploadObj.uploadError"></div>
-              <span class="text-accent text-accent d-flex align-items-center font-sm ml-1"
+              <span class="text-accent text-accent d-flex align-items-center font-13 ml-1"
                 *ngIf="uploadObj.showUploadSpinner">Uploading...</span>
-              <span class="text-danger text-accent d-flex align-items-center font-sm ml-1"
+              <span class="text-danger text-accent d-flex align-items-center font-13 ml-1"
                 *ngIf="!uploadObj.showUploadSpinner">{{uploadObj.errorMsg}}...</span>
             </div>
-            <div class="text-muted font-sm" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
-            <div class="text-accent font-sm" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
+            <div class="text-muted font-13" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
+            <div class="text-accent font-13" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
           </div>
           <span class="text-accent hover" *ngIf="!uploadObj.showUploadTag && !parseObj.showParseTag ">Re-Upload</span>
         </label>
@@ -412,13 +412,13 @@
                 [ngClass]="{'b-right':uploadObj.uploadProgress >30,'b-bottom':uploadObj.uploadProgress >90}">
               </div>
               <div class="mapper-warning" *ngIf="uploadObj.uploadError"></div>
-              <span class="text-accent text-accent d-flex align-items-center font-sm ml-1"
+              <span class="text-accent text-accent d-flex align-items-center font-13 ml-1"
                 *ngIf="uploadObj.showUploadSpinner">Uploading...</span>
-              <span class="text-danger text-accent d-flex align-items-center font-sm ml-1"
+              <span class="text-danger text-accent d-flex align-items-center font-13 ml-1"
                 *ngIf="!uploadObj.showUploadSpinner">{{uploadObj.errorMsg}}...</span>
             </div>
-            <div class="text-muted font-sm" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
-            <div class="text-accent font-sm" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
+            <div class="text-muted font-13" *ngIf="uploadObj.showUploadSpinner">{{uploadObj.uploadProgress }}%</div>
+            <div class="text-accent font-13" *ngIf="!uploadObj.showUploadSpinner">Re-Upload</div>
           </div>
           <span class="text-accent hover" *ngIf="!uploadObj.showUploadTag && !parseObj.showParseTag ">Re-Upload</span>
         </label>
@@ -429,7 +429,7 @@
               <odp-loading-placeholder width="120" height="15"></odp-loading-placeholder>
             </ng-container>
             <ng-container *ngIf="!showLazyLoader">
-              <span class="font-sm ">Records Found</span>
+              <span class="font-13 ">Records Found</span>
               <span>{{errorLog?.total}}</span>
             </ng-container>
           </div>
@@ -443,7 +443,7 @@
             <ng-container *ngIf="!showLazyLoader">
               <div class="d-flex">
                 <span class="status active"></span>
-                <span class="font-sm ml-1">Valid Records </span>
+                <span class="font-13 ml-1">Valid Records </span>
               </div>
               <span>{{errorLog?.total-(errorLog?.errors+errorLog?.conflicts)}}</span>
             </ng-container>
@@ -457,7 +457,7 @@
             <ng-container *ngIf="!showLazyLoader">
               <div class="d-flex">
                 <span class="status pending"></span>
-                <span class="font-sm ml-1">Duplicates</span>
+                <span class="font-13 ml-1">Duplicates</span>
               </div>
               <span>{{errorLog?.conflicts}}</span>
             </ng-container>
@@ -470,7 +470,7 @@
             <ng-container *ngIf="!showLazyLoader">
               <div class="d-flex">
                 <span class="status stopped"></span>
-                <span class="font-sm ml-1">Errors</span>
+                <span class="font-13 ml-1">Errors</span>
               </div>
               <span>{{errorLog?.errors}}</span>
             </ng-container>
@@ -680,7 +680,7 @@
       </div>
       <!-- <div class="d-flex flex-column p-4">
         <div class="font-weight-bold ">Original</div>
-        <div class="text-muted font-sm">Select Original to make no changes and ignore conflicts records</div>
+        <div class="text-muted font-13">Select Original to make no changes and ignore conflicts records</div>
         <div class="d-flex rounded confict-div align-items-center justify-content-between p-2 "
           [ngClass]="{'selected-record':selectedConflictRecords[0]?.selected}" (click)="markselected(0)">
           <span class="circle rounded-circle border mr-2 d-flex align-items-center justify-content-center"
@@ -693,7 +693,7 @@
       </div> -->
       <div class="d-flex flex-column p-4">
         <div class="font-weight-bold ">Duplicates</div>
-        <div class="text-muted font-sm">Select a record to use</div>
+        <div class="text-muted font-13">Select a record to use</div>
         <div class="duplicates">
           <ng-container *ngFor="let user of selectedConflictRecords;let uIndex=index">
             <div class="d-flex confict-div align-items-center justify-content-between p-2 rounded" 

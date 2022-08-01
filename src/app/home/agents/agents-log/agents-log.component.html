@@ -1,7 +1,7 @@
 <div class="d-flex flex-column w-100 h-100">
     <odp-breadcrumb></odp-breadcrumb>
     <div class="options d-flex justify-content-between align-items-center w-100 px-3 mb-3">
-        <div class="font-weight-bold font-lg p-2 text-nowrap">{{agentLogObject[0]?.name}}
+        <div class="font-weight-bold font-16 p-2 text-nowrap">{{agentLogObject[0]?.name}}
             {{agentLogObject[0]?.status}}<span class="text-muted ml-2">{{agentLogObject[0]?.type==='APPAGENT'?'(App
                 Agent)':'(Partner)'}}</span></div>
         <div class="d-flex align-items-center justify-content-end px-2 w-100 ml-auto">
@@ -174,7 +174,7 @@
 
         </div>
         <div class="d-flex flex-column w-100">
-            <div class="text-secondary font-sm mt-3">Agent Password</div>
+            <div class="text-secondary font-13 mt-3">Agent Password</div>
             <div class="text-dark mt-1">
                 <!-- <span  class="fa fa-spinner fa-pulse"></span> -->
                 <span class="text">{{agentLogObject[0]?.decPassword}}</span>
@@ -184,7 +184,7 @@
                 </button>
             </div>
             <div>
-                <span *ngIf="passwordCopied" class="text-info font-sm">Password Copied!</span>
+                <span *ngIf="passwordCopied" class="text-info font-13">Password Copied!</span>
                 &nbsp;
             </div>
 

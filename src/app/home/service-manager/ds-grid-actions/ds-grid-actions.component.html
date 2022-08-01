@@ -8,7 +8,7 @@
     <small class="fa fa-eye hover mr-2" *ngIf="canEditService()" (click)="viewService()"></small>
     <small class="fa fa-clone hover mr-2" *ngIf="canCloneService()" (click)="cloneService()"></small>
     <small class="fa fa-trash hover mr-2" *ngIf="canDeleteService()" (click)="deleteService()"></small>
-    <small class="hover mr-2 font-xsm" (click)="openDocs()">API</small>
+    <small class="hover mr-2 font-11" (click)="openDocs()">API</small>
     <span *ngIf="isDeploy()" id='deploy{{params.rowIndex}}' class="fas fa-play-circle text-primary"
         (click)="deployService()"></span>
 </div>

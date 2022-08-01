@@ -112,11 +112,11 @@
             <span class="font-weight-bold">Agent Details</span>
         </div>
         <div class="d-flex flex-column my-5 w-100">
-            <div class="text-secondary font-sm">Agent ID</div>
+            <div class="text-secondary font-13">Agent ID</div>
             <div class="text-dark mt-1">{{agent.agentID}}</div>
-            <div class="text-secondary font-sm mt-3">Agent Name</div>
+            <div class="text-secondary font-13 mt-3">Agent Name</div>
             <div class="text-dark mt-1">{{agent.name}}</div>
-            <div class="text-secondary font-sm mt-3">Agent Password</div>
+            <div class="text-secondary font-13 mt-3">Agent Password</div>
             <div class="text-dark mt-1">
                 <span *ngIf="!agent.decPassword" class="fa fa-spinner fa-pulse"></span>
                 <span *ngIf="agent.decPassword" class="text">{{agent.decPassword}}</span>
@@ -126,7 +126,7 @@
                 </button>
             </div>
             <div>
-                <span *ngIf="passwordCopied" class="text-info font-sm">Password Copied!</span>
+                <span *ngIf="passwordCopied" class="text-info font-13">Password Copied!</span>
                 &nbsp;
             </div>
         </div>
@@ -171,17 +171,17 @@
         </div>
         <div class="d-flex flex-column my-5 w-100">
             <div class="form-group">
-                <label for="agentName" class="font-sm text-secondary">Agent Name</label>
+                <label for="agentName" class="font-13 text-secondary">Agent Name</label>
                 <input type="text" class="form-control-plaintext no-outline" [(ngModel)]="agentPasswordModel.agent.name"
                     readonly>
             </div>
             <div class="form-group">
-                <label for="newPassword" class="font-sm text-secondary">New Password</label>
+                <label for="newPassword" class="font-13 text-secondary">New Password</label>
                 <input type="password" class="form-control" autocomplete="new-password"
                     [(ngModel)]="agentPasswordModel.password">
             </div>
             <div class="form-group">
-                <label for="newPassword" class="font-sm text-secondary">Confirm Password</label>
+                <label for="newPassword" class="font-13 text-secondary">Confirm Password</label>
                 <input type="password" class="form-control" [(ngModel)]="agentPasswordModel.cpassword">
             </div>
             <p class="text-danger">

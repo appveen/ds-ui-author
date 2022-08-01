@@ -7,7 +7,7 @@
 <div class="d-flex flex-column position-relative">
   <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
   <div class="options d-flex justify-content-between align-items-center w-100  px-3">
-    <div class="font-weight-bold font-lg">Bookmarks</div>
+    <div class="font-weight-bold font-16">Bookmarks</div>
     <div class="d-flex align-items-center ignore-outside">
       <button class="add-new btn-min-width btn btn-primary ignore-outside" type="button" (click)="createNewBookmark()"
         *ngIf="hasPermission('PMBM')">
@@ -22,11 +22,11 @@
         <div class="d-flex align-items-center">
           <div class="d-flex align-items-center">
             <odp-round-check [(checked)]="checkAllBookmark" [edit]={status:true}></odp-round-check>
-            <span class="text-accent font-sm ml-2" (click)="checkAllBookmark=!checkAllBookmark">Select All</span>
+            <span class="text-accent font-13 ml-2" (click)="checkAllBookmark=!checkAllBookmark">Select All</span>
           </div>
           <div class="d-flex align-items-center ml-4 hover" *ngIf="enableBulkDelete" (click)="bulkDelete()">
-           <span class="fa fa-trash text-danger font-sm"></span>
-            <button  type="button" class="btn btn-link text-danger font-sm" >Delete</button>
+           <span class="fa fa-trash text-danger font-13"></span>
+            <button  type="button" class="btn btn-link text-danger font-13" >Delete</button>
           </div>
         </div>
         <div class="d-flex align-items-center">

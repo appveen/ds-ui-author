@@ -103,7 +103,7 @@
 <div class="d-flex flex-column w-100 h-100">
     <odp-breadcrumb></odp-breadcrumb>
     <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3 mb-3">
-        <div class="font-weight-bold font-lg">List of Agents</div>
+        <div class="font-weight-bold font-16">List of Agents</div>
         <odp-search-box (enteredText)="search($event)" (reset)="clearSearch()"></odp-search-box>
         <span class="button-placeholder">
             &nbsp;
@@ -311,7 +311,7 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex align-items-center w-100 px-4 font-sm">
+        <div class="d-flex align-items-center w-100 px-4 font-13">
             <span class="text-secondary ml-2">Password</span>
             <div class="d-flex align-items-center justify-content-center mx-3">
                 <span *ngIf="!agentConfig.showPassword" class="fa fa-eye mr-2"
@@ -346,11 +346,11 @@
             <span class="font-weight-bold">Agent Details</span>
         </div>
         <div class="d-flex flex-column my-5 w-100">
-            <div class="text-secondary font-sm">Agent ID</div>
+            <div class="text-secondary font-13">Agent ID</div>
             <div class="text-dark mt-1">{{selectedAgent.agentID}}</div>
-            <div class="text-secondary font-sm mt-3">Agent Name</div>
+            <div class="text-secondary font-13 mt-3">Agent Name</div>
             <div class="text-dark mt-1">{{selectedAgent.name}}</div>
-            <div class="text-secondary font-sm mt-3">Agent Password</div>
+            <div class="text-secondary font-13 mt-3">Agent Password</div>
             <div class="text-dark mt-1">
                 <span *ngIf="!selectedAgent.decPassword" class="fa fa-spinner fa-pulse"></span>
                 <span *ngIf="selectedAgent.decPassword" class="text">{{selectedAgent.decPassword}}</span>
@@ -360,7 +360,7 @@
                 </button>
             </div>
             <div>
-                <span *ngIf="passwordCopied" class="text-info font-sm">Password Copied!</span>
+                <span *ngIf="passwordCopied" class="text-info font-13">Password Copied!</span>
                 &nbsp;
             </div>
         </div>

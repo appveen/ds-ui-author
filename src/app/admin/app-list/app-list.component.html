@@ -14,7 +14,7 @@
   <div
     class="d-flex justify-content-between align-items-center border-bottom py-4"
   >
-    <div class="font-weight-bold font-lg text-accent">
+    <div class="font-weight-bold font-16 text-accent">
       {{ isHome ? 'Select an app to proceed' : 'Apps' }}
     </div>
     <odp-search-box
@@ -157,7 +157,7 @@
         ></span>
       </div>
       <div class="d-flex flex-column w-100" [formGroup]="form">
-        <label for="name" class="font-sm text-secondary">
+        <label for="name" class="font-13 text-secondary">
           <span class="text">Name</span>
           <sup class="text-danger font-normal ml-2" ngbTooltip="Mandatory field"
             >&bull;</sup
@@ -204,7 +204,7 @@
             ></span>
           </ng-container>
         </div>
-        <label for="description" class="font-sm text-secondary mt-3"
+        <label for="description" class="font-13 text-secondary mt-3"
           >Description</label
         >
         <textarea
@@ -217,7 +217,7 @@
           (keydown.enter)="$event.preventDefault()"
           (keyup.enter)="createNewAppBtn.click()"
         ></textarea>
-        <label for="timezone" class="font-sm text-secondary mt-3"
+        <label for="timezone" class="font-13 text-secondary mt-3"
           >Timezone</label
         >
         <odp-timezone-picker

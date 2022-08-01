@@ -8,7 +8,7 @@
 
   <div class="d-flex flex-column position-relative">
     <div class="options d-flex">
-      <div class="fw-600 font-xxl">Bots</div>
+      <div class="fw-600 font-22">Bots</div>
       <button class="btn btn-primary mt-2 ml-auto" (click)="isCreate = true" *ngIf="hasPermission('PMBBC')">
         <span class="fa fa-plus mr-2"></span>
         <span class="text">New Bot</span>
@@ -37,7 +37,7 @@
       <div class="col-8 bots" style="padding: 20px">
         <div class="d-flex flex-column">
           <div class="d-flex flex-row">
-            <span class="font-xl fw-600 heading mr-2 mt-2">{{ selectedBot?.basicDetails?.name }}</span>
+            <span class="font-20 fw-600 heading mr-2 mt-2">{{ selectedBot?.basicDetails?.name }}</span>
             <div class="col mt-2">
               <odp-switch [edit]="{ status: true }" type="accent" (checkedChange)="toggleStatus($event)"
                 [(checked)]="selectedBot.isActive">
@@ -113,7 +113,7 @@
         <div class="new-bot m-auto px-3 py-4">
           <div class="d-flex flex-column justify-content-center align-items-center">
             <div class="bot-img mb-4"></div>
-            <span class="mx-auto font-xl fw-600 heading">Create Bots</span>
+            <span class="mx-auto font-20 fw-600 heading">Create Bots</span>
             <div class="mt-3 align-items-center text-muted text-center font-normal sub-heading">
               Bots provide API-only access into data.stack. Other
               applications/systems can use Bot credentials to access data.stack.
@@ -132,7 +132,7 @@
 
 
     <odp-delete-modal [open]="openDeleteBotModal" (close)="closeDeleteBotModal($event)">
-      <span class="odp-bots font-xl text-success"></span>
+      <span class="odp-bots font-20 text-success"></span>
     </odp-delete-modal>
   </div>
   <div *ngIf="isCreate || addNewKey || addNewProperty" class="slide-overlay position-fixed"></div>

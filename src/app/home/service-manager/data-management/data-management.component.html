@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between">
         <div class="d-flex align-items-center">
             <i class="fa fa-arrow-left text-secondary mr-3 fa-lg hover" aria-hidden="true" [routerLink]="['../']"></i>
-            <div class="fw-600 font-xxl">Settings</div>
+            <div class="fw-600 font-22">Settings</div>
         </div>
         <div>
             <button class="btn btn-primary btn-min-width fs-13 fw-600" [disabled]="!changesDone" (click)="save()">
@@ -10,39 +10,39 @@
         </div>
     </div>
     <div class="mt-3 bg-white rounded p-4">
-        <div class="fw-600 font-xxl mb-4">Data Management</div>
+        <div class="fw-600 font-22 mb-4">Data Management</div>
         <div class="ds-stats d-flex justify-content-start">
             <div class="service-details p-3 bg-info">
-                <div class="fw-600 font-xl">{{serviceStatus.Total?serviceStatus.Total:0}}</div>
-                <div class="pt-4 font-xsm text-secondary">TOTAL SERVICES</div>
+                <div class="fw-600 font-20">{{serviceStatus.Total?serviceStatus.Total:0}}</div>
+                <div class="pt-4 font-11 text-secondary">TOTAL SERVICES</div>
             </div>
             <div class="service-details p-3 bg-success">
                 <div class="d-flex align-items-center justify-content-between">
-                    <span class="fw-600 font-xl"> {{serviceStatus.Active?serviceStatus.Active:0}} </span>
+                    <span class="fw-600 font-20"> {{serviceStatus.Active?serviceStatus.Active:0}} </span>
                     <button class="btn btn-sm btn-danger font-11 hover" [disabled]="!serviceStatus.Active"
                         (click)="startStopServiceModel('Stop')">Stop All</button>
                 </div>
-                <div class="pt-4 font-xsm text-secondary">RUNNING SERVICES</div>
+                <div class="pt-4 font-11 text-secondary">RUNNING SERVICES</div>
             </div>
             <div class="service-details p-3 bg-primary">
-                <div class="fw-600 font-xl">{{serviceStatus.Draft?serviceStatus.Draft:0}}</div>
-                <div class="pt-4 font-xsm text-secondary">IN DRAFTS</div>
+                <div class="fw-600 font-20">{{serviceStatus.Draft?serviceStatus.Draft:0}}</div>
+                <div class="pt-4 font-11 text-secondary">IN DRAFTS</div>
             </div>
             <div class="service-details p-3 bg-danger">
                 <div class="d-flex align-items-center justify-content-between">
-                    <span class="fw-600 font-xl"> {{serviceStatus.Undeployed?serviceStatus.Undeployed:0}} </span>
+                    <span class="fw-600 font-20"> {{serviceStatus.Undeployed?serviceStatus.Undeployed:0}} </span>
                     <button class="btn btn-sm btn-success font-11 hover" [disabled]="!serviceStatus.Undeployed"
                         (click)="startStopServiceModel('Start')">Start All</button>
                 </div>
-                <div class="pt-4 font-xsm text-secondary">STOPPED SERVICES</div>
+                <div class="pt-4 font-11 text-secondary">STOPPED SERVICES</div>
             </div>
             <div class="service-details p-3 bg-secondary">
-                <div class="fw-600 font-xl">{{serviceStatus.Pending?serviceStatus.Pending:0}}</div>
-                <div class="pt-4 font-xsm text-secondary">MAINTAINANCE</div>
+                <div class="fw-600 font-20">{{serviceStatus.Pending?serviceStatus.Pending:0}}</div>
+                <div class="pt-4 font-11 text-secondary">MAINTAINANCE</div>
             </div>
         </div>
         <div class="data-settings">
-            <div class="fw-600 font-xl">Data Settings</div>
+            <div class="fw-600 font-20">Data Settings</div>
             <div class="row my-4">
                 <h6 class="col font-weight-bold">Keep history of data when data is changed </h6>
                 <div class="col-9 switch-container">
@@ -114,7 +114,7 @@
             <hr class="hr">
         </div>
         <div class="insights-settings">
-            <div class="fw-600 font-xl">Insights Settings</div>
+            <div class="fw-600 font-20">Insights Settings</div>
             <div class="row my-4">
                 <div class="col-3">
                     <h6 class="font-weight-bold"> Disable insights</h6>

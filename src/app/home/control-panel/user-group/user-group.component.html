@@ -6,7 +6,7 @@
 </div>
 <div class="group-page d-flex flex-column bg-light-gray">
   <div class="options d-flex justify-content-between align-items-center w-100 px-4">
-    <div class="font-xxl">
+    <div class="font-22">
       <span class="fw-600 mr-2">Groups</span>
       <span>({{totalRecords - 1}})</span>
     </div>
@@ -21,7 +21,7 @@
 
   <div class="scroll-pane">
     <div class="list-group mx-4 mb-4">
-      <div class="list-group-item header py-0 bg-light text-secondary text-uppercase">
+      <div class="list-group-item header py-0 bg-light text-muted text-uppercase font-13">
         <div class="d-flex align-items-center justify-content-between h-100">
           <div class="group-name">Group Name</div>
           <div class="d-flex align-items-center">
@@ -39,7 +39,7 @@
           <div class="d-flex align-items-center">
             <div class="group-users-count">{{group.membersCount}}</div>
             <div class="group-bots-count">{{group.botsCount}}</div>
-            <div class="group-author-flag d-flex align-items-center">
+            <div class="group-author-flag font-12 d-flex align-items-center">
               <ng-container *ngIf="group.hasAuthorRoles">
                 <span class="fa fa-circle fa-xs text-success mr-2"></span>
                 <span class="text-dark">Active</span>
@@ -49,7 +49,7 @@
                 <span class="text-muted">Inactive</span>
               </ng-container>
             </div>
-            <div class="group-appcenter-flag d-flex align-items-center">
+            <div class="group-appcenter-flag font-12 d-flex align-items-center">
               <ng-container *ngIf="group.hasAppcenterRoles">
                 <span class="fa fa-circle fa-xs text-success mr-2"></span>
                 <span class="text-dark">Active</span>
@@ -61,10 +61,10 @@
             </div>
           </div>
           <div class="group-actions">
-            <button type="button" class="btn btn-light bg-white mr-2" [routerLink]="['../gm', group._id]">
+            <button type="button" class="btn btn-light bg-transparent border mr-2" [routerLink]="['../gm', group._id]">
               <span class="fa fa-pen text-secondary"></span>
             </button>
-            <button type="button" class="btn btn-light bg-white">
+            <button type="button" class="btn btn-light bg-transparent border">
               <span class="fa fa-trash text-secondary"></span>
             </button>
           </div>
@@ -92,7 +92,7 @@
         </button>
       </div>
       <div class="d-flex flex-column w-100 mt-4">
-        <label for="name" class="font-sm text-secondary">
+        <label for="name" class="font-13 text-secondary">
           <span class="text">Name</span>
           <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
         </label>
@@ -113,7 +113,7 @@
               ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
           </ng-container>
         </div>
-        <label for="description" class="font-sm text-secondary mt-3">Description</label>
+        <label for="description" class="font-13 text-secondary mt-3">Description</label>
         <div class="name-wrapper position-relative">
           <textarea #newServiceTextarea class="form-control" id="description" rows="5" placeholder="No description"
             formControlName="description" (keydown.enter)="$event.preventDefault()"

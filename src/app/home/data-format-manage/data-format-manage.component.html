@@ -234,13 +234,13 @@
                                     *ngIf="item.flowDetails">
                                     <div class="d-flex align-items-center pl-2 mt-3">
                                         <div
-                                            class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-sm">
+                                            class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-13">
                                             {{item.inputType.toLowerCase()}}
                                         </div>
-                                        <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-sm">
+                                        <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-13">
                                             Partner Agent:
                                         </span>
-                                        <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-sm">
+                                        <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-13">
                                             Flow End Point:
                                         </span>
                                     </div>
@@ -264,14 +264,14 @@
                                     <ng-container *ngIf="item.outputType">
                                         <div class="d-flex align-items-center pl-2 mt-3">
                                             <div
-                                                class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-sm">
+                                                class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-13">
                                                 {{item.outputType.toLowerCase()}}
                                             </div>
                                             <span *ngIf="item.outputType === 'FILE'"
-                                                class="text-secondary ml-2 font-sm">
+                                                class="text-secondary ml-2 font-13">
                                                 App Agent:
                                             </span>
-                                            <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-sm">
+                                            <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-13">
                                                 External API:
                                             </span>
                                         </div>

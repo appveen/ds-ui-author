@@ -3,22 +3,22 @@
     <div class="options d-flex justify-content-between align-items-center w-100 px-3">
         <div class="p-2 d-flex flex-column">
             <div class="d-flex align-items-center">
-                <span class="font-weight-bold font-lg text-nowrap mr-2">{{agentDetails?.name}}</span>
+                <span class="font-weight-bold font-16 text-nowrap mr-2">{{agentDetails?.name}}</span>
                 <span class="badge badge-sm mr-2"
                     [ngClass]="{'badge-success':agentDetails?.status=='RUNNING','badge-danger':agentDetails?.status!='RUNNING'}">
                     {{agentDetails?.status}}
                 </span>
-                <!-- <span class="font-sm text-nowrap mr-l text-muted"></span> -->
+                <!-- <span class="font-13 text-nowrap mr-l text-muted"></span> -->
             </div>
-            <span *ngIf="agentDetails.type=='APPAGENT'" class="text-muted font-sm">
+            <span *ngIf="agentDetails.type=='APPAGENT'" class="text-muted font-13">
                 App Agent | {{agentDetails?.ipAddress || 'N.A.'}} | {{agentDetails?.macAddress || 'N.A.'}}
             </span>
-            <span *ngIf="agentDetails.type!='APPAGENT'" class="text-muted font-sm">
+            <span *ngIf="agentDetails.type!='APPAGENT'" class="text-muted font-13">
                 Partner Agent | {{agentDetails?.ipAddress || 'N.A.'}} | {{agentDetails?.macAddress || 'N.A.'}}
             </span>
         </div>
         <div class="d-flex align-items-center">
-            <div class="quick-info px-2 badge badge-dark d-flex font-sm align-items-center mr-3">
+            <div class="quick-info px-2 badge badge-dark d-flex font-13 align-items-center mr-3">
                 <span class="text font-weight-bold mr-2">Password&nbsp;:</span>
                 <span *ngIf="!togglePassword" class="text">
                     <span class="fa fa-asterisk fa-xs mx-1"></span>
@@ -30,11 +30,11 @@
                 <span class="fa ml-2 text hover" [ngClass]="{'fa-eye-slash':togglePassword,'fa-eye':!togglePassword}"
                     (click)="togglePassword=!togglePassword"></span>
             </div>
-            <div class="quick-info px-2 badge badge-dark d-flex font-sm align-items-center mr-3">
+            <div class="quick-info px-2 badge badge-dark d-flex font-13 align-items-center mr-3">
                 <span class="text mr-2">Heartbeat&nbsp;:</span>
                 <odp-agents-hb *ngIf="agentDetails?.agentID" [agent]="agentDetails"></odp-agents-hb>
             </div>
-            <div class="quick-info px-2 badge badge-dark d-flex font-sm align-items-center">
+            <div class="quick-info px-2 badge badge-dark d-flex font-13 align-items-center">
                 <span class="text mr-2">Streak&nbsp;:</span>
                 <odp-agents-streak *ngIf="agentDetails?.agentID" [agent]="agentDetails"></odp-agents-streak>
             </div>
@@ -184,11 +184,11 @@
         </div>
         <div class="d-flex flex-column py-3 w-100">
             <div class="form-group">
-                <label for="newPassword" class="text-secondary font-weight-bold font-sm">New Password</label>
+                <label for="newPassword" class="text-secondary font-weight-bold font-13">New Password</label>
                 <input type="password" id="newPassword" class="form-control" [(ngModel)]="agentPasswordModel.password">
             </div>
             <div class="form-group">
-                <label for="cnfPassword" class="text-secondary font-weight-bold font-sm">Confirm Password</label>
+                <label for="cnfPassword" class="text-secondary font-weight-bold font-13">Confirm Password</label>
                 <input type="password" id="cnfPassword" class="form-control" [(ngModel)]="agentPasswordModel.cpassword">
             </div>
             <p class="text-danger m-0">

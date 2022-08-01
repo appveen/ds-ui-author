@@ -7,7 +7,7 @@
 <div class="d-flex flex-column h-100 bg-light-gray service-listing-section">
   <!-- <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb> -->
   <div class="options d-flex justify-content-between align-items-center w-100">
-    <div class="fw-600 font-xxl">Data Services</div>
+    <div class="fw-600 font-22">Data Services</div>
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="search($event)" (reset)="resetSearch(); getServices()"></odp-search-box>
       <button type="button" id="data-management" class="btn btn-outline-light border ml-3" [routerLink]="['settings']"
@@ -333,7 +333,7 @@
         <span class="fa fa-times text-muted hover" (click)="newServiceModalRef.close(false)"></span>
       </div>
       <div class="d-flex flex-column w-100">
-        <label for="name" class="font-sm text-secondary">
+        <label for="name" class="font-13 text-secondary">
           <span class="text">Name</span>
           <sup class="text-danger font-normal high-zIndex sup-top" ngbTooltip="Mandatory field">*</sup>
         </label>
@@ -354,7 +354,7 @@
               ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
           </ng-container>
         </div>
-        <label for="description" class="font-sm text-secondary mt-3">Description</label>
+        <label for="description" class="font-13 text-secondary mt-3">Description</label>
         <div class="name-wrapper position-relative">
           <textarea #newServiceTextarea class="form-control" id="description" rows="5" placeholder="No description"
             formControlName="description" (keydown.enter)="$event.preventDefault()"
@@ -394,7 +394,7 @@
       </p>
       <div class="d-flex flex-column w-100">
         <div class="form-group">
-          <label for="name" class="font-sm text-secondary">
+          <label for="name" class="font-13 text-secondary">
             <span class="text">Clone Name</span>
             <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
           </label>
@@ -417,7 +417,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="description" class="font-sm text-secondary mt-3">Clone Description</label>
+          <label for="description" class="font-13 text-secondary mt-3">Clone Description</label>
           <div class="name-wrapper position-relative">
             <textarea #cloneServiceTextarea class="form-control" id="description" rows="5" placeholder="No description"
               formControlName="description" (keydown.enter)="$event.preventDefault()"

@@ -82,13 +82,13 @@
                             *ngIf="item.flowDetails">
                             <div class="d-flex align-items-center pl-2 mt-3">
                                 <div
-                                    class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-sm">
+                                    class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-13">
                                     {{item.inputType.toLowerCase()}}
                                 </div>
-                                <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-sm">
+                                <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-13">
                                     Partner Agent:
                                 </span>
-                                <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-sm">
+                                <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-13">
                                     Flow End Point:
                                 </span>
                             </div>
@@ -120,13 +120,13 @@
                             <ng-container *ngIf="item.outputType">
                                 <div class="d-flex align-items-center pl-2 mt-3">
                                     <div
-                                        class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-sm">
+                                        class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-13">
                                         {{item.outputType.toLowerCase()}}
                                     </div>
-                                    <span *ngIf="item.outputType === 'FILE'" class="text-secondary ml-2 font-sm">
+                                    <span *ngIf="item.outputType === 'FILE'" class="text-secondary ml-2 font-13">
                                         App Agent:
                                     </span>
-                                    <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-sm">
+                                    <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-13">
                                         External API:
                                     </span>
                                 </div>
@@ -256,7 +256,7 @@
         <ng-container *ngIf="newIntegrationFlowStep==1">
             <div class="d-flex flex-column w-100">
                 <div class="d-flex flex-column w-100">
-                    <label for="name" class="font-sm text-secondary">
+                    <label for="name" class="font-13 text-secondary">
                         <span class="text">Name</span>
                         <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
                     </label>
@@ -267,7 +267,7 @@
                             class="fa fa-exclamation-circle text-danger position-absolute"
                             ngbTooltip="Name cannot be more then 20 charaters." container="body"></span>
                     </div>
-                    <label for="description" class="font-sm text-secondary mt-3">Description</label>
+                    <label for="description" class="font-13 text-secondary mt-3">Description</label>
                     <textarea #newFlowTextarea class="form-control" id="description" rows="5"
                         placeholder="No description" formControlName="description"
                         (keydown.enter)="$event.preventDefault()" (keyup.enter)="newIntegrationFlowStep=2"></textarea>
@@ -301,7 +301,7 @@
                             <div class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
                                 <div class="api-icon"></div>
                             </div>
-                            <span class="text mt-1 font-sm">API</span>
+                            <span class="text mt-1 font-13">API</span>
                             <input ngbButton #apiType type="radio" class="d-none" name="blockType" id="apiType"
                                 value="api">
                         </label>
@@ -315,7 +315,7 @@
                             <div class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
                                 <div class="file-icon"></div>
                             </div>
-                            <span class="text mt-1 font-sm">File</span>
+                            <span class="text mt-1 font-13">File</span>
                             <input ngbButton #fileType type="radio" class="d-none" name="blockType" id="fileType"
                                 value="file">
                         </label>

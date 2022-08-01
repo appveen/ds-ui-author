@@ -21,7 +21,7 @@
     ></span>
   </div>
   <form class="w-100 pl-3 pr-4 bookmark-prop" [formGroup]="bookmarkForm">
-    <label for="name" class="font-sm text-secondary mt-3">
+    <label for="name" class="font-13 text-secondary mt-3">
       <span class="text">Name</span>
       <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
     </label>
@@ -41,7 +41,7 @@
         placeholder="Name"
       />
     </div>
-    <label for="url" class="font-sm text-secondary mt-3">
+    <label for="url" class="font-13 text-secondary mt-3">
       <span class="text">Target URL</span>
       <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
     </label>
@@ -66,7 +66,7 @@
       ></span>
     </div>
     <div class="d-flex mt-2">
-      <label class="font-sm text-secondary">Open in New Tab</label>
+      <label class="font-13 text-secondary">Open in New Tab</label>
       <label class="switch accent mb-0 ml-2" for="options">
         <input
           type="checkbox"
@@ -82,14 +82,14 @@
         }}</span>
         <span
           *ngIf="option"
-          class="fa fa-exclamation-circle text-info1 ml-2 field-error-symbol font-lg"
+          class="fa fa-exclamation-circle text-info1 ml-2 field-error-symbol font-16"
           ngbTooltip="Link will open in new tab "
           placement="bottom"
           container="body"
         ></span>
         <span
           *ngIf="!option"
-          class="fa fa-exclamation-circle text-info1 ml-2 field-error-symbol font-lg"
+          class="fa fa-exclamation-circle text-info1 ml-2 field-error-symbol font-16"
           ngbTooltip="Link will open in iFrame, websites where embeded option has been disabled cannot be opened in iFrame "
           placement="bottom"
           container="body"
@@ -110,7 +110,7 @@
     <ng-container formGroupName="parameters">
       <div class="my-3">URL Parameters</div>
       <div class="d-flex mt-1">
-        <label class="font-sm text-secondary sub-level-width">Token</label>
+        <label class="font-13 text-secondary sub-level-width">Token</label>
         <label class="switch accent mb-0 ml-2" for="token">
           <input
             type="checkbox"
@@ -126,7 +126,7 @@
         </label>
       </div>
       <div class="d-flex mt-3">
-        <label class="font-sm text-secondary sub-level-width">App Name</label>
+        <label class="font-13 text-secondary sub-level-width">App Name</label>
         <label class="switch accent mb-0 ml-2" for="appName">
           <input
             type="checkbox"
@@ -142,7 +142,7 @@
         </label>
       </div>
       <div class="d-flex mt-3">
-        <label class="font-sm text-secondary sub-level-width">User ID</label>
+        <label class="font-13 text-secondary sub-level-width">User ID</label>
         <label class="switch accent mb-0 ml-2" for="userId">
           <input
             type="checkbox"
@@ -179,7 +179,7 @@
       "
     >
       <div
-        class="d-flex justify-content-between py-2 pl-3 font-md align-items-center hover ignore-outside"
+        class="d-flex justify-content-between py-2 pl-3  align-items-center hover ignore-outside"
         *ngIf="i != editIndex; else keyValueModal"
       >
         <div
@@ -252,7 +252,7 @@
     </div>
     <div class="key-value-container bg-white mt-2 p-2">
       <div class="d-flex position-relative">
-        <label for="key" class="font-sm text-secondary mt-3 sub-level-width">
+        <label for="key" class="font-13 text-secondary mt-3 sub-level-width">
           <span class="text">Key</span>
           <sup class="text-danger font-normal" ngbTooltip="Mandatory field"
             >*</sup
@@ -271,7 +271,7 @@
         ></span>
       </div>
       <div class="d-flex">
-        <label for="value" class="font-sm text-secondary mt-3 sub-level-width">
+        <label for="value" class="font-13 text-secondary mt-3 sub-level-width">
           <span class="text">Value</span>
           <sup class="text-danger font-normal" ngbTooltip="Mandatory field"
             >*</sup

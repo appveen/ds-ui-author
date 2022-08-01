@@ -37,7 +37,7 @@
                 <div class="d-flex align-items-start w-100 py-5 px-4">
                     <div class="selector in-selector d-flex flex-column align-items-center" *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
                         <div
-                            class="bg-success rounded-circle mb-5 d-flex align-items-center justify-content-center text-white font-xs">
+                            class="bg-success rounded-circle mb-5 d-flex align-items-center justify-content-center text-white font-12">
                             IN</div>
                         <div class="selector-box d-flex flex-column align-items-center border rounded w-100"
                             [ngClass]="{'bg-light':selectedInType,'bg-secondary':!selectedInType}">
@@ -159,7 +159,7 @@
                     </div>
                     <div class="selector out-selector d-flex flex-column align-items-center" *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
                         <div
-                            class="bg-accent rounded-circle mb-5 d-flex align-items-center justify-content-center text-white font-xs">
+                            class="bg-accent rounded-circle mb-5 d-flex align-items-center justify-content-center text-white font-12">
                             OUT</div>
                         <div class="selector-box d-flex flex-column align-items-center border rounded w-100"
                             [ngClass]="{'bg-light':selectedOutType,'bg-secondary':!selectedOutType}">
@@ -289,13 +289,13 @@
                                     *ngIf="item.flowDetails">
                                     <div class="d-flex align-items-center pl-2 mt-3">
                                         <div
-                                            class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-sm">
+                                            class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-13">
                                             {{item.inputType.toLowerCase()}}
                                         </div>
-                                        <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-sm">
+                                        <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-13">
                                             Partner Agent:
                                         </span>
-                                        <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-sm">
+                                        <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-13">
                                             Flow End Point:
                                         </span>
                                     </div>
@@ -319,14 +319,14 @@
                                     <ng-container *ngIf="item.outputType">
                                         <div class="d-flex align-items-center pl-2 mt-3">
                                             <div
-                                                class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-sm">
+                                                class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-13">
                                                 {{item.outputType.toLowerCase()}}
                                             </div>
                                             <span *ngIf="item.outputType === 'FILE'"
-                                                class="text-secondary ml-2 font-sm">
+                                                class="text-secondary ml-2 font-13">
                                                 App Agent:
                                             </span>
-                                            <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-sm">
+                                            <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-13">
                                                 External API:
                                             </span>
                                         </div>

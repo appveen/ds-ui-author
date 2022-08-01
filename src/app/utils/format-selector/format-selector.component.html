@@ -21,7 +21,7 @@
                         (click)="selectDataStructureModalTemplateRef.close(false)"></span>
                 </div>
                 <div class="d-flex flex-column align-items-center my-3">
-                    <p class="font-sm">Choose the Selector type.</p>
+                    <p class="font-13">Choose the Selector type.</p>
                     <div class="d-flex align-items-center justify-content-between">
                         <odp-radio-btn class="mr-2" *ngIf="showDataService">
                             <div class="d-flex align-items-center">
@@ -86,17 +86,17 @@
                             'JSON'}}</td>
                             </tr>
                             <tr *ngIf="dataList.length==0 && !searchTerm">
-                                <td class="text-center font-sm text-secondary" colspan="4"
+                                <td class="text-center font-13 text-secondary" colspan="4"
                                     *ngIf="selectedType == 'dataService'">Start typing a
                                     Data
                                     Service name</td>
-                                <td class="text-center font-sm text-secondary" colspan="4"
+                                <td class="text-center font-13 text-secondary" colspan="4"
                                     *ngIf="selectedType == 'dataFormat'">Start typing a
                                     Data
                                     Format name</td>
                             </tr>
                             <tr *ngIf="dataList.length==0 && searchTerm">
-                                <td class="text-center text-secondary font-sm" colspan="4">No records found</td>
+                                <td class="text-center text-secondary font-13" colspan="4">No records found</td>
                             </tr>
                         </tbody>
                         <tbody *ngIf="showLoader && searchTerm">
@@ -135,7 +135,7 @@
 <ng-template #customFormatModalTemplate>
     <div class="modal-body p-4">
         <div class="d-flex align-items-center">
-            <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white font-xs">
+            <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white font-12">
                 IN</div>
             <span class="font-weight-bold ml-3">Create format</span>
         </div>

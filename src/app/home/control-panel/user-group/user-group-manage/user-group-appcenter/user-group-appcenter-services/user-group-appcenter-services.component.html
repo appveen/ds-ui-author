@@ -76,7 +76,7 @@
             </div>
             <odp-switch [edit]="{status:hasPermission('PMGCDS')}" [checked]="roleActive(role)"
               [disabled]="adminRole? true : false" (checkedChange)="toggleRole($event,role,selectedDS)"></odp-switch>
-            <!-- <span class="toggle font-sm">
+            <!-- <span class="toggle font-13">
               <label class="switch accent mb-0 mr-3 mt-1" [attr.for]="role.id" *ngIf="hasPermission('PMGCDS')">
                 <input type="checkbox" value="true" [attr.id]="role.id" (change)="toggleRole($event,role,selectedDS)"
                   [ngModel]="roleActive(role)" [attr.disabled]="adminRole? true : null">
@@ -113,7 +113,7 @@
               </div>
               <odp-switch [edit]="{status:hasPermission('PMGCDS')}" [checked]="roleActive(step)"
                 [disabled]="adminRole? true : false" (checkedChange)="toggleRole($event,step,selectedDS)"></odp-switch>
-              <!-- <span class="toggle font-sm">
+              <!-- <span class="toggle font-13">
                 <label class="switch accent mb-0 mr-3 mt-1" [attr.for]="step.id" *ngIf="hasPermission('PMGCDS')">
                   <input type="checkbox" value="true" [attr.id]="step.id" (change)="toggleRole($event,step,selectedDS)"
                     [ngModel]="roleActive(step)">
