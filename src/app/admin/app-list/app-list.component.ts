@@ -72,6 +72,7 @@ export class AppListComponent implements OnInit, OnDestroy {
   @ViewChild('newAppModal', { static: false })
   newAppModal: TemplateRef<HTMLElement>;
   @Input() isHome: boolean = false;
+  @Input() navToApp: any;
   subscriptions: any;
   appList: Array<App>;
   apiConfig: GetOptions;
@@ -172,7 +173,11 @@ export class AppListComponent implements OnInit, OnDestroy {
             delete item.logo;
           }
           self.appList.push(item);
+
           self.commonService.appList.push(item);
+          if (self.navToApp) {
+            this.useApp(this.navToApp._id)
+          }
         });
       },
       (err) => {
@@ -195,6 +200,9 @@ export class AppListComponent implements OnInit, OnDestroy {
           }
           self.appList.push(item);
           self.commonService.appList.push(item);
+          if (self.navToApp) {
+            this.useApp(this.navToApp._id)
+          }
         });
         if (self.appList.length === 1) {
           this.useApp(self.appList[0]._id);

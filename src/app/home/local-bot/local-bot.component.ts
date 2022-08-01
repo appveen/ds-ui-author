@@ -136,7 +136,6 @@ export class LocalBotComponent implements OnInit {
           Validators.pattern('[a-zA-Z0-9\\s-_@#.]+'),
         ],
       ],
-      desc: [null, [Validators.maxLength(240)]],
     });
     self.keyForm = self.fb.group({
       label: [
@@ -280,7 +279,6 @@ export class LocalBotComponent implements OnInit {
         basicDetails: {
           name: self.botForm.get('botName').value,
         },
-        description: self.botForm.get('desc').value,
       },
     };
     if (this.botForm.valid) {
@@ -325,7 +323,6 @@ export class LocalBotComponent implements OnInit {
     self.showLazyLoader = true;
     self.isCreate = false;
     self.botForm.get('botName').patchValue(self.selectedBot.basicDetails.name);
-    self.botForm.get('desc').patchValue(self.selectedBot.description);
     self.editBotModalRef = self.commonService.modal(self.newBotModal, {
       size: 'sm',
     });
@@ -334,7 +331,6 @@ export class LocalBotComponent implements OnInit {
         if (close) {
           self.selectedBot.basicDetails.name =
             self.botForm.get('botName').value;
-          self.selectedBot.description = self.botForm.get('desc').value;
 
           self.subscriptions['userDtl'] = self.commonService
             .put(

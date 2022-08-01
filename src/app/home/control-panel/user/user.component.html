@@ -39,7 +39,7 @@
         No users found
       </div>
       <div class="row" style="max-height: inherit" *ngIf="userList.length > 0">
-        <div class="col-4 border-right users">
+        <div class="col-3 border-right users pr-0">
           <div *ngFor="let user of userList; let usrIndex = index" class="d-flex" [id]="'user' + usrIndex"
             (click)="showDetails(user)">
             <div class="selectedTab" [ngStyle]="{
@@ -56,7 +56,7 @@
             </div>
           </div>
         </div>
-        <div class="col-8 users" style="padding: 20px">
+        <div class="col-9 users" style="padding: 24px">
           <div class="details">
             <span class="name">{{ details?.basicDetails?.name }}</span>
             <span class="email">{{ details?.username }}</span>
@@ -94,17 +94,17 @@
               <label class="tab-header">{{ currentTab }}</label>
               <div *ngIf="currentTab === 'Attributes'" style="display: flex">
                 <label style="color: #6c7584; font-weight: 400">All attributes in which the user has been added</label>
-                <div class="add-attribute hover" (click)="showAttributeSide()" id="showAttributeSide">
-                  <i class="dsi dsi-plus-circle font-20"></i>
+                <div class="add-attribute hover d-flex" (click)="showAttributeSide()" id="showAttributeSide">
+                  <i class="dsi dsi-plus-circle font-20 icon-primary"></i>
                   <label class="fw-500 font-normal heading">Add Attribute</label>
                 </div>
               </div>
               <div *ngIf="currentTab === 'Groups'" style="display: flex">
                 <label style="color: #6c7584; font-weight: 400">All groups in which the user has been added
                 </label>
-                <div class="add-attribute hover" (click)="openGroupModal()" id="openModal">
-                  <i class="dsi dsi-plus-circle font-20"></i>
-                  <label class="fw-500 font-normal heading">Add to Groups</label>
+                <div class="add-attribute hover d-flex" (click)="openGroupModal()" id="openModal">
+                  <i class="dsi dsi-plus-circle font-20 mr-2 icon-primary"></i>
+                  <label class="fw-500 font-normal heading ">Add to Groups</label>
                 </div>
               </div>
               <div *ngIf="showTable" class="mt-4">
@@ -190,7 +190,7 @@
             <div class="input-wrapper position-relative">
               <input class="form-control input-text" [type]="showPassword['new'] ? 'text' : 'password'"
                 placeholder="Password" formControlName="password" [ngClass]="{ 'is-invalid': pwdError }"
-                autocomplete="new-password" />
+                autocomplete="new-password" odpAutoFocus />
               <span id="showPass" class="dsi eye-icon position-absolute hover" [ngClass]="{
                   'dsi-view': !showPassword['new'],
                   'dsi-hide': showPassword['new']
@@ -249,7 +249,7 @@
               <label for="authType">Authentication Method</label>
               <div class="position-relative">
                 <select id="authType" class="form-control input-text" formControlName="authType"
-                  (ngModelChange)="onAuthTypeChange($event)">
+                  (ngModelChange)="onAuthTypeChange($event)" odpAutoFocus>
                   <option *ngFor="let item of validAuthTypes" [value]="item.value">
                     {{ item.label }}
                   </option>
@@ -436,7 +436,7 @@
             </label>
             <div class="position-relative">
               <input id="label" class="form-control pr-4 input-text" type="text" placeholder="Label name"
-                formControlName="label" autocomplete="autocomplete_off_hack" />
+                formControlName="label" autocomplete="autocomplete_off_hack" odpAutoFocus />
               <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('type').touched &&
                   attributesForm.get('label')?.hasError('required')
