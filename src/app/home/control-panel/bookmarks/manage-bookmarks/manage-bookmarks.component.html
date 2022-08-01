@@ -56,7 +56,7 @@
         placeholder="URL"
       ></textarea>
       <span
-        class="fas fa-question-circle text-danger position-absolute error-icon"
+        class="dsi dsi-danger-circle text-danger position-absolute error-icon"
         *ngIf="
           bookmarkForm.get('url').dirty &&
           bookmarkForm.get('url').hasError('pattern')
@@ -264,7 +264,7 @@
           [(ngModel)]="keyValuePair.key"
         />
         <span
-          class="fas fa-question-circle text-danger position-absolute duplicate-err-icon"
+          class="dsi dsi-danger-circle text-danger position-absolute duplicate-err-icon"
           *ngIf="isDuplicate"
           ngbTooltip="Duplicate key"
           placement="left"

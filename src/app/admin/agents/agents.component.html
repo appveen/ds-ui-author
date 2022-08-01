@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center justify-content-between px-3 mb-3">
             <div class="text-dark font-weight-bold">Integration Edge Gateway Identity</div>
             <button type="button" class="btn btn-link" (click)="downloadIEG()">
-                <span class="fa fa-download mr-2"></span>
+                <span class="dsi dsi-download mr-2"></span>
                 <span class="text">Download Edge Agent</span>
             </button>
         </div>
@@ -183,8 +183,8 @@
                         </div>
                         <div class="data-grid-cell d-flex align-items-center">
                             <span class="d-flex align-items-center">
-                                <span class="fa text-accent mr-2 hover"
-                                    [ngClass]="{'fa-eye-slash':agent.showPassword,'fa-eye':!agent.showPassword}"
+                                <span class="dsi text-accent mr-2 hover"
+                                    [ngClass]="{'dsi-hide':agent.showPassword,'dsi-view':!agent.showPassword}"
                                     (click)="showPassword(agent)"></span>
                                 <span class="text-secondary mt-1">
                                     **********

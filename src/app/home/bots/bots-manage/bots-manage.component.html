@@ -319,7 +319,7 @@
           odpAutoFocus
         />
         <span
-          class="fas fa-question-circle text-danger error-icon position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon position-absolute"
           *ngIf="
             userDetails.get('name').touched &&
             userDetails.get('name').dirty &&
@@ -330,7 +330,7 @@
         ></span>
         <span
           *ngIf="userDetails.get('name').hasError('pattern')"
-          class="text-danger position-absolute fa fa-question-circle error-icon"
+          class="text-danger position-absolute dsi dsi-danger-circle error-icon"
           container="body"
           ngbTooltip="Name can contain alphanumeric and _, - , @ , # and . characters only"
         ></span>
@@ -351,7 +351,7 @@
           [ngClass]="{ 'is-invalid': emailError }"
         />
         <span
-          class="fas fa-question-circle text-danger error-icon position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon position-absolute"
           *ngIf="
             userDetails.get('email').dirty &&
             userDetails.get('email').hasError('pattern')
@@ -370,7 +370,7 @@
           [ngClass]="{ 'is-invalid': phoneError }"
         />
         <span
-          class="fas fa-question-circle text-danger error-icon position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon position-absolute"
           *ngIf="
             userDetails.get('phone').dirty &&
             userDetails.get('phone').hasError('pattern')
@@ -460,7 +460,7 @@
           [ngClass]="{ 'is-invalid': cPwdError }"
         />
         <span
-          class="fas fa-question-circle text-danger error-icon position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon position-absolute"
           *ngIf="
             resetPasswordForm.get('cpassword').dirty &&
             resetPasswordForm.get('cpassword').hasError('required')
@@ -683,7 +683,7 @@
                   (change)="setKey(i)"
                 />
                 <span
-                  class="fas fa-question-circle text-danger error-icon-attr position-absolute"
+                  class="dsi dsi-danger-circle text-danger error-icon-attr position-absolute"
                   *ngIf="getLabelError(i)"
                   ngbTooltip="This is a required field"
                   placement="right"
@@ -773,7 +773,7 @@
                   (checkedChange)="setUserAttributeValue($event, i)"
                 ></odp-switch>
                 <span
-                  class="fas fa-question-circle text-danger error-icon-attr position-absolute"
+                  class="dsi dsi-danger-circle text-danger error-icon-attr position-absolute"
                   *ngIf="
                     control.get('type').value !== 'Boolean' && getValError(i)
                   "

@@ -22,6 +22,12 @@
 
   .group-actions {
     min-width: 100px;
+
+    .btn {
+      &:hover {
+        color: $secondary !important;
+      }
+    }
   }
 
   .scroll-pane {

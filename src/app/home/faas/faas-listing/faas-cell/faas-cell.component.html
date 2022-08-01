@@ -38,24 +38,24 @@
 <ng-container *ngIf="!value && field != '_options'">
     <span class="text-muted">N.A.</span>
 </ng-container>
-<div *ngIf="field == '_options' && data?._id" class="float-right">
+<div *ngIf="field == '_options' && data?._id" class="options float-right">
     <button type="button" *ngIf="data?.status === 'Undeployed' && hasStartStopPermission"
-        class="btn btn-outline-light text-secondary border mr-3" (click)="$event.preventDefault();startFaas(data)">
+        class="btn btn-link text-muted p-1 mr-2" (click)="$event.preventDefault();startFaas(data)">
         <span class="fa fa-start"></span>
     </button>
     <button type="button" *ngIf="data?.status === 'Active' && hasStartStopPermission"
-        class="btn btn-outline-light text-secondary border mr-3" (click)="$event.preventDefault();stopFaas(data)">
+        class="btn btn-link text-muted p-1 mr-2" (click)="$event.preventDefault();stopFaas(data)">
         <span class="fa fa-stop"></span>
     </button>
-    <button type="button" class="btn btn-outline-light text-secondary border mr-3"
+    <button type="button" class="btn btn-link text-muted p-1 mr-2"
         (click)="$event.preventDefault();redirectToManage()">
         <span class="dsi dsi-view"></span>
     </button>
-    <button type="button" class="btn btn-outline-light text-secondary border mr-3" *ngIf="hasManagePermission"
+    <button type="button" class="btn btn-link text-muted p-1 mr-2" *ngIf="hasManagePermission"
         (click)="$event.preventDefault();redirectToManage(true)">
         <span class="dsi dsi-edit"></span>
     </button>
-    <button type="button" class="btn btn-outline-light text-secondary border mr-3" *ngIf="hasManagePermission"
+    <button type="button" class="btn btn-link text-muted p-1 mr-2" *ngIf="hasManagePermission"
         (click)="$event.preventDefault();deleteFaas()">
         <span class="dsi dsi-trash"></span>
     </button>

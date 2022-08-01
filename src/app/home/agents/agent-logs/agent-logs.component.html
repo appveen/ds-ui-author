@@ -27,7 +27,7 @@
                     <span class="fa fa-asterisk fa-xs mx-1"></span>
                 </span>
                 <span *ngIf="togglePassword" class="text">{{agentDetails.decPassword}}</span>
-                <span class="fa ml-2 text hover" [ngClass]="{'fa-eye-slash':togglePassword,'fa-eye':!togglePassword}"
+                <span class="dsi ml-2 text hover" [ngClass]="{'dsi-hide':togglePassword,'dsi-view':!togglePassword}"
                     (click)="togglePassword=!togglePassword"></span>
             </div>
             <div class="quick-info px-2 badge badge-dark d-flex font-13 align-items-center mr-3">
@@ -62,12 +62,12 @@
                         </button>
                         <button type="button" ngbDropdownItem *ngIf="agentDetails?.type == 'PARTNERAGENT'"
                             (click)="downloadAgent($event, agentDetails?._id,'partneragent')">
-                            <!-- <span class="fa fa-download mr-2"></span> -->
+                            <!-- <span class="dsi dsi-download mr-2"></span> -->
                             <span class="text">Download</span>
                         </button>
                         <button type="button" ngbDropdownItem *ngIf="agentDetails?.type == 'APPAGENT'"
                             (click)="downloadAgent($event, agentDetails?._id,'appagent')">
-                            <!-- <span class="fa fa-download mr-2"></span> -->
+                            <!-- <span class="dsi dsi-download mr-2"></span> -->
                             <span class="text">Download</span>
                         </button>
                         <button type="button" ngbDropdownItem *ngIf="hasPermission('PMA')"

@@ -191,13 +191,13 @@
                               "
                             />
                             <span
-                              class="fas fa-question-circle text-danger stepname-error position-absolute"
+                              class="dsi dsi-danger-circle text-danger stepname-error position-absolute"
                               *ngIf="stepNameError(step)"
                               ngbTooltip="Step name is required"
                               placement="right"
                             ></span>
                             <span
-                              class="fas fa-question-circle text-danger stepname-error position-absolute"
+                              class="dsi dsi-danger-circle text-danger stepname-error position-absolute"
                               *ngIf="step.hasError('duplicateStepName')"
                               ngbTooltip="Duplicate step name"
                               placement="right"
@@ -227,14 +227,14 @@
                             [attr.disabled]="!makerCheckerEnabled ? true : null"
                           />
                           <span
-                            class="fas fa-question-circle text-danger approval-error position-absolute"
+                            class="dsi dsi-danger-circle text-danger approval-error position-absolute"
                             *ngIf="approvalError(step)"
                             ngbTooltip="Approvals is required"
                             placement="right"
                           >
                           </span>
                           <span
-                            class="fas fa-question-circle text-danger approval-error position-absolute"
+                            class="dsi dsi-danger-circle text-danger approval-error position-absolute"
                             *ngIf="
                               step.get('approvals').hasError('positiveNumber')
                             "

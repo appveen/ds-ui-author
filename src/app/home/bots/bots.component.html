@@ -209,7 +209,7 @@
                     <div class="value-width position-relative w-100">
                         <input class="form-control" type="text" placeholder="Enter Client ID" formControlName="username"
                             odpAutoFocus (blur)="checkForDuplicate()" [ngClass]="{'is-invalid': invalidBotname}">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidBotname" ngbTooltip="This is a required field" placement="right"></span>
                         <span *ngIf="userForm.get('userData.username').hasError('pattern')"
                             class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
@@ -221,7 +221,7 @@
                     <div class="value-width position-relative w-100" formGroupName="basicDetails">
                         <input #botNameControl class="form-control pr-4" type="text" placeholder="Enter Name"
                             formControlName="name" [ngClass]="{'is-invalid': invalidName}">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidName" ngbTooltip="This is a required field" placement="right"></span>
                         <span *ngIf="userForm.get('userData.basicDetails.name').hasError('pattern')"
                             class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
@@ -237,9 +237,9 @@
                         <input #botPasswordControl class="form-control" type="password" placeholder="Client Secret"
                             formControlName="password"
                             [ngClass]="{'is-invalid': invalidPassword || invalidPasswordLength}">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidPassword" ngbTooltip="This is a required field" placement="right"></span>
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"
                             placement="right"></span>
                     </div>
@@ -256,7 +256,7 @@
                     <div class="value-width position-relative w-100" formGroupName="basicDetails">
                         <input class="form-control" type="text" placeholder="Enter Email Address"
                             formControlName="email" [ngClass]="{'is-invalid': invalidEmail}">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidEmail" ngbTooltip="Enter a valid email" placement="right"></span>
                     </div>
                 </div> -->
@@ -291,7 +291,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidTeamSize" ngbTooltip="Bot should be part of at-least one team"
                             placement="right"></span>
                     </div>

@@ -278,7 +278,7 @@
         <div class="input-group">
           <input id="label" class="form-control pr-4 input-text" type="text" placeholder="Label name"
             formControlName="label" autocomplete="autocomplete_off_hack" />
-          <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
+          <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
               attributeForm.get('type').touched &&
               attributeForm.get('label').hasError('required')
             " ngbTooltip="This is a required field"></span>
@@ -296,7 +296,7 @@
               {{ item.label }}
             </option>
           </select>
-          <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
+          <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
               attributeForm.get('type').touched &&
               attributeForm.get('type').hasError('required')
             " ngbTooltip="This is a required field"></span>
@@ -319,7 +319,7 @@
 
           <input id="value" class="form-control pr-4 input-text" type="date" placeholder="Value" formControlName="value"
             autocomplete="autocomplete_off_hack" *ngIf="attributeForm.get('type').value === 'Date'" />
-          <span class="fas fa-question-circle text-danger error-icon position-absolute" *ngIf="
+          <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
               attributeForm.get('value').dirty &&
               attributeForm.get('value').hasError('required')
             " ngbTooltip="This is a required field"></span>

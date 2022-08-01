@@ -474,7 +474,7 @@
                                         formControlName="name" [value]="hookForm.get('name').value"
                                         (keyup)="uniqueHook()" id="prehookName">
                                     <span
-                                        class="fas fa-question-circle text-danger position-absolute field-error-symbol"
+                                        class="dsi dsi-danger-circle text-danger position-absolute field-error-symbol"
                                         *ngIf="hookForm.get('name').dirty && hookForm.get('name') && hookForm.hasError('duplicateName')"
                                         ngbTooltip="{{ 'This ' + hooks.hookshortName + 'hook name has already been used'}}"
                                         placement="right"></span>
@@ -491,7 +491,7 @@
                                         [value]="hookForm.get('url').value" (keyup)="uniqueHook()"
                                         id="prehookEndpoint"></textarea>
                                     <span
-                                        class="fas fa-question-circle  text-danger position-absolute field-error-symbol"
+                                        class="dsi dsi-danger-circle  text-danger position-absolute field-error-symbol"
                                         *ngIf="hookForm.get('url').dirty  && hookForm.get('url') && hookForm.get('url').hasError('pattern')"
                                         ngbTooltip="{{ 'please enter a valid ' + hooks.hookshortName + ' hook'}}"
                                         placement="right"></span>

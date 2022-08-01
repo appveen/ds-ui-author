@@ -202,7 +202,7 @@
           [ngClass]="{ 'is-invalid': invalidName }"
         />
         <span
-          class="fas fa-question-circle text-danger error-icon position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon position-absolute"
           *ngIf="
             userBasicDetail.get('name').touched &&
             userBasicDetail.get('name').dirty &&
@@ -232,7 +232,7 @@
           formControlName="alternateEmail"
         />
         <span
-          class="fas fa-question-circle text-danger error-icon position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon position-absolute"
           *ngIf="
             userBasicDetail.get('alternateEmail').dirty &&
             userBasicDetail.get('alternateEmail').hasError('pattern')
@@ -290,7 +290,7 @@
           [ngClass]="{ 'is-invalid': invalidUsername }"
         />
         <span
-          class="fas fa-question-circle text-danger error-icon position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon position-absolute"
           *ngIf="
             userCreds.get('username').touched &&
             userCreds.get('username').dirty &&
@@ -300,7 +300,7 @@
           placement="right"
         ></span>
         <span
-          class="fas fa-question-circle text-danger error-icon position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon position-absolute"
           *ngIf="
             userCreds.get('username').touched &&
             userCreds.get('username').dirty &&
@@ -552,21 +552,21 @@
           odpAutoFocus
         />
         <span
-          class="fas fa-question-circle text-danger error-icon-password position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
           *ngIf="invalidPassword"
           ngbTooltip="This is a required field"
           placement="right"
         ></span>
         <span
-          class="fas eye-icon position-absolute hover"
+          class="dsi eye-icon position-absolute hover"
           [ngClass]="{
-            'fa-eye': !showPassword['new'],
-            'fa-eye-slash': showPassword['new']
+            'dsi-view': !showPassword['new'],
+            'dsi-hide': showPassword['new']
           }"
           (click)="showPassword['new'] = !showPassword['new']"
         ></span>
         <span
-          class="fas fa-question-circle text-danger error-icon-password position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
           *ngIf="
             resetPasswordForm.get('password').dirty &&
             resetPasswordForm.get('password').hasError('minlength')
@@ -576,7 +576,7 @@
           placement="right"
         ></span>
         <span
-          class="fas fa-question-circle text-danger error-icon-password position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
           *ngIf="
             resetPasswordForm.get('password').dirty &&
             resetPasswordForm.get('password').hasError('pattern')
@@ -600,22 +600,22 @@
           [ngClass]="{ 'is-invalid': invalidCPassword || invalidMatch }"
         />
         <span
-          class="fas fa-question-circle text-danger error-icon-password position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
           *ngIf="invalidCPassword"
           ngbTooltip="This is a required field"
           placement="right"
         ></span>
         <span
-          class="fas fa-question-circle text-danger error-icon-password position-absolute"
+          class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
           *ngIf="invalidMatch"
           ngbTooltip="Passwords do not match"
           placement="right"
         ></span>
         <span
-          class="fas eye-icon position-absolute hover"
+          class="dsi eye-icon position-absolute hover"
           [ngClass]="{
-            'fa-eye': !showPassword['confirm'],
-            'fa-eye-slash': showPassword['confirm']
+            'dsi-view': !showPassword['confirm'],
+            'dsi-hide': showPassword['confirm']
           }"
           (click)="showPassword['confirm'] = !showPassword['confirm']"
         ></span>

@@ -61,12 +61,18 @@
             </div>
           </div>
           <div class="group-actions">
-            <button type="button" class="btn btn-light bg-transparent border mr-2" [routerLink]="['../gm', group._id]">
+            <button type="button" class="btn btn-link text-muted p-1 mr-2" [routerLink]="['../gm', group._id]">
+              <span class="dsi dsi-edit"></span>
+            </button>
+            <button type="button" class="btn btn-link text-muted p-1">
+              <span class="dsi dsi-trash"></span>
+            </button>
+            <!-- <button type="button" class="btn btn-light bg-transparent border mr-2" [routerLink]="['../gm', group._id]">
               <span class="dsi dsi-edit text-secondary"></span>
             </button>
             <button type="button" class="btn btn-light bg-transparent border">
               <span class="dsi dsi-trash text-secondary"></span>
-            </button>
+            </button> -->
           </div>
         </div>
       </div>

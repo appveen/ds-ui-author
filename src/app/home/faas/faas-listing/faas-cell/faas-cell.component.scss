@@ -5,6 +5,7 @@
   from {
     background: rgba($warning, 1);
   }
+
   to {
     background: darken($warning, 20);
   }
@@ -14,4 +15,12 @@
   background: $warning;
   color: $black;
   animation: pending 0.5s alternate infinite;
+}
+
+.options {
+  .btn {
+    &:hover {
+      color: $secondary !important;
+    }
+  }
 }

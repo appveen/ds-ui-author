@@ -45,10 +45,10 @@
                         placeholder="Enter a step name" odpAutoFocus required maxlength="40" [(ngModel)]="stepName"
                         #sbName="ngModel" #tabName (blur)="setTouched()" [ngClass]="{'is-invalid': sbNameErr}">
                     <span *ngIf="!edit.status" class="text-dark">{{stepName}}</span>
-                    <span class="fas fa-question-circle text-danger position-absolute field-error-symbol"
+                    <span class="dsi dsi-danger-circle text-danger position-absolute field-error-symbol"
                         *ngIf="stepNameAsFormCtrl && (stepNameAsFormCtrl.dirty || stepNameAsFormCtrl.touched) && stepNameAsFormCtrl.hasError('required')"
                         ngbTooltip="You cannot leave this blank" placement="right"></span>
-                    <span class="fas fa-question-circle text-danger position-absolute field-error-symbol"
+                    <span class="dsi dsi-danger-circle text-danger position-absolute field-error-symbol"
                         *ngIf="sameNameErr" ngbTooltip="Duplicate Step name" placement="right"></span>
                 </div>
                 <div *ngIf="edit.status">
@@ -356,7 +356,7 @@
                         <input class="form-control" type="text" placeholder="Enter hook name (max 40 characters)"
                             formControlName="name" maxlength="40" [ngClass]="{'is-invalid': hookNameErr}"
                             [value]="actionHookForm.get('name').value" (blur)="uniqHookName()" odpAutoFocus>
-                        <span class="fas fa-question-circle text-danger position-absolute error-icon"
+                        <span class="dsi dsi-danger-circle text-danger position-absolute error-icon"
                             *ngIf="hookNameErr" [ngbTooltip]="validationError" triggers="manual" #t1="ngbTooltip"
                             triggers="hover" (mouseenter)="toggleTooltip(t1, 'hook-name')" placement="right"></span>
                     </div>
@@ -369,7 +369,7 @@
                             placeholder="http://<hostname>:<port>/<path>" formControlName="url"
                             [value]="actionHookForm.get('url').value"
                             [ngClass]="{'is-invalid': hookUrlErr }"></textarea>
-                        <span class="fas fa-question-circle text-danger position-absolute error-icon" *ngIf="hookUrlErr"
+                        <span class="dsi dsi-danger-circle text-danger position-absolute error-icon" *ngIf="hookUrlErr"
                             [ngbTooltip]="validationError" triggers="manual" #t2="ngbTooltip" triggers="hover"
                             (mouseenter)="toggleTooltip(t2, 'hook-url')" placement="right"></span>
                     </div>

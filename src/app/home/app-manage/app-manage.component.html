@@ -60,7 +60,7 @@
                   <input type="file" name="logoFile" id="logoFile" class="d-none"
                     (odpUploadImage)="imageUpload($event, 'logo')" imageWidth="216" />
                   <img *ngIf="appData.logo.full" [src]="appData.logo.full" class="drop-box-logo-holder" />
-                  <i *ngIf="!appData.logo.full" class="fa fa-upload mr-1" style="color:#44A8F1"></i>
+                  <i *ngIf="!appData.logo.full" class="dsi dsi-upload mr-1" style="color:#44A8F1"></i>
                   <span *ngIf="!appData.logo.full" style="color:#44A8F1">Upload</span>
                 </label>
               </div>

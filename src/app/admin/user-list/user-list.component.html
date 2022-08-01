@@ -177,7 +177,7 @@
               </option>
             </select>
             <span
-              class="fas fa-question-circle text-danger error-icon position-absolute"
+              class="dsi dsi-danger-circle text-danger error-icon position-absolute"
               *ngIf="invalidAuthType"
               ngbTooltip="This is a required field"
               placement="right"
@@ -205,19 +205,19 @@
               }"
             />
             <span
-              class="fas fa-question-circle text-danger error-icon position-absolute"
+              class="dsi dsi-danger-circle text-danger error-icon position-absolute"
               *ngIf="invalidUsername"
               ngbTooltip="This is a required field"
               placement="right"
             ></span>
             <span
-              class="fas fa-question-circle text-danger error-icon position-absolute"
+              class="dsi dsi-danger-circle text-danger error-icon position-absolute"
               *ngIf="invalidUsernamePattern"
               ngbTooltip="Username must be of email format"
               placement="right"
             ></span>
             <span
-              class="fas fa-question-circle text-danger error-icon position-absolute"
+              class="dsi dsi-danger-circle text-danger error-icon position-absolute"
               *ngIf="userForm.get('username').value && invalidUniqueUsername"
               ngbTooltip="username is already taken"
               placement="right"
@@ -259,7 +259,7 @@
               [ngClass]="{ 'is-invalid': invalidName }"
             />
             <span
-              class="fas fa-question-circle text-danger error-icon position-absolute"
+              class="dsi dsi-danger-circle text-danger error-icon position-absolute"
               *ngIf="invalidName"
               ngbTooltip="This is a required field"
               placement="right"
@@ -292,23 +292,23 @@
                 (keyup.enter)="newUserCPassword.focus()"
               />
               <span
-                class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
                 *ngIf="invalidPassword"
                 ngbTooltip="This is a required field"
                 placement="right"
               ></span>
               <span
-                class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
                 *ngIf="invalidPasswordLength"
                 ngbTooltip="Password should be minimum 8 chars long"
                 placement="right"
               ></span>
             </div>
             <span
-              class="fas eye-icon position-absolute hover"
+              class="dsi eye-icon position-absolute hover"
               [ngClass]="{
-                'fa-eye': !showPassword['new'],
-                'fa-eye-slash': showPassword['new']
+                'dsi-view': !showPassword['new'],
+                'dsi-hide': showPassword['new']
               }"
               (click)="showPassword['new'] = !showPassword['new']"
             ></span>
@@ -331,23 +331,23 @@
                 }"
               />
               <span
-                class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
                 *ngIf="invalidCPassword"
                 ngbTooltip="This is a required field"
                 placement="right"
               ></span>
               <span
-                class="fas fa-question-circle text-danger error-icon-password position-absolute"
+                class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
                 *ngIf="invalidPasswordMatch"
                 ngbTooltip="Passwords do not match"
                 placement="right"
               ></span>
             </div>
             <span
-              class="fas eye-icon position-absolute hover"
+              class="dsi eye-icon position-absolute hover"
               [ngClass]="{
-                'fa-eye': !showPassword['confirm'],
-                'fa-eye-slash': showPassword['confirm']
+                'dsi-view': !showPassword['confirm'],
+                'dsi-hide': showPassword['confirm']
               }"
               (click)="showPassword['confirm'] = !showPassword['confirm']"
             ></span>
@@ -368,7 +368,7 @@
               (keyup.enter)="newUserEmail.focus()"
             />
             <span
-              class="fas fa-question-circle text-danger error-icon position-absolute"
+              class="dsi dsi-danger-circle text-danger error-icon position-absolute"
               *ngIf="invalidPhone"
               ngbTooltip="Phone must be of 10-digits"
               placement="right"
@@ -391,7 +391,7 @@
               (keyup.enter)="newUserCreate.click()"
             />
             <span
-              class="fas fa-question-circle text-danger error-icon position-absolute"
+              class="dsi dsi-danger-circle text-danger error-icon position-absolute"
               *ngIf="invalidEmail"
               ngbTooltip="Invalid Alternate Email"
               placement="right"

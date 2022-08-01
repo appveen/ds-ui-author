@@ -8,12 +8,14 @@
 .name-holder {
     .edit-icon {
         transition: 0.2s;
-        visibility: hidden;
+        // visibility: hidden;
+        color: $secondary;
     }
 
     &:hover {
         .edit-icon {
-            visibility: visible;
+            // visibility: visible;
+            color: $dark;
         }
     }
 }
