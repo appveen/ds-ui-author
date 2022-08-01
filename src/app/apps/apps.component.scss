@@ -4,6 +4,7 @@
 .header {
   min-height: 60px;
   max-height: 60px;
+
   .logo {
     min-height: 42px;
     max-height: 42px;
@@ -13,36 +14,43 @@
     background-size: 186px;
     background-position: center;
   }
+
   .text {
     min-height: 50px;
     max-height: 50px;
     font-weight: 600;
     font-size: 14px;
+
     .platform-name {
       margin-top: 3px;
       font-size: 18px;
       text-transform: uppercase;
       opacity: 0.7;
     }
+
     .product-name {
       margin-top: -3px;
       font-size: 13px;
       text-transform: uppercase;
     }
   }
+
   .admin-settings {
     padding-top: 5px;
   }
+
   .current-app {
     min-width: 235px;
     max-width: 235px;
     min-height: 48px;
     max-height: 48px;
     border-radius: 4px;
+
     .current-app-thumbnail {
       border-radius: 6px;
       overflow: hidden;
       transition: 0.25s;
+
       img {
         min-width: 36px;
         max-width: 36px;
@@ -53,7 +61,7 @@
   }
 }
 
-.logo-mini{
+.logo-mini {
   min-height: 42px;
   max-height: 42px;
   min-width: 45px;
@@ -62,6 +70,7 @@
   background-size: 45px;
   background-position: center;
 }
+
 .sidenav {
   min-width: 60px;
   max-width: 260px;
@@ -71,6 +80,7 @@
   overflow-y: auto;
   scrollbar-gutter: stable;
   overflow-x: hidden;
+
   // &.hide {
   //   margin-left: -170px;
   // }
@@ -84,6 +94,7 @@
     align-items: center;
     transition: 0.4s;
   }
+
   .icon-block {
     min-height: 30px;
     max-height: 30px;
@@ -94,20 +105,31 @@
     font-size: 14px;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
+
     .icon {
       min-width: 30px;
       max-width: 30px;
       min-height: 30px;
       max-height: 30px;
     }
+
     .text {
       font-size: 14px;
     }
+
     a {
       text-decoration: none !important;
     }
+
+    &:hover {
+      .dsi {
+        // transition: 0.2s;
+        color: $primary;
+      }
+    }
   }
 }
+
 .body {
   transition: 0.25s;
   min-height: calc(100vh - 60px);
@@ -128,17 +150,20 @@
 .menu {
   padding-top: 5px;
 }
+
 .profile {
   border-radius: 5px;
   box-shadow: 0px 6px 16px rgba($color: #c7c7c7, $alpha: 0.5);
   top: 50px;
   right: 6px;
   z-index: 1072;
+
   .profile-container {
     min-width: 400px;
     max-width: 400px;
     min-height: 120px;
     max-height: 120px;
+
     .user-icon {
       min-width: 36px;
       max-width: 36px;
@@ -147,23 +172,28 @@
       top: -40px;
       right: 9px;
     }
+
     .profile-thumbnail {
       min-width: 60px;
       max-width: 60px;
       min-height: 60px;
       max-height: 60px;
     }
+
     .profile-data-more-item {
       border-right: 2px solid $light;
+
       &:last-child {
         border-right: 0;
       }
     }
+
     .profile-data {
       width: 290px;
     }
   }
 }
+
 .img-app {
   border: 0px !important;
 }
@@ -171,9 +201,11 @@
 .username-holder {
   max-width: 90px;
 }
+
 .platform {
   min-width: 90px;
   min-height: 90px;
+
   .k8s-icon {
     width: 30px;
     height: 30px;
@@ -181,6 +213,7 @@
     background-size: cover;
   }
 }
+
 .ic-name {
   min-width: 8px;
   max-width: 8px;
@@ -202,22 +235,23 @@
   transform: rotate(180deg);
 }
 
-.border-c{
+.border-c {
   border-color: #ECECEC !important;
 }
 
-.items{
+.items {
   margin-left: 15px;
   color: #7A7A7A;
-  &:hover{
+
+  &:hover {
     cursor: pointer;
-    color: #181818 !important ;
+    color: #181818 !important;
   }
 }
 
-.fa-point{
+.fa-point {
   cursor: pointer;
-  color: $lightgrey  ;
+  color: $lightgrey ;
 }
 
 // .scroll::-webkit-scrollbar {
