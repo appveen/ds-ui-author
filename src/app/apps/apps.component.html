@@ -287,7 +287,7 @@
             [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
             routerLinkActive="text-accent bg-white active" [routerLink]="['cp/gr']" id="_groups">
             <div class="d-flex align-items-center ml-1">
-              <span class="dsi dsi-object"></span>
+              <span class="dsi dsi-group"></span>
               <span *ngIf="showSideNav" class="text items" [ngStyle]="{
                   'font-weight': groupRoute.isActive ? 700 : 500,
                   color: groupRoute.isActive ? '#181818' : '#7A7A7A'
