@@ -1,9 +1,9 @@
 <div class="d-flex flex-column position-absolute type-dropdown type-div bg-white" odpClickOutside (outside)="close()"
   [ignore]="['.ignore-click']">
   <div class="border pt-2 pb-2 rounded-top-radius d-flex flex-wrap justify-content-center">
-    <button type="button" class="btn btn-link type-width d-flex justify-content-center align-items-center" [ngClass]="{'text-accent':selectAllowed(i)}"
+    <button type="button" class="btn dsi dsi-bg dsi-sm {{type.class}} rounded-circle mr-2 text-dark type-width d-flex justify-content-center align-items-center" 
       *ngFor="let type of types; let i = index;" [disabled]="!selectAllowed(i)" (click)="switchType(type,$event)">
-      <span class="{{type.class}}" [ngbTooltip]="getTooltipText(i)" placement="left"></span>
+      <span [ngbTooltip]="getTooltipText(i)" placement="left"></span>
     </button>
   </div>
   <div *ngIf="type == 'String'" class="border type-div rounded-bottom-radius">

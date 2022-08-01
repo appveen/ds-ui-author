@@ -26,6 +26,10 @@
 
   font-size: 18px;
   display: inline-block;
+
+  &.dsi-sm{
+    font-size: 0.875rem !important;
+  }
 }
 
 .dsi-app-panel {
@@ -50,6 +54,9 @@
   &:before {
     content: $dsi-group;
   }
+  &.dsi-bg{
+    background: #CBE7CE;
+  }
 }
 
 .dsi-data-service {
@@ -67,6 +74,9 @@
 .dsi-library {
   &:before {
     content: $dsi-library;
+  }
+  &.dsi-bg{
+    background: #F7DEC2;
   }
 }
 
@@ -243,6 +253,9 @@
   &:before {
     content: $dsi-attach;
   }
+  &.dsi-bg{
+    background: #D7F5D1;
+  }
 }
 
 .dsi-refresh {
@@ -302,6 +315,9 @@
 .dsi-calendar {
   &:before {
     content: $dsi-calendar;
+  }
+  &.dsi-bg{
+    background: #FFE6D8;
   }
 }
 
@@ -486,11 +502,17 @@
   &:before {
     content: $dsi-text;
   }
+  &.dsi-bg{
+    background: #E7CBD4;
+  }
 }
 
 .dsi-boolean {
   &:before {
     content: $dsi-boolean;
+  }
+  &.dsi-bg{
+    background: #CBE7CE;
   }
 }
 
@@ -546,11 +568,17 @@
   &:before {
     content: $dsi-location;
   }
+  &.dsi-bg{
+    background: #CAF0F3;
+  }
 }
 
 .dsi-number {
   &:before {
     content: $dsi-number;
+  }
+  &.dsi-bg{
+    background: #E7CBE6;
   }
 }
 
@@ -563,6 +591,9 @@
 .dsi-array {
   &:before {
     content: $dsi-array;
+  }
+  &.dsi-bg{
+    background: #D3E4FF;
   }
 }
 
@@ -593,5 +624,8 @@
 .dsi-id {
   &:before {
     content: $dsi-id;
+  }
+  &.dsi-bg{
+    background: #C9D5E8;
   }
 }

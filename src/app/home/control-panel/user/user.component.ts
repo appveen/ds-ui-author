@@ -129,10 +129,10 @@ export class UserComponent implements OnInit, OnDestroy {
     this.bredcrumbSubject = new Subject<string>();
     this.showPassword = {};
     this.types = [
-      { class: 'odp-abc', value: 'String', label: 'Text' },
-      { class: 'odp-123', value: 'Number', label: 'Number' },
-      { class: 'odp-boolean', value: 'Boolean', label: 'True/False' },
-      { class: 'odp-calendar', value: 'Date', label: 'Date' },
+      { class: 'dsi-text', value: 'String', label: 'Text' },
+      { class: 'dsi-number', value: 'Number', label: 'Number' },
+      { class: 'dsi-boolean', value: 'Boolean', label: 'True/False' },
+      { class: 'dsi-date', value: 'Date', label: 'Date' },
     ];
     this.availableAuthTypes = [
       {
