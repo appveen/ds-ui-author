@@ -1,43 +1,90 @@
-<div class="d-flex permission-container p-4 mt-3">
-  <div class="d-flex flex-column roles-list">
+<div class="d-flex permission-container">
+  <div class="d-flex flex-column border-right-1 roles-list border-right">
+    <div
+      class="d-flex justify-content-between align-items-center py-2 border-bottom"
+    >
+      <span class="roles-list-heading font-weight-bold ml-3">Roles</span>
+      <span
+        class="btn btn-link"
+        (click)="addPermission()"
+        id="addNewRole"
+        *ngIf="edit.status"
+      >
+        <i class="dsi dsi-plus mr-2"></i>
+        <span class="text">Add</span>
+      </span>
+    </div>
     <div class="role-list">
       <div class="d-flex flex-column">
-        <span class="d-flex cursor-pointer mb-3" (click)="addPermission()" id="addNewRole" *ngIf="edit.status">
-          <i class="dsi dsi-plus-circle mr-2 icon-primary"></i>
-          <span class="text-primary fw-500 font-14">Add New</span>
-        </span>
-        <div class="d-flex flex-column roles-list-item fw-500 font-14 text-muted hover mb-2"
-          (click)="onSelectRole(role, i)" *ngFor="let role of roles | filterRole: searchRole; let i = index"
-          [ngClass]="{ 'active': i == selectedRoleIndex }">
+        <div
+          class="d-flex flex-column roles-list-item border-bottom hover"
+          (click)="onSelectRole(role, i)"
+          *ngFor="let role of roles | filterRole: searchRole; let i = index"
+          [ngClass]="{ 'active bg-white': i == selectedRoleIndex }"
+        >
           <div class="d-flex h-100">
-            <!-- <div class="d-flex align-items-center justify-content-center text-secondary symbol-holder" id="viewRole">
+            <div
+              class="d-flex align-items-center justify-content-center text-secondary symbol-holder"
+              id="viewRole"
+            >
               <span class="dsi dsi-view mr-2" *ngIf="!canManage(i)"></span>
               <span class="odp-manager mr-2" *ngIf="canManage(i)"></span>
-            </div> -->
+            </div>
             <div class="d-flex flex-column">
               <div class="p-2 m-0 w-100 text-truncate role-name-width">
-                <span class="text-muted roles-list-heading" *ngIf="!role.name">Untitled role</span>
-                <span class="text roles-list-heading" *ngIf="role.name" [ngbTooltip]="role.name" container="body"
-                  placement="top">{{ role.name }}</span>
+                <span class="text-muted roles-list-heading" *ngIf="!role.name"
+                  >Untitled role</span
+                >
+                <span
+                  class="text roles-list-heading"
+                  *ngIf="role.name"
+                  [ngbTooltip]="role.name"
+                  container="body"
+                  placement="top"
+                  >{{ role.name }}</span
+                >
               </div>
-              <!-- <span class="text-secondary px-2 mt-2 pb-2 roles-list-name" *ngIf="canManage(i)">
+              <span
+                class="text-secondary px-2 mt-2 pb-2 roles-list-name"
+                *ngIf="canManage(i)"
+              >
                 <div class="d-flex align-items-center">
-                  <span class="odp-add-circle mr-2" [ngClass]="{ 'color-create': permissionEnabled(i, 'POST') }"></span>
-                  <span class="odp-edit mr-2" [ngClass]="{ 'color-edit': permissionEnabled(i, 'PUT') }"></span>
-                  <span class="odp-delete mr-2" [ngClass]="{
+                  <span
+                    class="odp-add-circle mr-2"
+                    [ngClass]="{ 'color-create': permissionEnabled(i, 'POST') }"
+                  ></span>
+                  <span
+                    class="odp-edit mr-2"
+                    [ngClass]="{ 'color-edit': permissionEnabled(i, 'PUT') }"
+                  ></span>
+                  <span
+                    class="odp-delete mr-2"
+                    [ngClass]="{
                       'color-delete': permissionEnabled(i, 'DELETE')
-                    }"></span>
-                  <span class="odp-approver mr-2" [ngClass]="{
+                    }"
+                  ></span>
+                  <span
+                    class="odp-approver mr-2"
+                    [ngClass]="{
                       'color-approve':
                         permissionEnabled(i, 'REVIEW') &&
                         !permissionEnabled(i, 'SKIP_REVIEW')
-                    }"></span>
-                  <span *ngIf="permissionEnabled(i, 'SKIP_REVIEW')" class="fa fa-forward text-success mr-2"></span>
+                    }"
+                  ></span>
+                  <span
+                    *ngIf="permissionEnabled(i, 'SKIP_REVIEW')"
+                    class="fa fa-forward text-success mr-2"
+                  ></span>
                 </div>
-              </span> -->
-              <!-- <span class="text-secondary px-2 mt-2 pb-2 roles-list-name" *ngIf="!canManage(i)">
-                <span class="text">{{ getViewAttributes(role.id) }} Attributes</span>
-              </span> -->
+              </span>
+              <span
+                class="text-secondary px-2 mt-2 pb-2 roles-list-name"
+                *ngIf="!canManage(i)"
+              >
+                <span class="text"
+                  >{{ getViewAttributes(role.id) }} Attributes</span
+                >
+              </span>
             </div>
           </div>
         </div>
@@ -45,80 +92,132 @@
     </div>
   </div>
   <div class="d-flex flex-column w-100">
-    <div class="d-flex flex-column">
-      <div class="d-flex">
-        <span class="fw-600 font-20 mb-3">{{selectedRole.name}}</span>
-        <div class="cursor-pointer d-flex ml-auto" id="roleDeleteBtn" type="button"
-          *ngIf="edit.status && !selectedRole.skipReviewRole" (click)="deletePermission()">
-          <i class="dsi dsi-trash mr-2"></i>
-          <span class="fw-500">Delete role</span>
-        </div>
-
-      </div>
-
-      <div class="d-flex flex-column align-items-start w-100">
-        <div class="d-flex mb-4">
-          <div class="d-flex flex-column role-control input-group">
-            <div class="d-flex position-relative flex-column mb-4 ">
-              <span class="mb-2" [ngClass]="{'text-muted' : !edit.status}">Name</span>
-              <input *ngIf="edit.status" type="text" class="form-control" (ngModelChange)="markAsTouched(selectedRole)"
-                maxlength="40" [(ngModel)]="selectedRole.name" placeholder="Untitled role" id="roleName"
-                [disabled]="selectedRole.skipReviewRole" (keyup)="checkPermissionChange()" />
+    <div class="d-flex flex-column role-container">
+      <div class="d-flex flex-column align-items-start p-3">
+        <div
+          class="basic-info d-flex align-items-start justify-content-between w-100"
+        >
+          <div class="d-flex flex-column role-control">
+            <div class="d-flex w-100 mb-3 position-relative">
+              <span class="text-dark font-weight-bold first-column">Name</span>
+              <input
+                *ngIf="edit.status"
+                type="text"
+                class="form-control"
+                (ngModelChange)="markAsTouched(selectedRole)"
+                maxlength="40"
+                [(ngModel)]="selectedRole.name"
+                placeholder="Untitled role"
+                id="roleName"
+                [disabled]="selectedRole.skipReviewRole"
+                (keyup)="checkPermissionChange()"
+              />
               <span *ngIf="!edit.status" class="form-control-plaintext">{{
                 selectedRole.name
-                }}</span>
-              <span #infoTooltip="ngbTooltip" *ngIf="edit.status"
-                class="info fa fa-info-circle text-muted position-absolute" ngbTooltip="Maximum 40 chars allowed"
-                container="body" placement="right">&nbsp;</span>
+              }}</span>
+              <span
+                #infoTooltip="ngbTooltip"
+                *ngIf="edit.status"
+                class="info fa fa-info-circle text-muted position-absolute"
+                ngbTooltip="Maximum 40 chars allowed"
+                container="body"
+                placement="right"
+                >&nbsp;</span
+              >
             </div>
-            <div class="d-flex w-100 mb-3 position-relative flex-column">
-              <span class="mb-2" [ngClass]="{'text-muted' : !edit.status}">Description</span>
-              <textarea *ngIf="edit.status" class="form-control description" [(ngModel)]="selectedRole.description"
-                placeholder="Description" rows="4" [disabled]="selectedRole.skipReviewRole"
-                (keyup)="checkPermissionChange()" maxlength="250"></textarea>
-              <span *ngIf="!edit.status" class="form-control-plaintext text-break text-justify">{{
-                selectedRole.description }}</span>
-              <span #infoTooltip="ngbTooltip" *ngIf="edit.status"
-                class="info fa fa-info-circle text-muted position-absolute" ngbTooltip="Maximum 250 chars allowed"
-                container="body" placement="right">&nbsp;</span>
+            <div class="d-flex w-100 mb-3 position-relative">
+              <span class="text-dark font-weight-bold first-column"
+                >Description</span
+              >
+              <textarea
+                *ngIf="edit.status"
+                class="form-control description"
+                [(ngModel)]="selectedRole.description"
+                placeholder="Description"
+                rows="3"
+                [disabled]="selectedRole.skipReviewRole"
+                (keyup)="checkPermissionChange()"
+                maxlength="250"
+              ></textarea>
+              <span
+                *ngIf="!edit.status"
+                class="form-control-plaintext text-break text-justify"
+                >{{ selectedRole.description }}</span
+              >
+              <span
+                #infoTooltip="ngbTooltip"
+                *ngIf="edit.status"
+                class="info fa fa-info-circle text-muted position-absolute"
+                ngbTooltip="Maximum 250 chars allowed"
+                container="body"
+                placement="right"
+                >&nbsp;</span
+              >
             </div>
           </div>
-
+          <button
+            class="btn btn-link text-danger font-weight-bold"
+            id="roleDeleteBtn"
+            type="button"
+            *ngIf="edit.status && !selectedRole.skipReviewRole"
+            (click)="deletePermission()"
+          >
+            <span class="text">Delete role</span>
+          </button>
         </div>
         <ng-container *ngIf="!selectedRole.skipReviewRole">
           <div class="tab-list d-flex align-items-center border-bottom w-100">
-            <div class="tab px-3" [ngClass]="{ 'text-accent border-accent': activeTab === 1 }" (click)="activeTab = 1">
+            <div
+              class="tab px-3"
+              [ngClass]="{ 'text-accent border-accent': activeTab === 1 }"
+              (click)="activeTab = 1"
+            >
               Permission
             </div>
-            <div class="tab px-3" [ngClass]="{ 'text-accent border-accent': activeTab === 2 }" (click)="activeTab = 2"
-              *ngIf="!schemaFree">
+            <div
+              class="tab px-3"
+              [ngClass]="{ 'text-accent border-accent': activeTab === 2 }"
+              (click)="activeTab = 2"
+              *ngIf="!schemaFree"
+            >
               Dynamic Filters
             </div>
           </div>
-          <div class="tab-container d-flex align-items-start border-bottom w-100">
+          <div
+            class="tab-container d-flex align-items-start border-bottom w-100"
+          >
             <div id="tab-1" *ngIf="activeTab === 1">
-              <div class="d-flex flex-column w-100 my-3">
+              <div class="d-flex w-100 my-3">
+                <span class="text-dark font-weight-bold first-column"
+                  >Permission</span
+                >
                 <div class="d-flex flex-column">
-                  <select id="permissions" class="form-control input-text" (ngModelChange)="changePermission($event)"
-                    [disabled]="!edit.status && hasPermission('PMDSR')" [ngModel]="selectRoleType">
-                    <option *ngFor="let item of permissionOption" [value]="item.value">
-                      {{ item.label }}
-                    </option>
-                  </select>
-                  <!-- <div class="level-one position-relative mb-3">
-                    <div (click)="
+                  <div class="level-one position-relative mb-3">
+                    <div
+                      (click)="
                         toggleDropdown['GLOBAL'] =
                           hasPermission('PMDSR') && edit.status
                             ? !toggleDropdown['GLOBAL']
                             : false
-                      " [ngClass]="{
+                      "
+                      [ngClass]="{
                         view: selectRoleType === 'view',
                         manage: selectRoleType === 'manage',
                         hover: hasPermission('PMDSR')
-                      }" class="rounded-dropdown-toggle d-flex align-items-center ignore-outside">
-                      <div class="icon d-flex align-items-center justify-content-center">
-                        <span *ngIf="selectRoleType === 'view'" class="dsi dsi-view"></span>
-                        <span *ngIf="selectRoleType === 'manage'" class="dsi dsi-edit"></span>
+                      }"
+                      class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
+                    >
+                      <div
+                        class="icon d-flex align-items-center justify-content-center"
+                      >
+                        <span
+                          *ngIf="selectRoleType === 'view'"
+                          class="dsi dsi-view"
+                        ></span>
+                        <span
+                          *ngIf="selectRoleType === 'manage'"
+                          class="dsi dsi-edit"
+                        ></span>
                       </div>
                       <div *ngIf="selectRoleType === 'view'" class="text">
                         View
@@ -126,100 +225,135 @@
                       <div *ngIf="selectRoleType === 'manage'" class="text">
                         Manage
                       </div>
-                      <span *ngIf="hasPermission('PMDSR') && edit.status" class="fa fa-angle-down fa-sm"></span>
+                      <span
+                        *ngIf="hasPermission('PMDSR') && edit.status"
+                        class="fa fa-angle-down fa-sm"
+                      ></span>
                     </div>
-                    <div (outside)="toggleDropdown['GLOBAL'] = false" *ngIf="toggleDropdown['GLOBAL']"
-                      class="rounded-dropdown" odpClickOutside>
-                      <div (click)="
+                    <div
+                      (outside)="toggleDropdown['GLOBAL'] = false"
+                      *ngIf="toggleDropdown['GLOBAL']"
+                      class="rounded-dropdown"
+                      odpClickOutside
+                    >
+                      <div
+                        (click)="
                           toggleDropdown['GLOBAL'] = false;
                           selectRoleType = 'view'
-                        " class="rounded-dropdown-item d-flex align-items-center">
-                        <div class="icon d-flex align-items-center justify-content-center view">
+                        "
+                        class="rounded-dropdown-item d-flex align-items-center"
+                      >
+                        <div
+                          class="icon d-flex align-items-center justify-content-center view"
+                        >
                           <span class="dsi dsi-view"></span>
                         </div>
                         <div class="text">View</div>
                       </div>
-                      <div (click)="
+                      <div
+                        (click)="
                           toggleDropdown['GLOBAL'] = false;
                           selectRoleType = 'manage'
-                        " class="rounded-dropdown-item d-flex align-items-center">
-                        <div class="icon d-flex align-items-center justify-content-center manage">
+                        "
+                        class="rounded-dropdown-item d-flex align-items-center"
+                      >
+                        <div
+                          class="icon d-flex align-items-center justify-content-center manage"
+                        >
                           <span class="dsi dsi-edit"></span>
                         </div>
                         <div class="text">Manage</div>
                       </div>
                     </div>
-                  </div> -->
-                  <!-- <div *ngIf="selectRoleType === 'manage'"
-                    class="level-two position-relative d-flex align-items-center mb-3">
-                    <div (click)="canCreate = !canCreate" [ngClass]="{
+                  </div>
+                  <div
+                    *ngIf="selectRoleType === 'manage'"
+                    class="level-two position-relative d-flex align-items-center mb-3"
+                  >
+                    <div
+                      (click)="canCreate = !canCreate"
+                      [ngClass]="{
                         checked: canCreate,
                         disabled: !hasPermission('PMDSR') || !edit.status
-                      }" class="round-checkbox d-flex align-items-center justify-content-between mr-3">
+                      }"
+                      class="round-checkbox d-flex align-items-center justify-content-between mr-3"
+                    >
                       <div class="text font-weight-bold">Create</div>
-                      <div class="round-check d-flex align-items-center justify-content-center">
+                      <div
+                        class="round-check d-flex align-items-center justify-content-center"
+                      >
                         <span class="fa fa-check"></span>
                       </div>
                     </div>
-                    <div (click)="canEdit = !canEdit" [ngClass]="{
+                    <div
+                      (click)="canEdit = !canEdit"
+                      [ngClass]="{
                         checked: canEdit,
                         disabled: !hasPermission('PMDSR') || !edit.status
-                      }" class="round-checkbox d-flex align-items-center justify-content-between mr-3">
+                      }"
+                      class="round-checkbox d-flex align-items-center justify-content-between mr-3"
+                    >
                       <div class="text font-weight-bold">Edit</div>
-                      <div class="round-check d-flex align-items-center justify-content-center">
+                      <div
+                        class="round-check d-flex align-items-center justify-content-center"
+                      >
                         <span class="fa fa-check"></span>
                       </div>
                     </div>
-                    <div (click)="canDelete = !canDelete" [ngClass]="{
+                    <div
+                      (click)="canDelete = !canDelete"
+                      [ngClass]="{
                         checked: canDelete,
                         disabled: !hasPermission('PMDSR') || !edit.status
-                      }" class="round-checkbox d-flex align-items-center justify-content-between mr-3">
+                      }"
+                      class="round-checkbox d-flex align-items-center justify-content-between mr-3"
+                    >
                       <div class="text font-weight-bold">Delete</div>
-                      <div class="round-check d-flex align-items-center justify-content-center">
+                      <div
+                        class="round-check d-flex align-items-center justify-content-center"
+                      >
                         <span class="fa fa-check"></span>
                       </div>
                     </div>
-                  </div> -->
-                </div>
-                <div *ngIf="selectRoleType === 'manage'" class="mt-5">
-                  <div class="form-check">
-                    <input class="ml-1" type="checkbox" value="" id="createCheckbox"
-                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canCreate"
-                      (change)="canCreate = !canCreate">
-                    <label class="ml-3" for="createCheckBox">Create</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="ml-1" type="checkbox" value="" id="editCheckbox"
-                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canEdit"
-                      (change)="canEdit = !canEdit">
-                    <label class="ml-3" for="editCheckbox">Edit</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="ml-1" type="checkbox" value="" id="deleteCheckbox"
-                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canDelete"
-                      (change)="canDelete = !canDelete">
-                    <label class="ml-3" for="deleteCheckbox">Delete</label>
                   </div>
                 </div>
               </div>
-              <div class="d-flex w-100 mb-3" *ngIf="selectRoleType == 'view' && !schemaFree">
-                <span class="text-secondary font-weight-bold"></span>
+              <div
+                class="d-flex w-100 mb-3"
+                *ngIf="selectRoleType == 'view' && !schemaFree"
+              >
+                <span
+                  class="text-secondary font-weight-bold first-column"
+                ></span>
                 <div class="d-flex flex-column">
-                  <div class="d-flex flex-column pt-3 position-relative fields-container">
-                    <div class="d-flex pb-2 border-bottom">
+                  <div
+                    class="d-flex flex-column pt-3 position-relative fields-container"
+                  >
+                    <div
+                      class="d-flex justify-content-between align-items-center pb-2 border-bottom"
+                    >
                       <div class="d-flex flex-row">
-                        <span class="text-muted">
-                          Attributes
+                        <span class="font-weight-bold text-accent">
+                          Attributes ({{ countFields() }})
                         </span>
                       </div>
-                      <span class="text-muted ml-auto">Permission</span>
+                      <span class="font-weight-bold text-accent"
+                        >Permission</span
+                      >
                     </div>
-                    <div class="d-flex flex-column" [ngClass]="{ edit: edit.status }">
-                      <ng-container *ngFor="let srcDef of sourceDefinition; let i = index">
-                        <ng-container *ngTemplateOutlet="
+                    <div
+                      class="d-flex flex-column"
+                      [ngClass]="{ edit: edit.status }"
+                    >
+                      <ng-container
+                        *ngFor="let srcDef of sourceDefinition; let i = index"
+                      >
+                        <ng-container
+                          *ngTemplateOutlet="
                             fieldStructure;
                             context: { def: srcDef, level: 0 }
-                          ">
+                          "
+                        >
                         </ng-container>
                       </ng-container>
                     </div>
@@ -229,9 +363,14 @@
             </div>
             <div id="tab-2" *ngIf="activeTab === 2">
               <div class="d-flex w-100 my-3">
-                <span class="text-dark font-weight-bold first-column">Enable Filters</span>
+                <span class="text-dark font-weight-bold first-column"
+                  >Enable Filters</span
+                >
                 <div class="d-flex flex-column">
-                  <odp-switch [(checked)]="hasConditions" [edit]="edit"></odp-switch>
+                  <odp-switch
+                    [(checked)]="hasConditions"
+                    [edit]="edit"
+                  ></odp-switch>
                   <small class="text-muted role-control-right mb-3 mt-2">
                     Data Will be fine grained based on the condition you provide
                     here.
@@ -262,29 +401,58 @@
                 </div>
               </div>
               <ng-container *ngIf="hasConditions">
-                <div *ngIf="selectedMode == 'Basic'" class="rule-wrapper border rounded p-3 bg-white">
-                  <ng-container *ngFor="let item of rule; let i = index; let l = last">
-                    <div class="rule-block d-flex align-items-stretch" odpClickOutside [ignore]="[
+                <div
+                  *ngIf="selectedMode == 'Basic'"
+                  class="rule-wrapper border rounded p-3 bg-white"
+                >
+                  <ng-container
+                    *ngFor="let item of rule; let i = index; let l = last"
+                  >
+                    <div
+                      class="rule-block d-flex align-items-stretch"
+                      odpClickOutside
+                      [ignore]="[
                         '.selector-list-item',
                         '.common-options-item',
                         '.selected-data-service'
-                      ]">
-                      <div class="rule-block-query d-flex flex-column align-items-start">
-                        <odp-dynamic-condition [edit]="edit" [(rules)]="rule" [definition]="definition"
-                          (isInvalid)="onInvalidRole($event, i)" [index]="i">
+                      ]"
+                    >
+                      <div
+                        class="rule-block-query d-flex flex-column align-items-start"
+                      >
+                        <odp-dynamic-condition
+                          [edit]="edit"
+                          [(rules)]="rule"
+                          [definition]="definition"
+                          (isInvalid)="onInvalidRole($event, i)"
+                          [index]="i"
+                        >
                         </odp-dynamic-condition>
                       </div>
                     </div>
                   </ng-container>
                 </div>
-                <div *ngIf="selectedMode == 'Advance'" class="rule-wrapper border rounded p-3 bg-white">
+                <div
+                  *ngIf="selectedMode == 'Advance'"
+                  class="rule-wrapper border rounded p-3 bg-white"
+                >
                   <p>Write your filter in JSON</p>
-                  <odp-monotype-editor class="editor-wrapper" [edit]="edit" [(code)]="dynamicFilter">
+                  <odp-monotype-editor
+                    class="editor-wrapper"
+                    [edit]="edit"
+                    [(code)]="dynamicFilter"
+                  >
                   </odp-monotype-editor>
                 </div>
-                <div *ngIf="selectedMode == 'Expert'" class="rule-wrapper border rounded p-3 bg-white">
+                <div
+                  *ngIf="selectedMode == 'Expert'"
+                  class="rule-wrapper border rounded p-3 bg-white"
+                >
                   <p>Write your Code</p>
-                  <odp-monotype-editor class="editor-wrapper" [edit]="edit"></odp-monotype-editor>
+                  <odp-monotype-editor
+                    class="editor-wrapper"
+                    [edit]="edit"
+                  ></odp-monotype-editor>
                 </div>
               </ng-container>
             </div>
@@ -296,35 +464,61 @@
 </div>
 
 <ng-template #fieldStructure let-def="def" let-level="level">
-  <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 border-bottom">
+  <div
+    class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 border-bottom"
+  >
     <div class="d-flex align-items-center">
-      <span class="spacer border-right border-secondary" [ngStyle]="getSpacing(level)"></span>
-      <span class="icon odp-pin text-muted mr-2 fa-xs mt-1" *ngIf="idField(def)"></span>
+      <span
+        class="spacer border-right border-secondary"
+        [ngStyle]="getSpacing(level)"
+      ></span>
+      <span
+        class="icon odp-pin text-muted mr-2 fa-xs mt-1"
+        *ngIf="idField(def)"
+      ></span>
       <span class="icon d-flex align-items-center mr-2" *ngIf="!idField(def)">
-        <span class="fa text-secondary fa-lg hover" (click)="
+        <span
+          class="fa text-secondary fa-lg hover"
+          (click)="
             collapse[def.properties.dataKey] = !collapse[def.properties.dataKey]
-          " *ngIf="def.type == 'Object'" [ngClass]="{
+          "
+          *ngIf="def.type == 'Object'"
+          [ngClass]="{
             'fa-caret-right': collapse[def.properties.dataKey],
             'fa-caret-down': !collapse[def.properties.dataKey]
-          }"></span>
-        <span class="fa fa-asterisk text-danger" *ngIf="def.properties.required"></span>
+          }"
+        ></span>
+        <span
+          class="fa fa-asterisk text-danger"
+          *ngIf="def.properties.required"
+        ></span>
       </span>
       <div class="input-control position-relative mr-3">
         <span class="field form-control-plaintext">{{
           def.properties.name
-          }}</span>
+        }}</span>
       </div>
       <odp-field-type [field]="def" label="true"></odp-field-type>
     </div>
-    <odp-switch [attr.id]="def.properties.dataKey" [checked]="isChecked(def.properties.dataKey)"
-      (checkedChange)="changeValue(def.properties.dataKey, $event)" [edit]="edit"></odp-switch>
+    <odp-switch
+      [attr.id]="def.properties.dataKey"
+      [checked]="isChecked(def.properties.dataKey)"
+      (checkedChange)="changeValue(def.properties.dataKey, $event)"
+      [edit]="edit"
+    ></odp-switch>
   </div>
-  <ng-container *ngIf="def.type == 'Object' && !collapse[def.properties.dataKey]">
-    <ng-container *ngFor="let srcDef of def.definition; let i = index; let l = last">
-      <ng-container *ngTemplateOutlet="
+  <ng-container
+    *ngIf="def.type == 'Object' && !collapse[def.properties.dataKey]"
+  >
+    <ng-container
+      *ngFor="let srcDef of def.definition; let i = index; let l = last"
+    >
+      <ng-container
+        *ngTemplateOutlet="
           fieldStructure;
           context: { def: srcDef, level: level + 1 }
-        "></ng-container>
+        "
+      ></ng-container>
     </ng-container>
   </ng-container>
 </ng-template>
@@ -342,12 +536,20 @@
     </p>
   </div>
   <div class="modal-footer p-3 bg-light">
-    <button type="button" class="btn btn-min-width btn-default w-50 mx-3" (click)="deleteModalRef.close(false)"
-      id="sbDeleteModalNo">
+    <button
+      type="button"
+      class="btn btn-min-width btn-default w-50 mx-3"
+      (click)="deleteModalRef.close(false)"
+      id="sbDeleteModalNo"
+    >
       No
     </button>
-    <button type="button" class="btn btn-min-width btn-dark w-50 mx-3" (click)="deleteModalRef.close(true)"
-      id="sbDeleteModalYes">
+    <button
+      type="button"
+      class="btn btn-min-width btn-dark w-50 mx-3"
+      (click)="deleteModalRef.close(true)"
+      id="sbDeleteModalYes"
+    >
       Yes
     </button>
   </div>
