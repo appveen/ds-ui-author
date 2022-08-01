@@ -416,6 +416,14 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   padding: 32px !important;
 }
 
+.nav-inactive {
+  color: #7A7A7A;
+}
+
+.nav-active {
+  color: #181818;
+}
+
 // // Custom scrollbar
 // ::-webkit-scrollbar {
 //   width: 10px;

@@ -1,14 +1,14 @@
-<div class="actions d-flex justify-content-center hover align-items-center"
+<div class="actions d-flex justify-content-end hover align-items-center"
     *ngIf="params.value != 'Pending' && params.value != 'Maintainance' ">
-    <small class="fa fa-play text-success hover mr-2" *ngIf="params.value == 'Stopped' && isStartStop()"
-        (click)="toggleServiceStatus()"></small>
-    <small class="fa fa-stop text-danger hover mr-2" *ngIf="params.value == 'Active' && isStartStop()"
-        (click)="toggleServiceStatus()"></small>
-    <small class="dsi dsi-editcil-alt hover mr-2" *ngIf="canEditService()" (click)="editService()"></small>
-    <small class="dsi dsi-view hover mr-2" *ngIf="canEditService()" (click)="viewService()"></small>
-    <small class="fa fa-clone hover mr-2" *ngIf="canCloneService()" (click)="cloneService()"></small>
-    <small class="dsi dsi-trash hover mr-2" *ngIf="canDeleteService()" (click)="deleteService()"></small>
-    <small class="hover mr-2 font-11" (click)="openDocs()">API</small>
-    <span *ngIf="isDeploy()" id='deploy{{params.rowIndex}}' class="fas fa-play-circle text-primary"
-        (click)="deployService()"></span>
+    <span class="dsi dsi-play hover mr-2" *ngIf="params.value == 'Stopped' && isStartStop()"
+        (click)="toggleServiceStatus()" ngbTooltip="Start" container="body"></span>
+    <span class="dsi dsi-stop hover mr-2" *ngIf="params.value == 'Active' && isStartStop()"
+        (click)="toggleServiceStatus()" ngbTooltip="Stop" container="body"></span>
+    <span class="dsi dsi-edit hover mr-2" *ngIf="canEditService()" (click)="editService()"></span>
+    <span class="dsi dsi-view hover mr-2" *ngIf="canEditService()" (click)="viewService()"></span>
+    <span class="dsi dsi-copy hover mr-2" *ngIf="canCloneService()" (click)="cloneService()"></span>
+    <span class="dsi dsi-trash hover mr-2" *ngIf="canDeleteService()" (click)="deleteService()"></span>
+    <span class="hover mr-2 font-11" (click)="openDocs()">API</span>
+    <span *ngIf="isDeploy()" id='deploy{{params.rowIndex}}' class="dsi dsi-skip-forward text-primary"
+        (click)="deployService()" ngbTooltip="Deploy" container="body"></span>
 </div>

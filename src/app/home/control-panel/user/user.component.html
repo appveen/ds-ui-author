@@ -21,10 +21,9 @@
           <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')" [selectOnEnter]="true"
             (enteredPressed)="enterToSelect($event)"></odp-search-box>
         </div>
-        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-dark mr-3" routerLink="bulk-import"
+        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-outline-light border text-secondary mr-3" routerLink="bulk-import"
           ngbTooltip="Bulk Import" id="bulkimport">
           <span class="dsi dsi-upload"></span>
-          <!-- <span class="text">Bulk Import</span> -->
         </button>
         <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary"
           (click)="newUser()">
@@ -188,7 +187,7 @@
               <sup class="text-danger">*</sup>
             </label>
             <div class="input-wrapper position-relative">
-              <input class="form-control input-text" [type]="showPassword['new'] ? 'text' : 'password'"
+              <input class="form-control" [type]="showPassword['new'] ? 'text' : 'password'"
                 placeholder="Password" formControlName="password" [ngClass]="{ 'is-invalid': pwdError }"
                 autocomplete="new-password" odpAutoFocus />
               <span id="showPass" class="dsi eye-icon position-absolute hover" [ngClass]="{
@@ -211,7 +210,7 @@
               <sup class="text-danger">*</sup>
             </label>
             <div class="input-wrapper position-relative">
-              <input id="cPassword" class="form-control input-text"
+              <input id="cPassword" class="form-control"
                 [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"
                 formControlName="cpassword" [ngClass]="{ 'is-invalid': cPwdError }" />
               <span class="dsi eye-icon position-absolute hover" [ngClass]="{
@@ -228,7 +227,7 @@
             </div>
           </div>
           <div class="d-flex align-items-center justify-content-between mt-auto">
-            <button type="button" class="btn btn-primary add-button input-text" id="resetpassowrd"
+            <button type="button" class="btn btn-primary add-button" id="resetpassowrd"
               (click)="resetPassword()">
               Confirm
             </button>
@@ -248,7 +247,7 @@
             <div class="form-group" formGroupName="auth" *ngIf="validAuthTypes?.length > 1">
               <label for="authType">Authentication Method</label>
               <div class="position-relative">
-                <select id="authType" class="form-control input-text" formControlName="authType"
+                <select id="authType" class="form-control" formControlName="authType"
                   (ngModelChange)="onAuthTypeChange($event)" odpAutoFocus>
                   <option *ngFor="let item of validAuthTypes" [value]="item.value">
                     {{ item.label }}
@@ -272,7 +271,7 @@
                   <sup class="text-danger">*</sup>
                 </label>
                 <div class="position-relative">
-                  <input id="username" class="form-control input-text" type="text" placeholder="Enter Username"
+                  <input id="username" class="form-control" type="text" placeholder="Enter Username"
                     formControlName="username" odpAutoFocus (blur)="checkForDuplicate()" [ngClass]="{
                     'is-invalid': invalidUsername || invalidUsernamePattern
                   }" />
@@ -288,7 +287,7 @@
                   <sup class="text-danger">*</sup>
                 </label>
                 <div class="w-100 position-relative" formGroupName="basicDetails">
-                  <input id="name" class="form-control pr-4 input-text" type="text" placeholder="Enter Name"
+                  <input id="name" class="form-control pr-4" type="text" placeholder="Enter Name"
                     formControlName="name" [ngClass]="{ 'is-invalid': invalidName }"
                     autocomplete="autocomplete_off_hack" />
                   <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="invalidName"
@@ -312,7 +311,7 @@
                     <sup class="text-danger">*</sup>
                   </label>
                   <div class="position-relative">
-                    <input class="form-control input-text" [type]="showPassword['new'] ? 'text' : 'password'"
+                    <input class="form-control" [type]="showPassword['new'] ? 'text' : 'password'"
                       placeholder="Password" formControlName="password" [ngClass]="{
                         'is-invalid':
                           invalidPassword ||
@@ -338,7 +337,7 @@
                     <sup class="text-danger">*</sup>
                   </label>
                   <div class="position-relative">
-                    <input id="cPassword" class="form-control input-text"
+                    <input id="cPassword" class="form-control"
                       [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"
                       formControlName="cpassword" [ngClass]="{
                         'is-invalid': invalidCPassword || invalidPasswordMatch
@@ -358,14 +357,14 @@
                 <div class="form-group">
                   <label for="phone">Phone</label>
                   <div class="w-100" formGroupName="basicDetails">
-                    <input id="phone" class="form-control input-text" type="text" placeholder="Enter Phone Number"
+                    <input id="phone" class="form-control" type="text" placeholder="Enter Phone Number"
                       formControlName="phone" />
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="email">Alternate Email</label>
                   <div class="w-100 position-relative" formGroupName="basicDetails">
-                    <input id="email" class="form-control input-text" type="text" placeholder="Enter Alternate Email"
+                    <input id="email" class="form-control" type="text" placeholder="Enter Alternate Email"
                       formControlName="alternateEmail" />
                     <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                       *ngIf="invalidEmailPattern" ngbTooltip="Invalid Alternate Email"></span>
@@ -401,16 +400,16 @@
               !userInLocal &&
               !userInAzureAD &&
               hasPermission('PMUBC')
-            " type="button" class="btn btn-primary add-button input-text" id="createNewUserYes" (click)="addUser()"
+            " type="button" class="btn btn-primary add-button w-100" id="createNewUserYes" (click)="addUser()"
             [disabled]="userForm.get('userData').invalid">
             Add
           </button>
           <button *ngIf="userInLocal && hasPermission('PMUBC')" type="button"
-            class="btn btn-primary add-button input-text" id="importUser" (click)="importUser()">
+            class="btn btn-primary add-button w-100" id="importUser" (click)="importUser()">
             Import
           </button>
           <button *ngIf="userInAzureAD && hasPermission('PMUBC')" type="button"
-            class="btn btn-primary add-button input-text" disableImportid="importUser" (click)="importUserFromAzure()"
+            class="btn btn-primary add-button w-100" disableImportid="importUser" (click)="importUserFromAzure()"
             [disabled]="disableImport">
             Import
           </button>
@@ -434,7 +433,7 @@
               <sup class="text-danger">*</sup>
             </label>
             <div class="position-relative">
-              <input id="label" class="form-control pr-4 input-text" type="text" placeholder="Label name"
+              <input id="label" class="form-control pr-4" type="text" placeholder="Label name"
                 formControlName="label" autocomplete="autocomplete_off_hack" odpAutoFocus />
               <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
                   attributesForm.get('type').touched &&
@@ -448,7 +447,7 @@
               <sup class="text-danger">*</sup>
             </label>
             <div class="position-relative">
-              <select id="type" class="form-control input-text" formControlName="type"
+              <select id="type" class="form-control" formControlName="type"
                 (ngModelChange)="onAttributeFormTypeChange($event)">
                 <option *ngFor="let item of types" [value]="item.value">
                   {{ item.label }}
@@ -466,17 +465,17 @@
               <sup class="text-danger">*</sup>
             </label>
             <div class="position-relative">
-              <input id="value" class="form-control pr-4 input-text" type="text" placeholder="Value"
+              <input id="value" class="form-control pr-4" type="text" placeholder="Value"
                 formControlName="value" autocomplete="autocomplete_off_hack"
                 *ngIf="attributesForm.get('type').value === 'String'" />
-              <input id="value" class="form-control pr-4 input-text" type="number" placeholder="Value"
+              <input id="value" class="form-control pr-4" type="number" placeholder="Value"
                 formControlName="value" autocomplete="autocomplete_off_hack"
                 *ngIf="attributesForm.get('type').value === 'Number'" />
               <odp-switch [edit]="{ status: true }" [checked]="attributesForm.get('value').value"
                 (checkedChange)="setUserAttributeValue($event)" *ngIf="attributesForm.get('type').value === 'Boolean'">
               </odp-switch>
 
-              <input id="value" class="form-control pr-4 input-text" type="date" placeholder="Value"
+              <input id="value" class="form-control pr-4" type="date" placeholder="Value"
                 formControlName="value" autocomplete="autocomplete_off_hack"
                 *ngIf="attributesForm.get('type').value === 'Date'" />
               <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
@@ -485,7 +484,7 @@
                 " ngbTooltip="This is a required field"></span>
             </div>
           </div>
-          <button type="button" class="btn btn-primary add-button mt-auto" id="addAttributes" (click)="addAttribute()">
+          <button type="button" class="btn btn-primary add-button mt-auto w-100" id="addAttributes" (click)="addAttribute()">
             {{ editMode ? 'Save' : 'Add' }}
           </button>
         </form>

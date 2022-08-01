@@ -36,10 +36,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   context: any;
   @ViewChild('alertModalTemplate', { static: false })
   alertModalTemplate: TemplateRef<HTMLElement>;
-  @ViewChild('newServiceModal', { static: false })
-  newServiceModal: TemplateRef<HTMLElement>;
-  @ViewChild('cloneServiceModal', { static: false })
-  cloneServiceModal: TemplateRef<HTMLElement>;
   @ViewChild('yamlModalTemplate', { static: false })
   yamlModalTemplate: TemplateRef<HTMLElement>;
   app: string;
@@ -63,8 +59,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   form: FormGroup;
   cloneForm: FormGroup;
   alertModalTemplateRef: NgbModalRef;
-  newServiceModalRef: NgbModalRef;
-  cloneServiceModalRef: NgbModalRef;
   yamlModalTemplateRef: NgbModalRef;
   cloneData: any;
   easterEggEnabled: boolean;
@@ -73,6 +67,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   deploymentYaml: any;
   toggleImportWizard: boolean;
   frameworkComponents: any;
+  showNewServiceWindow: boolean;
+  showCloneServiceWindow: boolean;
   constructor(
     public commonService: CommonService,
     private appService: AppService,
@@ -248,12 +244,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     if (self.alertModalTemplateRef) {
       self.alertModalTemplateRef.close();
     }
-    if (self.newServiceModalRef) {
-      self.newServiceModalRef.close();
-    }
-    if (self.cloneServiceModalRef) {
-      self.cloneServiceModalRef.close();
-    }
   }
 
   onGridReady(event) {
@@ -331,6 +321,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         headerName: '',
         field: 'status',
         cellRenderer: 'actionRenderer',
+        width: 300,
       }
     ];
 
@@ -372,20 +363,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   newService() {
     const self = this;
-    self.newServiceModalRef = self.commonService.modal(self.newServiceModal, {
-      size: 'sm',
-    });
-    self.newServiceModalRef.result.then(
-      (close) => {
-        if (close && self.form.valid) {
-          self.triggerServiceCreate();
-        }
-        self.form.reset();
-      },
-      (dismiss) => {
-        self.form.reset();
-      }
-    );
+    self.form.reset();
+    this.showNewServiceWindow = true;
   }
 
   viewService(selectedRow) {
@@ -550,24 +529,11 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   cloneService(index: number) {
     const self = this;
+    self.cloneForm.reset({ desTab: true });
     self.cloneData = self.serviceList[index];
     self.cloneForm.get('name').patchValue(self.cloneData.name + ' Copy');
     self.cloneForm.get('description').patchValue(self.cloneData.description);
-    self.cloneServiceModalRef = self.commonService.modal(
-      self.cloneServiceModal,
-      { size: 'sm' }
-    );
-    self.cloneServiceModalRef.result.then(
-      (close) => {
-        self.cloneData = null;
-        self.cloneForm.reset({ desTab: true });
-      },
-      (dismiss) => {
-        self.cloneData = null;
-        self.cloneForm.reset({ desTab: true });
-      }
-    );
-    // self.appService.cloneServiceId = self.serviceList[index]._id;
+    this.showCloneServiceWindow = true;
   }
 
   triggerClone() {
@@ -621,7 +587,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         (res) => {
           self.ts.success('Service Cloned.');
           self.appService.editServiceId = res._id;
-          self.cloneServiceModalRef.close(false);
+          this.showCloneServiceWindow = false;
           self.router.navigate([
             '/app/',
             self.commonService.app._id,
