@@ -134,7 +134,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     col.field = 'name';
     // col.pinned = 'left';
     col.lockPinned = true;
-    col.width = 180;
+    col.width = 140;
     col.sort = 'asc';
     columns.push(col);
     col = new AgGridColumn();
@@ -148,16 +148,17 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     col = new AgGridColumn();
     col.headerName = 'Status';
     col.field = 'status';
-    col.width = 100;
+    col.width = 120;
     columns.push(col);
     col = new AgGridColumn();
     col.headerName = 'Last Invoked';
     col.field = 'lastInvoked';
-    col.width = 180;
+    col.width = 140;
     columns.push(col);
     col = new AgGridColumn();
     col.headerName = 'Options';
     col.field = '_options';
+    col.width = 140;
     // col.pinned = 'right';
     col.lockPinned = true;
     columns.push(col);

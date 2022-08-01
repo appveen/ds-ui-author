@@ -170,18 +170,18 @@
 
     <div [ngClass]="{
         show: showNewUserWindow || showPasswordSide || showAddAttribute
-      }" class="new-user-window position-fixed bg-white border-left p-4">
+      }" class="new-user-window position-fixed bg-white border-left p-4 d-flex flex-column">
       <!-- <span class="fa fa-times text-secondary hover close" id="closeicon"
         (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span> -->
-      <div *ngIf="showPasswordSide && !showNewUserWindow">
+      <div class="d-flex flex-column h-100" *ngIf="showPasswordSide && !showNewUserWindow">
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div class="d-flex align-items-center">
-            <h5 class="font-weight-bold">Reset Password</h5>
+            <h5 class="fw-600 font-20">Reset Password</h5>
           </div>
           <span class="fa fa-times text-secondary hover" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
-        <form class="d-flex flex-column" [formGroup]="resetPasswordForm" odpFocusNext>
+        <form class="d-flex flex-column h-100" [formGroup]="resetPasswordForm" odpFocusNext>
           <div class="form-group position-relative">
             <label for="password">
               New Password
@@ -227,18 +227,18 @@
                 [ngbTooltip]="'Passwords don\'t match'"></span>
             </div>
           </div>
-          <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center justify-content-between mt-auto">
             <button type="button" class="btn btn-primary add-button input-text" id="resetpassowrd"
               (click)="resetPassword()">
-              Save
+              Confirm
             </button>
           </div>
         </form>
       </div>
-      <div *ngIf="!showPasswordSide && showNewUserWindow">
+      <div class="d-flex flex-column" *ngIf="!showPasswordSide && showNewUserWindow">
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div class="d-flex align-items-center">
-            <h5 class="font-weight-bold">Create User</h5>
+            <h5 class="fw-600 font-20">Create User</h5>
           </div>
           <span class="fa fa-times text-secondary hover" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
@@ -375,7 +375,6 @@
               <div *ngIf="hasPermission('PMUG') && groupList.length > 0">
                 <div class="form-group">
                   <label for="groups">Groups</label><br />
-
                   <div class="groups-list border rounded bg-white">
                     <ul class="list-group list-group-flush">
                       <li *ngFor="let group of groupList; index as groupIndex" class="list-group-item py-2">
@@ -396,7 +395,7 @@
             </ng-container>
           </div>
         </form>
-        <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center justify-content-between mt-auto">
           <button *ngIf="
               selectedAuthType == 'local' &&
               !userInLocal &&
@@ -418,10 +417,10 @@
         </div>
       </div>
 
-      <div *ngIf="showAddAttribute && !showNewUserWindow && !showPasswordSide">
+      <div class="h-100" *ngIf="showAddAttribute && !showNewUserWindow && !showPasswordSide">
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div class="d-flex align-items-center">
-            <h5 class="font-weight-bold">
+            <h5 class="fw-600 font-20">
               {{ editMode ? 'Edit Attribute' : 'Add Attribute' }}
             </h5>
           </div>
@@ -486,7 +485,7 @@
                 " ngbTooltip="This is a required field"></span>
             </div>
           </div>
-          <button type="button" class="btn btn-primary add-button" id="addAttributes" (click)="addAttribute()">
+          <button type="button" class="btn btn-primary add-button mt-auto" id="addAttributes" (click)="addAttribute()">
             {{ editMode ? 'Save' : 'Add' }}
           </button>
         </form>

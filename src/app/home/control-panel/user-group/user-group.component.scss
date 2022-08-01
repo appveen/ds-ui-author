@@ -25,7 +25,7 @@
 
     .btn {
       &:hover {
-        color: $secondary !important;
+        color: $secondary  !important;
       }
     }
   }
@@ -33,6 +33,13 @@
   .scroll-pane {
     height: 100%;
     overflow: auto;
+  }
+}
+
+.name-wrapper {
+  .dsi {
+    top: 9px;
+    right: 9px;
   }
 }
 

@@ -2,8 +2,8 @@
   <div class="hover ignore-outside d-flex align-items-center p-2 border rounded-lg" (click)="showSettings = !showSettings">
     <span class="dsi dsi-settings font-20"></span>
     <label class="my-0 mx-2">Profile Settings</label>
-    <span class="fa-point fa" [ngClass]="{
-        'fa-chevron-down': !showSettings,
+    <span class="dsi" [ngClass]="{
+        'dsi-drop-down': !showSettings,
         'dsi-drop-up': showSettings
       }"></span>
   </div>

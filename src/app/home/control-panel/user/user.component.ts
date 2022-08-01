@@ -785,7 +785,7 @@ export class UserComponent implements OnInit, OnDestroy {
     if (!enteredUN) {
       return;
     }
-    if (this.agGrid.api.getRowNode(enteredUN)) {
+    if (this.userList.find(e => e._id === enteredUN)) {
       this.ts.warning('User already exist in this app.');
       this.userForm.get('userData.username').patchValue(null);
       return;

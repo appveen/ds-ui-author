@@ -6,32 +6,21 @@
 </div>
 <ng-container *ngIf="value">
     <span *ngIf="field == 'name'" class="d-flex align-items-center">
-        <a [routerLink]="data?._id" class="text-accent font-weight-bold ml-3">{{value}}</a>
-        <span *ngIf="data?.draftVersion" class="badge badge-accent ml-2" ngbTooltip="Draft Version"
+        <!-- <a [routerLink]="data?._id" class="text-dark font-weight-bold ml-3">{{value}}</a> -->
+        <span class="text-dark font-weight-bold ml-3">{{value}}</span>
+        <span *ngIf="data?.draftVersion" class="badge badge-dark ml-2" ngbTooltip="Draft Version"
             container="body">v{{data.draftVersion}}</span>
     </span>
-    <code *ngIf="field == 'url'">{{fqdn}}{{value}}</code>
-    <button *ngIf="field == 'url'" type="button" class="btn btn-link text-accent btn-sm ml-2" (click)="copyUrl()">
-        <span class="fa fa-copy"></span>
-    </button>
+    <div *ngIf="field == 'url'" class="url-block d-flex position-relative">
+        <span class="text-dark">https://{{fqdn}}{{value}}</span>
+        <button type="button" class="btn btn-link text-accent bg-white btn-sm position-absolute" (click)="copyUrl()">
+            <span class="dsi dsi-copy"></span>
+        </button>
+    </div>
     <code *ngIf="field == 'description'">{{value}}</code>
     <span *ngIf="field == 'status'">
-        <ng-container *ngIf="data?.status=='Draft'">
-            <span class="badge badge-accent">DRAFT</span>
-            <span class="badge badge-accent ml-1">v{{data?.version || 1}}</span>
-        </ng-container>
-        <ng-container *ngIf="data?.status=='Active'">
-            <span class="badge badge-success">RUNNING</span>
-            <span class="badge badge-success ml-1">v{{data?.version || 1}}</span>
-        </ng-container>
-        <ng-container *ngIf="data?.status=='Pending'">
-            <span class="badge pending">PENDING</span>
-            <span class="badge pending ml-1">v{{data?.version || 1}}</span>
-        </ng-container>
-        <ng-container *ngIf="data?.status=='Undeployed'">
-            <span class="badge badge-danger">STOPPED</span>
-            <span class="badge badge-danger ml-1">v{{data?.version || 1}}</span>
-        </ng-container>
+        <span [ngClass]="getStatusClass" class="badge">{{data?.status}}</span>
+        <span [ngClass]="getStatusClass" class="badge ml-1">v{{data?.version || 1}}</span>
     </span>
     <span *ngIf="field == 'lastInvoked'">{{value | dateFormat:'YYYY MMM DD, HH:mm:ss'}}</span>
 </ng-container>
@@ -47,8 +36,7 @@
         class="btn btn-link text-muted p-1 mr-2" (click)="$event.preventDefault();stopFaas(data)">
         <span class="fa fa-stop"></span>
     </button>
-    <button type="button" class="btn btn-link text-muted p-1 mr-2"
-        (click)="$event.preventDefault();redirectToManage()">
+    <button type="button" class="btn btn-link text-muted p-1 mr-2" (click)="$event.preventDefault();redirectToManage()">
         <span class="dsi dsi-view"></span>
     </button>
     <button type="button" class="btn btn-link text-muted p-1 mr-2" *ngIf="hasManagePermission"
