@@ -412,8 +412,8 @@
       align-items-center
     ">
     <div class="d-flex align-items-center justify-content-between mb-3 w-100">
-      <span class="font-20 fw-500" *ngIf="headerData && headerData.isEdit">Edit Properties</span>
-      <span class="font-20 fw-500" *ngIf="!headerData || !headerData.isEdit">Add Properties</span>
+      <span class="font-20 fw-600" *ngIf="headerData && headerData.isEdit">Edit Properties</span>
+      <span class="font-20 fw-600" *ngIf="!headerData || !headerData.isEdit">Add Properties</span>
       <span class="fa fa-times text-muted hover" (click)="keyValModalTemplateRef.close(false)"></span>
     </div>
     <div class="

@@ -4,6 +4,21 @@
 
 .library-page {
   height: calc(100vh - 60px);
+
+  .card-container {
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+  }
+
+  .list-group-item {
+    height: 56px;
+
+    &.header {
+      min-height: 38px;
+      max-height: 38px;
+      color: #6C7584;
+    }
+  }
 }
 
 .item-name {
