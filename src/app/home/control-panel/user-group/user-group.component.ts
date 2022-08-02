@@ -127,7 +127,7 @@ export class UserGroupComponent implements OnInit, OnDestroy {
     }
     addNewGroup() {
         this.showNewGroupWindow = true;
-        this.form.reset();
+        this.form.reset({ name: this.searchTerm });
     }
     createGroup() {
         if (this.form.valid) {

@@ -8,9 +8,10 @@
 </div>
 <div class="group-page d-flex flex-column bg-light-gray page-padding">
   <div class="options d-flex justify-content-between align-items-center w-100 pt-2 pb-4">
-    <div class="font-22">
+    <div class="font-22 d-flex align-items-center ">
       <span class="fw-600 mr-2">Groups</span>
       <span>({{totalRecords - 1}})</span>
+      <span *ngIf="searchTerm" ngbTooltip="Filter Applied" class="dsi dsi-filter-alt text-secondary ml-2"></span>
     </div>
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
@@ -22,60 +23,65 @@
   </div>
 
   <div class="scroll-pane">
-    <div class="list-group mb-3">
-      <div class="list-group-item header py-0 bg-light text-muted text-uppercase font-13">
-        <div class="d-flex align-items-center justify-content-between h-100">
-          <div class="group-name">Group Name</div>
-          <div class="d-flex align-items-center">
-            <div class="group-users-count">Users</div>
-            <div class="group-bots-count">Bots</div>
-            <div class="group-author-flag">Author</div>
-            <div class="group-appcenter-flag">Appcenter</div>
-          </div>
-          <div class="group-actions"></div>
+    <div *ngIf="(groupList|filterTeam:searchTerm).length==0" class="rounded-lg border bg-white p-4">
+      <p class="m-0">No Records Found, <button type="button" class="btn btn-link px-1 py-0"
+          (click)="addNewGroup()">Click
+          Here</button> to create a new Group
+        <span *ngIf="searchTerm">:&nbsp;<span class="fw-500">{{searchTerm}}</span></span>
+      </p>
+    </div>
+    <div *ngIf="(groupList|filterTeam:searchTerm).length>0" class="list-group mb-3">
+      <div
+        class="list-group-item header d-flex align-items-center justify-content-between py-0 bg-light text-uppercase font-11 fw-500">
+        <div class="group-name">Group Name</div>
+        <div class="d-flex align-items-center">
+          <div class="group-users-count">Users</div>
+          <div class="group-bots-count">Bots</div>
+          <div class="group-author-flag">Author</div>
+          <div class="group-appcenter-flag">Appcenter</div>
         </div>
+        <div class="group-actions"></div>
       </div>
-      <div class="list-group-item" *ngFor="let group of groupList|filterTeam:searchTerm">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="group-name">{{group.name}}</div>
-          <div class="d-flex align-items-center">
-            <div class="group-users-count">{{group.membersCount}}</div>
-            <div class="group-bots-count">{{group.botsCount}}</div>
-            <div class="group-author-flag font-12 d-flex align-items-center">
-              <ng-container *ngIf="group.hasAuthorRoles">
-                <span class="fa fa-circle fa-xs text-success mr-2"></span>
-                <span class="text-dark">Active</span>
-              </ng-container>
-              <ng-container *ngIf="!group.hasAuthorRoles">
-                <span class="fa fa-circle fa-xs text-muted mr-2"></span>
-                <span class="text-muted">Inactive</span>
-              </ng-container>
-            </div>
-            <div class="group-appcenter-flag font-12 d-flex align-items-center">
-              <ng-container *ngIf="group.hasAppcenterRoles">
-                <span class="fa fa-circle fa-xs text-success mr-2"></span>
-                <span class="text-dark">Active</span>
-              </ng-container>
-              <ng-container *ngIf="!group.hasAppcenterRoles">
-                <span class="fa fa-circle fa-xs text-muted mr-2"></span>
-                <span class="text-muted">Inactive</span>
-              </ng-container>
-            </div>
+      <div class="list-group-item d-flex align-items-center justify-content-between"
+        *ngFor="let group of groupList|filterTeam:searchTerm">
+        <div class="group-name text-dark fw-500">{{group.name}}</div>
+        <div class="d-flex align-items-center">
+          <div class="group-users-count">{{group.membersCount}}</div>
+          <div class="group-bots-count">{{group.botsCount}}</div>
+          <div class="group-author-flag font-12 d-flex align-items-center">
+            <ng-container *ngIf="group.hasAuthorRoles">
+              <span class="fa fa-circle fa-xs text-success mr-2"></span>
+              <span class="text-dark">Active</span>
+            </ng-container>
+            <ng-container *ngIf="!group.hasAuthorRoles">
+              <span class="fa fa-circle fa-xs text-muted mr-2"></span>
+              <span class="text-muted">Inactive</span>
+            </ng-container>
           </div>
-          <div class="group-actions">
-            <button type="button" class="btn btn-link text-muted p-1 mr-2" [routerLink]="['../gm', group._id]">
-              <span class="dsi dsi-edit"></span>
-            </button>
-            <button type="button" class="btn btn-link text-muted p-1">
-              <span class="dsi dsi-trash"></span>
-            </button>
-            <!-- <button type="button" class="btn btn-light bg-transparent border mr-2" [routerLink]="['../gm', group._id]">
+          <div class="group-appcenter-flag font-12 d-flex align-items-center">
+            <ng-container *ngIf="group.hasAppcenterRoles">
+              <span class="fa fa-circle fa-xs text-success mr-2"></span>
+              <span class="text-dark">Active</span>
+            </ng-container>
+            <ng-container *ngIf="!group.hasAppcenterRoles">
+              <span class="fa fa-circle fa-xs text-muted mr-2"></span>
+              <span class="text-muted">Inactive</span>
+            </ng-container>
+          </div>
+        </div>
+        <div class="group-actions">
+          <button type="button" class="btn btn-link text-muted p-1 mr-2" [routerLink]="['../gm', group._id]">
+            <span class="dsi dsi-edit"></span>
+          </button>
+          <button type="button" class="btn btn-link text-muted p-1">
+            <span class="dsi dsi-trash"></span>
+          </button>
+          <!-- <button type="button" class="btn btn-light bg-transparent border mr-2" [routerLink]="['../gm', group._id]">
               <span class="dsi dsi-edit text-secondary"></span>
             </button>
             <button type="button" class="btn btn-light bg-transparent border">
               <span class="dsi dsi-trash text-secondary"></span>
             </button> -->
-          </div>
         </div>
       </div>
     </div>

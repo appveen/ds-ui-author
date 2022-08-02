@@ -65,7 +65,8 @@
 
 .list-group-item {
   &.header {
-    font-weight: 400;
-    height: 40px;
+    min-height: 38px;
+    max-height: 38px;
+    color: #6C7584;
   }
 }
