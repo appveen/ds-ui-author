@@ -33,9 +33,16 @@
 .item-actions {
   min-width: 180px;
 
-  .btn {
+  .dsi {
+    min-width: 24px;
+    max-width: 24px;
+    display: inline-block;
+  }
+
+  .dsi,
+  .api-icon {
     &:hover {
-      color: $secondary  !important;
+      color: $dark;
     }
   }
 }

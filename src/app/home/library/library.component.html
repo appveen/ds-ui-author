@@ -17,17 +17,6 @@
     </div>
   </div>
   <div class="card-container" (scroll)="loadMore($event)">
-    <!-- <div class="card m-2 add-card hover" (click)="newLibrary()" id="_createLibrary"
-      *ngIf="hasManagePermission('GS') && (!libraryList || libraryList.length==0) && !showLazyLoader">
-      <div class="card-body bg-light d-flex w-100 h-100">
-        <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
-          <div class="align-self-center text-center bg-primary p-3 circle">
-            <span class="dsi dsi-plus fa-lg mt-2 text-white"></span>
-          </div>
-          <div class="align-self-center text-dark mt-3 font-weight-bold">New Library</div>
-        </div>
-      </div>
-    </div> -->
     <div class="list-group">
       <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500">
         <div class="d-flex align-items-center justify-content-between h-100">
@@ -44,27 +33,19 @@
       <ng-container *ngFor="let library of libraryList;let i=index">
         <div *ngIf="hasPermissionForLibrary(library._id)" class="list-group-item">
           <div class="d-flex align-items-center justify-content-between h-100" [attr.title]="library.name">
-            <div class="item-name">{{library.name}}</div>
-            <div class="d-flex align-items-center">
+            <div class="item-name text-dark fw-500">{{library.name}}</div>
+            <div class="d-flex align-items-center sub-heading">
               <div class="item-attribute-count text-center">{{library._attributes}}</div>
               <div class="item-reference-count text-center">{{library._references}}</div>
             </div>
-            <div class="item-actions d-flex align-items-center justify-content-end">
-              <div class="btn text-muted hover" id="lib-view" [routerLink]="['/app/',app,'gs',library._id]">
-                <span class="dsi dsi-view"></span>
-              </div>
-              <div *ngIf="canEditLibrary(library._id)" class="btn text-muted hover" (click)="editLibrary(i)"
-                id="lib-edit">
-                <span class="dsi dsi-edit"></span>
-              </div>
-              <div *ngIf="canEditLibrary(library._id) && hasManagePermission('GS')" class="btn text-muted hover"
-                id="lib-clone" (click)="cloneLibrary(i)">
-                <span class="dsi dsi-copy"></span>
-              </div>
-              <div *ngIf="canEditLibrary(library._id)" class="btn text-muted hover" id="lib-delete"
-                (click)="deleteLibrary(i);">
-                <span class="dsi dsi-trash"></span>
-              </div>
+            <div class="item-actions sub-heading d-flex align-items-center justify-content-end">
+              <span id="lib-view" class="dsi dsi-view hover mr-2" [routerLink]="['/app/',app,'gs',library._id]"></span>
+              <span *ngIf="canEditLibrary(library._id)" id="lib-edit" class="dsi dsi-edit hover mr-2"
+                (click)="editLibrary(i)"></span>
+              <span *ngIf="canEditLibrary(library._id) && hasManagePermission('GS')" id="lib-clone"
+                class="dsi dsi-copy hover mr-2" (click)="cloneLibrary(i)"></span>
+              <span *ngIf="canEditLibrary(library._id)" id="lib-delete" class="dsi dsi-trash hover mr-2"
+                (click)="deleteLibrary(i);"></span>
             </div>
           </div>
         </div>
