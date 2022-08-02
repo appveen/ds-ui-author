@@ -35,6 +35,13 @@
     .item-actions {
       min-width: 300px;
 
+        // display: none;
+        .dsi {
+          min-width: 24px;
+          max-width: 24px;
+          display: inline-block;
+        }
+
       .btn {
         &:hover {
           color: $secondary  !important;

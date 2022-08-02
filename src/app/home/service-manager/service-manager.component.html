@@ -60,7 +60,7 @@
             <div class="item-actions"></div>
           </div>
         </div>
-        <ng-container *ngFor="let srvc of serviceList">
+        <ng-container *ngFor="let srvc of serviceList; let i = index;">
           <div class="list-group-item d-flex align-items-center justify-content-between">
             <div class="item-name fw-500 d-flex align-items-center">
               <odp-checkbox [edit]="{status:true}"></odp-checkbox>
@@ -79,7 +79,28 @@
                 <span class="fa fa-circle mr-2"></span>
                 <span class="text font-12 fw-400">{{srvc.status}}</span>
               </div>
-              <div class="item-actions"></div>
+              <div class="item-actions d-flex justify-content-end hover align-items-center text-secondary"
+                *ngIf="serviceList[i].status != 'Pending' && serviceList[i].status != 'Maintainance' ">
+                <ng-container *ngIf="canStartStopService(srvc._id) && serviceList[i].type != 'internal'">
+                  <span class="dsi dsi-play hover mr-2" *ngIf="serviceList[i].status == 'Stopped'"
+                    (click)="toggleServiceStatus(i)" ngbTooltip="Start" container="body"></span>
+                  <span class="dsi dsi-stop hover mr-2" *ngIf="serviceList[i].status == 'Active'"
+                    (click)="toggleServiceStatus(i)" ngbTooltip="Stop" container="body"></span>
+                </ng-container>
+                <span *ngIf="showDeploy(i) && canDeployService(serviceList[i]) && serviceList[i].type != 'internal'"
+                class="dsi dsi-skip-forward mr-2" (click)="deployService(i)" ngbTooltip="Deploy"
+                container="body"></span>
+                <span class="dsi dsi-edit hover mr-2" *ngIf="canEditService(srvc._id) &&
+                serviceList[i].type === 'internal' && serviceList[i].status != 'Stopped'"
+                  (click)="editService(i)"></span>
+                <span class="dsi dsi-view hover mr-2" *ngIf="canEditService(srvc._id)" (click)="viewService(i)"></span>
+                <span class="dsi dsi-copy hover mr-2" *ngIf="canCloneService(srvc._id)"
+                  (click)="cloneService(i)"></span>
+                <span class="dsi dsi-trash hover mr-2" *ngIf="canDeleteService(srvc._id) &&
+                serviceList[i].type != 'internal'" (click)="deleteService(i)"></span>
+                <span class="hover mr-2 font-11" (click)="openDocs(i)">API</span>
+
+              </div>
             </div>
           </div>
         </ng-container>
