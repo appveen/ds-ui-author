@@ -708,3 +708,4 @@ export interface Rule {
   conditions?: any;
   filter?: any;
   code?: any;
+}
