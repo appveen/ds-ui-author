@@ -101,3 +101,26 @@ table {
   max-height: 400px;
   overflow-x: hidden
 }
+
+
+.list-group-item {
+  &.header {
+    font-weight: 400;
+    height: 40px;
+  }
+}
+
+.d-flex-1 {
+  flex: 1
+}
+
+
+.group-actions {
+  min-width: 100px;
+
+  .btn {
+    &:hover {
+      color: $secondary  !important;
+    }
+  }
+}
