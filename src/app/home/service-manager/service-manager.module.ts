@@ -18,8 +18,6 @@ import { CheckboxBtnModule } from 'src/app/utils/checkbox-btn/checkbox-btn.modul
 import { DataManagementComponent } from './data-management/data-management.component';
 import { FormsModule } from '@angular/forms';
 import { ServiceImportWizardModule } from 'src/app/utils/service-import-wizard/service-import-wizard.module';
-import { DsGridStatusComponent } from './ds-grid-status/ds-grid-status.component';
-import { DsGridActionsComponent } from './ds-grid-actions/ds-grid-actions.component';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 
@@ -56,8 +54,6 @@ const routes = [
     declarations: [
         ServiceManagerComponent,
         DataManagementComponent,
-        DsGridStatusComponent,
-        DsGridActionsComponent
     ]
 })
 export class ServiceManagerModule { }

@@ -4,6 +4,11 @@
 .data-service-page {
   height: calc(100vh - 60px);
 
+  .card-container {
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+  }
+
   .list-group-item {
     height: 56px;
 
@@ -35,6 +40,21 @@
     .item-actions {
       min-width: 300px;
 
+      .actions {
+        .dsi {
+          min-width: 24px;
+          max-width: 24px;
+          display: inline-block;
+        }
+
+        .dsi,
+        .api-icon {
+          &:hover {
+            color: $dark;
+          }
+        }
+      }
+
       .btn {
         &:hover {
           color: $secondary  !important;
@@ -49,7 +69,8 @@
   }
 }
 
-.new-service-window {
+.new-service-window,
+.yaml-window {
   height: 100vh;
   width: 360px;
   top: 0;
@@ -61,6 +82,13 @@
 
   &.show {
     right: 0px !important;
+  }
+}
+
+.yaml-window {
+  .form-text {
+    top: 6px;
+    right: 8px;
   }
 }
 
@@ -94,75 +122,4 @@
   top: 20%;
   left: 20%;
   z-index: 1;
-}
-
-::ng-deep .ag-theme-balham {
-  font-size: 14px;
-
-  .ag-root-wrapper {
-    border: 1px solid #ECECEC;
-    border-radius: 8px;
-  }
-
-
-  .ag-cell {
-    padding: 12px !important;
-    line-height: 22px;
-    color: $sub-headings;
-  }
-
-  .ag-layout-normal {
-    overflow-x: hidden
-  }
-
-}
-
-::ng-deep .ag-theme-balham .ag-header {
-  font-size: 11px;
-  color: $lightgrey;
-
-  .ag-header-container {
-    background-color: #FBFBFB;
-  }
-
-
-}
-
-::ng-deep .ag-theme-balham {
-  // .ag-checkbox  {
-  //     padding-bottom: 15px !important;
-  //   }
-
-  .ag-row-selected {
-    background-color: #fff;
-  }
-
-  .ag-ltr .ag-header-select-all {
-    // padding: 17px;
-  }
-
-  .ag-checkbox-input-wrapper.ag-checked::after {
-    color: white !important;
-    background: $headings  !important;
-    border-radius: 4px;
-  }
-}
-
-.context-menu {
-  min-width: 180px;
-  max-width: 180px;
-  min-height: 30px;
-  max-height: 160px;
-  background: #fff 0 0 no-repeat padding-box;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-  border: 1px solid #ececec;
-  border-radius: 6px;
-  opacity: 1;
-  align-items: flex-start;
-
-  button {
-    &:hover {
-      background-color: $light;
-    }
-  }
 }

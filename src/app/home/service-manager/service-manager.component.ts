@@ -21,8 +21,6 @@ import { environment } from 'src/environments/environment';
 import { AppService } from 'src/app/utils/services/app.service';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { GridApi, GridOptions, IDatasource } from 'ag-grid-community';
-import { DsGridStatusComponent } from './ds-grid-status/ds-grid-status.component'
-import { DsGridActionsComponent } from './ds-grid-actions/ds-grid-actions.component'
 @Component({
   selector: 'odp-service-manager',
   templateUrl: './service-manager.component.html',
@@ -36,8 +34,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   context: any;
   @ViewChild('alertModalTemplate', { static: false })
   alertModalTemplate: TemplateRef<HTMLElement>;
-  @ViewChild('yamlModalTemplate', { static: false })
-  yamlModalTemplate: TemplateRef<HTMLElement>;
   app: string;
   serviceSearchForm: FormGroup;
   serviceList: Array<any> = [];
@@ -59,16 +55,17 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   form: FormGroup;
   cloneForm: FormGroup;
   alertModalTemplateRef: NgbModalRef;
-  yamlModalTemplateRef: NgbModalRef;
   cloneData: any;
   easterEggEnabled: boolean;
   serviceRecordCounts: Array<any>;
-  serviceYaml: any;
-  deploymentYaml: any;
   toggleImportWizard: boolean;
   frameworkComponents: any;
   showNewServiceWindow: boolean;
   showCloneServiceWindow: boolean;
+  showYamlWindow: boolean;
+  selectedService: any;
+  copied: any;
+  searchTerm: string;
   constructor(
     public commonService: CommonService,
     private appService: AppService,
@@ -88,18 +85,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       message: '',
       index: -1,
     };
-    self.breadcrumbPaths = [
-      {
-        active: true,
-        label: 'Data Services',
-        url: null,
-      },
-    ];
-    this.frameworkComponents = {
-      statusRenderer: DsGridStatusComponent,
-      actionRenderer: DsGridActionsComponent
-    };
-    self.commonService.setBreadcrumbs(self.breadcrumbPaths);
     self.openDeleteModal = new EventEmitter();
     self.form = self.fb.group({
       name: [
@@ -149,6 +134,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         });
       }, 3000);
     };
+    this.copied = {};
+    this.selectedService = {};
   }
 
   ngOnInit() {
@@ -246,110 +233,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
   }
 
-  onGridReady(event) {
-    this.gridApi = event.api;
-    if (this.gridApi && this.agGrid.columnApi) {
-      this.forceResizeColumns();
-    }
-    // this.setupGrid();
-  }
-
-  private forceResizeColumns() {
-    this.agGrid.api.sizeColumnsToFit();
-    this.autoSizeAllColumns();
-  }
-
-  private autoSizeAllColumns() {
-    if (!!this.agGrid.api && !!this.agGrid.columnApi) {
-      setTimeout(() => {
-        const container = document.querySelector('.grid-container');
-        const availableWidth = !!container ? container.clientWidth - 170 : 1350;
-        const allColumns = this.agGrid.columnApi.getAllColumns();
-        allColumns.forEach(col => {
-          this.agGrid.columnApi.autoSizeColumn(col);
-          if (col.getActualWidth() > 200 || this.agGrid.api.getDisplayedRowCount() === 0) {
-            col.setActualWidth(200);
-          }
-        });
-        const occupiedWidth = allColumns.reduce((pv, cv) => pv + cv.getActualWidth(), -170);
-        if (occupiedWidth < availableWidth) {
-          this.agGrid.api.sizeColumnsToFit();
-        }
-      }, 2000);
-    }
-  }
-
-
-  configureGridSettings() {
-    // const list = _.differenceBy(this.groupList, this.userGroups, '_id');
-    const groupColumnDefs = [
-      {
-        headerName: '',
-        field: '',
-        width: 40,
-        headerCheckboxSelection: true,
-        checkboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: false,
-      },
-      {
-        headerName: 'SERVICE NAME',
-        field: 'name',
-        cellStyle: { 'font-weight': 500, 'font-style': 'normal', color: '#181818' }
-      },
-      {
-        headerName: 'RECORDS',
-        field: '_records',
-      },
-      {
-        headerName: 'ATTRIBUTES',
-        field: '_attributes',
-      },
-      {
-        headerName: 'REFERENCES',
-        field: '_references',
-      },
-      {
-        headerName: 'HOOKS',
-        field: '_webHooks',
-      },
-      // {
-      //   headerName: 'STATUS',
-      //   field: 'status',
-      //   cellRenderer: 'statusRenderer',
-      // },
-      {
-        headerName: '',
-        field: 'status',
-        cellRenderer: 'actionRenderer',
-        width: 300,
-      }
-    ];
-
-    this.gridOptions = {
-      paginationPageSize: 30,
-      cacheBlockSize: 30,
-      floatingFilter: false,
-      // datasource: this.dataSource,
-      rowData: this.serviceList,
-      columnDefs: groupColumnDefs,
-      animateRows: true,
-      rowHeight: 56,
-      headerHeight: 38,
-      frameworkComponents: this.frameworkComponents,
-      suppressPaginationPanel: true,
-      context: this.context,
-      rowSelection: 'multiple',
-      onRowDoubleClicked: this.onRowDoubleClick.bind(this)
-      // onSelectionChanged: (event) => this.onSelectionChanged(event),
-      // onCellValueChanged: this.onCellValueChanged,
-    };
-  }
-
-  private onRowDoubleClick(row: any) {
-    const self = this;
-    self.router.navigate(['/app', self.app, 'sb', row.data._id]);
-  }
-
 
   get isAppAdmin() {
     const self = this;
@@ -363,7 +246,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   newService() {
     const self = this;
-    self.form.reset();
+    self.form.reset({ name: this.searchTerm });
     this.showNewServiceWindow = true;
   }
 
@@ -499,32 +382,41 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   getYamls(index: number) {
-    const self = this;
-    const url = `/${this.commonService.app._id}/service/utils/${self.serviceList[index]._id}/yamls`;
-    self.subscriptions['updateservice'] = self.commonService
-      .get('serviceManager', url, null)
-      .subscribe(
-        (data) => {
-          this.serviceYaml = data.service;
-          this.deploymentYaml = data.deployment;
-          this.yamlModalTemplateRef = this.commonService.modal(
-            this.yamlModalTemplate
-          );
-          this.yamlModalTemplateRef.result.then(
-            (close) => {
-              this.serviceYaml = null;
-              this.deploymentYaml = null;
-            },
-            (dismiss) => {
-              this.serviceYaml = null;
-              this.deploymentYaml = null;
-            }
-          );
-        },
-        (err) => {
-          self.commonService.errorToast(err);
-        }
-      );
+    this.selectedService = this.serviceList[index];
+    if (!this.selectedService.serviceYaml || !this.selectedService.deploymentYaml) {
+      const url = `/${this.commonService.app._id}/service/utils/${this.selectedService._id}/yamls`;
+      this.subscriptions['updateservice'] = this.commonService
+        .get('serviceManager', url, null)
+        .subscribe(
+          (data) => {
+            this.selectedService.serviceYaml = data.service;
+            this.selectedService.deploymentYaml = data.deployment;
+            this.showYamlWindow = true;
+          },
+          (err) => {
+            this.commonService.errorToast(err);
+          }
+        );
+    } else {
+      this.showYamlWindow = true;
+    }
+  }
+
+  closeYamlWindow() {
+    this.showYamlWindow = false;
+    this.selectedService = null;
+  }
+
+  downloadYamls() {
+    this.appService.downloadText(this.selectedService.name + '.yaml', this.selectedService.serviceYaml + '\n---\n' + this.selectedService.deploymentYaml);
+  }
+
+  copyText(text: string, type: string) {
+    this.appService.copyToClipboard(text);
+    this.copied[type] = true;
+    setTimeout(() => {
+      this.copied[type] = false;
+    }, 2000);
   }
 
   cloneService(index: number) {
@@ -620,6 +512,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   resetSearch() {
     const self = this;
+    this.searchTerm = null;
     self.serviceList = [];
     self.service = {
       page: 1,
@@ -680,7 +573,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                 );
               }
             );
-            self.configureGridSettings();
           }
         },
         (err) => {
@@ -806,6 +698,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     if (!self.service.filter) {
       self.service.filter = {};
     }
+    this.searchTerm = value;
     self.service.filter.name = '/' + value.trim() + '/';
     self.serviceList = [];
     self.getServices();
@@ -1159,13 +1052,26 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     window.open(docsAPI, '_blank');
   }
 
+  getStatusClass(srvc) {
+    if (srvc.status === 'Active') {
+      return 'text-success';
+    }
+    if (srvc.status === 'Stopped') {
+      return 'text-danger';
+    }
+    if (srvc.status === 'Draft') {
+      return 'text-accent';
+    }
+    return 'text-secondary';
+  }
+
   get dummyRows() {
     const arr = new Array(15);
     arr.fill(1);
     return arr;
   }
 
-  get isExperimental(){
+  get isExperimental() {
     return this.commonService.userDetails.experimentalFeatures;
   }
 }
