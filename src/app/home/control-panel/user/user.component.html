@@ -13,7 +13,7 @@
       <div class="fw-600 font-22">Users</div>
       <div class="d-flex align-items-center ml-auto">
         <ng-container *ngIf="hasPermission('PMUBD')">
-          <button *ngIf="checkedUsers.length > 0" type="button" class="btn btn-outline-light border text-danger mr-3"
+          <button *ngIf="checkedUsers.length > 0" type="button" class="btn btn-light border text-danger mr-3"
             (click)="removeUsers()" id="removeusers" [ngbTooltip]="'Delete '+checkedUsers.length+' Users'">
             <span class="dsi dsi-trash"></span>
             <!-- <span class="text">Remove Users ({{ checkedUsers.length }})</span> -->
@@ -23,7 +23,7 @@
           <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')" [selectOnEnter]="true"
             (enteredPressed)="enterToSelect($event)"></odp-search-box>
         </div>
-        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-outline-light border text-secondary mr-3" routerLink="bulk-import"
+        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-light border mr-3" routerLink="bulk-import"
           ngbTooltip="Bulk Import" id="bulkimport">
           <span class="dsi dsi-upload"></span>
         </button>
