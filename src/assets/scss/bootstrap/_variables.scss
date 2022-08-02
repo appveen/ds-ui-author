@@ -5,7 +5,7 @@
 
 // Color system
 
-$white:    #fff !default;
+$white:    #FFFFFF !default;
 $gray-100: #f8f9fa !default;
 $gray-200: #efefef !default;
 $gray-300: #ddd !default;
@@ -38,18 +38,19 @@ $blue:    #2196F3 !default;
 $indigo:  #3F51B5 !default;
 $purple:  #9C27B0 !default;
 $pink:    #e83e8c !default;
-$red:     #DD5151 !default;
+// $red:     #DD5151 !default;
+$red:     #F26464 !default;
 $orange:  #FF6F00 !default;
-$yellow:  #FFEB3B !default;
-$green:   #1CAD49 !default;
+// $yellow:  #FFEB3B !default;
+$yellow:  #FF9052 !default;
+// $green:   #1CAD49 !default;
+$green:   #2FC48F !default;
 $teal:    #009688 !default;
 $cyan:    #00BCD4 !default;
-$capiot:  #0082C9 !default;
+$capiot:  #0A6CFF !default;
 
-$create:    #1CAD49 !default;
-$modify:    #202A36 !default;
-$delete:    #DD5151 !default;
-$rework:    #FBA200 !default;
+
+
 
 $data-grid-options:   #F2F2F2 !default;
 $data-grid-header:    #ECECEC !default;
@@ -71,25 +72,23 @@ $colors: map-merge(
     "cyan":       $cyan,
     "white":      $white,
     "gray":       $gray-600,
-    "gray-dark":  $gray-900,
-    "create":     $create,
-    "modify":     $modify,
-    "delete":     $delete
+    "gray-dark":  $gray-900
   ),
   $colors
 );
 
 $accent:        $capiot !default;
 $primary:       $orange !default;
-$secondary:     $gray-600 !default;
+$secondary:     #6C7584 !default;
 $success:       $green !default;
 $info:          $indigo !default;
 $warning:       $yellow !default;
 $danger:        $red !default;
 // $light:         $gray-200 !default;
-$light:         #FBFBFB !default;
-$dark:          #202a36 !default;
-$border:        #bdbdbd !default;
+$light:         #F6F6F6 !default;
+// $dark:          #202a36 !default;
+$dark:          #181818 !default;
+$border:        #ECECEC !default;
 
 $accordion-bg:  #E8E8E8;
 $heading-highlight: #747E8D;
@@ -107,11 +106,7 @@ $theme-colors: map-merge(
     "danger":     $danger,
     "light":      $light,
     "dark":       $dark,
-    "border":     $border,
-    "create":     $create,
-    "modify":     $modify,
-    "delete":     $delete,
-    "capiot":     $accent
+    "border":     $border
   ),
   $theme-colors
 );
@@ -187,7 +182,8 @@ $sizes: map-merge(
 // Settings for the `<body>` element.
 
 $body-bg:                   $white !default;
-$body-color:                $gray-900 !default;
+// $body-color:                $gray-900 !default;
+$body-color:                $dark !default;
 
 
 // Links

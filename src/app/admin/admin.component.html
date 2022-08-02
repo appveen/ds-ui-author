@@ -10,8 +10,8 @@
             'img-app': selectedApp.logo && selectedApp.logo.thumbnail
           }">
           <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail" alt="Logo" />
-          <odp-app-icon class="pt-1" *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail" color="aaa" size="24">
-          </odp-app-icon>
+          <!-- <odp-app-icon class="pt-1" *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail" color="aaa" size="24">
+          </odp-app-icon> -->
         </div>
         <div class="current-app-name text-dark" ngbTooltip="Current App" placement="bottom">
           {{ selectedApp._id }}
@@ -26,7 +26,8 @@
       <div *ngIf="isSuperAdmin" (click)="loadAdminPage()"
         class="admin-settings bg-light rounded d-flex flex-column justify-content-center align-items-center mr-3 pt-1 hover"
         ngbTooltip="Admin Panel" placement="bottom">
-        <odp-admin-console-icon size="28"></odp-admin-console-icon>
+        <span class="dsi dsi-admin"></span>
+        <!-- <odp-admin-console-icon size="28"></odp-admin-console-icon> -->
       </div>
       <div [@userProfileIcon]="showProfileOptions"
         class="profile-icon d-flex align-items-center justify-content-center rounded-circle bg-light border border-border hover"

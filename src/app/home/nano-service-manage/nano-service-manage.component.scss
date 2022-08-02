@@ -178,27 +178,6 @@
                 min-height: 16px;
                 max-height: 16px;
                 font-size: 10px;
-                &.online {
-                    background: $create;
-                    color: $white;
-                }
-                &.offline {
-                    background: $heading-highlight;
-                    color: $white;
-                }
-                &.draft {
-                    background: $accent;
-                    color: $white;
-                }
-                &.error {
-                    background: $delete;
-                    color: $white;
-                }
-                &.pending {
-                    background: $warning;
-                    color: $black;
-                    animation: pending .5s alternate infinite;
-                }
             }
             &.options-cell {
                 overflow: hidden;

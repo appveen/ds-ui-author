@@ -5,7 +5,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { IntegrationFlowComponent } from './integration-flow.component';
 import { NewFlowComponent } from './new-flow/new-flow.component';
-import { IconsModule } from '../icons/icons.module';
 import { ClickOutsideModule } from '../directives/click-outside/click-outside.module';
 import { FormatSelectorModule } from '../format-selector/format-selector.module';
 import { SearchBoxModule } from '../search-box/search-box.module';
@@ -95,7 +94,6 @@ import { EllipsisPipeModule } from '../pipes/ellipsis/ellipsis.module';
   ],
   imports: [
     CommonModule,
-    IconsModule,
     FormsModule,
     ClickOutsideModule,
     FormatSelectorModule,

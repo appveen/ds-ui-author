@@ -31,7 +31,7 @@
         <div *ngIf="groupList && groupList.length > 0 && !showLazyLoader">
             <div *ngFor="let grp of groupList | filterTeam: filterStr" class="d-flex flex-column view-container">
                 <div class="content-height bg-white d-flex align-items-center pl-2 hover border-bottom">
-                    <odp-group-icon [size]="17" color="bdbdbd" class="mr-2"></odp-group-icon>
+                    <span class="dsi ds-group mr-2"></span>
                     <div>{{ grp.name }}</div>
                 </div>
             </div>

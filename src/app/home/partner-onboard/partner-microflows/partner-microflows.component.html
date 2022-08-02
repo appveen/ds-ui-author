@@ -341,12 +341,7 @@
 <ng-template #alertModalTemplate>
     <div class="modal-body p-4 d-flex flex-column">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-partner-icon [size]="18" color="202a36" class="mt-1"></odp-partner-icon>
-                </span>
-                <span class="font-weight-bold">{{alertModalData.title}}</span>
-            </div>
+            <span class="font-20 fw-500">{{alertModalData.title}}</span>
             <span class="fa fa-times text-secondary hover" (click)="alertModalTemplateRef.close(false)"></span>
         </div>
         <div class="d-flex flex-column my-5 w-100">
@@ -359,6 +354,4 @@
     </div>
 </ng-template>
 
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-    <odp-partner-icon [size]="18" color="DD5151" class="mt-1"></odp-partner-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

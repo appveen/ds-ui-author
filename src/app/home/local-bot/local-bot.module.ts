@@ -8,7 +8,6 @@ import { AgGridModule } from 'ag-grid-angular';
 import { LocalBotComponent } from './local-bot.component';
 import { BotGuard } from 'src/app/utils/guards/bot.guard';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
@@ -39,7 +38,6 @@ const routes: Routes = [{ path: '', component: LocalBotComponent, canActivate: [
     ReactiveFormsModule,
     FormsModule,
     SearchBoxModule,
-    IconsModule,
     FieldTypeModule,
     SwitchModule,
     DeleteModalModule,

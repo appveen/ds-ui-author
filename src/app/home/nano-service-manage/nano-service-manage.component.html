@@ -2,13 +2,14 @@
     <div class="align-self-center text-center">
         <div class="spinner-border text-dark" role="status">
             <span class="sr-only">Processing...</span>
-          </div>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
 <div class="d-flex flex-column w-100 h-100" [formGroup]="form">
     <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
-    <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="{status:edit.status && canEditNanoService}">
+    <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description"
+        [edit]="{status:edit.status && canEditNanoService}">
         <div class="d-flex justify-content-end align-items-center">
             <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link"
                 id="cancelNanoServiceBtn">
@@ -37,7 +38,8 @@
         <div class="scrollable border-top" *ngIf="activeTab===0 && hasDesignTabViewPermission()">
             <div class="d-flex flex-column w-100 px-3">
                 <div class="d-flex align-items-start w-100 py-5 px-4">
-                    <div class="selector in-selector d-flex flex-column align-items-center" *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
+                    <div class="selector in-selector d-flex flex-column align-items-center"
+                        *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
                         <div
                             class="bg-success rounded-circle mb-5 d-flex align-items-center justify-content-center text-white font-12">
                             IN</div>
@@ -51,8 +53,6 @@
                                     </div>
                                     <odp-format-selector *ngIf="edit.status" (formatChange)="setInputFormat($event)"
                                         [restrictToFormat]="restrictToFormat">
-                                        <odp-nano-service-icon size="18" class="mt-1" color="1CAD49">
-                                        </odp-nano-service-icon>
                                         <span class="btn-label">Select Data Structure</span>
                                     </odp-format-selector>
                                 </div>
@@ -61,12 +61,9 @@
                                 class="selected-details d-flex flex-column align-items-center w-100 bg-white">
                                 <div class="selected-name d-flex align-items-center justify-content-center mb-2 border">
                                     <div *ngIf="selectedInType == 'dataService'" class="d-flex align-items-center">
-                                        <odp-service-icon active="true" size="16" class="mt-1"></odp-service-icon>
                                         <span class="text ml-2">Data Service</span>
                                     </div>
                                     <div *ngIf="selectedInType == 'dataFormat'" class="d-flex align-items-center">
-                                        <odp-data-format-icon active="true" size="16" class="mt-1">
-                                        </odp-data-format-icon>
                                         <span class="text ml-2">Data Format</span>
                                     </div>
                                     <div *ngIf="selectedInType == 'binary'" class="d-flex align-items-center">
@@ -96,22 +93,25 @@
                         </div>
                     </div>
                     <div class="nano-service-details d-flex flex-column w-100">
-                        <div class="link d-flex align-items-center" *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
+                        <div class="link d-flex align-items-center"
+                            *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
                             <div class="border-top border-success w-100"></div>
                             <div class="nanoservices-config mt-2"></div>
                             <div class="border-top border-accent w-100"></div>
                         </div>
                         <div class="details-form align-self-center my-3" *ngIf="hasDetailViewPermission()">
-                            <div class="d-flex align-items-center mb-3" *ngIf="hasPermission('PVNSURL') || hasPermission('PMNSURL')">
+                            <div class="d-flex align-items-center mb-3"
+                                *ngIf="hasPermission('PVNSURL') || hasPermission('PMNSURL')">
                                 <span class="fa fa-link text-secondary mr-2"></span>
                                 <span class="text font-weight-bold">URL
                                     <sup class="text-danger">*</sup>
                                 </span>
                             </div>
                             <div class="d-flex align-items-start mb-2">
-                                <textarea *ngIf="edit.status && hasPermission('PMNSURL')" class="form-control" id="url" rows="3"
-                                    placeholder="Enter URL" formControlName="url"></textarea>
-                                <div *ngIf="!edit.status && (hasPermission('PVNSURL') || hasPermission('PMNSURL'))" class="form-control-plaintext">
+                                <textarea *ngIf="edit.status && hasPermission('PMNSURL')" class="form-control" id="url"
+                                    rows="3" placeholder="Enter URL" formControlName="url"></textarea>
+                                <div *ngIf="!edit.status && (hasPermission('PVNSURL') || hasPermission('PMNSURL'))"
+                                    class="form-control-plaintext">
                                     <ng-container *ngIf="form.get('url').value">{{form.get('url').value}}</ng-container>
                                     <span *ngIf="!form.get('url').value" class="text-muted">N.A.</span>
                                 </div>
@@ -121,11 +121,13 @@
                             <span class="text font-weight-bold">Allow Untrusted Connections</span>
                             <odp-switch class="ml-4" [edit]="edit" [(checked)]="checkedControl"></odp-switch>
                         </div> -->
-                            <div class="d-flex align-items-center mb-3" *ngIf="hasPermission('PVNSH') || hasPermission('PMNSH')">
+                            <div class="d-flex align-items-center mb-3"
+                                *ngIf="hasPermission('PVNSH') || hasPermission('PMNSH')">
                                 <span class="fa fa-link text-secondary mr-2"></span>
                                 <span class="text font-weight-bold">Properties</span>
                             </div>
-                            <div class="d-flex align-items-start mb-2" *ngIf="hasPermission('PVNSH') || hasPermission('PMNSH')">
+                            <div class="d-flex align-items-start mb-2"
+                                *ngIf="hasPermission('PVNSH') || hasPermission('PMNSH')">
                                 <table class="table">
                                     <thead class="bg-accent text-white">
                                         <tr>
@@ -159,7 +161,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="selector out-selector d-flex flex-column align-items-center" *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
+                    <div class="selector out-selector d-flex flex-column align-items-center"
+                        *ngIf="hasPermission('PVNSIO') || hasPermission('PMNSIO')">
                         <div
                             class="bg-accent rounded-circle mb-5 d-flex align-items-center justify-content-center text-white font-12">
                             OUT</div>
@@ -173,8 +176,6 @@
                                     </div>
                                     <odp-format-selector *ngIf="edit.status" (formatChange)="setOutputFormat($event)"
                                         [restrictToFormat]="restrictToFormat">
-                                        <odp-nano-service-icon size="18" class="mt-1" color="1CAD49">
-                                        </odp-nano-service-icon>
                                         <span class="btn-label">Select Data Structure</span>
                                     </odp-format-selector>
                                 </div>
@@ -183,12 +184,9 @@
                                 class="selected-details d-flex flex-column align-items-center w-100 bg-white">
                                 <div class="selected-name d-flex align-items-center justify-content-center mb-2 border">
                                     <div *ngIf="selectedOutType == 'dataService'" class="d-flex align-items-center">
-                                        <odp-service-icon active="true" size="16" class="mt-1"></odp-service-icon>
                                         <span class="text ml-2">Data Service</span>
                                     </div>
                                     <div *ngIf="selectedOutType == 'dataFormat'" class="d-flex align-items-center">
-                                        <odp-data-format-icon active="true" size="16" class="mt-1">
-                                        </odp-data-format-icon>
                                         <span class="text ml-2">Data Format</span>
                                     </div>
                                     <div *ngIf="selectedOutType == 'binary'" class="d-flex align-items-center">
@@ -383,17 +381,13 @@
 <ng-template #pageChangeModalTemplate>
     <div class="modal-body p-4">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-nano-service-icon [size]="18" color="202a36" class="mt-1"></odp-nano-service-icon>
-                </span>
-                <span class="font-weight-bold mb-1">Unsaved Changes</span>
-            </div>
+            <span class="font-20 fw-500">Unsaved Changes</span>
             <span class="fa fa-times text-secondary hover " (click)="pageChangeModalTemplateRef.close(false)"></span>
         </div>
         <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
         <div class="d-flex align-items-center justify-content-end">
-            <button type="button" class="btn btn-min-width btn-dark" (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+            <button type="button" class="btn btn-min-width btn-dark"
+                (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
         </div>
     </div>
 </ng-template>
@@ -401,19 +395,16 @@
 <ng-template #dataChangeModalTemplate>
     <div class="modal-body p-4">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-nano-service-icon [size]="18" color="202a36" class="mt-1"></odp-nano-service-icon>
-                </span>
-                <span class="font-weight-bold mb-1">Changes made</span>
-            </div>
+            <span class="font-20 fw-500">Changes made</span>
             <span class="fa fa-times text-secondary hover " (click)="dataChangeModalTemplateRef.close(false)"></span>
         </div>
         <p class="text-secondary text-center my-5">You have made changes in this Nano Service, You might have to
             redeploy any Integration flows which is using this Nano Service.</p>
         <div class="d-flex align-items-center justify-content-end">
-            <button type="button" class="btn btn-link text-dark" (click)="dataChangeModalTemplateRef.close(false)">Cancel</button>
-            <button type="button" class="btn btn-min-width btn-dark" (click)="dataChangeModalTemplateRef.close(true)">Ok</button>
+            <button type="button" class="btn btn-link text-dark"
+                (click)="dataChangeModalTemplateRef.close(false)">Cancel</button>
+            <button type="button" class="btn btn-min-width btn-dark"
+                (click)="dataChangeModalTemplateRef.close(true)">Ok</button>
         </div>
     </div>
 </ng-template>
@@ -421,13 +412,8 @@
 <ng-template #keyValModalTemplate>
     <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center">
         <div class="d-flex align-items-center justify-content-between mb-3 w-100">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-nano-service-icon [size]="18" color="202a36" class="mt-1"></odp-nano-service-icon>
-                </span>
-                <span class="font-weight-bold mb-1" *ngIf="headerData && headerData.isEdit">Edit Properties</span>
-                <span class="font-weight-bold mb-1" *ngIf="!headerData || !headerData.isEdit">Add Properties</span>
-            </div>
+            <span class="font-20 fw-500" *ngIf="headerData && headerData.isEdit">Edit Properties</span>
+            <span class="font-20 fw-500" *ngIf="!headerData || !headerData.isEdit">Add Properties</span>
             <span class="fa fa-times text-muted hover" (click)="keyValModalTemplateRef.close(false)"></span>
         </div>
         <div class="info d-flex flex-column align-self-center justify-content-center w-100">

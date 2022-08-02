@@ -1,228 +1,51 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.header {
-  min-height: 50px;
-  max-height: 50px;
-}
+.data-service-page {
+  height: calc(100vh - 60px);
 
-.options {
-  min-height: 50px;
-  max-height: 50px;
-}
+  .list-group-item {
+    height: 56px;
 
-.service-listing-section {
-  padding: 32px
-}
-
-.card-container {
-  height: calc(100vh - 178px);
-  overflow: auto;
-}
-
-.card {
-  width: 230px;
-  float: left;
-  overflow: hidden;
-  height: 200px;
-  border-radius: 10px;
-
-  .card-title,
-  .draft-options {
-    span {
-      vertical-align: middle;
+    &.header {
+      min-height: 38px;
+      max-height: 38px;
+      color: #6C7584;
     }
 
-    .status {
-      font-size: 32px;
-      line-height: 0;
-      vertical-align: middle;
+    .item-name {
+      width: 300px;
+    }
 
-      &.active {
-        color: $green;
-      }
+    .item-record-count,
+    .item-attribute-count,
+    .item-reference-count,
+    .item-hook-count {
+      width: 100px;
+    }
 
-      &.pending {
-        color: $orange;
-      }
+    .item-status {
+      width: 200px;
 
-      &.maintenance {
-        color: $light;
-      }
-
-      &.stopped {
-        color: $red;
-      }
-
-      &.draft {
-        color: $accent;
-      }
-
-      .symbol {
-        margin-top: 11px;
-        display: inline-block;
-        height: 20px;
-        width: 20px;
-      }
-
-      .fa {
-        font-size: 12px;
-        margin: 0;
-        display: inline-block;
-        text-align: center;
-        line-height: 20px;
+      .fa-circle {
+        font-size: 8px;
       }
     }
 
-    .name {
-      width: 130px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
+    .item-actions {
+      min-width: 300px;
 
-    .version {
-      font-size: 12px;
-    }
-
-    [class^="odp-"],
-    [class*=" odp-"] {
-      font-size: 32px;
-      line-height: 0;
-    }
-  }
-
-  .card-body {
-    span {
-      vertical-align: middle;
-    }
-
-    [class^="odp-"],
-    [class*=" odp-"] {
-      font-size: 14px;
-      line-height: 0;
-      margin-right: 5px;
-    }
-  }
-
-  &.add-card {
-    .circle {
-      width: 75px;
-      height: 75px;
-      border-radius: 100%;
-    }
-  }
-
-  .draft-options {
-    width: 230px;
-    height: 200px;
-    top: -200px;
-    z-index: 1050;
-    transition: 0.25s;
-
-    &.show {
-      top: 0;
-    }
-  }
-}
-
-.button-grid {
-  &.view-only {
-    bottom: 0 !important;
-    width: 100%;
-  }
-
-  &.some-manage {
-    bottom: -34px;
-  }
-
-  &.has-deploy {
-    bottom: -104px;
-
-    &.some-manage {
-      bottom: -68px;
-    }
-  }
-
-  position: absolute;
-  bottom: -68px;
-  border-top: 1px solid #ccc;
-  transition: 0.25s;
-
-  .toggler {
-    padding: 0px;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    display: inline-block;
-    margin: auto;
-    margin-top: -8px;
-    height: 14px;
-    width: 26px;
-    position: absolute;
-    left: 45%;
-    text-align: center;
-    background: #fff;
-    box-shadow: 0px 0px 4px rgba(#000, 0.16);
-    border-radius: 10px;
-
-    &:hover {
-      cursor: pointer;
-      box-shadow: none;
-    }
-
-    .fa {
-      transition: 0.25s;
-      position: absolute;
-      margin-top: -2px;
-      left: 34%;
-    }
-  }
-
-  .button {
-    .icon {
-      width: 20px;
-      display: inline-block;
-    }
-
-    &:hover {
-      text-shadow: 0px 0px 2px rgba(#000, 0.16);
-    }
-  }
-
-  &.active {
-    bottom: 0;
-
-    .toggler {
-      .fa {
-        margin-top: 0px;
-        transition: 0.25s;
-        transform: rotate(180deg);
+      .btn {
+        &:hover {
+          color: $secondary  !important;
+        }
       }
     }
   }
 
-  &:focus {
-    outline: none;
-  }
-
-  &>div:focus {
-    outline: none;
-  }
-}
-
-.button-grid1 {
-  border-top: 1px solid #ccc;
-  transition: 0.25s;
-
-  .button {
-    .icon {
-      width: 20px;
-      display: inline-block;
-    }
-
-    &:hover {
-      text-shadow: 0px 0px 2px rgba(#000, 0.16);
-    }
+  .scroll-pane {
+    height: 100%;
+    overflow: auto;
   }
 }
 

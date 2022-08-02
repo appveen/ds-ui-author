@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { B2bFlowsManageComponent } from './b2b-flows-manage.component';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
@@ -30,7 +29,6 @@ const routes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     NgbModule,
-    IconsModule,
     ClickOutsideModule,
     BreadcrumbModule,
     SearchBoxModule,

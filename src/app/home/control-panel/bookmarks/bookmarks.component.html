@@ -89,10 +89,6 @@
       (toggleBookmarkMngChange)="showManageBookmark=$event;getBookmarkList();getBookmarkCount()" (cancelBookMarkPage)="showManageBookmark=$event"></odp-manage-bookmarks>
   </div>
 </div>
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-  <odp-group-icon [size]="18" color="DD5151" class="mt-1"></odp-group-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
 
-<odp-delete-modal [open]="openBulkDeleteModal" (close)="closeBulkDeleteModal($event)">
-  <odp-group-icon [size]="18" color="DD5151" class="mt-1"></odp-group-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openBulkDeleteModal" (close)="closeBulkDeleteModal($event)"></odp-delete-modal>

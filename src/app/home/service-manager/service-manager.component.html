@@ -6,9 +6,8 @@
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="d-flex flex-column h-100 bg-light-gray service-listing-section">
-  <!-- <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb> -->
-  <div class="options d-flex justify-content-between align-items-center w-100">
+<div class="data-service-page d-flex flex-column h-100 bg-light-gray page-padding">
+  <div class="options d-flex justify-content-between align-items-center w-100 pt-2 pb-4">
     <div class="fw-600 font-22">Data Services</div>
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="search($event)" (reset)="resetSearch(); getServices()"></odp-search-box>
@@ -16,19 +15,17 @@
         *ngIf="isAppAdmin || isSuperAdmin">
         <span class="dsi dsi-settings text-secondary"></span>
       </button>
-      <button *ngIf="isExperimental" type="button" class="btn btn-light border ml-3"
-        (click)="toggleImportWizard=true">
+      <button *ngIf="isExperimental" type="button" class="btn btn-light border ml-3" (click)="toggleImportWizard=true">
         <span class="dsi dsi-upload text-secondary"></span>
       </button>
       <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3" (click)="newService()"
         *ngIf="hasCreatePermission('SM')">
         <span class="dsi dsi-plus"></span>
-        <!-- <span class="text">Data Service</span> -->
       </button>
     </div>
   </div>
   <div class="d-flex flex-column w-100  position-relative">
-    <div class="card-container pt-3 " (scroll)="loadMore($event)">
+    <div class="card-container" (scroll)="loadMore($event)">
       <div class="card m-2 add-card hover" (click)="newService()" id="createEntity" *ngIf="
           hasCreatePermission('SM') &&
           (!serviceList || serviceList.length == 0) &&
@@ -45,9 +42,51 @@
           </div>
         </div>
       </div>
-      <ag-grid-angular *ngIf="serviceList.length > 0" #agGrid class="ag-theme-balham grid w-100 h-100"
+      <div *ngIf="serviceList.length > 0" class="list-group">
+        <div
+          class="list-group-item d-flex align-items-center justify-content-between header py-0 bg-light text-uppercase font-11 fw-500">
+          <div class="item-name d-flex align-items-center">
+            <odp-checkbox [edit]="{status:true}"></odp-checkbox>
+            <span class="ml-2">Name</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-center">
+            <div class="item-record-count">Records</div>
+            <div class="item-attribute-count">Attributes</div>
+            <div class="item-reference-count">References</div>
+            <div class="item-hook-count">Hooks</div>
+          </div>
+          <div class="d-flex align-items-center justify-content-end">
+            <div class="item-status">Status</div>
+            <div class="item-actions"></div>
+          </div>
+        </div>
+        <ng-container *ngFor="let srvc of serviceList">
+          <div class="list-group-item d-flex align-items-center justify-content-between">
+            <div class="item-name fw-500 d-flex align-items-center">
+              <odp-checkbox [edit]="{status:true}"></odp-checkbox>
+              <span class="ml-2 pl-1 text-dark">{{srvc.name}}</span>
+              <span class="ml-2 version sub-heading font-11 text-uppercase">(v{{srvc.version}})</span>
+              <span *ngIf="srvc.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-center">
+              <div class="sub-heading item-record-count">{{srvc._records}}</div>
+              <div class="sub-heading item-attribute-count">{{srvc._attributes}}</div>
+              <div class="sub-heading item-reference-count">{{srvc._references}}</div>
+              <div class="sub-heading item-hook-count">{{srvc._webHooks}}</div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+              <div class="item-status">
+                <span class="fa fa-circle mr-2"></span>
+                <span class="text font-12 fw-400">{{srvc.status}}</span>
+              </div>
+              <div class="item-actions"></div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <!-- <ag-grid-angular *ngIf="serviceList.length > 0" #agGrid class="ag-theme-balham grid w-100 h-100"
         [gridOptions]="gridOptions" (gridReady)="onGridReady($event)">
-      </ag-grid-angular>
+      </ag-grid-angular> -->
 
       <!-- <ng-container *ngFor="let service of serviceList; let i = index">
         <div class="card m-2 position-relative" id="serviceManagerCard" *ngIf="hasPermissionForService(service._id)">
@@ -242,7 +281,8 @@
           </div>
         </div>
       </ng-container> -->
-      <div class="d-flex flex-column w-100 justify-content-center align-items-center p-3" *ngIf="!showLazyLoader && !serviceList.length">
+      <div class="d-flex flex-column w-100 justify-content-center align-items-center p-3"
+        *ngIf="!showLazyLoader && !serviceList.length">
         <h5 class="my-4 text-secondary">zero. zip. zilch. nada.</h5>
       </div>
     </div>
@@ -265,9 +305,7 @@
   </div>
 </ng-template>
 
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-  <odp-service-icon [size]="18" color="DD5151" class="mt-1"></odp-service-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
 
 <div [ngClass]="{'show':showNewServiceWindow}"
   class="new-service-window p-4 page-padding position-fixed bg-white d-flex flex-column" [formGroup]="form">
@@ -465,12 +503,7 @@
 <ng-template #yamlModalTemplate>
   <div class="modal-body p-4">
     <div class="d-flex align-items-center justify-content-between w-100">
-      <div class="d-flex align-items-center">
-        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-          <odp-service-icon [size]="18" color="202a36" class="mt-1"></odp-service-icon>
-        </span>
-        <span class="font-weight-bold mb-1">Yamls</span>
-      </div>
+      <span class="font-20 fw-500">Yamls</span>
       <span class="fa fa-times text-secondary hover" (click)="yamlModalTemplateRef.close(false)"></span>
     </div>
     <textarea class="form-control my-3" rows="10" cols="30" readonly>{{

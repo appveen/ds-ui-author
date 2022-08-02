@@ -9,7 +9,6 @@ import { RouteGuard } from 'src/app/utils/guards/route.guard';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { PartnerMicroflowsComponent } from './partner-microflows/partner-microflows.component';
 import { PartnerConfigurationComponent } from './partner-configuration/partner-configuration.component';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { PartnerSecretsComponent } from './partner-secrets/partner-secrets.component';
 import { DataGridModule } from 'src/app/utils/data-grid/data-grid.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
@@ -40,7 +39,6 @@ const routes: Routes = [
     FormsModule,
     NgbModule,
     BreadcrumbModule,
-    IconsModule,
     DataGridModule,
     ReactiveFormsModule,
     SearchBoxModule,

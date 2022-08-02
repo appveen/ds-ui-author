@@ -26,7 +26,6 @@ import { ShortcutModule } from './utils/shortcut/shortcut.module';
 import { ShortcutService } from './utils/shortcut/shortcut.service';
 import { NotFoundComponent } from 'src/app/not-found/not-found.component';
 import { AutoLogoutDirective } from './utils/directives/session/auto-logout.directive';
-import { IconsModule } from './utils/icons/icons.module';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { ReqResInterceptorService } from './utils/services/req-res-interceptor.service';
 import { SortablejsModule } from 'ngx-sortablejs';
@@ -69,7 +68,6 @@ import { AdminModule } from './admin/admin.module';
     }),
     LoadingModule,
     ShortcutModule,
-    IconsModule,
     SortablejsModule.forRoot({ animation: 150 }),
     MatChipsModule,
     MatFormFieldModule,

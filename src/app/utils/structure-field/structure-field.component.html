@@ -133,15 +133,7 @@
 <ng-template #nameChangeModal>
     <div class="modal-body p-4">
         <div class="d-flex align-items-center">
-            <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                <odp-service-icon *ngIf="isLibrary" [size]="18" color="202a36" class="mt-1">
-                </odp-service-icon>
-                <odp-data-format-icon *ngIf="isDataFormat" [size]="18" color="202a36" class="mt-1">
-                </odp-data-format-icon>
-                <odp-library-icon *ngIf="!isLibrary && !isDataFormat" [size]="18" color="202a36" class="mt-1">
-                </odp-library-icon>
-            </span>
-            <span class="font-weight-bold mb-1">{{nameChange.title}}</span>
+            <span class="font-20 fw-500">{{nameChange.title}}</span>
         </div>
         <p class="text-dark text-center my-5">{{nameChange.message}}</p>
         <div class="d-flex align-items-center justify-content-end">
@@ -156,15 +148,7 @@
 <ng-template #flowDeployAlertModal>
     <div class="modal-body p-4">
         <div class="d-flex align-items-center">
-            <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                <odp-service-icon *ngIf="isLibrary" [size]="18" color="202a36" class="mt-1">
-                </odp-service-icon>
-                <odp-data-format-icon *ngIf="isDataFormat" [size]="18" color="202a36" class="mt-1">
-                </odp-data-format-icon>
-                <odp-library-icon *ngIf="!isLibrary && !isDataFormat" [size]="18" color="202a36" class="mt-1">
-                </odp-library-icon>
-            </span>
-            <span class="font-weight-bold mb-1">Structure Changed</span>
+            <span class="font-20 fw-500">Structure Changed</span>
         </div>
         <p class="text-dark text-center my-5">Running flows would require remapping and re-deployment. Please check the
             Integration Flows tab to know which flows

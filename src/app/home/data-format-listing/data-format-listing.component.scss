@@ -54,21 +54,6 @@
   background: rgba(#f7e9e0, 1);
   color: rgba(#ff771d, 0.8);
 }
-.new-data-format-modal {
-  label {
-    min-width: 100px;
-  }
-  .icon-wrapper {
-    min-width: 32px;
-    max-width: 32px;
-    min-height: 32px;
-    max-height: 32px;
-    background: rgba($create, 0.2);
-  }
-  #description {
-    resize: none;
-  }
-}
 
 .name-wrapper {
   .fa-exclamation-circle {
