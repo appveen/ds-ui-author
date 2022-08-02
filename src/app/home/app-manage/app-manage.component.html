@@ -9,12 +9,12 @@
   </div>
   <div class="d-flex flex-column position-relative">
     <div class="d-flex options">
-      <div class="center-h">
+      <div class="my-auto">
         <odp-basic-info holderStyle="square" [(name)]="appData._id" [(description)]="appData.description"
           [edit]="{ status: true }">
         </odp-basic-info>
       </div>
-      <button class="btn btn-primary mt-2 ml-auto center-h" (click)="save()" [disabled]="!changesDone || isInvalid">
+      <button class="btn btn-primary mt-2 ml-auto my-auto" (click)="save()" [disabled]="!changesDone || isInvalid">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">Save</span>
       </button>
