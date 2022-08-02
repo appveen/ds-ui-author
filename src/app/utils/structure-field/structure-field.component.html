@@ -63,6 +63,8 @@
             </div>
             <span *ngIf="edit.status && type!=='internal'" class="dsi dsi-edit text-secondary hover ml-4"
                 (click)="activateProperty()"> </span>
+            <span *ngIf="canDelete && edit.status && type!=='internal'" class="fa fa-clone text-secondary d-flex align-items-center hover ml-4"
+                (click)="cloneField()"></span>
             <span *ngIf="canDelete && edit.status && type!=='internal'" class="dsi dsi-trash text-secondary hover ml-4"
                 (click)="remove()"></span>
             <span class="fa text-secondary fa-lg hover ml-4 text-center d-flex align-items-center"
