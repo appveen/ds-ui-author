@@ -4,6 +4,11 @@
 .data-service-page {
   height: calc(100vh - 60px);
 
+  .list-group-content{
+    height: calc(100vh - 230px);
+    overflow: auto;
+  }
+
   .list-group-item {
     height: 56px;
 
