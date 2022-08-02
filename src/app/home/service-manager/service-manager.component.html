@@ -12,11 +12,11 @@
     <div class="fw-600 font-22">Data Services</div>
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="search($event)" (reset)="resetSearch(); getServices()"></odp-search-box>
-      <button type="button" id="data-management" class="btn btn-outline-light border ml-3" [routerLink]="['settings']"
+      <button type="button" id="data-management" class="btn btn-light border ml-3" [routerLink]="['settings']"
         *ngIf="isAppAdmin || isSuperAdmin">
         <span class="dsi dsi-settings text-secondary"></span>
       </button>
-      <button *ngIf="isExperimental" type="button" class="btn btn-outline-light border ml-3"
+      <button *ngIf="isExperimental" type="button" class="btn btn-light border ml-3"
         (click)="toggleImportWizard=true">
         <span class="dsi dsi-upload text-secondary"></span>
       </button>
