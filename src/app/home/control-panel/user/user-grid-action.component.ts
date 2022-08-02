@@ -8,15 +8,15 @@ import * as _ from 'lodash';
   template: `<div style="overflow: hidden; float: right">
     <span
       *ngIf="currentTab === 'Attributes'"
-      class="fa fa-regular fa-edit mr-4 icons"
+      class="dsi dsi-edit mr-4 text-muted hover"
       (click)="editAttr()"
     ></span>
     <span
-      class="fa fa-regular fa-trash mr-4 icons"
+      class="dsi dsi-trash mr-4 text-muted hover"
       (click)="deleteAttr()"
     ></span>
   </div>`,
-  styles: ['.icons{color: #6C7584; cursor: pointer}'],
+  styles: [],
 })
 export class UserGridActionRendererComponent implements AgRendererComponent {
   params: any;

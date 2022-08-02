@@ -36,7 +36,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserToGroupModalComponent } from './user-to-group-modal/user-to-group-modal.component';
 import { UserGridAppsRendererComponent } from './user-grid-apps.component ';
 import { FilterPipe } from 'src/app/utils/pipes/filter.pipe';
-import { S } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'odp-user',
@@ -91,7 +90,6 @@ export class UserComponent implements OnInit, OnDestroy {
   details: any = {};
   checked: boolean = false;
   isLoading: boolean = true;
-  isDataLoading: boolean = true;
   currentTab: string = 'Groups';
   gridApi: GridApi;
   showSettings: boolean = false;
@@ -103,7 +101,6 @@ export class UserComponent implements OnInit, OnDestroy {
   editMode: boolean = false;
   types: Array<any>;
   userGroups: Array<any> = [];
-  showTable: boolean = false;
   private context;
   newGroupModalRef: NgbModalRef;
   searchTerm: string = '';
@@ -230,7 +227,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     });
 
-    this.configureGridSettings();
+
   }
 
   onAuthTypeChange(value) {
@@ -440,69 +437,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userForm.get('userData.cpassword').updateValueAndValidity();
   }
 
-  // onGridAction(buttonName: string, rowNode: RowNode) {
-  //   switch (buttonName) {
-  //     case 'View':
-  //       {
-  //         this.onRowDoubleClick(rowNode);
-  //       }
-  //       break;
-  //     case 'Remove':
-  //       {
-  //         this.removeUsers({ userIds: [rowNode.data._id], single: true });
-  //       }
-  //       break;
-  //   }
-  // }
 
-  onGridReady(event: GridReadyEvent) {
-    this.gridApi = event.api;
-    if (this.gridApi) {
-      this.gridApi.sizeColumnsToFit();
-    }
-    // this.forceResizeColumns();
-    // this.configureGrid();
-  }
-
-  // private forceResizeColumns() {
-  //   this.agGrid.api.sizeColumnsToFit();
-  //   if (this.agGrid.columnApi && this.agGrid.api) {
-  //     this.autoSizeAllColumns();
-  //   }
-  // }
-
-  // private autoSizeAllColumns() {
-  //   const pinnedContentSize = this.hasPermission('PMUBD') ? 170 : 94;
-  //   if (!!this.agGrid.api && !!this.agGrid.columnApi) {
-  //     setTimeout(() => {
-  //       const container = document.querySelector('.grid-container');
-  //       const availableWidth = !!container
-  //         ? container.clientWidth - pinnedContentSize
-  //         : 1070;
-  //       const allColumns = this.agGrid?.columnApi?.getAllColumns() || [];
-  //       allColumns.forEach((col) => {
-  //         this.agGrid.columnApi.autoSizeColumn(col);
-  //         if (
-  //           col.getActualWidth() > 200 ||
-  //           this.agGrid.api.getDisplayedRowCount() === 0
-  //         ) {
-  //           col.setActualWidth(200);
-  //         }
-  //       });
-  //       const occupiedWidth = allColumns.reduce(
-  //         (pv, cv) => pv + cv.getActualWidth(),
-  //         -pinnedContentSize
-  //       );
-  //       if (occupiedWidth < availableWidth) {
-  //         this.agGrid.api.sizeColumnsToFit();
-  //       }
-  //     }, 2000);
-  //   }
-  // }
-
-  // private onRowDoubleClick(row: any) {
-  //   this.editUser(row);
-  // }
 
   checkAllUser(val) {
     this.agGrid.api.forEachNode((row) => {
@@ -638,20 +573,6 @@ export class UserComponent implements OnInit, OnDestroy {
       return isSuperAdmin || isAppAdmin;
     }
   }
-
-  // getLabelError() {
-  //   return (
-  //     this.attributesForm.get('label').touched &&
-  //     this.attributesForm.get('label').hasError('required')
-  //   );
-  // }
-
-  // getValError() {
-  //   return (
-  //     this.attributesForm.get('value').touched &&
-  //     this.attributesForm.get('value').hasError('required')
-  //   );
-  // }
 
   newUser() {
     this.showSettings = false;
@@ -961,24 +882,6 @@ export class UserComponent implements OnInit, OnDestroy {
     this.updateBreadCrumb(this.selectedUser?.basicDetails?.name || '');
   }
 
-  // search(event) {
-  //   if (
-  //     !this.searchForm.value.searchTerm ||
-  //     this.searchForm.value.searchTerm.trim() === ''
-  //   ) {
-  //     this.apiConfig.filter = {
-  //       bot: false,
-  //     };
-  //   } else {
-  //     this.apiConfig.filter = {
-  //       username: '/' + this.searchForm.value.searchTerm + '/',
-  //       'basicDetails.name': '/' + this.searchForm.value.searchTerm + '/',
-  //       bot: false,
-  //     };
-  //   }
-  //   this.agGrid.api.purgeInfiniteCache();
-  // }
-
   canEdit(user: UserDetails) {
     if (
       user._id === this.commonService.userDetails._id ||
@@ -1000,7 +903,12 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   isThisUser(user) {
-    return user._id === this.commonService.userDetails?._id;
+    if (user) {
+      return user._id === this.commonService.userDetails?._id;
+    }
+    else {
+      return
+    }
   }
 
   updateBreadCrumb(usr) {
@@ -1169,7 +1077,6 @@ export class UserComponent implements OnInit, OnDestroy {
       });
     }
     if (this.details._id !== user._id) {
-      this.isDataLoading = true;
       this.details = user;
       this.fetchUserGroups();
     } else {
@@ -1189,124 +1096,8 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   switchTab(tab) {
-    this.isDataLoading = true;
     this.currentTab = tab;
-    this.showTable = false;
-    this.configureGridSettings();
-    this.checkShowTable();
-    this.isDataLoading = false;
   }
-
-  configureGridSettings() {
-    const self = this;
-
-    const groupColumnDefs = [
-      {
-        headerName: 'NAME',
-        field: 'name',
-        filter: false,
-      },
-      {
-        headerName: 'AUHTOR',
-        field: 'roles',
-        cellRenderer: 'appCheckRenderer',
-        cellRendererParams: {
-          checkApp: 'author',
-        },
-      },
-      {
-        headerName: 'APPCENTER',
-        field: 'roles',
-        cellRenderer: 'appCheckRenderer',
-        cellRendererParams: {
-          checkApp: 'author',
-        },
-      },
-      {
-        headerName: '',
-        cellRenderer: 'actionRenderer',
-        cellRendererParams: {
-          user: this.details,
-        },
-      },
-    ];
-
-    const attrColumnDefs = [
-      {
-        headerName: 'LABEL',
-        field: 'label',
-        filter: false,
-      },
-      {
-        headerName: 'TYPE',
-        field: 'type',
-        filter: false,
-      },
-      {
-        headerName: 'VALUE',
-        field: 'value',
-        filter: false,
-      },
-      {
-        headerName: '',
-        cellRenderer: 'actionRenderer',
-        cellRendererParams: {
-          user: this.details,
-        },
-      },
-    ];
-
-    const gridOpts = {
-      paginationPageSize: 30,
-      suppressRowClickSelection: true,
-      cacheBlockSize: 30,
-      rowData: this.currentTab === 'Groups' ? self.userGroups || [] : self.details.attributesData || [],
-      pagination: false,
-      animateRows: true,
-      rowHeight: 48,
-      headerHeight: 48,
-      frameworkComponents: this.frameworkComponents,
-      suppressPaginationPanel: true,
-      context: this.context,
-      suppressCellSelection: true,
-
-    };
-
-    self.gridGroupOptions = {
-      ...gridOpts,
-      columnDefs: groupColumnDefs,
-    };
-    self.gridAttrOptions = {
-      ...gridOpts,
-      columnDefs: attrColumnDefs,
-    };
-  }
-
-  // configureGrid() {
-  // const self = this;
-  // self.dataSource = {
-  //   getRows: (params: IGetRowsParams) => {
-  //     this.gridApi.showLoadingOverlay();
-  //     let data = [];
-  //     if (this.currentTab === 'Attributes') {
-  //       data = self.details.attributesData || [];
-  //     } else {
-  //       data = self.userGroups || [];
-  //     }
-  //     params.successCallback(data, data.length);
-  //     if (data.length < 1 && this.gridApi) {
-  //       this.gridApi.showNoRowsOverlay();
-  //     } else {
-  //       if (data.length !== 0 && this.gridApi) {
-  //         this.gridApi.hideOverlay();
-  //       }
-  //     }
-  //   },
-  // };
-  // this.gridApi.setDatasource(this.dataSource);
-  // this.gridApi.hideOverlay();
-  // this.gridApi.redrawRows();
-  // }
 
   togglePasswordChange() {
     this.showPasswordSide = true;
@@ -1387,7 +1178,6 @@ export class UserComponent implements OnInit, OnDestroy {
   addAttribute() {
     const { key, ...rest } = this.attributesForm.value;
     this.details.attributes[key] = this.appService.cloneObject(rest);
-    this.isDataLoading = true;
     this.commonService
       .put(
         'user',
@@ -1398,12 +1188,9 @@ export class UserComponent implements OnInit, OnDestroy {
         (res) => {
 
           this.details['attributes'] = res.attributes;
-          this.showTable = true;
           this.showDetails(this.details);
           this.editMode = false;
-          this.isDataLoading = false;
           this.showAddAttribute = false;
-          this.configureGridSettings()
           this.ts.success('Custom Details Saved Successfully');
         },
         (err) => {
@@ -1417,35 +1204,31 @@ export class UserComponent implements OnInit, OnDestroy {
   }
   fetchUserGroups() {
     const self = this;
+    this.showLazyLoader = true;
     const filter = {
       count: -1,
       filter: { users: self.details._id },
     };
-    // if (this.gridApi) {
-    //   this.gridApi.showLoadingOverlay();
-    // }
+    this.userGroups = []
     self.subscriptions['userTeams'] = self.commonService
       .get('user', `/${self.commonService.app._id}/group/`, filter)
       .subscribe((resp) => {
-        this.userGroups = resp.filter((ele) => ele.name !== '#') || [];
-        this.configureGridSettings()
-        this.isDataLoading = false;
-        this.checkShowTable();
+        resp.forEach(item => {
+          const authorPermissions = item.roles.filter(e => e.id.match(/^[A-Z]{2,}$/));
+          item.hasAuthorRoles = authorPermissions.length > 0;
+          item.hasAppcenterRoles = authorPermissions.length != item.roles.length;
+
+          this.userGroups.push(item);
+          const index = this.userGroups.findIndex(e => e.name === '#');
+          if (index >= 0) {
+            this.userGroups.splice(index, 1);
+          }
+        })
+        this.showLazyLoader = false;
       });
   }
 
-  checkShowTable() {
-    if (this.currentTab === 'Groups' && this.userGroups.length > 0) {
-      this.showTable = true;
-    } else if (
-      this.currentTab === 'Attributes' &&
-      this.details?.attributesData?.length > 0
-    ) {
-      this.showTable = true;
-    } else {
-      this.showTable = false;
-    }
-  }
+
 
   editAttribute(data) {
     this.editMode = true;
@@ -1455,7 +1238,7 @@ export class UserComponent implements OnInit, OnDestroy {
   deleteAttribute(data) {
     const key = data['key'];
     delete this.details.attributes[key];
-    this.isDataLoading = true;
+    this.showLazyLoader = true;
     this.commonService
       .put(
         'user',
@@ -1467,24 +1250,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
           this.details.attributes = res.attributes || [];
           this.showDetails(this.details)
-          this.configureGridSettings()
-          this.isDataLoading = false
-          // this.getUserList().subscribe((users) => {
-          //   this.userList = users;
-          //   this.ogUsersList = users;
-          //   this.selectedUser = users.find(
-          //     (user) => user._id === this.details._id
-          //   );
-          //   this.showDetails(this.selectedUser);
 
-          //   this.isDataLoading = false;
-          //   this.configureGridSettings();
-          //   if (this.gridApi) {
-          //     this.configureGrid();
-          //   }
-          //   this.checkShowTable();
-          // });
+
           this.showAddAttribute = false;
+          this.showLazyLoader = false;
           this.ts.success('Custom Details Saved Successfully');
         },
         (err) => {
@@ -1494,7 +1263,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   deleteGroup(data) {
-    this.isDataLoading = true;
     this.commonService
       .put(
         'user',
@@ -1507,11 +1275,9 @@ export class UserComponent implements OnInit, OnDestroy {
             `${data.name} Group has been removed for user ${this.details.basicDetails.name}`
           );
           this.fetchUserGroups();
-          // this.getUserTeam();
         },
         (err) => {
           data.loading = false;
-          this.isDataLoading = false;
           this.commonService.errorToast(err);
         }
       );
@@ -1530,7 +1296,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        this.isDataLoading = true;
         this.fetchUserGroups();
       }
     });
@@ -1560,4 +1325,12 @@ export class UserComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  isAttrPresent(data) {
+    if (!data.attributes || _.isEmpty(data.attributes)) {
+      return false
+    }
+    return true
+  }
+
 }
