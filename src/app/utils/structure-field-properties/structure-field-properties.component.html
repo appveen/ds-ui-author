@@ -311,12 +311,36 @@
     </span>
   </div>
   <div class="schemaProperties-wrapper" *ngIf="!idField">
-    <div class="font-16 fw-500">Properties</div>
     <ng-container
       *ngFor="let formItem of formList;let formIndex = index; let isLastFormItem = last; let isFirstFormItem = first"
       [formGroup]="formItem">
       <div class="schemaProperties-body" formGroupName="properties">
+
+        <div class="w-100 mt-4">
+          <div class="font-14 text-dark mb-2">
+            <ng-container *ngIf="formItem.get('key').value !== '_self'">Type</ng-container>
+            <ng-container *ngIf="formItem.get('key').value === '_self'">Collection of</ng-container>
+          </div>
+          <div class="w-100 bg-white position-relative">
+            <button type="button"
+              class="d-flex w-100 align-items-center justify-content-between bg-white px-2 py-1 border rounded ignore-click"
+              (click)="showDataTypes[formIndex]=true" [disabled]="!canEdit || checkStateModel()">
+              <odp-field-type [field]="{type:formItem.value.type,properties:formItem.value.properties}" [label]="true">
+              </odp-field-type>
+              <span *ngIf="canEdit" class="fas fa-angle-down text-accent"></span>
+            </button>
+            <small class='text-secondary' *ngIf="canEdit && checkStateModel()">
+              Type can't be changed because there is a state model configured
+            </small>
+            <odp-field-type-selector *ngIf="showDataTypes[formIndex]" [(toggle)]="showDataTypes[formIndex]"
+              [form]="formItem" [edit]="edit" [isLibrary]="isLibrary" [isDataFormat]="isDataFormat"
+              [formatType]="formatType">
+            </odp-field-type-selector>
+          </div>
+        </div>
+
         <div class="w-100 justify-content-center" *ngIf="!(isDataFormat || checkStateModel())">
+          <div class="font-16 fw-500 mt-40">Properties</div>
           <div class=" d-flex align-items-center w-100 py-3" [ngClass]="{'hover':canEdit}"
             *ngIf="formItem.get('properties.required') && formItem.get('key').value !== '_self'">
             <odp-checkbox [edit]="{ status: canEdit }"
@@ -367,28 +391,6 @@
             </label> -->
           </div>
         </div>
-        <div class="w-100 mb-4">
-          <div class="text-secondary">
-            <ng-container *ngIf="formItem.get('key').value !== '_self'">Type</ng-container>
-            <ng-container *ngIf="formItem.get('key').value === '_self'">Collection of</ng-container>
-          </div>
-          <div class="w-100 bg-white position-relative">
-            <button type="button"
-              class="d-flex w-100 align-items-center justify-content-between bg-white px-2 py-1 border rounded ignore-click"
-              (click)="showDataTypes[formIndex]=true" [disabled]="!canEdit || checkStateModel()">
-              <odp-field-type [field]="{type:formItem.value.type,properties:formItem.value.properties}" [label]="true">
-              </odp-field-type>
-              <span *ngIf="canEdit" class="fas fa-angle-down text-accent"></span>
-            </button>
-            <small class='text-secondary' *ngIf="canEdit && checkStateModel()">
-              Type can't be changed because there is a state model configured
-            </small>
-            <odp-field-type-selector *ngIf="showDataTypes[formIndex]" [(toggle)]="showDataTypes[formIndex]"
-              [form]="formItem" [edit]="edit" [isLibrary]="isLibrary" [isDataFormat]="isDataFormat"
-              [formatType]="formatType">
-            </odp-field-type-selector>
-          </div>
-        </div>
         <div class="text-secondary bg-light mb-3 p-2" *ngIf="formItem.get('key').value !== '_self' && !isLibrary &&  
         formItem.get('type').value!='Relation' && formItem.get('type').value!='User'">Advanced
           Properties</div>
@@ -424,7 +426,7 @@
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
         </odp-date-property>
         <div *ngIf="formItem.get('type').value=='Boolean' && !isDataFormat && !isLibrary ">
-          <div class="w-100 text-secondary">Default Value
+          <div class="w-100 text-secondary mb-2">Default Value
           </div>
           <div class="w-100 position-relative">
             <ng-container *ngIf="canEdit">
@@ -454,7 +456,7 @@
         </div>
 
         <div class="mb-4" *ngIf="formItem.get('type').value=='Date' && !isDataFormat && !isLibrary ">
-          <div class="w-100 text-secondary">Default Value</div>
+          <div class="w-100 text-secondary mb-2">Default Value</div>
           <div class="w-100 position-relative">
             <ng-container *ngIf="canEdit">
               <button type="button" class="btn btn-link" *ngIf="form.get('properties.default')?.value"
@@ -484,7 +486,7 @@
 
 
           <div *ngIf="!idField" class=" w-100 mt-4">
-            <div class=" text-secondary">Custom Label</div>
+            <div class="font-14 text-dark mb-2">Custom Label</div>
             <div>
               <input *ngIf="edit.status" class="form-control" type="text" formControlName="label" id="label">
               <span *ngIf="!edit.status">{{formItem.get('properties.label').value}}</span>
@@ -497,7 +499,7 @@
             </span>
           </div>
           <div *ngIf="!idField" class="w-100 mt-4">
-            <div class=" text-secondary">Custom Error</div>
+            <div class="font-14 text-dark mb-2">Custom Error</div>
             <div>
               <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"
                 [attr.disabled]="(checkStateModel() || (formItem.get('type').value =='Boolean')) ? true : null">
@@ -505,7 +507,7 @@
             </div>
           </div>
           <div *ngIf="showSecureText(formItem)" class="w-100 mt-4">
-            <div class=" text-secondary">Secure</div>
+            <div class="font-14 text-dark mb-2">Secure</div>
             <div class=" position-relative">
               <ng-container *ngIf="canEdit">
                 <label *ngIf="canEdit" class="switch accent">
@@ -536,7 +538,7 @@
         </ng-container>
 
         <div *ngIf="showSecureFile(formItem)" class="w-100 mt-4">
-          <div class=" text-secondary">Secure</div>
+          <div class="font-14 text-dark mb-2">Secure</div>
 
           <div class=" position-relative">
             <ng-container *ngIf="canEdit">
@@ -568,7 +570,7 @@
         <ng-container *ngIf="showCommonFields">
           <div class="w-100 mt-4" [ngClass]="{'mb-4': isLastFormItem && !descriptionError}"
             *ngIf="formList.length == 1 || formIndex > 0">
-            <div class=" text-secondary">Description</div>
+            <div class="font-14 text-dark mb-2">Description</div>
             <div>
               <textarea *ngIf="canEdit" class="form-control" formControlName="_description"
                 placeholder="What is this attribute for?" [attr.disabled]="checkStateModel() ? true : null"></textarea>

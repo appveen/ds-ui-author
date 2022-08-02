@@ -3,7 +3,7 @@
   <div class="d-flex w-100  flex-column mb-4" *ngIf="form.get('properties.default') && !form.get('properties.longText')?.value &&
     !form.get('properties.richText')?.value && !isLibrary && !isDataFormat">
     <div >
-      <div class=" text-secondary">Default Value
+      <div class="font-14 text-dark mb-2">Default Value
       </div>
       <div class=" position-relative">
         <ng-container *ngIf="canEdit">
@@ -51,7 +51,7 @@
     </div>
   </div>
   <div *ngIf=" showSecureText()" class="w-100 mt-4" [ngClass]="{'mb-4': collectionSecureText()}">
-    <div class=" text-secondary">Secure</div>
+    <div class="font-14 text-dark mb-2">Secure</div>
     <!-- <div >
       <select [attr.disabled]="!canEdit ? '' : null" class="form-control" formControlName="password">
         <option [ngValue]="true">True</option>
@@ -86,7 +86,7 @@
   <div class="d-flex flex-column w-100 mt-4" *ngIf="form.get('properties.pattern') && (form.get('properties._detailedType').value ==='' ||
           form.get('properties._detailedType').value === 'password')">
     <div class="position-relative ">
-      <div class=" text-secondary">Pattern</div>
+      <div class="font-14 text-dark mb-2">Pattern</div>
       <div >
         <input *ngIf="canEdit" class="form-control" type="text" formControlName="pattern" id="_pattern"
           placeholder="Regular Expression"
@@ -117,7 +117,7 @@
   </div>
   <div class="d-flex w-100 mb-4"
     *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
-    <div class=" text-secondary">Values</div>
+    <div class="font-14 text-dark mb-2">Values</div>
     <div class=" position-relative">
       <ng-container *ngIf="edit.status">
         <input class="form-control pr-4"
