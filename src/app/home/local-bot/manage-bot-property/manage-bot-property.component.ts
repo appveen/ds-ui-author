@@ -82,10 +82,10 @@ export class ManageBotPropertyComponent implements OnInit {
   ) {
     const self = this;
     self.types = [
-      { class: 'odp-abc', value: 'String', label: 'Text' },
-      { class: 'odp-123', value: 'Number', label: 'Number' },
-      { class: 'odp-boolean', value: 'Boolean', label: 'True/False' },
-      { class: 'odp-calendar', value: 'Date', label: 'Date' },
+      { class: 'dsi-text', value: 'String', label: 'Text' },
+      { class: 'dsi-number', value: 'Number', label: 'Number' },
+      { class: 'dsi-boolean', value: 'Boolean', label: 'True/False' },
+      { class: 'dsi-date', value: 'Date', label: 'Date' },
     ];
     self.toggleFieldTypeSelector = {};
     self.openDeleteModal = new EventEmitter();
@@ -125,6 +125,7 @@ export class ManageBotPropertyComponent implements OnInit {
           {
             headerName: '',
             cellRenderer: 'actionCellRenderer',
+            type: 'rightAligned',
             refData: {
               actionsButtons: 'Edit,Delete',
               actionCallbackFunction: 'onGridAction',
@@ -158,44 +159,44 @@ export class ManageBotPropertyComponent implements OnInit {
   }
 
   onGridReady(event: GridReadyEvent) {
-    if (this.agGrid.api && this.agGrid.columnApi) {
-      this.forceResizeColumns()
+    if (event.api) {
+      event.api.sizeColumnsToFit()
     }
   }
 
-  private forceResizeColumns() {
-    this.agGrid.api.sizeColumnsToFit();
-    this.autoSizeAllColumns();
-  }
+  // private forceResizeColumns() {
+  //   this.agGrid.api.sizeColumnsToFit();
+  //   this.autoSizeAllColumns();
+  // }
 
-  private autoSizeAllColumns() {
-    const fixedSize = this.hasPermission('PMBBU') ? 94 : 0;
-    if (!!this.agGrid.api && !!this.agGrid.columnApi) {
-      setTimeout(() => {
-        const container = document.querySelector('.grid-container');
-        const availableWidth = !!container
-          ? container.clientWidth - fixedSize
-          : 730;
-        const allColumns = this.agGrid.columnApi.getAllColumns() || [];
-        allColumns.forEach((col) => {
-          this.agGrid.columnApi.autoSizeColumn(col);
-          if (
-            col.getActualWidth() > 200 ||
-            this.agGrid.api.getDisplayedRowCount() === 0
-          ) {
-            col.setActualWidth(200);
-          }
-        });
-        const occupiedWidth = allColumns.reduce(
-          (pv, cv) => pv + cv.getActualWidth(),
-          -fixedSize
-        );
-        if (occupiedWidth < availableWidth) {
-          this.agGrid.api.sizeColumnsToFit();
-        }
-      }, 2000);
-    }
-  }
+  // private autoSizeAllColumns() {
+  //   const fixedSize = this.hasPermission('PMBBU') ? 94 : 0;
+  //   if (!!this.agGrid.api && !!this.agGrid.columnApi) {
+  //     setTimeout(() => {
+  //       const container = document.querySelector('.grid-container');
+  //       const availableWidth = !!container
+  //         ? container.clientWidth - fixedSize
+  //         : 730;
+  //       const allColumns = this.agGrid.columnApi.getAllColumns() || [];
+  //       allColumns.forEach((col) => {
+  //         this.agGrid.columnApi.autoSizeColumn(col);
+  //         if (
+  //           col.getActualWidth() > 200 ||
+  //           this.agGrid.api.getDisplayedRowCount() === 0
+  //         ) {
+  //           col.setActualWidth(200);
+  //         }
+  //       });
+  //       const occupiedWidth = allColumns.reduce(
+  //         (pv, cv) => pv + cv.getActualWidth(),
+  //         -fixedSize
+  //       );
+  //       if (occupiedWidth < availableWidth) {
+  //         this.agGrid.api.sizeColumnsToFit();
+  //       }
+  //     }, 2000);
+  //   }
+  // }
 
   onGridAction(buttonName: string, rowNode: RowNode) {
     switch (buttonName) {

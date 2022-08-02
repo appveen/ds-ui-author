@@ -15,7 +15,6 @@ import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 })
 export class LibraryComponent implements OnInit, OnDestroy {
 
-    @ViewChild('newLibraryModal', { static: false }) newLibraryModal: TemplateRef<HTMLElement>;
     app: string;
     searchForm: FormGroup;
     libraryList: Array<any> = [];
@@ -32,8 +31,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
     showAddButton: boolean;
     breadcrumbPaths: Array<Breadcrumb>;
     openDeleteModal: EventEmitter<any>;
-    newLibraryModalRef: NgbModalRef;
     form: FormGroup;
+    showNewLibraryWindow: boolean;
     constructor(private commonService: CommonService,
         private appService: AppService,
         private router: Router,
@@ -86,22 +85,12 @@ export class LibraryComponent implements OnInit, OnDestroy {
         Object.keys(self.subscriptions).forEach(e => {
             self.subscriptions[e].unsubscribe();
         });
-        if (self.newLibraryModalRef) {
-            self.newLibraryModalRef.close();
-        }
     }
 
     newLibrary() {
         const self = this;
-        self.newLibraryModalRef = self.commonService.modal(self.newLibraryModal, { size: 'sm' });
-        self.newLibraryModalRef.result.then(close => {
-            if (close && self.form.valid) {
-                self.triggerLibraryCreate();
-            }
-            self.form.reset();
-        }, dismiss => {
-            self.form.reset();
-        });
+        self.form.reset();
+        this.showNewLibraryWindow = true;
     }
 
     triggerLibraryCreate() {

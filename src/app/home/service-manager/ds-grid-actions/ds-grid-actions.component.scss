@@ -1,5 +1,17 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
 .actions {
-  display: none;
+
+  // display: none;
+  .dsi {
+    min-width: 24px;
+    max-width: 24px;
+    display: inline-block;
+    &:hover{
+      color: $dark;
+    }
+  }
 }
 
 .ag-row-hover .actions {

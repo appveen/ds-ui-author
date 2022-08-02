@@ -1,6 +1,8 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+          </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
@@ -12,7 +14,7 @@
         [(toggleMicroflow)]="toggleMicroflow" [partner]="form" [id]="microflowId"></odp-integration-flow>
     <ng-container *ngIf="!toggleMicroflow">
         <div class="header d-flex align-items-start justify-content-between mr-3">
-            <odp-basic-info class="w-100" [(logo)]="logo" [(name)]="name" [nameCharLimit]="30"
+            <odp-basic-info class="w-100" [(name)]="name" [nameCharLimit]="30"
                 [(description)]="description" [pattern]="'[a-z0-9A-Z\\s_-]+'"
                 [edit]="{status:edit.status && canEditPartner}">
                 <!-- <button type="button" class="btn btn-link" (click)="deletePartner()" *ngIf="value._id">Delete</button> -->

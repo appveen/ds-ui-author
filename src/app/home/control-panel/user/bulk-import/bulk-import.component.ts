@@ -18,6 +18,7 @@ export class BulkImportComponent implements OnInit {
   showUploadWindow: boolean;
   fileAdded: boolean;
   fileInput: HTMLInputElement;
+  selectedFile: File;
   downloadUrl: string;
   showAzureLoginButton: boolean;
   constructor(private commonService: CommonService,
@@ -120,6 +121,9 @@ export class BulkImportComponent implements OnInit {
   onChange(event) {
     this.fileAdded = true;
     this.fileInput = event.target;
+    if(event.target && event.target.files && event.target.files[0]){
+      this.selectedFile = event.target.files[0];
+    }
   }
 
   startProcess() {

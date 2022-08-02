@@ -2,8 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
-  TemplateRef,
   EventEmitter,
   Input,
 } from '@angular/core';
@@ -69,15 +67,13 @@ import * as _ from 'lodash';
   providers: [FilterPipe],
 })
 export class AppListComponent implements OnInit, OnDestroy {
-  @ViewChild('newAppModal', { static: false })
-  newAppModal: TemplateRef<HTMLElement>;
+
   @Input() isHome: boolean = false;
   @Input() navToApp: any;
   subscriptions: any;
   appList: Array<App>;
   apiConfig: GetOptions;
   errorMessage: string;
-  newAppModalRef: NgbModalRef;
   createAppLoader: boolean;
   searchTerm: string;
   deleteModalRef: NgbModalRef;
@@ -96,6 +92,7 @@ export class AppListComponent implements OnInit, OnDestroy {
   timezones: Array<any>;
   userDetails: UserDetails;
   isSuperadmin: boolean;
+  showNewAppWindow: boolean;
   constructor(
     private commonService: CommonService,
     private appService: AppService,
@@ -155,9 +152,6 @@ export class AppListComponent implements OnInit, OnDestroy {
     Object.keys(self.subscriptions).forEach((e) => {
       self.subscriptions[e].unsubscribe();
     });
-    if (self.newAppModalRef) {
-      self.newAppModalRef.close();
-    }
   }
 
   getApps() {
@@ -216,29 +210,14 @@ export class AppListComponent implements OnInit, OnDestroy {
 
   newApp() {
     const self = this;
-    self.newAppModalRef = self.commonService.modal(self.newAppModal);
-    self.newAppModalRef.result.then(
-      (close) => {
-        self.errorMessage = null;
-        self.form.reset({
-          type: 'Management',
-          serviceVersionValidity: {
-            validityType: 'count',
-            validityValue: -1,
-          },
-        });
+    self.form.reset({
+      type: 'Management',
+      serviceVersionValidity: {
+        validityType: 'count',
+        validityValue: -1,
       },
-      (dismiss) => {
-        self.errorMessage = null;
-        self.form.reset({
-          type: 'Management',
-          serviceVersionValidity: {
-            validityType: 'count',
-            validityValue: -1,
-          },
-        });
-      }
-    );
+    });
+    this.showNewAppWindow = true;
   }
 
   createApp() {
@@ -250,7 +229,7 @@ export class AppListComponent implements OnInit, OnDestroy {
     self.commonService.post('user', '/admin/app', payload).subscribe(
       (res) => {
         self.createAppLoader = false;
-        self.newAppModalRef.close();
+        self.showNewAppWindow = false;
         self.commonService.appList.push(res);
         self.showLazyLoader = false;
         self.router.navigate(['/app', res._id, 'sm']);

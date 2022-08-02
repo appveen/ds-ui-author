@@ -36,7 +36,7 @@ export class FieldTypeComponent {
     if (temp) {
       return temp.class;
     } else {
-      return 'odp-abc';
+      return 'dsi-text';
     }
   }
 

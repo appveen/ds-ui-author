@@ -122,10 +122,10 @@ export class LocalBotComponent implements OnInit {
     self.selectedGroups = [];
     self.slideState = 'blur';
     self.types = [
-      { class: 'odp-abc', value: 'String', label: 'Text' },
-      { class: 'odp-123', value: 'Number', label: 'Number' },
-      { class: 'odp-boolean', value: 'Boolean', label: 'True/False' },
-      { class: 'odp-calendar', value: 'Date', label: 'Date' },
+      { class: 'dsi-text', value: 'String', label: 'Text' },
+      { class: 'dsi-number', value: 'Number', label: 'Number' },
+      { class: 'dsi-boolean', value: 'Boolean', label: 'True/False' },
+      { class: 'dsi-date', value: 'Date', label: 'Date' },
     ];
     self.botForm = self.fb.group({
       botName: [
@@ -848,6 +848,8 @@ export class LocalBotComponent implements OnInit {
       this.manageGroups.openGroupModal()
     }
     if (tab === 'Keys') {
+      this.keyForm.get('period').setValue('days')
+
       this.addNewKey = true;
     }
     if (tab === 'Properties') {
@@ -872,6 +874,7 @@ export class LocalBotComponent implements OnInit {
 
   editKey(data) {
     this.keyForm.get('label').patchValue(data.label)
+    this.keyForm.get('period').patchValue('days')
     this.keyForm.get('expires').patchValue(data.expires / 1440)
     this.editMode = true
     this.keyId = data._id;
