@@ -13,6 +13,20 @@
   &.show {
     right: 0px !important;
   }
+
+  .properties {
+    width: 20px;
+    height: 20px;
+    &.required {
+      background: $required;
+    }
+    &.create-only {
+      background: $create-only;
+    }
+    &.unique {
+      background: $unique;
+    }
+  }
   .schemaProperties-header {
     font-size: 20px;
   }
