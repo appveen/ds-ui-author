@@ -1,9 +1,69 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.card-container {
-  height: calc(100vh - 170px);
-  overflow: auto;
+.faas-page {
+  height: calc(100vh - 60px);
+
+  .card-container {
+    height: calc(100vh - 170px);
+    overflow: auto;
+
+    .list-group-item {
+      &.header {
+        min-height: 38px;
+        max-height: 38px;
+        color: #6C7584;
+      }
+
+      .item-name {
+        width: 200px;
+      }
+
+      .item-url {
+        width: 400px;
+      }
+
+      .item-status {
+        width: 120px;
+
+        .text-warning {
+          animation: blink 0.5s alternate infinite;
+        }
+
+        .fa-circle {
+          font-size: 8px;
+        }
+      }
+
+      .item-last-invoked {
+        width: 200px;
+      }
+
+      .item-actions {
+        min-width: 200px;
+
+        .actions {
+          .dsi {
+            min-width: 24px;
+            max-width: 24px;
+            display: inline-block;
+          }
+
+          .dsi,
+          .api-icon {
+            &:hover {
+              color: $dark;
+            }
+          }
+        }
+      }
+
+      .scroll-pane {
+        height: 100%;
+        overflow: auto;
+      }
+    }
+  }
 }
 
 .name-wrapper {

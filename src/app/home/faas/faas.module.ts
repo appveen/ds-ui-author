@@ -19,6 +19,7 @@ import { FaasFilterComponent } from './faas-listing/faas-filter/faas-filter.comp
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
+import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
 
 
 const routes: Routes = [
@@ -48,7 +49,8 @@ const routes: Routes = [
     ]),
     DateFormatModule,
     OnChangeModule,
-    AutoFocusModule
+    AutoFocusModule,
+    CommonFilterModule
   ],
   exports: [RouterModule]
 })

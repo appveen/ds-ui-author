@@ -11,7 +11,7 @@
         <odp-basic-info hideLogo="true" [(name)]="faasData.name" [(description)]="faasData.description" [edit]="edit">
             <div class="d-flex justify-content-end align-items-center">
                 <button (click)="cancel()" type="button"
-                    class="edit-button btn btn-min-width btn-light border mr-3"
+                    class="edit-button btn btn-min-width btn-white border mr-3"
                     id="cancelNanoServiceBtn">
                     <span class="text">Cancel</span>
                 </button>
@@ -47,7 +47,7 @@
                 <span class="text-uppercase font-weight-bold text-accent">Function Code</span>
             </div>
             <div class="editor-theme-selection d-flex align-items-center">
-                <button type="button" class="btn btn-light border mr-3 d-flex align-items-center"
+                <button type="button" class="btn btn-white border mr-3 d-flex align-items-center"
                     (click)="showConsole=!showConsole;toggleConsole()">
                     <span class="dsi dsi-console mr-2"></span>
                     <span class="text">Console</span>
