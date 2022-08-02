@@ -75,19 +75,20 @@
                 <span class="text font-12 fw-400">{{srvc.status}}</span>
               </div>
               <div class="item-actions">
-                <div class="actions text-secondary d-flex justify-content-end hover align-items-center"
-                  *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintainance' ">
-                  <span *ngIf="isDeploy(i)" id='deploy_{{i}}' class="dsi dsi-skip-forward text-primary mr-2"
-                    (click)="deployService(i)" [ngbTooltip]="'Deploy v'+(srvc.draftVersion || srvc.version)"
-                    container="body"></span>
-                  <span class="dsi dsi-play hover mr-2" *ngIf="srvc.status == 'Stopped' && isStartStopService(i)"
-                    (click)="toggleServiceStatus(i)" [ngbTooltip]="'Start v'+srvc.version" container="body"></span>
-                  <span class="dsi dsi-stop hover mr-2" *ngIf="srvc.status == 'Active' && isStartStopService(i)"
-                    (click)="toggleServiceStatus(i)" [ngbTooltip]="'Stop v'+srvc.version" container="body"></span>
-                  <span class="dsi dsi-edit hover mr-2" *ngIf="canEditService(srvc._id)"
-                    (click)="editService(i)"></span>
-                  <span class="dsi dsi-view hover mr-2" *ngIf="canEditService(srvc._id)"
-                    (click)="viewService(i)"></span>
+                <div class="actions text-secondary d-flex justify-content-end hover align-items-center">
+                  <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintainance' ">
+                    <span *ngIf="isDeploy(i)" id='deploy_{{i}}' class="dsi dsi-skip-forward text-primary mr-2"
+                      (click)="deployService(i)" [ngbTooltip]="'Deploy v'+(srvc.draftVersion || srvc.version)"
+                      container="body"></span>
+                    <span class="dsi dsi-play hover mr-2" *ngIf="srvc.status == 'Stopped' && isStartStopService(i)"
+                      (click)="toggleServiceStatus(i)" [ngbTooltip]="'Start v'+srvc.version" container="body"></span>
+                    <span class="dsi dsi-stop hover mr-2" *ngIf="srvc.status == 'Active' && isStartStopService(i)"
+                      (click)="toggleServiceStatus(i)" [ngbTooltip]="'Stop v'+srvc.version" container="body"></span>
+                    <span class="dsi dsi-edit hover mr-2" *ngIf="canEditService(srvc._id)"
+                      (click)="editService(i)"></span>
+                    <span class="dsi dsi-view hover mr-2" *ngIf="canEditService(srvc._id)"
+                      (click)="viewService(i)"></span>
+                  </ng-container>
                   <span class="dsi dsi-copy hover mr-2" *ngIf="canCloneService(srvc._id)"
                     (click)="cloneService(i)"></span>
                   <span class="dsi dsi-trash hover mr-2" *ngIf="canDeleteService(srvc._id)"

@@ -31,6 +31,9 @@
 
     .item-status {
       width: 200px;
+      .text-warning{
+        animation: blink 0.5s alternate infinite;
+      }
 
       .fa-circle {
         font-size: 8px;
@@ -52,12 +55,6 @@
           &:hover {
             color: $dark;
           }
-        }
-      }
-
-      .btn {
-        &:hover {
-          color: $secondary  !important;
         }
       }
     }

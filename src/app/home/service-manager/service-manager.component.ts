@@ -1062,6 +1062,9 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     if (srvc.status === 'Draft') {
       return 'text-accent';
     }
+    if (srvc.status === 'Pending') {
+      return 'text-warning';
+    }
     return 'text-secondary';
   }
 
