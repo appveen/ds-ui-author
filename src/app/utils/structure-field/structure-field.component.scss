@@ -11,6 +11,21 @@
   &.active {
     border-left-color: $dark;
   }
+
+  .properties {
+    width: 20px;
+    height: 20px;
+    &.required {
+      background: $required;
+    }
+    &.create-only {
+      background: $create-only;
+    }
+    &.unique {
+      background: $unique;
+    }
+  }
+
   .icon {
     min-width: 14px;
     max-width: 14px;
@@ -18,8 +33,8 @@
     max-height: 14px;
   }
   .field {
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 180px;
+    max-width: 180px;
     min-height: 28px;
     max-height: 28px;
   }
@@ -81,7 +96,7 @@
   line-height: 28px;
 }
 
-.field-wrapper:hover {
+.field-wrapper {
   background-color: #ececec;
 }
 

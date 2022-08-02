@@ -19,7 +19,7 @@ import { SwitchModule } from '../switch/switch.module';
 import { UserPropertyComponent } from './user-property/user-property.component';
 import { AutoFocusModule } from '../directives/auto-focus/auto-focus.module';
 import { TimezonePickerModule } from '../timezone-picker/timezone-picker.module';
-
+import { CheckboxModule } from '../checkbox/checkbox.module'
 @NgModule({
   imports: [
     CommonModule,
@@ -33,7 +33,8 @@ import { TimezonePickerModule } from '../timezone-picker/timezone-picker.module'
     SwitchModule,
     SortablejsModule,
     AutoFocusModule,
-    TimezonePickerModule
+    TimezonePickerModule,
+    CheckboxModule
   ],
   declarations: [
     StructureFieldPropertiesComponent,

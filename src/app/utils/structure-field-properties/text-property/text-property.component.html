@@ -51,7 +51,7 @@
     </div>
   </div>
   <div *ngIf=" showSecureText()" class="w-100 mt-4" [ngClass]="{'mb-4': collectionSecureText()}">
-    <div class=" text-secondary">Secure</div>
+    <div class="font-14 text-dark mb-2">Secure</div>
     <!-- <div >
       <select [attr.disabled]="!canEdit ? '' : null" class="form-control" formControlName="password">
         <option [ngValue]="true">True</option>
@@ -117,7 +117,7 @@
   </div>
   <div class="d-flex w-100 mb-4"
     *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
-    <div class=" text-secondary">Values</div>
+    <div class="font-14 text-dark mb-2">Values</div>
     <div class=" position-relative">
       <ng-container *ngIf="edit.status">
         <input class="form-control pr-4"
@@ -196,14 +196,50 @@
     </button>
   </div>
   <ng-container *ngIf="formatType!='FLATFILE'">
-    <div class="d-flex flex-column w-100 mb-4 mt-4"
-      *ngIf="form.get('properties.minlength') && form.get('properties._detailedType').value==''">
-      <div class="d-flex flex-row mb-4">
-        <div class=" text-secondary">Length</div>
-        <div class=" text-accent">Min and max lengths of the value</div>
+    <div class="d-flex flex-column w-100 mt-4">
+      <div class="row no-gutters">
+        <div class="col-6">
+          <ng-container *ngIf="form.get('properties.minlength') && form.get('properties._detailedType').value==''">
+            <div class="mb-2">Min Length</div>
+            <input *ngIf="canEdit" class=" form-control short" placeholder="Minimum length"
+              [ngClass]="{'is-invalid':form.get('properties.minlength').dirty && form.hasError('minMaxLength')}"
+              type="text" min="0" #minlengthEle formControlName="minlength" id="_minLength"
+              (blur)="reCalibrateTextDefaultValue('minlength', form.get('properties.minlength').value, form.get('properties'))">
+            <span
+              *ngIf="!canEdit && form.get('properties.minlength') && form.get('properties.minlength').value">{{form.get('properties.minlength').value}}</span>
+            <span class="text-muted" *ngIf="!canEdit && !form.get('properties.minlength').value">-</span>
+          </ng-container>
+        </div>
+        <div class="col-6">
+          <ng-container *ngIf="form.get('properties.maxlength') && form.get('properties._detailedType').value==''">
+            <div class="mb-2">Max Length</div>
+            <input *ngIf="canEdit" class=" form-control short mb-2" placeholder="Maximum length"
+              [ngClass]="{'is-invalid':form.get('properties.maxlength').dirty && form.hasError('minMaxLength')}"
+              type="text" min="0" #maxlengthEle formControlName="maxlength" id="_maxLength"
+              (blur)="reCalibrateTextDefaultValue('maxlength', form.get('properties.maxlength').value, form.get('properties'))">
+            <span
+              *ngIf="!canEdit && form.get('properties.maxlength') && form.get('properties.maxlength').value">{{form.get('properties.maxlength').value}}</span>
+            <span class="text-muted" *ngIf="!canEdit && !form.get('properties.maxlength').value">-</span>
+          </ng-container>
+
+        </div>
+        <div class="col-12 mt-2">
+          <div class="font-12 text-secondary mb-2"
+            *ngIf="form.get('properties.minlength') && form.get('properties.maxlength') && form.get('properties._detailedType').value==''">
+            Min and max length of the attribute</div>
+          <div class="font-12 text-danger"
+            *ngIf="form.get('properties.minlength').dirty && form.get('properties').hasError('minMaxLength')"><span
+              class="fa fa-times mr-1"></span>Min
+            Length value cannot be greater then Max Length value</div>
+        </div>
+        <div class="font-12 text-danger"
+          *ngIf="form.get('properties.maxlength').dirty && form.get('properties').hasError('minMaxLength')"><span
+            class="fa fa-times mr-1"></span>Max
+          Length value cannot be lesser then Min Length value</div>
       </div>
-      <div class="border-left d-flex flex-column">
-        <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-column position-relative">
+
+      <!-- <div >
+        <div class="d-flex position-relative">
           <div class="d-flex">
             <div class="sub-level-width text-secondary">Min.</div>
             <input *ngIf="canEdit" class=" form-control short" placeholder="Minimum length"
@@ -242,7 +278,7 @@
               Length value cannot be lesser then Min Length value</span>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </ng-container>
 </div>

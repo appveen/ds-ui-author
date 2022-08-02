@@ -183,7 +183,7 @@
 
 
           <div *ngIf="!idField" class="d-flex w-100 mt-4">
-            <div class=" text-secondary">Custom Label</div>
+            <div class=" text-secondary">Appcenter Custom Label</div>
             <div >
               <input *ngIf="edit.status" class="form-control" type="text" formControlName="label" id="label">
               <span *ngIf="!edit.status">{{formItem.get('properties.label').value}}</span>
@@ -196,7 +196,7 @@
             </span>
           </div>
           <div *ngIf="!idField" class="d-flex w-100 mt-4">
-            <div class=" text-secondary">Custom Error</div>
+            <div class=" text-secondary">Appcenter Custom Error</div>
             <div >
               <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"
                 [attr.disabled]="(checkStateModel() || (formItem.get('type').value =='Boolean')) ? true : null">
@@ -316,49 +316,10 @@
     <ng-container
       *ngFor="let formItem of formList;let formIndex = index; let isLastFormItem = last; let isFirstFormItem = first"
       [formGroup]="formItem">
-      <div class="schemaProperties-body" [ngClass]="{'pt-4': isFirstFormItem}" formGroupName="properties">
-        <div class="w-100 justify-content-center" *ngIf="!(isDataFormat || checkStateModel())">
-          <div class=" d-flex align-items-center font-13 checkbox w-100 p-2 mb-2"
-            [ngClass]="{'selected-checkbox':formItem.get('properties.required').value,'hover':canEdit}"
-            *ngIf="formItem.get('properties.required') && formItem.get('key').value !== '_self'"
-            (click)="toggleCheck(formItem.get('properties.required'))">
-            <div class="text-dark">Required</div>
-            <label for="reqAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
-              <input type="checkbox" id="reqAttr" [checked]="formItem.get('properties.required').value" class="d-none"
-                formControlName="required" *ngIf="canEdit" (click)="toggleCheck(formItem.get('properties.required'))">
-              <input type="checkbox" class="d-none" formControlName="required" *ngIf="!canEdit">
-              <span class="checkmark"></span>
-            </label>
-          </div>
-          <div class=" d-flex align-items-center font-13 checkbox p-2 mb-2"
-            [ngClass]="{'selected-checkbox':formItem.get('properties.createOnly').value,'hover':canEdit}"
-            *ngIf="formItem.get('properties.createOnly') && formItem.get('key').value !=='_self'"
-            (click)="toggleCheck(formItem.get('properties.createOnly'))">
-            <div class="text-dark mr-2">Create Only</div>
-            <label for="createAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
-              <input type="checkbox" id="createAttr" class="d-none"
-                [checked]="formItem.get('properties.createOnly').value"
-                (click)="toggleCheck(formItem.get('properties.createOnly'))" formControlName="createOnly"
-                *ngIf="canEdit">
-              <input type="checkbox" class="d-none" formControlName="createOnly" *ngIf="!canEdit">
-              <span class="checkmark"></span>
-            </label>
-          </div>
-          <div class=" d-flex align-items-center font-13 checkbox p-2 mb-2"
-            [ngClass]="{'selected-checkbox':formItem.get('properties.unique').value,'hover':canEdit}"
-            *ngIf="formItem.get('properties.unique') && formItem.get('key').value !== '_self'"
-            (click)="toggleCheckUnique(formItem.get('properties.unique'))">
-            <div class="text-dark">Unique</div>
-            <label for="UniqAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
-              <input type="checkbox" id="UniqAttr" class="d-none" [checked]="formItem.get('properties.unique').value"
-                (click)="toggleCheckUnique(formItem.get('properties.unique'))" formControlName="unique" *ngIf="canEdit">
-              <input type="checkbox" class="d-none" formControlName="unique" *ngIf="!canEdit">
-              <span class="checkmark"></span>
-            </label>
-          </div>
-        </div>
-        <div class="w-100 mb-4">
-          <div class="text-secondary">
+      <div class="schemaProperties-body" formGroupName="properties">
+
+        <div class="w-100 mt-4">
+          <div class="font-14 text-dark mb-2">
             <ng-container *ngIf="formItem.get('key').value !== '_self'">Type</ng-container>
             <ng-container *ngIf="formItem.get('key').value === '_self'">Collection of</ng-container>
           </div>
@@ -377,6 +338,59 @@
               [form]="formItem" [edit]="edit" [isLibrary]="isLibrary" [isDataFormat]="isDataFormat"
               [formatType]="formatType">
             </odp-field-type-selector>
+          </div>
+        </div>
+
+        <div class="w-100 justify-content-center" *ngIf="!(isDataFormat || checkStateModel())">
+          <div class="font-16 fw-500 mt-40">Properties</div>
+          <div class=" d-flex align-items-center w-100 py-3" [ngClass]="{'hover':canEdit}"
+            *ngIf="formItem.get('properties.required') && formItem.get('key').value !== '_self'">
+            <odp-checkbox [edit]="{ status: canEdit }"
+              (checkedChange)="toggleCheck(formItem.get('properties.required'))"
+              [checked]="formItem.get('properties.required').value"></odp-checkbox>
+            <span
+              class="ml-2 rounded-circle properties required d-flex justify-content-center align-items-center text-white fw-500 font-12">R</span>
+            <span class="ml-2 text-dark font-14">Required</span>
+            <!-- <div class="text-dark">Required</div> -->
+            <!-- <label for="reqAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
+              <input type="checkbox" id="reqAttr" [checked]="formItem.get('properties.required').value" class="d-none"
+                formControlName="required" *ngIf="canEdit" (click)="toggleCheck(formItem.get('properties.required'))">
+                <input type="checkbox" class="d-none" formControlName="required" *ngIf="!canEdit">
+              <span class="checkmark"></span>
+            </label> -->
+          </div>
+          <div class=" d-flex align-items-center pb-3" [ngClass]="{'hover':canEdit}"
+            *ngIf="formItem.get('properties.createOnly') && formItem.get('key').value !=='_self'">
+            <odp-checkbox [edit]="{ status: canEdit }"
+              (checkedChange)="toggleCheck(formItem.get('properties.createOnly'))"
+              [checked]="formItem.get('properties.createOnly').value"></odp-checkbox>
+            <span
+              class="ml-2 rounded-circle properties create-only d-flex justify-content-center align-items-center text-white fw-500 font-12">C</span>
+            <span class="ml-2 text-dark font-14">Create Only</span>
+            <!-- <div class="text-dark mr-2">Create Only</div> -->
+            <!-- <label for="createAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
+              <input type="checkbox" id="createAttr" class="d-none"
+                [checked]="formItem.get('properties.createOnly').value"
+                (click)="toggleCheck(formItem.get('properties.createOnly'))" formControlName="createOnly"
+                *ngIf="canEdit">
+              <input type="checkbox" class="d-none" formControlName="createOnly" *ngIf="!canEdit">
+              <span class="checkmark"></span>
+            </label> -->
+          </div>
+          <div class=" d-flex align-items-center pb-3" [ngClass]="{'hover':canEdit}"
+            *ngIf="formItem.get('properties.unique') && formItem.get('key').value !== '_self'">
+            <odp-checkbox [edit]="{ status: canEdit }" (checkedChange)="toggleCheck(formItem.get('properties.unique'))"
+              [checked]="formItem.get('properties.unique').value"></odp-checkbox>
+            <span
+              class="ml-2 rounded-circle properties unique d-flex justify-content-center align-items-center text-white fw-500 font-12">U</span>
+            <span class="ml-2 text-dark font-14">Unique</span>
+            <!-- <div class="text-dark">Unique</div>
+            <label for="UniqAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
+              <input type="checkbox" id="UniqAttr" class="d-none" [checked]="formItem.get('properties.unique').value"
+                (click)="toggleCheckUnique(formItem.get('properties.unique'))" formControlName="unique" *ngIf="canEdit">
+              <input type="checkbox" class="d-none" formControlName="unique" *ngIf="!canEdit">
+              <span class="checkmark"></span>
+            </label> -->
           </div>
         </div>
         <div class="text-secondary bg-light mb-3 p-2" *ngIf="formItem.get('key').value !== '_self' && !isLibrary &&  
@@ -414,7 +428,7 @@
           [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
         </odp-date-property>
         <div *ngIf="formItem.get('type').value=='Boolean' && !isDataFormat && !isLibrary ">
-          <div class="w-100 text-secondary">Default Value
+          <div class="w-100 text-secondary mb-2">Default Value
           </div>
           <div class="w-100 position-relative">
             <ng-container *ngIf="canEdit">
@@ -444,7 +458,7 @@
         </div>
 
         <div class="mb-4" *ngIf="formItem.get('type').value=='Date' && !isDataFormat && !isLibrary ">
-          <div class="w-100 text-secondary">Default Value</div>
+          <div class="w-100 text-secondary mb-2">Default Value</div>
           <div class="w-100 position-relative">
             <ng-container *ngIf="canEdit">
               <button type="button" class="btn btn-link" *ngIf="form.get('properties.default')?.value"
@@ -474,7 +488,7 @@
 
 
           <div *ngIf="!idField" class=" w-100 mt-4">
-            <div class=" text-secondary">Custom Label</div>
+            <div class="font-14 text-dark mb-2">Appcenter Custom Label</div>
             <div>
               <input *ngIf="edit.status" class="form-control" type="text" formControlName="label" id="label">
               <span *ngIf="!edit.status">{{formItem.get('properties.label').value}}</span>
@@ -487,7 +501,7 @@
             </span>
           </div>
           <div *ngIf="!idField" class="w-100 mt-4">
-            <div class=" text-secondary">Custom Error</div>
+            <div class="font-14 text-dark mb-2">Appcenter Custom Error</div>
             <div>
               <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"
                 [attr.disabled]="(checkStateModel() || (formItem.get('type').value =='Boolean')) ? true : null">
@@ -495,7 +509,7 @@
             </div>
           </div>
           <div *ngIf="showSecureText(formItem)" class="w-100 mt-4">
-            <div class=" text-secondary">Secure</div>
+            <div class="font-14 text-dark mb-2">Secure</div>
             <div class=" position-relative">
               <ng-container *ngIf="canEdit">
                 <label *ngIf="canEdit" class="switch accent">
@@ -526,7 +540,7 @@
         </ng-container>
 
         <div *ngIf="showSecureFile(formItem)" class="w-100 mt-4">
-          <div class=" text-secondary">Secure</div>
+          <div class="font-14 text-dark mb-2">Secure</div>
 
           <div class=" position-relative">
             <ng-container *ngIf="canEdit">
@@ -558,7 +572,7 @@
         <ng-container *ngIf="showCommonFields">
           <div class="w-100 mt-4" [ngClass]="{'mb-4': isLastFormItem && !descriptionError}"
             *ngIf="formList.length == 1 || formIndex > 0">
-            <div class=" text-secondary">Description</div>
+            <div class="font-14 text-dark mb-2">Description</div>
             <div>
               <textarea *ngIf="canEdit" class="form-control" formControlName="_description"
                 placeholder="What is this attribute for?" [attr.disabled]="checkStateModel() ? true : null"></textarea>
