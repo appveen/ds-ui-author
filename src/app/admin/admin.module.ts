@@ -5,7 +5,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminComponent } from 'src/app/admin/admin.component';
 import { AdminRoutingModule } from 'src/app/admin/admin.routing';
 import { FilterPipeModule } from 'src/app/utils/pipes/filter.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { AppCenterPreviewModule } from 'src/app/utils/app-center-preview/app-center-preview.module';
 import { ColorPickerModule } from 'src/app/utils/color-picker/color-picker.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
@@ -50,7 +49,6 @@ import { DateFormatModule } from '../utils/date-format/date-format.module';
     AdminRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    IconsModule,
     AppCenterPreviewModule,
     ColorPickerModule,
     ClickOutsideModule,
@@ -81,7 +79,6 @@ import { DateFormatModule } from '../utils/date-format/date-format.module';
     AgGridSharedFloatingFilterModule,
     DateFormatModule,
     ClickOutsideModule,
-    IconsModule,
   ],
   exports: [AppListComponent],
   declarations: [

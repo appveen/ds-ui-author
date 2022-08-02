@@ -1,44 +1,19 @@
 <div class="d-flex flex-column w-100 h-100">
-  <div
-    class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white border-bottom border-dark"
-  >
-    <div
-      class="left d-flex align-items-center"
-      [ngClass]="{ 'add-blur': addBlur }"
-    >
+  <div class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white border-bottom border-dark">
+    <div class="left d-flex align-items-center" [ngClass]="{ 'add-blur': addBlur }">
       <div class="logo"></div>
     </div>
     <div class="w-50 d-flex align-items-center justify-content-end">
-      <div
-        class="current-app d-flex align-items-center mr-3"
-        *ngIf="selectedApp && selectedApp._id"
-      >
-        <div
-          class="current-app-thumbnail d-flex align-items-center justify-content-center border border-border mr-2"
-          ngbTooltip="Current App"
-          placement="bottom"
-          [ngClass]="{
+      <div class="current-app d-flex align-items-center mr-3" *ngIf="selectedApp && selectedApp._id">
+        <div class="current-app-thumbnail d-flex align-items-center justify-content-center border border-border mr-2"
+          ngbTooltip="Current App" placement="bottom" [ngClass]="{
             'img-app': selectedApp.logo && selectedApp.logo.thumbnail
-          }"
-        >
-          <img
-            *ngIf="selectedApp.logo && selectedApp.logo.thumbnail"
-            [src]="selectedApp.logo.thumbnail"
-            alt="Logo"
-          />
-          <odp-app-icon
-            class="pt-1"
-            *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail"
-            color="aaa"
-            size="24"
-          >
-          </odp-app-icon>
+          }">
+          <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail" alt="Logo" />
+          <!-- <odp-app-icon class="pt-1" *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail" color="aaa" size="24">
+          </odp-app-icon> -->
         </div>
-        <div
-          class="current-app-name text-dark"
-          ngbTooltip="Current App"
-          placement="bottom"
-        >
+        <div class="current-app-name text-dark" ngbTooltip="Current App" placement="bottom">
           {{ selectedApp._id }}
         </div>
       </div>
@@ -48,86 +23,51 @@
           <span class="ml-2">Edge Agent</span>
         </button> -->
       </div>
-      <div
-        *ngIf="isSuperAdmin"
-        (click)="loadAdminPage()"
+      <div *ngIf="isSuperAdmin" (click)="loadAdminPage()"
         class="admin-settings bg-light rounded d-flex flex-column justify-content-center align-items-center mr-3 pt-1 hover"
-        ngbTooltip="Admin Panel"
-        placement="bottom"
-      >
-        <odp-admin-console-icon size="28"></odp-admin-console-icon>
+        ngbTooltip="Admin Panel" placement="bottom">
+        <span class="dsi dsi-admin"></span>
+        <!-- <odp-admin-console-icon size="28"></odp-admin-console-icon> -->
       </div>
-      <div
-        [@userProfileIcon]="showProfileOptions"
+      <div [@userProfileIcon]="showProfileOptions"
         class="profile-icon d-flex align-items-center justify-content-center rounded-circle bg-light border border-border hover"
-        (click)="showProfileOptions = !showProfileOptions"
-        ngbTooltip="User Profile"
-        placement="bottom"
-      >
+        (click)="showProfileOptions = !showProfileOptions" ngbTooltip="User Profile" placement="bottom">
         <span class="far fa-user fa-lg text-secondary"></span>
       </div>
-      <div
-        [@userProfile]
-        class="profile position-absolute bg-white border border-border"
-        *ngIf="showProfileOptions"
-        odpClickOutside
-        [ignore]="['.profile-icon', '.fa-user']"
-        (outside)="showProfileOptions = false"
-      >
-        <div
-          class="profile-container position-relative d-flex align-items-center h-100 w-100"
-        >
+      <div [@userProfile] class="profile position-absolute bg-white border border-border" *ngIf="showProfileOptions"
+        odpClickOutside [ignore]="['.profile-icon', '.fa-user']" (outside)="showProfileOptions = false">
+        <div class="profile-container position-relative d-flex align-items-center h-100 w-100">
           <div
-            class="user-icon d-flex align-items-center justify-content-center position-absolute rounded-circle bg-light border border-border"
-          >
+            class="user-icon d-flex align-items-center justify-content-center position-absolute rounded-circle bg-light border border-border">
             <span class="far fa-user fa-lg text-secondary"></span>
           </div>
           <div
-            class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-border mx-4"
-          >
+            class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-border mx-4">
             <span class="far fa-user fa-2x text-secondary"></span>
           </div>
           <div class="profile-data d-flex flex-column">
             <h4 class="profile-data-name font-weight-bold">{{ name }}</h4>
             <div class="profile-data-more d-flex align-items-center">
-              <div
-                class="text-secondary profile-data-more-item pr-3 username-holder text-truncate"
-              >
+              <div class="text-secondary profile-data-more-item pr-3 username-holder text-truncate">
                 {{ username }}
               </div>
-              <div
-                class="profile-data-more-item px-1"
-                *ngIf="authType && authType === 'local'"
-              >
-                <button
-                  type="button"
-                  class="btn btn-link btn-sm"
-                  (click)="toggleChangePassword = true"
-                >
+              <div class="profile-data-more-item px-1" *ngIf="authType && authType === 'local'">
+                <button type="button" class="btn btn-link btn-sm" (click)="toggleChangePassword = true">
                   Change Password
                 </button>
               </div>
               <div class="profile-data-more-item px-1">
-                <button
-                  type="button"
-                  class="btn btn-link btn-sm"
-                  (click)="logout()"
-                  id="logout"
-                >
+                <button type="button" class="btn btn-link btn-sm" (click)="logout()" id="logout">
                   Logout
                 </button>
               </div>
             </div>
           </div>
-          <small class="position-absolute text-border app-version"
-            >v{{ version }}</small
-          >
-          <small class="last-login text-muted"
-            >Last Login:
+          <small class="position-absolute text-border app-version">v{{ version }}</small>
+          <small class="last-login text-muted">Last Login:
             {{
-              lastLogin | dateFormat: 'DD-MMM-YYYY, hh:mm:ss A, z':'Etc/Zulu'
-            }}</small
-          >
+            lastLogin | dateFormat: 'DD-MMM-YYYY, hh:mm:ss A, z':'Etc/Zulu'
+            }}</small>
         </div>
       </div>
       <!-- <div class="menu hover rounded-circle bg-light border border-border d-flex align-items-center justify-content-center"
@@ -136,29 +76,15 @@
       </div> -->
     </div>
   </div>
-  <div
-    class="sub-header d-flex align-items-center justify-content-center bg-dark"
-  >
-    <div
-      #adminActive="routerLinkActive"
-      class="d-flex align-items-center px-3 item hover"
-      routerLinkActive="active"
-      routerLink="apps"
-    >
-      <odp-app-icon
-        class="pt-1"
-        [color]="adminActive.isActive ? 'FBA200' : 'FFF'"
-        size="24"
-      ></odp-app-icon>
+  <div class="sub-header d-flex align-items-center justify-content-center bg-dark">
+    <div #adminActive="routerLinkActive" class="d-flex align-items-center px-3 item hover" routerLinkActive="active"
+      routerLink="apps">
+      <span class="dsi dsi-app-panel mr-2"></span>
       <span class="text">Apps</span>
     </div>
-    <div
-      class="d-flex align-items-center px-3 item hover"
-      routerLinkActive="active"
-      routerLink="users"
-      *ngIf="isSuperAdmin"
-    >
-      <span class="fa fa-users mr-2"></span>
+    <div class="d-flex align-items-center px-3 item hover" routerLinkActive="active" routerLink="users"
+      *ngIf="isSuperAdmin">
+      <span class="dsi dsi-user mr-2"></span>
       <span class="text">Users</span>
     </div>
     <!-- <div #agentActive="routerLinkActive" class="d-flex align-items-center px-3 item hover" routerLinkActive="active"
@@ -173,27 +99,16 @@
     </div>
   </div>
 </div>
-<odp-app-switcher
-  *ngIf="showAppOptions"
-  [activeApp]="selectedApp"
-  (activeAppChange)="onAppChange($event)"
-  (cancel)="showAppOptions = false"
-></odp-app-switcher>
-<odp-change-password
-  *ngIf="toggleChangePassword"
-  [(toggleModal)]="toggleChangePassword"
-></odp-change-password>
+<odp-app-switcher *ngIf="showAppOptions" [activeApp]="selectedApp" (activeAppChange)="onAppChange($event)"
+  (cancel)="showAppOptions = false"></odp-app-switcher>
+<odp-change-password *ngIf="toggleChangePassword" [(toggleModal)]="toggleChangePassword"></odp-change-password>
 
 <ng-template #downloadAgentModalTemplate>
   <div class="modal-body p-4 d-flex flex-column align-items-center">
     <p class="text-dark font-weight-bold text-center mt-3">
       Choose Architecture
     </p>
-    <select
-      id="arch"
-      class="custom-select agent-arch-select"
-      [(ngModel)]="agentConfig.arch"
-    >
+    <select id="arch" class="custom-select agent-arch-select" [(ngModel)]="agentConfig.arch">
       <option value="amd64">64-bit</option>
       <option value="386">32-bit</option>
     </select>
@@ -205,23 +120,19 @@
         <div class="d-flex align-items-center justify-content-center">
           <div
             class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-            (click)="downloadAgentModalTemplateRef.close('windows')"
-          >
+            (click)="downloadAgentModalTemplateRef.close('windows')">
             <span class="fab fa-windows fa-2x"></span>
             <span class="text mt-3">Windows</span>
           </div>
-          <div
-            *ngIf="agentConfig.arch != '386'"
+          <div *ngIf="agentConfig.arch != '386'"
             class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-            (click)="downloadAgentModalTemplateRef.close('darwin')"
-          >
+            (click)="downloadAgentModalTemplateRef.close('darwin')">
             <span class="fab fa-apple fa-2x"></span>
             <span class="text mt-3">Mac OS</span>
           </div>
           <div
             class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-            (click)="downloadAgentModalTemplateRef.close('linux')"
-          >
+            (click)="downloadAgentModalTemplateRef.close('linux')">
             <span class="fab fa-linux fa-2x"></span>
             <span class="text mt-3">Linux</span>
           </div>
@@ -235,8 +146,7 @@
       <div class="d-flex align-items-center justify-content-center">
         <div
           class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-          (click)="downloadAgentModalTemplateRef.close('k8s')"
-        >
+          (click)="downloadAgentModalTemplateRef.close('k8s')">
           <span class="k8s-icon"></span>
           <span class="text mt-3">Kubernetes</span>
         </div>
@@ -245,42 +155,24 @@
     <div class="d-flex align-items-center w-100 px-4 font-13">
       <span class="text-secondary ml-2">Password</span>
       <div class="d-flex align-items-center justify-content-center mx-3">
-        <span
-          *ngIf="!agentConfig.showPassword"
-          class="dsi dsi-view mr-2"
-          (click)="agentConfig.showPassword = true; getAgentPassword()"
-        ></span>
-        <span
-          *ngIf="agentConfig.showPassword"
-          class="dsi dsi-hide mr-2"
-          (click)="agentConfig.showPassword = false"
-        ></span>
+        <span *ngIf="!agentConfig.showPassword" class="dsi dsi-view mr-2"
+          (click)="agentConfig.showPassword = true; getAgentPassword()"></span>
+        <span *ngIf="agentConfig.showPassword" class="dsi dsi-hide mr-2"
+          (click)="agentConfig.showPassword = false"></span>
         <span *ngIf="!agentConfig.showPassword" class="text-dark">******</span>
-        <span
-          *ngIf="agentConfig.showPassword"
-          class="text-dark d-flex align-items-center"
-        >
-          <span
-            *ngIf="!agentConfig.password"
-            class="fa fa-spinner fa-pulse"
-          ></span>
+        <span *ngIf="agentConfig.showPassword" class="text-dark d-flex align-items-center">
+          <span *ngIf="!agentConfig.password" class="fa fa-spinner fa-pulse"></span>
           <span *ngIf="agentConfig.password">{{ agentConfig.password }}</span>
           <span class="fa fa-copy ml-2 hover" (click)="copyPassword()"></span>
         </span>
       </div>
       <div class="d-flex align-items-center justify-content-center">
-        <span *ngIf="agentConfig.copied" class="text-info"
-          >Password Copied!</span
-        >&nbsp;
+        <span *ngIf="agentConfig.copied" class="text-info">Password Copied!</span>&nbsp;
       </div>
     </div>
     <div class="d-flex align-self-end">
-      <button
-        type="button"
-        class="btn btn-link"
-        id="deletePartnerModalNo"
-        (click)="downloadAgentModalTemplateRef.close(false)"
-      >
+      <button type="button" class="btn btn-link" id="deletePartnerModalNo"
+        (click)="downloadAgentModalTemplateRef.close(false)">
         Close
       </button>
     </div>

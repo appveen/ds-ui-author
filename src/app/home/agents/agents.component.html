@@ -110,12 +110,7 @@
 <ng-template #newAgentModalTemplate>
     <div class="modal-body p-4 d-flex flex-column align-items-center">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper create rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-agent-icon [size]="18" color="1CAD49" class="mt-1"></odp-agent-icon>
-                </span>
-                <span class="font-weight-bold">{{agentData.isEdit?'Edit':'Create new'}} App Agent</span>
-            </div>
+            <span class="font-20 fw-500">{{agentData.isEdit?'Edit':'Create new'}} App Agent</span>
             <button type="button" class="btn btn-link text-dark" (click)="newAgentModalTemplateRef.close(false)">
                 <span class="fa fa-times"></span>
             </button>

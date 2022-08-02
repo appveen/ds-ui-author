@@ -1,10 +1,12 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
   <div class="align-self-center text-center">
-    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="spinner-border text-dark" role="status">
+      <span class="sr-only">Processing...</span>
+    </div>
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="d-flex flex-column w-100 h-100 app-list">
+<div class="d-flex flex-column w-100 h-100 app-list container">
   <!-- <div class="d-flex flex-column align-items-center justify-content-center">
     <odp-search-box (enteredText)="searchTerm = $event" (reset)="searchTerm = '';"></odp-search-box>
   </div> -->
@@ -14,9 +16,9 @@
     </div>
     <odp-search-box (enteredText)="searchTerm = $event" (reset)="searchTerm = ''" [selectOnEnter]="true" open="true"
       (enteredPressed)="enterToSelect($event)"></odp-search-box>
-    <button class="add-new btn-min-width btn btn-primary" (click)="newApp()" *ngIf="isSuperadmin">
+    <button class="add-new btn-min-width btn btn-primary d-flex align-items-center justify-content-center" (click)="newApp()" *ngIf="isSuperadmin">
       <span class="dsi dsi-plus mr-2"></span>
-      <span class="text">Add App</span>
+      <span class="text">New</span>
     </button>
   </div>
   <div class="apps-container d-flex flex-wrap">
@@ -33,7 +35,7 @@
       </odp-loading-placeholder>
     </ng-container>
     <ng-container *ngFor="let app of appList | filterApp: searchTerm; let appIndex = index">
-      <div class="app-card d-flex flex-column mt-3 mr-3 rounded position-relative"
+      <div class="app-card d-flex flex-column mt-4 mx-3 rounded position-relative"
         (click)="appOptions[appIndex] = true">
         <!-- <div
           class="d-flex justify-content-end mt-2 mr-2 delete-option"
@@ -103,26 +105,23 @@
   </div>
 </div>
 
-<ng-template #newAppModal>
-  <div class="modal-body p-4 d-flex flex-column align-items-center">
-    <div class="d-flex flex-column w-100">
-      <div class="d-flex align-items-center justify-content-between mb-3">
-        <div class="d-flex align-items-center">
-          <span class="icon-circle d-flex align-items-center justify-content-center mr-2">
-            <odp-partner-icon size="16" color="1CAD49"></odp-partner-icon>
-          </span>
-          <span class="font-weight-bold">Create New App</span>
-        </div>
-        <span class="fa fa-times text-muted hover" (click)="!createAppLoader && newAppModalRef.close(false)"></span>
-      </div>
-      <div class="d-flex flex-column w-100" [formGroup]="form">
-        <label for="name" class="font-13 text-secondary">
+<div *ngIf="showNewAppWindow" class="new-app-window overlay position-fixed"></div>
+<div [ngClass]="{'show':showNewAppWindow}"
+  class="new-app-window position-fixed p-4 d-flex flex-column bg-white border-left">
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center justify-content-between mb-5">
+      <span class="font-20 fw-600">New App</span>
+      <span class="fa fa-times text-muted hover" (click)="!createAppLoader && showNewAppWindow=false"></span>
+    </div>
+    <div class="d-flex flex-column w-100" [formGroup]="form">
+      <div *ngIf="showNewAppWindow" class="form-group">
+        <label for="name" class="">
           <span class="text">Name</span>
-          <sup class="text-danger font-normal ml-2" ngbTooltip="Mandatory field">&bull;</sup>
+          <sup class="text-danger fa fa-asterik" ngbTooltip="Mandatory field"></sup>
         </label>
         <div class="name-wrapper position-relative">
           <input type="text" class="form-control" id="name" formControlName="_id" placeholder="Give a name" odpAutoFocus
-            (keyup.enter)="newAppDesc.focus()" [ngClass]="{
+            [ngClass]="{
               'is-invalid':
                 form.get('_id').invalid &&
                 (form.get('_id').dirty || form.get('_id').touched)
@@ -132,41 +131,41 @@
               (form.get('_id').dirty || form.get('_id').touched)
             ">
             <span *ngIf="form.get('_id').hasError('required')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute dsi dsi-danger-circle" container="body"
               ngbTooltip="Name is required"></span>
             <span *ngIf="form.get('_id').hasError('pattern')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute dsi dsi-danger-circle" container="body"
               ngbTooltip="Name can be only be alphanumeric and can contain dash(-)"></span>
             <span *ngIf="form.get('_id').hasError('maxlength')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute dsi dsi-danger-circle" container="body"
               ngbTooltip="Name should be within 40 characters"></span>
           </ng-container>
         </div>
-        <label for="description" class="font-13 text-secondary mt-3">Description</label>
-        <textarea #newAppDesc class="form-control" id="description" rows="5" placeholder="A brief description. Optional"
-          formControlName="description" (keydown.enter)="$event.preventDefault()"
-          (keyup.enter)="createNewAppBtn.click()"></textarea>
-        <label for="timezone" class="font-13 text-secondary mt-3">Timezone</label>
-        <odp-timezone-picker [edit]="{ status: true }" formControlName="defaultTimezone"></odp-timezone-picker>
-        <!-- <select id="timezone" class="form-control" formControlName="defaultTimezone">
-            <option *ngFor="let tz of timezones" [value]="tz">{{tz}}</option>
-          </select> -->
-        <!-- <textarea #newAppDesc class="form-control" id="description" rows="5" placeholder="A brief description. Optional"
-          formControlName="description" (keydown.enter)="$event.preventDefault()"
-          (keyup.enter)="createNewAppBtn.click();"></textarea> -->
       </div>
-      <div class="text-danger mt-3">{{ errorMessage }} &nbsp;</div>
+      <div class="form-group">
+        <label for="description" class="">Description</label>
+        <textarea #newAppDesc class="form-control" id="description" rows="5" placeholder="A brief description. Optional"
+          formControlName="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="timezone" class="">Timezone</label>
+        <odp-timezone-picker [edit]="{ status: true }" formControlName="defaultTimezone"></odp-timezone-picker>
+      </div>
+      <!-- <select id="timezone" class="form-control" formControlName="defaultTimezone">
+          <option *ngFor="let tz of timezones" [value]="tz">{{tz}}</option>
+        </select> -->
+      <!-- <textarea #newAppDesc class="form-control" id="description" rows="5" placeholder="A brief description. Optional"
+        formControlName="description"></textarea> -->
     </div>
-    <div class="d-flex align-self-end justify-content-end w-100 mt-3">
-      <button #createNewAppBtn type="button" class="btn btn-min-width btn-create"
-        [disabled]="form.invalid || createAppLoader" (click)="createApp()">
-        <span class="fa fa-spinner fa-pulse mr-1" *ngIf="createAppLoader"></span>
-        Create App
-      </button>
-    </div>
+    <div class="text-danger mt-3">{{ errorMessage }} &nbsp;</div>
   </div>
-</ng-template>
+  <div class="d-flex flex-column mt-auto">
+    <button #createNewAppBtn type="button" class="btn btn-primary w-100" [disabled]="form.invalid || createAppLoader"
+      (click)="createApp()">
+      <span class="fa fa-spinner fa-pulse mr-1" *ngIf="createAppLoader"></span>
+      Create
+    </button>
+  </div>
+</div>
 
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-  <odp-app-icon [size]="18" color="DD5151" class="mt-1"></odp-app-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

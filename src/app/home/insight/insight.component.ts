@@ -21,6 +21,7 @@ export class InsightComponent implements OnInit {
     filterModel: any;
     private _dateFrom: Date;
     private _dateTo: Date;
+    showLazyLoader: boolean;
 
     public get dateFrom(): Date {
         const self = this;

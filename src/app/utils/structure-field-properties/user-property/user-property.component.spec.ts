@@ -6,7 +6,6 @@ import { AppService } from '../../services/app.service';
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FieldTypeModule } from '../../field-type/field-type.module';
-import { IconsModule } from '../../icons/icons.module';
 import { FilterDefinitionModule } from '../../pipes/filter-definition/filter-definition.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -33,7 +32,6 @@ describe('UserPropertyComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         FieldTypeModule,
-        IconsModule,
         FilterDefinitionModule,
         HttpClientTestingModule,
         RouterTestingModule,

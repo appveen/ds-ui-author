@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppManageComponent } from './app-manage.component';
 import { RouterModule, Routes } from '@angular/router';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'src/app/utils/color-picker/color-picker.module';
@@ -24,7 +23,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    IconsModule,
     NgbModule,
     FormsModule,
     ColorPickerModule,

@@ -51,6 +51,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
   activeTab: number;
   toggleDropdown: any;
   blockFocus: any;
+  permissionOption: any;
 
   selectedMode: string;
 
@@ -103,6 +104,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
         self.role.fields = [];
       }
     }
+    this.permissionOption = [{ label: 'Manage', value: 'manage' }, { label: 'View', value: 'view' }]
     self.initRoles();
   }
 
@@ -679,6 +681,11 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     // self.blockInvalidRole[key] = data;
     // self.blockInvalidRoleChange.emit(self.blockInvalidRole);
   }
+
+  changePermission(event) {
+    console.log(event);
+    this.selectRoleType = event;
+  }
 }
 
 export interface RoleModel {
@@ -701,4 +708,3 @@ export interface Rule {
   conditions?: any;
   filter?: any;
   code?: any;
-}

@@ -1,6 +1,8 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+          </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
@@ -30,6 +32,4 @@
 
 
 
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-    <odp-user-icon [size]="18" color="202A36" class="mt-1"></odp-user-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

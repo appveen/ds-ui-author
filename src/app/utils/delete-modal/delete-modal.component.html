@@ -1,22 +1,37 @@
 <ng-template #deleteModalTemplate>
   <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center ignore-outside">
-    <div class="d-flex align-items-center justify-content-between mb-3 w-100">
-      <div class="d-flex align-items-center">
-        <!-- <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
-          <ng-content></ng-content>
-        </span> -->
-        <span class="font-weight-bold mb-1">{{data?.title}}</span>
+    <div class="d-flex align-items-center justify-content-between mb-2 w-100 flex-column">
+      <span class="fa fa-times text-muted hover ignore-click ml-auto"
+        (click)="deleteModalTemplateRef.close(false)"></span>
+
+      <div class="d-flex align-items-center mr-auto">
+        <span class="fw-600 font-20 mb-1">{{data?.title}}</span>
       </div>
-      <span class="fa fa-times text-muted hover ignore-click" (click)="deleteModalTemplateRef.close(false)"></span>
     </div>
     <div class="info d-flex flex-column align-self-center justify-content-center w-100">
-      <div class="d-flex align-items-center info-msg">
-        <span class="text-secondary text-center" [innerHTML]="data?.message"></span>
+      <div class="d-flex info-msg mb-3">
+        <span class="text-secondary" [innerHTML]="data?.message"></span>
       </div>
-      <div class="d-flex flex-column align-items-end w-100 ">
-        <button type="button" class="btn btn-delete btn-min-width ignore-click" id="deleteModalYes" (click)="$event.stopPropagation();deleteModalTemplateRef.close(true)">
+      <div class="d-flex align-items-end w-100 justify-content-end" *ngIf="!data.usePrimaryButton">
+        <button type="button" class="btn btn-outline-secondary btn-min-width ignore-click mr-2" id="deleteModalNo"
+          (click)="deleteModalTemplateRef.close(false)">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-delete btn-min-width ignore-click" id="deleteModalYes"
+          (click)="$event.stopPropagation();deleteModalTemplateRef.close(true)">
           <span *ngIf="!data?.btnText" class="text">Delete</span>
           <span *ngIf="data?.btnText" class="text">{{data.btnText}}</span>
+        </button>
+      </div>
+      <div class="d-flex align-items-end w-100 justify-content-end" *ngIf="data.usePrimaryButton">
+        <button type="button" class="btn btn-outline-secondary btn-min-width ignore-click mr-2" id="deleteModalYes"
+          (click)="deleteModalTemplateRef.close(false)">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary btn-min-width ignore-click" id="deleteModalNo"
+          (click)="$event.stopPropagation();deleteModalTemplateRef.close(true)">
+          <span *ngIf="data?.btnText" class="text">{{data.btnText}}</span>
+          <span *ngIf="!data?.btnText" class="text">Confirm</span>
         </button>
       </div>
     </div>

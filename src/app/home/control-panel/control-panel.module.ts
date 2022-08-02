@@ -11,7 +11,6 @@ import { UserManageComponent } from './user/user-manage/user-manage.component';
 import { SchemaUtilsModule } from '../schema-utils/schema-utils.module';
 import { SelectedAccessComponent } from './selected-access/selectedAccess.component';
 import { TimeoutTriggerModule } from 'src/app/utils/directives/timeout-trigger/timeout-trigger.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { UserGroupManageComponent } from './user-group/user-group-manage/user-group-manage.component';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { ClickOutsideModule } from '../../utils/directives/click-outside/click-outside.module';
@@ -87,7 +86,6 @@ import { UserGroupMembersSearchComponent } from './user-group/user-group-manage/
     SchemaUtilsModule,
     ClickOutsideModule,
     TimeoutTriggerModule,
-    IconsModule,
     SearchBoxModule,
     FilterUserModule,
     FilterTeamModule,

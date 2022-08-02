@@ -7,7 +7,6 @@ import { AgGridModule } from 'ag-grid-angular';
 
 import { FaasListingComponent } from './faas-listing/faas-listing.component';
 import { FaasManageComponent } from './faas-manage/faas-manage.component';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
@@ -35,7 +34,6 @@ const routes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     NgbModule,
-    IconsModule,
     ClickOutsideModule,
     BreadcrumbModule,
     SearchBoxModule,

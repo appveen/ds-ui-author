@@ -1,6 +1,8 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="apiCallsPending">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+          </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
@@ -9,7 +11,7 @@
         <odp-basic-info hideLogo="true" [(name)]="faasData.name" [(description)]="faasData.description" [edit]="edit">
             <div class="d-flex justify-content-end align-items-center">
                 <button (click)="cancel()" type="button"
-                    class="edit-button btn btn-min-width btn-outline-light border text-secondary mr-3"
+                    class="edit-button btn btn-min-width btn-light border mr-3"
                     id="cancelNanoServiceBtn">
                     <span class="text">Cancel</span>
                 </button>
@@ -45,13 +47,13 @@
                 <span class="text-uppercase font-weight-bold text-accent">Function Code</span>
             </div>
             <div class="editor-theme-selection d-flex align-items-center">
-                <button type="button" class="btn btn-outline-light border text-secondary mr-3 d-flex align-items-center"
+                <button type="button" class="btn btn-light border mr-3 d-flex align-items-center"
                     (click)="showConsole=!showConsole;toggleConsole()">
                     <span class="dsi dsi-console mr-2"></span>
                     <span class="text">Console</span>
                 </button>
-                <!-- <span class="label text-secondary font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span> -->
-                <select class="custom-select text-secondary mr-3" name="fontSize" id="fontSize"
+                <!-- <span class="label font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span> -->
+                <select class="custom-select mr-3" name="fontSize" id="fontSize"
                     [(ngModel)]="selectedFontSize">
                     <option value="13">13</option>
                     <option value="14">14</option>
@@ -59,8 +61,8 @@
                     <option value="18">18</option>
                     <option value="20">20</option>
                 </select>
-                <!-- <span class="label text-secondary font-weight-bold mr-2">Theme&nbsp;:</span> -->
-                <select class="custom-select text-secondary" name="theme" id="theme" [(ngModel)]="selectedEditorTheme">
+                <!-- <span class="label font-weight-bold mr-2">Theme&nbsp;:</span> -->
+                <select class="custom-select" name="theme" id="theme" [(ngModel)]="selectedEditorTheme">
                     <option value="vs-dark">Dark</option>
                     <option value="vs-light">Light</option>
                 </select>

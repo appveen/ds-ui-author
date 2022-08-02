@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormatSelectorComponent } from './format-selector.component';
-import { IconsModule } from '../icons/icons.module';
 import { TableCheckboxModule } from '../table-checkbox/table-checkbox.module';
 import { SearchBoxModule } from '../search-box/search-box.module';
 import { SchemaUtilsModule } from 'src/app/home/schema-utils/schema-utils.module';
@@ -20,7 +19,6 @@ import { StructureFieldPropertiesModule } from '../structure-field-properties/st
         FormsModule,
         ReactiveFormsModule,
         NgbModule,
-        IconsModule,
         TableCheckboxModule,
         SearchBoxModule,
         SchemaUtilsModule,

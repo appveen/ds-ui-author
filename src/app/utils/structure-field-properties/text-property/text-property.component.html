@@ -3,7 +3,7 @@
   <div class="d-flex w-100  flex-column mb-4" *ngIf="form.get('properties.default') && !form.get('properties.longText')?.value &&
     !form.get('properties.richText')?.value && !isLibrary && !isDataFormat">
     <div>
-      <div class="font-14 text-dark mb-2">Default Value
+      <div class=" text-secondary">Default Value
       </div>
       <div class=" position-relative">
         <ng-container *ngIf="canEdit">
@@ -86,7 +86,7 @@
   <div class="d-flex flex-column w-100 mt-4" *ngIf="form.get('properties.pattern') && (form.get('properties._detailedType').value ==='' ||
           form.get('properties._detailedType').value === 'password')">
     <div class="position-relative ">
-      <div class="font-14 text-dark mb-2">Pattern</div>
+      <div class=" text-secondary">Pattern</div>
       <div>
         <input *ngIf="canEdit" class="form-control" type="text" formControlName="pattern" id="_pattern"
           placeholder="Regular Expression"
@@ -285,15 +285,8 @@
 
 <ng-template #deleteModalTemplate>
   <div class="modal-body p-4">
-    <div class="d-flex align-items-center">
-      <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
-        <odp-service-icon *ngIf="!isDataFormat && !isLibrary" [size]="18" color="DD5151" class="mt-1">
-        </odp-service-icon>
-        <odp-data-format-icon *ngIf="isDataFormat" [size]="18" color="DD5151" class="mt-1">
-        </odp-data-format-icon>
-        <odp-library-icon *ngIf="isLibrary" [size]="18" color="DD5151" class="mt-1"></odp-library-icon>
-      </span>
-      <span class="font-weight-bold mb-1">{{deleteModal.title}}</span>
+    <div class="d-flex align-items-center justify-content-between">
+      <span class="font-20 fw-500">{{deleteModal.title}}</span>
       <span class="fa fa-times text-secondary hover ml-auto" (click)="deleteModalTemplateRef.close(false)"></span>
     </div>
     <p class="text-center my-5" [ngClass]="{'text-truncate': deleteModal.message.length > 65}">

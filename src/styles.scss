@@ -188,31 +188,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   height: 64px;
 }
 
-.icon-wrapper {
-  min-width: 32px;
-  max-width: 32px;
-  min-height: 32px;
-  max-height: 32px;
-  border-radius: 50%;
-
-  &.create {
-    background: rgba($create, 0.2);
-  }
-
-  &.delete {
-    background: rgba($delete, 0.2);
-  }
-
-  &.modify {
-    background: rgba($dark, 0.2);
-  }
-
-  &.modify-red {
-    background: rgba(248, 220, 220, 1);
-    color: $red;
-  }
-}
-
 .popup {
   &-overlay {
     width: 100vw;
@@ -420,6 +395,14 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   padding: 32px !important;
 }
 
+.nav-inactive {
+  color: #7A7A7A;
+}
+
+.nav-active {
+  color: #181818;
+}
+
 // // Custom scrollbar
 // ::-webkit-scrollbar {
 //   width: 10px;
@@ -562,15 +545,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
       background: darken($accent, 10);
     }
   }
-
-  &.blocked {
-    border-color: $delete;
-    background: $delete;
-
-    &:hover {
-      background: darken($delete, 10);
-    }
-  }
 }
 
 .rounded-dropdown {
@@ -605,10 +579,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
       &.view {
         color: $success;
-      }
-
-      &.blocked {
-        color: $delete;
       }
     }
 
@@ -951,8 +921,4 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
 .icon-primary {
   color: $orange
-}
-
-.center-h {
-  margin: auto 0;
 }

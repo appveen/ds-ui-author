@@ -6,7 +6,6 @@
     <div *ngIf="!node.sourceFormat.type" class="text-center">
         <odp-format-selector *ngIf="edit.status" [restrictToFormat]="restrictToFormat" [format]="node.sourceFormat"
             (formatChange)="setDataStructure($event)" class="align-self-center ignore-outside">
-            <odp-partner-icon size="18" color="1CAD49" class="mt-1"></odp-partner-icon>
             <div class="btn-label text-accent text-left">Select Data Structure</div>
         </odp-format-selector>
     </div>

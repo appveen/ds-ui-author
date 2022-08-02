@@ -171,16 +171,8 @@
 
 <ng-template #deleteModalTemplate>
   <div class="modal-body p-4">
-    <div class="d-flex align-items-center">
-      <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
-        <odp-service-icon *ngIf="!isDataFormat && !isLibrary" [size]="18" color="DD5151" class="mt-1">
-        </odp-service-icon>
-
-        <odp-data-format-icon *ngIf="isDataFormat" [size]="18" color="DD5151" class="mt-1">
-        </odp-data-format-icon>
-        <odp-library-icon *ngIf="isLibrary" [size]="18" color="DD5151" class="mt-1"></odp-library-icon>
-      </span>
-      <span class="font-weight-bold mb-1">{{deleteModal.title}}</span>
+    <div class="d-flex align-items-center justify-content-between">
+      <span class="font-20 fw-500">{{deleteModal.title}}</span>
       <span class="fa fa-times text-secondary hover ml-auto" (click)="deleteModalTemplateRef.close(false)"></span>
     </div>
     <p class="text-center my-5" [ngClass]="{'text-truncate': deleteModal.message.length > 65}">

@@ -8,14 +8,14 @@
     <span *ngIf="showLabel" class="text">{{ checked ? 'Yes' : 'No'}}</span>
 </div>
 <div class="d-flex align-items-center" *ngIf="!edit.status">
-    <span class="text d-flex" *ngIf="checked">
+    <span class="d-flex" *ngIf="checked">
         <span class="d-flex align-items-center justify-content-center rounded-circle check-circle mr-1"
             [ngClass]="sliderClass">
             <span class="fa fa-check text-white"></span>
         </span>
         <span class="text">Yes</span>
     </span>
-    <span class="text d-flex" *ngIf="!checked">
+    <span class="d-flex" *ngIf="!checked">
         <span
             class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1"></span>
         <span class="text">No</span>

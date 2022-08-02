@@ -1,6 +1,10 @@
 @import 'src/assets/scss/bootstrap/_functions.scss';
 @import 'src/assets/scss/bootstrap/_variables.scss';
 
+.import-wrapper {
+    height: 100vh;
+}
+
 .overlay {
     height: 100vh;
     width: 100vw;
@@ -12,9 +16,9 @@
 
 .upload-window {
     height: 100vh;
-    width: 300px;
+    width: 360px;
     top: 0;
-    right: -300px;
+    right: -360px;
     z-index: 2;
     transition: 0.2s;
 

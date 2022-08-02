@@ -24,7 +24,6 @@ import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { CheckboxBtnModule } from 'src/app/utils/checkbox-btn/checkbox-btn.module';
 import { DatePickerModule } from 'src/app/utils/date-picker/datePicker.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { FocusNextModule } from 'src/app/utils/focus-next/focus-next.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
@@ -54,7 +53,6 @@ import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-edi
         AutoFocusModule,
         CheckboxBtnModule,
         DatePickerModule,
-        IconsModule,
         FieldTypeModule,
         FocusNextModule,
         SwitchModule,

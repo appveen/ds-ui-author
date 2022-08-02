@@ -10,7 +10,6 @@ import { RouteGuard } from '../../utils/guards/route.guard';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { StructureFieldModule } from 'src/app/utils/structure-field/structure-field.module';
 import { StructureFieldPropertiesModule } from 'src/app/utils/structure-field-properties/structure-field-properties.module';
 
@@ -32,7 +31,6 @@ const routes: Routes = [
         BreadcrumbModule,
         AutoFocusModule,
         BasicInfoModule,
-        IconsModule,
         StructureFieldModule,
         StructureFieldPropertiesModule
     ],

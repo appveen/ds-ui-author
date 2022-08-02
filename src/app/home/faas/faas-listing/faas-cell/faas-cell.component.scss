@@ -20,7 +20,19 @@
 .options {
   .btn {
     &:hover {
-      color: $secondary !important;
+      color: $secondary  !important;
+    }
+  }
+}
+
+.url-block {
+  .btn {
+    right: -100px;
+  }
+
+  &:hover {
+    .btn {
+      right: -11px;
     }
   }
 }

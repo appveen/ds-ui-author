@@ -6,7 +6,6 @@ import { SortablejsModule } from 'ngx-sortablejs';
 
 import { StructureFieldPropertiesComponent } from './structure-field-properties.component';
 import { RelationPropertyComponent } from './relation-property/relation-property.component';
-import { IconsModule } from '../icons/icons.module';
 import { DeleteModalModule } from '../delete-modal/delete-modal.module';
 import { TextPropertyComponent } from './text-property/text-property.component';
 import { NumberPropertyComponent } from './number-property/number-property.component';
@@ -27,7 +26,6 @@ import { CheckboxModule } from '../checkbox/checkbox.module'
     ReactiveFormsModule,
     FormsModule,
     NgbModule,
-    IconsModule,
     DeleteModalModule,
     DatePickerModule,
     FieldTypeModule,

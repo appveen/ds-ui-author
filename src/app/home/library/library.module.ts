@@ -6,8 +6,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LibraryComponent } from './library.component';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
+import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 
 const routes = [
   { path: '', component: LibraryComponent },
@@ -21,8 +21,8 @@ const routes = [
     RouterModule.forChild(routes),
     BreadcrumbModule,
     SearchBoxModule,
-    IconsModule,
-    DeleteModalModule
+    DeleteModalModule,
+    AutoFocusModule
   ],
   declarations: [
     LibraryComponent

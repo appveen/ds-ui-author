@@ -101,7 +101,7 @@ export class FaasCellComponent implements ICellRendererAngularComp {
   }
 
   copyUrl() {
-    const url = this.fqdn + this.data.url;
+    const url = 'https://' + this.fqdn + this.data.url;
     this.appService.copyToClipboard(url);
   }
 
@@ -124,5 +124,22 @@ export class FaasCellComponent implements ICellRendererAngularComp {
 
   get hasStartStopPermission() {
     return this.commonService.hasPermission('PMFPS')
+  }
+
+  get getStatusClass() {
+    if (this.data) {
+      if (this.data.status == 'Draft' || this.data.status == 'DRAFT') {
+        return 'badge-accent';
+      }
+      if (this.data.status == 'Active' || this.data.status == 'RUNNING') {
+        return 'badge-success';
+      }
+      if (this.data.status == 'Pending' || this.data.status == 'PENDING') {
+        return 'pending';
+      }
+      if (this.data.status == 'Undeployed' || this.data.status == 'STOPPED') {
+        return 'badge-danger';
+      }
+    }
   }
 }

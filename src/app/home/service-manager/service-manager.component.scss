@@ -1,252 +1,72 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.header {
-  min-height: 50px;
-  max-height: 50px;
+.data-service-page {
+  height: calc(100vh - 60px);
+
+  .list-group-item {
+    height: 56px;
+
+    &.header {
+      min-height: 38px;
+      max-height: 38px;
+      color: #6C7584;
+    }
+
+    .item-name {
+      width: 300px;
+    }
+
+    .item-record-count,
+    .item-attribute-count,
+    .item-reference-count,
+    .item-hook-count {
+      width: 100px;
+    }
+
+    .item-status {
+      width: 200px;
+
+      .fa-circle {
+        font-size: 8px;
+      }
+    }
+
+    .item-actions {
+      min-width: 300px;
+
+      .btn {
+        &:hover {
+          color: $secondary  !important;
+        }
+      }
+    }
+  }
+
+  .scroll-pane {
+    height: 100%;
+    overflow: auto;
+  }
 }
 
-.options {
-  min-height: 50px;
-  max-height: 50px;
-}
-
-.service-listing-section{
-  padding: 32px
-}
-
-.card-container {
-  height: calc(100vh - 178px);
+.new-service-window {
+  height: 100vh;
+  width: 360px;
+  top: 0;
+  right: -360px;
+  z-index: 2;
+  transition: 0.2s;
   overflow: auto;
-}
+  padding-top: 40px !important;
 
-.card {
-  width: 230px;
-  float: left;
-  overflow: hidden;
-  height: 200px;
-  border-radius: 10px;
-
-  .card-title,
-  .draft-options {
-    span {
-      vertical-align: middle;
-    }
-
-    .status {
-      font-size: 32px;
-      line-height: 0;
-      vertical-align: middle;
-
-      &.active {
-        color: $green;
-      }
-
-      &.pending {
-        color: $orange;
-      }
-
-      &.maintenance {
-        color: $light;
-      }
-
-      &.stopped {
-        color: $red;
-      }
-
-      &.draft {
-        color: $accent;
-      }
-
-      .symbol {
-        margin-top: 11px;
-        display: inline-block;
-        height: 20px;
-        width: 20px;
-      }
-
-      .fa {
-        font-size: 12px;
-        margin: 0;
-        display: inline-block;
-        text-align: center;
-        line-height: 20px;
-      }
-    }
-
-    .name {
-      width: 130px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .version {
-      font-size: 12px;
-    }
-
-    [class^="odp-"],
-    [class*=" odp-"] {
-      font-size: 32px;
-      line-height: 0;
-    }
-  }
-
-  .card-body {
-    span {
-      vertical-align: middle;
-    }
-
-    [class^="odp-"],
-    [class*=" odp-"] {
-      font-size: 14px;
-      line-height: 0;
-      margin-right: 5px;
-    }
-  }
-
-  &.add-card {
-    .circle {
-      width: 75px;
-      height: 75px;
-      border-radius: 100%;
-    }
-  }
-
-  .draft-options {
-    width: 230px;
-    height: 200px;
-    top: -200px;
-    z-index: 1050;
-    transition: 0.25s;
-
-    &.show {
-      top: 0;
-    }
-  }
-}
-
-.button-grid {
-  &.view-only {
-    bottom: 0 !important;
-    width: 100%;
-  }
-
-  &.some-manage {
-    bottom: -34px;
-  }
-
-  &.has-deploy {
-    bottom: -104px;
-
-    &.some-manage {
-      bottom: -68px;
-    }
-  }
-
-  position: absolute;
-  bottom: -68px;
-  border-top: 1px solid #ccc;
-  transition: 0.25s;
-
-  .toggler {
-    padding: 0px;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    display: inline-block;
-    margin: auto;
-    margin-top: -8px;
-    height: 14px;
-    width: 26px;
-    position: absolute;
-    left: 45%;
-    text-align: center;
-    background: #fff;
-    box-shadow: 0px 0px 4px rgba(#000, 0.16);
-    border-radius: 10px;
-
-    &:hover {
-      cursor: pointer;
-      box-shadow: none;
-    }
-
-    .fa {
-      transition: 0.25s;
-      position: absolute;
-      margin-top: -2px;
-      left: 34%;
-    }
-  }
-
-  .button {
-    .icon {
-      width: 20px;
-      display: inline-block;
-    }
-
-    &:hover {
-      text-shadow: 0px 0px 2px rgba(#000, 0.16);
-    }
-  }
-
-  &.active {
-    bottom: 0;
-
-    .toggler {
-      .fa {
-        margin-top: 0px;
-        transition: 0.25s;
-        transform: rotate(180deg);
-      }
-    }
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  &>div:focus {
-    outline: none;
-  }
-}
-
-.button-grid1 {
-  border-top: 1px solid #ccc;
-  transition: 0.25s;
-
-  .button {
-    .icon {
-      width: 20px;
-      display: inline-block;
-    }
-
-    &:hover {
-      text-shadow: 0px 0px 2px rgba(#000, 0.16);
-    }
-  }
-}
-
-.new-service-modal {
-  label {
-    min-width: 100px;
-  }
-
-  .icon-wrapper {
-    min-width: 32px;
-    max-width: 32px;
-    min-height: 32px;
-    max-height: 32px;
-    background: rgba($create, 0.2);
-  }
-
-  #description {
-    resize: none;
+  &.show {
+    right: 0px !important;
   }
 }
 
 .name-wrapper {
-  .fa-exclamation-circle {
-    top: 7px;
+  .dsi-danger-circle {
+    top: 8px;
     right: 5px;
   }
 }
@@ -276,9 +96,10 @@
   z-index: 1;
 }
 
-::ng-deep .ag-theme-balham{
+::ng-deep .ag-theme-balham {
   font-size: 14px;
-  .ag-root-wrapper{
+
+  .ag-root-wrapper {
     border: 1px solid #ECECEC;
     border-radius: 8px;
   }
@@ -290,19 +111,20 @@
     color: $sub-headings;
   }
 
-  .ag-layout-normal{
+  .ag-layout-normal {
     overflow-x: hidden
   }
- 
+
 }
 
 ::ng-deep .ag-theme-balham .ag-header {
   font-size: 11px;
   color: $lightgrey;
-  .ag-header-container{
+
+  .ag-header-container {
     background-color: #FBFBFB;
   }
-  
+
 
 }
 
@@ -311,18 +133,19 @@
   //     padding-bottom: 15px !important;
   //   }
 
-    .ag-row-selected{
-      background-color: #fff;
-    }
+  .ag-row-selected {
+    background-color: #fff;
+  }
 
-    .ag-ltr .ag-header-select-all{
-      // padding: 17px;
-    }
+  .ag-ltr .ag-header-select-all {
+    // padding: 17px;
+  }
+
   .ag-checkbox-input-wrapper.ag-checked::after {
-  color: white !important;
-  background: $headings !important;
-  border-radius: 4px;
-}
+    color: white !important;
+    background: $headings  !important;
+    border-radius: 4px;
+  }
 }
 
 .context-menu {
@@ -336,6 +159,7 @@
   border-radius: 6px;
   opacity: 1;
   align-items: flex-start;
+
   button {
     &:hover {
       background-color: $light;

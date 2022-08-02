@@ -1,31 +1,32 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
-<div class="d-flex flex-column w-100 h-100" [formGroup]="form">
-    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
-    <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="edit">
-        <div class="d-flex justify-content-end align-items-center">
-            <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link mr-3"
-                id="sbButtonCancel">
-                <span class="fa fa-close mr-2"></span>
-                <span class="text">Cancel</span>
-            </button>
-            <button *ngIf="edit.id && !edit.status && hasWritePermission" (click)="edit.status=true;" type="button"
-                class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
-                <span class="odp-edit mr-2"></span>
-                <span class="text">Edit</span>
-            </button>
-            <button *ngIf="edit.status && hasWritePermission" [disabled]="!isValidSchema"
-                (click)="saveSchema();edit.status=false" type="button" class="edit-button btn btn-min-width btn-dark"
-                id="_saveSchema">
-                <span class="fa fa-save mr-2"></span>
-                <span class="text">Save</span>
-            </button>
-        </div>
-    </odp-basic-info>
+<div class="d-flex flex-column page-padding w-100 h-100 bg-light-gray" [formGroup]="form">
+    <div class="pb-4 pt-2">
+        <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="edit">
+            <div class="d-flex justify-content-end align-items-center">
+                <button (click)="cancel()" type="button"
+                    class="edit-button btn btn-min-width btn-light border mr-3"
+                    id="sbButtonCancel">
+                    <span class="text">Cancel</span>
+                </button>
+                <button *ngIf="edit.id && !edit.status && hasWritePermission" (click)="edit.status=true;" type="button"
+                    class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
+                    <span class="text">Edit</span>
+                </button>
+                <button *ngIf="edit.status && hasWritePermission" [disabled]="!isValidSchema"
+                    (click)="saveSchema();edit.status=false" type="button"
+                    class="edit-button btn btn-min-width btn-primary" id="_saveSchema">
+                    <span class="text">Save</span>
+                </button>
+            </div>
+        </odp-basic-info>
+    </div>
     <!-- <div class="action d-flex align-items-center justify-content-between w-100 p-3">
         <div class="d-flex align-items-center position-relative" [formGroup]="form">
             <span class="name-label text-secondary">Library Name</span>
@@ -39,8 +40,8 @@
         </div>
         
     </div> -->
-    <div class="d-flex flex-column w-100 px-3">
-        <div class="d-flex flex-column w-100 border-top border-right border-left">
+    <div class="d-flex flex-column w-100">
+        <div class="d-flex flex-column w-100 border rounded-lg">
             <div class="d-flex w-100 builder">
                 <div class="d-flex flex-column w-100 builder-body">
                     <div class="options d-flex justify-content-between align-items-center border-bottom px-3">
@@ -54,10 +55,10 @@
                                 <button type="button" class="btn btn-link px-1 pt-2" id="insertDropDown"
                                     ngbDropdownToggle></button>
                                 <div ngbDropdownMenu>
-                                    <button type="button" class="dropdown-item"
-                                        (click)="addField('before')">Insert Before</button>
-                                    <button type="button" class="dropdown-item"
-                                        (click)="addField('after')">Insert After</button>
+                                    <button type="button" class="dropdown-item" (click)="addField('before')">Insert
+                                        Before</button>
+                                    <button type="button" class="dropdown-item" (click)="addField('after')">Insert
+                                        After</button>
                                 </div>
                             </div>
                             <button type="button" class="btn btn-link" (click)="clearSchema()" id="sbClearAll">
@@ -81,7 +82,7 @@
                         </ng-container>
                     </div>
                 </div>
-                <div class="properties-wrapper builder-body border-left">
+                <div class="properties-wrapper builder-body">
                     <odp-structure-field-properties [edit]="edit" [isLibrary]="true"></odp-structure-field-properties>
                 </div>
             </div>
@@ -93,17 +94,13 @@
 <ng-template #deleteModalEle>
     <div class="modal-body p-4">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-library-icon [size]="18" color="DD5151" class="mt-1"></odp-library-icon>
-                </span>
-                <span class="font-weight-bold mb-1">{{deleteModal.title}}</span>
-            </div>
+            <span class="font-20 fw-500">{{deleteModal.title}}</span>
             <span class="fa fa-times text-secondary hover " (click)="deleteModalEleRef.close(false)"></span>
         </div>
         <p class="text-secondary text-center my-5">{{deleteModal.message}}?</p>
         <div class="d-flex align-items-center justify-content-end">
-            <button type="button" class="btn btn-min-width btn-delete" (click)="deleteModalEleRef.close(true)">Yes</button>
+            <button type="button" class="btn btn-min-width btn-delete"
+                (click)="deleteModalEleRef.close(true)">Yes</button>
         </div>
     </div>
 </ng-template>
@@ -111,17 +108,13 @@
 <ng-template #pageChangeModalTemplate>
     <div class="modal-body p-4">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-library-icon [size]="18" color="202a36" class="mt-1"></odp-library-icon>
-                </span>
-                <span class="font-weight-bold mb-1">Unsaved change</span>
-            </div>
+            <span class="font-20 fw-500">Unsaved change</span>
             <span class="fa fa-times text-secondary hover " (click)="pageChangeModalTemplateRef.close(false)"></span>
         </div>
         <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
         <div class="d-flex align-items-center justify-content-end">
-            <button type="button" class="btn btn-min-width btn-dark" (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+            <button type="button" class="btn btn-min-width btn-dark"
+                (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
         </div>
     </div>
 </ng-template>

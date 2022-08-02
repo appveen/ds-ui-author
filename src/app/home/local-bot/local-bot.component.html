@@ -1,7 +1,9 @@
 <div class="bg-light w-100 h-100 vh-100">
   <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-      <span class="fa fa-spinner fa-pulse fa-3x"></span>
+      <div class="spinner-border text-dark" role="status">
+        <span class="sr-only">Processing...</span>
+      </div>
       <div class="text-secondary mt-2">Processing...</div>
     </div>
   </div>
@@ -233,7 +235,7 @@
         <label for="period"> Period </label>
         <div class="input-group">
           <select id="period" class="form-control input-text" formControlName="period"
-            (ngModelChange)="periodChange($event)" ngModel="days">
+            (onchange)="periodChange($event)">
             <option *ngFor="let item of expiryOptions" [value]="item.value">
               {{ item.label }}
             </option>
@@ -268,7 +270,7 @@
         </label>
         <div class="input-group">
           <input id="label" class="form-control pr-4 input-text" type="text" placeholder="Label name"
-            formControlName="label" autocomplete="autocomplete_off_hack" odpAutoFocus/>
+            formControlName="label" autocomplete="autocomplete_off_hack" odpAutoFocus />
           <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
               attributeForm.get('type').touched &&
               attributeForm.get('label').hasError('required')
@@ -282,7 +284,7 @@
         </label>
         <div class="input-group">
           <select id="type" class="form-control input-text" formControlName="type"
-            (ngModelChange)="onAttributeFormTypeChange($event)">
+            (onchange)="onAttributeFormTypeChange($event)">
             <option *ngFor="let item of types" [value]="item.value">
               {{ item.label }}
             </option>
