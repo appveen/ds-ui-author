@@ -1,18 +1,13 @@
 <div class="d-flex flex-column w-100">
-    <div class="field-wrapper row d-flex align-items-center justify-content-between w-100 px-3 rounded"
+    <div class="field-wrapper row no-gutters d-flex align-items-center justify-content-between w-100 rounded"
         [ngClass]="{'active bg-light':active}" [formGroup]="form">
         <div class="d-flex col-3 align-items-center" formGroupName="properties">
             <span class="spacer border-right border-secondary" [ngStyle]="getSpacing()"></span>
-            <span class="icon mr-2">
+            <span class="icon mr-2 ml-3 d-flex align-items-center">
                 <span class="fa fa-bars text-muted hover" *ngIf="!idField && edit.status && type!=='internal'"></span>
             </span>
             <span class="icon odp-pin text-muted mr-2 fa-xs mt-1" *ngIf="idField"></span>
-            <span class="icon d-flex align-items-center mr-2" *ngIf="!idField">
-                <span class="fa text-secondary fa-lg hover" (click)="collapse=!collapse" *ngIf="canCollapse"
-                    [ngClass]="{'fa-caret-right':collapse,'fa-caret-down':!collapse}"></span>
-                <span class="fa fa-asterisk text-danger"
-                    *ngIf="form.get('properties.required') && form.get('properties.required').value"></span>
-            </span>
+
             <div class="input-control position-relative mr-3">
                 <span class="d-flex align-items-center field form-control-plaintext word-elipsis"
                     *ngIf="!edit.status || type==='internal'" [ngbTooltip]="form.get('properties.name').value"
@@ -51,25 +46,28 @@
                 *ngIf="form.get('properties.unique') && form.get('properties.unique').value">U</span>
 
         </div>
-        <div class="d-flex col-3 field-options">
-            <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 hover"
+        <div class="d-flex col-3 field-options justify-content-end pr-3">
+            <div class="readonly d-flex align-items-center justify-content-center rounded-circle ml-4 hover"
                 [ngClass]="{'active':form.get('properties.readonly')?.value}" placement="top"
                 ngbTooltip="Mark as read-only" (click)="setReadOnly(form.get('properties.readonly'))"
                 *ngIf="  (!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
             && form.get('type').value !== 'Object') &&  edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
                 <span class="odp-no-edit"></span>
             </div>
-            <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 "
+            <div class="readonly d-flex align-items-center justify-content-center rounded-circle ml-4"
                 [ngClass]="{'active':form.get('properties.readonly')?.value}" placement="top"
                 ngbTooltip="Marked as read-only"
                 *ngIf="(!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
             && form.get('type').value !== 'Object') && form.get('properties.readonly')?.value &&  !edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
                 <span class="odp-no-edit"></span>
             </div>
-            <span *ngIf="edit.status && type!=='internal'" class="dsi dsi-edit text-secondary hover mr-4"
+            <span *ngIf="edit.status && type!=='internal'" class="dsi dsi-edit text-secondary hover ml-4"
                 (click)="activateProperty()"> </span>
-            <span *ngIf="canDelete && edit.status && type!=='internal'" class="dsi dsi-trash text-secondary hover"
+            <span *ngIf="canDelete && edit.status && type!=='internal'" class="dsi dsi-trash text-secondary hover ml-4"
                 (click)="remove()"></span>
+            <span class="fa text-secondary fa-lg hover ml-4 text-center d-flex align-items-center"
+                (click)="collapse=!collapse" *ngIf="canCollapse"
+                [ngClass]="{'fa-caret-right':collapse,'fa-caret-down':!collapse}"></span>
         </div>
     </div>
 </div>
