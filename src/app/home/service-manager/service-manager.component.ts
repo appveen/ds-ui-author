@@ -1068,12 +1068,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     return 'text-secondary';
   }
 
-  get dummyRows() {
-    const arr = new Array(15);
-    arr.fill(1);
-    return arr;
-  }
-
   get isExperimental() {
     return this.commonService.userDetails.experimentalFeatures;
   }
