@@ -244,13 +244,14 @@
     <span class="font-20 fw-600">Yamls</span>
     <span class="dsi dsi-close hover" (click)="closeYamlWindow()"></span>
   </div>
+  <button type="button" class="btn btn-link p-0 mb-4" (click)="downloadYamls()">Download Yamls</button>
   <ng-container *ngIf="showYamlWindow">
     <div class="form-group">
       <label for="service">Service</label>
       <div class="position-relative">
         <pre class="form-control">{{selectedService.serviceYaml}}</pre>
         <small class="form-text position-absolute">
-          <span class="text-muted hover" *ngIf="!copied['service']"
+          <span class="text-secondary hover" *ngIf="!copied['service']"
             (click)="copyText(selectedService.serviceYaml,'service')">Copy</span>
           <span class="text-accent" *ngIf="copied['service']">Copied!</span>
         </small>
@@ -261,16 +262,13 @@
       <div class="position-relative">
         <pre class="form-control">{{selectedService.deploymentYaml}}</pre>
         <small class="form-text position-absolute">
-          <span class="text-muted hover" *ngIf="!copied['deployment']"
+          <span class="text-secondary hover" *ngIf="!copied['deployment']"
             (click)="copyText(selectedService.deploymentYaml,'deployment')">Copy</span>
           <span class="text-accent" *ngIf="copied['deployment']">Copied!</span>
         </small>
       </div>
     </div>
   </ng-container>
-  <div class="d-flex align-items-center justify-content-end mt-auto">
-    <button type="button" class="btn btn-primary w-100" (click)="downloadYamls()">Download</button>
-  </div>
 </div>
 
 <div *ngIf="toggleImportWizard || showNewServiceWindow || showCloneServiceWindow || showYamlWindow" class="overlay">
