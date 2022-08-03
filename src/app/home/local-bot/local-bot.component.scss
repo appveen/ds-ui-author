@@ -221,8 +221,8 @@
 }
 
 .error-icon-attr {
-  top: 7px;
-  left: 85%;
+  top: 10px;
+  right: 5px;
 }
 
 .dropdown-itm {
@@ -345,6 +345,8 @@
 .bots {
   overflow-y: auto;
   min-height: 53vw;
+  overflow-x: hidden;
+
 }
 
 .nav-item {

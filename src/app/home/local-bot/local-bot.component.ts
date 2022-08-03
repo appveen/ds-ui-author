@@ -365,10 +365,13 @@ export class LocalBotComponent implements OnInit {
   }
 
   createKey() {
+    this.keyForm.reset()
     this.addNewKey = true;
   }
   createBotKey() {
     const self = this;
+    this.keyForm.markAllAsTouched()
+    this.keyForm.dirty;
     if (self.keyForm.invalid || this.isInvalidDate) {
       return;
     }
@@ -476,32 +479,34 @@ export class LocalBotComponent implements OnInit {
 
 
   addProperty() {
-    const { key, ...rest } = this.attributeForm.value;
-    if (!this.selectedBot.attributes) {
-      this.selectedBot['attributes'] = {}
-    }
-    this.showLazyLoader = true;
-    this.selectedBot.attributes[key] = this.appService.cloneObject(rest);
-    this.commonService
-      .put(
-        'user',
-        `/${this.commonService.app._id}/user/${this.selectedBot._id}`,
-        this.selectedBot
-      )
-      .subscribe(
-        (res) => {
+    if (this.attributeForm.valid) {
+      const { key, ...rest } = this.attributeForm.value;
+      if (!this.selectedBot.attributes) {
+        this.selectedBot['attributes'] = {}
+      }
+      this.showLazyLoader = true;
+      this.selectedBot.attributes[key] = this.appService.cloneObject(rest);
+      this.commonService
+        .put(
+          'user',
+          `/${this.commonService.app._id}/user/${this.selectedBot._id}`,
+          this.selectedBot
+        )
+        .subscribe(
+          (res) => {
 
-          this.selectedBot.attributes = res.attributes
-          this.addNewProperty = false;
-          this.attributeForm.reset()
-          this.editMode = false
-          this.showLazyLoader = false;
-          this.ts.success('Custom Details Saved Successfully');
-        },
-        (err) => {
-          this.ts.error(err.error.message);
-        }
-      );
+            this.selectedBot.attributes = res.attributes
+            this.addNewProperty = false;
+            this.attributeForm.reset()
+            this.editMode = false
+            this.showLazyLoader = false;
+            this.ts.success('Custom Details Saved Successfully');
+          },
+          (err) => {
+            this.ts.error(err.error.message);
+          }
+        );
+    }
   }
 
   setUserAttributeValue(val) {
@@ -848,11 +853,13 @@ export class LocalBotComponent implements OnInit {
       this.manageGroups.openGroupModal()
     }
     if (tab === 'Keys') {
+      this.keyForm.reset();
       this.keyForm.get('period').setValue('days')
 
       this.addNewKey = true;
     }
     if (tab === 'Properties') {
+      this.attributeForm.reset();
       this.addNewProperty = true;
     }
   }

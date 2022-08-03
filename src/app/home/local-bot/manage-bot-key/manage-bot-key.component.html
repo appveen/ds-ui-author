@@ -2,7 +2,7 @@
     <div class="align-self-center text-center">
         <div class="spinner-border text-dark" role="status">
             <span class="sr-only">Processing...</span>
-          </div>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
@@ -11,7 +11,7 @@
 
 <div class="d-flex mb-4">
     <div>
-        <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')" [selectOnEnter]="true">
+        <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect(null)" [selectOnEnter]="true">
         </odp-search-box>
     </div>
     <div class="d-flex ml-auto mr-2">
@@ -24,13 +24,71 @@
 </div>
 
 <div>
-    <ag-grid-angular #agGrid class="ag-theme-balham table" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+    <!-- <ag-grid-angular #agGrid class="ag-theme-balham table" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
         [frameworkComponents]="frameworkComponents">
-    </ag-grid-angular>
+    </ag-grid-angular> -->
+    <div class="scroll-pane">
+        <div class="list-group mb-3">
+            <div class="list-group-item header py-0 bg-light text-muted text-uppercase font-11">
+                <div class="d-flex align-items-center justify-content-between h-100">
+                    <div class="d-flex-1">Key Name</div>
+                    <div class="d-flex-1">Expires (In Days)</div>
+                    <div class="d-flex-1">Key</div>
+                    <div class="d-flex-1">Last Login At</div>
+                    <div class="group-actions"></div>
+                </div>
+            </div>
+            <div class="list-group-item" *ngFor="let key of data">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex-1">{{key.label}}</div>
+                    <div class="d-flex-1">
+                        <span *ngIf="!key.isActive" style="color: #FF9052">Deactivated</span>
+                        <span *ngIf="key.isActive">{{key.expires/ (24 * 60)}}</span>
+                    </div>
+                    <div [ngStyle]="{flex: key.isNew ? '2' : '1' }">
+                        <span *ngIf="!key.isNew">****************</span>
+                        <span *ngIf="key.isNew" (click)="copyKey(key)">
+                            <span>{{ key.keyValue }}</span>
+                            <span class="dsi dsi-copy ml-2 hover"></span>
+                        </span>
+                    </div>
+                    <div class="d-flex-1">{{key.lastLogin ? formatLastLogin(key.lastLogin) : '-'}}
+                    </div>
+
+                    <div class="group-actions">
+                        <button type="button" class="btn btn-link text-muted p-1" (click)="confirmEndSession(key)"
+                            *ngIf="hasPermission('PMBA')">
+                            <span class="dsi dsi-ban"></span>
+                        </button>
+                        <button type="button" class="btn btn-link text-muted p-1" (click)="confirmDeactivate(key)"
+                            *ngIf="key.isActive && hasPermission('PMBA')">
+                            <span class="dsi dsi dsi-minus-circle"></span>
+                        </button>
+                        <button type="button" class="btn btn-link text-muted p-1" (click)="confirmReactivate(key)"
+                            *ngIf="!key.isActive && hasPermission('PMBA')">
+                            <span class="dsi dsi dsi-plus-circle"></span>
+                        </button>
+                        <button type="button" class="btn btn-link text-muted p-1" (click)="editBotKey(key)"
+                            *ngIf="hasPermission('PMBU')">
+                            <span class="dsi dsi-edit"></span>
+                        </button>
+                        <button type="button" class="btn btn-link text-muted p-1" (click)="deleteBotKey(key)" *ngIf="
+                            hasPermission('PMBU')">
+                            <span class="dsi dsi-trash"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="hasNewKey()" class="d-flex selected">
+        <span style="color: #F26464">*</span>
+        <span>Please Copy the key. The key cannot be retrived once you navigate away from the screen</span>
+    </div>
 </div>
 
 
-
-<odp-delete-modal [open]="openDeleteBotKeyModal" (close)="closeDeleteBotKeyModal($event)" [action]="action">
+<odp-delete-modal [open]="openDeleteBotKeyModal" (close)="closeDeleteBotKeyModal($event)">
     <span class="odp-bots  font-20 text-success"></span>
 </odp-delete-modal>
