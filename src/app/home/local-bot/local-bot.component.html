@@ -26,7 +26,7 @@
       <span class="fa fa-spinner fa-pulse fa-3x"></span>
     </div>
     <div class="row" style="max-height: inherit" *ngIf="botCount > 0">
-      <div class="col-3 bots border-right">
+      <div class="col-3 bots border-right pr-0">
         <div *ngFor="let bot of botRecords; let i = index" class="d-flex" [id]="'bot' + i" (click)="selectRecord(bot)">
           <div class="selectedTab" [ngStyle]="{
               background: bot._id === selectedBot?._id ? '#ff6f00' : 'none'
@@ -158,17 +158,17 @@
           <span *ngIf="
             (botForm.get('botName').touched || botForm.get('botName').dirty) &&
             botForm.get('botName').hasError('required')
-          " class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
+          " class="text-danger position-absolute dsi dsi-danger-circle error-icon-attr" container="body"
             ngbTooltip="Name is required"></span>
           <span *ngIf="
             (botForm.get('botName').touched || botForm.get('botName').dirty) &&
             botForm.get('botName').hasError('maxlength')
-          " class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
+          " class="text-danger position-absolute dsi dsi-danger-circle error-icon-attr" container="body"
             ngbTooltip="Name should be within 30 characters"></span>
           <span *ngIf="
             (botForm.get('botName').touched || botForm.get('botName').dirty) &&
             botForm.get('botName').hasError('pattern')
-          " class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
+          " class="text-danger position-absolute dsi dsi-danger-circle error-icon-attr" container="body"
             ngbTooltip="Name can contain alphanumeric and  _,- , @ , # and . characters only"></span>
         </div>
       </div>
@@ -193,41 +193,42 @@
 
         <div class="input-group">
           <input newlabel type="text" class="form-control" id="name" placeholder="Give a label to identify"
-            formControlName="label" odpAutoFocus [ngClass]="{
-              'is-invalid':
-                keyForm.get('label').invalid && keyForm.get('label').dirty
-            }" odpAutoFocus />
-          <ng-container *ngIf="keyForm.get('label').dirty">
-            <span *ngIf="keyForm.get('label').hasError('required')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-              ngbTooltip="Name is required"></span>
-            <span *ngIf="keyForm.get('label').hasError('maxlength')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-              ngbTooltip="Name should be within 30 characters"></span>
-            <span *ngIf="keyForm.get('label').hasError('pattern')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-              ngbTooltip="Name can be only alphanumeric ,spaces, _and - characters only"></span>
-          </ng-container>
+            formControlName="label" odpAutoFocus />
+
+          <span
+            *ngIf="(keyForm.get('label').touched || keyForm.get('label').dirty) && keyForm.get('label').hasError('required')"
+            class="text-danger position-absolute dsi dsi-danger-circle error-icon-attr" container="body"
+            ngbTooltip="Name is required"></span>
+          <span
+            *ngIf="(keyForm.get('label').touched || keyForm.get('label').dirty)  && keyForm.get('label').hasError('maxlength')"
+            class="text-danger position-absolute dsi dsi-danger-circle error-icon-attr" container="body"
+            ngbTooltip="Name should be within 30 characters"></span>
+          <span
+            *ngIf="(keyForm.get('label').touched || keyForm.get('label').dirty)  && keyForm.get('label').hasError('pattern')"
+            class="text-danger position-absolute dsi dsi-danger-circle error-icon-attr" container="body"
+            ngbTooltip="Name can be only alphanumeric ,spaces, _and - characters only"></span>
+
         </div>
       </div>
       <div class="form-group position-relative">
         <label for="expires"> Expiry </label>
+        <sup class="text-danger">*</sup>
         <div class="input-group">
           <input type="number" class="form-control" formControlName="expires" [ngClass]="{
               'is-invalid':
                 keyForm.get('expires').invalid &&
                 keyForm.get('expires').dirty
             }" placeholder="Give an expiration period" />
-          <ng-container *ngIf="keyForm.get('expires').dirty">
-            <span *ngIf="keyForm.get('expires').hasError('required')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-              ngbTooltip="Expiry is required"></span>
-            <span *ngIf="keyForm.get('expires').hasError('min')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-              ngbTooltip="Mininum value is 1"></span>
-            <span *ngIf="isInvalidDate" class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-              ngbTooltip="Please enter the No of days within September 13, 275760"></span>
-          </ng-container>
+          <span
+            *ngIf="(keyForm.get('expires').touched || keyForm.get('expires').dirty)  && keyForm.get('expires').hasError('required')"
+            class="text-danger position-absolute dsi dsi-danger-circle error-icon-attr" container="body"
+            ngbTooltip="Expiry is required"></span>
+          <span
+            *ngIf="(keyForm.get('expires').touched || keyForm.get('expires').dirty) && keyForm.get('expires').hasError('min')"
+            class="text-danger position-absolute dsi dsi-danger-circle error-icon-attr" container="body"
+            ngbTooltip="Mininum value is 1"></span>
+          <span *ngIf="isInvalidDate" class="text-danger position-absolute dsi dsi-danger-circle error-icon-attr"
+            container="body" ngbTooltip="Please enter the No of days within September 13, 275760"></span>
         </div>
 
       </div>
@@ -243,7 +244,7 @@
           <span *ngIf="
             (keyForm.get('period').touched || keyForm.get('period').dirty) &&
             keyForm.get('period').hasError('required')
-          " class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
+          " class="text-danger position-absolute dsi dsi-danger-circle error-icon" container="body"
             ngbTooltip="Period is required"></span>
         </div>
 
@@ -272,7 +273,7 @@
           <input id="label" class="form-control pr-4 input-text" type="text" placeholder="Label name"
             formControlName="label" autocomplete="autocomplete_off_hack" odpAutoFocus />
           <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
-              attributeForm.get('type').touched &&
+              (attributeForm.get('label').touched || attributeForm.get('label').dirty) &&
               attributeForm.get('label').hasError('required')
             " ngbTooltip="This is a required field"></span>
         </div>

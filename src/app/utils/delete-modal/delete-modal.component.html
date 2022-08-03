@@ -13,18 +13,18 @@
         <span class="text-secondary" [innerHTML]="data?.message"></span>
       </div>
       <div class="d-flex align-items-end w-100 justify-content-end" *ngIf="!data.usePrimaryButton">
-        <button type="button" class="btn btn-outline-secondary btn-min-width ignore-click mr-2" id="deleteModalNo"
+        <button type="button" class="btn btn-outline-dark btn-min-width ignore-click mr-2" id="deleteModalNo"
           (click)="deleteModalTemplateRef.close(false)">
           Cancel
         </button>
-        <button type="button" class="btn btn-delete btn-min-width ignore-click" id="deleteModalYes"
+        <button type="button" class="btn btn-danger btn-min-width ignore-click" id="deleteModalYes"
           (click)="$event.stopPropagation();deleteModalTemplateRef.close(true)">
           <span *ngIf="!data?.btnText" class="text">Delete</span>
           <span *ngIf="data?.btnText" class="text">{{data.btnText}}</span>
         </button>
       </div>
       <div class="d-flex align-items-end w-100 justify-content-end" *ngIf="data.usePrimaryButton">
-        <button type="button" class="btn btn-outline-secondary btn-min-width ignore-click mr-2" id="deleteModalYes"
+        <button type="button" class="btn btn-outline-dark btn-min-width ignore-click mr-2" id="deleteModalYes"
           (click)="deleteModalTemplateRef.close(false)">
           Cancel
         </button>

@@ -2,7 +2,7 @@
     <div class="align-self-center text-center">
         <div class="spinner-border text-dark" role="status">
             <span class="sr-only">Processing...</span>
-          </div>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
@@ -11,7 +11,7 @@
 
 <div class="d-flex mb-4">
     <div>
-        <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')" [selectOnEnter]="true">
+        <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null">
         </odp-search-box>
     </div>
     <div class="d-flex ml-auto mr-2">
@@ -25,9 +25,49 @@
 
 
 <div class="grid-container">
-    <ag-grid-angular #agGrid class="ag-theme-balham table" [gridOptions]="gridOptions"
-        (gridReady)="onGridReady($event)">
-    </ag-grid-angular>
+    <div class="scroll-pane">
+        <div class="list-group mb-3">
+            <div class="list-group-item header py-0 bg-light text-muted text-uppercase font-11">
+                <div class="d-flex align-items-center justify-content-between h-100">
+                    <div class="group-name d-flex-1">Name</div>
+                    <div class="group-author-flag d-flex-1">Author</div>
+                    <div class="group-appcenter-flag d-flex-1">Appcenter</div>
+                    <div class="group-actions"></div>
+                </div>
+            </div>
+            <div class="list-group-item" *ngFor="let group of userTeams|filterTeam:searchTerm">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex-1">{{group.name}}</div>
+                    <div class="group-author-flag font-12 d-flex align-items-center d-flex-1">
+                        <ng-container *ngIf="group.hasAuthorRoles">
+                            <span class="fa fa-circle fa-xs text-success mr-2"></span>
+                            <span class="text-dark">Active</span>
+                        </ng-container>
+                        <ng-container *ngIf="!group.hasAuthorRoles">
+                            <span class="fa fa-circle fa-xs text-muted mr-2"></span>
+                            <span class="text-muted">Inactive</span>
+                        </ng-container>
+                    </div>
+                    <div class="group-appcenter-flag font-12 d-flex align-items-center d-flex-1">
+                        <ng-container *ngIf="group.hasAppcenterRoles">
+                            <span class="fa fa-circle fa-xs text-success mr-2"></span>
+                            <span class="text-dark">Active</span>
+                        </ng-container>
+                        <ng-container *ngIf="!group.hasAppcenterRoles">
+                            <span class="fa fa-circle fa-xs text-muted mr-2"></span>
+                            <span class="text-muted">Inactive</span>
+                        </ng-container>
+                    </div>
+                    <div class="group-actions">
+                        <button type="button" class="btn btn-link text-muted p-1" (click)="removeGroupForUser(group)"
+                            *ngIf="hasPermission('PMBU')">
+                            <span class="dsi dsi-trash"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

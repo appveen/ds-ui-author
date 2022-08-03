@@ -41,7 +41,8 @@ export class ManageBotPropertyComponent implements OnInit {
   filterModel: any;
   filtering: boolean;
   @Output() onAdd: EventEmitter<any> = new EventEmitter();
-  searchTerm: any;
+  searchTerm: string;
+  data: any;
 
 
   get selectedBot() {
@@ -65,6 +66,7 @@ export class ManageBotPropertyComponent implements OnInit {
       });
     }
     self.userAttributeList = arr;
+    this.data = arr;
   }
   additionalDetails: FormGroup;
   toggleFieldTypeSelector: any;
@@ -97,120 +99,6 @@ export class ManageBotPropertyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setupGrid();
-  }
-
-  setupGrid() {
-    this.frameworkComponents = {
-      customCellRenderer: LocalBotCellRendererComponent,
-      actionCellRenderer: AgGridActionsRendererComponent,
-    };
-
-    const columnDefs = [
-      {
-        headerName: 'Label',
-        field: 'label',
-      },
-      {
-        headerName: 'Type',
-        field: 'type',
-      },
-      {
-        headerName: 'Value',
-        field: 'value',
-        filter: false,
-      },
-      ...(this.hasPermission('PMBBU')
-        ? [
-          {
-            headerName: '',
-            cellRenderer: 'actionCellRenderer',
-            type: 'rightAligned',
-            refData: {
-              actionsButtons: 'Edit,Delete',
-              actionCallbackFunction: 'onGridAction',
-            },
-          },
-        ]
-        : []),
-    ];
-    this.gridOptions = {
-
-      columnDefs: columnDefs,
-      context: this,
-      rowData: this.userAttributeList,
-      paginationPageSize: 30,
-      cacheBlockSize: 30,
-      floatingFilter: false,
-      animateRows: true,
-      rowHeight: 48,
-      headerHeight: 48,
-      frameworkComponents: this.frameworkComponents,
-      suppressPaginationPanel: true,
-      suppressCellSelection: true,
-
-    };
-
-
-  }
-
-  gridTypesMapper(data: any[]) {
-    return this.types.map((type) => ({ label: type.label, value: type.value }));
-  }
-
-  onGridReady(event: GridReadyEvent) {
-    if (event.api) {
-      event.api.sizeColumnsToFit()
-    }
-  }
-
-  // private forceResizeColumns() {
-  //   this.agGrid.api.sizeColumnsToFit();
-  //   this.autoSizeAllColumns();
-  // }
-
-  // private autoSizeAllColumns() {
-  //   const fixedSize = this.hasPermission('PMBBU') ? 94 : 0;
-  //   if (!!this.agGrid.api && !!this.agGrid.columnApi) {
-  //     setTimeout(() => {
-  //       const container = document.querySelector('.grid-container');
-  //       const availableWidth = !!container
-  //         ? container.clientWidth - fixedSize
-  //         : 730;
-  //       const allColumns = this.agGrid.columnApi.getAllColumns() || [];
-  //       allColumns.forEach((col) => {
-  //         this.agGrid.columnApi.autoSizeColumn(col);
-  //         if (
-  //           col.getActualWidth() > 200 ||
-  //           this.agGrid.api.getDisplayedRowCount() === 0
-  //         ) {
-  //           col.setActualWidth(200);
-  //         }
-  //       });
-  //       const occupiedWidth = allColumns.reduce(
-  //         (pv, cv) => pv + cv.getActualWidth(),
-  //         -fixedSize
-  //       );
-  //       if (occupiedWidth < availableWidth) {
-  //         this.agGrid.api.sizeColumnsToFit();
-  //       }
-  //     }, 2000);
-  //   }
-  // }
-
-  onGridAction(buttonName: string, rowNode: RowNode) {
-    switch (buttonName) {
-      case 'Edit':
-        {
-          this.openEditAttributeModal(rowNode.data);
-        }
-        break;
-      case 'Delete':
-        {
-          this.deleteAdditionInfo(rowNode.data.key);
-        }
-        break;
-    }
   }
 
 
@@ -288,14 +176,13 @@ export class ManageBotPropertyComponent implements OnInit {
   enterToSelect(event) {
     this.searchTerm = event;
     let filtered;
-    if (event === '' || event === 'reset') {
+    if (event === '' || event === null) {
       filtered = this.userAttributeList;
     }
     else {
-      filtered = this.userAttributeList.filter(ele => ele.label.indexOf(event) > -1)
+      filtered = this.userAttributeList.filter(obj => Object.keys(obj).some(key => obj[key].toLowerCase().includes(this.searchTerm)))
     }
-
-    this.gridOptions.api.setRowData(filtered)
+    this.data = filtered;
 
   }
 

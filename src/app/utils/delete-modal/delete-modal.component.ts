@@ -15,7 +15,7 @@ export class DeleteModalComponent implements OnInit, OnDestroy {
   @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
   deleteModalTemplateRef: NgbModalRef;
   data: any;
-  @Input() action: String = 'Delete';
+  // @Input() action: String = 'Delete';
   constructor(private commonService: CommonService) {
     const self = this;
     self.open = new EventEmitter();
@@ -36,7 +36,7 @@ export class DeleteModalComponent implements OnInit, OnDestroy {
       self.deleteModalTemplateRef.result.then(close => {
         self.deleteModalTemplateRef = null;
         if (close) {
-          self.close.emit({ data: self.data, action: self.action });
+          self.close.emit(data);
         } else {
           self.close.emit(null);
         }

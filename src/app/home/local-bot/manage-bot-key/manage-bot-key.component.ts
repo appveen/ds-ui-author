@@ -36,6 +36,7 @@ export class ManageBotKeyComponent implements OnInit {
   gridApi: GridApi;
   searchTerm: string;
   action: any;
+  data: any;
   constructor(
     private fb: FormBuilder,
     public commonService: CommonService,
@@ -52,129 +53,9 @@ export class ManageBotKeyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setupGrid();
+    this.data = this.selectedBot.botKeys
   }
 
-  setupGrid() {
-    this.frameworkComponents = {
-      customCellRenderer: LocalBotCellRendererComponent,
-      actionCellRenderer: AgGridActionsRendererComponent
-    };
-    const columnDefs = [
-      {
-        headerName: 'KEY NAME',
-        field: 'label',
-        width: 150,
-
-      },
-      {
-        headerName: 'EXPIRY (IN DAYS)',
-        width: 150,
-        field: 'expires',
-        cellRenderer: (params) => {
-          if (!params.data.isActive) {
-            return `<div style="color: #FF9052">Deactivated</div>`
-          }
-          else {
-            return `<div>${params.value / (24 * 60)}</div>`
-          }
-        }
-      },
-
-      {
-        headerName: 'KEY',
-        field: 'keyValue',
-        width: 250,
-        cellRenderer: 'customCellRenderer',
-        colSpan: (params) => {
-          if (params.data && params.data.isNew) {
-            return 2
-          }
-          else {
-            return 1
-          }
-        },
-        refData: {
-          namespace: 'keys'
-        }
-      },
-      {
-        headerName: 'LAST LOGIN AT',
-        field: 'lastLogin',
-        width: 250,
-        valueFormatter: (params) => {
-          if (params.value) {
-            return this.formatLastLogin(params.value)
-          }
-          else {
-            return '-'
-          }
-        }
-      },
-      ...(this.hasPermission('PMBBU') || this.hasPermission('PMBA')
-        ? [
-          {
-            headerName: '',
-            cellRenderer: 'actionCellRenderer',
-            type: 'rightAligned',
-            refData: {
-              actionButtonsMapperFn: 'actionButtonsMapperFn',
-              actionCallbackFunction: 'onGridAction'
-            }
-          }
-        ]
-        : [])
-    ];
-    this.gridOptions = {
-
-      columnDefs: columnDefs,
-      context: this,
-      rowData: this.selectedBot.botKeys,
-      paginationPageSize: 30,
-      cacheBlockSize: 30,
-      floatingFilter: false,
-      animateRows: true,
-      rowHeight: 48,
-      headerHeight: 48,
-      frameworkComponents: this.frameworkComponents,
-      suppressCellSelection: true,
-      suppressPaginationPanel: true,
-
-    };
-  }
-
-  onGridReady(event: GridReadyEvent) {
-    this.gridApi = event.api;
-    if (this.gridApi) {
-      this.gridApi.sizeColumnsToFit()
-    }
-  }
-
-  // private forceResizeColumns() {
-  //   this.agGrid.api.sizeColumnsToFit();
-  //   this.autoSizeAllColumns();
-  // }
-
-  // private autoSizeAllColumns() {
-  //   const fixedSize = (this.hasPermission('PMBBU') ? 94 : 0) + (this.hasPermission('PMBA') ? 164 : 0);
-  //   if (!!this.agGrid.api && !!this.agGrid.columnApi) {
-  //     setTimeout(() => {
-  //       const container = document.querySelector('.grid-container');
-  //       const availableWidth = !!container ? container.clientWidth - fixedSize : 730;
-  //       const allColumns = this.agGrid.columnApi.getAllColumns() || [];
-  //       allColumns.forEach(col => {
-  //         this.agGrid.columnApi.autoSizeColumn(col);
-  //         if (col.getActualWidth() > 200 || this.agGrid.api.getDisplayedRowCount() === 0) {
-  //           col.setActualWidth(200);
-  //         }
-  //       });
-  //       const occupiedWidth = allColumns.reduce((pv, cv) => pv + cv.getActualWidth(), -fixedSize);
-  //       if (occupiedWidth < availableWidth) {
-  //         this.agGrid.api.sizeColumnsToFit();
-  //       }
-  //     }, 2000);
-  //   }
-  // }
 
   actionButtonsMapperFn(data: any) {
     const buttons = [];
@@ -190,39 +71,7 @@ export class ManageBotKeyComponent implements OnInit {
     return buttons;
   }
 
-  onGridAction(buttonName: string, rowNode: RowNode) {
-    switch (buttonName) {
-      case 'Edit':
-        {
-          this.editBotKey(rowNode.data);
-        }
-        break;
-      case 'End Session':
-        {
-          this.action = 'End Session';
-          this.confirmEndSession(rowNode.data);
-        }
-        break;
-      case 'Delete':
-        {
-          this.action = 'Delete'
-          this.deleteBotKey(rowNode.data);
-        }
-        break;
-      case 'Activate':
-        {
-          this.action = 'Reactivate';
-          this.confirmReactivate(rowNode.data)
-        }
-        break;
-      case 'Deactivate':
-        {
-          this.action = 'Deactivate';
-          this.confirmDeactivate(rowNode.data);
-        }
-        break;
-    }
-  }
+
 
   onFilterChanged(event) {
     this.filtering = true;
@@ -235,34 +84,6 @@ export class ManageBotKeyComponent implements OnInit {
   editBotKey(key: any) {
     const self = this;
     this.editKey.emit(key);
-    // self.keyForm.get('label').patchValue(key.label)
-    // self.keyForm.get('expires').patchValue(key.expires / 1440)
-    // self.editKeyModalRef = self.commonService.modal(self.newKeyModal, { size: 'sm' });
-    // self.editKeyModalRef.result.then(close => {
-    //   if (close) {
-    //     const payload = self.keyForm.value;
-    //     payload.expires = payload.expires * 1440;
-    //     payload.keyId = key._id;
-    //     self.showLazyLoader = true;
-
-    //     self.commonService.put('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
-    //       .subscribe((res) => {
-    //         self.showLazyLoader = false;
-    //         self.selectedBot = res;
-    //         self.dataChange.emit(res);
-    //         if (this.gridApi) {
-    //           this.gridApi.redrawRows()
-    //         }
-    //       }, err => {
-    //         self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
-    //       });
-    //   } else {
-    //     self.showLazyLoader = false;
-    //     self.keyForm.reset();
-    //   }
-    // }, dismiss => {
-    //   self.keyForm.reset();
-    // });
   }
 
   getDate(key) {
@@ -290,9 +111,7 @@ export class ManageBotKeyComponent implements OnInit {
       .subscribe((res) => {
         self.showLazyLoader = false;
         self.ts.success("Session ended");
-        if (this.gridApi) {
-          this.gridApi.redrawRows()
-        }
+
       }, err => {
         self.showLazyLoader = false;
         self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
@@ -301,6 +120,7 @@ export class ManageBotKeyComponent implements OnInit {
 
   deactivateKey(key) {
     const self = this;
+    this.action = 'Deactivate';
     const payload = key
     payload.isActive = !key.isActive;
     payload.keyId = key._id;
@@ -311,9 +131,7 @@ export class ManageBotKeyComponent implements OnInit {
         self.showLazyLoader = false;
         self.selectedBot = res;
         self.dataChange.emit(res);
-        if (this.gridApi) {
-          this.gridApi.redrawRows()
-        }
+
       }, err => {
         self.showLazyLoader = false;
         self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
@@ -323,6 +141,7 @@ export class ManageBotKeyComponent implements OnInit {
 
   deleteBotKey(key) {
     const self = this;
+    this.action = 'Delete'
     const alertModal: any = {};
     alertModal.statusChange = false;
     alertModal.title = 'Delete Bot Key';
@@ -333,6 +152,7 @@ export class ManageBotKeyComponent implements OnInit {
 
   confirmDeactivate(key) {
     const self = this;
+    this.action = 'Deactivate';
     const alertModal: any = {};
     alertModal.statusChange = false;
     alertModal.title = 'Deactivate Key';
@@ -344,6 +164,7 @@ export class ManageBotKeyComponent implements OnInit {
   }
   confirmReactivate(key) {
     const self = this;
+    this.action = 'Reactivate';
     const alertModal: any = {};
     alertModal.statusChange = false;
     alertModal.usePrimaryButton = true;
@@ -356,6 +177,7 @@ export class ManageBotKeyComponent implements OnInit {
   }
   confirmEndSession(key) {
     const self = this;
+    this.action = 'End Session';
     const alertModal: any = {};
     alertModal.statusChange = false;
     alertModal.title = 'End Session';
@@ -368,32 +190,32 @@ export class ManageBotKeyComponent implements OnInit {
 
 
   closeDeleteBotKeyModal(event) {
-    if (event.data) {
-      if (event.action === 'Delete') {
-        const self = this;
-        const payload = { keyId: event.data._id }
-        self.showLazyLoader = true;
 
-        self.commonService.delete('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
-          .subscribe((res) => {
-            self.showLazyLoader = false;
-            self.selectedBot = res;
-            self.dataChange.emit(res);
-            if (this.gridApi) {
-              this.gridApi.redrawRows()
-            }
-          }, err => {
-            self.showLazyLoader = false;
-            self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
-          });
-      }
-      if (event.action === 'Deactivate' || event.action === 'Reactivate') {
-        this.deactivateKey(event.data.key)
-      }
-      if (event.action === 'End Session') {
-        this.endSession(event.data.key)
-      }
+    if (this.action === 'Delete') {
+      const self = this;
+      const payload = { keyId: event._id }
+      self.showLazyLoader = true;
+
+      self.commonService.delete('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
+        .subscribe((res) => {
+          self.showLazyLoader = false;
+          self.selectedBot = res;
+          self.dataChange.emit(res);
+          if (this.gridApi) {
+            this.gridApi.redrawRows()
+          }
+        }, err => {
+          self.showLazyLoader = false;
+          self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
+        });
     }
+    if (this.action === 'Deactivate' || this.action === 'Reactivate') {
+      this.deactivateKey(event.key)
+    }
+    if (this.action === 'End Session') {
+      this.endSession(event.key)
+    }
+
   }
   hasPermission(type: string): boolean {
     const self = this;
@@ -415,18 +237,20 @@ export class ManageBotKeyComponent implements OnInit {
   enterToSelect(event) {
     this.searchTerm = event;
     let filtered;
-    if (event === '' || event === 'reset') {
+    if (event === '' || event === null) {
       filtered = this.selectedBot.botKeys;
     }
     else {
-      filtered = this.selectedBot.botKeys.filter(ele => ele.label.indexOf(event) > -1)
+      filtered = this.selectedBot.botKeys.filter(ele => ele.label.toLowerCase().indexOf(event) > -1)
     }
-
-    this.gridOptions.api.setRowData(filtered)
-
+    this.data = filtered
   }
 
   add() {
     this.onAdd.emit('Keys')
+  }
+
+  hasNewKey() {
+    return this.selectedBot.botKeys.find(key => key.isNew)
   }
 }

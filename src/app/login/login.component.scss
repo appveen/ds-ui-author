@@ -55,7 +55,16 @@
 
     .input-text {
         width: 360px;
+        min-height: 40px !important;
+        border-radius: 8px;
     }
+
+    .form-button {
+        width: 360px;
+        min-height: 48px !important;
+        border-radius: 6px;
+    }
+
 
     .product {
         width: 340px;

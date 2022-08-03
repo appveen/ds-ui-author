@@ -112,9 +112,9 @@
                   <div class="list-group mb-3">
                     <div class="list-group-item header py-0 bg-light text-muted text-uppercase font-11">
                       <div class="d-flex align-items-center justify-content-between h-100">
-                        <div class="group-name">Name</div>
-                        <div class="group-author-flag">Author</div>
-                        <div class="group-appcenter-flag">Appcenter</div>
+                        <div class="group-name d-flex-1">Name</div>
+                        <div class="group-author-flag d-flex-1">Author</div>
+                        <div class="group-appcenter-flag d-flex-1">Appcenter</div>
                         <div class="group-actions"></div>
                       </div>
                     </div>
@@ -123,25 +123,25 @@
                         <div class="d-flex-1">{{group.name}}</div>
                         <div class="group-author-flag font-12 d-flex align-items-center d-flex-1">
                           <ng-container *ngIf="group.hasAuthorRoles">
-                            <span class="dis dis-circle text-success mr-2"></span>
+                            <span class="fa fa-circle fa-xs text-success mr-2"></span>
                             <span class="text-dark">Active</span>
                           </ng-container>
                           <ng-container *ngIf="!group.hasAuthorRoles">
-                            <span class="dis dis-circle text-muted mr-2"></span>
+                            <span class="fa fa-circle fa-xs text-muted mr-2"></span>
                             <span class="text-muted">Inactive</span>
                           </ng-container>
                         </div>
                         <div class="group-appcenter-flag font-12 d-flex align-items-center d-flex-1">
                           <ng-container *ngIf="group.hasAppcenterRoles">
-                            <span class="dis dis-circle text-success mr-2"></span>
+                            <span class="fa fa-circle fa-xs text-success mr-2"></span>
                             <span class="text-dark">Active</span>
                           </ng-container>
                           <ng-container *ngIf="!group.hasAppcenterRoles">
-                            <span class="dis dis-circle text-muted mr-2"></span>
+                            <span class="fa fa-circle fa-xs text-muted mr-2"></span>
                             <span class="text-muted">Inactive</span>
                           </ng-container>
                         </div>
-                        <div class="group-actions">
+                        <div class="group-actions" *ngIf="hasPermission('PMUBU')">
                           <button type="button" class="btn btn-link text-muted p-1" (click)="deleteGroup(group)">
                             <span class="dsi dsi-trash"></span>
                           </button>
@@ -169,7 +169,7 @@
                         <div class="d-flex-1">{{attr.type}}</div>
                         <div class="d-flex-1">{{attr.value}}</div>
 
-                        <div class="group-actions">
+                        <div class="group-actions" *ngIf="hasPermission('PMUBU')">
                           <button type="button" class="btn btn-link text-muted p-1" (click)="editAttribute(attr)">
                             <span class="dsi dsi-edit"></span>
                           </button>
