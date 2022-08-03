@@ -1,6 +1,6 @@
-<div class='p-3'>
+<div class='p-4'>
 
-    <div class="mb-2">
+    <div class="mb-3">
         <strong>State Model</strong>
     </div>
 
@@ -10,7 +10,7 @@
             will be the starting state for the state model machine.
         </p>
 
-        <section *ngIf="!stateModelEnabled" [formGroup]="form" class='create-state-model'>
+        <div *ngIf="!stateModelEnabled" [formGroup]="form" class='create-state-model'>
             <div class="d-flex justify-content-start">
                 <div id='select-state-model' formGroupName="stateModel" odpClickOutside (outside)='searchTerm = "" '
                     class='position-relative'>
@@ -46,15 +46,9 @@
                     <ngb-highlight [result]="r.properties.name" [term]="t"></ngb-highlight>
                 </ng-container>
             </ng-template>
-            <div class='meme position-absolute text-center'>
-                <img src="./assets/img/state_model_meme.png" alt="Meme">
-                <h4>
-                    Hmm...That box must be important...
-                </h4>
-            </div>
-        </section>
+        </div>
 
-        <section *ngIf="stateModelEnabled">
+        <div *ngIf="stateModelEnabled">
             <div class="d-flex justify-content-between">
                 <div id='view-state-model'>
                     <input [attr.disabled]="true" type="text" class="form-control" [value]='StateModelAttrName'>
@@ -164,7 +158,7 @@
 
             </div>
 
-        </section>
+        </div>
     </ng-container>
 
     <ng-container *ngIf="isSchemaFree">

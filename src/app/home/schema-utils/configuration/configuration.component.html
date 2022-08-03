@@ -1,45 +1,7 @@
 <div class="configuration d-flex flex-column w-100" [formGroup]="form">
-  <div class="d-flex p-3 builder-body">
+  <div class="d-flex p-4 builder-body">
     <div class="">
-      <!-- <div class="d-flex flex-column w-100">
-        <span class="font-weight-bold mb-3">About this Data Service</span>
-        <div class="d-flex w-100 pr-5">
-          <div class="position-relative w-100">
-            <textarea
-              *ngIf="edit.status && canEdit('BU')"
-              class="form-control pr-4 description"
-              formControlName="description"
-              placeholder="Enter a description for this data service"
-              rows="4"
-            ></textarea>
-            <span
-              *ngIf="!edit.status || !canEdit('BU')"
-              class="text-dark d-inline-block description custom-text-overflow"
-            >
-              {{
-                form.get("description").value
-                  ? form.get("description").value
-                  : "This data service does not have a description."
-              }}
-            </span>
-            <span
-              class="
-                fa fa-xs fa-circle
-                text-danger
-                position-absolute
-                textarea-error-symbol
-              "
-              *ngIf="
-                form.get('description').dirty &&
-                form.get('description').hasError('length')
-              "
-              ngbTooltip="Description should be less than 250 characters"
-              placement="right"
-            ></span>
-          </div>
-        </div>
-      </div> -->
-      <div class="d-flex w-100" *ngIf="canView('S') || canView('S')">
+      <div class="d-flex w-100 pb-3" *ngIf="canView('S') || canView('S')">
         <div class="d-flex flex-column w-50">
           <span class="font-weight-bold">Data Settings</span>
           <span class="text-accent my-2">These settings defines how records are handled</span>
@@ -55,44 +17,9 @@
                   align-items-center
                   justify-content-center
                 ">
-                <ng-container *ngIf="edit.status && canEdit('S')">
-                  <label class="switch accent mb-0 mr-2">
-                    <input type="checkbox" formControlName="permanentDeleteData" />
-                    <span class="slider"></span>
-                    <span class="toggler"></span>
-                  </label>
-                  <span class="text">{{
-                    form.get("permanentDeleteData").value ? "Yes" : "No"
-                    }}</span>
-                </ng-container>
-                <ng-container *ngIf="!edit.status || !canEdit('S')">
-                  <span class="text d-flex" *ngIf="form && form.get('permanentDeleteData').value">
-                    <span class="
-                        d-flex
-                        align-items-center
-                        justify-content-center
-                        rounded-circle
-                        bg-accent
-                        check-circle
-                        mr-1
-                      ">
-                      <span class="fa fa-check text-white"></span>
-                    </span>
-                    <span class="text">Yes</span>
-                  </span>
-                  <span class="text d-flex" *ngIf="!form || !form.get('permanentDeleteData').value">
-                    <span class="
-                        d-flex
-                        align-items-center
-                        justify-content-center
-                        rounded-circle
-                        bg-secondary
-                        check-circle
-                        mr-1
-                      "></span>
-                    <span class="text">No</span>
-                  </span>
-                </ng-container>
+                <odp-switch [edit]="{status:edit.status && canEdit('S')}"
+                  [checked]="form.get('permanentDeleteData').value"
+                  (checkedChange)="form.get('permanentDeleteData').patchValue($event)"></odp-switch>
               </div>
             </div>
             <div class="d-flex mt-3" *ngIf="canView('S')">
@@ -105,45 +32,8 @@
                   align-items-center
                   justify-content-center
                 ">
-                <ng-container *ngIf="edit.status && canEdit('S')">
-                  <label class="switch accent mb-0 mr-2">
-                    <input type="checkbox" [ngModelOptions]="{ standalone: true }" [(ngModel)]="retainDataHistory"
-                      (ngModelChange)="onVersionChange($event)" />
-                    <span class="slider"></span>
-                    <span class="toggler"></span>
-                  </label>
-                  <span class="text">{{
-                    retainDataHistory ? "Yes" : "No"
-                    }}</span>
-                </ng-container>
-                <ng-container *ngIf="!edit.status || !canEdit('S')">
-                  <span class="text d-flex" *ngIf="retainDataHistory">
-                    <span class="
-                        d-flex
-                        align-items-center
-                        justify-content-center
-                        rounded-circle
-                        bg-accent
-                        check-circle
-                        mr-1
-                      ">
-                      <span class="fa fa-check text-white"></span>
-                    </span>
-                    <span class="text">Yes</span>
-                  </span>
-                  <span class="text d-flex" *ngIf="!retainDataHistory">
-                    <span class="
-                        d-flex
-                        align-items-center
-                        justify-content-center
-                        rounded-circle
-                        bg-secondary
-                        check-circle
-                        mr-1
-                      "></span>
-                    <span class="text">No</span>
-                  </span>
-                </ng-container>
+                <odp-switch [edit]="{status:edit.status && canEdit('S')}" [(checked)]="retainDataHistory"
+                  (checkedChange)="onVersionChange($event)"></odp-switch>
               </div>
             </div>
             <div class="d-flex mt-3" *ngIf="retainDataHistory && canView('S')">
@@ -218,7 +108,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex flex-column w-100 mt-2 mb-1">
+      <div class="d-flex flex-column w-100 pb-3">
         <span class="font-weight-bold">Insights Settings</span>
         <div class="d-flex mt-2" *ngIf="isAdmin">
           <div class="text-secondary option-label">Disable Insights</div>
@@ -228,71 +118,35 @@
               align-items-center
               justify-content-center
             ">
-            <ng-container *ngIf="edit.status">
-              <label class="switch accent mb-0 mr-2">
-                <input type="checkbox" formControlName="disableInsights" />
-                <span class="slider"></span>
-                <span class="toggler"></span>
-              </label>
-              <span class="text">{{
-                form.get("disableInsights").value ? "Yes" : "No"
-                }}</span>
-            </ng-container>
-            <ng-container *ngIf="!edit.status">
-              <span class="text d-flex" *ngIf="form && form.get('disableInsights').value">
-                <span class="
-                    d-flex
-                    align-items-center
-                    justify-content-center
-                    rounded-circle
-                    bg-accent
-                    check-circle
-                    mr-1
-                  ">
-                  <span class="fa fa-check text-white"></span>
-                </span>
-                <span class="text">Yes</span>
-              </span>
-              <span class="text d-flex" *ngIf="form && !form.get('disableInsights').value">
-                <span class="
-                    d-flex
-                    align-items-center
-                    justify-content-center
-                    rounded-circle
-                    bg-secondary
-                    check-circle
-                    mr-1
-                  "></span>
-                <span class="text">No</span>
-              </span>
-            </ng-container>
+            <odp-switch [edit]="{status:edit.status && canEdit('S')}" [checked]="form.get('disableInsights').value"
+              (checkedChange)="form.get('disableInsights').patchValue($event)"></odp-switch>
           </div>
         </div>
       </div>
-      <div class="mt-3" *ngIf="edit.status && canEdit('S')">
-        <div class="d-flex flex-column w-50 p-3 reset-data">
-          <div class="d-flex">
+      <div class="pb-3" *ngIf="edit.status && canEdit('S')">
+        <div class="d-flex flex-column w-50 p-4 reset-data">
+          <div class="d-flex mb-3">
             <div class="mr-2 warning position-relative">
               <span class="fas fa-xs fa-exclamation position-absolute icon-pos"></span>
             </div>
             <div><strong>Reset</strong></div>
           </div>
-          <div class="mt-3">
-            Note that, these actions are
+          <div class="d-flex mb-3">
+            Note that, these actions are&nbsp;
             <strong>permanent and can not be undone.</strong>
           </div>
-          <div class="d-flex ml-3 mt-3">
+          <div class="d-flex align-items-start justify-content-between mb-3">
             <div class="d-flex flex-column">
               <div>Clear logs</div>
               <div class="text-secondary">
                 Remove all logs generated by hooks and workflows
               </div>
             </div>
-            <div class="btn-link text-danger hover mt-auto ml-5" (click)="purgeData('logs')">
+            <div class="btn-link text-danger hover mr-3" (click)="purgeData('logs')">
               Purge all Logs
             </div>
           </div>
-          <div class="d-flex ml-3 mt-3">
+          <div class="d-flex align-items-start justify-content-between mb-3">
             <div class="d-flex flex-column">
               <div>Clear audit</div>
               <div class="text-secondary desc">
@@ -300,11 +154,11 @@
                 documents saved
               </div>
             </div>
-            <div class="btn-link text-danger hover mt-3 ml-5" (click)="purgeData('audits')">
+            <div class="btn-link text-danger hover mr-3" (click)="purgeData('audits')">
               Purge all Audit
             </div>
           </div>
-          <div class="d-flex ml-3 mt-3">
+          <div class="d-flex align-items-start justify-content-between mb-3">
             <div class="d-flex flex-column">
               <div>Clear all data</div>
               <div class="text-secondary desc">
@@ -313,7 +167,7 @@
                 be reset
               </div>
             </div>
-            <div class="btn-link text-danger hover mt-3 ml-5" (click)="purgeData('all')">
+            <div class="btn-link text-danger hover mr-3" (click)="purgeData('all')">
               <strong>Purge all Data</strong>
             </div>
           </div>
@@ -321,13 +175,13 @@
       </div>
     </div>
     <div class="">
-      <div class="d-flex flex-column mb-4" *ngIf="canView('S')">
+      <div class="d-flex flex-column pb-3" *ngIf="canView('S')">
         <strong class="font-weight-bold mb-3">Customize API endpoint</strong>
         <input *ngIf="edit.status && canEdit('S')" type="text" class="form-control" formControlName="api"
           id="sbAPIEndpoint" />
         <span *ngIf="!edit.status || !canEdit('S')" class="form-control-plaintext">{{ form.get("api").value }}</span>
       </div>
-      <div class="d-flex flex-column fuzzy-toggle" *ngIf="canView('S')">
+      <div class="d-flex flex-column fuzzy-toggle pb-3" *ngIf="canView('S')">
         <div class="d-flex mb-2">
           <div class="font-weight-bold">Fuzzy-search:</div>
           <div class="value-width ml-3">
@@ -343,25 +197,7 @@
           having Collections).
         </div>
       </div>
-      <!-- <div class="d-flex flex-column w-100" *ngIf="canView('S')">
-        <span class="font-weight-bold mt-3 mb-2">Allowed File Types</span>
-        <div class="d-flex flex-wrap">
-          <label
-            class="file-ext-block d-flex align-items-start mb-2"
-            *ngFor="let ext of allowedFileTypes"
-          >
-            <odp-checkbox
-              [edit]="edit"
-              [checked]="getFileExtention(ext)"
-              (checkedChange)="setFileExtention($event, ext)"
-            >
-              {{ ext }}
-            </odp-checkbox>
-          </label>
-        </div>
-        <div class="d-flex flex-column w-100 px-3"></div>
-      </div> -->
-      <div class="d-flex flex-column w-100" *ngIf="canView('S')">
+      <div class="d-flex flex-column w-100 pb-3" *ngIf="canView('S')">
         <span class="font-weight-bold mt-3 mb-2">Properties</span>
         <table class="table">
           <thead class="bg-light text-secondary">

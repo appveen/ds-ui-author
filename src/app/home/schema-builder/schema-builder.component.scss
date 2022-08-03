@@ -5,6 +5,7 @@
   .name-label {
     min-width: 50px;
   }
+
   input {
     min-width: 400px;
   }
@@ -15,30 +16,36 @@
     transition: 0.25s;
     min-height: 56px;
     line-height: 56px;
-    font-weight: 700;
-    color: #B5B8BC;
+    font-weight: 500;
+    color: $sub-headings;
+
     &.active,
     &:hover {
-      color: $link-color !important;
+      color: $link-color  !important;
     }
+
     &.active {
-      color: $link-color !important;
+      color: $link-color  !important;
       font-weight: bold;
     }
+
     .fa {
       opacity: 0;
       transition: 0.5s;
       font-size: 8px;
+
       &.show {
         opacity: 0.6;
       }
     }
   }
 }
+
 .properties-wrapper {
   min-width: 430px;
   max-width: 430px;
 }
+
 .builder {
   .options {
     min-height: 40px;
@@ -46,7 +53,7 @@
   }
 
   #experience-side-nav {
-    width: 175px;
+    width: 250px;
     // border-right: 1px solid #DBDBDB;
 
     .side-nav-tab {
@@ -64,7 +71,7 @@
 .scroll {
   overflow-y: auto;
   overflow-x: hidden;
-  min-height:  calc(100vh - 330px);
+  min-height: calc(100vh - 330px);
   max-height: calc(100vh - 330px);
 }
 
@@ -78,13 +85,14 @@
 .builder-body {
   min-height: 100%;
   max-height: calc(100vh - 224px);
+
   &.schema-creator {
     min-height: calc(100vh - 244px);
     max-height: calc(100vh - 244px);
     padding-bottom: 10px !important;
   }
 
-  .schema-free{
+  .schema-free {
     min-height: 58vh;
   }
 
@@ -94,12 +102,14 @@
     opacity: 0;
     transition: 0.25s;
   }
+
   .copy-text {
     right: 26px;
     top: 10px;
     opacity: 0;
     transition: 0.25s;
   }
+
   &:hover {
     .copy-symbol {
       opacity: 1;
@@ -116,6 +126,7 @@
       border-radius: 15px;
       font-size: 12px;
     }
+
     .text {
       font-size: 14px;
     }

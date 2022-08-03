@@ -7,39 +7,36 @@
   </div>
 </div>
 <div class="d-flex flex-column w-100 h-100 page-padding bg-light-gray">
-  <!-- <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb> -->
-  <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description"
-    [edit]="{status:edit.status && canEditService}">
-    <div class="d-flex justify-content-end align-items-center">
-      <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link mr-3" id="sbButtonCancel">
-        <span class="fa fa-close mr-2"></span>
-        <span class="text">Cancel</span>
-      </button>
-      <button *ngIf="edit.id && !edit.status && hasWritePermission && serviceObj.type!='internal' "
-        (click)="enableEdit(true)" type="button" class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
-        <span class="odp-edit mr-2"></span>
-        <span class="text">Edit</span>
-      </button>
-      <button
-        *ngIf="edit.id && !edit.status && hasWritePermission && serviceObj.status!=='Undeployed' && serviceObj.type==='internal'"
-        (click)="enableEdit(true)" type="button" class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
-        <span class="odp-edit mr-2"></span>
-        <span class="text">Edit</span>
-      </button>
-
-      <button *ngIf="edit.status && hasWritePermission" (click)="checkAndSave();edit.status=false" type="button"
-        class="edit-button btn btn-min-width btn-primary mr-3" id="sbButtonSave">
-        <span class="fa fa-save mr-2"></span>
-        <span class="text">Save</span>
-      </button>
-      <button *ngIf="edit.status && canSaveAndDeploy" [disabled]="!isValidSchema"
-        (click)="checkSaveAndDeploy();edit.status=false" type="button" class="edit-button btn btn-min-width btn-dark"
-        id="sbButtonSaveAndDeploy">
-        <span class="fa fa-save mr-2"></span>
-        <span class="text">Save &amp; Deploy</span>
-      </button>
-    </div>
-  </odp-basic-info>
+  <div class="pt-2 pb-4">
+    <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description"
+      [edit]="{status:edit.status && canEditService}">
+      <div class="d-flex justify-content-end align-items-center">
+        <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-white border mr-3"
+          id="sbButtonCancel">
+          <span class="fa fa-close mr-2"></span>
+          <span class="text">Cancel</span>
+        </button>
+        <button *ngIf="edit.id && !edit.status && hasWritePermission && serviceObj.type!='internal' "
+          (click)="enableEdit(true)" type="button" class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
+          <span class="text">Edit</span>
+        </button>
+        <button
+          *ngIf="edit.id && !edit.status && hasWritePermission && serviceObj.status!=='Undeployed' && serviceObj.type==='internal'"
+          (click)="enableEdit(true)" type="button" class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
+          <span class="text">Edit</span>
+        </button>
+        <button *ngIf="edit.status && hasWritePermission" (click)="checkAndSave();edit.status=false" type="button"
+          class="edit-button btn btn-min-width btn-outline-primary mr-3" id="sbButtonSave">
+          <span class="text">Save</span>
+        </button>
+        <button *ngIf="edit.status && canSaveAndDeploy" [disabled]="!isValidSchema"
+          (click)="checkSaveAndDeploy();edit.status=false" type="button"
+          class="edit-button btn btn-min-width btn-primary" id="sbButtonSaveAndDeploy">
+          <span class="text">Save &amp; Deploy</span>
+        </button>
+      </div>
+    </odp-basic-info>
+  </div>
   <form [formGroup]="form" class="d-flex flex-column w-100 h-100 mt-4">
     <div class="d-flex flex-column w-100 h-100 border-top border-left border-right rounded bg-white">
       <div class="tabs d-flex align-items-center border-bottom" (click)="showHiddenMenu()" id="sbTabs">
@@ -84,16 +81,20 @@
       </div>
       <div class="builder-body d-flex flex-column w-100" *ngIf="hasAnyTabPermission">
         <ng-container>
-          <div class="m-3" *ngIf="activeTab == 0" >
+          <div class="m-3" *ngIf="activeTab == 0">
             <div ngbDropdown class="d-inline-block">
-              <button type="button" class="btn btn-outline-secondary" id="dropdownBasic1" ngbDropdownToggle [disabled]="!edit.status">{{isSchemaFree ? "Schema Free Design": "Schema Designer"}}</button>
+              <button type="button" class="btn btn-outline-secondary" id="dropdownBasic1" ngbDropdownToggle
+                [disabled]="!edit.status">{{isSchemaFree ? "Schema Free Design": "Schema Designer"}}</button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <button ngbDropdownItem type="button" (click)='toggleSchemaType(true)' *ngIf="!isSchemaFree">Schema Free Design</button>
-                <button ngbDropdownItem type="button" (click)='toggleSchemaType(false)' *ngIf="isSchemaFree">Schema Designer</button>
+                <button ngbDropdownItem type="button" (click)='toggleSchemaType(true)' *ngIf="!isSchemaFree">Schema Free
+                  Design</button>
+                <button ngbDropdownItem type="button" (click)='toggleSchemaType(false)' *ngIf="isSchemaFree">Schema
+                  Designer</button>
               </div>
             </div>
           </div>
-          <div *ngIf="isSchemaFree && activeTab == 0" class='schema-free d-flex align-items-center justify-content-center'>
+          <div *ngIf="isSchemaFree && activeTab == 0"
+            class='schema-free d-flex align-items-center justify-content-center'>
             <div class='text-center w-25'>
               <img src="./assets/img/Book.png" alt="Schema Free">
               <div class='font-weight-bold mt-3'>Schema Free</div>
@@ -103,8 +104,9 @@
               </div>
             </div>
           </div>
-          <div class="w-100 builder px-4" [ngClass]="{'d-none':activeTab != 0,'d-flex':activeTab == 0}" *ngIf="!isSchemaFree">
-            <div class="d-flex flex-column w-100" >
+          <div class="w-100 builder px-4" [ngClass]="{'d-none':activeTab != 0,'d-flex':activeTab == 0}"
+            *ngIf="!isSchemaFree">
+            <div class="d-flex flex-column w-100">
               <div class="options d-flex justify-content-between align-items-center ">
                 <span class="text-dark font-weight-bold">Attributes</span>
                 <div class="d-flex justify-content-end align-items-center"
@@ -149,7 +151,7 @@
                 </ng-container>
               </div>
             </div>
-            <div >
+            <div>
               <odp-structure-field-properties [edit]="edit" [type]="serviceObj?.type" [(mainForm)]='form'>
               </odp-structure-field-properties>
             </div>
@@ -161,29 +163,24 @@
         </ng-container>
         <ng-container *ngIf="activeTab == 2">
           <div class="w-100 builder d-flex">
-            <div class='d-flex flex-column p-3' id='experience-side-nav'>
-              <div class='mb-3'>
+            <div class='d-flex flex-column p-4 fw-500 text-muted font-14' id='experience-side-nav'>
+              <div class='mb-3 p-2'>
                 <span class='side-nav-tab'
-                  [ngClass]="{'text-accent' : experienceSideNavActiveTab == 0 , 'text-bold' : experienceSideNavActiveTab == 0}"
+                  [ngClass]="{'text-dark' : experienceSideNavActiveTab == 0 , 'fw-600' : experienceSideNavActiveTab == 0}"
                   (click)='experienceSideNavActiveTab = 0'>
                   State Model
                 </span>
               </div>
-              <div class='mb-3' *ngIf='false'>
-                <span class='side-nav-tab'>
-                  Data Segmentation
-                </span>
-              </div>
-              <div class='mb-3'>
+              <div class='mb-3 p-2'>
                 <span class='side-nav-tab'
-                  [ngClass]="{'text-accent' : experienceSideNavActiveTab == 2 , 'text-bold' : experienceSideNavActiveTab == 2}"
+                  [ngClass]="{'text-dark' : experienceSideNavActiveTab == 2 , 'fw-600' : experienceSideNavActiveTab == 2}"
                   (click)='experienceSideNavActiveTab = 2'>
                   Personalize
                 </span>
               </div>
-              <div class='mb-3'>
+              <div class='mb-3 p-2'>
                 <span class='side-nav-tab'
-                  [ngClass]="{'text-accent' : experienceSideNavActiveTab == 3 , 'text-bold' : experienceSideNavActiveTab == 3}"
+                  [ngClass]="{'text-dark' : experienceSideNavActiveTab == 3 , 'fw-600' : experienceSideNavActiveTab == 3}"
                   (click)='experienceSideNavActiveTab = 3'>
                   Workflows
                 </span>
@@ -198,7 +195,7 @@
               </div>
 
               <div *ngIf="experienceSideNavActiveTab == 0"
-                class="schema-creator scrollStateModel position-relative w-100 bg-light">
+                class="schema-creator scrollStateModel position-relative w-100">
                 <odp-state-model [(form)]='form' [edit]='edit'></odp-state-model>
               </div>
 
@@ -257,11 +254,11 @@
   <div class="modal-body p-4">
     <div class="d-flex align-items-center justify-content-between w-100">
       <span class="font-20 fw-600">{{deleteModal.title}}</span>
-      <span class="fa fa-times text-secondary hover " (click)="deleteModalTemplateRef.close(false)"></span>
+      <span class="fa fa-times text-secondary hover" (click)="deleteModalTemplateRef.close(false)"></span>
     </div>
     <p class="text-secondary text-center my-5">{{deleteModal.message}}</p>
     <div class="d-flex align-items-center justify-content-end">
-      <button type="button" class="btn btn-min-width btn-delete" (click)="deleteModalTemplateRef.close(true)"
+      <button type="button" class="btn btn-min-width btn-danger" (click)="deleteModalTemplateRef.close(true)"
         id="sbDeleteModalYes">Yes</button>
     </div>
   </div>
@@ -275,7 +272,7 @@
     </div>
     <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
     <div class="d-flex align-items-center justify-content-end">
-      <button type="button" class="btn btn-min-width btn-dark"
+      <button type="button" class="btn btn-min-width btn-primary"
         (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
     </div>
   </div>
@@ -290,8 +287,8 @@
     </div>
     <p class="text-secondary my-5">{{toggleSchemaModal.message}}</p>
     <div class="d-flex align-items-center justify-content-end">
-      <button type="button" class="btn btn-min-width btn-outline-dark mr-3" (click)="schemaToggleTemplateRef.close(false)"
-        id="sbDeleteModalYes">Cancel</button>
+      <button type="button" class="btn btn-min-width btn-outline-dark mr-3"
+        (click)="schemaToggleTemplateRef.close(false)" id="sbDeleteModalYes">Cancel</button>
       <button type="button" class="btn btn-min-width btn-primary" (click)="schemaToggleTemplateRef.close(true)"
         id="sbDeleteModalYes">Enable</button>
     </div>

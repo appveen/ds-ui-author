@@ -1,7 +1,4 @@
-<div class="d-flex flex-row w-100 h-100 maker-checker-builder" [ngClass]="{
-    'bg-light': !edit.status && !makerCheckerCreated,
-    'bg-white': makerCheckerCreated
-  }">
+<div class="d-flex flex-row w-100 h-100 maker-checker-builder bg-white">
   <ng-container *ngIf="!isSchemaFree">
     <ng-container *ngIf="!makerCheckerCreated">
       <div class="d-flex flex-column w-50 create-maker-checker h-auto justify-content-center m-auto text-center">
@@ -24,7 +21,7 @@
         </div>
       </div>
     </ng-container>
-    <div class="p-3 w-100" id="maker-checker-section" *ngIf="makerCheckerCreated">
+    <div class="p-4 w-100" id="maker-checker-section" *ngIf="makerCheckerCreated">
       <form [formGroup]="makerCheckerData">
         <div class="d-flex justify-content-between">
           <div class="d-flex justify-content-start">
@@ -58,11 +55,9 @@
                     <span>Delete</span>
                   </div>
                   <div>
-                    <button type="button" class="btn btn-link" (click)="addStep()">
-                      <span class="rounded-circle bg-primary align-middle">
-                        <span class="dsi dsi-plus text-white delete-steps"></span>
-                      </span>
-                      <span class="ml-2 align-middle">Add Step</span>
+                    <button type="button" class="btn btn-link d-flex align-items-center" (click)="addStep()">
+                      <span class="dsi dsi-plus mr-2"></span>
+                      <span class="">Add Step</span>
                     </button>
                   </div>
                 </div>
@@ -180,7 +175,7 @@
         (click)="deleteModalTemplateRef.close(false)" id="sbDeleteModal">
         {{ deleteModal.falseButton }}
       </button>
-      <button type="button" class="btn btn-min-width btn-delete" (click)="deleteModalTemplateRef.close(true)"
+      <button type="button" class="btn btn-min-width btn-danger" (click)="deleteModalTemplateRef.close(true)"
         id="sbDeleteModalYes">
         {{ deleteModal.trueButton }}
       </button>

@@ -70,13 +70,13 @@
   }
 }
 
-.permission-container {
+.permission-wrapper {
   height: calc(100% - 16px);
 }
 
-.role-container {
+.permission-container {
   overflow-y: auto;
-  height: calc(100vh - 205px);
+  height: calc(100vh - 230px);
 }
 
 .field-toggle-state {
@@ -187,8 +187,8 @@ textarea {
 }
 
 .info {
-  top: 7px;
-  left: 96%;
+  top: 10px;
+  right: 2px;
 }
 
 .radio-btn-grp {
@@ -203,7 +203,8 @@ textarea {
 }
 
 .rule-wrapper {
-  width: calc(100vw - 510px);
+  // width: calc(100vw - 510px);
+  width: 100%;
   min-height: 300px;
   overflow-x: auto;
 
