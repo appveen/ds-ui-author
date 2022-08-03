@@ -221,7 +221,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     }
     self.delete = {
       title: 'Delete ' + self.roles.find(e => e.id === self.selectedRole.id).name,
-      label: 'Are you sure you want to delete this role?'
+      label: self.roles.find(e => e.id === self.selectedRole.id).name
     };
     self.deleteModalRef = self.commonService.modal(self.deleteModal);
     self.deleteModalRef.result.then(close => {

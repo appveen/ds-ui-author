@@ -294,39 +294,16 @@
 </ng-template>
 
 <ng-template #purgeModalTemplate>
-  <div class="
-      delete-modal-body
-      modal-body
-      p-4
-      d-flex
-      flex-column
-      align-items-center
-    " odpFocusNext (trigger)="purgeModalTemplateRef.close(true)">
-    <div class="d-flex align-items-center justify-content-between mb-2 w-100">
+  <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center"
+    (trigger)="purgeModalTemplateRef.close(true)">
+    <div class="d-flex align-items-center justify-content-between mb-4 w-100">
       <div class="d-flex align-items-center">
-        <span class="
-            icon-wrapper
-            modify-red
-            rounded-circle
-            d-flex
-            align-items-center
-            justify-content-center
-            mr-2
-          ">
-          <span class="fas fa-exclamation"></span>
-        </span>
-        <span class="font-weight-bold mb-1"><strong>{{ purgeModal.title }}</strong></span>
+        <span class="dsi dsi-danger-circle mr-2"></span>
+        <span class="font-20 fw-600"><strong>{{ purgeModal.title }}</strong></span>
       </div>
-      <span class="fa fa-times text-muted hover" (click)="purgeModalTemplateRef.close(false)"></span>
+      <span class="dsi dsi-close text-dark hover" (click)="purgeModalTemplateRef.close(false)"></span>
     </div>
-    <div class="
-        info
-        d-flex
-        flex-column
-        align-self-center
-        justify-content-center
-        w-100
-      ">
+    <div class="info d-flex flex-column align-self-center justify-content-center w-100">
       <div class="desc-pos">{{ purgeModal.desc }}</div>
       <div class="text-center mt-3 px-4">
         <span class="confirm-text">
@@ -335,7 +312,7 @@
       </div>
       <input type="text" class="form-control mt-3 service-name" placeholder="Enter the Data Service name"
         [(ngModel)]="confirmServiceName" odpAutoFocus />
-      <div class="text-center mt-3">
+      <div class="text-center mt-5">
         <button class="btn btn-danger" type="button" (click)="purgeModalTemplateRef.close(true)">
           {{ purgeModal.btnText }}
         </button>

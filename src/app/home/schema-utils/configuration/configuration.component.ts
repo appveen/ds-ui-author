@@ -144,7 +144,7 @@ export class ConfigurationComponent implements OnInit {
         self.purgeModal = {
           title: 'Purge all saved logs?',
           desc: 'This action cannot be undone. This will permanently delete logs.',
-          btnText: 'I understand, clear logs',
+          btnText: 'I understand, Clear logs',
           type: 'log'
         };
         break;
@@ -153,7 +153,7 @@ export class ConfigurationComponent implements OnInit {
         self.purgeModal = {
           title: 'Purge all saved audits?',
           desc: 'This action cannot be undone. This will permanently delete audits.',
-          btnText: 'I understand, clear audits',
+          btnText: 'I understand, Clear audits',
           type: 'audit'
         };
         break;
@@ -162,7 +162,7 @@ export class ConfigurationComponent implements OnInit {
         self.purgeModal = {
           title: 'Purge all data?',
           desc: 'This action cannot be undone. This will permanently delete all data.',
-          btnText: 'I understand, clear data',
+          btnText: 'I understand, Clear data',
           type: 'all'
         };
         break;

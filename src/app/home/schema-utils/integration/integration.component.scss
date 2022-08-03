@@ -7,63 +7,64 @@
   overflow-y: auto;
 
   .hooks-dashboard {
-    width: 200px;
-  }
-
-  .text-small {
-    font-size: 0.8125rem;
-  }
-
-  .text-bold {
-    font-weight: bold;
+    min-width: 250px;
   }
 
   .hooks-content {
     .preHook-desc {
       max-width: 500px;
       min-width: 500px;
-      max-height: 34px;
       min-height: 34px;
     }
 
     .hook-table {
-      .hHook-table__row:hover {
-        background: $light;
+      .hHook-table__row {
+        max-height: 56px;
+        min-height: 56px;
+
+        &:hover {
+          background: $light;
+        }
       }
+
       .hook-table__header {
-        background: $heading-highlight;
-        color: $white;
-        font-size: 0.8125rem;
-        max-height: 36px;
-        min-height: 36px;
+        background: $light;
+        color: $sub-headings;
+        font-size: 12px;
+        max-height: 38px;
+        min-height: 38px;
       }
+
       .hook-name {
         min-width: 180px;
         max-width: 180px;
       }
+
       .hook-url {
         min-width: 550px;
         max-width: 550px;
       }
+
       .hook-header-name {
         min-width: 202px;
-        
+
       }
+
       .hook-header-url {
         min-width: 562px;
         max-width: 562px;
       }
-      
+
 
     }
   }
 }
+
 .field-error-symbol {
   top: 7px;
   left: 90%;
 }
 
-sup{
+sup {
   top: auto !important;
 }
-

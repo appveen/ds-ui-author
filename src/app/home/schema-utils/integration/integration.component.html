@@ -1,70 +1,51 @@
 <div class="d-flex flex-column w-100 h-100 builder-body">
-    <div class="d-flex w-100 p-3">
-        <div class="d-flex flex-column hooks-dashboard">
+    <div class="d-flex w-100">
+        <div class="d-flex flex-column hooks-dashboard p-4">
             <div class="mb-3"><strong>Data Hooks</strong></div>
             <div class="d-flex flex-column pl-2">
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('preHook')"
-                        [ngClass]="{'text-accent': hooks.preHook, 'text-bold': hooks.preHook}">
-                        Pre hooks
-                    </span>
-                    <span class="text-muted w-25 d-flex justify-content-end">
-                        {{ preHook.length }}
-                    </span>
+                <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                    <span class="hover" (click)="selectHook('preHook')"
+                        [ngClass]="{'text-dark fw-600': hooks.preHook}">Pre hooks</span>
+                    <span class="">{{ preHook.length }}</span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('postHook')"
-                        [ngClass]="{'text-accent': hooks.postHook, 'text-bold': hooks.postHook}" id="postHooks">Post
-                        hooks</span>
-                    <span class="text-muted w-25 d-flex justify-content-end">
-                        {{ webHooks.length }}
-                    </span>
+                <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                    <span class="hover" (click)="selectHook('postHook')"
+                        [ngClass]="{'text-dark fw-600': hooks.postHook}" id="postHooks">Post hooks</span>
+                    <span class="">{{ webHooks.length }}</span>
                 </div>
             </div>
             <div class="mb-3" *ngIf="!isSchemaFree"><strong>Review Hooks</strong></div>
             <div class="d-flex flex-column pl-2" *ngIf="!isSchemaFree">
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('submitHook')"
-                        [ngClass]="{'text-accent': hooks.submitHook, 'text-bold': hooks.submitHook}">Submit</span>
-                    <span class="text-muted d-flex w-25 justify-content-end">
-                        {{ submitHooks.length }}
-                    </span>
+                <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                    <span class="hover" (click)="selectHook('submitHook')"
+                        [ngClass]="{'text-dark fw-600': hooks.submitHook}">Submit</span>
+                    <span class="">{{ submitHooks.length }}</span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('approveHook')"
-                        [ngClass]="{'text-accent': hooks.approveHook, 'text-bold': hooks.approveHook}">Approve</span>
-                    <span class="text-muted d-flex w-25 justify-content-end">
-                        {{ approveHooks.length }}
-                    </span>
+                <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                    <span class="hover" (click)="selectHook('approveHook')"
+                        [ngClass]="{'text-dark fw-600': hooks.approveHook}">Approve</span>
+                    <span class="">{{ approveHooks.length }}</span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('rejectHook')"
-                        [ngClass]="{'text-accent': hooks.rejectHook, 'text-bold': hooks.rejectHook}">Reject</span>
-                    <span class="text-muted d-flex w-25 justify-content-end">
-                        {{ rejectHooks.length }}
-                    </span>
+                <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                    <span class="hover" (click)="selectHook('rejectHook')"
+                        [ngClass]="{'text-dark fw-600': hooks.rejectHook}">Reject</span>
+                    <span class="">{{ rejectHooks.length }}</span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('sendForReviewHook')"
-                        [ngClass]="{'text-accent': hooks.sendForReviewHook, 'text-bold': hooks.sendForReviewHook}">
-                        Rework
-                    </span>
-                    <span class="text-muted d-flex w-25 justify-content-end">
-                        {{ sendForReviewHooks.length }}
-                    </span>
+                <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                    <span class="hover" (click)="selectHook('sendForReviewHook')"
+                        [ngClass]="{'text-dark fw-600': hooks.sendForReviewHook}">Rework</span>
+                    <span class="">{{ sendForReviewHooks.length }}</span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('discardHook')"
-                        [ngClass]="{'text-accent': hooks.discardHook, 'text-bold': hooks.discardHook}">Discard</span>
-                    <span class="text-muted d-flex w-25 justify-content-end">
-                        {{ discardHooks.length }}
-                    </span>
+                <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                    <span class="hover" (click)="selectHook('discardHook')"
+                        [ngClass]="{'text-dark fw-600': hooks.discardHook}">Discard</span>
+                    <span class="">{{ discardHooks.length }}</span>
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.preHook">
+        <div class="d-flex flex-column hooks-content p-4 w-100" *ngIf="hooks.preHook">
             <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Pre hooks</strong>
+                <span class="fw-600 font-20">Pre hooks</span>
                 <div class="ml-auto">
                     <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
@@ -80,46 +61,47 @@
                 saved.
                 Pre hooks are invoked when data is created and edited, to enrich and/or validate data.
             </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Pre hook Name</p>
-                    <p class="hook-header-url ml-2">Pre hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
+            <div class="hook-table border rounded">
+                <div class="hook-table__header border-bottom d-flex align-items-center px-4">
+                    <span class="hook-header-name">Pre hook Name</span>
+                    <span class="hook-header-url ml-2">Pre hook URL</span>
+                    <span *ngIf="edit.status">Action</span>
                 </div>
-                <div class="hook-table__body d-flex pt-2 px-4" *ngIf="preHook.length === 0">
+                <div class="hook-table__body d-flex py-2 px-4" *ngIf="preHook.length === 0">
                     <span class="text-muted">No pre hooks </span>
                 </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="preHook.length > 0">
+                <div class="hHook-table__body d-flex flex-column" *ngIf="preHook.length > 0">
                     <div [sortablejs]="preHook" [sortablejsOptions]="{ disabled: !edit.status }">
                         <div *ngFor="let hook of preHook; let hookIndex = index"
-                            class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                            <span class="fa fa-bars text-muted hover mt-1"></span>
-                            <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                                {{ hook.name }}</p>
+                            class="d-flex p-2 border-bottom w-100 hHook-table__row d-flex align-items-center">
+                            <span class="fa fa-bars text-muted hover"></span>
+                            <span class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
+                                {{ hook.name }}</span>
                             <div class="ml-2 d-flex justify-content-start">
-                                <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
+                                <span class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
                                     ngbTooltip="{{hook.url}}">
                                     {{ hook.url }}
-                                </p>
+                                </span>
                             </div>
                             <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                                <p class="text-accent hook-url hover text-truncate" placement="top"
+                                <span class="text-accent hook-url hover text-truncate" placement="top"
                                     ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                    {{ hook.url }}</p>
+                                    {{ hook.url }}</span>
                             </div>
-                            <div *ngIf="edit.status">
-                                <button type="button" class="btn btn-link"
-                                    (click)="removeHook(hookIndex)">Delete</button>
-                                <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
+                            <div class="d-flex align-items-center justify-content-end ml-auto" *ngIf="edit.status">
+                                <!-- <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
+                                <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button> -->
+                                <span class="dsi dsi-trash text-secondary mr-3" (click)="removeHook(hookIndex)"></span>
+                                <span class="dsi dsi-edit text-secondary mr-3" (click)="newHook(hookIndex)"></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.postHook">
+        <div class="d-flex flex-column hooks-content p-4 w-100" *ngIf="hooks.postHook">
             <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Post hooks</strong>
+                <span class="fw-600 font-20">Post hooks</span>
                 <div class="ml-auto">
                     <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
@@ -134,42 +116,44 @@
             <div class="text-secondary preHook-desc mb-4">Use a post hook to perform an action when data is successfully
                 updated. Post hooks are triggerred for all create, update and delete actions on data.
             </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Post hook Name</p>
-                    <p class="hook-header-url">Post hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
+            <div class="hook-table border rounded">
+                <div class="hook-table__header border-bottom d-flex align-items-center px-4">
+                    <span class="hook-header-name">Post hook Name</span>
+                    <span class="hook-header-url">Post hook URL</span>
+                    <span *ngIf="edit.status">Action</span>
                 </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="webHooks.length === 0">
+                <div class="hHook-table__body d-flex py-2 px-4" *ngIf="webHooks.length === 0">
                     <span class="text-muted">No post hooks </span>
                 </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="webHooks.length > 0">
+                <div class="hHook-table__body d-flex flex-column" *ngIf="webHooks.length > 0">
                     <div *ngFor="let hook of webHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
+                        class="d-flex p-2 border-bottom w-100 hHook-table__row d-flex align-items-center">
+                        <span class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
+                            {{ hook.name }}</span>
                         <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
+                            <span class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
                                 ngbTooltip="{{hook.url}}">
                                 {{ hook.url }}
-                            </p>
+                            </span>
                         </div>
                         <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
+                            <span class="text-accent hook-url hover text-truncate" placement="top"
                                 ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
+                                {{ hook.url }}</span>
                         </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
+                        <div class="d-flex align-items-center justify-content-end ml-auto" *ngIf="edit.status">
+                            <!-- <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
+                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button> -->
+                            <span class="dsi dsi-trash text-secondary mr-3" (click)="removeHook(hookIndex)"></span>
+                            <span class="dsi dsi-edit text-secondary mr-3" (click)="newHook(hookIndex)"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.approveHook">
+        <div class="d-flex flex-column hooks-content p-4 w-100" *ngIf="hooks.approveHook">
             <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Approve hooks</strong>
+                <span class="fw-600 font-20">Approve hooks</span>
                 <div class="ml-auto">
                     <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
@@ -186,42 +170,44 @@
                 successfully
                 updated. Approve hooks are triggerred for all create, update and delete actions on data.
             </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Approve hook Name</p>
-                    <p class="hook-header-url">Approve hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
+            <div class="hook-table border rounded">
+                <div class="hook-table__header border-bottom d-flex align-items-center px-4">
+                    <span class="hook-header-name">Approve hook Name</span>
+                    <span class="hook-header-url">Approve hook URL</span>
+                    <span *ngIf="edit.status">Action</span>
                 </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="approveHooks.length === 0">
+                <div class="hHook-table__body d-flex py-2 px-4" *ngIf="approveHooks.length === 0">
                     <span class="text-muted">No approve hooks </span>
                 </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="approveHooks.length > 0">
+                <div class="hHook-table__body d-flex flex-column" *ngIf="approveHooks.length > 0">
                     <div *ngFor="let hook of approveHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
+                        class="d-flex p-2 border-bottom w-100 hHook-table__row d-flex align-items-center">
+                        <span class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
+                            {{ hook.name }}</span>
                         <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
+                            <span class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
                                 ngbTooltip="{{hook.url}}">
                                 {{ hook.url }}
-                            </p>
+                            </span>
                         </div>
                         <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
+                            <span class="text-accent hook-url hover text-truncate" placement="top"
                                 ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
+                                {{ hook.url }}</span>
                         </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
+                        <div class="d-flex align-items-center justify-content-end ml-auto" *ngIf="edit.status">
+                            <!-- <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
+                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button> -->
+                            <span class="dsi dsi-trash text-secondary mr-3" (click)="removeHook(hookIndex)"></span>
+                            <span class="dsi dsi-edit text-secondary mr-3" (click)="newHook(hookIndex)"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.rejectHook">
+        <div class="d-flex flex-column hooks-content p-4 w-100" *ngIf="hooks.rejectHook">
             <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Reject hooks</strong>
+                <span class="fw-600 font-20">Reject hooks</span>
                 <div class="ml-auto">
                     <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
@@ -238,42 +224,44 @@
                 successfully
                 updated. Reject hooks are triggered for all create, update and delete actions on data.
             </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Reject hook Name</p>
-                    <p class="hook-header-url">Reject hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
+            <div class="hook-table border rounded">
+                <div class="hook-table__header border-bottom d-flex align-items-center px-4">
+                    <span class="hook-header-name">Reject hook Name</span>
+                    <span class="hook-header-url">Reject hook URL</span>
+                    <span *ngIf="edit.status">Action</span>
                 </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="rejectHooks.length === 0">
+                <div class="hHook-table__body d-flex py-2 px-4" *ngIf="rejectHooks.length === 0">
                     <span class="text-muted">No reject hooks </span>
                 </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="rejectHooks.length > 0">
+                <div class="hHook-table__body d-flex flex-column" *ngIf="rejectHooks.length > 0">
                     <div *ngFor="let hook of rejectHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
+                        class="d-flex p-2 border-bottom w-100 hHook-table__row d-flex align-items-center">
+                        <span class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
+                            {{ hook.name }}</span>
                         <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
+                            <span class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
                                 ngbTooltip="{{hook.url}}">
                                 {{ hook.url }}
-                            </p>
+                            </span>
                         </div>
                         <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
+                            <span class="text-accent hook-url hover text-truncate" placement="top"
                                 ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
+                                {{ hook.url }}</span>
                         </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
+                        <div class="d-flex align-items-center justify-content-end ml-auto" *ngIf="edit.status">
+                            <!-- <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
+                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button> -->
+                            <span class="dsi dsi-trash text-secondary mr-3" (click)="removeHook(hookIndex)"></span>
+                            <span class="dsi dsi-edit text-secondary mr-3" (click)="newHook(hookIndex)"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.sendForReviewHook">
+        <div class="d-flex flex-column hooks-content p-4 w-100" *ngIf="hooks.sendForReviewHook">
             <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Rework hooks</strong>
+                <span class="fw-600 font-20">Rework hooks</span>
                 <div class="ml-auto">
                     <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
@@ -290,42 +278,44 @@
                 successfully
                 updated. Rework hooks are triggered for all create, update and delete actions on data.
             </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Rework hook Name</p>
-                    <p class="hook-header-url">Rework hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
+            <div class="hook-table border rounded">
+                <div class="hook-table__header border-bottom d-flex align-items-center px-4">
+                    <span class="hook-header-name">Rework hook Name</span>
+                    <span class="hook-header-url">Rework hook URL</span>
+                    <span *ngIf="edit.status">Action</span>
                 </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="sendForReviewHooks.length === 0">
+                <div class="hHook-table__body d-flex py-2 px-4" *ngIf="sendForReviewHooks.length === 0">
                     <span class="text-muted">No Rework hooks </span>
                 </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="sendForReviewHooks.length > 0">
+                <div class="hHook-table__body d-flex flex-column" *ngIf="sendForReviewHooks.length > 0">
                     <div *ngFor="let hook of sendForReviewHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
+                        class="d-flex p-2 border-bottom w-100 hHook-table__row d-flex align-items-center">
+                        <span class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
+                            {{ hook.name }}</span>
                         <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
+                            <span class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
                                 ngbTooltip="{{hook.url}}">
                                 {{ hook.url }}
-                            </p>
+                            </span>
                         </div>
                         <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
+                            <span class="text-accent hook-url hover text-truncate" placement="top"
                                 ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
+                                {{ hook.url }}</span>
                         </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
+                        <div class="d-flex align-items-center justify-content-end ml-auto" *ngIf="edit.status">
+                            <!-- <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
+                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button> -->
+                            <span class="dsi dsi-trash text-secondary mr-3" (click)="removeHook(hookIndex)"></span>
+                            <span class="dsi dsi-edit text-secondary mr-3" (click)="newHook(hookIndex)"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.discardHook">
+        <div class="d-flex flex-column hooks-content p-4 w-100" *ngIf="hooks.discardHook">
             <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Discard hooks</strong>
+                <span class="fw-600 font-20">Discard hooks</span>
                 <div class="ml-auto">
                     <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
@@ -342,42 +332,44 @@
                 successfully
                 updated. Discard hooks are triggerred for all create, update and delete actions on data.
             </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Discard hook Name</p>
-                    <p class="hook-header-url">Discard hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
+            <div class="hook-table border rounded">
+                <div class="hook-table__header border-bottom d-flex align-items-center px-4">
+                    <span class="hook-header-name">Discard hook Name</span>
+                    <span class="hook-header-url">Discard hook URL</span>
+                    <span *ngIf="edit.status">Action</span>
                 </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="discardHooks.length === 0">
+                <div class="hHook-table__body d-flex py-2 px-4" *ngIf="discardHooks.length === 0">
                     <span class="text-muted">No discard hooks </span>
                 </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="discardHooks.length > 0">
+                <div class="hHook-table__body d-flex flex-column" *ngIf="discardHooks.length > 0">
                     <div *ngFor="let hook of discardHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
+                        class="d-flex p-2 border-bottom w-100 hHook-table__row d-flex align-items-center">
+                        <span class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
+                            {{ hook.name }}</span>
                         <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
+                            <span class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
                                 ngbTooltip="{{hook.url}}">
                                 {{ hook.url }}
-                            </p>
+                            </span>
                         </div>
                         <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
+                            <span class="text-accent hook-url hover text-truncate" placement="top"
                                 ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
+                                {{ hook.url }}</span>
                         </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
+                        <div class="d-flex align-items-center justify-content-end ml-auto" *ngIf="edit.status">
+                            <!-- <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
+                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button> -->
+                            <span class="dsi dsi-trash text-secondary mr-3" (click)="removeHook(hookIndex)"></span>
+                            <span class="dsi dsi-edit text-secondary mr-3" (click)="newHook(hookIndex)"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.submitHook">
+        <div class="d-flex flex-column hooks-content p-4 w-100" *ngIf="hooks.submitHook">
             <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Submit hooks</strong>
+                <span class="fw-600 font-20">Submit hooks</span>
                 <div class="ml-auto">
                     <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
@@ -394,34 +386,36 @@
                 successfully
                 updated. Submit hooks are triggered for all create, update and delete actions on data.
             </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Submit hook Name</p>
-                    <p class="hook-header-url">Submit hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
+            <div class="hook-table border rounded">
+                <div class="hook-table__header border-bottom d-flex align-items-center px-4">
+                    <span class="hook-header-name">Submit hook Name</span>
+                    <span class="hook-header-url">Submit hook URL</span>
+                    <span *ngIf="edit.status">Action</span>
                 </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="submitHooks.length === 0">
+                <div class="hHook-table__body d-flex py-2 px-4" *ngIf="submitHooks.length === 0">
                     <span class="text-muted">No submit hooks </span>
                 </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="submitHooks.length > 0">
+                <div class="hHook-table__body d-flex flex-column" *ngIf="submitHooks.length > 0">
                     <div *ngFor="let hook of submitHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
+                        class="d-flex p-2 border-bottom w-100 hHook-table__row d-flex align-items-center">
+                        <span class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
+                            {{ hook.name }}</span>
                         <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
+                            <span class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
                                 ngbTooltip="{{hook.url}}">
                                 {{ hook.url }}
-                            </p>
+                            </span>
                         </div>
                         <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
+                            <span class="text-accent hook-url hover text-truncate" placement="top"
                                 ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
+                                {{ hook.url }}</span>
                         </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
+                        <div class="d-flex align-items-center justify-content-end ml-auto" *ngIf="edit.status">
+                            <!-- <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
+                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button> -->
+                            <span class="dsi dsi-trash text-secondary mr-3" (click)="removeHook(hookIndex)"></span>
+                            <span class="dsi dsi-edit text-secondary mr-3" (click)="newHook(hookIndex)"></span>
                         </div>
                     </div>
                 </div>
@@ -430,20 +424,15 @@
     </div>
 </div>
 <ng-template #deleteModalTemplate>
-    <div class="modal-body p-4">
-        <div class="circle bg-dark">
-            <span class="dsi dsi-trash text-white"></span>
+    <div class="modal-body p-4 d-flex flex-column">
+        <span class="font-20 fw-600">{{deleteModal.title}}</span>
+        <span class="text-secondary text-center py-5">{{deleteModal.message}}</span>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-outline-dark mr-3"
+                (click)="deleteModalTemplateRef.close(false)" id="sbDeleteModalNo">No</button>
+            <button type="button" class="btn btn-min-width btn-danger" (click)="deleteModalTemplateRef.close(true)"
+                id="sbDeleteModalYes">Yes</button>
         </div>
-        <p class="text-dark font-weight-bold text-center" [ngClass]="{'text-truncate': deleteModal.title.length > 65}">
-            {{deleteModal.title}}</p>
-        <p class="text-secondary text-center" [ngClass]="{'text-truncate': deleteModal.message.length > 65}">
-            {{deleteModal.message}}</p>
-    </div>
-    <div class="modal-footer p-3 bg-light">
-        <button type="button" class="btn btn-min-width btn-link w-50 mx-3" (click)="deleteModalTemplateRef.close(false)"
-            id="sbDeleteModalNo">No</button>
-        <button type="button" class="btn btn-min-width btn-primary w-50 mx-3"
-            (click)="deleteModalTemplateRef.close(true)" id="sbDeleteModalYes">Yes</button>
     </div>
 </ng-template>
 
@@ -473,8 +462,7 @@
                                         placeholder="Enter a name for the hook" [ngClass]="{'is-invalid': hookErr}"
                                         formControlName="name" [value]="hookForm.get('name').value"
                                         (keyup)="uniqueHook()" id="prehookName">
-                                    <span
-                                        class="dsi dsi-danger-circle text-danger position-absolute field-error-symbol"
+                                    <span class="dsi dsi-danger-circle text-danger position-absolute field-error-symbol"
                                         *ngIf="hookForm.get('name').dirty && hookForm.get('name') && hookForm.hasError('duplicateName')"
                                         ngbTooltip="{{ 'This ' + hooks.hookshortName + 'hook name has already been used'}}"
                                         placement="right"></span>

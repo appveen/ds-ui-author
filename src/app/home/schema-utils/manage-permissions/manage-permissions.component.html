@@ -217,15 +217,15 @@
 <ng-template #deleteModal>
   <div class="modal-body p-4">
     <p class="font-20 fw-600">{{ delete.title }}</p>
-    <p class="text-secondary text-center">
+    <p class="text-secondary text-center my-5">
       Are you sure you want to delete
       <strong *ngIf="delete.label">{{ delete.label }}</strong>
       <strong *ngIf="!delete.label" class="text-muted">Untitled role</strong>
     </p>
     <div class="d-flex align-items-center justify-content-end">
-      <button type="button" class="btn btn-min-width btn-outline-primary mr-3" (click)="deleteModalRef.close(false)"
+      <button type="button" class="btn btn-min-width btn-outline-dark mr-3" (click)="deleteModalRef.close(false)"
         id="sbDeleteModalNo">No</button>
-      <button type="button" class="btn btn-min-width btn-primary" (click)="deleteModalRef.close(true)"
+      <button type="button" class="btn btn-min-width btn-danger" (click)="deleteModalRef.close(true)"
         id="sbDeleteModalYes">Yes</button>
     </div>
   </div>
