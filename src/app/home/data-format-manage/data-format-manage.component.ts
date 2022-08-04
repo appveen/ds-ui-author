@@ -107,6 +107,7 @@ export class DataFormatManageComponent implements
             label: 'Data Formats',
             url: '/app/' + self.commonService.app._id + '/dfl'
         });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         self.commonService.activeComponent = this;
         self.ngbToolTipConfig.container = 'body';
         self.app = self.commonService.app._id;
@@ -127,6 +128,7 @@ export class DataFormatManageComponent implements
                     active: true,
                     label: 'New Data Format'
                 });
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                 self.edit.status = true;
                 if (self.appService.clone) {
                     self.fillDetails(self.appService.clone);
@@ -267,6 +269,7 @@ export class DataFormatManageComponent implements
                     active: true,
                     label: self.form.controls.name.value + (self.edit ? ' (Edit)' : '')
                 });
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
             }, err => {
                 self.showLazyLoader = true;
                 self.commonService.errorToast(err);

@@ -109,7 +109,7 @@ export class AppsComponent implements OnInit, OnDestroy {
     integration: true,
     management: true,
   };
-  breadcrumbPaths: Array<Breadcrumb>;
+  breadcrumbPaths: any;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -127,13 +127,18 @@ export class AppsComponent implements OnInit, OnDestroy {
     self.roleList = [];
     self.hover = {};
     self.agentConfig = {};
+    const trigger = self.commonService.breadcrumbTrigger;
+    trigger.subscribe(val => {
+      this.breadcrumbPaths = val
+    })
   }
 
   ngOnInit() {
     const self = this;
     self.agentConfig.arch = 'amd64';
     self.agentConfig.os = 'windows';
-    this.breadcrumbPaths = self.commonService.getBreadcrumbs();
+
+
     self.route.params.subscribe((params) => {
       if (params.app) {
         const tempApp = self.commonService.appList.find(
@@ -285,7 +290,7 @@ export class AppsComponent implements OnInit, OnDestroy {
           self.triggerAgentDownload();
         }
       },
-      (dismiss) => {}
+      (dismiss) => { }
     );
   }
 
@@ -317,7 +322,7 @@ export class AppsComponent implements OnInit, OnDestroy {
         (res) => {
           self.agentConfig.password = res.password;
         },
-        (err) => {}
+        (err) => { }
       );
     }
   }
@@ -469,7 +474,6 @@ export class AppsComponent implements OnInit, OnDestroy {
   }
 
   getBreadcrumbs() {
-    this.breadcrumbPaths = this.commonService.getBreadcrumbs();
-    console.log(this.breadcrumbPaths);
+    return this.breadcrumbPaths
   }
 }

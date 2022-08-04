@@ -79,6 +79,12 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       searchTerm: ['', [Validators.required]],
       searchField: ['name', [Validators.required]],
     });
+    self.breadcrumbPaths = [{
+      active: true,
+      label: 'Data Services',
+      url: null
+    }];
+    this.commonService.changeBreadcrumb(self.breadcrumbPaths)
     self.alertModal = {
       statusChange: false,
       title: '',

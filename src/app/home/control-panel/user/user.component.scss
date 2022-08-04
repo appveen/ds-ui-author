@@ -8,7 +8,7 @@
 
 .options {
   min-height: 100px;
-  padding: 40px;
+  padding: 32px;
 }
 
 .fill-empty-space {
@@ -444,4 +444,10 @@
       color: $secondary  !important;
     }
   }
+}
+
+.closeicon {
+  position: absolute;
+  top: 25px;
+  right: 25px
 }

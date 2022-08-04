@@ -3,7 +3,7 @@
 
 .options {
   min-height: 100px;
-  padding: 40px;
+  padding: 32px;
 }
 
 .bot-img {
@@ -384,4 +384,10 @@
   background: #FF6F00;
   opacity: 0.04;
   border-radius: 0px 0px 6px 6px
+}
+
+.closeicon {
+  position: absolute;
+  top: 25px;
+  right: 25px
 }
