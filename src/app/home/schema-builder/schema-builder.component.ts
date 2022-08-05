@@ -222,6 +222,7 @@ export class SchemaBuilderComponent implements
             label: 'Data Services',
             url: '/app/' + self.commonService.app._id + '/sm'
         });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         self.enableEdit(false);
         self.route.params.subscribe(param => {
             if (param.id) {
@@ -244,6 +245,7 @@ export class SchemaBuilderComponent implements
                     active: true,
                     label: 'New Data Service'
                 });
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                 if (self.commonService.app.serviceVersionValidity) {
                     self.form.get('versionValidity.validityType').patchValue(self.commonService.app.serviceVersionValidity.validityType);
                     self.form.get('versionValidity.validityValue').patchValue(self.commonService.app.serviceVersionValidity.validityValue);
@@ -702,6 +704,7 @@ export class SchemaBuilderComponent implements
                             self.roleChange = false;
                             self.edit.status = false;
                             self.breadcrumbPaths.pop();
+                            this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                             self.fillDetails(self.edit.id);
                         }
                     } else {
@@ -853,6 +856,7 @@ export class SchemaBuilderComponent implements
                     active: true,
                     label: serviceName
                 });
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                 if (self.cloneServiceId) {
                     const name = self.form.get('name').value;
                     self.form.get('name').patchValue(name + ' Copy');

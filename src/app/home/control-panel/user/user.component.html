@@ -237,14 +237,14 @@
     <div [ngClass]="{
         show: showNewUserWindow || showPasswordSide || showAddAttribute
       }" class="new-user-window position-fixed bg-white border-left p-4 d-flex flex-column">
-      <!-- <span class="dsi dsi-close text-secondary hover close" id="closeicon"
+      <!-- <span class="dsi dsi-close hover close" id="closeicon"
         (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span> -->
       <div class="d-flex flex-column h-100" *ngIf="showPasswordSide && !showNewUserWindow">
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div class="d-flex align-items-center">
             <h5 class="fw-600 font-20">Reset Password</h5>
           </div>
-          <span class="dsi dsi-close text-secondary hover" id="closeicon"
+          <span class="dsi dsi-close hover closeicon" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
         <form class="d-flex flex-column h-100" [formGroup]="resetPasswordForm" odpFocusNext>
@@ -304,7 +304,7 @@
           <div class="d-flex align-items-center">
             <h5 class="fw-600 font-20">Create User</h5>
           </div>
-          <span class="dsi dsi-close text-secondary hover" id="closeicon"
+          <span class="dsi dsi-close hover closeicon" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
         <form class="d-flex flex-column" [formGroup]="userForm" odpFocusNext>
@@ -485,7 +485,7 @@
               {{ editMode ? 'Edit Attribute' : 'Add Attribute' }}
             </h5>
           </div>
-          <span class="dsi dsi-close text-secondary hover" id="closeicon"
+          <span class="dsi dsi-close hover closeicon" id="closeicon"
             (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
         <form class="d-flex flex-column" [formGroup]="attributesForm" odpFocusNext>

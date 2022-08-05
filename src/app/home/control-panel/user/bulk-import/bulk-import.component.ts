@@ -40,6 +40,7 @@ export class BulkImportComponent implements OnInit {
       active: true,
       label: 'Bulk Import'
     });
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths);
     this.fetchFileTransfers();
     this.downloadUrl = environment.url.user + `/${this.commonService.app._id}/user/utils/bulkCreate/template`;
     this.commonService.bulkUpload.status.subscribe(data => {
@@ -121,7 +122,7 @@ export class BulkImportComponent implements OnInit {
   onChange(event) {
     this.fileAdded = true;
     this.fileInput = event.target;
-    if(event.target && event.target.files && event.target.files[0]){
+    if (event.target && event.target.files && event.target.files[0]) {
       this.selectedFile = event.target.files[0];
     }
   }

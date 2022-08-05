@@ -145,6 +145,7 @@ export class BotsComponent implements OnInit, OnDestroy {
             active: true,
             label: 'Bots'
         });
+        this.commonService.changeBreadcrumb(self.breadcrumbPaths)
         self.ngbToolTipConfig.container = 'body';
         self.initConfig();
         self.commonService.apiCalls.componentLoading = false;
@@ -420,11 +421,13 @@ export class BotsComponent implements OnInit, OnDestroy {
         const self = this;
         if (self.breadcrumbPaths.length === 2) {
             self.breadcrumbPaths.pop();
+
         }
         self.breadcrumbPaths.push({
             active: true,
             label: usr
         });
+        this.commonService.changeBreadcrumb(self.breadcrumbPaths)
     }
 
     removeBots(userIds: Array<string>) {

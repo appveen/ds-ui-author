@@ -180,6 +180,7 @@ export class UserComponent implements OnInit, OnDestroy {
       active: true,
       label: 'Users',
     });
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.configureAuthTypes();
     // this.createUserForm();
     this.ngbToolTipConfig.container = 'body';
@@ -919,6 +920,7 @@ export class UserComponent implements OnInit, OnDestroy {
       active: true,
       label: usr,
     });
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
   }
 
   removeSelectedUsers(userIds?: Array<string>) {

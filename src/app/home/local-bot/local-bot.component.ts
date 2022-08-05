@@ -27,6 +27,7 @@ import { ManageBotGroupComponent } from './manage-bot-group/manage-bot-group.com
 import { ManageBotKeyComponent } from './manage-bot-key/manage-bot-key.component';
 import { ManageBotPropertyComponent } from './manage-bot-property/manage-bot-property.component';
 import { filter } from 'rxjs/operators';
+import { Breadcrumb } from '../../utils/interfaces/breadcrumb';
 
 
 @Component({
@@ -103,6 +104,7 @@ export class LocalBotComponent implements OnInit {
   editMode: boolean = false;
   keyId: string;
   isLatest: boolean = false;
+  breadcrumbPaths: Array<Breadcrumb>;
 
 
   constructor(
@@ -168,6 +170,11 @@ export class LocalBotComponent implements OnInit {
 
   ngOnInit() {
     const self = this;
+    this.breadcrumbPaths.push({
+      active: true,
+      label: 'Bots',
+    });
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     self.getBotRecords();
     self.getBotCount();
     this.keyForm.get('expires').valueChanges.subscribe((value) => {

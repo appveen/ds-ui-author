@@ -102,6 +102,7 @@ export class GlobalSchemasComponent implements
             label: 'Libraries',
             url: '/app/' + self.commonService.app._id + '/lib'
         });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         self.commonService.activeComponent = this;
         self.ngbToolTipConfig.container = 'body';
         self.app = self.commonService.app._id;
@@ -122,6 +123,7 @@ export class GlobalSchemasComponent implements
                     active: true,
                     label: 'New Library'
                 });
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                 self.edit.status = true;
             }
         });
@@ -389,6 +391,7 @@ export class GlobalSchemasComponent implements
                         });
                     }
                 }
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
             }, err => {
                 self.showLazyLoader = true;
                 self.commonService.errorToast(err);

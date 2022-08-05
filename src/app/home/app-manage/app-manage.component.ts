@@ -10,6 +10,7 @@ import { App } from 'src/app/utils/interfaces/app';
 import { AppService } from 'src/app/utils/services/app.service';
 import { UserDetails } from 'src/app/utils/interfaces/userDetails';
 import { environment } from 'src/environments/environment';
+import { Breadcrumb } from '../../utils/interfaces/breadcrumb';
 
 @Component({
     selector: 'odp-app-manage',
@@ -155,6 +156,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
     authType: string;
     isCalenderEnabled: boolean;
     timezones: Array<string>;
+    breadcrumbPaths: Array<Breadcrumb> = [];
     constructor(private renderer: Renderer2,
         private commonService: CommonService,
         private appService: AppService,
@@ -225,6 +227,11 @@ export class AppManageComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         const self = this;
+        this.breadcrumbPaths.push({
+            active: true,
+            label: 'App Panel',
+        });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         self.userConfig.count = -1;
         self.userConfig.noApp = true;
         self.userConfig.filter = {};

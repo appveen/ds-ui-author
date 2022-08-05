@@ -49,11 +49,13 @@ export class BulkImportStatusComponent implements OnInit {
       active: false,
       label: 'Bulk Import'
     });
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.route.params.subscribe(params => {
       this.breadcrumbPaths.push({
         active: true,
         label: params.id
       });
+      this.commonService.changeBreadcrumb(this.breadcrumbPaths)
       this.fileId = params.id;
       this.setupGrid();
     });

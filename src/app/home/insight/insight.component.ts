@@ -71,6 +71,7 @@ export class InsightComponent implements OnInit {
             active: true,
             label: 'Insights'
         });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         self.searchModel.field = 'summary';
         this.setActiveTab();
         // self.subscriptions['userLogs'] = self.insightService.searchUserLog.subscribe(_txnId => {

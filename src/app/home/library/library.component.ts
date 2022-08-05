@@ -53,6 +53,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
             active: true,
             label: 'Libraries'
         }];
+
+        this.commonService.changeBreadcrumb(self.breadcrumbPaths)
         self.openDeleteModal = new EventEmitter();
         self.config = {
             filter: { app: this.commonService.app._id },

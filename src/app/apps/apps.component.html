@@ -1,94 +1,14 @@
 <div class="d-flex flex-column w-100 h-100">
-  <div class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white border-bottom border-dark">
-    <div class="left d-flex align-items-center" [ngClass]="{ 'add-blur': addBlur }"
-      [ngStyle]="{ width: showSideNav ? '15vw' : '4vw' }">
-      <!-- <span class="fa fa-bars fa-lg hover mr-3" (click)="toggleNav()"></span> -->
-      <div *ngIf="showSideNav" class="logo" (click)="toggleNav()"></div>
-      <div *ngIf="!showSideNav" class="logo-mini" (click)="toggleNav()"></div>
-    </div>
-    <div style="flex: 1 0 0">
-      <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
-    </div>
-    <div class="w-50 d-flex align-items-center justify-content-end">
-      <ng-container *ngIf="isSuperAdmin">
-        <!-- <div class="d-flex align-items-center mr-3">
-                    <button type="button" class="btn btn-link font-sm" (click)="downloadIEG()">
-                        <span [ngClass]="{'nav-inactive':}" class="dsi dsi-download"></span>
-                        <span class="ml-2"> --Edge Agent</span>
-                    </button>
-                </div> -->
-        <div (click)="loadAdminPage()"
-          class="admin-settings bg-light rounded d-flex flex-column justify-content-center align-items-center mr-3 hover"
-          ngbTooltip="Admin Panel" placement="bottom">
-          <div class="dsi dsi-admin"></div>
-        </div>
-      </ng-container>
-      <div class="current-app d-flex align-items-center border rounded mr-3 hover ignore-outside"
-        (click)="toggleAppOptions()">
-        <div class="current-app-thumbnail d-flex align-items-center justify-content-center mx-2" ngbTooltip="Switch App"
-          placement="bottom" [ngStyle]="{ 'background-color': selectedApp.bg }" [ngClass]="{
-            'img-app': selectedApp.logo && selectedApp.logo.thumbnail
-          }">
-          <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail" alt="Logo" />
-          <span *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail">{{selectedApp.firstLetter}}</span>
-        </div>
-        <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" placement="bottom">
-          {{ selectedApp._id }}
-        </div>
-        <div class="text-primary"></div>
-        <div *ngIf="isAppAdmin" class="d-flex align-items-center justify-content-center ml-1">
-          <span class="fa fa-star text-warning" ngbTooltip="You are admin of this App" placement="bottom"></span>
-        </div>
-        <div *ngIf="commonService.appList.length > 1" class="ml-auto mr-2">
-          <span class="fas fa-angle-down text-accent"></span>
-        </div>
-      </div>
-      <div
-        class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle bg-light border border-border hover"
-        (click)="showProfileOptions = !showProfileOptions">
-        <span class="far fa-user fa-lg text-secondary"></span>
-      </div>
-      <div [@userProfile] class="profile position-absolute bg-white border border-border" *ngIf="showProfileOptions"
-        odpClickOutside [ignore]="['.profile-icon', '.fa-user']" (outside)="showProfileOptions = false">
-        <div class="profile-container position-relative d-flex align-items-center h-100 w-100">
-          <div
-            class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-border mx-4">
-            <span class="far fa-user fa-2x text-secondary"></span>
-          </div>
-          <div class="profile-data d-flex flex-column">
-            <h4 class="profile-data-name text-truncate font-weight-bold">
-              {{ name }}
-            </h4>
-            <div class="profile-data-more d-flex align-items-center">
-              <div class="text-secondary profile-data-more-item pr-3 username-holder text-truncate"
-                [ngbTooltip]="username">
-                {{ username }}
-              </div>
-              <div class="profile-data-more-item px-1" *ngIf="authType && authType === 'local'">
-                <button type="button" class="btn btn-link btn-sm" (click)="
-                    showProfileOptions = false; toggleChangePassword = true
-                  ">
-                  Change Password
-                </button>
-              </div>
-              <div class="profile-data-more-item px-1">
-                <button type="button" class="btn btn-link btn-sm" (click)="logout()" id="logout">
-                  Logout
-                </button>
-              </div>
-            </div>
-          </div>
-          <small class="position-absolute text-border app-version">v{{ version }}</small>
-          <small class="last-login text-muted">Last Login:
-            {{
-            lastLogin | dateFormat: 'YYYY MMM DD, HH:mm:ss, z':'Etc/Zulu'
-            }}</small>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="d-flex w-100 h-100">
-    <div class="sidenav d-flex flex-column pl-3" id="_sideNavBar" [ngStyle]="{ width: showSideNav ? '260px' : '48px' }">
+    <div class="sidenav d-flex flex-column pl-3 border-right" id="_sideNavBar"
+      [ngStyle]="{ 'min-width': showSideNav ? '260px' : '48px'}">
+      <!-- <div class="left" [ngClass]="{ 'add-blur': addBlur }" [ngStyle]="{ width: showSideNav ? '15vw' : '4vw' }"> -->
+
+      <div class="mt-2 mb-3">
+        <div *ngIf="showSideNav" class="logo" (click)="toggleNav()"></div>
+        <div *ngIf="!showSideNav" class="logo-mini" (click)="toggleNav()"></div>
+      </div>
+      <!-- </div> -->
       <div class="icon-block-group text-secondary border-border pt-3"
         *ngIf="hasDataServicePermission || hasDataLibraryPermission">
         <span *ngIf="showSideNav" class="nav-active">DATA</span>
@@ -317,8 +237,94 @@
         </div>
       </ng-container>
     </div>
-    <div class="d-flex flex-column body w-100">
-      <router-outlet></router-outlet>
+    <div class="w-100 overflow-auto">
+      <div class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white">
+
+        <div>
+          <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+        </div>
+        <div class="w-50 d-flex align-items-center justify-content-end">
+          <ng-container *ngIf="isSuperAdmin">
+            <!-- <div class="d-flex align-items-center mr-3">
+                        <button type="button" class="btn btn-link font-sm" (click)="downloadIEG()">
+                            <span [ngClass]="{'nav-inactive':}" class="dsi dsi-download"></span>
+                            <span class="ml-2"> --Edge Agent</span>
+                        </button>
+                    </div> -->
+            <div (click)="loadAdminPage()"
+              class="admin-settings bg-light rounded d-flex flex-column justify-content-center align-items-center mr-3 hover"
+              ngbTooltip="Admin Panel" placement="bottom">
+              <div class="dsi dsi-admin"></div>
+            </div>
+          </ng-container>
+          <div class="current-app d-flex align-items-center border rounded mr-3 hover ignore-outside"
+            (click)="toggleAppOptions()">
+            <div class="current-app-thumbnail d-flex align-items-center justify-content-center mx-2"
+              ngbTooltip="Switch App" placement="bottom" [ngStyle]="{ 'background-color': selectedApp.bg }" [ngClass]="{
+                'img-app': selectedApp.logo && selectedApp.logo.thumbnail
+              }">
+              <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail"
+                alt="Logo" />
+              <span *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail">{{selectedApp.firstLetter}}</span>
+            </div>
+            <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" placement="bottom">
+              {{ selectedApp._id }}
+            </div>
+            <div class="text-primary"></div>
+            <div *ngIf="isAppAdmin" class="d-flex align-items-center justify-content-center ml-1">
+              <span class="fa fa-star text-warning" ngbTooltip="You are admin of this App" placement="bottom"></span>
+            </div>
+            <div *ngIf="commonService.appList.length > 1" class="ml-auto mr-2">
+              <span class="fas fa-angle-down text-accent"></span>
+            </div>
+          </div>
+          <div
+            class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle bg-light border border-border hover"
+            (click)="showProfileOptions = !showProfileOptions">
+            <span class="far fa-user fa-lg text-secondary"></span>
+          </div>
+          <div [@userProfile] class="profile position-absolute bg-white border border-border" *ngIf="showProfileOptions"
+            odpClickOutside [ignore]="['.profile-icon', '.fa-user']" (outside)="showProfileOptions = false">
+            <div class="profile-container position-relative d-flex align-items-center h-100 w-100">
+              <div
+                class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-border mx-4">
+                <span class="far fa-user fa-2x text-secondary"></span>
+              </div>
+              <div class="profile-data d-flex flex-column">
+                <h4 class="profile-data-name text-truncate font-weight-bold">
+                  {{ name }}
+                </h4>
+                <div class="profile-data-more d-flex align-items-center">
+                  <div class="text-secondary profile-data-more-item pr-3 username-holder text-truncate"
+                    [ngbTooltip]="username">
+                    {{ username }}
+                  </div>
+                  <div class="profile-data-more-item px-1" *ngIf="authType && authType === 'local'">
+                    <button type="button" class="btn btn-link btn-sm" (click)="
+                        showProfileOptions = false; toggleChangePassword = true
+                      ">
+                      Change Password
+                    </button>
+                  </div>
+                  <div class="profile-data-more-item px-1">
+                    <button type="button" class="btn btn-link btn-sm" (click)="logout()" id="logout">
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <small class="position-absolute text-border app-version">v{{ version }}</small>
+              <small class="last-login text-muted">Last Login:
+                {{
+                lastLogin | dateFormat: 'YYYY MMM DD, HH:mm:ss, z':'Etc/Zulu'
+                }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column body w-100">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
 </div>

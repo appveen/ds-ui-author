@@ -107,6 +107,7 @@ export class CommonService {
   private stallTime: number;
   private stallCount = 0;
   breadcrumbPaths: Array<Breadcrumb>;
+  breadcrumbTrigger: Subject<any> = new Subject();
 
   constructor(
     private http: HttpClient,
@@ -1490,11 +1491,14 @@ export class CommonService {
     });
   }
 
-  setBreadcrumbs(breadcrumbPaths) {
-    this.breadcrumbPaths = breadcrumbPaths;
+  set breadcrumb(path: Subject<any>) {
+    this.breadcrumbTrigger = path;
   }
-  getBreadcrumbs() {
-    return this.breadcrumbPaths;
+  get breadcrumb(): Subject<any> {
+    return this.breadcrumbTrigger;
+  }
+  changeBreadcrumb(path) {
+    this.breadcrumbTrigger.next(path)
   }
 
   appColor() {
