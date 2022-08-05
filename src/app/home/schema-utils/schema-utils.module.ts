@@ -37,7 +37,6 @@ import { StateModelComponent } from './state-model/state-model.component';
 import { FilterNextStatePipe } from './filter-next-state.pipe';
 import { MakerCheckerComponent } from './maker-checker/maker-checker.component';
 import { DynamicConditionComponent } from './manage-permissions/dynamic-condition/dynamic-condition.component';
-import { RadioChipModule } from 'src/app/utils/radio-chip/radio-chip.module';
 import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-editor.module';
 
