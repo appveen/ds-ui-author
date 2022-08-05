@@ -81,8 +81,18 @@
       </div>
       <div class="builder-body d-flex flex-column w-100" *ngIf="hasAnyTabPermission">
         <ng-container>
-          <div class="m-3" *ngIf="activeTab == 0">
-            <div ngbDropdown class="d-inline-block">
+          <div class="p-4 d-flex align-items-center" *ngIf="activeTab == 0">
+            <div class="d-flex align-items-center hover mr-3" (click)="toggleSchemaType(false)">
+              <odp-round-radio size="24" [checked]="isSchemaFree==false" (checkedChange)="toggleSchemaType(false)">
+              </odp-round-radio>
+              <span class="text ml-2">Schema Based</span>
+            </div>
+            <div class="d-flex align-items-center hover" (click)="toggleSchemaType(true)">
+              <odp-round-radio size="24" [checked]="isSchemaFree==true" (checkedChange)="toggleSchemaType(true)">
+              </odp-round-radio>
+              <span class="text ml-2">Schema Free</span>
+            </div>
+            <!-- <div ngbDropdown class="d-inline-block">
               <button type="button" class="btn btn-outline-secondary" id="dropdownBasic1" ngbDropdownToggle
                 [disabled]="!edit.status">{{isSchemaFree ? "Schema Free Design": "Schema Designer"}}</button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
@@ -91,7 +101,7 @@
                 <button ngbDropdownItem type="button" (click)='toggleSchemaType(false)' *ngIf="isSchemaFree">Schema
                   Designer</button>
               </div>
-            </div>
+            </div> -->
           </div>
           <div *ngIf="isSchemaFree && activeTab == 0"
             class='schema-free d-flex align-items-center justify-content-center'>
@@ -141,11 +151,11 @@
                       </div>
                     </ng-container>
                   </div>
-                  <div class="add-attribute d-flex align-items-center text-muted"
+                  <div class="add-attribute d-flex align-items-center text-muted mt-4"
                     *ngIf="edit.status && serviceObj?.type!=='internal'">
-                    <span class="d-flex align-items-center hover" (click)="addGroup()" id="schemaFieldObjectAddField">
-                      <span class="dsi dsi-plus fa-xs mr-1"></span>
-                      <span class="text">New Attribute</span>
+                    <span class="d-flex align-items-center justify-content-center hover alert alert-primary w-100" (click)="addGroup()" id="schemaFieldObjectAddField">
+                      <span class="dsi dsi-plus fa-xs mr-2"></span>
+                      <span class="text">Add Attribute</span>
                     </span>
                   </div>
                 </ng-container>

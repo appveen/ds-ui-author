@@ -234,7 +234,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         (self.all as FormArray).insert(self.index + 1, temp);
         setTimeout(() => {
             self.schemaService.selectedFieldId = temp.value._fieldId;
-            // self.schemaService.activeField.emit(temp.value._fieldId);
+            self.schemaService.activeField.emit(temp.value._fieldId);
         }, 200);
     }
 
@@ -246,7 +246,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         const temp = self.schemaService.getDefinitionStructure(val);
         (self.all as FormArray).insert(self.index + 1, temp);
         self.schemaService.selectedFieldId = temp.value._fieldId;
-        // self.schemaService.activeField.emit(temp.value._fieldId);
+        self.schemaService.activeField.emit(temp.value._fieldId);
     }
 
     deleteField(event: KeyboardEvent) {

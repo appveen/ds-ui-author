@@ -2,7 +2,7 @@
     <div class="field-wrapper row no-gutters d-flex align-items-center justify-content-between w-100 rounded"
         [ngClass]="{'active bg-light':active}" [formGroup]="form">
         <div class="d-flex col-3 align-items-center" formGroupName="properties">
-            <span class="spacer border-right border-secondary" [ngStyle]="getSpacing()"></span>
+            <span class="spacer" [ngStyle]="getSpacing()"></span>
             <span class="icon mr-2 ml-3 d-flex align-items-center">
                 <span class="fa fa-bars text-muted hover" *ngIf="!idField && edit.status && type!=='internal'"></span>
             </span>
@@ -13,7 +13,7 @@
                     *ngIf="!edit.status || type==='internal'" [ngbTooltip]="form.get('properties.name').value"
                     #tooltip="ngbTooltip">{{form.get('properties.name').value}}</span>
                 <input #inputField *ngIf="edit.status && type!=='internal'" placement="top" [ngbTooltip]="tipContent"
-                    #tooltip="ngbTooltip" triggers="manual" (blur)="checkType(inputField.value);searchService();"
+                    #tooltip="ngbTooltip" triggers="manual" (blur)="checkType(inputField.value);searchService();" (focus)="activateProperty()"
                     (keyup.enter)="addField()" (shift.delete)="deleteField($event)" type="text" class="field mr-2"
                     formControlName="name" (paste)="pasteOnField($event)" [attr.placeholder]="placeholder"
                     [attr.id]="fieldId"
@@ -63,7 +63,7 @@
             </div>
             <span *ngIf="edit.status && type!=='internal'" class="dsi dsi-edit text-secondary hover ml-4"
                 (click)="activateProperty()"> </span>
-            <span *ngIf="canDelete && edit.status && type!=='internal'" class="fa fa-clone text-secondary d-flex align-items-center hover ml-4"
+            <span *ngIf="canDelete && edit.status && type!=='internal'" class="dsi dsi-copy text-secondary d-flex align-items-center hover ml-4"
                 (click)="cloneField()"></span>
             <span *ngIf="canDelete && edit.status && type!=='internal'" class="dsi dsi-trash text-secondary hover ml-4"
                 (click)="remove()"></span>
@@ -74,11 +74,10 @@
     </div>
 </div>
 
-<div class="add-attribute d-flex align-items-center text-muted" *ngIf="edit.status && canAdd && type!=='internal'"
-    [ngStyle]="style">
-    <span class="d-flex align-items-center hover" (click)="addField()" id="schemaFieldObjectAddField">
+<div class="add-attribute d-flex align-items-center alert alert-primary hover mb-4" (click)="addField()" *ngIf="edit.status && canAdd && type!=='internal'">
+    <span [ngStyle]="style" class="d-flex align-items-center" id="schemaFieldObjectAddField">
         <span class="dsi dsi-plus fa-xs mr-1"></span>
-        <span class="text">New Attribute</span>
+        <span class="text">Add Attribute</span>
     </span>
 </div>
 

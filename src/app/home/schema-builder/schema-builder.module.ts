@@ -16,6 +16,7 @@ import { StructureFieldModule } from 'src/app/utils/structure-field/structure-fi
 import { StructureFieldPropertiesModule } from 'src/app/utils/structure-field-properties/structure-field-properties.module';
 import { PrettyJsonModule } from 'src/app/utils/pretty-json/pretty-json.module';
 import { SortablejsModule } from 'ngx-sortablejs';
+import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: SchemaBuilderComponent, canDeactivate: [RouteGuard] }
@@ -37,7 +38,8 @@ const routes: Routes = [
     StructureFieldModule,
     StructureFieldPropertiesModule,
     PrettyJsonModule,
-    SortablejsModule
+    SortablejsModule,
+    RoundRadioModule
   ],
   exports: [
     RouterModule
