@@ -24,6 +24,8 @@ export class FieldTypeSelectorComponent {
   toggleDropdown: boolean;
   types: Array<any>;
   typeChangeModalTemplateRef: NgbModalRef;
+  // showSubType: boolean;
+  selectedType: any;
   constructor(private schemaService: SchemaBuilderService,
     private commonService: CommonService,
     private fb: FormBuilder) {
@@ -65,25 +67,36 @@ export class FieldTypeSelectorComponent {
     return true;
   }
 
-  switchType(type: any, event: Event) {
+  checkSubType(type: any) {
+    if (type.value === 'String' || type.value === 'Number' || type.value === 'Date' || type.value === 'Geojson') {
+      this.selectedType = type;
+    } else {
+      this.switchType(type, '');
+    }
+  }
+
+  switchType(type: any, detailedType: string) {
     const self = this;
     if (self.isEdit && self.editable && self.form.get('_newField') && !self.form.get('_newField').value) {
+      if (self.typeChangeModalTemplateRef) {
+        self.typeChangeModalTemplateRef.close(false);
+      }
       self.typeChangeModalTemplateRef = self.commonService.modal(self.typeChangeModalTemplate);
       self.typeChangeModalTemplateRef.result.then((close) => {
         if (close) {
           self.form.get('properties._typeChanged').patchValue(self.form.get('type').value);
-          self.changeType(type, event);
+          self.changeType(type, detailedType);
         }
       }, dismiss => { });
     } else if (self.editable) {
-      self.changeType(type, event);
+      self.changeType(type, detailedType);
     }
   }
 
-  changeType(type: any, event: Event) {
+  changeType(type: any, detailedType: string) {
     const self = this;
     if (type.value === 'String' || type.value === 'Number' || type.value === 'Date' || type.value === 'Geojson') {
-      event.stopPropagation();
+      // event.stopPropagation();
     } else {
       self.close();
     }
@@ -136,6 +149,7 @@ export class FieldTypeSelectorComponent {
     if (type.value === 'Array' || type.value === 'Object') {
       self.form.get('definition').setValidators([sameName]);
     }
+    this.changeDetailedType(detailedType);
     self.schemaService.typechanged.emit(true);
   }
 
@@ -167,11 +181,11 @@ export class FieldTypeSelectorComponent {
       (self.form.get('properties') as FormGroup).removeControl('hasTokens');
       (self.form.get('properties') as FormGroup).addControl('hasTokens', self.fb.array([]));
     }
-    if(value == 'enum'){
+    if (value == 'enum') {
       self.form.get('properties.enum').setValidators([emptyEnum]);
     }
-    else if(self.form.get('properties.enum')){
-      
+    else if (self.form.get('properties.enum')) {
+
       self.form.get('properties.enum').clearValidators();
     }
 
@@ -234,8 +248,11 @@ export class FieldTypeSelectorComponent {
 
   get type() {
     const self = this;
-    if (self.form && self.form.get('type')) {
-      return self.form.get('type').value;
+    // if (self.form && self.form.get('type')) {
+    //   return self.form.get('type').value;
+    // }
+    if (self.selectedType && self.selectedType.value) {
+      return self.selectedType.value;
     }
     return 'String';
   }

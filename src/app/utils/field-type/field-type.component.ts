@@ -40,6 +40,19 @@ export class FieldTypeComponent {
     }
   }
 
+  getStyle(field?: any) {
+    this.makeStructure();
+    if (!field) {
+      field = this.field;
+    }
+    const temp = this.types.find(e => e.value === field.type);
+    if (temp) {
+      return temp.bgColor;
+    } else {
+      return '#E7CBD4';
+    }
+  }
+
   getLabel(field?: any) {
     let label = '';
     if (!field) {
@@ -98,6 +111,13 @@ export class FieldTypeComponent {
   get collectionClass() {
     if (this.field.type === 'Array' && this.field.definition && this.field.definition.length > 0) {
       return this.getClass(this.field.definition[0]);
+    }
+    return null;
+  }
+
+  get collectionStyle() {
+    if (this.field.type === 'Array' && this.field.definition && this.field.definition.length > 0) {
+      return this.getStyle(this.field.definition[0]);
     }
     return null;
   }

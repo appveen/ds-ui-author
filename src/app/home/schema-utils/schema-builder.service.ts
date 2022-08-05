@@ -437,18 +437,18 @@ export class SchemaBuilderService {
 
     getSchemaTypes(): Array<FieldType> {
         return [
-            { class: 'dsi-id', value: 'id', label: 'Identifier' },
-            { class: 'dsi-text', value: 'String', label: 'Text' },
-            { class: 'dsi-number', value: 'Number', label: 'Number' },
-            { class: 'dsi-boolean', value: 'Boolean', label: 'True/False' },
-            { class: 'dsi-date', value: 'Date', label: 'Date' },
-            { class: 'dsi-object', value: 'Object', label: 'Group' },
-            { class: 'dsi-array', value: 'Array', label: 'Collection' },
-            { class: 'dsi-location', value: 'Geojson', label: 'Location' },
-            { class: 'dsi-attach', value: 'File', label: 'File' },
-            { class: 'dsi-relation', value: 'Relation', label: 'Relation' },
-            { class: 'dsi-library', value: 'Global', label: 'Library' },
-            { class: 'far fa-user-circle', value: 'User', label: 'User' }
+            { class: 'dsi-id', value: 'id', label: 'Identifier', bgColor: '#C9D5E8' },
+            { class: 'dsi-text', value: 'String', label: 'Text', bgColor: '#E7CBD4' },
+            { class: 'dsi-number', value: 'Number', label: 'Number', bgColor: '#E7CBE6' },
+            { class: 'dsi-boolean', value: 'Boolean', label: 'True/False', bgColor: '#CBE7CE' },
+            { class: 'dsi-date', value: 'Date', label: 'Date', bgColor: '#FFE6D8' },
+            { class: 'dsi-object', value: 'Object', label: 'Group', bgColor: '#D7D4EF' },
+            { class: 'dsi-array', value: 'Array', label: 'Collection', bgColor: '#D3E4FF' },
+            { class: 'dsi-location', value: 'Geojson', label: 'Location', bgColor: '#CAF0F3' },
+            { class: 'dsi-attach', value: 'File', label: 'File', bgColor: '#D7F5D1' },
+            { class: 'dsi-relation', value: 'Relation', label: 'Relation', bgColor: '#F0F1CC' },
+            { class: 'dsi-library', value: 'Global', label: 'Library', bgColor: '#F7DEC2' },
+            { class: 'dsi-user', value: 'User', label: 'User', bgColor: '#F1D3D3' }
         ];
     }
     countAttr(def) {

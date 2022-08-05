@@ -1,11 +1,11 @@
 <div class="d-flex align-items-center text-dark">
     <span
-        class="dsi dsi-bg dsi-sm {{getClass()}} rounded-circle d-flex align-items-center justify-content-center field-type-badge"></span>
+        class="dsi dsi-sm {{getClass()}} rounded-circle d-flex align-items-center justify-content-center field-type-badge" [ngStyle]="{'background-color':getStyle()}"></span>
     <span *ngIf="label" class="text-dark ml-2">{{getLabel()}}</span>
     <ng-container *ngIf="collectionType">
         <span class="text-dark mx-2">of</span>
         <span
-        class="dsi dsi-bg dsi-sm rounded-circle {{collectionClass}} rounded-circle d-flex align-items-center justify-content-center field-type-badge"></span>
+        class="dsi dsi-sm rounded-circle {{collectionClass}} rounded-circle d-flex align-items-center justify-content-center field-type-badge"></span>
         <span *ngIf="label" class="text-dark ml-2">{{collectionType}}</span>
     </ng-container>
 </div>
