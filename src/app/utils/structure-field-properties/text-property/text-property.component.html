@@ -34,18 +34,18 @@
       <div></div>
       <div class="ml-2">
         <span class="text-danger" *ngIf="form.get('properties.default').hasError('minlength')"><span
-            class="fa fa-times mr-1"></span>{{form.get('properties.name').value}}
+            class="dsi dsi-close mr-1"></span>{{form.get('properties.name').value}}
           should have min. length {{form.get('properties.minlength').value}}
         </span>
         <span class="text-danger" *ngIf="form.get('properties.default').hasError('maxlength')"><span
-            class="fa fa-times mr-1"></span>
+            class="dsi dsi-close mr-1"></span>
           {{form.get('properties.name').value}} should have max. length {{form.get('properties.maxlength').value}}
         </span>
         <span class="text-danger" *ngIf="form.get('properties.default').hasError('pattern')"><span
-            class="fa fa-times mr-1"></span>
+            class="dsi dsi-close mr-1"></span>
           Invalid regex pattern</span>
         <span class="text-danger" *ngIf="form.get('properties.default').hasError('DefaultEmail')"><span
-            class="fa fa-times mr-1"></span>
+            class="dsi dsi-close mr-1"></span>
           {{form.get('properties.name').value}} should be a valid email</span>
       </div>
     </div>
@@ -109,15 +109,15 @@
           <span class="text-accent">{{sampleRegexValue}}</span>
         </ng-container>
         <span class="text-danger" *ngIf="form.get('properties.pattern').hasError('patternValidator')">
-          <span class="fa fa-times mr-1"></span>
+          <span class="dsi dsi-close mr-1"></span>
           <span class="text">Invalid regex pattern</span>
         </span>
       </div>
     </div> -->
   </div>
-  <div class="d-flex w-100 mb-4"
+  <div class="w-100 mb-4 mt-4"
     *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
-    <div class="font-14 text-dark mb-2">Values</div>
+    <div class="font-14 text-secondary mb-2">Values</div>
     <div class=" position-relative">
       <ng-container *ngIf="edit.status">
         <input class="form-control pr-4"
@@ -126,7 +126,7 @@
           formControlName="_listInput">
         <button type="button" class="list-add-button btn btn-link hover position-absolute p-0"
           [disabled]="form.get('properties._listInput').value===''" (click)="addToList('enum')">
-          <span class="dsi dsi-plus text-primary"></span>
+          <span class="dsi dsi-plus text-accent"></span>
         </button>
       </ng-container>
       <div *ngIf="form.get('properties.enum').hasError('emptyEnum')">
@@ -138,10 +138,11 @@
   </div>
   <div class="d-flex flex-column w-100 mb-4"
     *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
-    <div class="border-left" formArrayName="enum" [sortablejs]="enumList"
+    <div class="" formArrayName="enum" [sortablejs]="enumList"
       [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
       <ng-container *ngFor="let en of enumList; let i=index;">
-        <div class="enum-list-item mx-2 px-2 py-1" [class.disabled]="!edit || !edit.status">
+        <div class="enum-list-item d-flex justify-content-between align-items-center p-2"
+          [class.disabled]="!edit || !edit.status">
           <span class="icon" *ngIf="!!edit && !!edit.status">
             <span class="fa fa-bars text-muted hover"></span>
           </span>
@@ -151,8 +152,8 @@
             <input *ngIf="editStateListOfValues === i" type="text" [formControl]="en" class="field form-control"
               [id]="en.value" (keyup.enter)="editStateListOfValues = null" odpAutoFocus>
           </div>
-          <span *ngIf="edit.status" class="enum-icons-section text-primary">
-            <span class="fa fa-times" (click)="removeFromList('enum',i)" placement="top" [ngbTooltip]="'Remove'"></span>
+          <span *ngIf="edit.status" class="enum-icons-section text-danger">
+            <span class="dsi dsi-trash" (click)="removeFromList('enum',i)" placement="top" [ngbTooltip]="'Remove'"></span>
           </span>
         </div>
 
@@ -164,7 +165,7 @@
     </button>
   </div>
 
-  <div class="d-flex w-100 mb-4" *ngIf="form.get('properties.hasTokens') && (form.get('properties.longText').value
+  <div class="w-100 mb-4 mt-4" *ngIf="form.get('properties.hasTokens') && (form.get('properties.longText').value
                   || form.get('properties.richText').value)">
     <div class=" text-secondary">Tokens</div>
     <div class=" position-relative" *ngIf="canEdit; else show_list">
@@ -173,7 +174,7 @@
         (keyup.enter)="listEnterKey($event,'hasTokens')">
       <button type="button" class="list-add-button btn btn-link hover position-absolute p-0"
         [disabled]="form.get('properties._listInput').value==''" (click)="addToList('hasTokens')">
-        <span class="dsi dsi-plus text-primary"></span>
+        <span class="dsi dsi-plus text-accent"></span>
       </button>
     </div>
     <ng-template #show_list>
@@ -184,10 +185,11 @@
   </div>
   <div class="d-flex flex-column w-100 mb-4" *ngIf="form.get('properties.hasTokens') && (form.get('properties.longText').value
                    || form.get('properties.richText').value) && canEdit">
-    <div class="list-group-item" *ngFor="let en of hasTokensList; let i=index;">
+    <div class="enum-list-item p-2 d-flex justify-content-between align-items-center"
+      *ngFor="let en of hasTokensList; let i=index;">
       <span>{{en.value}}</span>
-      <span class="hover float-right text-primary" (click)="removeFromList('hasTokens',i)">
-        <span class="fa fa-times"></span>
+      <span class="hover float-right text-danger" (click)="removeFromList('hasTokens',i)">
+        <span class="dsi dsi-trash"></span>
       </span>
     </div>
     <button type="button" class="btn btn-min-width btn-primary my-1 w-100" *ngIf="hasTokensList.length>2 && canEdit"
@@ -229,12 +231,12 @@
             Min and max length of the attribute</div>
           <div class="font-12 text-danger"
             *ngIf="form.get('properties.minlength').dirty && form.get('properties').hasError('minMaxLength')"><span
-              class="fa fa-times mr-1"></span>Min
+              class="dsi dsi-close mr-1"></span>Min
             Length value cannot be greater then Max Length value</div>
         </div>
         <div class="font-12 text-danger"
           *ngIf="form.get('properties.maxlength').dirty && form.get('properties').hasError('minMaxLength')"><span
-            class="fa fa-times mr-1"></span>Max
+            class="dsi dsi-close mr-1"></span>Max
           Length value cannot be lesser then Min Length value</div>
       </div>
 
@@ -254,7 +256,7 @@
             <div class="sub-level-width"></div>
             <span class=" text-danger"
               *ngIf="form.get('properties.minlength').dirty && form.get('properties').hasError('minMaxLength')"><span
-                class="fa fa-times mr-1"></span>Min
+                class="dsi dsi-close mr-1"></span>Min
               Length value cannot be greater then Max Length value</span>
           </div>
         </div>
@@ -274,7 +276,7 @@
             <div class="sub-level-width"></div>
             <span class=" text-danger"
               *ngIf="form.get('properties.maxlength').dirty && form.get('properties').hasError('minMaxLength')"><span
-                class="fa fa-times mr-1"></span>Max
+                class="dsi dsi-close mr-1"></span>Max
               Length value cannot be lesser then Min Length value</span>
           </div>
         </div>
@@ -287,7 +289,7 @@
   <div class="modal-body p-4">
     <div class="d-flex align-items-center justify-content-between">
       <span class="font-20 fw-600">{{deleteModal.title}}</span>
-      <span class="fa fa-times text-secondary hover ml-auto" (click)="deleteModalTemplateRef.close(false)"></span>
+      <span class="dsi dsi-close text-secondary hover ml-auto" (click)="deleteModalTemplateRef.close(false)"></span>
     </div>
     <p class="text-center my-5" [ngClass]="{'text-truncate': deleteModal.message.length > 65}">
       {{deleteModal.message}}

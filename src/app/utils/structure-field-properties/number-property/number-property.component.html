@@ -55,7 +55,7 @@
       </select>
     </div>
   </div>
-  <div class="d-flex w-100 mb-4"
+  <div class="w-100 mb-4 mt-4"
     *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
     <div class=" text-secondary">Values</div>
     <div class=" position-relative">
@@ -77,10 +77,10 @@
   </div>
   <div class="d-flex flex-column w-100 mb-4"
     *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
-    <div class="border-left" formArrayName="enum" [sortablejs]="enumList"
+    <div class="" formArrayName="enum" [sortablejs]="enumList"
       [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
       <ng-container *ngFor="let en of enumList; let i=index;">
-        <div class="enum-list-item mx-2 px-2 py-1" [class.disabled]="!edit || !edit.status">
+        <div class="enum-list-item p-2" [class.disabled]="!edit || !edit.status">
           <span class="icon" *ngIf="!!edit && !!edit.status">
             <span class="fa fa-bars text-muted hover"></span>
           </span>
