@@ -17,7 +17,7 @@ export class SwitchComponent implements OnInit {
     @Output() checkedChange: EventEmitter<boolean>;
     constructor() {
         this.checkedChange = new EventEmitter();
-        this.type = 'dark';
+        this.type = 'success';
         this.edit = {};
         this.showLabel = false;
     }
