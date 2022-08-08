@@ -39,6 +39,10 @@ import { MakerCheckerComponent } from './maker-checker/maker-checker.component';
 import { DynamicConditionComponent } from './manage-permissions/dynamic-condition/dynamic-condition.component';
 import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-editor.module';
+import { CommonSettingsComponent } from './configuration/common-settings/common-settings.component';
+import { DataSettingsComponent } from './configuration/data-settings/data-settings.component';
+import { SearchSettingsComponent } from './configuration/search-settings/search-settings.component';
+import { ResetServiceComponent } from './reset-service/reset-service.component';
 
 @NgModule({
     imports: [
@@ -82,7 +86,11 @@ import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-edi
         StateModelComponent,
         FilterNextStatePipe,
         MakerCheckerComponent,
-        DynamicConditionComponent
+        DynamicConditionComponent,
+        CommonSettingsComponent,
+        DataSettingsComponent,
+        SearchSettingsComponent,
+        ResetServiceComponent
     ],
     exports: [
         SchemaStructurePipe,
@@ -98,7 +106,11 @@ import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-edi
         LogicalConditionComponent,
         StateModelComponent,
         MakerCheckerComponent,
-        DynamicConditionComponent
+        DynamicConditionComponent,
+        CommonSettingsComponent,
+        DataSettingsComponent,
+        SearchSettingsComponent,
+        ResetServiceComponent
     ],
     providers: [SchemaBuilderService]
 })

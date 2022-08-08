@@ -39,44 +39,50 @@
   </div>
   <form [formGroup]="form" class="d-flex flex-column w-100 h-100 mt-4">
     <div class="d-flex flex-column w-100 h-100 border-top border-left border-right rounded bg-white">
-      <div class="tabs d-flex align-items-center border-bottom text-uppercase" (click)="showHiddenMenu()" id="sbTabs">
-        <div class="font-13 pl-4 pr-2 font-weight-bold hover" *ngIf="hasPermissionForTab('D')" (click)="activeTab=0"
+      <div class="tabs d-flex align-items-center border-bottom text-uppercase fw-500 font-13 text-muted" (click)="showHiddenMenu()" id="sbTabs">
+        <div class="pl-4 pr-2 hover" *ngIf="hasPermissionForTab('D')" (click)="activeTab=0"
           [ngClass]="{'active':activeTab==0}">
           <span>Design</span>
           <span class="fa fa-circle fa-xs ml-2"
             [ngClass]="{'show':changesDoneInDesign,'text-danger':errorInDesign}"></span>
         </div>
-        <div class="font-13 px-2  hover" *ngIf="hasPermissionForTab('I')" (click)="activeTab=1"
+        <div class="px-2  hover" *ngIf="hasPermissionForTab('I')" (click)="activeTab=1"
           [ngClass]="{'active':activeTab==1}">
           <span>Integration</span>
           <span class="fa fa-circle fa-xs ml-2"
             [ngClass]="{'show':changesDoneInIntegration,'text-danger':errorInIntegration}"></span>
         </div>
-        <div class="font-13 px-2 hover" *ngIf="hasPermissionForTab('E') && !isSchemaFree" (click)="activeTab=2"
+        <div class="px-2 hover" *ngIf="hasPermissionForTab('E') && !isSchemaFree" (click)="activeTab=2"
           [ngClass]="{'active':activeTab==2}">
           <span>Experience</span>
           <span class="fa fa-circle fa-xs ml-2"
             [ngClass]="{'show':changesDoneInExperience,'text-danger':errorInExperience}"></span>
         </div>
-        <div class="font-13 px-2 hover" *ngIf="hasPermissionForTab('R')" (click)="activeTab=4"
-          [ngClass]="{'active':activeTab==4}">
+        <div class="px-2 hover" *ngIf="hasPermissionForTab('R')" (click)="activeTab=3"
+          [ngClass]="{'active':activeTab==3}">
           <span>Roles</span>
           <span class="fa fa-circle fa-xs ml-2"
             [ngClass]="{'show':changesDoneInRoles,'text-danger':errorInRoles}"></span>
         </div>
-        <div class="font-13 px-2 hover" *ngIf="hasPermissionForTab('S')" (click)="activeTab=3"
-          [ngClass]="{'active':activeTab==3}">
+        <div class="px-2 hover" *ngIf="hasPermissionForTab('S')" (click)="activeTab=4"
+          [ngClass]="{'active':activeTab==4}">
           <span>Settings</span>
           <span class="fa fa-circle fa-xs ml-2"
             [ngClass]="{'show':changesDoneInConfiguration,'text-danger':errorInConfiguration}"></span>
         </div>
-        <div class="font-13 px-2 hover" (click)="activeTab=5" [ngClass]="{'active':activeTab==5}"
+        <div class="px-2 hover" *ngIf="edit.status && hasPermissionForTab('S')" (click)="activeTab=5"
+          [ngClass]="{'active':activeTab==5}">
+          <span>Reset</span>
+          <span class="fa fa-circle fa-xs ml-2"
+            [ngClass]="{'show':changesDoneInConfiguration,'text-danger':errorInConfiguration}"></span>
+        </div>
+        <div class="px-2 hover" (click)="activeTab=6" [ngClass]="{'active':activeTab==6}"
           *ngIf="!edit.status && hasPermissionStartsWith('PVDSA','SM')">
           Audit
         </div>
-        <div class="font-13 px-2 hover" (click)="generateData();activeTab=10" [ngClass]="{'active':activeTab==10}"
+        <div class="px-2 hover" (click)="generateData();activeTab=10" [ngClass]="{'active':activeTab==10}"
           *ngIf="clickCount>9">JSON</div>
-        <div class="font-13 px-2 hover" (click)="generateData();activeTab=11" [ngClass]="{'active':activeTab==11}"
+        <div class="px-2 hover" (click)="generateData();activeTab=11" [ngClass]="{'active':activeTab==11}"
           *ngIf="clickCount>9">Schema</div>
       </div>
       <div class="builder-body d-flex flex-column w-100" *ngIf="hasAnyTabPermission">
@@ -203,32 +209,33 @@
                   <odp-wizards [form]="form" [edit]="edit"></odp-wizards>
                 </div>
               </div>
-
               <div *ngIf="experienceSideNavActiveTab == 0"
                 class="schema-creator scrollStateModel position-relative w-100">
                 <odp-state-model [(form)]='form' [edit]='edit'></odp-state-model>
               </div>
-
               <div *ngIf="experienceSideNavActiveTab == 3" class="scrollStateModel">
                 <odp-maker-checker [(form)]='form' [edit]='edit'></odp-maker-checker>
               </div>
             </div>
-
+          </div>
+        </ng-container>
+        <ng-container *ngIf="activeTab == 3">
+          <div class="d-flex flex-column w-100">
+            <odp-manage-permissions #permissionsComponent [name]="name" [(role)]="role" [schemaFree]="isSchemaFree"
+              [(firstInit)]="manageRolesFirstInit" [(blockInvalidRole)]="blockInvalidRole" [definitions]="definitions"
+              [edit]="edit" (oldRoleReset)="onOldRoleReset($event)" [ngClass]="{'d-none':activeTab != 3}">
+            </odp-manage-permissions>
           </div>
         </ng-container>
         <ng-container>
           <odp-configuration [form]="form" [edit]="edit" [versionConfig]="versionConfig"
-            [ngClass]="{'d-none':activeTab != 3}"></odp-configuration>
+            [ngClass]="{'d-none':activeTab != 4}"></odp-configuration>
         </ng-container>
-        <ng-container *ngIf="activeTab == 4">
-          <div class="d-flex flex-column w-100">
-            <odp-manage-permissions #permissionsComponent [name]="name" [(role)]="role" [schemaFree]="isSchemaFree"
-              [(firstInit)]="manageRolesFirstInit" [(blockInvalidRole)]="blockInvalidRole" [definitions]="definitions"
-              [edit]="edit" (oldRoleReset)="onOldRoleReset($event)" [ngClass]="{'d-none':activeTab != 4}">
-            </odp-manage-permissions>
-          </div>
+        <ng-container>
+          <odp-reset-service [form]="form" [edit]="edit"
+            [ngClass]="{'d-none':activeTab != 5}"></odp-reset-service>
         </ng-container>
-        <ng-container *ngIf="activeTab == 5">
+        <ng-container *ngIf="activeTab == 6">
           <odp-logs [serviceObj]="serviceObj"></odp-logs>
         </ng-container>
         <ng-container *ngIf="activeTab == 10">

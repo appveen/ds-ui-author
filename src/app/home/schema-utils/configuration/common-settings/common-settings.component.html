@@ -1,0 +1,97 @@
+<div class="common-wrapper d-flex flex-column w-100 p-4 common-wrapper" [formGroup]="form">
+    <span class="font-20 fw-600 mb-3">Common Settings</span>
+    <div class="d-flex flex-column mt-4 p-0" *ngIf="canView('S')">
+        <span class="font-14 fw-700 mb-2">Customize API endpoint</span>
+        <input *ngIf="edit.status && canEdit('S')" type="text" class="form-control col-4" formControlName="api"
+            id="sbAPIEndpoint" />
+        <span *ngIf="!edit.status || !canEdit('S')" class="form-control-plaintext">
+            {{ form.get("api").value }}
+        </span>
+    </div>
+    <div class="my-3">
+        <div class="custom-alert d-flex align-items-center p-4 rounded">
+            <span class="dsi dsi-danger-circle text-danger"></span>
+            <span class="ml-3 text-dark font-12 fw-400">"Changing the API endpoint would result in the data service
+                being not accessible for sometime. Unless you are fully aware of what you are doing, it is highly
+                recommended that you don't change the system generated endpoint"</span>
+        </div>
+    </div>
+    <div class="d-flex flex-column w-100 mt-4 mb-3" *ngIf="canView('S')">
+        <div class="d-flex justify-content-between">
+            <span class="font-14 fw-700 mb-2">Properties</span>
+            <button *ngIf="edit.status && canEdit('S')" type="button" class="btn btn-link text-dark font-14 fw-500" (click)="openHeadersModal()">
+                <span class="dsi dsi-plus-circle text-primary mr-2"></span>
+                <span class="text">Add Property</span>
+            </button>
+        </div>
+        <div class="list-group rounded">
+            <div class="list-group-item header font-11 fw-500 bg-light d-flex align-items-center text-uppercase">
+                <div class="item-no">#</div>
+                <div class="item-key">Key</div>
+                <div class="item-value">Value</div>
+                <div class="item-actions"></div>
+            </div>
+            <div class="scroll-pane">
+                <div class="list-group-item d-flex align-items-center" *ngFor="let item of headers; let i = index"
+                    (dblclick)="openHeadersModal(item)">
+                    <div class="item-no">{{ i + 1 }}.</div>
+                    <div class="item-key">
+                        {{ item.key }}
+                    </div>
+                    <div class="item-value">
+                        {{ item.value }}
+                    </div>
+                    <div class="item-actions">
+                        <span *ngIf="edit.status && canEdit('S')" class="dsi dsi-edit text-secondary mr-3"
+                            (click)="openHeadersModal(item)"></span>
+                        <span *ngIf="edit.status && canEdit('S')" class="dsi dsi-trash text-secondary"
+                            (click)="removeHeader(item.key)"></span>
+                    </div>
+                </div>
+                <div class="list-group-item d-flex align-items-center" *ngIf="headers.length==0">No Properties Added
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showHeaderWindow" class="overlay position-fixed"></div>
+
+<div [ngClass]="{'show':showHeaderWindow}"
+    class="header-window position-fixed bg-white border-left p-4 d-flex flex-column">
+    <div class="d-flex align-items-center justify-content-between mb-3 w-100">
+        <span class="font-20 fw-600" *ngIf="headerData && headerData.isEdit">Edit Properties</span>
+        <span class="font-20 fw-600" *ngIf="!headerData || !headerData.isEdit">Add Properties</span>
+        <span class="dsi dsi-close text-muted hover" (click)="closeHeadersModal()"></span>
+    </div>
+    <div *ngIf="showHeaderWindow" class="info d-flex flex-column align-self-center justify-content-center w-100 h-100">
+        <div class="form-group">
+            <label for="key">Key</label>
+            <div class="w-100 position-relative headers-key-wrapper">
+                <input #headerKey="ngModel" id="key" type="text" class="form-control" [(ngModel)]="headerData.key"
+                    maxlength="24" pattern="[a-zA-Z0-9_-]+" required [disabled]="headerData.isEdit" odpAutoFocus
+                    (keyup.enter)="headerValue.focus()" [ngClass]="{
+                'is-invalid':
+                  headerKey.invalid && (headerKey.dirty || headerKey.touched)
+              }" />
+                <ng-container *ngIf="headerKey.invalid && (headerKey.dirty || headerKey.touched)">
+                    <span *ngIf="headerKey?.errors?.required"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Key is required"></span>
+                    <span *ngIf="headerKey?.errors?.pattern"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Key can be only alphanumeric and can only contain underscore(_) and dash(-)"></span>
+                </ng-container>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="value">Value</label>
+            <input #headerValue id="value" type="text" class="form-control" [(ngModel)]="headerData.value"
+                (keyup.enter)="headerSave.click()" />
+        </div>
+        <div class="d-flex flex-column align-items-end w-100 mt-auto">
+            <button #headerSave type="button" class="btn btn-primary w-100" id="keyValueModalYes"
+                [disabled]="headerKey.invalid" (click)="setHeaderData()">Save</button>
+        </div>
+    </div>
+</div>

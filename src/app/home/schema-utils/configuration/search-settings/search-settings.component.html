@@ -1,0 +1,19 @@
+<div class="d-flex flex-column w-100 p-4" *ngIf="canView('S')">
+    <span class="font-20 fw-600 mb-3">Search Settings</span>
+    <div class="d-flex justify-content-between my-4">
+        <div class="d-flex flex-column">
+            <div class="font-14 fw-700">Fuzzy search</div>
+            <div class="sub-heading font-14 fw-400">Enabling fuzzy-search will allow you to search across all text fields.</div>
+        </div>
+        <div class="switch-container">
+            <odp-switch [edit]="{ status: edit.status && canEdit('S') }" [(checked)]="fuzzySearch"></odp-switch>
+        </div>
+    </div>
+
+    <div class="text-dark font-12 fw-400 mt-3">
+        <span class="text-danger">*</span>
+        It is recommended to not enable fuzzy-search if the data service has a
+        lot of text fields (>10) or nested fields (e.g. Collection of Group
+        having Collections).
+    </div>
+</div>

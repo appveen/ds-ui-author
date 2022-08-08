@@ -1,28 +1,24 @@
-import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
-import { FormGroup, FormArray, FormControl } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
-import { VersionConfig } from 'src/app/utils/interfaces/schemaBuilder';
+import { CommonService } from 'src/app/utils/services/common.service';
 
 @Component({
-  selector: 'odp-configuration',
-  templateUrl: './configuration.component.html',
-  styleUrls: ['./configuration.component.scss']
+  selector: 'odp-search-settings',
+  templateUrl: './search-settings.component.html',
+  styleUrls: ['./search-settings.component.scss']
 })
-export class ConfigurationComponent implements OnInit {
+export class SearchSettingsComponent implements OnInit {
 
   @Input() form: FormGroup;
   @Input() edit: any;
-  @Input() versionConfig: VersionConfig;
-  activeTab: number;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
     private ts: ToastrService) {
-    this.activeTab = 1;
+
   }
 
   ngOnInit() {
@@ -52,7 +48,6 @@ export class ConfigurationComponent implements OnInit {
   }
 
   isAdmin() {
-
     if (!this.commonService.userDetails.isSuperAdmin
       && this.commonService.isAppAdmin) {
       return true;
@@ -60,7 +55,16 @@ export class ConfigurationComponent implements OnInit {
       return false
   }
 
+  set fuzzySearch(val: boolean) {
+    this.form.get('enableSearchIndex').patchValue(val);
+  }
+
+  get fuzzySearch() {
+    return this.form.get('enableSearchIndex').value;
+  }
+
   get id() {
     return this.edit._id;
   }
+
 }

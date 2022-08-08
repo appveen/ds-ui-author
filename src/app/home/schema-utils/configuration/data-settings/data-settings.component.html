@@ -1,0 +1,104 @@
+<div class="wrapper d-flex flex-column w-100 p-4" [formGroup]="form">
+    <span class="font-20 fw-600 mb-3">Data Settings</span>
+    <div class="d-flex flex-column" *ngIf="canView('S')">
+        <!-- <span class="text-accent my-2">These settings defines how records are handled</span> -->
+        <div class="d-flex flex-column w-100">
+            <div class="d-flex justify-content-between mt-4" *ngIf="canView('S')">
+                <div class="d-flex flex-column">
+                    <div class="font-14 fw-700 my-2">Soft Delete</div>
+                    <div class="sub-heading font-14 fw-400">
+                        Delete data permanently when a record is deleted at the App
+                        Center
+                    </div>
+                </div>
+                <div class=" switch-container d-flex align-items-center justify-content-center">
+                    <odp-switch [edit]="{status:edit.status && canEdit('S')}"
+                        [checked]="form.get('permanentDeleteData').value"
+                        (checkedChange)="form.get('permanentDeleteData').patchValue($event)"></odp-switch>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mt-4" *ngIf="canView('S')">
+                <div class="d-flex flex-column">
+                    <div class="font-14 fw-700 my-2">Track and store changes of data history</div>
+                    <div class="sub-heading font-14 fw-400">
+                        Keep a history of data when data is changed?
+                    </div>
+                </div>
+                <div class="switch-container d-flex align-items-center justify-content-center">
+                    <odp-switch [edit]="{status:edit.status && canEdit('S')}" [(checked)]="retainDataHistory"
+                        (checkedChange)="onVersionChange($event)"></odp-switch>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mt-4" *ngIf="retainDataHistory && canView('S')">
+                <div class="d-flex flex-column">
+                    <div class="font-14 fw-700 my-2">Retain data by</div>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="btn-group btn-group-toggle" (change)="patchVersionValue(true)" ngbRadioGroup
+                        [ngModelOptions]="{ standalone: true }" [(ngModel)]="versionConfig.type">
+                        <label ngbButtonLabel class="btn btn-outline-accent">
+                            <input ngbButton type="radio" value="count" [disabled]="!edit.status || !canEdit('S')" />
+                            Versions
+                        </label>
+                        <label ngbButtonLabel class="btn btn-outline-accent">
+                            <input ngbButton type="radio" value="time" [disabled]="!edit.status || !canEdit('S')" />
+                            Duration
+                        </label>
+                    </div>
+                    <ng-container>
+                        <select *ngIf="form.get('versionValidity.validityType').value == 'time'"
+                            class="form-control my-2" [(ngModel)]="versionConfig.value"
+                            [ngModelOptions]="{ standalone: true }" (change)="patchVersionValue()"
+                            [disabled]="!edit.status || !canEdit('S')">
+                            <option value="">All</option>
+                            <option value="custom">Custom</option>
+                            <option value="1 months">1 Month</option>
+                            <option value="3 months">3 Month</option>
+                            <option value="6 months">6 Month</option>
+                            <option value="1 years">1 Year</option>
+                        </select>
+                        <select *ngIf="form.get('versionValidity.validityType').value == 'count'"
+                            class="form-control my-2" (change)="patchVersionValue()"
+                            [ngModelOptions]="{ standalone: true }" [(ngModel)]="versionConfig.value"
+                            [disabled]="!edit.status || !canEdit('S')">
+                            <option value="-1" selected>All</option>
+                            <option value="custom">Custom</option>
+                            <option value="10">Last 10</option>
+                            <option value="25">Last 25</option>
+                            <option value="50">Last 50</option>
+                            <option value="100">Last 100</option>
+                        </select>
+                    </ng-container>
+                    <div *ngIf="versionConfig.isCustomValue" class="custom-input-number position-relative">
+                        <input type="number" class="form-control" [ngModelOptions]="{ standalone: true }"
+                            [(ngModel)]="versionConfig.customValue" #vcCustomval="ngModel"
+                            (change)="patchVersionValue()" min="1" [disabled]="!edit.status || !canEdit('S')" />
+                        <span class="fa fa-xs fa-circle text-danger position-absolute version-error-symbol"
+                            ngbTooltip="Custom value should not be less than '1'" placement="right"
+                            *ngIf="!validityValidator && vcCustomval.touched"></span>
+                        <select class=" embeded-select position-absolute text-accent bg-white border-0"
+                            *ngIf="form.get('versionValidity.validityType').value == 'time'"
+                            [ngModelOptions]="{ standalone: true }" [(ngModel)]="versionConfig.customValueSuffix"
+                            (change)="patchVersionValue()" [disabled]="!edit.status || !canEdit('S')">
+                            <option value="minutes">Minutes</option>
+                            <option value="hour">Hour</option>
+                            <option value="days">Days</option>
+                            <option value="months">Months</option>
+                            <option value="years">Years</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-column w-100 mt-4" *ngIf="isAdmin">
+        <span class="font-20 fw-500 mb-3">Insights Settings</span>
+        <div class="d-flex justify-content-between">
+            <div class="font-14 fw-700 my-2">Disable Insights</div>
+            <div class="switch-container d-flex align-items-center justify-content-center">
+                <odp-switch [edit]="{status:edit.status && canEdit('S')}" [checked]="form.get('disableInsights').value"
+                    (checkedChange)="form.get('disableInsights').patchValue($event)"></odp-switch>
+            </div>
+        </div>
+    </div>
+</div>
