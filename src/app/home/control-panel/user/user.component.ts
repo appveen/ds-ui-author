@@ -228,7 +228,21 @@ export class UserComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     });
 
-
+    this.attributesForm = this.fb.group({
+      key: [''],
+      type: ['String', [Validators.required]],
+      value: ['', [Validators.required]],
+      label: ['', [Validators.required]],
+    });
+    this.attributesForm.get('key').disable();
+    this.attributesForm
+      .get('label')
+      .valueChanges
+      .subscribe((val: any) => {
+        this.attributesForm
+          .get('key')
+          .patchValue(this.appService.toCamelCase(val));
+      });
   }
 
   onAuthTypeChange(value) {
@@ -1149,22 +1163,9 @@ export class UserComponent implements OnInit, OnDestroy {
     }
   }
 
-  showAttributeSide(data = {}) {
-    this.attributesForm = this.fb.group({
-      key: [''],
-      type: ['String', [Validators.required]],
-      value: ['', [Validators.required]],
-      label: ['', [Validators.required]],
-    });
-    this.attributesForm
-      .get('label')
-      .valueChanges.pipe(filter(() => !this.editMode))
-      .subscribe((val: any) => {
-        this.attributesForm
-          .get('key')
-          .patchValue(this.appService.toCamelCase(val));
-      });
-    if (this.editMode) {
+  showAttributeSide(data?: any) {
+    this.attributesForm.reset({ type: 'String' });
+    if (this.editMode && data) {
       this.attributesForm.setValue(data)
     }
     this.showAddAttribute = true;
@@ -1178,7 +1179,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   addAttribute() {
-    const { key, ...rest } = this.attributesForm.value;
+    const { key, ...rest } = this.attributesForm.getRawValue();
     this.details.attributes[key] = this.appService.cloneObject(rest);
     this.commonService
       .put(
