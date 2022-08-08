@@ -23,8 +23,10 @@ export class RoundRadioComponent {
 
   toggle(val) {
     const self = this;
-    self.checked = val;
-    self.checkedChange.emit(val);
+    if (this.edit && this.edit.status) {
+      self.checked = val;
+      self.checkedChange.emit(val);
+    }
   }
 
   get style() {
