@@ -54,7 +54,7 @@
           </div>
         </div>
         <div class="item-actions">
-          <div class="actions text-secondary d-flex justify-content-end hover align-items-center">
+          <div class="actions d-flex justify-content-end hover align-items-center">
             <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintainance' ">
               <span *ngIf="canDeployFunction(item)" id='deploy_{{i}}' class="dsi dsi-skip-forward text-primary mr-2"
                 (click)="deployFunction(i)" [ngbTooltip]="'Deploy v'+(item.draftVersion || item.version)"

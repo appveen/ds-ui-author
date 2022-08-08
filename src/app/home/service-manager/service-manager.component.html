@@ -75,7 +75,7 @@
                 <span class="text font-12 fw-400">{{srvc.status}}</span>
               </div>
               <div class="item-actions">
-                <div class="actions text-secondary d-flex justify-content-end hover align-items-center">
+                <div class="actions d-flex justify-content-end hover align-items-center">
                   <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintainance' ">
                     <span *ngIf="isDeploy(i)" id='deploy_{{i}}' class="dsi dsi-skip-forward text-primary mr-2"
                       (click)="deployService(i)" [ngbTooltip]="'Deploy v'+(srvc.draftVersion || srvc.version)"

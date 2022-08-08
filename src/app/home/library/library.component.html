@@ -38,7 +38,7 @@
               <div class="item-attribute-count text-center">{{library._attributes}}</div>
               <div class="item-reference-count text-center">{{library._references}}</div>
             </div>
-            <div class="item-actions sub-heading d-flex align-items-center justify-content-end">
+            <div class="item-actions d-flex align-items-center justify-content-end">
               <span id="lib-view" class="dsi dsi-view hover mr-2" [routerLink]="['/app/',app,'gs',library._id]"></span>
               <span *ngIf="canEditLibrary(library._id)" id="lib-edit" class="dsi dsi-edit hover mr-2"
                 (click)="editLibrary(i)"></span>

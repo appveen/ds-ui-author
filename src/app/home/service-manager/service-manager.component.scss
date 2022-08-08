@@ -48,6 +48,9 @@
           min-width: 24px;
           max-width: 24px;
           display: inline-block;
+          &:not(:hover) {
+            color: $sub-headings;
+          }
         }
 
         .dsi,
