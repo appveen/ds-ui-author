@@ -522,7 +522,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     self.serviceList = [];
     self.service = {
       page: 1,
-      count: -1,
+      count: 30,
       select: null,
       filter: { app: this.commonService.app._id },
     };

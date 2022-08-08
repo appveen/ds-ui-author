@@ -116,8 +116,8 @@
 }
 
 .fields-container {
-  min-width: 500px;
-  max-width: 500px;
+  min-width: 800px;
+  max-width: 800px;
 }
 
 .role-list {
@@ -254,4 +254,8 @@ textarea {
 
 .editor-wrapper {
   width: calc(100% - 360px);
+}
+
+.field-type-container {
+  min-width: 120px;
 }

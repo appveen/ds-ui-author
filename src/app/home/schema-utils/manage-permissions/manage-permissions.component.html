@@ -2,8 +2,8 @@
   <div class="d-flex flex-column roles-list p-4">
     <div class="role-list">
       <div class="d-flex flex-column">
-        <button class="btn btn-link d-flex align-items-center hover mb-3 px-0" (click)="addPermission()"
-          id="addNewRole" *ngIf="edit.status">
+        <button class="btn btn-link d-flex align-items-center hover mb-3 px-0" (click)="addPermission()" id="addNewRole"
+          *ngIf="edit.status">
           <span class="dsi dsi-plus mr-2"></span>
           <span class="fw-500 font-14">Add New</span>
         </button>
@@ -81,16 +81,47 @@
           <div class="tab-container d-flex align-items-start w-100">
             <div id="tab-1" *ngIf="activeTab === 1">
               <div class="d-flex flex-column w-100 my-3">
-                <div class="d-flex flex-column">
-                  <select id="permissions" class="form-control input-text" (ngModelChange)="changePermission($event)"
+                <div class="d-flex align-items-center">
+                  <!-- <select id="permissions" class="form-control input-text" (ngModelChange)="changePermission($event)"
                     [disabled]="!edit.status && hasPermission('PMDSR')" [ngModel]="selectRoleType">
                     <option *ngFor="let item of permissionOption" [value]="item.value">
                       {{ item.label }}
                     </option>
-                  </select>
+                  </select> -->
+                  <div class="d-flex align-items-center mr-3 my-3 hover" (click)="changePermission('manage')">
+                    <odp-round-radio id="permissions" [edit]="{status:edit.status&&hasPermission('PMDSR')}"
+                      [checked]="selectRoleType == 'manage'" (checkedChange)="changePermission('manage')">
+                    </odp-round-radio>
+                    <span class="ml-2">Manage</span>
+                  </div>
+                  <div class="d-flex align-items-center mr-3 my-3 hover" (click)="changePermission('view')">
+                    <odp-round-radio id="permissions" [edit]="{status:edit.status&&hasPermission('PMDSR')}"
+                      [checked]="selectRoleType == 'view'" (checkedChange)="changePermission('view')"></odp-round-radio>
+                    <span class="ml-2">View</span>
+                  </div>
                 </div>
                 <div *ngIf="selectRoleType === 'manage'" class="mt-5">
-                  <div class="form-check">
+                  <div class="d-flex align-items-center mr-3 mb-3"
+                    (click)="edit && edit.status ? canCreate = !canCreate:''">
+                    <odp-checkbox id="createCheckbox" [edit]="edit" [checked]="canCreate"
+                      (checkedChange)="canCreate = !canCreate" [disabled]="!hasPermission('PMDSR')"></odp-checkbox>
+                    <span class="ml-2">Create</span>
+                  </div>
+                  <div class="d-flex align-items-center mr-3 mb-3"
+                    (click)="edit && edit.status ? canEdit = !canEdit:''">
+                    <odp-checkbox id="editCheckbox" [edit]="edit" [checked]="canEdit"
+                      (checkedChange)="canEdit = !canEdit" [disabled]="!hasPermission('PMDSR')"></odp-checkbox>
+                    <span class="ml-2">Edit</span>
+                  </div>
+                  <div class="d-flex align-items-center mr-3 mb-3"
+                    (click)="edit && edit.status ? canDelete = !canDelete:''">
+                    <odp-checkbox id="deleteCheckbox" [edit]="edit" [checked]="canDelete"
+                      (checkedChange)="canDelete = !canDelete" [disabled]="!hasPermission('PMDSR')"></odp-checkbox>
+                    <span class="ml-2">Delete</span>
+                  </div>
+
+
+                  <!-- <div class="form-check">
                     <input class="ml-1" type="checkbox" value="" id="createCheckbox"
                       [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canCreate"
                       (change)="canCreate = !canCreate">
@@ -107,7 +138,26 @@
                       [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canDelete"
                       (change)="canDelete = !canDelete">
                     <label class="ml-3" for="deleteCheckbox">Delete</label>
+                  </div> -->
+
+                  <!-- <div class="form-check">
+                    <input class="ml-1" type="checkbox" value="" id="createCheckbox"
+                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canCreate"
+                      (change)="canCreate = !canCreate">
+                    <label class="ml-3" for="createCheckBox">Create</label>
                   </div>
+                  <div class="form-check">
+                    <input class="ml-1" type="checkbox" value="" id="editCheckbox"
+                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canEdit"
+                      (change)="canEdit = !canEdit">
+                    <label class="ml-3" for="editCheckbox">Edit</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="ml-1" type="checkbox" value="" id="deleteCheckbox"
+                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canDelete"
+                      (change)="canDelete = !canDelete">
+                    <label class="ml-3" for="deleteCheckbox">Delete</label>
+                  </div> -->
                 </div>
               </div>
               <div class="d-flex w-100 mb-3" *ngIf="selectRoleType == 'view' && !schemaFree">
@@ -199,10 +249,14 @@
           def.properties.name
           }}</span>
       </div>
-      <odp-field-type [field]="def" label="true"></odp-field-type>
     </div>
-    <odp-switch [attr.id]="def.properties.dataKey" [checked]="isChecked(def.properties.dataKey)"
-      (checkedChange)="changeValue(def.properties.dataKey, $event)" [edit]="edit"></odp-switch>
+    <div class="d-flex align-items-center justify-content-end">
+      <div class="field-type-container">
+        <odp-field-type [field]="def" label="true"></odp-field-type>
+      </div>
+      <odp-switch class="ml-3" [attr.id]="def.properties.dataKey" [checked]="isChecked(def.properties.dataKey)"
+        (checkedChange)="changeValue(def.properties.dataKey, $event)" [edit]="edit"></odp-switch>
+    </div>
   </div>
   <ng-container *ngIf="def.type == 'Object' && !collapse[def.properties.dataKey]">
     <ng-container *ngFor="let srcDef of def.definition; let i = index; let l = last">

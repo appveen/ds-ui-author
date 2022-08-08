@@ -405,6 +405,9 @@ export class SchemaBuilderComponent implements
 
     toggleSchemaType(schemaFree: boolean) {
         const self = this;
+        if (!this.edit || !this.edit.status) {
+            return false;
+        }
         if (schemaFree) {
             self.toggleSchemaModal = {
                 title: 'Enable Schema Free',
@@ -417,6 +420,9 @@ export class SchemaBuilderComponent implements
                 message: 'Define data in collection, existing data will be maintained but might not be accessible. New documents will require validations',
                 info: ''
             };
+        }
+        if (self.schemaToggleTemplateRef) {
+            self.schemaToggleTemplateRef.close(false);
         }
         self.schemaToggleTemplateRef = self.commonService.modal(self.schemaToggleTemplate);
         self.schemaToggleTemplateRef.result.then((response) => {
@@ -706,6 +712,7 @@ export class SchemaBuilderComponent implements
                             self.breadcrumbPaths.pop();
                             this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                             self.fillDetails(self.edit.id);
+                            this.activeTab = 1;
                         }
                     } else {
                         self.router.navigate(['/app/', self.commonService.app._id, 'sm']);
@@ -719,6 +726,7 @@ export class SchemaBuilderComponent implements
                 } else {
                     if (self.edit.status) {
                         self.edit.status = false;
+                        this.activeTab = 1;
                     } else {
                         self.router.navigate(['/app/', self.commonService.app._id, 'sm']);
                     }

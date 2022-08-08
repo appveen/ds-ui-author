@@ -69,6 +69,9 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     self.firstInitChange = new EventEmitter();
     self.blockFocus = {};
     this.selectedMode = 'Advance';
+    this.edit = {
+      status: false
+    };
   }
 
   ngOnInit() {
@@ -683,8 +686,9 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
   }
 
   changePermission(event) {
-    console.log(event);
-    this.selectRoleType = event;
+    if (this.edit && this.edit.status) {
+      this.selectRoleType = event;
+    }
   }
 }
 

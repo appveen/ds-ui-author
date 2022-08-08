@@ -49,11 +49,11 @@
             <div class="mb-2 d-flex align-items-center">
                 <span class="fw-600 font-20">{{hooks.hookTitle}}</span>
                 <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
+                    <button class=" btn btn-link text-secondary p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
                         Preview {{hooks.hookshortName}} hook
                     </button>
-                    <button class=" btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()" (click)="newHook()"
+                    <button class=" btn btn-link text-secondary p-0" type="button" *ngIf="edit.status && canEdit()" (click)="newHook()"
                         id="addPrehook">+
                         Add {{hooks.hookshortName}} hook
                     </button>
