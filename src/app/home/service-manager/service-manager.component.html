@@ -21,9 +21,10 @@
       <button *ngIf="isExperimental" type="button" class="btn btn-white border ml-3" (click)="toggleImportWizard=true">
         <span class="dsi dsi-upload text-secondary"></span>
       </button>
-      <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3" (click)="newService()"
+      <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3 btn-min-width d-flex align-items-center" (click)="newService()"
         *ngIf="hasCreatePermission('SM')">
-        <span class="dsi dsi-plus"></span>
+        <span class="dsi dsi-plus mr-2"></span>
+        <span class="text">New Data Service</span>
       </button>
     </div>
   </div>
