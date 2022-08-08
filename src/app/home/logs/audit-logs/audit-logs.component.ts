@@ -15,8 +15,6 @@ import { DataGridColumn } from 'src/app/utils/data-grid/data-grid.directive';
 })
 export class AuditLogsComponent implements OnInit, OnDestroy {
 
-  @ViewChild('logModal', { static: false }) logModal: TemplateRef<any>;
-
   subscriptions: any;
   apiConfig: APIConfig;
   totalCount: number;
@@ -25,7 +23,6 @@ export class AuditLogsComponent implements OnInit, OnDestroy {
   selectedLog: any;
   jsonDiff: any;
   showLazyLoader: boolean;
-  logModalRef: NgbModalRef;
   service: any;
   @Output() columnsChange: EventEmitter<any>;
   @Output() filtersChange: EventEmitter<any>;
@@ -34,6 +31,7 @@ export class AuditLogsComponent implements OnInit, OnDestroy {
   currentPage: number;
   pageSize: number;
   totalRecords: number;
+  showLogObjectWindow: boolean;
 
   constructor(private commonService: CommonService,
     private appService: AppService,
@@ -162,9 +160,6 @@ export class AuditLogsComponent implements OnInit, OnDestroy {
         self.subscriptions[key].unsubscribe();
       }
     });
-    if (self.logModalRef) {
-      self.logModalRef.close();
-    }
   }
 
   getRecords() {
@@ -309,9 +304,15 @@ export class AuditLogsComponent implements OnInit, OnDestroy {
       fragment.appendChild(node);
     }
     self.jsonDiff = fragment.innerHTML;
-    self.logModalRef = self.commonService.modal(self.logModal, { size: 'lg' });
-    self.logModalRef.result.then((close) => { }, dismiss => { });
+    this.showLogObjectWindow = true;
+  }
 
+  onScroll(event: any) {
+    if (event.target.scrollTop + event.target.offsetHeight === event.target.scrollHeight
+      && this.totalRecords - 1 !== this.logs.length) {
+      this.apiConfig.page = this.apiConfig.page + 1;
+      this.loadMore({ page: this.apiConfig.page });
+    }
   }
 
   prevPage() {
