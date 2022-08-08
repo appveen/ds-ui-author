@@ -21,6 +21,16 @@
 
 .user-remove {
     width: 100px;
+
+    .btn {
+        &:not(:hover) {
+            color: $text-muted;
+        }
+
+        &:hover {
+            color: $dark;
+        }
+    }
 }
 
 .scrollable {

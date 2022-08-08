@@ -47,26 +47,26 @@
           </div>
           <div class="d-flex align-items-center justify-content-end">
             <span *ngIf="changesMadeinAuthorTab && !changesMadeinAppcenterTab && !changesMadeinUsersTab"
-              class="text-secondary mr-3">Changes made in Author Tab</span>
+              class="text-secondary mr-3"><span class="text-capitalize">Changes made in:</span> Author Roles</span>
             <span *ngIf="changesMadeinAppcenterTab && !changesMadeinAuthorTab && !changesMadeinUsersTab"
-              class="text-secondary mr-3">Changes made in App Center Tab</span>
+              class="text-secondary mr-3"><span class="text-capitalize">Changes made in:</span> App Center Roles</span>
             <span *ngIf="changesMadeinUsersTab && !changesMadeinAuthorTab && !changesMadeinAppcenterTab"
-              class="text-secondary mr-3">Changes made in Members Tab</span>
+              class="text-secondary mr-3"><span class="text-capitalize">Changes made in:</span> Members</span>
             <span *ngIf="changesMadeinAuthorTab && changesMadeinAppcenterTab && !changesMadeinUsersTab"
               class="text-secondary mr-3">
-              Changes made in multiple tabs: Author, App Center
+              <span class="text-capitalize">Changes made in multiple tabs:</span> Author, App Center
             </span>
             <span *ngIf="changesMadeinAppcenterTab && changesMadeinUsersTab && !changesMadeinAuthorTab"
               class="text-secondary mr-3">
-              Changes made in multiple tabs: App Center, Members
+              <span class="text-capitalize">Changes made in multiple tabs:</span> App Center, Members
             </span>
             <span *ngIf="changesMadeinAuthorTab && changesMadeinUsersTab && !changesMadeinAppcenterTab"
               class="text-secondary mr-3">
-              Changes made in multiple tabs: Author, Members
+              <span class="text-capitalize">Changes made in multiple tabs:</span> Author, Members
             </span>
             <span *ngIf="changesMadeinAuthorTab && changesMadeinUsersTab && changesMadeinAppcenterTab"
               class="text-secondary mr-3">
-              Changes made in multiple tabs: Author, App Center, Members
+              <span class="text-capitalize">Changes made in multiple tabs:</span> Author, App Center, Members
             </span>
           </div>
         </div>

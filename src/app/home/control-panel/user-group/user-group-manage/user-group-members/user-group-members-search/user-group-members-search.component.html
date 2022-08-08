@@ -7,7 +7,7 @@
             </button>
         </div>
         <div class="d-flex align-items-center justify-content-start my-3">
-            <odp-search-box (enteredText)="onSearch($event)" (reset)="onSearchReset()"></odp-search-box>
+            <odp-search-box (enteredText)="onSearch($event)" open="true" (reset)="onSearchReset()"></odp-search-box>
         </div>
         <div class="model-container d-flex w-100 align-items-stretch justify-content-between mb-4">
             <ng-container *ngIf="showLoader">
@@ -18,8 +18,8 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="!showLoader">
-                <div class="d-flex scrollable">
-                    <div class="list-group">
+                <div class="d-flex scrollable border rounded">
+                    <div class="list-group list-group-flush">
                         <div class="list-group-item d-flex align-items-center bg-light-gray text-secondary">
                             <div class="user-check">
                                 <odp-checkbox [edit]="{status:true}" [(checked)]="selectAll"></odp-checkbox>
@@ -42,8 +42,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex scrollable ml-4">
-                    <div class="list-group">
+                <div class="d-flex scrollable border rounded ml-4">
+                    <div class="list-group list-group-flush">
                         <div class="list-group-item d-flex align-items-center bg-light-gray text-secondary">
                             <div class="user-name text-uppercase">Name</div>
                             <div class="user-username text-uppercase">Username</div>
@@ -55,7 +55,7 @@
                                 <div class="user-name">{{user?.basicDetails?.name}}</div>
                                 <div class="user-username" [ngbTooltip]="user?._id">{{user?._id}}</div>
                                 <div class="user-remove clearfix">
-                                    <button type="button" class="btn btn-light border text-secondary float-right"
+                                    <button type="button" class="btn btn-link py-0 float-right"
                                         (click)="removeSelectedUser(i)">
                                         <span class="dsi dsi-trash"></span>
                                     </button>
