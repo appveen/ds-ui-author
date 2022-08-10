@@ -12,6 +12,14 @@
     </div>
   </div>
   <div *ngIf="selectedType" class="p-2 d-flex flex-column">
+    <div class="d-flex align-items-center justify-content-start p-2 mb-2">
+      <span class="dsi dsi-arrow-left mr-2 hover ignore-outside" (click)="selectedType=null"></span>
+      <span
+        class="dsi dsi-sm {{selectedType.class}} rounded-circle mr-2 text-dark type-width d-flex justify-content-center align-items-center ignore-outside"
+        [ngStyle]="{'background-color':selectedType.bgColor}">
+      </span>
+      <span class="ignore-outside">{{selectedType.label}}</span>
+    </div>
     <div *ngIf="type == 'String'" class="type-div">
       <div class="d-flex flex-column">
         <div class="d-flex background-hover pl-2 pt-2" (click)="switchType(selectedType,'');">

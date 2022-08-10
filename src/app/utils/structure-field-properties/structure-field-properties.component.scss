@@ -10,6 +10,7 @@
   transition: 0.2s;
   overflow: auto;
   padding-top: 40px !important;
+
   &.show {
     right: 0px !important;
   }
@@ -17,19 +18,28 @@
   .properties {
     width: 20px;
     height: 20px;
+
     &.required {
       background: $required;
     }
+
     &.create-only {
       background: $create-only;
     }
+
     &.unique {
       background: $unique;
     }
+
+    &.password {
+      background: $dark;
+    }
   }
+
   .schemaProperties-header {
     font-size: 20px;
   }
+
   // .schemaProperties-wrapper {
   //   overflow-y: auto;
   //   min-height: calc(100vh - 310px);
@@ -52,6 +62,7 @@
     min-width: 250px;
     max-width: 250px;
     word-break: break-word;
+
     // overflow: hidden;
     .label_type {
       display: inline-block;
@@ -83,12 +94,14 @@
   .dataType-div {
     max-width: 250px;
     border-top: 0 !important;
+
     .dataType-width {
       width: 42px;
       height: 42px;
       font-size: 1.125rem;
       float: left;
     }
+
     .dataType-width:hover {
       background: $light;
       border-radius: 4px;
@@ -129,8 +142,8 @@
 
   .selected-type,
   .selected-type:hover {
-    background: $capiot !important;
-    color: $white !important;
+    background: $capiot  !important;
+    color: $white  !important;
     width: 42px;
     height: 42px;
     border-radius: 4px;
@@ -155,6 +168,7 @@
     max-height: 16px;
     min-width: 16px;
     min-height: 16px;
+
     .fa {
       font-size: 10px;
     }
@@ -177,6 +191,7 @@
 .edit-icon {
   font-size: 12px;
 }
+
 .checkbox-container {
   display: inline-block;
   position: relative;
@@ -189,21 +204,26 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
   input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
-    &:checked ~ .checkmark {
+
+    &:checked~.checkmark {
       background-color: $capiot;
       border: 1px solid $capiot;
+
       &::after {
         display: block;
       }
     }
-    &:focus:not(:checked) ~ .checkmark {
+
+    &:focus:not(:checked)~.checkmark {
       background-color: #eee;
     }
   }
+
   .checkmark {
     border-radius: 18px !important;
     transition: 0.25s;
@@ -215,6 +235,7 @@
     background-color: #fff;
     // border-radius: 2px;
     border: 1px solid #bdbdbd;
+
     &::after {
       content: "";
       position: absolute;
@@ -230,12 +251,14 @@
       transform: rotate(45deg);
     }
   }
+
   &:hover {
-    input:not(:checked) ~ .checkmark {
+    input:not(:checked)~.checkmark {
       background-color: #eee;
     }
   }
 }
+
 .checkbox {
   min-height: 40px;
   max-height: 40px;
@@ -245,6 +268,7 @@
   box-shadow: 0px 1px 3px rgba($color: #000000, $alpha: 0.23);
   border: 1px solid transparent;
 }
+
 .selected-checkbox {
   border: #0082c9 solid 1px;
   box-shadow: 0px 3px 9px rgba($capiot, 0.3);

@@ -92,9 +92,9 @@ export class FieldTypeComponent {
     } else {
       label = temp ? temp.label : 'Text';
     }
-    if (field.properties.password) {
-      label += '  [secure]';
-    }
+    // if (field.properties.password) {
+    //   label += '  [secure]';
+    // }
     if (!label) {
       label = 'Text';
     }

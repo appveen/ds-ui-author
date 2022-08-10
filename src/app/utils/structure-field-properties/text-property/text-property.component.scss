@@ -1,12 +1,19 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+
 .label-width {
   min-width: 120px;
 }
+
 .sub-level-width {
   min-width: 105px;
 }
+
 .value-width {
   min-width: 250px;
   max-width: 250px;
+
   // overflow: hidden;
   .label_type {
     display: inline-block;
@@ -14,40 +21,48 @@
     padding-top: 3px;
   }
 }
-.list-add-button{
+
+.list-add-button {
   top: 5px;
   right: 10px;
 }
+
 .enum-list-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: 10px;
+  min-height: 38px;
+
+  .enum-mid-section {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr auto;
     align-items: center;
     column-gap: 10px;
-    min-height: 38px;
+  }
 
-    .enum-mid-section {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      column-gap: 10px;
-    }
+  .enum-icons-section {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 5px;
+    align-items: center;
+    color: $text-muted;
 
-    .enum-icons-section {
-      display: grid;
-      grid-template-columns: auto auto;
-      column-gap: 5px;
-      align-items: center;
+    &:hover {
+      color: $dark;
     }
+  }
 }
 
-.invalid-enum{
+.invalid-enum {
   background-color: rgba(150, 0, 0, 0.1);
   border-color: #DD5151;
+
   &:focus {
     background-color: rgba(150, 0, 0, 0.1);
   }
 }
 
-.short{
+.short {
   width: 142px;
 }

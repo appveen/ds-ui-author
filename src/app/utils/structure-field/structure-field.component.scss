@@ -8,6 +8,7 @@
   margin-bottom: 6px;
   background: $light;
   font-size: 14px;
+
   &.active {
     border-left-color: $dark;
   }
@@ -15,14 +16,21 @@
   .properties {
     width: 20px;
     height: 20px;
+
     &.required {
       background: $required;
     }
+
     &.create-only {
       background: $create-only;
     }
+
     &.unique {
       background: $unique;
+    }
+
+    &.password {
+      background: $dark;
     }
   }
 
@@ -32,25 +40,32 @@
     min-height: 14px;
     max-height: 14px;
   }
+
   .field {
     min-width: 180px;
     max-width: 180px;
     min-height: 28px;
     max-height: 28px;
   }
+
   .word-elipsis {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
   }
+
   .error-icon {
     top: 7px;
     left: 90%;
   }
+
   .searching-relation {
-    right: 4px;
-    top: 7px;
+    right: 10px;
+    top: 6px;
+    height: 16px;
+    width: 16px;
   }
+
   .type-icon-holder {
     min-width: 28px;
     max-width: 28px;
@@ -58,6 +73,7 @@
     max-height: 22px;
     font-size: 16px;
   }
+
   .field-options {
     .readonly {
       min-width: 18px;
@@ -68,6 +84,7 @@
       font-size: 10px;
       opacity: 0;
       transition: 0.25s;
+
       &.active {
         opacity: 1;
         background: #000;
@@ -75,6 +92,7 @@
       }
     }
   }
+
   &:hover {
     .field-options {
       .readonly {
@@ -95,4 +113,18 @@
   border-radius: 4px;
   padding: 2px 5px;
   margin-left: 12px;
+}
+
+
+
+.field-name-holder,
+.field-type-holder {
+  min-width: 280px;
+  max-width: 280px;
+}
+
+
+.field-flag-holder {
+  min-width: 120px;
+  max-width: 120px;
 }

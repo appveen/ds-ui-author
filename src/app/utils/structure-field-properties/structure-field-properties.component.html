@@ -6,295 +6,6 @@
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<!-- <div class="d-flex flex-column schemaProperties h-100">
-  <div class="schemaProperties-header border-bottom bg-dark d-flex align-items-center">
-    <span class="text-dark font-weight-bold w-100 d-flex align-items-center justify-content-between">
-      <div class="pl-3 d-flex w-50">
-        <span *ngIf="name" class="text-truncate text-white">{{name}}&nbsp;</span>
-        <span *ngIf="!name" class="text-truncate text-muted">Unnamed&nbsp;</span>
-      </div>
-      <span class="d-flex justify-content-end w-50" *ngIf="canEdit">
-        <button type="button" class="btn btn-link text-primary" (click)="cloneField()"
-          [disabled]="idField">Clone</button>
-        <button type="button" class="btn btn-link text-primary" (click)="deleteField()"
-          [disabled]="!canDelete">Remove</button>
-      </span>
-    </span>
-  </div>
-  <div class="schemaProperties-wrapper" *ngIf="!idField">
-    <ng-container
-      *ngFor="let formItem of formList;let formIndex = index; let isLastFormItem = last; let isFirstFormItem = first"
-      [formGroup]="formItem">
-      <div class="px-3 schemaProperties-body" [ngClass]="{'pt-4': isFirstFormItem}" formGroupName="properties">
-        <div class="d-flex flex-row mb-4 justify-content-center" *ngIf="!(isDataFormat || checkStateModel())">
-          <div class=" d-flex align-items-center font-13 checkbox mr-3 p-2"
-            [ngClass]="{'selected-checkbox':formItem.get('properties.required').value,'hover':canEdit}"
-            *ngIf="formItem.get('properties.required') && formItem.get('key').value !== '_self'"
-            (click)="toggleCheck(formItem.get('properties.required'))">
-            <div class="text-dark">Required</div>
-            <label for="reqAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
-              <input type="checkbox" id="reqAttr" [checked]="formItem.get('properties.required').value" class="d-none"
-                formControlName="required" *ngIf="canEdit" (click)="toggleCheck(formItem.get('properties.required'))">
-              <input type="checkbox" class="d-none" formControlName="required" *ngIf="!canEdit">
-              <span class="checkmark"></span>
-            </label>
-          </div>
-          <div class=" d-flex align-items-center font-13 checkbox mr-3 p-2 "
-            [ngClass]="{'selected-checkbox':formItem.get('properties.createOnly').value,'hover':canEdit}"
-            *ngIf="formItem.get('properties.createOnly') && formItem.get('key').value !=='_self'"
-            (click)="toggleCheck(formItem.get('properties.createOnly'))">
-            <div class="text-dark mr-2">Create Only</div>
-            <label for="createAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
-              <input type="checkbox" id="createAttr" class="d-none"
-                [checked]="formItem.get('properties.createOnly').value"
-                (click)="toggleCheck(formItem.get('properties.createOnly'))" formControlName="createOnly"
-                *ngIf="canEdit">
-              <input type="checkbox" class="d-none" formControlName="createOnly" *ngIf="!canEdit">
-              <span class="checkmark"></span>
-            </label>
-          </div>
-          <div class=" d-flex align-items-center font-13 checkbox p-2 "
-            [ngClass]="{'selected-checkbox':formItem.get('properties.unique').value,'hover':canEdit}"
-            *ngIf="formItem.get('properties.unique') && formItem.get('key').value !== '_self'"
-            (click)="toggleCheckUnique(formItem.get('properties.unique'))">
-            <div class="text-dark">Unique</div>
-            <label for="UniqAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
-              <input type="checkbox" id="UniqAttr" class="d-none" [checked]="formItem.get('properties.unique').value"
-                (click)="toggleCheckUnique(formItem.get('properties.unique'))" formControlName="unique" *ngIf="canEdit">
-              <input type="checkbox" class="d-none" formControlName="unique" *ngIf="!canEdit">
-              <span class="checkmark"></span>
-            </label>
-          </div>
-        </div>
-        <div class="d-flex w-100 mb-4">
-          <div class=" text-secondary">
-            <ng-container *ngIf="formItem.get('key').value !== '_self'">Type</ng-container>
-            <ng-container *ngIf="formItem.get('key').value === '_self'">Collection of</ng-container>
-          </div>
-          <div class=" bg-white position-relative">
-            <button type="button"
-              class="d-flex w-100 align-items-center justify-content-between bg-white px-2 py-1 border rounded ignore-click"
-              (click)="showDataTypes[formIndex]=true" [disabled]="!canEdit || checkStateModel()">
-              <odp-field-type [field]="{type:formItem.value.type,properties:formItem.value.properties}" [label]="true">
-              </odp-field-type>
-              <span *ngIf="canEdit" class="fas fa-angle-down text-accent"></span>
-            </button>
-            <small class='text-secondary' *ngIf="canEdit && checkStateModel()">
-              Type can't be changed because there is a state model configured
-            </small>
-            <odp-field-type-selector *ngIf="showDataTypes[formIndex]" [(toggle)]="showDataTypes[formIndex]"
-              [form]="formItem" [edit]="edit" [isLibrary]="isLibrary" [isDataFormat]="isDataFormat"
-              [formatType]="formatType">
-            </odp-field-type-selector>
-          </div>
-        </div>
-        <div class="sub-heading text-secondary bg-light mb-3 p-2" *ngIf="formItem.get('key').value !== '_self' && !isLibrary &&  
-        formItem.get('type').value!='Relation' && formItem.get('type').value!='User'">Advanced
-          Properties</div>
-        <div class="d-flex w-100 mb-4" *ngIf="isDataFormat && formatType=='FLATFILE'">
-          <div class=" text-secondary">Field Length
-            <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
-          </div>
-
-          <div >
-            <input *ngIf="canEdit" class="form-control" type="number" formControlName="fieldLength" id="fieldLength">
-            <span *ngIf="!canEdit">{{formItem.get('properties.fieldLength').value}}</span>
-          </div>
-        </div>
-
-        <odp-relation-property *ngIf="formItem.get('type').value=='Relation'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [type]='type'>
-        </odp-relation-property>
-        <odp-text-property *ngIf="formItem.get('type').value=='String'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType" [type]='type'
-          [(mainForm)]='mainForm'>
-        </odp-text-property>
-        <odp-number-property *ngIf="formItem.get('type').value=='Number'" [form]="formItem" [edit]="edit"
-          [(mainForm)]='mainForm' [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType"
-          [type]='type'>
-        </odp-number-property>
-        <odp-library-property *ngIf="formItem.get('type').value=='Global'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
-        </odp-library-property>
-        <odp-user-property *ngIf="formItem.get('type').value=='User'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
-        </odp-user-property>
-        <odp-date-property *ngIf="formItem.get('type').value=='Date'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
-        </odp-date-property>
-        <div class="d-flex" *ngIf="formItem.get('type').value=='Boolean' && !isDataFormat && !isLibrary ">
-          <div class=" text-secondary">Default Value
-          </div>
-          <div class=" position-relative">
-            <ng-container *ngIf="canEdit">
-              <label *ngIf="canEdit" class="switch accent">
-                <input type="checkbox" formControlName="default">
-                <span class="slider"></span>
-                <span class="toggler"></span>
-                <span class="ml-3">{{form.get('properties.default')?.value ? 'Yes' : 'No'}}</span>
-              </label>
-            </ng-container>
-            <ng-container *ngIf="!canEdit">
-              <span class="text d-flex" *ngIf=" form.get('properties.default').value === true">
-                <span
-                  class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
-                  <span class="fa fa-check text-white"></span>
-                </span>
-                <span class="text">Yes</span>
-              </span>
-              <span class="text d-flex" *ngIf="form.get('properties.default').value === false">
-                <span
-                  class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1">
-                </span>
-                <span class="text">No</span>
-              </span>
-            </ng-container>
-          </div>
-        </div>
-
-        <div class="d-flex mb-4" *ngIf="formItem.get('type').value=='Date' && !isDataFormat && !isLibrary ">
-          <div class=" text-secondary">Default Value</div>
-          <div class=" position-relative">
-            <ng-container *ngIf="canEdit">
-              <button type="button" class="btn btn-link" *ngIf="form.get('properties.default')?.value"
-                (click)="showDatePicker=true">
-                <ng-container *ngIf="form.get('properties.dateType').value == 'date'">
-                  {{form.get('properties.default')?.value | date:'dd-MMM-yyyy' }}</ng-container>
-                <ng-container *ngIf="form.get('properties.dateType').value != 'date'">
-                  {{form.get('properties.default')?.value | date:'dd-MMM-yyyy HH:mm:ss' }}</ng-container>
-              </button>
-              <button type="button" class="btn btn-link" *ngIf="!form.get('properties.default')?.value"
-                (click)="showDatePicker=true">Select
-                Date</button>
-              <odp-date-picker [(togglePicker)]="showDatePicker" [options]="{floating:true,buttons:true}"
-                *ngIf="showDatePicker" [(from)]="dateFrom"></odp-date-picker>
-              <button class="btn btn-link text-muted p-0" *ngIf="form.get('properties.default')?.value"
-                (click)="clearValue()">
-                <span class="fas fa-times-circle"></span>
-              </button>
-
-            </ng-container>
-            <ng-container *ngIf="!canEdit">
-              <span>{{form.get('properties.default')?.value | date:'dd-MMM-yyyy'}}</span>
-            </ng-container>
-          </div>
-        </div>
-        <ng-container *ngIf="showCommonFields && formItem.get('key').value !== '_self'" class="mb-4">
-
-
-          <div *ngIf="!idField" class="d-flex w-100 mt-4">
-            <div class=" text-secondary">Appcenter Custom Label</div>
-            <div >
-              <input *ngIf="edit.status" class="form-control" type="text" formControlName="label" id="label">
-              <span *ngIf="!edit.status">{{formItem.get('properties.label').value}}</span>
-            </div>
-          </div>
-          <div class="d-flex">
-            <div ></div>
-            <span class="text-danger" *ngIf="labelError"><span class="fa fa-times mr-1"></span>
-              <span>Label should not be more than 40 characters</span>
-            </span>
-          </div>
-          <div *ngIf="!idField" class="d-flex w-100 mt-4">
-            <div class=" text-secondary">Appcenter Custom Error</div>
-            <div >
-              <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"
-                [attr.disabled]="(checkStateModel() || (formItem.get('type').value =='Boolean')) ? true : null">
-              <span *ngIf="!canEdit">{{formItem.get('properties.errorMessage').value}}</span>
-            </div>
-          </div>
-          <div *ngIf="showSecureText(formItem)" class="d-flex w-100 mt-4">
-            <div class=" text-secondary">Secure</div>
-            <div class=" position-relative">
-              <ng-container *ngIf="canEdit">
-                <label *ngIf="canEdit" class="switch accent">
-                  <input type="checkbox" formControlName="password">
-                  <span class="slider"></span>
-                  <span class="toggler"></span>
-                  <span class="ml-3">{{formItem.get('properties.password')?.value ? 'Yes' : 'No'}}</span>
-                </label>
-              </ng-container>
-              <ng-container *ngIf="!canEdit">
-                <span class="text d-flex" *ngIf=" formItem.get('properties.password').value === true">
-                  <span
-                    class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
-                    <span class="fa fa-check text-white"></span>
-                  </span>
-                  <span class="text">Yes</span>
-                </span>
-                <span class="text d-flex" *ngIf="formItem.get('properties.password').value === false">
-                  <span
-                    class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1">
-                  </span>
-                  <span class="text">No</span>
-                </span>
-              </ng-container>
-            </div>
-
-          </div>
-        </ng-container>
-
-        <div *ngIf="showSecureFile(formItem)" class="d-flex w-100 mt-4">
-          <div class=" text-secondary">Secure</div>
-
-          <div class=" position-relative">
-            <ng-container *ngIf="canEdit">
-              <label *ngIf="canEdit" class="switch accent">
-                <input type="checkbox" formControlName="password">
-                <span class="slider"></span>
-                <span class="toggler"></span>
-                <span class="ml-3">{{formItem.get('properties.password')?.value ? 'Yes' : 'No'}}</span>
-              </label>
-            </ng-container>
-            <ng-container *ngIf="!canEdit">
-              <span class="text d-flex" *ngIf=" formItem.get('properties.password').value === true">
-                <span
-                  class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
-                  <span class="fa fa-check text-white"></span>
-                </span>
-                <span class="text">Yes</span>
-              </span>
-              <span class="text d-flex" *ngIf="formItem.get('properties.password').value === false">
-                <span
-                  class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1">
-                </span>
-                <span class="text">No</span>
-              </span>
-            </ng-container>
-          </div>
-        </div>
-
-        <ng-container *ngIf="showCommonFields">
-          <div class="d-flex w-100 mt-4" [ngClass]="{'mb-4': isLastFormItem && !descriptionError}"
-            *ngIf="formList.length == 1 || formIndex > 0">
-            <div class=" text-secondary">Description</div>
-            <div >
-              <textarea *ngIf="canEdit" class="form-control" formControlName="_description"
-                placeholder="What is this attribute for?" [attr.disabled]="checkStateModel() ? true : null"></textarea>
-              <span
-                *ngIf="!canEdit && formItem.get('properties._description') && formItem.get('properties._description').value">{{formItem.get('properties._description').value}}</span>
-              <span *ngIf="!canEdit && !formItem.get('properties._description').value" class="text-muted">-</span>
-            </div>
-          </div>
-          <div class="d-flex" [class.mb-4]="descriptionError">
-            <div ></div>
-            <span class="text-danger" *ngIf="descriptionError">
-              <span class="fa fa-times mr-1"></span>
-              <span>
-                {{ descriptionError }}
-              </span>
-            </span>
-          </div>
-        </ng-container>
-      </div>
-    </ng-container>
-  </div>
-  <div class="p-4 schemaProperties-wrapper" *ngIf="idField">
-    <odp-id-property [form]="form" [edit]="edit" [type]='type'></odp-id-property>
-  </div>
-</div> -->
-
-<!-- <div class="overlay position-fixed" *ngIf="showProperties"></div> -->
 <div class="new-user-window position-fixed bg-white border-left p-4 d-flex flex-column schemaProperties"
   [ngClass]="{'show': showProperties}">
   <div class="d-flex align-items-center">
@@ -303,13 +14,7 @@
         <span *ngIf="name" class="text-truncate">{{name}}&nbsp;</span>
         <span *ngIf="!name" class="text-truncate text-muted">Unnamed&nbsp;</span>
       </div>
-      <!-- <span class="d-flex justify-content-end w-50" *ngIf="canEdit">
-        <button type="button" class="btn btn-link text-primary" (click)="cloneField()"
-          [disabled]="idField">Clone</button>
-        <button type="button" class="btn btn-link text-primary" (click)="deleteField()"
-          [disabled]="!canDelete">Remove</button>
-      </span> -->
-      <span class="fa fa-times text-secondary hover" id="closeicon" (click)="showProperties=false"></span>
+      <span class="dsi dsi-close text-dark hover" id="closeicon" (click)="showProperties=false"></span>
     </span>
   </div>
   <div class="schemaProperties-wrapper" *ngIf="!idField">
@@ -317,7 +22,6 @@
       *ngFor="let formItem of formList;let formIndex = index; let isLastFormItem = last; let isFirstFormItem = first"
       [formGroup]="formItem">
       <div class="schemaProperties-body" formGroupName="properties">
-
         <div class="w-100 mt-4">
           <div class="font-14 text-dark mb-2">
             <ng-container *ngIf="formItem.get('key').value !== '_self'">Type</ng-container>
@@ -345,62 +49,49 @@
           <div class="font-16 fw-500 mt-40">Properties</div>
           <div class=" d-flex align-items-center w-100 py-3" [ngClass]="{'hover':canEdit}"
             *ngIf="formItem.get('properties.required') && formItem.get('key').value !== '_self'">
-            <odp-checkbox [edit]="{ status: canEdit }"
+            <odp-checkbox id="reqAttr" [edit]="{ status: canEdit }"
               (checkedChange)="toggleCheck(formItem.get('properties.required'))"
               [checked]="formItem.get('properties.required').value"></odp-checkbox>
             <span
               class="ml-2 rounded-circle properties required d-flex justify-content-center align-items-center text-white fw-500 font-12">R</span>
             <span class="ml-2 text-dark font-14">Required</span>
-            <!-- <div class="text-dark">Required</div> -->
-            <!-- <label for="reqAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
-              <input type="checkbox" id="reqAttr" [checked]="formItem.get('properties.required').value" class="d-none"
-                formControlName="required" *ngIf="canEdit" (click)="toggleCheck(formItem.get('properties.required'))">
-                <input type="checkbox" class="d-none" formControlName="required" *ngIf="!canEdit">
-              <span class="checkmark"></span>
-            </label> -->
           </div>
           <div class=" d-flex align-items-center pb-3" [ngClass]="{'hover':canEdit}"
             *ngIf="formItem.get('properties.createOnly') && formItem.get('key').value !=='_self'">
-            <odp-checkbox [edit]="{ status: canEdit }"
+            <odp-checkbox id="createAttr" [edit]="{ status: canEdit }"
               (checkedChange)="toggleCheck(formItem.get('properties.createOnly'))"
               [checked]="formItem.get('properties.createOnly').value"></odp-checkbox>
             <span
               class="ml-2 rounded-circle properties create-only d-flex justify-content-center align-items-center text-white fw-500 font-12">C</span>
             <span class="ml-2 text-dark font-14">Create Only</span>
-            <!-- <div class="text-dark mr-2">Create Only</div> -->
-            <!-- <label for="createAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
-              <input type="checkbox" id="createAttr" class="d-none"
-                [checked]="formItem.get('properties.createOnly').value"
-                (click)="toggleCheck(formItem.get('properties.createOnly'))" formControlName="createOnly"
-                *ngIf="canEdit">
-              <input type="checkbox" class="d-none" formControlName="createOnly" *ngIf="!canEdit">
-              <span class="checkmark"></span>
-            </label> -->
           </div>
           <div class=" d-flex align-items-center pb-3" [ngClass]="{'hover':canEdit}"
             *ngIf="formItem.get('properties.unique') && formItem.get('key').value !== '_self'">
-            <odp-checkbox [edit]="{ status: canEdit }" (checkedChange)="toggleCheck(formItem.get('properties.unique'))"
+            <odp-checkbox id="UniqAttr" [edit]="{ status: canEdit }"
+              (checkedChange)="toggleCheck(formItem.get('properties.unique'))"
               [checked]="formItem.get('properties.unique').value"></odp-checkbox>
             <span
               class="ml-2 rounded-circle properties unique d-flex justify-content-center align-items-center text-white fw-500 font-12">U</span>
             <span class="ml-2 text-dark font-14">Unique</span>
-            <!-- <div class="text-dark">Unique</div>
-            <label for="UniqAttr" class="checkbox-container ml-auto" [ngClass]="{'default-cur': !canEdit}">
-              <input type="checkbox" id="UniqAttr" class="d-none" [checked]="formItem.get('properties.unique').value"
-                (click)="toggleCheckUnique(formItem.get('properties.unique'))" formControlName="unique" *ngIf="canEdit">
-              <input type="checkbox" class="d-none" formControlName="unique" *ngIf="!canEdit">
-              <span class="checkmark"></span>
-            </label> -->
+          </div>
+          <div class=" d-flex align-items-center pb-3" [ngClass]="{'hover':canEdit}"
+            *ngIf="formItem.get('properties.password') && formItem.get('key').value !== '_self'">
+            <odp-checkbox id="secureAttr" [edit]="{ status: canEdit }"
+              (checkedChange)="toggleCheck(formItem.get('properties.password'))"
+              [checked]="formItem.get('properties.password').value"></odp-checkbox>
+            <span
+              class="ml-2 rounded-circle properties password d-flex justify-content-center align-items-center text-white fw-500 font-12">S</span>
+            <span class="ml-2 text-dark font-14">Secure</span>
           </div>
         </div>
-        <div class="text-secondary bg-light mb-3 p-2" *ngIf="formItem.get('key').value !== '_self' && !isLibrary &&  
-        formItem.get('type').value!='Relation' && formItem.get('type').value!='User'">Advanced
-          Properties</div>
+        <div class="my-3 font-14 fw-500 border-bottom pb-2" *ngIf="formItem.get('key').value !== '_self' && !isLibrary &&  
+        formItem.get('type').value!='Relation' && formItem.get('type').value!='User'">
+          Advanced Properties
+        </div>
         <div class="w-100 mb-4" *ngIf="isDataFormat && formatType=='FLATFILE'">
           <div class=" text-secondary">Field Length
             <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
           </div>
-
           <div>
             <input *ngIf="canEdit" class="form-control" type="number" formControlName="fieldLength" id="fieldLength">
             <span *ngIf="!canEdit">{{formItem.get('properties.fieldLength').value}}</span>
@@ -485,8 +176,6 @@
           </div>
         </div>
         <ng-container *ngIf="showCommonFields && formItem.get('key').value !== '_self'" class="mb-4">
-
-
           <div *ngIf="!idField" class=" w-100 mt-4">
             <div class="font-14 text-dark mb-2">Appcenter Custom Label</div>
             <div>
@@ -496,7 +185,7 @@
           </div>
           <div class="d-flex">
             <div></div>
-            <span class="text-danger" *ngIf="labelError"><span class="fa fa-times mr-1"></span>
+            <span class="text-danger" *ngIf="labelError"><span class="dsi dsi-danger-circle mr-1"></span>
               <span>Label should not be more than 40 characters</span>
             </span>
           </div>
@@ -508,66 +197,7 @@
               <span *ngIf="!canEdit">{{formItem.get('properties.errorMessage').value}}</span>
             </div>
           </div>
-          <div *ngIf="showSecureText(formItem)" class="w-100 mt-4">
-            <div class="font-14 text-dark mb-2">Secure</div>
-            <div class=" position-relative">
-              <ng-container *ngIf="canEdit">
-                <label *ngIf="canEdit" class="switch accent">
-                  <input type="checkbox" formControlName="password">
-                  <span class="slider"></span>
-                  <span class="toggler"></span>
-                  <span class="ml-3">{{formItem.get('properties.password')?.value ? 'Yes' : 'No'}}</span>
-                </label>
-              </ng-container>
-              <ng-container *ngIf="!canEdit">
-                <span class="text d-flex" *ngIf=" formItem.get('properties.password').value === true">
-                  <span
-                    class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
-                    <span class="fa fa-check text-white"></span>
-                  </span>
-                  <span class="text">Yes</span>
-                </span>
-                <span class="text d-flex" *ngIf="formItem.get('properties.password').value === false">
-                  <span
-                    class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1">
-                  </span>
-                  <span class="text">No</span>
-                </span>
-              </ng-container>
-            </div>
-
-          </div>
         </ng-container>
-
-        <div *ngIf="showSecureFile(formItem)" class="w-100 mt-4">
-          <div class="font-14 text-dark mb-2">Secure</div>
-
-          <div class=" position-relative">
-            <ng-container *ngIf="canEdit">
-              <label *ngIf="canEdit" class="switch accent">
-                <input type="checkbox" formControlName="password">
-                <span class="slider"></span>
-                <span class="toggler"></span>
-                <span class="ml-3">{{formItem.get('properties.password')?.value ? 'Yes' : 'No'}}</span>
-              </label>
-            </ng-container>
-            <ng-container *ngIf="!canEdit">
-              <span class="text d-flex" *ngIf=" formItem.get('properties.password').value === true">
-                <span
-                  class="d-flex align-items-center justify-content-center rounded-circle bg-accent check-circle mr-1">
-                  <span class="fa fa-check text-white"></span>
-                </span>
-                <span class="text">Yes</span>
-              </span>
-              <span class="text d-flex" *ngIf="formItem.get('properties.password').value === false">
-                <span
-                  class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1">
-                </span>
-                <span class="text">No</span>
-              </span>
-            </ng-container>
-          </div>
-        </div>
 
         <ng-container *ngIf="showCommonFields">
           <div class="w-100 mt-4" [ngClass]="{'mb-4': isLastFormItem && !descriptionError}"
@@ -584,7 +214,7 @@
           <div class="d-flex" [class.mb-4]="descriptionError">
             <div></div>
             <span class="text-danger" *ngIf="descriptionError">
-              <span class="fa fa-times mr-1"></span>
+              <span class="dsi dsi-danger-circle mr-1"></span>
               <span>
                 {{ descriptionError }}
               </span>
