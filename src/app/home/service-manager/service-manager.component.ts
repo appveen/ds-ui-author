@@ -351,14 +351,14 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   editService(index: number) {
     const self = this;
-    if (
-      (self.serviceList[index].status === 'Draft' ||
-        self.serviceList[index].draftVersion) &&
-      !self.showCardDraft[index]
-    ) {
-      self.showCardDraft[index] = true;
-      return;
-    }
+    // if (
+    //   (self.serviceList[index].status === 'Draft' ||
+    //     self.serviceList[index].draftVersion) &&
+    //   !self.showCardDraft[index]
+    // ) {
+    //   self.showCardDraft[index] = true;
+    //   return;
+    // }
     self.appService.editServiceId = self.serviceList[index]._id;
     self.router.navigate([
       '/app/',
