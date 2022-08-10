@@ -277,7 +277,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
             self.appData = Object.assign(self.appData, res);
             self.oldData = self.appService.cloneObject(self.appData);
             self.getUserDetail();
-            self.getIdentityDetails();
+            // self.getIdentityDetails();
             self.configureVersionSettings();
         }, err => {
             self.showLazyLoader = false;
