@@ -1,29 +1,28 @@
 <div [formGroup]="form">
   <div class="d-flex flex-column w-100 mb-4">
     <div class="mb-2 d-flex flex-row">
-      <div class="label-width text-secondary">Identifier</div>
+      <!-- <div class="label-width text-secondary">Identifier</div> -->
       <div class="value-width">
         <span class="text-muted">Preview:</span>
         <span class="text-accent pl-2">{{idPreview}}</span>
       </div>
     </div>
   </div>
-  <div class="border-left d-flex flex-column">
-    <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-row">
-      <div class="sub-level-width text-secondary">Prefix</div>
+  <div class="d-flex flex-column">
+    <div class="form-group">
+      <label class="font-14 text-dark mb-2">Prefix</label>
       <input *ngIf="canEdit" class="value-width form-control short" type="text" #idPrefix formControlName="prefix">
       <span *ngIf="!canEdit">{{form.get('prefix').value}}</span>
     </div>
-    <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-row">
-      <div class="sub-level-width text-secondary">Suffix</div>
+    <div class="form-group">
+      <label class="font-14 text-dark mb-2">Suffix</label>
       <div class="value-width">
-        <input *ngIf="canEdit" class="value-width form-control short" type="text" #idPrefix
-          formControlName="suffix">
+        <input *ngIf="canEdit" class="value-width form-control short" type="text" #idPrefix formControlName="suffix">
         <span *ngIf="!canEdit">{{form.get('suffix').value}}</span>
       </div>
     </div>
-    <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-row">
-      <div class="sub-level-width text-secondary">Min Length</div>
+    <div class="form-group">
+      <label class="font-14 text-dark mb-2">Min Length</label>
       <input *ngIf="canEdit" class="value-width form-control short" [ngClass]="{'is-invalid':paddingError}"
         type="number" #idPrefix formControlName="padding">
       <span *ngIf="!canEdit">{{form.get('padding').value}}</span>
@@ -35,10 +34,9 @@
         <span *ngIf="form.get('padding').errors.min">ID length cannot be less than 0</span>
       </span>
     </div>
-    <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-row">
-      <div class="sub-level-width text-secondary">Start from</div>
-      <input *ngIf="canEdit" class="value-width form-control short" type="number" #idPrefix
-        formControlName="counter">
+    <div class="form-group">
+      <label class="font-14 text-dark mb-2">Start from</label>
+      <input *ngIf="canEdit" class="value-width form-control short" type="number" #idPrefix formControlName="counter">
       <span *ngIf="!canEdit">{{form.get('counter').value}}</span>
     </div>
     <div class="d-flex">

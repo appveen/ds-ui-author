@@ -8,7 +8,7 @@
 </div>
 <div class="new-user-window position-fixed bg-white border-left p-4 d-flex flex-column schemaProperties"
   [ngClass]="{'show': showProperties}">
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center mb-4">
     <span class="font-20 text-dark font-weight-bold w-100 d-flex align-items-center justify-content-between">
       <div class="d-flex schemaProperties-header ">
         <span *ngIf="name" class="text-truncate">{{name}}&nbsp;</span>
@@ -22,7 +22,7 @@
       *ngFor="let formItem of formList;let formIndex = index; let isLastFormItem = last; let isFirstFormItem = first"
       [formGroup]="formItem">
       <div class="schemaProperties-body" formGroupName="properties">
-        <div class="w-100 mt-4">
+        <div class="w-100">
           <div class="font-14 text-dark mb-2">
             <ng-container *ngIf="formItem.get('key').value !== '_self'">Type</ng-container>
             <ng-container *ngIf="formItem.get('key').value === '_self'">Collection of</ng-container>
@@ -224,7 +224,7 @@
       </div>
     </ng-container>
   </div>
-  <div class="p-4 schemaProperties-wrapper" *ngIf="idField">
+  <div class="schemaProperties-wrapper" *ngIf="idField">
     <odp-id-property [form]="form" [edit]="edit" [type]='type'></odp-id-property>
   </div>
 </div>
