@@ -116,6 +116,7 @@ export class LocalBotComponent implements OnInit {
     private filterTerm: FilterPipe
   ) {
     const self = this;
+    this.breadcrumbPaths = [];
     self.botRecords = [];
     self.selectedBot = {};
     self.openDeleteModal = new EventEmitter();
