@@ -9,6 +9,8 @@
     overflow: auto;
 
     .list-group-item {
+      overflow: hidden;
+
       &.header {
         min-height: 38px;
         max-height: 38px;
@@ -16,15 +18,18 @@
       }
 
       .item-name {
-        width: 200px;
+        min-width: 240px;
+        max-width: 240px;
       }
 
       .item-url {
-        width: 400px;
+        min-width: 360px;
+        max-width: 360px;
       }
 
       .item-status {
-        width: 120px;
+        min-width: 120px;
+        max-width: 120px;
 
         .text-warning {
           animation: blink 0.5s alternate infinite;
@@ -36,13 +41,20 @@
       }
 
       .item-last-invoked {
-        width: 200px;
+        min-width: 160px;
+        max-width: 160px;
       }
 
       .item-actions {
         min-width: 200px;
+        max-width: 200px;
+        position: absolute;
+        right: -500px;
+        top: -10px;
+        transition: 0.2s;
 
         .actions {
+
           .dsi {
             min-width: 24px;
             max-width: 24px;
@@ -56,6 +68,12 @@
               color: $dark;
             }
           }
+        }
+      }
+
+      &:hover {
+        .item-actions {
+          right: 0px;
         }
       }
 

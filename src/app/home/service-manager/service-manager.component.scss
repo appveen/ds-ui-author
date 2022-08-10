@@ -11,6 +11,7 @@
 
   .list-group-item {
     height: 56px;
+    overflow: hidden;
 
     &.header {
       min-height: 38px;
@@ -19,19 +20,23 @@
     }
 
     .item-name {
-      width: 300px;
+      min-width: 260px;
+      max-width: 260px;
     }
 
     .item-record-count,
     .item-attribute-count,
     .item-reference-count,
     .item-hook-count {
-      width: 100px;
+      min-width: 80px;
+      max-width: 80px;
     }
 
     .item-status {
-      width: 200px;
-      .text-warning{
+      min-width: 120px;
+      max-width: 120px;
+
+      .text-warning {
         animation: blink 0.5s alternate infinite;
       }
 
@@ -40,14 +45,25 @@
       }
     }
 
+    &:hover {
+      .item-actions {
+        right: 15px;
+      }
+    }
+
     .item-actions {
-      min-width: 300px;
+      min-width: 240px;
+      max-width: 300px;
+      position: absolute;
+      right: -500px;
+      transition: 0.2s;
 
       .actions {
         .dsi {
           min-width: 24px;
           max-width: 24px;
           display: inline-block;
+
           &:not(:hover) {
             color: $sub-headings;
           }

@@ -22,22 +22,38 @@
 }
 
 .item-name {
-  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
 }
 
 .item-attribute-count,
 .item-reference-count {
-  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
+}
+
+.list-group-item {
+  overflow: hidden;
+  &:hover {
+    .item-actions {
+      right: 0;
+    }
+  }
 }
 
 .item-actions {
   min-width: 180px;
+  max-width: 180px;
+  position: absolute;
+  right: -500px;
+  transition: 0.2s;
 
   .dsi {
     min-width: 24px;
     max-width: 24px;
     display: inline-block;
-    &:not(:hover){
+
+    &:not(:hover) {
       color: $sub-headings;
     }
   }

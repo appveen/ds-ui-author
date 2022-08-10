@@ -20,7 +20,7 @@
   <div class="card-container" (scroll)="loadMore($event)">
     <div class="list-group">
       <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500">
-        <div class="d-flex align-items-center justify-content-between h-100">
+        <div class="d-flex align-items-center justify-content-start h-100">
           <div class="item-name">Name</div>
           <div class="d-flex align-items-center">
             <div class="item-attribute-count text-center">Attributes</div>
@@ -33,7 +33,7 @@
 
       <ng-container *ngFor="let library of libraryList;let i=index">
         <div *ngIf="hasPermissionForLibrary(library._id)" class="list-group-item">
-          <div class="d-flex align-items-center justify-content-between h-100" [attr.title]="library.name">
+          <div class="d-flex align-items-center justify-content-start h-100" [attr.title]="library.name">
             <div class="item-name text-dark fw-500">{{library.name}}</div>
             <div class="d-flex align-items-center sub-heading">
               <div class="item-attribute-count text-center">{{library._attributes}}</div>

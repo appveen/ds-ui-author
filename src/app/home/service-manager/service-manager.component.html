@@ -21,8 +21,8 @@
       <button *ngIf="isExperimental" type="button" class="btn btn-white border ml-3" (click)="toggleImportWizard=true">
         <span class="dsi dsi-upload text-secondary"></span>
       </button>
-      <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3 btn-min-width d-flex align-items-center" (click)="newService()"
-        *ngIf="hasCreatePermission('SM')">
+      <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3 btn-min-width d-flex align-items-center"
+        (click)="newService()" *ngIf="hasCreatePermission('SM')">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New Data Service</span>
       </button>
@@ -40,7 +40,7 @@
       </div>
       <div *ngIf="serviceList.length > 0" class="list-group">
         <div
-          class="list-group-item d-flex align-items-center justify-content-between header py-0 bg-light text-uppercase font-11 fw-500">
+          class="list-group-item d-flex align-items-center justify-content-start header py-0 bg-light text-uppercase font-11 fw-500">
           <div class="item-name d-flex align-items-center">
             <odp-checkbox [edit]="{status:true}"></odp-checkbox>
             <span class="ml-2">Name</span>
@@ -50,14 +50,14 @@
             <div class="item-attribute-count">Attributes</div>
             <div class="item-reference-count">References</div>
             <div class="item-hook-count">Hooks</div>
-          </div>
-          <div class="d-flex align-items-center justify-content-end">
             <div class="item-status">Status</div>
+          </div>
+          <div class="d-flex align-items-center justify-content-end w-100">
             <div class="item-actions"></div>
           </div>
         </div>
         <ng-container *ngFor="let srvc of serviceList;let i=index">
-          <div class="list-group-item d-flex align-items-center justify-content-between">
+          <div class="list-group-item d-flex align-items-center justify-content-start">
             <div class="item-name fw-500 d-flex align-items-center">
               <odp-checkbox [edit]="{status:true}"></odp-checkbox>
               <span class="ml-2 pl-1 text-dark">{{srvc.name}}</span>
@@ -69,12 +69,12 @@
               <div class="sub-heading item-attribute-count">{{srvc._attributes}}</div>
               <div class="sub-heading item-reference-count">{{srvc._references}}</div>
               <div class="sub-heading item-hook-count">{{srvc._webHooks}}</div>
-            </div>
-            <div class="d-flex align-items-center justify-content-end">
               <div class="item-status d-flex align-items-center">
                 <span class="fa fa-circle mr-2" [ngClass]="getStatusClass(srvc)"></span>
                 <span class="text font-12 fw-400">{{srvc.status}}</span>
               </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end w-100">
               <div class="item-actions">
                 <div class="actions d-flex justify-content-end hover align-items-center">
                   <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintainance' ">
