@@ -23,17 +23,17 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="dataFormatBlocked" name="dataFormat" size="20" [checked]="permissionType=='blocked'"
+          <odp-round-radio [edit]="edit" id="dataFormatBlocked" name="dataFormat" size="20" [checked]="permissionType=='blocked'"
             (checkedChange)="permissionType='PNDF'"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="dataFormatView" name="dataFormat" size="20" [checked]="permissionType=='view'"
+          <odp-round-radio [edit]="edit" id="dataFormatView" name="dataFormat" size="20" [checked]="permissionType=='view'"
             (checkedChange)="permissionType='PVDF'"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="dataFormatManage" name="dataFormat" size="20" [checked]="permissionType=='manage'"
+          <odp-round-radio [edit]="edit" id="dataFormatManage" name="dataFormat" size="20" [checked]="permissionType=='manage'"
             (checkedChange)="permissionType='PMDF'"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>

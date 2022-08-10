@@ -10,13 +10,14 @@ export class GroupAuthorDataFormatsComponent implements OnInit {
 
   @Input() roles: Array<any>;
   @Output() rolesChange: EventEmitter<Array<any>>;
-
-
+  edit: any;
+  
   constructor(
     private commonService: CommonService,
   ) {
     this.roles = [];
     this.rolesChange = new EventEmitter();
+    this.edit = { status: true };
   }
 
   ngOnInit() {

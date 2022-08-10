@@ -1,4 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import * as _ from 'lodash';
+
 import { CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
 
@@ -7,15 +9,21 @@ import { AppService } from 'src/app/utils/services/app.service';
   templateUrl: './group-author-functions.component.html',
   styleUrls: ['./group-author-functions.component.scss']
 })
-export class GroupAuthorFunctionsComponent implements OnInit, OnDestroy {
+export class GroupAuthorFunctionsComponent implements OnInit {
 
   @Input() roles: Array<any>;
   @Output() rolesChange: EventEmitter<Array<any>>;
+  edit: any;
+  managePermissions: Array<string>;
+  viewPermissions: Array<string>;
 
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.roles = [];
     this.rolesChange = new EventEmitter();
+    this.edit = { status: true };
+    this.managePermissions = ['PMF', 'PMFPD', 'PMFPS'];
+    this.viewPermissions = ['PVF'];
   }
 
   ngOnInit() {
@@ -37,7 +45,34 @@ export class GroupAuthorFunctionsComponent implements OnInit, OnDestroy {
   hasPermission(type: string) {
     return this.commonService.hasPermission(type);
   }
-  ngOnDestroy() {
+
+  changeAllPermissions(val: string) {
+    if (val == 'manage') {
+      _.remove(this.roles, (item) => item.entity == 'FAAS')
+      this.managePermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item));
+      });
+    } else if (val == 'view') {
+      _.remove(this.roles, (item) => item.entity == 'FAAS')
+      this.viewPermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item));
+      });
+    } else if (val == 'blocked') {
+      _.remove(this.roles, (item) => item.entity == 'FAAS')
+    }
+  }
+
+  get globalPermission() {
+    const perms = this.roles.map(e => e.id);
+    if (_.intersection(this.managePermissions, perms).length === this.managePermissions.length) {
+      return 'manage';
+    } else if (_.intersection(this.viewPermissions, perms).length === this.viewPermissions.length) {
+      return 'view';
+    } else if (perms.length == 0) {
+      return 'blocked';
+    } else {
+      return 'custom';
+    }
   }
 
   get permissionType() {

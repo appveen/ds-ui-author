@@ -11,11 +11,13 @@ export class GroupAuthorLibraryComponent implements OnInit, OnDestroy {
 
   @Input() roles: Array<any>;
   @Output() rolesChange: EventEmitter<Array<any>>;
+  edit: any;
 
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.roles = [];
     this.rolesChange = new EventEmitter();
+    this.edit = { status: true };
   }
 
   ngOnInit() {

@@ -3,13 +3,13 @@
     <div class="w-100">
       <h5 class="font-weight-bold font-20">Groups</h5>
     </div>
-    <!-- <select name="permissions" id="permissions" class="all-permissions-selector custom-select"
+    <select name="permissions" id="permissions" class="all-permissions-selector custom-select"
       [ngModel]="globalPermission" (ngModelChange)="changeAllPermissions($event)">
       <option value="custom">Custom</option>
       <option value="blocked">None</option>
       <option value="view">View</option>
       <option value="manage">Manage</option>
-    </select> -->
+    </select>
   </div>
   <div class="d-flex flex-column w-100">
     <div class="d-flex justify-content-between border-bottom py-3">
@@ -23,19 +23,19 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupDataServicesBlocked" name="groupDataServices" size="20"
+          <odp-round-radio [edit]="edit" id="groupDataServicesBlocked" name="groupDataServices" size="20"
             [checked]="basicPermission=='blocked'" (checkedChange)="basicPermission='PNGB'">
           </odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupDataServicesView" name="groupDataServices" size="20"
+          <odp-round-radio [edit]="edit" id="groupDataServicesView" name="groupDataServices" size="20"
             [checked]="basicPermission=='view'" (checkedChange)="basicPermission='PVGB'">
           </odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupDataServicesView" name="groupDataServices" size="20"
+          <odp-round-radio [edit]="edit" id="groupDataServicesView" name="groupDataServices" size="20"
             [checked]="basicPermission=='manage'" (checkedChange)="basicPermission=['PMGBC', 'PMGBU', 'PMGBD']">
           </odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
@@ -53,17 +53,17 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupUsersBlocked" name="groupUsers" size="20" [checked]="membersPermission=='blocked'"
+          <odp-round-radio [edit]="edit" id="groupUsersBlocked" name="groupUsers" size="20" [checked]="membersPermission=='blocked'"
             (checkedChange)="membersPermission='PNGMU'"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupUsersView" name="groupUsers" size="20" [checked]="membersPermission=='view'"
+          <odp-round-radio [edit]="edit" id="groupUsersView" name="groupUsers" size="20" [checked]="membersPermission=='view'"
             (checkedChange)="membersPermission='PVGMU'"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupUsersManage" name="groupUsers" size="20" [checked]="membersPermission=='manage'"
+          <odp-round-radio [edit]="edit" id="groupUsersManage" name="groupUsers" size="20" [checked]="membersPermission=='manage'"
             (checkedChange)="membersPermission=['PMGMUC','PMGMUD']"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -80,17 +80,17 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupBotsBlocked" name="groupBots" size="20" [checked]="botsPermission=='blocked'"
+          <odp-round-radio [edit]="edit" id="groupBotsBlocked" name="groupBots" size="20" [checked]="botsPermission=='blocked'"
             (checkedChange)="botsPermission='PNGMB'"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupBotsView" name="groupBots" size="20" [checked]="botsPermission=='view'"
+          <odp-round-radio [edit]="edit" id="groupBotsView" name="groupBots" size="20" [checked]="botsPermission=='view'"
             (checkedChange)="botsPermission='PVGMB'"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupBotsManage" name="groupBots" size="20" [checked]="botsPermission=='manage'"
+          <odp-round-radio [edit]="edit" id="groupBotsManage" name="groupBots" size="20" [checked]="botsPermission=='manage'"
             (checkedChange)="botsPermission=['PMGMBC','PMGMBD']"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -109,17 +109,17 @@
       </div>
       <!-- <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupAuthorBlocked" name="groupAuthor" size="20" [checked]="botsPermission=='blocked'"
+          <odp-round-radio [edit]="edit" id="groupAuthorBlocked" name="groupAuthor" size="20" [checked]="botsPermission=='blocked'"
             (checkedChange)="botsPermission='PNGMB'"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupAuthorView" name="groupAuthor" size="20" [checked]="botsPermission=='view'"
+          <odp-round-radio [edit]="edit" id="groupAuthorView" name="groupAuthor" size="20" [checked]="botsPermission=='view'"
             (checkedChange)="botsPermission='PVGMB'"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupAuthorManage" name="groupAuthor" size="20" [checked]="botsPermission=='manage'"
+          <odp-round-radio [edit]="edit" id="groupAuthorManage" name="groupAuthor" size="20" [checked]="botsPermission=='manage'"
             (checkedChange)="botsPermission=['PMGMBC','PMGMBD']"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -137,19 +137,19 @@
             </div>
             <div class="d-flex align-items-center">
               <div class="permission-btn-block d-flex align-items-center justify-content-end">
-                <odp-round-radio id="groupAuthorBlocked" name="groupAuthor" size="20"
+                <odp-round-radio [edit]="edit" id="groupAuthorBlocked" name="groupAuthor" size="20"
                   [checked]="getModulePermissionLevel(item.segment,item.entity)=='blocked'"
                   (checkedChange)="changeModulePermissionLevel('N',item.segment,item.entity)"></odp-round-radio>
                 <span class="text-dark ml-2">Blocked</span>
               </div>
               <div class="permission-btn-block d-flex align-items-center justify-content-end">
-                <odp-round-radio id="groupAuthorView" name="groupAuthor" size="20"
+                <odp-round-radio [edit]="edit" id="groupAuthorView" name="groupAuthor" size="20"
                   [checked]="getModulePermissionLevel(item.segment,item.entity)=='view'"
                   (checkedChange)="changeModulePermissionLevel('V',item.segment,item.entity)"></odp-round-radio>
                 <span class="text-dark ml-2">View</span>
               </div>
               <div class="permission-btn-block d-flex align-items-center justify-content-end">
-                <odp-round-radio id="groupAuthorManage" name="groupAuthor" size="20"
+                <odp-round-radio [edit]="edit" id="groupAuthorManage" name="groupAuthor" size="20"
                   [checked]="getModulePermissionLevel(item.segment,item.entity)=='manage'"
                   (checkedChange)="changeModulePermissionLevel('M',item.segment,item.entity)"></odp-round-radio>
                 <span class="text-dark ml-2">Manage</span>
@@ -175,17 +175,17 @@
       </div>
       <!-- <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupAppcenterBlocked" name="groupAppcenter" size="20"
+          <odp-round-radio [edit]="edit" id="groupAppcenterBlocked" name="groupAppcenter" size="20"
             [checked]="botsPermission=='blocked'" (checkedChange)="botsPermission='PNGMB'"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupAppcenterView" name="groupAppcenter" size="20" [checked]="botsPermission=='view'"
+          <odp-round-radio [edit]="edit" id="groupAppcenterView" name="groupAppcenter" size="20" [checked]="botsPermission=='view'"
             (checkedChange)="botsPermission='PVGMB'"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="groupAppcenterManage" name="groupAppcenter" size="20"
+          <odp-round-radio [edit]="edit" id="groupAppcenterManage" name="groupAppcenter" size="20"
             [checked]="botsPermission=='manage'" (checkedChange)="botsPermission=['PMGMBC','PMGMBD']"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -203,19 +203,19 @@
             </div>
             <div class="d-flex align-items-center">
               <div class="permission-btn-block d-flex align-items-center justify-content-end">
-                <odp-round-radio id="groupAuthorBlocked" name="groupAuthor" size="20"
+                <odp-round-radio [edit]="edit" id="groupAuthorBlocked" name="groupAuthor" size="20"
                   [checked]="getModulePermissionLevel(item.segment,item.entity)=='blocked'"
                   (checkedChange)="changeModulePermissionLevel('N',item.segment,item.entity)"></odp-round-radio>
                 <span class="text-dark ml-2">Blocked</span>
               </div>
               <div class="permission-btn-block d-flex align-items-center justify-content-end">
-                <odp-round-radio id="groupAuthorView" name="groupAuthor" size="20"
+                <odp-round-radio [edit]="edit" id="groupAuthorView" name="groupAuthor" size="20"
                   [checked]="getModulePermissionLevel(item.segment,item.entity)=='view'"
                   (checkedChange)="changeModulePermissionLevel('V',item.segment,item.entity)"></odp-round-radio>
                 <span class="text-dark ml-2">View</span>
               </div>
               <div class="permission-btn-block d-flex align-items-center justify-content-end">
-                <odp-round-radio id="groupAuthorManage" name="groupAuthor" size="20"
+                <odp-round-radio [edit]="edit" id="groupAuthorManage" name="groupAuthor" size="20"
                   [checked]="getModulePermissionLevel(item.segment,item.entity)=='manage'"
                   (checkedChange)="changeModulePermissionLevel('M',item.segment,item.entity)"></odp-round-radio>
                 <span class="text-dark ml-2">Manage</span>

@@ -14,12 +14,14 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
     @Input() roles: Array<any>;
     @Output() rolesChange: EventEmitter<Array<any>>;
     subscriptions: any;
+    edit: any;
 
     managePermissions: Array<string>;
     viewPermissions: Array<string>;
 
     constructor(private commonService: CommonService,
         private appService: AppService) {
+        this.edit = { status: true };
         this.subscriptions = {};
         this.roles = [];
         this.rolesChange = new EventEmitter();
@@ -63,17 +65,17 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
 
     changeAllPermissions(val: string) {
         if (val == 'manage') {
-            this.roles.splice(0);
+            _.remove(this.roles, (item) => item.entity == 'SM');
             this.managePermissions.forEach(item => {
                 this.roles.push(this.getPermissionObject(item));
             });
         } else if (val == 'view') {
-            this.roles.splice(0);
+            _.remove(this.roles, (item) => item.entity == 'SM');
             this.viewPermissions.forEach(item => {
                 this.roles.push(this.getPermissionObject(item));
             });
         } else if (val == 'blocked') {
-            this.roles.splice(0);
+            _.remove(this.roles, (item) => item.entity == 'SM');
         }
     }
 

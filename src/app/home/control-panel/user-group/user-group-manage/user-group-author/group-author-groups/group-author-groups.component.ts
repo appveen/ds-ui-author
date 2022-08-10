@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import * as _ from 'lodash';
+
 import { CommonService } from 'src/app/utils/services/common.service';
 
 @Component({
@@ -15,10 +17,15 @@ export class GroupAuthorGroupsComponent implements OnInit {
   };
   authorModulesList: Array<RoleModule>;
   appcenterModulesList: Array<RoleModule>;
+  edit: any;
+  managePermissions: Array<string>;
+  viewPermissions: Array<string>;
   constructor(private commonService: CommonService) {
     this.rolesChange = new EventEmitter();
     this.roles = [];
     this.dropdownToggle = {};
+    this.managePermissions = ['PMGBC', 'PMGBU', 'PMGBD', 'PMGBD', 'PMGMBC', 'PMGMBD', 'PMGMUC', 'PMGMUD', 'PMGADS', 'PMGAL', 'PMGAP', 'PMGADF', 'PMGAF', 'PMGAA', 'PMGABM', 'PMGAU', 'PMGAB', 'PMGAG', 'PMGAIS', 'PMGCDS', 'PMGCI', 'PMGCBM'];
+    this.viewPermissions = ['PVGB', 'PVGMB', 'PVGMU', 'PVGADS', 'PVGAL', 'PVGAP', 'PVGADF', 'PVGAF', 'PVGAA', 'PVGABM', 'PVGAU', 'PVGAB', 'PVGAG', 'PVGAIS', 'PVGCDS', 'PVGCI', 'PVGCBM'];
     this.authorModulesList = [
       {
         label: 'Data Service',
@@ -93,6 +100,7 @@ export class GroupAuthorGroupsComponent implements OnInit {
       //   entity: 'GROUP'
       // },
     ];
+    this.edit = { status: true };
   }
 
   ngOnInit() {
@@ -155,6 +163,35 @@ export class GroupAuthorGroupsComponent implements OnInit {
 
   hasPermission(type: string) {
     return this.commonService.hasPermission(type);
+  }
+
+  changeAllPermissions(val: string) {
+    if (val == 'manage') {
+      _.remove(this.roles, (item) => item.entity == 'GROUP');
+      this.managePermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item, 'GROUP'));
+      });
+    } else if (val == 'view') {
+      _.remove(this.roles, (item) => item.entity == 'GROUP');
+      this.viewPermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item, 'GROUP'));
+      });
+    } else if (val == 'blocked') {
+      _.remove(this.roles, (item) => item.entity == 'GROUP');
+    }
+  }
+
+  get globalPermission() {
+    const perms = this.roles.map(e => e.id);
+    if (_.intersection(this.managePermissions, perms).length === this.managePermissions.length) {
+      return 'manage';
+    } else if (_.intersection(this.viewPermissions, perms).length === this.viewPermissions.length) {
+      return 'view';
+    } else if (perms.length == 0) {
+      return 'blocked';
+    } else {
+      return 'custom';
+    }
   }
 
   set basicPermission(val: any) {

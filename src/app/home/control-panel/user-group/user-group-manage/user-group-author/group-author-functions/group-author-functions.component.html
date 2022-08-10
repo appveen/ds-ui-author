@@ -3,13 +3,13 @@
     <div class="w-100">
       <h5 class="font-weight-bold font-20">Function</h5>
     </div>
-    <!-- <select name="permissions" id="permissions" class="all-permissions-selector custom-select"
+    <select name="permissions" id="permissions" class="all-permissions-selector custom-select"
       [ngModel]="globalPermission" (ngModelChange)="changeAllPermissions($event)">
       <option value="custom">Custom</option>
       <option value="blocked">None</option>
       <option value="view">View</option>
       <option value="manage">Manage</option>
-    </select> -->
+    </select>
   </div>
   <div class="d-flex flex-column w-100">
     <div class="d-flex justify-content-between border-bottom py-3">
@@ -23,17 +23,17 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="libraryBlocked" name="library" size="20" [checked]="permissionType=='blocked'"
+          <odp-round-radio [edit]="edit" id="libraryBlocked" name="library" size="20" [checked]="permissionType=='blocked'"
             (checkedChange)="commonPermission={id:'PNF',type:''}"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="libraryView" name="library" size="20" [checked]="permissionType=='view'"
+          <odp-round-radio [edit]="edit" id="libraryView" name="library" size="20" [checked]="permissionType=='view'"
             (checkedChange)="commonPermission={id:'PVF',type:''}"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="libraryManage" name="library" size="20" [checked]="permissionType=='manage'"
+          <odp-round-radio [edit]="edit" id="libraryManage" name="library" size="20" [checked]="permissionType=='manage'"
             (checkedChange)="commonPermission={id:'PMF',type:''}"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -50,13 +50,13 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="libraryBlocked" name="library" size="20" [checked]="powerPermissionDeploy=='blocked'"
+          <odp-round-radio [edit]="edit" id="libraryBlocked" name="library" size="20" [checked]="powerPermissionDeploy=='blocked'"
             (checkedChange)="commonPermission={id:'PNFPD',type:'PD'}"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end"></div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="libraryManage" name="library" size="20" [checked]="powerPermissionDeploy=='manage'"
+          <odp-round-radio [edit]="edit" id="libraryManage" name="library" size="20" [checked]="powerPermissionDeploy=='manage'"
             (checkedChange)="commonPermission={id:'PMFPD',type:'PD'}"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -73,13 +73,13 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="libraryBlocked" name="library" size="20" [checked]="powerPermissionsStartStop=='blocked'"
+          <odp-round-radio [edit]="edit" id="libraryBlocked" name="library" size="20" [checked]="powerPermissionsStartStop=='blocked'"
             (checkedChange)="commonPermission={id:'PNFPS',type:'PS'}"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end"></div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="libraryManage" name="library" size="20" [checked]="powerPermissionsStartStop=='manage'"
+          <odp-round-radio [edit]="edit" id="libraryManage" name="library" size="20" [checked]="powerPermissionsStartStop=='manage'"
             (checkedChange)="commonPermission={id:'PMFPS',type:'PS'}"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>

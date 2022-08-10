@@ -24,17 +24,17 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="basicBlocked" name="basic" size="20" [checked]="basicPermission=='blocked'"
+          <odp-round-radio [edit]="edit" id="basicBlocked" name="basic" size="20" [checked]="basicPermission=='blocked'"
             (checkedChange)="basicPermission='PNDSB'"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="basicView" name="basic" size="20" [checked]="basicPermission=='view'"
+          <odp-round-radio [edit]="edit" id="basicView" name="basic" size="20" [checked]="basicPermission=='view'"
             (checkedChange)="basicPermission='PVDSB'"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="basicManage" name="basic" size="20" [checked]="basicPermission=='manage'"
+          <odp-round-radio [edit]="edit" id="basicManage" name="basic" size="20" [checked]="basicPermission=='manage'"
             (checkedChange)="basicPermission=['PMDSBC','PMDSBU','PMDSBD']"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -51,13 +51,13 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="deployBlocked" name="deploy" size="20" [checked]="powerPermissionDeploy=='blocked'"
+          <odp-round-radio [edit]="edit" id="deployBlocked" name="deploy" size="20" [checked]="powerPermissionDeploy=='blocked'"
             (checkedChange)="commonPermission={id:'PNDSPD',type:'PD'}"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end"></div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="deployManage" name="deploy" size="20" [checked]="powerPermissionDeploy=='manage'"
+          <odp-round-radio [edit]="edit" id="deployManage" name="deploy" size="20" [checked]="powerPermissionDeploy=='manage'"
             (checkedChange)="commonPermission={id:'PMDSPD',type:'PD'}"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -75,14 +75,14 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="startStopBlocked" name="startStop" size="20"
+          <odp-round-radio [edit]="edit" id="startStopBlocked" name="startStop" size="20"
             [checked]="powerPermissionsStartStop=='blocked'" (checkedChange)="commonPermission={id:'PNDSPS',type:'PS'}">
           </odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end"></div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="startStopManage" name="startStop" size="20"
+          <odp-round-radio [edit]="edit" id="startStopManage" name="startStop" size="20"
             [checked]="powerPermissionsStartStop=='manage'" (checkedChange)="commonPermission={id:'PMDSPS',type:'PS'}">
           </odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
@@ -101,17 +101,17 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="designBlocked" name="design" size="20" [checked]="definitionPermission=='blocked'"
+          <odp-round-radio [edit]="edit" id="designBlocked" name="design" size="20" [checked]="definitionPermission=='blocked'"
             (checkedChange)="commonPermission={id:'PNDSD',type:'D'}"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="designView" name="design" size="20" [checked]="definitionPermission=='view'"
+          <odp-round-radio [edit]="edit" id="designView" name="design" size="20" [checked]="definitionPermission=='view'"
             (checkedChange)="commonPermission={id:'PVDSD',type:'D'}"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="designManage" name="design" size="20" [checked]="definitionPermission=='manage'"
+          <odp-round-radio [edit]="edit" id="designManage" name="design" size="20" [checked]="definitionPermission=='manage'"
             (checkedChange)="commonPermission={id:'PMDSD',type:'D'}"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -129,18 +129,18 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="integrationBlocked" name="integration" size="20"
+          <odp-round-radio [edit]="edit" id="integrationBlocked" name="integration" size="20"
             [checked]="integrationPermission=='blocked'" (checkedChange)="commonPermission={id:'PNDSI',type:'I'}">
           </odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="integrationView" name="integration" size="20" [checked]="integrationPermission=='view'"
+          <odp-round-radio [edit]="edit" id="integrationView" name="integration" size="20" [checked]="integrationPermission=='view'"
             (checkedChange)="commonPermission={id:'PVDSI',type:'I'}"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="integrationManage" name="integration" size="20"
+          <odp-round-radio [edit]="edit" id="integrationManage" name="integration" size="20"
             [checked]="integrationPermission=='manage'" (checkedChange)="commonPermission={id:'PMDSI',type:'I'}">
           </odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
@@ -159,18 +159,18 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="experienceBlocked" name="experience" size="20"
+          <odp-round-radio [edit]="edit" id="experienceBlocked" name="experience" size="20"
             [checked]="experiencePermission=='blocked'" (checkedChange)="commonPermission={id:'PNDSE',type:'E'}">
           </odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="experienceView" name="experience" size="20" [checked]="experiencePermission=='view'"
+          <odp-round-radio [edit]="edit" id="experienceView" name="experience" size="20" [checked]="experiencePermission=='view'"
             (checkedChange)="commonPermission={id:'PVDSE',type:'E'}"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="experienceManage" name="experience" size="20" [checked]="experiencePermission=='manage'"
+          <odp-round-radio [edit]="edit" id="experienceManage" name="experience" size="20" [checked]="experiencePermission=='manage'"
             (checkedChange)="commonPermission={id:'PMDSE',type:'E'}">
           </odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
@@ -189,17 +189,17 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="roleBlocked" name="role" size="20" [checked]="rolePermission=='blocked'"
+          <odp-round-radio [edit]="edit" id="roleBlocked" name="role" size="20" [checked]="rolePermission=='blocked'"
             (checkedChange)="commonPermission={id:'PNDSR',type:'R'}"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="roleView" name="role" size="20" [checked]="rolePermission=='view'"
+          <odp-round-radio [edit]="edit" id="roleView" name="role" size="20" [checked]="rolePermission=='view'"
             (checkedChange)="commonPermission={id:'PVDSR',type:'R'}"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="roleManage" name="role" size="20" [checked]="rolePermission=='manage'"
+          <odp-round-radio [edit]="edit" id="roleManage" name="role" size="20" [checked]="rolePermission=='manage'"
             (checkedChange)="commonPermission={id:'PMDSR',type:'R'}"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -217,17 +217,17 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="settingsBlocked" name="settings" size="20" [checked]="settingsPermission=='blocked'"
+          <odp-round-radio [edit]="edit" id="settingsBlocked" name="settings" size="20" [checked]="settingsPermission=='blocked'"
             (checkedChange)="commonPermission={id:'PNDSS',type:'S'}"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="settingsView" name="settings" size="20" [checked]="settingsPermission=='view'"
+          <odp-round-radio [edit]="edit" id="settingsView" name="settings" size="20" [checked]="settingsPermission=='view'"
             (checkedChange)="commonPermission={id:'PVDSS',type:'S'}"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="settingsManage" name="settings" size="20" [checked]="settingsPermission=='manage'"
+          <odp-round-radio [edit]="edit" id="settingsManage" name="settings" size="20" [checked]="settingsPermission=='manage'"
             (checkedChange)="commonPermission={id:'PMDSS',type:'S'}"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
@@ -245,12 +245,12 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="auditBlocked" name="audit" size="20" [checked]="auditPermission=='blocked'"
+          <odp-round-radio [edit]="edit" id="auditBlocked" name="audit" size="20" [checked]="auditPermission=='blocked'"
             (checkedChange)="commonPermission={id:'PNDSA',type:'A'}"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="auditView" name="audit" size="20" [checked]="auditPermission=='view'"
+          <odp-round-radio [edit]="edit" id="auditView" name="audit" size="20" [checked]="auditPermission=='view'"
             (checkedChange)="commonPermission={id:'PVDSA',type:'A'}"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>

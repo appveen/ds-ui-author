@@ -3,13 +3,13 @@
     <div class="w-100">
       <h5 class="font-weight-bold">Insights</h5>
     </div>
-    <!-- <select name="permissions" id="permissions" class="all-permissions-selector custom-select"
+    <select name="permissions" id="permissions" class="all-permissions-selector custom-select"
       [ngModel]="globalPermission" (ngModelChange)="changeAllPermissions($event)">
       <option value="custom">Custom</option>
       <option value="blocked">None</option>
       <option value="view">View</option>
-      <option value="manage">Manage</option>
-    </select> -->
+      <!-- <option value="manage">Manage</option> -->
+    </select>
   </div>
   <div class="d-flex flex-column w-100">
     <div class="d-flex justify-content-between border-bottom py-3">
@@ -23,13 +23,13 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="insightDataServicesBlocked" name="insightDataServices" size="20"
+          <odp-round-radio [edit]="edit" id="insightDataServicesBlocked" name="insightDataServices" size="20"
             [checked]="dataserviceTabPermission=='blocked'" (checkedChange)="dataserviceTabPermission='PNISDS'">
           </odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="insightDataServicesView" name="insightDataServices" size="20"
+          <odp-round-radio [edit]="edit" id="insightDataServicesView" name="insightDataServices" size="20"
             [checked]="dataserviceTabPermission=='view'" (checkedChange)="dataserviceTabPermission='PVISDS'">
           </odp-round-radio>
           <span class="text-dark ml-2">View</span>
@@ -48,12 +48,12 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="insightUsersBlocked" name="insightUsers" size="20"
+          <odp-round-radio [edit]="edit" id="insightUsersBlocked" name="insightUsers" size="20"
             [checked]="userTabPermission=='blocked'" (checkedChange)="userTabPermission='PNISU'"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="insightUsersView" name="insightUsers" size="20" [checked]="userTabPermission=='view'"
+          <odp-round-radio [edit]="edit" id="insightUsersView" name="insightUsers" size="20" [checked]="userTabPermission=='view'"
             (checkedChange)="userTabPermission='PVISU'"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
@@ -71,12 +71,12 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="insightGroupsBlocked" name="insightGroups" size="20"
+          <odp-round-radio [edit]="edit" id="insightGroupsBlocked" name="insightGroups" size="20"
             [checked]="groupTabPermission=='blocked'" (checkedChange)="groupTabPermission='PNISG'"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
-          <odp-round-radio id="insightGroupsView" name="insightGroups" size="20" [checked]="groupTabPermission=='view'"
+          <odp-round-radio [edit]="edit" id="insightGroupsView" name="insightGroups" size="20" [checked]="groupTabPermission=='view'"
             (checkedChange)="groupTabPermission='PVISG'"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>

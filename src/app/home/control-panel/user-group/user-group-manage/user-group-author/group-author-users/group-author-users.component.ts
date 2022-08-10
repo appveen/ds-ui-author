@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import * as _ from 'lodash';
+
 import { CommonService } from 'src/app/utils/services/common.service';
 
 @Component({
@@ -10,9 +12,15 @@ export class GroupAuthorUsersComponent implements OnInit {
 
   @Input() roles: Array<any>;
   @Output() rolesChange: EventEmitter<Array<any>>;
+  edit: any;
+  managePermissions: Array<string>;
+  viewPermissions: Array<string>;
 
   constructor(private commonService: CommonService) {
     this.rolesChange = new EventEmitter();
+    this.edit = { status: true };
+    this.managePermissions = ['PMUBC', 'PMUBU', 'PMUBD', 'PMUA', 'PMUG'];
+    this.viewPermissions = ['PVUB'];
   }
 
   ngOnInit() {
@@ -38,6 +46,35 @@ export class GroupAuthorUsersComponent implements OnInit {
 
   hasPermission(type: string) {
     return this.commonService.hasPermission(type);
+  }
+
+  changeAllPermissions(val: string) {
+    if (val == 'manage') {
+      _.remove(this.roles, (item) => item.id.startsWith('PMU') || item.id.startsWith('PVU'));
+      this.managePermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item, 'USER'));
+      });
+    } else if (val == 'view') {
+      _.remove(this.roles, (item) => item.id.startsWith('PMU') || item.id.startsWith('PVU'));
+      this.viewPermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item, 'USER'));
+      });
+    } else if (val == 'blocked') {
+      _.remove(this.roles, (item) => item.id.startsWith('PMU') || item.id.startsWith('PVU'));
+    }
+  }
+
+  get globalPermission() {
+    const perms = this.roles.map(e => e.id);
+    if (_.intersection(this.managePermissions, perms).length === this.managePermissions.length) {
+      return 'manage';
+    } else if (_.intersection(this.viewPermissions, perms).length === this.viewPermissions.length) {
+      return 'view';
+    } else if (perms.length == 0) {
+      return 'blocked';
+    } else {
+      return 'custom';
+    }
   }
 
   get basicPermission() {

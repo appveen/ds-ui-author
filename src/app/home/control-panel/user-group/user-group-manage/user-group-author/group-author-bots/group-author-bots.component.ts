@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import * as _ from 'lodash';
+
 import { CommonService } from 'src/app/utils/services/common.service';
 
 @Component({
@@ -13,9 +15,15 @@ export class GroupAuthorBotsComponent implements OnInit {
   dropdownToggle: {
     [key: string]: boolean;
   };
+  edit: any;
+  managePermissions: Array<string>;
+  viewPermissions: Array<string>;
   constructor(private commonService: CommonService) {
     this.rolesChange = new EventEmitter();
     this.dropdownToggle = {};
+    this.edit = { status: true };
+    this.managePermissions = ['PMBBC', 'PMBBU', 'PMBBD', 'PMBA', 'PMBG'];
+    this.viewPermissions = ['PVBB'];
   }
 
   ngOnInit() {
@@ -32,6 +40,35 @@ export class GroupAuthorBotsComponent implements OnInit {
 
   hasPermission(type: string) {
     return this.commonService.hasPermission(type);
+  }
+
+  changeAllPermissions(val: string) {
+    if (val == 'manage') {
+      _.remove(this.roles, (item) => item.id.startsWith('PMB') || item.id.startsWith('PVB'));
+      this.managePermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item, 'USER'));
+      });
+    } else if (val == 'view') {
+      _.remove(this.roles, (item) => item.id.startsWith('PMB') || item.id.startsWith('PVB'));
+      this.viewPermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item, 'USER'));
+      });
+    } else if (val == 'blocked') {
+      _.remove(this.roles, (item) => item.id.startsWith('PMB') || item.id.startsWith('PVB'));
+    }
+  }
+
+  get globalPermission() {
+    const perms = this.roles.map(e => e.id);
+    if (_.intersection(this.managePermissions, perms).length === this.managePermissions.length) {
+      return 'manage';
+    } else if (_.intersection(this.viewPermissions, perms).length === this.viewPermissions.length) {
+      return 'view';
+    } else if (perms.length == 0) {
+      return 'blocked';
+    } else {
+      return 'custom';
+    }
   }
 
   get basicPermission() {
