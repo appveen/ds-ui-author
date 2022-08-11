@@ -310,20 +310,6 @@
   }
 }
 
-
-.email {
-  font-weight: 400;
-  font-size: 12px;
-  color: $sub-headings;
-}
-
-.time {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 11px;
-  color: $lightgrey;
-}
-
 .nav-item {
   width: 100px;
 }
@@ -339,6 +325,8 @@
     text-decoration: underline;
     text-underline-offset: 10px;
     text-decoration-color: $orange;
+    text-decoration-thickness: 2px;
+
   }
 }
 
@@ -346,6 +334,7 @@
   text-decoration: underline;
   text-underline-offset: 10px;
   text-decoration-color: $orange;
+  text-decoration-thickness: 2px;
   color: $headings;
 }
 

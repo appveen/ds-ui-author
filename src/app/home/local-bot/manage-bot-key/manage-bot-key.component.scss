@@ -110,8 +110,10 @@ table {
   }
 }
 
-.d-flex-1 {
-  flex: 1
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 
