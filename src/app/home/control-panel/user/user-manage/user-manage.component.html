@@ -20,8 +20,12 @@
         authType == 'local' &&
         hasPermission('PMUA')
       ">Reset Password</span>
-    <span id="removefromapp" class="popover-options" [ngClass]="{
+    <span id="removefromapp" class="popover-options text-danger" [ngClass]="{
         'disable-option': isThisUser(user)
-      }" *ngIf="hasPermission('PMUBD')" (click)="removeFromApp()">Remove from app</span>
+      }" *ngIf="hasPermission('PMUBD')" (click)="removeFromApp()">Remove user</span>
   </div>
 </div>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+  <span class="dsi dsi-user"></span>
+</odp-delete-modal>

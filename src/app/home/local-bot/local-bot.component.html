@@ -42,7 +42,7 @@
           <div class="d-flex flex-row">
             <span class="font-20 fw-600 heading mr-2 mt-2">{{ selectedBot?.basicDetails?.name }}</span>
             <div class="col mt-2">
-              <odp-switch [edit]="{ status: true }" type="accent" (checkedChange)="toggleStatus($event)"
+              <odp-switch [edit]="{ status: true }" type="dark" (checkedChange)="toggleStatus($event)"
                 [(checked)]="selectedBot.isActive">
               </odp-switch>
             </div>
@@ -154,7 +154,8 @@
         </label>
 
         <div class="input-group">
-          <input class="form-control" type="text" formControlName="botName" placeholder="Type here" odpAutoFocus />
+          <input class="form-control" type="text" formControlName="botName" placeholder="Type here" odpAutoFocus
+            (keyup.enter)="createBot()" />
           <span *ngIf="
             (botForm.get('botName').touched || botForm.get('botName').dirty) &&
             botForm.get('botName').hasError('required')
@@ -276,6 +277,10 @@
               (attributeForm.get('label').touched || attributeForm.get('label').dirty) &&
               attributeForm.get('label').hasError('required')
             " ngbTooltip="This is a required field"></span>
+          <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
+              (attributeForm.get('label').touched || attributeForm.get('label').dirty) &&
+              attributeForm.get('label').hasError('maxlength')
+            " ngbTooltip="Label should be within 30 characters"></span>
         </div>
       </div>
       <div class="form-group position-relative">

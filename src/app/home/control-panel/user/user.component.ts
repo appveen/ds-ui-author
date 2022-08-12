@@ -219,6 +219,13 @@ export class UserComponent implements OnInit, OnDestroy {
       this.showAzureLoginButton = false;
     }
     this.showLazyLoader = true;
+
+    this.fetchUsers()
+
+  }
+
+
+  fetchUsers() {
     this.getUserList().subscribe((users) => {
       this.userList = users;
       this.ogUsersList = users;
@@ -227,24 +234,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.showLazyLoader = false;
       this.isLoading = false;
     });
-
-    this.attributesForm = this.fb.group({
-      key: [''],
-      type: ['String', [Validators.required]],
-      value: ['', [Validators.required]],
-      label: ['', [Validators.required]],
-    });
-    this.attributesForm.get('key').disable();
-    this.attributesForm
-      .get('label')
-      .valueChanges
-      .subscribe((val: any) => {
-        this.attributesForm
-          .get('key')
-          .patchValue(this.appService.toCamelCase(val));
-      });
   }
-
   onAuthTypeChange(value) {
     this.showAzureLoginButton = false;
     if (this.userForm.get('password')) {
@@ -944,16 +934,18 @@ export class UserComponent implements OnInit, OnDestroy {
     if (!userIds || userIds.length === 0) {
       return;
     }
+    this.isLoading = true
     this.subscriptions['removeUsers'] = this.commonService
       .put('user', `/${this.commonService.app._id}/user/utils/removeUsers`, {
         userIds,
       })
       .subscribe(
         () => {
-          this.agGrid.api.deselectAll();
-          setTimeout(() => {
-            this.agGrid.api.purgeInfiniteCache();
-          }, 500);
+          this.fetchUsers()
+          // this.agGrid.api.deselectAll();
+          // setTimeout(() => {
+          //   this.agGrid.api.purgeInfiniteCache();
+          // }, 500);
           this.ts.success(
             `Removed User(s) from ${this.selectedApp} App Successfully`
           );
@@ -1164,6 +1156,23 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   showAttributeSide(data?: any) {
+    this.attributesForm = this.fb.group({
+      key: [''],
+      type: ['String', [Validators.required]],
+      value: ['', [Validators.required]],
+      label: ['', [Validators.required]],
+    });
+    this.attributesForm.get('key').disable();
+    if (!this.editMode) {
+      this.attributesForm
+        .get('label')
+        .valueChanges
+        .subscribe((val: any) => {
+          this.attributesForm
+            .get('key')
+            .patchValue(this.appService.toCamelCase(val));
+        });
+    }
     this.attributesForm.reset({ type: 'String' });
     if (this.editMode && data) {
       this.attributesForm.setValue(data)
@@ -1180,7 +1189,12 @@ export class UserComponent implements OnInit, OnDestroy {
 
   addAttribute() {
     const { key, ...rest } = this.attributesForm.getRawValue();
-    this.details.attributes[key] = this.appService.cloneObject(rest);
+    let obj = {};
+    obj[key] = rest;
+
+    this.details.attributes = {
+      ... this.details.attributes, ...obj
+    };
     this.commonService
       .put(
         'user',
@@ -1251,7 +1265,7 @@ export class UserComponent implements OnInit, OnDestroy {
       .subscribe(
         (res) => {
 
-          this.details.attributes = res.attributes || [];
+          this.details.attributes = res.attributes || {};
           this.showDetails(this.details)
 
 
@@ -1289,7 +1303,7 @@ export class UserComponent implements OnInit, OnDestroy {
   openGroupModal() {
     const dialogRef = this.dialog.open(UserToGroupModalComponent, {
       width: '60vw',
-      height: '65vh',
+      height: '68vh',
       data: {
         groupList: this.groupList,
         userGroups: this.userGroups,
