@@ -43,6 +43,8 @@ import { CommonSettingsComponent } from './configuration/common-settings/common-
 import { DataSettingsComponent } from './configuration/data-settings/data-settings.component';
 import { SearchSettingsComponent } from './configuration/search-settings/search-settings.component';
 import { ResetServiceComponent } from './reset-service/reset-service.component';
+import { StepFieldsComponent } from './wizards/step-fields/step-fields.component';
+import { StepActionsComponent } from './wizards/step-actions/step-actions.component';
 
 @NgModule({
     imports: [
@@ -90,7 +92,9 @@ import { ResetServiceComponent } from './reset-service/reset-service.component';
         CommonSettingsComponent,
         DataSettingsComponent,
         SearchSettingsComponent,
-        ResetServiceComponent
+        ResetServiceComponent,
+        StepFieldsComponent,
+        StepActionsComponent
     ],
     exports: [
         SchemaStructurePipe,
@@ -110,7 +114,9 @@ import { ResetServiceComponent } from './reset-service/reset-service.component';
         CommonSettingsComponent,
         DataSettingsComponent,
         SearchSettingsComponent,
-        ResetServiceComponent
+        ResetServiceComponent,
+        StepFieldsComponent,
+        StepActionsComponent
     ],
     providers: [SchemaBuilderService]
 })

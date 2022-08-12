@@ -1,0 +1,21 @@
+.attributes {
+    min-height: calc(100vh - 464px);
+    max-height: calc(100vh - 464px);
+    overflow-y: auto;
+
+    .attribute-item {
+        min-height: 40px;
+        max-height: 40px;
+
+        .attribute-action {
+            min-width: 16px;
+            max-width: 16px;
+        }
+
+        .attribute-name {
+            min-width: 116px;
+            max-width: 116px;
+        }
+    }
+
+}
