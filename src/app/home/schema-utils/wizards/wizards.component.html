@@ -1,5 +1,6 @@
-<div class="d-flex flex-row w-100 h-100 " *ngIf="!isSchemaFree">
-    <div class="d-flex flex-column w-50 steps-div bg-light h-auto align-items-center justify-content-center">
+<div class="wizard-wrapper d-flex flex-column w-100 p-4" *ngIf="!isSchemaFree">
+    <div class="font-20 fw-600 mb-3">Personalize</div>
+    <!-- <div class="d-flex flex-column w-50 steps-div bg-light h-auto align-items-center justify-content-center">
         <ng-container *ngIf="steps.length>0">
             <div class="d-flex align-items-center steps-count bg-gray border-bottom w-100">
                 <div class="steps-wrapper d-flex align-items-center mr-auto">
@@ -40,7 +41,6 @@
             </div>
             <div class="action d-flex align-items-center justify-content-between w-100 p-3 bg-white" *ngIf="edit">
                 <div class="d-flex align-items-center position-relative">
-                    <!--<strong [ngClass]="{'mr-2': !edit.status, 'mr-3': edit.status}">{{ stepIndex }}</strong>-->
                     <input *ngIf="edit.status" type="text" class="form-control pr-4" id="stepName" name="sbName"
                         placeholder="Enter a step name" odpAutoFocus required maxlength="40" [(ngModel)]="stepName"
                         #sbName="ngModel" #tabName (blur)="setTouched()" [ngClass]="{'is-invalid': sbNameErr}">
@@ -103,11 +103,6 @@
                                 </ng-container>
                             </div>
                             <div class="d-flex field-options">
-                                <!-- <div class="readonly d-flex align-items-center justify-content-center rounded-circle mr-2 hover"
-                                    [ngClass]="{'active':getReadOnly(field)}" placement="top"
-                                    ngbTooltip="Mark as read-only" (click)="setReadOnly(field)">
-                                    <span class="odp-no-edit"></span>
-                                </div> -->
                                 <span class="fa hover fa-minus-circle text-danger fa-lg mr-2  " *ngIf="edit.status"
                                     (click)="removeFromStep(fieldIndex)"></span>
                             </div>
@@ -222,101 +217,184 @@
                 </div>
             </div>
         </ng-container>
-    </div>
-    <div class="d-flex flex-column w-50 border-left">
-        <div class="field-wrapper d-flex align-items-end w-100 px-3 border-bottom">
-            <div class="text-dark font-weight-bold tab pb-2 mr-5 hover position-relative" (click)="activeTab = 1"
-                [ngClass]="{'active-tab': activeTab === 1}">
-                Attributes
-                <span class="field-Count d-flex justify-content-center align-items-center position-absolute"
+    </div> -->
+    <ng-container *ngIf="steps.length==0">
+        <div class="bg-light d-flex justify-content-center align-items-center p-4 rounded">
+            <div class="d-flex flex-column align-items-center  w-50" *ngIf="edit.status">
+                <div class="font-14 fw-500 my-3">Customize Data Experience</div>
+                <div class="d-flex align-items-center text-muted font-14 fw-400">
+                    Click 'Customize' to start building a step by step user experience for capturing data in the
+                    AppCenter.
+                </div>
+                <div class="mt-4">
+                    <button class="btn btn-success btn-min-width" (click)="addStepAfter()" id="customizeSteps">
+                        Customize
+                    </button>
+                </div>
+            </div>
+            <div class="d-flex flex-column " *ngIf="!edit.status">
+                <div class="text-muted font-14 fw-400">
+                    There is no custom user experience configured for this data service.
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="steps.length>0">
+        <div class="d-flex align-items-center justify-content-between rounded bg-light mb-3 p-2">
+            <div class="steps-container d-flex align-items-center">
+                <div class="step-block d-flex flex-column px-2 py-1 rounded hover"
+                    *ngFor="let step of steps;let i=index;let l=last;" [ngClass]="{'bg-white':selectedStepIndex==i}"
+                    (click)="selectStep(i)">
+                    <span class="text-muted text-uppercase fw-500 font-11">STEP {{i+1}}</span>
+                    <span class="fw-400 font-14 sub-heading text-truncate"
+                        [ngClass]="{'text-dark':selectedStepIndex==i}"
+                        [ngbTooltip]="step.value.name">{{step.value.name}}</span>
+                </div>
+                <!-- <div class="step-block d-flex flex-column bg-white px-2 py-1 rounded">
+                    <span class="text-muted text-uppercase fw-500 font-11">STEP 2</span>
+                    <span class="fw-400 font-14 sub-heading text-truncate" [ngbTooltip]="'Some Naem sdasd adsad'">Some
+                        Name</span>
+                </div>
+                <div class="step-block d-flex flex-column px-2 py-1 rounded">
+                    <span class="text-muted text-uppercase fw-500 font-11">STEP 3</span>
+                    <span class="fw-400 font-14 sub-heading text-truncate" [ngbTooltip]="'Some Naem sdasd adsad'">Some
+                        Name</span>
+                </div> -->
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="dsi dsi-edit mr-3 sub-heading" (click)="showStepsWindow=true"></span>
+                <button type="button" class="btn btn-outline-primary" (click)="showStepsWindow=true">
+                    <span class="dsi dsi-plus"></span>
+                </button>
+            </div>
+        </div>
+        <div class="d-flex flex-column w-100">
+            <div class="tabs-wrapper d-flex align-items-end justify-content-between w-100 mb-3">
+                <div class="d-flex align-items-end">
+                    <div class="font-14 tab px-0 mr-3 py-1 hover position-relative" (click)="activeTab = 1"
+                        [ngClass]="{'active-tab fw-500 text-dark': activeTab == 1,'fw-400 text-muted': activeTab != 1}">
+                        Attributes
+                        <!-- <span class="field-Count d-flex justify-content-center align-items-center position-absolute"
                     [ngClass]="{'bg-gray': activeTab !== 1, 'bg-accent': activeTab === 1}"
                     *ngIf="remainingFields.length > 0">{{ formArrLen === 0 ? remainingFields.length - 1 :
                     remainingFields.length }}</span>
                 <span class="field-Count d-flex justify-content-center align-items-center position-absolute"
                     [ngClass]="{'bg-gray': activeTab !== 1, 'bg-accent': activeTab === 1}"
-                    *ngIf="remainingFields.length == 0">{{remainingFields.length}}</span>
+                    *ngIf="remainingFields.length == 0">{{remainingFields.length}}</span> -->
+                    </div>
+                    <div class="font-14 tab px-0 mr-3 py-1 hover position-relative" (click)="activeTab = 2"
+                        [ngClass]="{'active-tab fw-500 text-dark': activeTab == 2,'fw-400 text-muted': activeTab != 2}">
+                        Actions
+                        <!-- <span class="field-Count d-flex justify-content-center align-items-center position-absolute"
+                    [ngClass]="{'bg-gray': activeTab !== 2, 'bg-accent': activeTab === 2}">{{allActions.length}}</span> -->
+                    </div>
+                </div>
+                <button type="button" class="btn btn-white fw-400 font-12 d-flex align-items-center"
+                    (click)="removeStep()">
+                    <span class="dsi dsi-trash mr-2 sub-heading"></span>
+                    <span>Delete Step</span>
+                </button>
             </div>
-            <div class="text-dark font-weight-bold tab pb-2 mr-1 hover position-relative" (click)="activeTab = 2"
-                [ngClass]="{'active-tab': activeTab === 2}">
-                Actions
-                <span class="field-Count d-flex justify-content-center align-items-center position-absolute"
-                    [ngClass]="{'bg-gray': activeTab !== 2, 'bg-accent': activeTab === 2}">{{allActions.length}}</span>
-            </div>
-        </div>
-        <div *ngIf="activeTab === 1">
-            <ng-container *ngIf="remainingFields.length">
-                <ng-container *ngFor="let field of remainingFields;let fieldIndex = index">
-                    <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 border-bottom"
-                        *ngIf="!field.get('_id')" id="uxAttributes">
-                        <div class="d-flex align-items-center">
-                            <span class="spacer border-right border-secondary" [ngStyle]="getSpacing()"></span>
-                            <span class="fa hover fa-plus-circle text-success fa-lg mr-2"
-                                (click)="addToStep(field,fieldIndex)" *ngIf="steps.length && edit.status"
-                                id="addAtribute"></span>
-                            <span class="icon odp-pin text-muted mr-2 fa-xs mt-1" *ngIf="getIdField(field)"></span>
-                            <span class="icon d-flex align-items-center mr-2" *ngIf="!getIdField(field)">
-                                <span class="fa fa-asterisk text-danger" *ngIf="field.value.properties.required"></span>
-                            </span>
-                            <div class="input-control position-relative mr-3">
-                                <span
-                                    class="field form-control-plaintext ellipsis-span">{{field.value.properties.name}}</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <span
-                                    class="type-icon-holder d-flex flex-column align-items-center justify-content-center text-accent rounded bg-white border mr-2 {{getSelectedTypeClass(field)}}"></span>
-                                <span class="text-secondary">{{getSelectedType(field)}}</span>
-                            </div>
-                            <ng-container *ngIf="field.value.type == 'Array'">
-                                <span class="text-secondary mx-2">of</span>
-                                <div class="d-flex align-items-center">
-                                    <span
-                                        class="type-icon-holder d-flex flex-column align-items-center justify-content-center text-accent rounded bg-white border mr-2 {{getSelectedTypeClass(field)}}"></span>
-                                    <span class="text-secondary">{{getCollectionType(field)}}</span>
+            <div class="wizard-content border rounded">
+                <div class="d-flex align-items-stretch" *ngIf="activeTab === 1">
+                    <div class="attributes added w-50 p-3">
+                        <ng-container *ngIf="selectedStepFields.length">
+                            <ng-container *ngFor="let field of selectedStepFields;let fieldIndex = index">
+                                <div class="attribute-item bg-light rounded px-3 mb-1 d-flex align-items-center justify-content-between"
+                                    *ngIf="!field.get('_id')" id="uxAttributes">
+                                    <div class="d-flex align-items-center">
+                                        <div
+                                            class="attribute-action d-flex align-items-center justify-content-center mr-3">
+                                            <span class="dsi dsi-minus-circle mr-2 hover"
+                                                (click)="removeFromStep(fieldIndex)"
+                                                *ngIf="steps.length>0 && edit.status" id="addAtribute"></span>
+                                        </div>
+                                        <div class="attribute-name position-relative">
+                                            <span
+                                                class="text-dark font-14 fw-400">{{field.value.properties.name}}</span>
+                                        </div>
+                                        <div class="attribute-type position-relative">
+                                            <odp-field-type [field]="field.value" label="true"></odp-field-type>
+                                        </div>
+                                    </div>
                                 </div>
                             </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="!selectedStepFields.length">
+                            <div class="d-flex justify-content-center mt-5 text-muted">
+                                No attributes added to this step
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="attributes available w-50 p-3 border-left">
+                        <ng-container *ngIf="remainingFields.length">
+                            <ng-container *ngFor="let field of remainingFields;let fieldIndex = index">
+                                <div class="attribute-item bg-light rounded px-3 mb-1 d-flex align-items-center justify-content-between"
+                                    *ngIf="!field.get('_id')" id="uxAttributes">
+                                    <div class="d-flex align-items-center">
+                                        <div
+                                            class="attribute-action d-flex align-items-center justify-content-center mr-3">
+                                            <span class="dsi dsi-plus-circle mr-2 hover"
+                                                (click)="addToStep(field,fieldIndex)"
+                                                *ngIf="steps.length>0 && edit.status" id="addAtribute"></span>
+                                        </div>
+                                        <div class="attribute-name position-relative">
+                                            <span
+                                                class="text-dark font-14 fw-400">{{field.value.properties.name}}</span>
+                                        </div>
+                                        <div class="attribute-type position-relative">
+                                            <odp-field-type [field]="field.value" label="true"></odp-field-type>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="!remainingFields.length">
+                            <div class="d-flex justify-content-center mt-5 text-muted">
+                                All attributes are moved to steps
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div *ngIf="activeTab === 2" class="px-3">
+                    <div class="mt-3 mb-2">
+                        <span class="text-secondary">An Action cannot be added multiple times to a single step.</span>
+                    </div>
+                    <div *ngFor="let field of allActions;let actionIndex = index">
+                        <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 border-bottom border-top action-list"
+                            *ngIf="field">
+                            <span *ngIf="edit.status && !isHookAdded(field)"
+                                class="dsi dsi-plus-circle hover text-success fa-lg pl-1 pr-1 action-icon"
+                                (click)="addHookToStep(field)"></span>
+                            <span *ngIf="edit.status && isHookAdded(field)"
+                                class="fas fa-check-circle text-secondary fa-lg pl-1 pr-1 action-icon"></span>
+                            <span class="action-label">{{ field.label }}</span>
+                            <div class="d-flex action-item">
+                                <div class="mr-1 action-type d-inline" [ngClass]="{'bg-success': field.type === 'success',
+                                'bg-warning': field.type === 'warning',
+                                'bg-danger': field.type === 'danger'}"></div>
+                                <span>
+                                    {{ field.type === 'success' ? 'Type 1' : field.type === 'warning' ? 'Type 2' :
+                                    'Type3'}}
+                                </span>
+                            </div>
+                            <span class="action-item text-truncate" placement="left" [ngbTooltip]="field.name">
+                                {{ field.name }}
+                            </span>
+                            <span *ngIf="edit.status" class="fas fa-cog text-secondary action-settings"
+                                (click)="editHook(field)" placement="top" ngbTooltip="Edit hook"></span>
                         </div>
                     </div>
-                </ng-container>
-            </ng-container>
-            <ng-container *ngIf="!remainingFields.length">
-                <div class="d-flex justify-content-center mt-5 text-muted">
-                    All attributes are moved to steps
-                </div>
-            </ng-container>
-        </div>
-        <div *ngIf="activeTab === 2" class="px-3">
-            <div class="mt-3 mb-2">
-                <span class="text-secondary">An Action cannot be added multiple times to a single step.</span>
-            </div>
-            <div *ngFor="let field of allActions;let actionIndex = index">
-                <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 border-bottom border-top action-list"
-                    *ngIf="field">
-                    <span *ngIf="edit.status && !isHookAdded(field)"
-                        class="dsi dsi-plus-circle hover text-success fa-lg pl-1 pr-1 action-icon"
-                        (click)="addHookToStep(field)"></span>
-                    <span *ngIf="edit.status && isHookAdded(field)"
-                        class="fas fa-check-circle text-secondary fa-lg pl-1 pr-1 action-icon"></span>
-                    <span class="action-label">{{ field.label }}</span>
-                    <div class="d-flex action-item">
-                        <div class="mr-1 action-type d-inline" [ngClass]="{'bg-success': field.type === 'success',
-                            'bg-warning': field.type === 'warning',
-                            'bg-danger': field.type === 'danger'}"></div>
-                        <span>{{ field.type === 'success' ? 'Type 1' : field.type === 'warning' ? 'Type 2' : 'Type
-                            3'}}</span>
-                    </div>
-                    <span class="action-item text-truncate" placement="left" [ngbTooltip]="field.name">{{ field.name
-                        }}</span>
-                    <span *ngIf="edit.status" class="fas fa-cog text-secondary action-settings"
-                        (click)="editHook(field)" placement="top" ngbTooltip="Edit hook"></span>
                 </div>
             </div>
         </div>
-    </div>
+    </ng-container>
 </div>
 
 <ng-container *ngIf="isSchemaFree">
-    <div class='d-flex align-items-center justify-content-center schema-free-message'>
-        <div class='text-secondary'>
+    <div class="font-20 fw-600 mb-3">Personalize</div>
+    <div class="d-flex align-items-center justify-content-center schema-free-message">
+        <div class="text-secondary">
             Schema Free is enabled, it restricts you from customizing the data experience
         </div>
     </div>
@@ -324,22 +402,22 @@
 
 <ng-template #deleteModalTemplate>
     <div class="modal-body p-4">
-        <div class="circle bg-dark d-flex justify-content-center align-items-center">
-            <span class="dsi dsi-trash fa-lg text-white"></span>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <span class="font-20 fw-500">{{deleteModal.title}}</span>
+            <span class="dsi dsi-close hover" (click)="deleteModalTemplateRef.close(false)"></span>
         </div>
-        <p class="text-dark font-weight-bold text-center" [ngClass]="{'text-truncate': deleteModal.title.length > 65}">
-            {{deleteModal.title}}</p>
         <p class="text-secondary text-center" [ngClass]="{'text-truncate': deleteModal.message.length > 65}">
-            {{deleteModal.message}}</p>
-    </div>
-    <div class="modal-footer p-3 bg-light">
-        <button type="button" class="btn btn-min-width btn-link w-50 mx-3" (click)="deleteModalTemplateRef.close(false)"
-            id="sbDeleteModalNo">No
-        </button>
-        <button type="button" class="btn btn-min-width btn-primary w-50 mx-3"
-            (click)="deleteModalTemplateRef.close(true)" id="sbDeleteModalYes">
-            Yes
-        </button>
+            {{deleteModal.message}}
+        </p>
+        <div class="d-flex align-items-center justify-content-end mt-4">
+            <button type="button" class="btn btn-min-width btn-outline-primary mr-3"
+                (click)="deleteModalTemplateRef.close(false)" id="sbDeleteModalNo">No
+            </button>
+            <button type="button" class="btn btn-min-width btn-primary" (click)="deleteModalTemplateRef.close(true)"
+                id="sbDeleteModalYes">
+                Yes
+            </button>
+        </div>
     </div>
 </ng-template>
 
@@ -356,9 +434,9 @@
                         <input class="form-control" type="text" placeholder="Enter hook name (max 40 characters)"
                             formControlName="name" maxlength="40" [ngClass]="{'is-invalid': hookNameErr}"
                             [value]="actionHookForm.get('name').value" (blur)="uniqHookName()" odpAutoFocus>
-                        <span class="dsi dsi-danger-circle text-danger position-absolute error-icon"
-                            *ngIf="hookNameErr" [ngbTooltip]="validationError" triggers="manual" #t1="ngbTooltip"
-                            triggers="hover" (mouseenter)="toggleTooltip(t1, 'hook-name')" placement="right"></span>
+                        <span class="dsi dsi-danger-circle text-danger position-absolute error-icon" *ngIf="hookNameErr"
+                            [ngbTooltip]="validationError" triggers="manual" #t1="ngbTooltip" triggers="hover"
+                            (mouseenter)="toggleTooltip(t1, 'hook-name')" placement="right"></span>
                     </div>
                 </div>
                 <div class="d-flex w-100 mb-4">
@@ -461,3 +539,37 @@
         </ng-container>
     </div>
 </ng-template>
+
+
+<div *ngIf="showStepsWindow" (click)="showStepsWindow=false" class="overlay position-fixed"></div>
+<div [ngClass]="{'show':showStepsWindow}" class="new-wizard-window position-fixed bg-white border-left page-padding">
+    <div *ngIf="showStepsWindow" class="" [formGroup]="form">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="font-20 fw-500">Add Step</div>
+            <span class="dsi dsi-close text-dark" (click)="showStepsWindow=false"></span>
+        </div>
+        <div class="form-wrapper my-4" formGroupName="wizard">
+            <div class="form-group" *ngFor="let step of steps;let i=index;" formGroupName="steps">
+                <label [for]="i+1" class="font-14 fw-400">Step {{i+1}}</label>
+                <div class="position-relative" [formArrayName]="i">
+                    <input type="text" class="form-control" formControlName="name" (keyup.enter)="addStepAfter()"
+                        odpAutoFocus>
+                    <span class="delete-icon dsi dsi-trash text-dark position-absolute hover"
+                        (click)="removeStepAt(i)"></span>
+                    <ng-container *ngIf="form.get(['wizard','steps',i,'name']).errors">
+                        <span *ngIf="form.get(['wizard','steps',i,'name']).hasError('required')"
+                            class="error-symbol dsi dsi-danger-circle text-danger position-absolute"
+                            ngbTooltip="Name is Required"></span>
+                        <span *ngIf="form.get(['wizard','steps',i,'name']).hasError('length')"
+                            class="error-symbol dsi dsi-danger-circle text-danger position-absolute"
+                            ngbTooltip="Max. 40 Characters is Allowed"></span>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-link px-0 d-flex align-items-center" (click)="addStepAfter()">
+            <span class="dsi dsi-plus-circle text-primary mr-2"></span>
+            <span class="text-dark">Add New</span>
+        </button>
+    </div>
+</div>

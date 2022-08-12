@@ -1,8 +1,4 @@
-import {
-    Component, OnInit, Input, OnDestroy, ViewChildren,
-    QueryList, Renderer2, ElementRef, ViewChild, AfterViewInit,
-    TemplateRef
-} from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Renderer2, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormArray, Validators, FormBuilder } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -18,21 +14,16 @@ import { DeleteModalConfig } from 'src/app/utils/interfaces/schemaBuilder';
     templateUrl: './wizards.component.html',
     styleUrls: ['./wizards.component.scss']
 })
-export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class WizardsComponent implements OnInit, OnDestroy {
 
-    @ViewChildren('stepsEle') stepsEle: QueryList<any>;
-    @ViewChild('allStepsDropdown', { static: false }) allStepsDropdown: ElementRef;
     @ViewChild('expHookModal', { static: false }) expHookModal: TemplateRef<HTMLElement>;
     @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
-    @ViewChild('sbName', { static: false }) sbName: ElementRef;
-    @ViewChild('tabName', { static: false }) tabName: ElementRef;
     @Input() form: FormGroup;
     @Input() level: number;
     @Input() edit: any;
     deleteModalTemplateRef: NgbModalRef;
     expHookModalRef: NgbModalRef;
     sameNameErr: boolean;
-    types: Array<any> = [];
     subscriptions: any;
     deleteModal: DeleteModalConfig;
     showStepsDropdown: boolean;
@@ -43,16 +34,14 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         status: boolean;
         loading: boolean;
     };
-    collapse: boolean;
+
     actionTypes: Array<any> = [];
     remainingFields: Array<any> = [];
-    seletedStep: any;
     tempSteps: Array<any> = [];
     stepLevel = 5;
-    dragEntered: boolean;
-    dragStarted: boolean;
-    index = 3;
-    formArrLen = 0;
+
+    showStepsWindow: boolean;
+    selectedStepIndex: number;
     constructor(
         private commonService: CommonService,
         private schemaService: SchemaBuilderService,
@@ -87,15 +76,12 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
             { name: 'Type 2', value: 'warning' },
             { name: 'Type 3', value: 'danger' }];
         self.sameNameErr = false;
+        this.showStepsWindow = false;
     }
 
     ngOnInit() {
         const self = this;
         self.remainingFields = self.getRemainingFields();
-        self.types = self.schemaService.getSchemaTypes();
-        if (self.tabName) {
-            self.tabName.nativeElement.focus();
-        }
     }
 
     get sbNameErr() {
@@ -117,13 +103,6 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
-        const self = this;
-        if (self.tabName) {
-            self.tabName.nativeElement.focus();
-        }
-    }
-
     get isSchemaFree() {
         const self = this;
         if (self.form && self.form.get('schemaFree')) {
@@ -142,6 +121,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     addStepAfter() {
         const self = this;
+        this.showStepsWindow = true;
         const i = (self.form.get('wizard.steps') as FormArray).controls.length - 1;
         (self.form.get('wizard.steps') as FormArray).insert(i + 1, self.fb.group({
             name: [null, [Validators.required, maxLenValidator(40)]],
@@ -156,9 +136,6 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
                 document.getElementById('step-' + i).scrollIntoView({ block: 'end' });
             }
         }, 100);
-        if (self.tabName) {
-            self.tabName.nativeElement.focus();
-        }
     }
 
     addToStep(field, index) {
@@ -202,79 +179,13 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
     selectStep(index) {
         const self = this;
         self.form.get('wizard.selectedStep').patchValue(index);
+        this.selectedStepIndex = index;
         self.showStepsDropdown = false;
         setTimeout(() => {
             if (document.getElementById('step-' + index)) {
                 document.getElementById('step-' + index).scrollIntoView({ block: 'end' });
             }
         }, 100);
-    }
-
-    getSteps(index?) {
-
-        const self = this;
-        const temp = self.tempSteps;
-        self.tempSteps = [];
-        const stepsLength = (self.form.get('wizard.steps') as FormArray).length;
-        if (!index) {
-            if (stepsLength < this.stepLevel) {
-                for (let i = 0; i < stepsLength; i++) {
-                    self.tempSteps.push(i);
-                }
-            } else {
-                for (let i = 0; i < this.stepLevel; i++) {
-                    self.tempSteps.push(i);
-                }
-            }
-        } else {
-            if (index < this.stepLevel) {
-                for (let i = 0; i <= index; i++) {
-                    self.tempSteps.push(i);
-                }
-
-            } else {
-                for (let i = index - (this.stepLevel - 1); i <= index; i++) {
-                    self.tempSteps.push(i);
-                }
-            }
-        }
-
-
-    }
-
-    setTouched() {
-        const self = this;
-        const selectedStep = self.form.get('wizard.selectedStep').value;
-        (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsTouched();
-    }
-
-
-    get stepName() {
-        const self = this;
-        const selectedStep = self.form.get('wizard.selectedStep').value;
-        return (self.form.get(['wizard', 'steps', selectedStep, 'name']) as FormArray).value;
-    }
-
-
-    set stepName(val) {
-        const self = this;
-        const selectedStep = self.form.get('wizard.selectedStep').value;
-        if (val) {
-            (self.form.get(['wizard', 'steps', selectedStep, 'name'])).setValue(val);
-            (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsDirty();
-            (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsTouched();
-
-        } else {
-            (self.form.get(['wizard', 'steps', selectedStep, 'name'])).setValue(null);
-            (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsDirty();
-            (self.form.get(['wizard', 'steps', selectedStep, 'name'])).markAsTouched();
-
-        }
-        const expSteps = self.form.get('wizard.steps').value;
-        const stepsName = expSteps.map(e => e.name);
-        if (stepsName.length > 1) {
-            self.sameNameErr = stepsName.filter(e => e === val).length > 1;
-        }
     }
 
     get stepIndex() {
@@ -297,7 +208,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         if ((self.form.get('wizard.steps') as FormArray).controls.length === 0) {
             return;
         }
-        self.deleteModal.title = 'Delete step';
+        self.deleteModal.title = 'Delete Step';
         self.deleteModal.message = 'Are you sure you want to delete this step?';
         self.deleteModalTemplateRef = self.commonService.modal(self.deleteModalTemplate);
         self.deleteModalTemplateRef.result.then((close) => {
@@ -316,6 +227,33 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
                 } else {
                     self.form.get('wizard.selectedStep').patchValue(0);
                 }
+            }
+        }, (dismiss) => { });
+    }
+
+    removeStepAt(index: number) {
+        const self = this;
+        if ((self.form.get('wizard.steps') as FormArray).controls.length === 0) {
+            return;
+        }
+        self.deleteModal.title = 'Delete Step';
+        self.deleteModal.message = 'Are you sure you want to delete this step?';
+        self.deleteModalTemplateRef = self.commonService.modal(self.deleteModalTemplate);
+        self.deleteModalTemplateRef.result.then((close) => {
+            if (close) {
+                const formArray = (self.form.get(['wizard', 'steps']) as FormArray);
+                const temp = formArray.at(index);
+                if (temp) {
+                    (temp.get('fields') as FormArray).controls.forEach((control, i) => {
+                        self.removeFromUsed((temp.get('fields') as FormArray).at(+i));
+                    });
+                }
+                if (formArray && formArray.length > 0) {
+                    formArray.removeAt(index);
+                }
+                self.form.get('wizard').markAsDirty();
+                self.form.markAsDirty();
+                this.selectedStepIndex = 0;
             }
         }, (dismiss) => { });
     }
@@ -394,7 +332,8 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         const self = this;
         const selectedStep = self.form.get('wizard.selectedStep').value;
         if ((self.form.get('wizard.steps') as FormArray).length > 0 && self.form.get('wizard.selectedStep').value !== null) {
-            return (self.form.get(['wizard', 'steps', selectedStep, 'fields']) as FormArray).controls;
+            const temp = (self.form.get(['wizard', 'steps', selectedStep, 'fields']) as FormArray);
+            return temp ? temp.controls : [];
         }
         return [];
     }
@@ -404,9 +343,7 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         let temp = [];
         if ((self.form.get('wizard.usedFields') as FormArray).controls.length === 0) {
             temp = self.definitions.slice();
-            self.formArrLen = 0;
         } else {
-            self.formArrLen = (self.form.get('wizard.usedFields') as FormArray).controls.length;
             self.definitions.forEach(e => {
                 const index = (self.form.get('wizard.usedFields') as FormArray).controls.findIndex(f => f.value.key === e.value.key);
                 if (e.get('key').value === '_id') {
@@ -427,89 +364,6 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
         return temp;
-    }
-
-    getSpacing() {
-        const self = this;
-        let width = self.level * 28;
-        if (self.level > 1) {
-            width += (self.level - 1) * 16;
-        }
-        if (width > 0) {
-            return {
-                'min-width': width + 'px',
-                'min-height': '36px',
-                'margin-right': '16px'
-            };
-        } else {
-            return {};
-        }
-    }
-
-    getSelectedTypeClass(form) {
-        const self = this;
-        return self.getTypeClass(form.get('type').value);
-    }
-
-    getSelectedType(form) {
-        const self = this;
-        return self.getTypeLabel(form.get('type').value);
-    }
-
-    getTypeClass(type) {
-        const self = this;
-        const temp = self.types.find(e => e.value === type);
-        if (temp) {
-            return temp.class;
-        } else {
-            return 'dsi-text';
-        }
-    }
-
-    getTypeLabel(type) {
-        const self = this;
-        const temp = self.types.find(e => e.value === type);
-        if (temp) {
-            return temp.label;
-        } else {
-            return 'Text';
-        }
-    }
-
-    getCollectionType(form) {
-        const self = this;
-        if (form.get(['definition', 0, 'type'])) {
-            return self.getTypeLabel(form.get(['definition', 0, 'type']).value);
-        }
-        return null;
-    }
-
-    getCollectionTypeClass(form) {
-        const self = this;
-        if (form.get(['definition', 0, 'type'])) {
-            return self.getTypeClass(form.get(['definition', 0, 'type']).value);
-        }
-        return null;
-    }
-
-    getIdField(form) {
-        const self = this;
-        if (form && form.get('key')) {
-            return Boolean(form.get('key').value === '_id');
-        }
-        return false;
-    }
-
-    showAllStepsDropdown(event) {
-        const self = this;
-        self.renderer.setStyle(self.allStepsDropdown.nativeElement, 'display', 'block');
-        self.allStepsDropdown.nativeElement.focus();
-
-    }
-
-    hideAllStepsDropdown(event) {
-        const self = this;
-        self.renderer.setStyle(self.allStepsDropdown.nativeElement, 'display', 'none');
     }
 
     activeUrl(url) {
@@ -646,39 +500,5 @@ export class WizardsComponent implements OnInit, OnDestroy, AfterViewInit {
         return (self.actionHookForm.get('url').touched || self.actionHookForm.get('url').dirty) &&
             (self.actionHookForm.get('url').hasError('pattern') || self.actionHookForm.get('url').hasError('required'));
     }
-
-    dragStartEvent(event: DragEvent, element) {
-        const self = this;
-        event.dataTransfer.effectAllowed = 'copyLink';
-        event.dataTransfer.setDragImage(element, 0, 0);
-        event.dataTransfer.setData('text', self.index + '');
-        self.dragStarted = true;
-    }
-
-    dropEvent(event: DragEvent) {
-        const self = this;
-        this.dragEntered = false;
-        const dragIndex = parseInt(event.dataTransfer.getData('text'), 10);
-        const dragField = self.selectedStepFields.splice(dragIndex, 1)[0];
-        self.selectedStepFields.splice(self.index + 1, 0, dragField);
-    }
-
-    dragOverEvent(event: DragEvent) {
-        event.preventDefault();
-    }
-
-    dragEnterEvent(event: DragEvent) {
-        this.dragEntered = true;
-    }
-
-    dragLeaveEvent(event: DragEvent) {
-        this.dragEntered = false;
-    }
-
-    setDragIndex(index) {
-        this.index = index;
-    }
-
-
 
 }

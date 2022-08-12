@@ -39,7 +39,8 @@
   </div>
   <form [formGroup]="form" class="d-flex flex-column w-100 h-100 mt-4">
     <div class="d-flex flex-column w-100 h-100 border-top border-left border-right rounded bg-white">
-      <div class="tabs d-flex align-items-center border-bottom text-uppercase fw-500 font-13 text-muted" (click)="showHiddenMenu()" id="sbTabs">
+      <div class="tabs d-flex align-items-center border-bottom text-uppercase fw-500 font-13 text-muted"
+        (click)="showHiddenMenu()" id="sbTabs">
         <div class="pl-4 pr-2 hover" *ngIf="hasPermissionForTab('D')" (click)="activeTab=0"
           [ngClass]="{'active':activeTab==0}">
           <span>Design</span>
@@ -86,15 +87,17 @@
           *ngIf="clickCount>9">Schema</div>
       </div>
       <div class="builder-body d-flex flex-column w-100" *ngIf="hasAnyTabPermission">
-        <ng-container>
-          <div class="p-4 d-flex align-items-center" *ngIf="activeTab == 0">
+        <ng-container *ngIf="activeTab == 0">
+          <div class="p-4 d-flex align-items-center">
             <div class="d-flex align-items-center hover mr-3" (click)="toggleSchemaType(false)">
-              <odp-round-radio size="18" [edit]="edit" [checked]="isSchemaFree==false" (checkedChange)="toggleSchemaType(false)">
+              <odp-round-radio size="18" [edit]="edit" [checked]="isSchemaFree==false"
+                (checkedChange)="toggleSchemaType(false)">
               </odp-round-radio>
               <span class="text ml-2">Schema Based</span>
             </div>
             <div class="d-flex align-items-center hover" (click)="toggleSchemaType(true)">
-              <odp-round-radio size="18" [edit]="edit" [checked]="isSchemaFree==true" (checkedChange)="toggleSchemaType(true)">
+              <odp-round-radio size="18" [edit]="edit" [checked]="isSchemaFree==true"
+                (checkedChange)="toggleSchemaType(true)">
               </odp-round-radio>
               <span class="text ml-2">Schema Free</span>
             </div>
@@ -109,12 +112,11 @@
               </div>
             </div> -->
           </div>
-          <div *ngIf="isSchemaFree && activeTab == 0"
-            class='schema-free d-flex align-items-center justify-content-center'>
-            <div class='text-center w-25'>
+          <div *ngIf="isSchemaFree" class="schema-free d-flex align-items-center justify-content-center">
+            <div class="text-center w-25">
               <img src="./assets/img/Book.png" alt="Schema Free">
-              <div class='font-weight-bold mt-3'>Schema Free</div>
-              <div class='text-secondary mt-2'>
+              <div class="font-weight-bold mt-3">Schema Free</div>
+              <div class="text-secondary mt-2">
                 Schema-free data service allows you to store documents without defining any schema.
                 Data validations can only be enforced using the validation hooks.
               </div>
@@ -159,7 +161,8 @@
                   </div>
                   <div class="add-attribute d-flex align-items-center text-muted mt-4"
                     *ngIf="edit.status && serviceObj?.type!=='internal'">
-                    <span class="d-flex align-items-center justify-content-center hover alert alert-primary w-100" (click)="addGroup()" id="schemaFieldObjectAddField">
+                    <span class="d-flex align-items-center justify-content-center hover alert alert-primary w-100"
+                      (click)="addGroup()" id="schemaFieldObjectAddField">
                       <span class="dsi dsi-plus fa-xs mr-2"></span>
                       <span class="text">Add Attribute</span>
                     </span>
@@ -178,7 +181,7 @@
           </odp-integration>
         </ng-container>
         <ng-container *ngIf="activeTab == 2">
-          <div class="w-100 builder d-flex">
+          <div class="w-100 builder full d-flex">
             <div class='d-flex flex-column p-4 fw-500 text-muted font-14' id='experience-side-nav'>
               <div class='mb-3 p-2'>
                 <span class='side-nav-tab'
@@ -232,8 +235,7 @@
             [ngClass]="{'d-none':activeTab != 4}"></odp-configuration>
         </ng-container>
         <ng-container>
-          <odp-reset-service [form]="form" [edit]="edit"
-            [ngClass]="{'d-none':activeTab != 5}"></odp-reset-service>
+          <odp-reset-service [form]="form" [edit]="edit" [ngClass]="{'d-none':activeTab != 5}"></odp-reset-service>
         </ng-container>
         <ng-container *ngIf="activeTab == 6">
           <odp-logs [serviceObj]="serviceObj"></odp-logs>

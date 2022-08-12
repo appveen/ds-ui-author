@@ -2,8 +2,8 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 .builder-body {
-  min-height: calc(100vh - 204px);
-  max-height: calc(100vh - 204px);
+  min-height: calc(100vh - 242px);
+  max-height: calc(100vh - 242px);
   overflow-y: auto;
 
   .hooks-dashboard {
@@ -11,6 +11,9 @@
   }
 
   .hooks-content {
+    overflow-y: auto;
+    max-height: calc(100vh - 218px);
+
     .preHook-desc {
       max-width: 500px;
       min-width: 500px;
@@ -40,20 +43,20 @@
         max-width: 180px;
       }
 
-      .hook-url {
-        min-width: 550px;
-        max-width: 550px;
-      }
+      // .hook-url {
+      //   min-width: 280px;
+      //   max-width: 280px;
+      // }
 
       .hook-header-name {
-        min-width: 202px;
+        min-width: 180px;
 
       }
 
-      .hook-header-url {
-        min-width: 562px;
-        max-width: 562px;
-      }
+      // .hook-header-url {
+      //   min-width: 280px;
+      //   max-width: 280px;
+      // }
 
 
     }
@@ -65,7 +68,7 @@
   right: 10px;
 }
 
-.dsi-info-circle{
+.dsi-info-circle {
   top: 9px;
   right: 10px;
 }

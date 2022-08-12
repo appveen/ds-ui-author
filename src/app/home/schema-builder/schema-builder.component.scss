@@ -47,6 +47,8 @@
 }
 
 .builder {
+  max-height: calc(100vh - 274px);
+
   .options {
     min-height: 40px;
     max-height: 40px;
@@ -62,29 +64,41 @@
   }
 }
 
-.scroll {
-  overflow-y: auto;
-  overflow-x: hidden;
-  min-height: calc(100vh - 330px);
-  max-height: calc(100vh - 330px);
-}
+// .scroll {
+//   overflow-y: auto;
+//   overflow-x: hidden;
+//   min-height: calc(100vh - 330px);
+//   max-height: calc(100vh - 330px);
+// }
 
 .scrollStateModel {
   overflow-y: auto;
   overflow-x: hidden;
-  min-height: calc(100vh - 224px);
-  max-height: calc(100vh - 224px);
+  min-height: calc(100vh - 242px);
+  max-height: calc(100vh - 242px);
 }
 
 .builder-body {
-  min-height: 100%;
-  max-height: calc(100vh - 224px);
+  min-height: calc(100vh - 242px);
+  max-height: calc(100vh - 242px);
 
-  &.schema-creator {
-    min-height: calc(100vh - 244px);
-    max-height: calc(100vh - 244px);
-    padding-bottom: 10px !important;
+  .builder {
+    min-height: calc(100vh - 316px);
+    max-height: calc(100vh - 316px);
+    overflow-y: auto;
+
+    &.full {
+      min-height: calc(100vh - 242px) !important;
+      max-height: calc(100vh - 242px) !important;
+    }
   }
+
+  // .schema-creator {
+  //   min-height: calc(100vh - 334px);
+  //   max-height: calc(100vh - 334px);
+  //   padding-bottom: 10px !important;
+  //   overflow-y: auto;
+  // }
 
   .schema-free {
     min-height: 58vh;

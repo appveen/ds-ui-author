@@ -45,7 +45,7 @@
                 </div>
             </ng-container>
         </div>
-        <div class="d-flex flex-column hooks-content p-4 w-100">
+        <div class="d-flex flex-column hooks-content p-4 flex-fill">
             <div class="mb-2 d-flex align-items-center">
                 <span class="fw-600 font-20">{{hooks.hookTitle}}</span>
                 <div class="ml-auto">
@@ -88,9 +88,9 @@
                 successfully updated. Discard hooks are triggerred for all create, update and delete actions on data.
             </div>
             <div class="hook-table border rounded">
-                <div class="hook-table__header border-bottom d-flex align-items-center px-4">
+                <div class="hook-table__header border-bottom d-flex align-items-center px-4 position-relative">
                     <span class="hook-header-name">Name</span>
-                    <span class="hook-header-url ml-2">URL</span>
+                    <span class="hook-header-url flex-fill ml-2">URL</span>
                     <span *ngIf="edit.status">Action</span>
                 </div>
                 <div class="hook-table__body d-flex py-2 px-4" *ngIf="hookList.length === 0">
@@ -99,18 +99,18 @@
                 <div class="hHook-table__body d-flex flex-column" *ngIf="hookList.length > 0">
                     <div [sortablejs]="hookList" [sortablejsOptions]="{ disabled: !edit.status }">
                         <div *ngFor="let hook of hookList; let hookIndex = index"
-                            class="d-flex p-2 border-bottom w-100 hHook-table__row d-flex align-items-center">
+                            class="d-flex p-2 border-bottom w-100 hHook-table__row d-flex align-items-center position-relative">
                             <span class="fa fa-bars text-muted hover"></span>
                             <span class="hook-name text-truncate ml-2" ngbTooltip="{{hook.name}}">
                                 {{ hook.name }}</span>
                             <div class="ml-2 d-flex justify-content-start">
-                                <span class="text-accent hook-url text-truncate" *ngIf="!edit.status"
+                                <span class="text-accent hook-url flex-fill text-truncate" *ngIf="!edit.status"
                                     ngbTooltip="{{hook.url}}">
                                     {{ hook.url }}
                                 </span>
                             </div>
                             <div class="ml-2 d-flex justify-content-start" id="hookListUrlEdit">
-                                <span class="text-accent hook-url hover text-truncate" ngbTooltip="{{hook.url}}"
+                                <span class="text-accent hook-url flex-fill hover text-truncate" ngbTooltip="{{hook.url}}"
                                     *ngIf="edit.status" (click)="newHook(hookIndex)">
                                     {{ hook.url }}</span>
                             </div>
