@@ -1,6 +1,8 @@
 <div class="d-flex align-items-stretch">
-    <div class="attributes added w-50 p-3 d-flex align-items-center justify-content-center">
-        <div class="d-flex flex-column align-items-center">
+    <div class="attributes w-50"
+        [ngClass]="{'d-flex align-items-center justify-content-center':!selectedStepActions || selectedStepActions.length==0}">
+        <div *ngIf="!selectedStepActions || selectedStepActions.length==0"
+            class="d-flex flex-column align-items-center">
             <div class="font-20 fw-600 mb-2 text-dark">Add Actions</div>
             <div class="font-14 fw-400 mb-3 sub-heading">No Actions are created for this step.</div>
             <button type="button" class="btn btn-primary btn-min-width d-flex align-items-center justify-content-center"
@@ -9,35 +11,54 @@
                 <span class="text">Add New</span>
             </button>
         </div>
+        <ng-container *ngIf="selectedStepActions && selectedStepActions.length>0">
+            <div *ngFor="let field of selectedStepActions;let actionIndex = index">
+                <div class="attribute-item px-3 border-bottom d-flex align-items-center justify-content-start position-relative"
+                    *ngIf="field">
+                    <div class="d-flex align-items-center p-1 mr-3">
+                        <span *ngIf="edit.status" class="dsi dsi-minus-circle hover"
+                            (click)="removeHookFromStep(field)"></span>
+                    </div>
+                    <div class="attribute-name text-truncate mr-3" [ngbTooltip]="field.name">
+                        {{ field.name }}
+                    </div>
+                    <div class="attribute-url sub-heading text-truncate" [ngbTooltip]="field.url">
+                        {{ field.url }}
+                    </div>
+                    <!-- <div *ngIf="edit.status" class="attribute-actions d-flex align-items-center px-3">
+                        <span class="dsi dsi-edit hover mr-2" (click)="openNewActionWindow(field)"></span>
+                        <span class="dsi dsi-trash hover" (click)="openNewActionWindow(field)"></span>
+                    </div> -->
+                </div>
+            </div>
+        </ng-container>
     </div>
-    <div class="attributes added w-50 p-3 border-left">
-        <div class="p-3">
+    <div class="attributes added w-50 border-left">
+        <div *ngIf="!allActions || allActions.length==0" class="p-3">
             <span class="text-secondary">No Action Added.</span>
         </div>
-        <div *ngFor="let field of allActions;let actionIndex = index">
-            <div class="d-flex align-items-center justify-content-between action-list" *ngIf="field">
-                <span *ngIf="edit.status && !isHookAdded(field)"
-                    class="dsi dsi-plus-circle hover text-success fa-lg pl-1 pr-1 action-icon"
-                    (click)="addHookToStep(field)"></span>
-                <span *ngIf="edit.status && isHookAdded(field)"
-                    class="fas fa-check-circle text-secondary fa-lg pl-1 pr-1 action-icon"></span>
-                <span class="action-label">{{ field.label }}</span>
-                <div class="d-flex action-item">
-                    <div class="mr-1 action-type d-inline" [ngClass]="{'bg-success': field.type === 'success',
-                    'bg-warning': field.type === 'warning',
-                    'bg-danger': field.type === 'danger'}"></div>
-                    <span>
-                        {{ field.type === 'success' ? 'Type 1' : field.type === 'warning' ? 'Type 2' :
-                        'Type3'}}
-                    </span>
+        <ng-container *ngIf="allActions && allActions.length>0">
+            <div *ngFor="let field of allActions;let actionIndex = index">
+                <div class="attribute-item px-3 border-bottom d-flex align-items-center justify-content-start position-relative"
+                    *ngIf="field">
+                    <div class="d-flex align-items-center p-1 mr-3">
+                        <span *ngIf="edit.status && !isHookAdded(field)" class="dsi dsi-plus-circle hover"
+                            (click)="addHookToStep(field)"></span>
+                        <span *ngIf="edit.status && isHookAdded(field)" class="dsi dsi-check"></span>
+                    </div>
+                    <div class="attribute-name text-truncate mr-3" [ngbTooltip]="field.name">
+                        {{ field.name }}
+                    </div>
+                    <div class="attribute-url sub-heading text-truncate" [ngbTooltip]="field.url">
+                        {{ field.url }}
+                    </div>
+                    <div *ngIf="edit.status" class="attribute-actions d-flex align-items-center px-3">
+                        <span class="dsi dsi-edit hover mr-2" (click)="openNewActionWindow(field)"></span>
+                        <span class="dsi dsi-trash hover" (click)="openDeleteActionWindow(field)"></span>
+                    </div>
                 </div>
-                <span class="action-item text-truncate" placement="left" [ngbTooltip]="field.name">
-                    {{ field.name }}
-                </span>
-                <span *ngIf="edit.status" class="fas fa-cog text-secondary action-settings"
-                    (click)="openNewActionWindow(field)" placement="top" ngbTooltip="Edit hook"></span>
             </div>
-        </div>
+        </ng-container>
     </div>
 </div>
 
@@ -46,6 +67,7 @@
     class="new-action-window page-pagging position-fixed bg-white border-left p-4">
     <div class="d-flex align-items-center justify-content-between">
         <span class="font-20 fw-500">Add Action</span>
+        <span class="dsi dsi-close text-dark hover font-18" (click)="showNewActionWindow=false"></span>
     </div>
     <div class="d-flex flex-column mt-4" [formGroup]="actionHookForm">
         <div class="form-group">
@@ -111,8 +133,8 @@
         </div>
     </div>
     <div class="d-flex w-100 justify-content-end align-items-center mt-auto">
-        <button type="button" class="btn btn-primary w-100" (click)="showNewActionWindow=false;resetHookForm()"
-            id="createActionYes" [disabled]="actionHookForm.invalid">
+        <button type="button" class="btn btn-primary w-100" (click)="triggerHookSave()" id="createActionYes"
+            [disabled]="actionHookForm.invalid">
             Create Action
         </button>
     </div>
@@ -150,3 +172,6 @@
         </ng-container>
     </div>
 </ng-template>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+</odp-delete-modal>

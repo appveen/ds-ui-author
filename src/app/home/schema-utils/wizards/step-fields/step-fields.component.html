@@ -9,8 +9,8 @@
                             <span class="dsi dsi-minus-circle mr-2 hover" (click)="removeFromStep(fieldIndex)"
                                 *ngIf="edit.status" id="addAtribute"></span>
                         </div>
-                        <div class="attribute-name position-relative">
-                            <span class="text-dark font-14 fw-400">{{field.value.properties.name}}</span>
+                        <div class="attribute-name position-relative text-truncate">
+                            <span class="text-dark font-14 fw-400" [ngbTooltip]="field.value.properties.name">{{field.value.properties.name}}</span>
                         </div>
                         <div class="attribute-type position-relative">
                             <odp-field-type [field]="field.value" label="true"></odp-field-type>
@@ -35,8 +35,8 @@
                             <span class="dsi dsi-plus-circle mr-2 hover" (click)="addToStep(field,fieldIndex)"
                                 *ngIf="steps.length>0 && edit.status" id="addAtribute"></span>
                         </div>
-                        <div class="attribute-name position-relative">
-                            <span class="text-dark font-14 fw-400">{{field.value.properties.name}}</span>
+                        <div class="attribute-name position-relative text-truncate">
+                            <span class="text-dark font-14 fw-400" [ngbTooltip]="field.value.properties.name">{{field.value.properties.name}}</span>
                         </div>
                         <div class="attribute-type position-relative">
                             <odp-field-type [field]="field.value" label="true"></odp-field-type>

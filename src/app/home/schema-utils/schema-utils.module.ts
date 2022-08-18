@@ -45,6 +45,7 @@ import { SearchSettingsComponent } from './configuration/search-settings/search-
 import { ResetServiceComponent } from './reset-service/reset-service.component';
 import { StepFieldsComponent } from './wizards/step-fields/step-fields.component';
 import { StepActionsComponent } from './wizards/step-actions/step-actions.component';
+import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 
 @NgModule({
     imports: [
@@ -71,7 +72,8 @@ import { StepActionsComponent } from './wizards/step-actions/step-actions.compon
         MatAutocompleteModule,
         MatChipsModule,
         RoundRadioModule,
-        MonotypeEditorModule
+        MonotypeEditorModule,
+        DeleteModalModule
     ],
     declarations: [
         SchemaStructurePipe,

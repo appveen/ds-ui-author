@@ -91,8 +91,8 @@
 }
 
 .role-control {
-  min-width: 250px;
-  max-width: 250px;
+  min-width: 320px;
+  max-width: 320px;
 }
 
 .role-control-right {
@@ -238,14 +238,8 @@ textarea {
 }
 
 .tab-list {
-  min-height: 32px;
-  max-height: 32px;
-
-  .tab {
-    min-height: 32px;
-    max-height: 32px;
-    border-bottom: 3px solid transparent;
-  }
+  min-height: 40px;
+  max-height: 40px;
 }
 
 .add-step {

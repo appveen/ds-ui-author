@@ -63,6 +63,13 @@
   }
 }
 
+#hookFormat {
+  pre {
+    word-break: break-all;
+    white-space: break-spaces;
+  }
+}
+
 .field-error-symbol {
   top: 7px;
   right: 10px;

@@ -259,8 +259,8 @@
         <span class="font-20 fw-600">Preview of {{hooks.hookTitle}}</span>
         <span class="dsi dsi-close hover" (click)="showPreviewWindow=false"></span>
     </div>
-    <div class="modal-body my-5" id="hookFormat">
-        <pre [innerHTML]="htmlContent" class="pre"></pre>
+    <div class="my-5" id="hookFormat">
+        <pre [innerHTML]="htmlContent" class="pre border rounded bg-light p-3"></pre>
     </div>
     <div class="d-flexjustify-content-end align-items-center">
         <button class="btn btn-primary w-100" type="button" (click)="copyFormat();tooltip.open()">Copy</button>

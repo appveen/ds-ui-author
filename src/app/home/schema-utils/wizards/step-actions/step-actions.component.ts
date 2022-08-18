@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -17,6 +17,7 @@ export class StepActionsComponent implements OnInit {
   @Input() form: FormGroup;
   @Input() edit: any;
 
+  openDeleteModal: EventEmitter<any>;
   showNewActionWindow: boolean;
   actionHookForm: FormGroup;
   triggeredHookValidation: boolean;
@@ -48,6 +49,7 @@ export class StepActionsComponent implements OnInit {
       { name: 'Type 1', value: 'success' },
       { name: 'Type 2', value: 'warning' },
       { name: 'Type 3', value: 'danger' }];
+    this.openDeleteModal = new EventEmitter();
   }
 
   ngOnInit(): void {
@@ -89,9 +91,17 @@ export class StepActionsComponent implements OnInit {
       }
       (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'actions']) as FormArray).push(this.actionHookForm);
       this.form.markAsDirty();
-    } else {
-      this.resetHookForm();
     }
+    this.resetHookForm();
+    this.showNewActionWindow = false;
+  }
+
+  openDeleteActionWindow(hook?: any) {
+    this.openDeleteModal.emit({
+      title: 'Delete Action Hook?',
+      message: 'Are You Sure? You want to delete action hook: <b>' + hook.name + '</b>?',
+      hook
+    });
   }
 
   resetHookForm(hook?: any) {
@@ -127,9 +137,19 @@ export class StepActionsComponent implements OnInit {
       (this.form.get(['wizard', 'steps', selectedStep, 'actions']) as FormArray).push(this.actionHookForm);
       this.form.get('wizard').markAsDirty();
       this.form.markAsDirty();
-      this.ts.success(hook.name + ' is added successfully');
+      // this.ts.success(hook.name + ' is added successfully');
     }
 
+  }
+
+  removeHookFromStep(hook) {
+    const hId = hook.hookId;
+    const selectedStep = this.form.get('wizard.selectedStep').value;
+    const actionInStep = (this.form.get(['wizard', 'steps', selectedStep, 'actions'])).value;
+    const index = actionInStep.findIndex(e => e.hookId === hId);
+    if (index > -1) {
+      (this.form.get(['wizard', 'steps', selectedStep, 'actions']) as FormArray).removeAt(index);
+    }
   }
 
   uniqHookName() {
@@ -140,6 +160,19 @@ export class StepActionsComponent implements OnInit {
       if (hookIndex >= 0 && hookId != this.allActions[hookIndex].hookId) {
         this.actionHookForm.get('name').setErrors({ duplicateName: true });
       }
+    }
+  }
+
+  closeDeleteModal(data) {
+    if (data) {
+      const steps = this.form.get(['wizard', 'steps']) as FormArray;
+      steps.controls.forEach(step => {
+        const actionInStep = step.get(['actions']).value;
+        const actionIndex = actionInStep.findIndex(e => e.hookId === data.hook.hookId);
+        if (actionIndex > -1) {
+          (step.get(['actions']) as FormArray).removeAt(actionIndex);
+        }
+      });
     }
   }
 
@@ -188,5 +221,10 @@ export class StepActionsComponent implements OnInit {
       }
       return e;
     });
+  }
+
+  get selectedStepActions() {
+    const temp = (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'actions']) as FormArray).value;
+    return temp ? temp : [];
   }
 }

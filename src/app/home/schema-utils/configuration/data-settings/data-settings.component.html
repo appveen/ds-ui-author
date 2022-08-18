@@ -36,11 +36,11 @@
                 <div class="d-flex flex-column">
                     <div class="btn-group btn-group-toggle" (change)="patchVersionValue(true)" ngbRadioGroup
                         [ngModelOptions]="{ standalone: true }" [(ngModel)]="versionConfig.type">
-                        <label ngbButtonLabel class="btn btn-outline-accent">
+                        <label ngbButtonLabel class="btn btn-outline-dark">
                             <input ngbButton type="radio" value="count" [disabled]="!edit.status || !canEdit('S')" />
                             Versions
                         </label>
-                        <label ngbButtonLabel class="btn btn-outline-accent">
+                        <label ngbButtonLabel class="btn btn-outline-dark">
                             <input ngbButton type="radio" value="time" [disabled]="!edit.status || !canEdit('S')" />
                             Duration
                         </label>

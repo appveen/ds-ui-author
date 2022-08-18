@@ -48,7 +48,7 @@
                   selectedRole.name
                   }}</span>
                 <span #infoTooltip="ngbTooltip" *ngIf="edit.status"
-                  class="info fa fa-info-circle text-muted position-absolute" ngbTooltip="Maximum 40 chars allowed"
+                  class="info dsi dsi-info-circle text-muted position-absolute" ngbTooltip="Maximum 40 chars allowed"
                   container="body" placement="right">&nbsp;</span>
               </div>
             </div>
@@ -61,33 +61,30 @@
                 <span *ngIf="!edit.status" class="form-control-plaintext text-break text-justify">{{
                   selectedRole.description }}</span>
                 <span #infoTooltip="ngbTooltip" *ngIf="edit.status"
-                  class="info fa fa-info-circle text-muted position-absolute" ngbTooltip="Maximum 250 chars allowed"
+                  class="info dsi dsi-info-circle text-muted position-absolute" ngbTooltip="Maximum 250 chars allowed"
                   container="body" placement="right">&nbsp;</span>
               </div>
             </div>
           </div>
 
         </div>
-        <ng-container *ngIf="!selectedRole.skipReviewRole">
-          <div class="tab-list d-flex align-items-center border-bottom w-100">
-            <div class="tab px-3" [ngClass]="{ 'text-accent border-accent': activeTab === 1 }" (click)="activeTab = 1">
+        <div *ngIf="!selectedRole.skipReviewRole" class="border rounded w-100">
+          <div class="tab-list d-flex align-items-center border-bottom w-100 p-3 bg-light-gray text-uppercase">
+            <div class="tab px-3 font-13 hover"
+              [ngClass]="{ 'text-dark fw-500': activeTab === 1,'text-muted fw-400': activeTab !== 1 }"
+              (click)="activeTab = 1">
               Permission
             </div>
-            <div class="tab px-3" [ngClass]="{ 'text-accent border-accent': activeTab === 2 }" (click)="activeTab = 2"
-              *ngIf="!schemaFree">
+            <div class="tab px-3 font-13 hover"
+              [ngClass]="{ 'text-dark fw-500': activeTab === 2,'text-muted fw-400': activeTab !== 2 }"
+              (click)="activeTab = 2" *ngIf="!schemaFree">
               Dynamic Filters
             </div>
           </div>
-          <div class="tab-container d-flex align-items-start w-100">
-            <div id="tab-1" *ngIf="activeTab === 1">
-              <div class="d-flex flex-column w-100 my-3">
+          <div class="tab-container d-flex align-items-start w-100 p-4">
+            <div id="tab-1" class="w-100" *ngIf="activeTab === 1">
+              <div class="d-flex flex-column w-100 mb-3">
                 <div class="d-flex align-items-center">
-                  <!-- <select id="permissions" class="form-control input-text" (ngModelChange)="changePermission($event)"
-                    [disabled]="!edit.status && hasPermission('PMDSR')" [ngModel]="selectRoleType">
-                    <option *ngFor="let item of permissionOption" [value]="item.value">
-                      {{ item.label }}
-                    </option>
-                  </select> -->
                   <div class="d-flex align-items-center mr-3 my-3 hover" (click)="changePermission('manage')">
                     <odp-round-radio id="permissions" [edit]="{status:edit.status&&hasPermission('PMDSR')}"
                       [checked]="selectRoleType == 'manage'" (checkedChange)="changePermission('manage')">
@@ -119,51 +116,12 @@
                       (checkedChange)="canDelete = !canDelete" [disabled]="!hasPermission('PMDSR')"></odp-checkbox>
                     <span class="ml-2">Delete</span>
                   </div>
-
-
-                  <!-- <div class="form-check">
-                    <input class="ml-1" type="checkbox" value="" id="createCheckbox"
-                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canCreate"
-                      (change)="canCreate = !canCreate">
-                    <label class="ml-3" for="createCheckBox">Create</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="ml-1" type="checkbox" value="" id="editCheckbox"
-                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canEdit"
-                      (change)="canEdit = !canEdit">
-                    <label class="ml-3" for="editCheckbox">Edit</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="ml-1" type="checkbox" value="" id="deleteCheckbox"
-                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canDelete"
-                      (change)="canDelete = !canDelete">
-                    <label class="ml-3" for="deleteCheckbox">Delete</label>
-                  </div> -->
-
-                  <!-- <div class="form-check">
-                    <input class="ml-1" type="checkbox" value="" id="createCheckbox"
-                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canCreate"
-                      (change)="canCreate = !canCreate">
-                    <label class="ml-3" for="createCheckBox">Create</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="ml-1" type="checkbox" value="" id="editCheckbox"
-                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canEdit"
-                      (change)="canEdit = !canEdit">
-                    <label class="ml-3" for="editCheckbox">Edit</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="ml-1" type="checkbox" value="" id="deleteCheckbox"
-                      [disabled]="!hasPermission('PMDSR') || !edit.status" [checked]="canDelete"
-                      (change)="canDelete = !canDelete">
-                    <label class="ml-3" for="deleteCheckbox">Delete</label>
-                  </div> -->
                 </div>
               </div>
               <div class="d-flex w-100 mb-3" *ngIf="selectRoleType == 'view' && !schemaFree">
                 <span class="text-secondary font-weight-bold"></span>
-                <div class="d-flex flex-column">
-                  <div class="d-flex flex-column pt-3 position-relative fields-container">
+                <div class="d-flex flex-column w-100">
+                  <div class="d-flex flex-column pt-3 position-relative">
                     <div class="d-flex pb-2 border-bottom">
                       <div class="d-flex flex-row">
                         <span class="text-muted">
@@ -185,8 +143,8 @@
                 </div>
               </div>
             </div>
-            <div id="tab-2" *ngIf="activeTab === 2">
-              <div class="d-flex w-100 my-3">
+            <div id="tab-2" class="w-100" *ngIf="activeTab === 2">
+              <div class="d-flex w-100 mb-3">
                 <span class="text-dark font-weight-bold first-column">Enable Filters</span>
                 <div class="d-flex flex-column">
                   <odp-switch [(checked)]="hasConditions" [edit]="edit"></odp-switch>
@@ -212,26 +170,28 @@
                     </div>
                   </ng-container>
                 </div>
-                <div *ngIf="selectedMode == 'Advance'" class="rule-wrapper border rounded p-3 bg-white">
-                  <p>Write your filter in JSON</p>
-                  <odp-monotype-editor class="editor-wrapper" [edit]="edit" [(code)]="dynamicFilter">
-                  </odp-monotype-editor>
-                </div>
-                <div *ngIf="selectedMode == 'Expert'" class="rule-wrapper border rounded p-3 bg-white">
-                  <p>Write your Code</p>
+                <ng-container *ngIf="selectedMode == 'Advance'">
+                  <p class="font-13 fw-500 sub-heading">Write your filter in JSON</p>
+                  <div class="rule-wrapper border rounded py-3 bg-white">
+                    <odp-monotype-editor class="editor-wrapper" [edit]="edit" [(code)]="dynamicFilter">
+                    </odp-monotype-editor>
+                  </div>
+                </ng-container>
+                <div *ngIf="selectedMode == 'Expert'" class="rule-wrapper border rounded py-3 bg-white">
+                  <!-- <p>Write your Code</p> -->
                   <odp-monotype-editor class="editor-wrapper" [edit]="edit"></odp-monotype-editor>
                 </div>
               </ng-container>
             </div>
           </div>
-        </ng-container>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <ng-template #fieldStructure let-def="def" let-level="level">
-  <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 border-bottom">
+  <div class="field-wrapper d-flex align-items-center justify-content-between w-100 px-3 my-1">
     <div class="d-flex align-items-center">
       <span class="spacer border-right border-secondary" [ngStyle]="getSpacing(level)"></span>
       <span class="icon odp-pin text-muted mr-2 fa-xs mt-1" *ngIf="idField(def)"></span>

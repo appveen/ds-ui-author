@@ -60,7 +60,7 @@
           <div class="list-group-item d-flex align-items-center justify-content-start">
             <div class="item-name fw-500 d-flex align-items-center">
               <odp-checkbox [edit]="{status:true}"></odp-checkbox>
-              <span class="ml-2 pl-1 text-dark">{{srvc.name}}</span>
+              <span class="ml-2 pl-1 text-dark hover" (click)="viewService(i)">{{srvc.name}}</span>
               <span class="ml-2 version sub-heading font-11 text-uppercase">(v{{srvc.version}})</span>
               <span *ngIf="srvc.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
             </div>
@@ -85,6 +85,8 @@
                       (click)="toggleServiceStatus(i)" [ngbTooltip]="'Start v'+srvc.version" container="body"></span>
                     <span class="dsi dsi-stop hover mr-2" *ngIf="srvc.status == 'Active' && isStartStopService(i)"
                       (click)="toggleServiceStatus(i)" [ngbTooltip]="'Stop v'+srvc.version" container="body"></span>
+                    <span class="dsi dsi-ban hover mr-2" [ngbTooltip]="'Discard Draft'"
+                      *ngIf="srvc.draftVersion && canEditService(srvc._id)" (click)="discardDraft(i)"></span>
                     <span class="dsi dsi-edit hover mr-2" *ngIf="canEditService(srvc._id)"
                       (click)="editService(i)"></span>
                     <span class="dsi dsi-view hover mr-2" *ngIf="canEditService(srvc._id)"
