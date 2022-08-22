@@ -184,8 +184,8 @@
                             ngbTooltip="Edit">
                             <span class="dsi dsi-edit"></span>
                           </button>
-                          <button type="button" class="btn btn-link text-muted p-1" (click)="deleteAttribute(attr)"
-                            ngbTooltip="Delete">
+                          <button type="button" class="btn btn-link text-muted p-1"
+                            (click)="deleteAttributeConfirmation(attr)" ngbTooltip="Delete">
                             <span class="dsi dsi-trash"></span>
                           </button>
                         </div>
@@ -575,4 +575,7 @@
       </div>
     </div>
   </div>
+  <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+    <span class="font-20 text-success"></span>
+  </odp-delete-modal>
 </div>

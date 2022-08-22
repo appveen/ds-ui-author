@@ -1,41 +1,38 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   OnDestroy,
   OnInit,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModalRef, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
 import {
   GridApi,
-  GridOptions,
-  GridReadyEvent,
-  IDatasource,
-  IGetRowsParams,
+  GridOptions, IDatasource
 } from 'ag-grid-community';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
 
+import { MatDialog } from '@angular/material/dialog';
+import * as _ from 'lodash';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { UserDetails } from 'src/app/utils/interfaces/userDetails';
+import { FilterPipe } from 'src/app/utils/pipes/filter.pipe';
 import { AppService } from 'src/app/utils/services/app.service';
 import {
   CommonService,
-  GetOptions,
+  GetOptions
 } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
 import { SessionService } from '../../../utils/services/session.service';
 import { UserGridActionRendererComponent } from './user-grid-action.component';
-import * as _ from 'lodash';
-import { MatDialog } from '@angular/material/dialog';
-import { UserToGroupModalComponent } from './user-to-group-modal/user-to-group-modal.component';
 import { UserGridAppsRendererComponent } from './user-grid-apps.component ';
-import { FilterPipe } from 'src/app/utils/pipes/filter.pipe';
+import { UserToGroupModalComponent } from './user-to-group-modal/user-to-group-modal.component';
 
 @Component({
   selector: 'odp-user',
@@ -106,6 +103,9 @@ export class UserComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   search: boolean = false;
   ogUsersList: any;
+  openDeleteModal: EventEmitter<any> = new EventEmitter();
+  selectedAttr: any;
+
 
   constructor(
     private fb: FormBuilder,
@@ -1252,6 +1252,24 @@ export class UserComponent implements OnInit, OnDestroy {
     this.showAttributeSide(data);
   }
 
+  deleteAttributeConfirmation(attr) {
+    const self = this;
+    self.selectedAttr = attr;
+    const alertModal: any = {};
+    alertModal.statusChange = false;
+    alertModal.title = 'Delete Attribute';
+    alertModal.message = 'Are you sure you want to delete the attribute?';
+    alertModal._id = attr._id
+    self.openDeleteModal.emit(alertModal);
+  }
+
+  closeDeleteModal(event) {
+    if (event) {
+      this.deleteAttribute(this.selectedAttr)
+    }
+  }
+
+
   deleteAttribute(data) {
     const key = data['key'];
     delete this.details.attributes[key];
@@ -1271,7 +1289,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
           this.showAddAttribute = false;
           this.showLazyLoader = false;
-          this.ts.success('Custom Details Saved Successfully');
+          this.ts.success('Attribute deleted Successfully');
         },
         (err) => {
           this.ts.error(err.error.message);
