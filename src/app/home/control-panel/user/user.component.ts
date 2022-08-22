@@ -1005,10 +1005,6 @@ export class UserComponent implements OnInit, OnDestroy {
     // this.agGrid.api.purgeInfiniteCache();
   }
 
-  testToggle(event, test) {
-    console.log(event)
-  }
-
   toggleGroup(flag: boolean, groupId: string) {
     const index = this.selectedGroups.findIndex((e) => e === groupId);
     if (flag && index == -1) {
