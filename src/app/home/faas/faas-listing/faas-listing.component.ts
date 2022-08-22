@@ -208,7 +208,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     if (srvc.status.toLowerCase() === 'active') {
       return 'text-success';
     }
-    if (srvc.status.toLowerCase() === 'stopped') {
+    if (srvc.status.toLowerCase() === 'stopped' || srvc.status.toLowerCase() === 'undeployed') {
       return 'text-danger';
     }
     if (srvc.status.toLowerCase() === 'draft') {
@@ -218,6 +218,13 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       return 'text-warning';
     }
     return 'text-secondary';
+  }
+
+  getStatusLabel(srvc){
+    if (srvc.status.toLowerCase() === 'stopped' || srvc.status.toLowerCase() === 'undeployed') {
+      return 'Stopped';
+    }
+    return srvc.status;
   }
 
 
