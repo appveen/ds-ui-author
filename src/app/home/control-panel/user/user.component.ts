@@ -465,7 +465,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   get selectedUsers(): Array<any> {
-    return this.agGrid?.api?.getSelectedRows() || [];
+    return this.checkedUsers || [];
   }
 
   get isAllUserChecked() {
@@ -950,9 +950,11 @@ export class UserComponent implements OnInit, OnDestroy {
           this.ts.success(
             `Removed User(s) from ${this.selectedApp} App Successfully`
           );
+          this.checkedUsers = []
         },
         (err) => {
           console.log(err);
+          this.checkedUsers = []
           // this.agGrid.api.deselectAll();
           setTimeout(() => {
             // this.agGrid.api.purgeInfiniteCache();
@@ -975,11 +977,12 @@ export class UserComponent implements OnInit, OnDestroy {
     );
     this.removeSelectedModalRef.result.then(
       (close) => {
-        this.userToRemove = null;
         if (close) {
           this.removeSelectedUsers(params?.userIds);
+          this.userToRemove = null;
         } else {
           this.removeSelectedModalRef.close(true);
+          this.userToRemove = null;
         }
       },
       (dismiss) => {
