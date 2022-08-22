@@ -265,7 +265,7 @@
               }">
               <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail"
                 alt="Logo" />
-              <span *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail">{{selectedApp.firstLetter}}</span>
+              <span *ngIf="!selectedApp?.logo?.thumbnail">{{selectedApp.firstLetter}}</span>
             </div>
             <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" placement="bottom">
               {{ selectedApp._id }}
