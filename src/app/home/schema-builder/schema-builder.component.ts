@@ -11,7 +11,7 @@ import {
     AfterViewInit,
     TemplateRef
 } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators, FormArray, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -29,7 +29,6 @@ import { ManagePermissionsComponent } from '../schema-utils/manage-permissions/m
 import { AppService } from '../../utils/services/app.service';
 import { ShortcutService } from '../../utils/shortcut/shortcut.service';
 import { maxLenValidator } from 'src/app/home/custom-validators/min-max-validator';
-import { counterPaddingValidator, counterValidator } from 'src/app/home/custom-validators/counter-padding.validator';
 import { CanComponentDeactivate } from 'src/app/utils/guards/route.guard';
 import { IntegrationComponent } from 'src/app/home/schema-utils/integration/integration.component';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
@@ -1067,7 +1066,7 @@ export class SchemaBuilderComponent implements
         return (self.form.get('definition') as FormArray).controls;
     }
 
-    hasSameNameError(definition: AbstractControl<any>[]) {
+    hasSameNameError(definition: any[]) {
         let flag = false;
         if (definition) {
             definition.forEach(item => {
