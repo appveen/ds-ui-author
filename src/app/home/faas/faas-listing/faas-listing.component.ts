@@ -372,8 +372,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
 
   copyUrl(faas: any) {
     this.copied[faas._id] = true;
-    const url = 'https://' + this.commonService.userDetails.fqdn + faas.url;
-    this.appService.copyToClipboard(url);
+    this.appService.copyToClipboard(faas.url);
     setTimeout(() => {
       this.copied[faas._id] = false;
     }, 2000);
