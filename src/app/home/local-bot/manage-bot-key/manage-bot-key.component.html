@@ -24,7 +24,7 @@
     </div>
 </div>
 
-<div>
+<div style="height: 48vh">
     <!-- <ag-grid-angular #agGrid class="ag-theme-balham table" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
         [frameworkComponents]="frameworkComponents">
     </ag-grid-angular> -->
@@ -59,23 +59,23 @@
 
                     <div class="group-actions" style="flex-basis: 15%;">
                         <button type="button" class="btn btn-link text-muted p-1" (click)="confirmEndSession(key)"
-                            *ngIf="hasPermission('PMBA')">
+                            ngbTooltip="End Session" *ngIf="hasPermission('PMBA')">
                             <span class="dsi dsi-ban"></span>
                         </button>
                         <button type="button" class="btn btn-link text-muted p-1" (click)="confirmDeactivate(key)"
-                            *ngIf="key.isActive && hasPermission('PMBA')">
+                            ngbTooltip="Deactivate" *ngIf="key.isActive && hasPermission('PMBA')">
                             <span class="dsi dsi dsi-minus-circle"></span>
                         </button>
                         <button type="button" class="btn btn-link text-muted p-1" (click)="confirmReactivate(key)"
-                            *ngIf="!key.isActive && hasPermission('PMBA')">
+                            ngbTooltip="Reactivate" *ngIf="!key.isActive && hasPermission('PMBA')">
                             <span class="dsi dsi dsi-plus-circle"></span>
                         </button>
                         <button type="button" class="btn btn-link text-muted p-1" (click)="editBotKey(key)"
-                            *ngIf="hasPermission('PMBU')">
+                            ngbTooltip="Edit" *ngIf="hasPermission('PMBU')">
                             <span class="dsi dsi-edit"></span>
                         </button>
                         <button type="button" class="btn btn-link text-muted p-1" (click)="deleteBotKey(key)" *ngIf="
-                            hasPermission('PMBU')">
+                            hasPermission('PMBU')" ngbTooltip="Delete">
                             <span class="dsi dsi-trash"></span>
                         </button>
                     </div>

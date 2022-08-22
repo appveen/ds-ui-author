@@ -35,7 +35,7 @@ table {
 }
 
 .grid-container {
-  height: calc(100vh - 322px);
+  height: 48vh;
   display: grid;
 }
 
@@ -74,4 +74,9 @@ table {
       color: $secondary  !important;
     }
   }
+}
+
+.scroll-pane {
+  height: 100%;
+  overflow: auto;
 }

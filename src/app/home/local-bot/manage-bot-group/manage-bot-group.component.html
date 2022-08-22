@@ -60,7 +60,7 @@
                     </div>
                     <div class="group-actions">
                         <button type="button" class="btn btn-link text-muted p-1" (click)="removeGroupForUser(group)"
-                            *ngIf="hasPermission('PMBU')">
+                            *ngIf="hasPermission('PMBU')" ngbTooltip="Delete">
                             <span class="dsi dsi-trash"></span>
                         </button>
                     </div>

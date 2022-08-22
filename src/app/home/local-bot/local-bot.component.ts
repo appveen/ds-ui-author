@@ -109,7 +109,7 @@ export class LocalBotComponent implements OnInit {
 
   constructor(
     public commonService: CommonService,
-    private appService: AppService,
+    public appService: AppService,
     private router: Router,
     private ts: ToastrService,
     private fb: FormBuilder,
