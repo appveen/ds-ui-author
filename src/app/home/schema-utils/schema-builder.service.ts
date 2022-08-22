@@ -34,7 +34,7 @@ export class SchemaBuilderService {
 
     getPropertiesStructure(value?: any): FormGroup {
         const self = this;
-        const temp = self.fb.group({
+        const temp: FormGroup = self.fb.group({
             _type: [value.type],
             label: [value.properties && value.properties.label ? value.properties.label : null, [maxLenValidator(40)]],
             readonly: [value.properties && value.properties.readonly ? value.properties.readonly : false],
@@ -268,7 +268,7 @@ export class SchemaBuilderService {
     getDefinitionStructure(value?: any, _isGrpParentArray?: boolean): FormGroup {
         const key = value && value.key ? value.key : '';
         const type = value && value.type ? value.type : 'String';
-        const tempForm = this.fb.group({
+        const tempForm: FormGroup = this.fb.group({
             _fieldId: [uuid()],
             _placeholder: ['Untitled Attribute'],
             type: [type, [Validators.required]],
@@ -315,7 +315,7 @@ export class SchemaBuilderService {
                 if (value.properties && (value.properties._isParrentArray || value.properties._isGrpParentArray)) {
                     value.definition[i].properties._isGrpParentArray = true;
                 }
-                const tempDef = this.getDefinitionStructure(value.definition[i]);
+                const tempDef: any = this.getDefinitionStructure(value.definition[i]);
                 if (value.definition[i].properties && value.definition[i].properties.name) {
                     tempDef.get('properties.name').patchValue(value.definition[i].properties.name);
                 } else {
