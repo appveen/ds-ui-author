@@ -80,7 +80,7 @@ export class ManageBotGroupComponent implements OnInit {
   openGroupModal() {
     const dialogRef = this.dialog.open(UserToGroupModalComponent, {
       width: '60vw',
-      height: '65vh',
+      minHeight: '65vh',
       data: {
         groupList: this.allTeams,
         userGroups: this.userTeams,
