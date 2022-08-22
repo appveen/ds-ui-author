@@ -930,7 +930,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   removeSelectedUsers(userIds?: Array<string>) {
     if (!userIds) {
-      userIds = this.selectedUsers.map((e) => e._id);
+      userIds = this.checkedUsers.map((e) => e._id);
     }
     if (!userIds || userIds.length === 0) {
       return;
@@ -942,23 +942,16 @@ export class UserComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         () => {
-          this.fetchUsers()
-          // this.agGrid.api.deselectAll();
-          // setTimeout(() => {
-          //   this.agGrid.api.purgeInfiniteCache();
-          // }, 500);
           this.ts.success(
             `Removed User(s) from ${this.selectedApp} App Successfully`
           );
-          this.checkedUsers = []
+          this.fetchUsers()
+          this.checkedUsers = [];
+          this.isLoading = false
         },
         (err) => {
           console.log(err);
           this.checkedUsers = []
-          // this.agGrid.api.deselectAll();
-          setTimeout(() => {
-            // this.agGrid.api.purgeInfiniteCache();
-          }, 500);
           this.commonService.errorToast(
             err,
             'unable to remove selected user(s), please try after sometime'
@@ -977,12 +970,11 @@ export class UserComponent implements OnInit, OnDestroy {
     );
     this.removeSelectedModalRef.result.then(
       (close) => {
+        this.userToRemove = null;
         if (close) {
           this.removeSelectedUsers(params?.userIds);
-          this.userToRemove = null;
         } else {
           this.removeSelectedModalRef.close(true);
-          this.userToRemove = null;
         }
       },
       (dismiss) => {
