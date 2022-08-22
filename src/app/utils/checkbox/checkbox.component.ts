@@ -29,7 +29,7 @@ export class CheckboxComponent implements OnInit {
 
   }
 
-  
+
   onChange(value) {
     this.checked = value;
     this.checkedChange.emit(value);

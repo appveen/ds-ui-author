@@ -639,7 +639,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.showLazyLoader = false;
           this.closeWindow(true);
           this.initConfig();
-          this.agGrid.api?.purgeInfiniteCache();
+          // this.agGrid.api?.purgeInfiniteCache();
           this.ts.success('User Imported successfully');
           this.userInLocal = false;
           this.userInAzureAD = false;
@@ -672,7 +672,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.showLazyLoader = false;
           this.closeWindow(true);
           this.initConfig();
-          this.agGrid.api?.purgeInfiniteCache();
+          // this.agGrid.api?.purgeInfiniteCache();
           this.ts.success('User Imported successfully');
           this.userInLocal = false;
           this.userInAzureAD = false;
@@ -700,8 +700,9 @@ export class UserComponent implements OnInit, OnDestroy {
           this.showLazyLoader = false;
           this.closeWindow(true);
           this.initConfig();
-          this.agGrid.api?.purgeInfiniteCache();
+          // this.agGrid.api?.purgeInfiniteCache();
           this.ts.success('User created successfully');
+          this.fetchUsers()
         },
         (err) => {
           this.showLazyLoader = false;
@@ -952,9 +953,9 @@ export class UserComponent implements OnInit, OnDestroy {
         },
         (err) => {
           console.log(err);
-          this.agGrid.api.deselectAll();
+          // this.agGrid.api.deselectAll();
           setTimeout(() => {
-            this.agGrid.api.purgeInfiniteCache();
+            // this.agGrid.api.purgeInfiniteCache();
           }, 500);
           this.commonService.errorToast(
             err,
@@ -1001,7 +1002,11 @@ export class UserComponent implements OnInit, OnDestroy {
 
   sortModelChange(model: any) {
     this.apiConfig.sort = this.appService.getSortQuery(model);
-    this.agGrid.api.purgeInfiniteCache();
+    // this.agGrid.api.purgeInfiniteCache();
+  }
+
+  testToggle(event, test) {
+    console.log(event)
   }
 
   toggleGroup(flag: boolean, groupId: string) {
