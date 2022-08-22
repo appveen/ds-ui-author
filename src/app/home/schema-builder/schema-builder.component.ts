@@ -1050,7 +1050,10 @@ export class SchemaBuilderComponent implements
     }
 
     get canSchemaBeSaved() {
-        if (!this.hasSameNameError(this.definitions)) {
+        if (!this.isSchemaFree && this.hasSameNameError(this.definitions)) {
+            return false;
+        }
+        if (!this.isSchemaFree && this.form.hasError('invalidDynamicFilter')) {
             return false;
         }
         if (!this.isSchemaFree && (this.form.get('definition') as FormArray).length < 2) {

@@ -224,7 +224,7 @@
         </ng-container>
         <ng-container *ngIf="activeTab == 3">
           <div class="d-flex flex-column w-100">
-            <odp-manage-permissions #permissionsComponent [name]="name" [(role)]="role" [schemaFree]="isSchemaFree"
+            <odp-manage-permissions #permissionsComponent [name]="name" [form]="form" [(role)]="role" [schemaFree]="isSchemaFree"
               [(firstInit)]="manageRolesFirstInit" [(blockInvalidRole)]="blockInvalidRole" [definitions]="definitions"
               [edit]="edit" (oldRoleReset)="onOldRoleReset($event)" [ngClass]="{'d-none':activeTab != 3}">
             </odp-manage-permissions>

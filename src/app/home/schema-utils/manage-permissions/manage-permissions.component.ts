@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input, EventEmitter, OnDestroy, TemplateRef, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModalRef, NgbButtonLabel } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -19,6 +19,7 @@ export interface Definition {
 export class ManagePermissionsComponent implements OnInit, OnDestroy {
 
   @ViewChild('deleteModal', { static: false }) deleteModal: TemplateRef<HTMLElement>;
+  @Input() form: FormGroup;
   @Input() definitions: any;
   @Input() role: any;
   @Input() firstInit: boolean;
@@ -688,6 +689,19 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
   changePermission(event) {
     if (this.edit && this.edit.status) {
       this.selectRoleType = event;
+    }
+  }
+
+  get isInvalidJSON() {
+    if (this.dynamicFilter) {
+      try {
+        JSON.parse(this.dynamicFilter);
+        this.form.setErrors(null);
+        return false;
+      } catch (err) {
+        this.form.setErrors({ invalidDynamicFilter: true });
+        return true;
+      }
     }
   }
 }

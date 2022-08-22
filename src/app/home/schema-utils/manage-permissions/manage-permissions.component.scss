@@ -33,6 +33,15 @@
   }
 }
 
+.editor-error-message {
+  top: -100px;
+  left: 5px;
+  transition: 0.2s;
+
+  &.show {
+    top: 4px;
+  }
+}
 
 
 .field-wrapper {
