@@ -464,21 +464,6 @@ export class UserComponent implements OnInit, OnDestroy {
     return !this.totalCount;
   }
 
-  get selectedUsers(): Array<any> {
-    return this.agGrid?.api?.getSelectedRows() || [];
-  }
-
-  get isAllUserChecked() {
-    if (!!this.agGrid?.api) {
-      const selectedNodes = this.agGrid.api.getSelectedNodes();
-      const visibleRowCount = this.agGrid.api.getInfiniteRowCount();
-      return (
-        !!selectedNodes.length && visibleRowCount - selectedNodes.length < 2
-      );
-    }
-    return false;
-  }
-
   get invalidName() {
     return (
       this.userForm.get('userData.basicDetails.name').dirty &&
@@ -929,7 +914,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   removeSelectedUsers(userIds?: Array<string>) {
     if (!userIds) {
-      userIds = this.selectedUsers.map((e) => e._id);
+      userIds = this.checkedUsers.map((e) => e._id);
     }
     if (!userIds || userIds.length === 0) {
       return;
@@ -964,22 +949,19 @@ export class UserComponent implements OnInit, OnDestroy {
       );
   }
 
-  removeUsers(params?: { userIds?: Array<string>; single?: boolean }) {
-    this.userToRemove = null;
-    if (!!params?.single) {
-      this.userToRemove = !!params.userIds?.length ? params.userIds[0] : null;
-    }
+  removeUsers() {
+    this.userToRemove = this.checkedUsers.map((e) => e._id).join(', ');
     this.removeSelectedModalRef = this.commonService.modal(
       this.removeSelectedModal
     );
     this.removeSelectedModalRef.result.then(
       (close) => {
-        this.userToRemove = null;
         if (close) {
-          this.removeSelectedUsers(params?.userIds);
+          this.removeSelectedUsers(this.checkedUsers.map((e) => e._id));
         } else {
           this.removeSelectedModalRef.close(true);
         }
+        this.userToRemove = null;
       },
       (dismiss) => {
         this.userToRemove = null;
