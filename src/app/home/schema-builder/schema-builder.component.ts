@@ -11,7 +11,7 @@ import {
     AfterViewInit,
     TemplateRef
 } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -1049,9 +1049,33 @@ export class SchemaBuilderComponent implements
         return true;
     }
 
+    get canSchemaBeSaved() {
+        if (!this.hasSameNameError(this.definitions)) {
+            return false;
+        }
+        if (!this.isSchemaFree && (this.form.get('definition') as FormArray).length < 2) {
+            return false;
+        }
+        return true;
+    }
+
     get definitions() {
         const self = this;
         return (self.form.get('definition') as FormArray).controls;
+    }
+
+    hasSameNameError(definition: AbstractControl<any>[]) {
+        let flag = false;
+        if (definition) {
+            definition.forEach(item => {
+                if (item.hasError('sameName')) {
+                    flag = true;
+                } else if (item.get('definition')) {
+                    flag = this.hasSameNameError((item.get('definition') as FormArray).controls);
+                }
+            });
+        }
+        return flag;
     }
 
     populateWH(data) {

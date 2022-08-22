@@ -25,7 +25,7 @@
           (click)="enableEdit(true)" type="button" class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
           <span class="text">Edit</span>
         </button>
-        <button *ngIf="edit.status && hasWritePermission" (click)="checkAndSave();edit.status=false" type="button"
+        <button *ngIf="edit.status && hasWritePermission" (click)="checkAndSave();edit.status=false" type="button" [disabled]="!canSchemaBeSaved"
           class="edit-button btn btn-min-width btn-outline-primary mr-3" id="sbButtonSave">
           <span class="text">Save</span>
         </button>
