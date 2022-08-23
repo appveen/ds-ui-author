@@ -172,7 +172,8 @@
                 </div>
                 <ng-container *ngIf="selectedMode == 'Advance'">
                   <p class="font-13 fw-500 sub-heading">Write your filter in JSON</p>
-                  <div class="rule-wrapper border rounded py-3 bg-white">
+                  <div class="rule-wrapper border rounded py-4 bg-white position-relative" [ngClass]="{'border-danger':isInvalidJSON}">
+                    <small class="text-danger editor-error-message position-absolute" [ngClass]="{'show':isInvalidJSON}">JSON is Invalid</small>
                     <odp-monotype-editor class="editor-wrapper" [edit]="edit" [(code)]="dynamicFilter">
                     </odp-monotype-editor>
                   </div>

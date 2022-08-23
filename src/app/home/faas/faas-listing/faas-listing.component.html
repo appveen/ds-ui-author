@@ -50,7 +50,7 @@
           </div>
           <div class="sub-heading item-status d-flex align-items-center">
             <span class="fa fa-circle mr-2" [ngClass]="getStatusClass(item)"></span>
-            <span class="text font-12 fw-400">{{item.status}}</span>
+            <span class="text font-12 fw-400">{{getStatusLabel(item)}}</span>
           </div>
           <div class="sub-heading item-last-invoked">
             <span *ngIf="item.lastInvoked">{{item.lastInvoked | date:'medium'}}</span>

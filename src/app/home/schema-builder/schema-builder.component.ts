@@ -29,7 +29,6 @@ import { ManagePermissionsComponent } from '../schema-utils/manage-permissions/m
 import { AppService } from '../../utils/services/app.service';
 import { ShortcutService } from '../../utils/shortcut/shortcut.service';
 import { maxLenValidator } from 'src/app/home/custom-validators/min-max-validator';
-import { counterPaddingValidator, counterValidator } from 'src/app/home/custom-validators/counter-padding.validator';
 import { CanComponentDeactivate } from 'src/app/utils/guards/route.guard';
 import { IntegrationComponent } from 'src/app/home/schema-utils/integration/integration.component';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
@@ -1049,9 +1048,36 @@ export class SchemaBuilderComponent implements
         return true;
     }
 
+    get canSchemaBeSaved() {
+        if (!this.isSchemaFree && this.hasSameNameError(this.definitions)) {
+            return false;
+        }
+        if (!this.isSchemaFree && this.form.hasError('invalidDynamicFilter')) {
+            return false;
+        }
+        if (!this.isSchemaFree && (this.form.get('definition') as FormArray).length < 2) {
+            return false;
+        }
+        return true;
+    }
+
     get definitions() {
         const self = this;
         return (self.form.get('definition') as FormArray).controls;
+    }
+
+    hasSameNameError(definition: any[]) {
+        let flag = false;
+        if (definition) {
+            definition.forEach(item => {
+                if (item.hasError('sameName')) {
+                    flag = true;
+                } else if (item.get('definition')) {
+                    flag = this.hasSameNameError((item.get('definition') as FormArray).controls);
+                }
+            });
+        }
+        return flag;
     }
 
     populateWH(data) {

@@ -330,7 +330,7 @@ export class GlobalSchemasComponent implements
             .subscribe(res => {
                 self.showLazyLoader = false;
                 let temp: any;
-                if (res.definition) {
+                if (res.definition && res.definition[0]) {
                     temp = {
                         name: res.name,
                         type: res.definition[0].type,
@@ -343,7 +343,7 @@ export class GlobalSchemasComponent implements
                         description: res.description
                     };
                 }
-                if (res.definition && res.definition[0].definition) {
+                if (res.definition && res.definition[0] && res.definition[0].definition) {
                     temp.definition = self.schemaService.generateStructure(res.definition[0].definition);
                 } else {
                     temp.definition = [];
