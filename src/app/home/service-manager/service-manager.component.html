@@ -88,16 +88,16 @@
                     <span class="dsi dsi-ban hover mr-2" [ngbTooltip]="'Discard Draft'"
                       *ngIf="srvc.draftVersion && canEditService(srvc._id)" (click)="discardDraft(srvc._id)"
                       container="body"></span>
-                    <span class="dsi dsi-edit hover mr-2" *ngIf="canEditService(srvc._id)"
+                    <span class="dsi dsi-edit hover mr-2" *ngIf="canEditService(srvc._id)" ngbTooltip="Edit"
                       (click)="editService(i)"></span>
-                    <span class="dsi dsi-view hover mr-2" *ngIf="canEditService(srvc._id)"
+                    <span class="dsi dsi-view hover mr-2" *ngIf="canEditService(srvc._id)" ngbTooltip="View"
                       (click)="viewService(i)"></span>
                   </ng-container>
-                  <span class="dsi dsi-copy hover mr-2" *ngIf="canCloneService(srvc._id)"
+                  <span class="dsi dsi-copy hover mr-2" *ngIf="canCloneService(srvc._id)" ngbTooltip="Clone"
                     (click)="cloneService(i)"></span>
-                  <span class="dsi dsi-trash hover mr-2" *ngIf="canDeleteService(srvc._id)"
+                  <span class="dsi dsi-trash hover mr-2" *ngIf="canDeleteService(srvc._id)" ngbTooltip="Delete"
                     (click)="deleteService(i)"></span>
-                  <span class="api-icon hover mr-2 font-11" (click)="openDocs(i)">API</span>
+                  <span class="api-icon hover mr-2 font-11" (click)="openDocs(i)" ngbTooltip="Open Docs">API</span>
 
                   <ng-container *ngIf="canEditService(srvc._id) && easterEggEnabled">
                     <span class="text-muted mr-2">|</span>

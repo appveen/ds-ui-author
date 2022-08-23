@@ -48,14 +48,15 @@
     <div class="tab-content w-100 pt-3">
       <ng-container *ngIf="activeTab == 1">
         <div class="row" style="max-height: inherit">
-          <div class="col-4" style="padding: 20px 0 20px 20px">
+          <div class="col-4 upload-section">
             <span class="ml-3 font-weight-bold">Logo</span>
             <div class="d-flex align-items-start pt-2 mb-4">
               <div class="d-flex flex-column">
                 <span class="d-flex">
-                  <span class="text-secondary pl-3">Upload your logo, to add your brand identity to app center
+                  <span class="text-secondary pl-3" style="width: 20vw">Upload your logo, to add your brand identity to
+                    app center
                     (Recommended size: 216px x 72 px)</span>
-                  <span class="ml-auto text-danger mr-3" (click)="appData.logo.full = undefined"
+                  <span class="ml-auto text-danger mr-3 hover" (click)="appData.logo.full = undefined"
                     *ngIf="appData.logo.full">Remove</span>
                 </span>
                 <label class="drop-box-logo drop-box d-flex align-items-center justify-content-center m-3">
@@ -67,6 +68,25 @@
                 </label>
               </div>
             </div>
+            <!-- <span class="ml-3 font-weight-bold">Thumbnail</span>
+            <div class="d-flex align-items-start pt-2 mb-4">
+              <div class="d-flex flex-column">
+                <span class="d-flex">
+                  <span class="text-secondary pl-3" style="width: 22vw">Upload your thumbnail for the app
+                    (Recommended size: 72px x 72 px)</span>
+                  <span class="ml-auto text-danger mr-3 hover" (click)="appData.logo.thumbnail = undefined"
+                    *ngIf="appData.logo.thumbnail">Remove</span>
+                </span>
+                <label class="drop-box-thumbnail drop-box d-flex align-items-center justify-content-center m-3">
+                  <input type="file" name="logoFile" id="logoFile" class="d-none"
+                    (odpUploadImage)="imageUpload($event, 'thumbnail')" imageWidth="216" />
+                  <img *ngIf="appData.logo.thumbnail" [src]="appData.logo.thumbnail"
+                    class="drop-box-thumbnail-holder" />
+                  <i *ngIf="!appData.logo.thumbnail" class="dsi dsi-upload mr-1" style="color:#44A8F1"></i>
+                  <span *ngIf="!appData.logo.thumbnail" style="color:#44A8F1">Upload</span>
+                </label>
+              </div>
+            </div> -->
             <span class="ml-3 font-weight-bold">Accent Color</span>
             <div class="d-flex align-items-start pt-2">
               <div class="d-flex flex-column">

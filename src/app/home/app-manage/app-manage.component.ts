@@ -432,6 +432,14 @@ export class AppManageComponent implements OnInit, OnDestroy {
         if (!this.changesDone) {
             return;
         }
+        if (self.appData && self.appData.logo) {
+            if (!self.appData.logo.full) {
+                self.appData.logo.full = null;
+            }
+            if (!self.appData.logo.thumbnail) {
+                self.appData.logo.thumbnail = null;
+            }
+        }
         self.commonService.put('user', '/data/app/' + self.appData._id, self.appData).subscribe(res => {
             self.oldData = self.appService.cloneObject(self.appData);
             self.ts.success('App saved successfully');
