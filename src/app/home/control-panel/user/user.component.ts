@@ -960,22 +960,19 @@ export class UserComponent implements OnInit, OnDestroy {
       );
   }
 
-  removeUsers(params?: { userIds?: Array<string>; single?: boolean }) {
-    this.userToRemove = null;
-    if (!!params?.single) {
-      this.userToRemove = !!params.userIds?.length ? params.userIds[0] : null;
-    }
+  removeUsers() {
+    this.userToRemove = this.checkedUsers.map((e) => e._id).join(', ');
     this.removeSelectedModalRef = this.commonService.modal(
       this.removeSelectedModal
     );
     this.removeSelectedModalRef.result.then(
       (close) => {
-        this.userToRemove = null;
         if (close) {
-          this.removeSelectedUsers(params?.userIds);
+          this.removeSelectedUsers(this.checkedUsers.map((e) => e._id));
         } else {
           this.removeSelectedModalRef.close(true);
         }
+        this.userToRemove = null;
       },
       (dismiss) => {
         this.userToRemove = null;

@@ -86,7 +86,8 @@
                     <span class="dsi dsi-stop hover mr-2" *ngIf="srvc.status == 'Active' && isStartStopService(i)"
                       (click)="toggleServiceStatus(i)" [ngbTooltip]="'Stop v'+srvc.version" container="body"></span>
                     <span class="dsi dsi-ban hover mr-2" [ngbTooltip]="'Discard Draft'"
-                      *ngIf="srvc.draftVersion && canEditService(srvc._id)" (click)="discardDraft(i)"></span>
+                      *ngIf="srvc.draftVersion && canEditService(srvc._id)" (click)="discardDraft(srvc._id)"
+                      container="body"></span>
                     <span class="dsi dsi-edit hover mr-2" *ngIf="canEditService(srvc._id)" ngbTooltip="Edit"
                       (click)="editService(i)"></span>
                     <span class="dsi dsi-view hover mr-2" *ngIf="canEditService(srvc._id)" ngbTooltip="View"
