@@ -34,6 +34,7 @@
 
 .list-group-item {
   overflow: hidden;
+
   &:hover {
     .item-actions {
       right: 0;
@@ -106,5 +107,16 @@
   &.header {
     font-weight: 400;
     height: 40px;
+  }
+}
+
+.more-options {
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+  min-width: 140px;
+
+  .list-group-item {
+    height: 36px;
   }
 }

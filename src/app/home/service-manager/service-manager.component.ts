@@ -168,20 +168,15 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       }
     });
 
-    // this.changeAppSubscription = this.commonService.appChange.subscribe(
-    //   (_app) => {
-    //     this.app = this.commonService.app._id;
-    //     this.showLazyLoader = true;
-    //     this.commonService.apiCalls.componentLoading = false;
-    //     this.serviceList = [];
-    //     this.resetSearch();
-    //     this.getServices();
-    //   }
-    // );
+    this.commonService.appChange.subscribe((_app: any) => {
+      this.showLazyLoader = true;
+      this.commonService.apiCalls.componentLoading = false;
+      this.getServices();
+    });
     // this.form.get('name').valueChanges.subscribe(_val => {
-    //     this.form.controls.api.patchValue('/' + _.camelCase(_val));
-    //     this.form.get(['definition', 0, '_id', 'prefix']).patchValue(_.toUpper(_.camelCase(_val.substring(0, 3))));
-    //     this.form.get(['definition', 0, '_id', 'counter']).patchValue(1001);
+    //   this.form.controls.api.patchValue('/' + _.camelCase(_val));
+    //   this.form.get(['definition', 0, '_id', 'prefix']).patchValue(_.toUpper(_.camelCase(_val.substring(0, 3))));
+    //   this.form.get(['definition', 0, '_id', 'counter']).patchValue(1001);
     // });
   }
 

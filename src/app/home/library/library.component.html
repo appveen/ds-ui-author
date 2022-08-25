@@ -10,14 +10,15 @@
   <div class="options d-flex justify-content-between align-items-center w-100 pt-2 mb-4">
     <div class="fw-600 font-22">Libraries</div>
     <div class="d-flex align-items-center">
-      <odp-search-box (enteredText)="search($event)" (reset)="clearSearch();"></odp-search-box>
-      <button class="add-new btn btn-primary ml-3 d-flex align-items-center" *ngIf="hasManagePermission('GS')" (click)="newLibrary()">
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+      <button class="add-new btn btn-primary ml-3 d-flex align-items-center" *ngIf="hasManagePermission('GS')"
+        (click)="newLibrary()">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New</span>
       </button>
     </div>
   </div>
-  <div class="card-container" (scroll)="loadMore($event)">
+  <div class="card-container">
     <div class="list-group">
       <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500">
         <div class="d-flex align-items-center justify-content-start h-100">
@@ -39,7 +40,7 @@
               <div class="item-attribute-count text-center">{{library._attributes}}</div>
               <div class="item-reference-count text-center">{{library._references}}</div>
             </div>
-            <div class="item-actions d-flex align-items-center justify-content-end">
+            <!-- <div class="item-actions d-flex align-items-center justify-content-end">
               <span id="lib-view" class="dsi dsi-view hover mr-2" [routerLink]="['/app/',app,'gs',library._id]"></span>
               <span *ngIf="canEditLibrary(library._id)" id="lib-edit" class="dsi dsi-edit hover mr-2"
                 (click)="editLibrary(i)"></span>
@@ -47,77 +48,31 @@
                 class="dsi dsi-copy hover mr-2" (click)="cloneLibrary(i)"></span>
               <span *ngIf="canEditLibrary(library._id)" id="lib-delete" class="dsi dsi-trash hover mr-2"
                 (click)="deleteLibrary(i);"></span>
+            </div> -->
+            <div class="item-actions d-flex align-items-center justify-content-end">
+              <span id="lib-view" class="fw-600 font-13 hover mr-3" [routerLink]="['/app/',app,'gs',library._id]">View</span>
+              <span id="lib-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
+                (click)="showDropDown($event,i)"></span>
+              <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed"
+                (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
+                (outside)="showOptionsDropdown[i]=false">
+                <div id="lib-edit" class="list-group-item list-group-item-action py-2" *ngIf="canEditLibrary(library._id)" (click)="editLibrary(i)">
+                  Edit
+                </div>
+                <div id="lib-clone" class="list-group-item list-group-item-action py-2"
+                  *ngIf="canEditLibrary(library._id) && hasManagePermission('GS')" (click)="cloneLibrary(i)">
+                  Clone
+                </div>
+                <div id="lib-delete" class="list-group-item list-group-item-action py-2" *ngIf="canEditLibrary(library._id)"
+                  (click)="deleteLibrary(i);">
+                  Delete
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </ng-container>
     </div>
-    <!-- <ng-container *ngFor="let library of libraryList;let i=index">
-      <div class="card m-2" *ngIf="hasPermissionForLibrary(library._id)">
-        <div class="card-header bg-white border-0 p-2">
-          <div class="card-title m-0">
-            <span class="name d-inline-block font-weight-bold" [attr.title]="library.name">{{library.name}}</span>
-          </div>
-        </div>
-        <div class="card-body pt-2">
-          <div class="row my-2">
-            <div class="col">
-              <div>
-                <span class="odp-attribute text-muted"></span>
-                <span class="count font-weight-bold">{{library._attributes}}</span>
-              </div>
-              <div>
-              </div>
-              <small class="text-muted">Attributes</small>
-            </div>
-            <div class="col">
-              <div>
-                <span class="odp-references text-muted"></span>
-                <span class="count font-weight-bold">{{library._references}}</span>
-              </div>
-              <div>
-                <small class="text-muted">References</small>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-footer p-0">
-          <div class="button-grid bg-light clearfix" [ngClass]="{'active':showCardMenu[i]}"
-            *ngIf="canEditLibrary(library._id)">
-            <div class="toggler" id="lib-toggler" (click)="showCardMenu[i]=!showCardMenu[i]">
-              <span class="fa fa-angle-up"></span>
-            </div>
-            <div class="button float-left w-50 pl-4 py-2 text-secondary hover" id="lib-view"
-              [routerLink]="['/app/',app,'gs',library._id]">
-              <span class="dsi dsi-view mr-2"></span>
-              <span class="text">View</span>
-            </div>
-            <div class="button float-left w-50 pl-4 py-2 text-secondary hover" (click)="editLibrary(i)" id="lib-edit">
-              <span class="dsi dsi-editcil-alt mr-2"></span>
-              <span class="text">Edit</span>
-            </div>
-            <div *ngIf="hasManagePermission('GS')" class="button float-left w-50 pl-4 py-2 text-secondary hover"
-              id="lib-clone" (click)="cloneLibrary(i)">
-              <span class="fa fa-copy mr-2"></span>
-              <span class="text">Clone</span>
-            </div>
-            <div class="button float-left w-50 pl-4 py-2 text-secondary hover" id="lib-delete"
-              (click)="deleteLibrary(i);showCardMenu[i]=false">
-              <span class="dsi dsi-trash mr-2"></span>
-              <span class="text">Delete</span>
-            </div>
-          </div>
-          <div class="button-grid bg-light clearfix only-view" [ngClass]="{'active':showCardMenu[i]}"
-            *ngIf="!canEditLibrary(library._id)">
-            <div class="button float-left w-50 pl-4 py-2 text-secondary hover"
-              [routerLink]="['/app/',app,'gs',library._id]">
-              <span class="dsi dsi-view mr-2"></span>
-              <span class="text">View</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-container> -->
   </div>
 </div>
 

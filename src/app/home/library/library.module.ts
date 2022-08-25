@@ -8,6 +8,7 @@ import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
+import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
 
 const routes = [
   { path: '', component: LibraryComponent },
@@ -22,7 +23,8 @@ const routes = [
     BreadcrumbModule,
     SearchBoxModule,
     DeleteModalModule,
-    AutoFocusModule
+    AutoFocusModule,
+    CommonFilterModule
   ],
   declarations: [
     LibraryComponent
