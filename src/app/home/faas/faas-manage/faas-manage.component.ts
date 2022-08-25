@@ -53,9 +53,15 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     this.selectedFontSize = 14;
     this.ele.nativeElement.classList.add('h-100');
     this.logs = [];
+    this.breadcrumbPaths.push({
+      active: false,
+      label: 'Function',
+      url: '/app/' + this.commonService.app._id + '/faas'
+    });
   }
 
   ngOnInit(): void {
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.route.params.subscribe(params => {
       if (params && params.id) {
         this.edit.id = params.id;
@@ -97,6 +103,11 @@ export class FaasManageComponent implements OnInit, OnDestroy {
       delete this.faasData._metadata;
       this.oldData = this.appService.cloneObject(this.faasData);
       this.appService.updateCodeEditorState.emit(this.edit);
+      this.breadcrumbPaths.push({
+        active: true,
+        label: res.name + (this.edit ? ' (Edit)' : '')
+      });
+      this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     }, err => {
       this.apiCalls.getFaas = false;
       this.commonService.errorToast(err);

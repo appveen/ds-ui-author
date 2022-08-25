@@ -8,6 +8,8 @@ import { GetOptions, CommonService } from 'src/app/utils/services/common.service
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { switchMap } from 'rxjs/operators';
+import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 
 @Component({
   selector: 'odp-faas-listing',
@@ -40,6 +42,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   selectedItemEvent: any
   selectedLibrary: any;
   sortModel: any;
+  breadcrumbPaths: Array<Breadcrumb>;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -69,8 +72,13 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.showOptionsDropdown = {};
     this.showLazyLoader = true;
     this.sortModel = {};
+    this.breadcrumbPaths = [{
+      active: true,
+      label: 'Functions'
+    }];
   }
   ngOnInit() {
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.commonService.apiCalls.componentLoading = false;
     this.getFaas();
     this.form.get('api').disable();
@@ -117,9 +125,12 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   }
 
   getFaas() {
-    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`).pipe((ev: any) => {
-      return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, { count: ev });
-    }).subscribe(res => {
+    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`).pipe(
+      switchMap((ev: any) => {
+        this.totalCount = ev;
+        return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, { count: ev });
+      })
+    ).subscribe(res => {
       res.forEach(item => {
         item.url = 'https://' + this.commonService.userDetails.fqdn + item.url;
         this.faasList.push(item);

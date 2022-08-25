@@ -1,7 +1,7 @@
 <div class="faas-page d-flex flex-column w-100 bg-light-gray page-padding">
   <div class="d-flex justify-content-between align-items-center w-100 pt-2 pb-4">
     <div class="font-22">
-      <span class="fw-600 mr-2">Functions ({{totalCount}})</span>
+      <span class="fw-600 mr-2">Functions</span>
       <span></span>
     </div>
     <div class="d-flex align-items-center">
@@ -23,11 +23,27 @@
     <div *ngIf="records.length>0" class="list-group mb-3">
       <div
         class="list-group-item header d-flex align-items-center justify-content-start py-0 bg-light text-uppercase font-11 fw-500">
-        <div class="item-name">Name</div>
+        <div (click)="applySort('name')" class="hover d-flex align-items-center item-name">
+          <span class="mr-2">Name</span>
+          <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
+        </div>
         <div class="d-flex align-items-center">
-          <div class="item-url">URL</div>
-          <div class="item-status">Status</div>
-          <div class="item-last-invoked">Last Invoked</div>
+          <div (click)="applySort('url')" class="hover d-flex align-items-center item-url">
+            <span class="mr-2">URL</span>
+            <span *ngIf="sortModel['url']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['url']==-1" class="dsi dsi-drop-up"></span>
+          </div>
+          <div (click)="applySort('status')" class="hover d-flex align-items-center item-status">
+            <span class="mr-2">Status</span>
+            <span *ngIf="sortModel['status']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['status']==-1" class="dsi dsi-drop-up"></span>
+          </div>
+          <div (click)="applySort('lastInvoked')" class="hover d-flex align-items-center item-last-invoked">
+            <span class="mr-2">Last Invoked</span>
+            <span *ngIf="sortModel['lastInvoked']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['lastInvoked']==-1" class="dsi dsi-drop-up"></span>
+          </div>
         </div>
         <div class="d-flex w-100 justify-content-end">
           <div class="item-actions"></div>
