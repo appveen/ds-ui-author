@@ -30,9 +30,9 @@
           <div class="item-actions">&nbsp;</div>
         </div>
       </div>
-      <div *ngIf="!libraryList || libraryList.length==0" class="list-group-item">No Records Found</div>
+      <div *ngIf="!records || records.length==0" class="list-group-item">No Records Found</div>
 
-      <ng-container *ngFor="let library of libraryList;let i=index">
+      <ng-container *ngFor="let library of records;let i=index">
         <div *ngIf="hasPermissionForLibrary(library._id)" class="list-group-item">
           <div class="d-flex align-items-center justify-content-start h-100" [attr.title]="library.name">
             <div class="item-name text-dark fw-500">{{library.name}}</div>

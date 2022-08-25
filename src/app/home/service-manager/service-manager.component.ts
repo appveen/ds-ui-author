@@ -839,7 +839,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   showDropDown(event: any, i: number) {
-    console.log(event);
     this.selectedItemEvent = event;
     Object.keys(this.showOptionsDropdown).forEach(key => {
       this.showOptionsDropdown[key] = false;

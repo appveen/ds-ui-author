@@ -353,7 +353,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
         self.selectedRow = event;
         self.selectedAgent = event.data;
         self.showContextMenu = true;
-        console.log(event);
     }
     closeContextMenu() {
         const self = this;

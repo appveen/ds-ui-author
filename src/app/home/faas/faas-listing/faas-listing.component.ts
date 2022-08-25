@@ -36,6 +36,10 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   showLazyLoader: boolean;
   easterEggEnabled: boolean;
   copied: any;
+  showOptionsDropdown: any;
+  selectedItemEvent: any
+  selectedLibrary: any;
+  sortModel: any;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -62,26 +66,28 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     };
     this.openDeleteModal = new EventEmitter();
     this.copied = {};
+    this.showOptionsDropdown = {};
+    this.showLazyLoader = true;
+    this.sortModel = {};
   }
   ngOnInit() {
     this.commonService.apiCalls.componentLoading = false;
-    this.getFaasCount();
     this.getFaas();
     this.form.get('api').disable();
     this.form.get('name').valueChanges.subscribe(val => {
       this.form.get('api').patchValue(`/api/a/faas/${this.commonService.app._id}/${_.camelCase(val)}`);
     });
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
-      this.resetSearch();
+      this.getFaas();
     });
     this.subscriptions['faas.delete'] = this.commonService.faas.delete.subscribe(data => {
-      this.resetSearch();
+      this.getFaas();
     });
     this.subscriptions['faas.status'] = this.commonService.faas.status.subscribe(data => {
-      this.resetSearch();
+      this.getFaas();
     });
     this.subscriptions['faas.new'] = this.commonService.faas.new.subscribe(data => {
-      this.resetSearch();
+      this.getFaas();
     });
   }
 
@@ -111,7 +117,9 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   }
 
   getFaas() {
-    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, this.apiConfig).subscribe(res => {
+    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`).pipe((ev: any) => {
+      return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, { count: ev });
+    }).subscribe(res => {
       res.forEach(item => {
         item.url = 'https://' + this.commonService.userDetails.fqdn + item.url;
         this.faasList.push(item);
@@ -119,37 +127,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     }, err => {
       this.commonService.errorToast(err);
     });
-  }
-
-  getFaasCount() {
-    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`, { filter: this.apiConfig.filter }).subscribe(res => {
-      this.totalCount = res;
-    }, err => {
-      this.commonService.errorToast(err);
-    });
-  }
-
-  resetSearch() {
-    this.searchTerm = null;
-    this.faasList = [];
-    this.apiConfig.filter = {};
-    this.getFaasCount();
-    this.getFaas();
-  }
-
-  search(value) {
-    this.searchTerm = value;
-    if (!value || !value.trim()) {
-      return;
-    }
-    if (!this.apiConfig.filter) {
-      this.apiConfig.filter = {};
-    }
-    this.searchTerm = value;
-    this.apiConfig.filter.name = '/' + value.trim() + '/';
-    this.faasList = [];
-    this.getFaasCount();
-    this.getFaas();
   }
 
   canManageFaas(id: string) {
@@ -220,7 +197,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     return 'text-secondary';
   }
 
-  getStatusLabel(srvc){
+  getStatusLabel(srvc) {
     if (srvc.status.toLowerCase() === 'stopped' || srvc.status.toLowerCase() === 'undeployed') {
       return 'Stopped';
     }
@@ -378,11 +355,77 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     }, 2000);
   }
 
+  applySort(field: string) {
+    if (!this.sortModel[field]) {
+      this.sortModel = {};
+      this.sortModel[field] = 1;
+    } else if (this.sortModel[field] == 1) {
+      this.sortModel[field] = -1;
+    } else {
+      delete this.sortModel[field];
+    }
+  }
+
+  showDropDown(event: any, i: number) {
+    this.selectedItemEvent = event;
+    Object.keys(this.showOptionsDropdown).forEach(key => {
+      this.showOptionsDropdown[key] = false;
+    })
+    this.selectedLibrary = this.faasList[i];
+    this.showOptionsDropdown[i] = true;
+  }
+
+  private compare(a: any, b: any) {
+    if (a > b) {
+      return 1;
+    } else if (a < b) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
+  get dropDownStyle() {
+    let top = (this.selectedItemEvent.clientY + 10);
+    if (this.selectedItemEvent.clientY > 430) {
+      top = this.selectedItemEvent.clientY - 106
+    }
+    return {
+      top: top + 'px',
+      right: '50px'
+    };
+  }
 
   get records() {
-    if (!this.faasList) {
-      return [];
+    let records = this.commonFilter.transform(this.faasList, 'name', this.searchTerm);
+    const field = Object.keys(this.sortModel)[0];
+    if (field) {
+      records = records.sort((a, b) => {
+        if (this.sortModel[field] == 1) {
+          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+            return this.compare((a[field]), (b[field]));
+          } else {
+            return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
+          }
+        } else if (this.sortModel[field] == -1) {
+          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+            return this.compare((b[field]), (a[field]));
+          } else {
+            return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
+          }
+        } else {
+          return 0;
+        }
+      });
+    } else {
+      records = records.sort((a, b) => {
+        return this.compare(b._metadata.lastUpdated, a._metadata.lastUpdated);
+      });
     }
-    return this.commonFilter.transform(this.faasList, 'name', this.searchTerm) || [];
+    return records;
+  }
+
+  get app() {
+    return this.commonService.app._id;
   }
 }

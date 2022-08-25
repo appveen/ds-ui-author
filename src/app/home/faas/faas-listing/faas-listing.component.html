@@ -5,17 +5,15 @@
       <span></span>
     </div>
     <div class="d-flex align-items-center">
-      <odp-search-box (enteredText)="search($event)" (reset)="resetSearch();"></odp-search-box>
-      <button id="createFunction" type="button"
-        class="add-new btn btn-primary ml-3 d-flex align-items-center" (click)="newFaas()"
-        [disabled]="!hasWritePermission('FAAS')">
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+      <button id="createFunction" type="button" class="add-new btn btn-primary ml-3 d-flex align-items-center"
+        (click)="newFaas()" [disabled]="!hasWritePermission('FAAS')">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New</span>
       </button>
     </div>
   </div>
   <div class="card-container d-flex flex-column w-100 mb-3">
-
     <div *ngIf="records.length==0" class="rounded-lg border bg-white p-4">
       <p class="m-0">No Records Found, <button type="button" class="btn btn-link px-1 py-0" (click)="newFaas()">Click
           Here</button> to create a new Function
@@ -57,9 +55,9 @@
             <span *ngIf="!item.lastInvoked" class="text-muted">-</span>
           </div>
         </div>
-        <div class="d-flex w-100 justify-content-end">
-          <div class="item-actions bg-white px-3 py-2 border-left">
-            <div class="actions d-flex justify-content-end hover align-items-center">
+        <div class="d-flex w-100 align-items-center justify-content-end">
+          <div class="item-actions d-flex align-items-center justify-content-end">
+            <!-- <div class="actions d-flex justify-content-end hover align-items-center">
               <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintainance' ">
                 <span *ngIf="canDeployFunction(item)" id='deploy_{{i}}' class="dsi dsi-skip-forward text-primary mr-2"
                   (click)="deployFunction(i)" [ngbTooltip]="'Deploy v'+(item.draftVersion || item.version)"
@@ -74,23 +72,41 @@
               </ng-container>
               <span class="dsi dsi-copy hover mr-2" *ngIf="canManageFaas(item._id)" (click)="cloneFunction(i)"></span>
               <span class="dsi dsi-trash hover mr-2" *ngIf="canManageFaas(item._id)" (click)="deleteFunction(i)"></span>
-
-              <!-- <ng-container *ngIf="canManageFaas(item._id) && easterEggEnabled">
-                <span class="text-muted mr-2">|</span>
-                <span id="getYamls" class="hover text-accent mr-2 font-11" (click)="getYamls(i)">YAMLs</span>
-                <span [ngbTooltip]="'Repair v'+item.version" id="repairDataService"
-                  class="fa fa-toolbox text-accent mr-2 hover" (click)="repairService(i)"></span>
-              </ng-container> -->
+            </div> -->
+            <div class="actions d-flex justify-content-end hover align-items-center">
+              <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintainance' ">
+                <span *ngIf="canDeployFunction(item)" id='deploy_{{i}}' class="text-primary mr-3"
+                  (click)="deployFunction(i)">Deploy</span>
+                <span class="fw-600 font-13 hover mr-3" *ngIf="item.status == 'Undeployed' && canStartStopFunction(i)"
+                  (click)="toggleFunctionStatus(i)">Start</span>
+                <span class="fw-600 font-13 hover mr-3" *ngIf="item.status == 'Active' && canStartStopFunction(i)"
+                  (click)="toggleFunctionStatus(i)">Stop</span>
+                <span class="dsi dsi-more-vertical hover mr-3 ignore-outside" (click)="showDropDown($event,i)"></span>
+              </ng-container>
+              <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed"
+                (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
+                (outside)="showOptionsDropdown[i]=false">
+                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFaas(item._id)"
+                  (click)="editFunction(i)">
+                  Edit
+                </div>
+                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFaas(item._id)"
+                  (click)="viewFunction(i)">
+                  View
+                </div>
+                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFaas(item._id)"
+                  (click)="cloneFunction(i)">
+                  Clone
+                </div>
+                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFaas(item._id)"
+                  (click)="deleteFunction(i)">
+                  Delete
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- <ag-grid-angular #agGrid *ngIf="columnDefs" class="ag-theme-balham ag-grid-container custom-style h-100"
-      [columnDefs]="columnDefs" floatingFilter="true" rowModelType="infinite" [rowHeight]="56"
-      (filterModified)="filterModified($event)" [datasource]="dataSource" cacheBlockSize="30" headerHeight="36"
-      floatingFiltersHeight="40" (sortChanged)="sortChanged($event)" (gridReady)="gridReady($event)"
-      [overlayNoRowsTemplate]="noRowsTemplate">
-    </ag-grid-angular> -->
     </div>
   </div>
 
@@ -132,18 +148,6 @@
           <input type="text" class="form-control" id="apiEndpoint" placeholder="/api/a/faas/" formControlName="api">
         </div>
       </div>
-      <!-- <div class="form-group">
-      <label for="description" class="">Description</label>
-      <div class="name-wrapper position-relative">
-        <textarea #newFaasTextarea class="form-control" id="description" rows="5" placeholder="No description"
-          formControlName="description" (keydown.enter)="$event.preventDefault()"></textarea>
-        <ng-container *ngIf="form.get('description').dirty">
-          <span *ngIf="form.get('description').hasError('maxlength')"
-            class="text-danger position-absolute dsi dsi-danger-circle" container="body"
-            ngbTooltip="Description should be within 240 characters"></span>
-        </ng-container>
-      </div>
-    </div> -->
     </div>
     <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
       <button type="button" class="btn btn-primary w-100" id="newFaasModalYes" [disabled]="form.invalid"

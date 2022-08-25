@@ -216,8 +216,18 @@ export class LibraryComponent implements OnInit, OnDestroy {
         return self.commonService.hasPermission('PVL', entity);
     }
 
+    applySort(field: string) {
+        if (!this.sortModel[field]) {
+            this.sortModel = {};
+            this.sortModel[field] = 1;
+        } else if (this.sortModel[field] == 1) {
+            this.sortModel[field] = -1;
+        } else {
+            delete this.sortModel[field];
+        }
+    }
+
     showDropDown(event: any, i: number) {
-        console.log(event);
         this.selectedItemEvent = event;
         Object.keys(this.showOptionsDropdown).forEach(key => {
             this.showOptionsDropdown[key] = false;
