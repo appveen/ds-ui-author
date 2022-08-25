@@ -11,10 +11,10 @@
   <div class="d-flex flex-column position-relative">
     <div class="options d-flex">
       <div class="fw-600 font-22">Bots</div>
-      <button class="btn btn-primary mt-2 ml-auto d-flex" (click)="isCreate = true"
+      <button class="btn btn-primary mt-2 ml-auto d-flex d-flex align-items-center" (click)="isCreate = true"
         *ngIf="hasPermission('PMBBC') && botCount > 0">
         <span class="dsi dsi-plus mr-2"></span>
-        <span class="text">New Bot</span>
+        <span class="text">New</span>
       </button>
 
       <!-- <odp-search-box (enteredText)="search($event)" ></odp-search-box> -->

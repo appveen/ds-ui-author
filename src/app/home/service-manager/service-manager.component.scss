@@ -13,6 +13,11 @@
     height: 56px;
     overflow: hidden;
 
+    &:not(.header):hover {
+      background: $light;
+      cursor: pointer;
+    }
+
     &.header {
       min-height: 38px;
       max-height: 38px;
@@ -28,8 +33,8 @@
     .item-attribute-count,
     .item-reference-count,
     .item-hook-count {
-      min-width: 80px;
-      max-width: 80px;
+      min-width: 110px;
+      max-width: 110px;
     }
 
     .item-status {
@@ -137,4 +142,16 @@
   top: 20%;
   left: 20%;
   z-index: 1;
+}
+
+
+.more-options {
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+  min-width: 140px;
+
+  .list-group-item {
+    height: 36px;
+  }
 }

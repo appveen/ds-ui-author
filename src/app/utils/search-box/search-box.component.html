@@ -18,7 +18,7 @@
     <span *ngIf="searchInput.value" class="fa fa-times-circle text-danger position-absolute hover high-zIndex ignore-outside"
       (click)="clear();searchInput.focus()" ngbTooltip="Clear Search" container="body" [placement]="toolTipDirection"></span>
   </div>
-  <button *ngIf="!openSearchBox" type="button" class="btn btn-white border ignore-outside" (click)="openSearchBox=true">
+  <button *ngIf="!openSearchBox" type="button" class="btn btn-white d-flex align-items-center border ignore-outside" (click)="openSearchBox=true">
     <span class="dsi dsi-search text-secondary ignore-outside"></span>
   </button>
 </div>

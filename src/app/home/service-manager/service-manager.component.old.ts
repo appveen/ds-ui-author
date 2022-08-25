@@ -19,19 +19,17 @@ import {
 import { environment } from 'src/environments/environment';
 import { AppService } from 'src/app/utils/services/app.service';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
-import { switchMap } from 'rxjs/operators';
-import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 @Component({
   selector: 'odp-service-manager',
   templateUrl: './service-manager.component.html',
   styleUrls: ['./service-manager.component.scss'],
-  providers: [CommonFilterPipe]
 })
 export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   @ViewChild('alertModalTemplate', { static: false })
   alertModalTemplate: TemplateRef<HTMLElement>;
-
+  app: string;
+  serviceSearchForm: FormGroup;
   serviceList: Array<any> = [];
   service: GetOptions;
   alertModal: {
@@ -41,7 +39,9 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     index: number;
   };
   showLazyLoader = true;
-  // changeAppSubscription: any;
+  changeAppSubscription: any;
+  showCardMenu: any = {};
+  showCardDraft: any = {};
   subscriptions: any = {};
   showAddButton: boolean;
   breadcrumbPaths: Array<Breadcrumb>;
@@ -53,23 +53,24 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   easterEggEnabled: boolean;
   serviceRecordCounts: Array<any>;
   toggleImportWizard: boolean;
+  frameworkComponents: any;
   showNewServiceWindow: boolean;
   showCloneServiceWindow: boolean;
   showYamlWindow: boolean;
   selectedService: any;
   copied: any;
   searchTerm: string;
-  showOptionsDropdown: any;
-  selectedItemEvent: any;
-  sortModel: any;
   constructor(
     public commonService: CommonService,
     private appService: AppService,
     private router: Router,
     private fb: FormBuilder,
-    private ts: ToastrService,
-    private commonPipe: CommonFilterPipe
+    private ts: ToastrService
   ) {
+    this.serviceSearchForm = this.fb.group({
+      searchTerm: ['', [Validators.required]],
+      searchField: ['name', [Validators.required]],
+    });
     this.breadcrumbPaths = [{
       active: true,
       label: 'Data Services',
@@ -84,12 +85,32 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     };
     this.openDeleteModal = new EventEmitter();
     this.form = this.fb.group({
-      name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
-      description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]]
+      name: [
+        null,
+        [
+          Validators.required,
+          Validators.maxLength(40),
+          Validators.pattern(/\w+/),
+        ],
+      ],
+      description: [
+        null,
+        [Validators.maxLength(240), Validators.pattern(/\w+/)],
+      ],
     });
     this.cloneForm = this.fb.group({
-      name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
-      description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
+      name: [
+        null,
+        [
+          Validators.required,
+          Validators.maxLength(40),
+          Validators.pattern(/\w+/),
+        ],
+      ],
+      description: [
+        null,
+        [Validators.maxLength(240), Validators.pattern(/\w+/)],
+      ],
       desTab: [true],
       intTab: [false],
       expTab: [false],
@@ -100,84 +121,97 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     window['imadeveloper'] = () => {
       this.easterEggEnabled = true;
       this.ts.success('You are Developer!');
+      setTimeout(() => {
+        Object.keys(this.showCardMenu).forEach((key) => {
+          this.showCardMenu[key] = true;
+        });
+      }, 200);
+      setTimeout(() => {
+        Object.keys(this.showCardMenu).forEach((key) => {
+          this.showCardMenu[key] = false;
+        });
+      }, 3000);
     };
     this.copied = {};
     this.selectedService = {};
-    this.showOptionsDropdown = {};
-    this.sortModel = {};
   }
 
   ngOnInit() {
+    this.app = this.commonService.app._id;
     this.showLazyLoader = true;
-    // this.resetSearch();
+    this.resetSearch();
     this.getServices();
     this.commonService.apiCalls.componentLoading = false;
-    this.subscriptions['entity.delete'] = this.commonService.entity.delete.subscribe((data) => {
-      const index = this.serviceList.findIndex((s) => {
-        if (s._id === data._id) {
-          return s;
+    this.subscriptions['entity.delete'] =
+      this.commonService.entity.delete.subscribe((data) => {
+        const index = this.serviceList.findIndex((s) => {
+          if (s._id === data._id) {
+            return s;
+          }
+        });
+        this.ts.success('Deleted ' + this.serviceList[index].name + '.');
+        if (index > -1) {
+          this.serviceList.splice(index, 1);
         }
       });
-      this.ts.success('Deleted ' + this.serviceList[index].name + '.');
-      if (index > -1) {
-        this.serviceList.splice(index, 1);
-      }
-    });
-    this.subscriptions['entity.status'] = this.commonService.entity.status.subscribe((data) => {
-      const index = this.serviceList.findIndex((s) => {
-        if (s._id === data._id) {
-          return s;
+    this.subscriptions['entity.status'] =
+      this.commonService.entity.status.subscribe((data) => {
+        const index = this.serviceList.findIndex((s) => {
+          if (s._id === data._id) {
+            return s;
+          }
+        });
+        if (index === -1) {
+          return;
         }
-      });
-      if (index === -1) {
-        return;
-      }
-      if (data.message === 'Undeployed') {
-        this.ts.success('Stopped ' + this.serviceList[index].name + '.');
-      } else if (data.message === 'Deployed') {
-        this.ts.success('Started ' + this.serviceList[index].name + '.');
-      } else if (data.message === 'Pending') {
-        this.serviceList[index].status = 'Pending';
-      }
-      this.getLatestRecord(this.serviceList[index], index);
-    });
-    this.subscriptions['entity.new'] = this.commonService.entity.new.subscribe((data) => {
-      const index = this.serviceList.findIndex((s) => {
-        if (s._id === data._id) {
-          return s;
+        if (data.message === 'Undeployed') {
+          this.ts.success('Stopped ' + this.serviceList[index].name + '.');
+        } else if (data.message === 'Deployed') {
+          this.ts.success('Started ' + this.serviceList[index].name + '.');
+        } else if (data.message === 'Pending') {
+          this.serviceList[index].status = 'Pending';
         }
+        this.getLatestRecord(this.serviceList[index], index);
       });
-      if (index > -1) {
-        this.serviceList[index].status = 'Active';
-      } else {
-        this.commonService
-          .get(
-            'serviceManager',
-            `/${this.commonService.app._id}/service/` + data._id,
-            { filter: { app: this.commonService.app._id } }
-          )
-          .subscribe(
-            (service) => {
-              // this.setServiceDetails(service);
-              // this.serviceList.push(service);
-            },
-            (err) => {
-              this.commonService.errorToast(err);
-            }
-          );
+    this.subscriptions['entity.new'] = this.commonService.entity.new.subscribe(
+      (data) => {
+        const index = this.serviceList.findIndex((s) => {
+          if (s._id === data._id) {
+            return s;
+          }
+        });
+        if (index > -1) {
+          this.serviceList[index].status = 'Active';
+        } else {
+          this.commonService
+            .get(
+              'serviceManager',
+              `/${this.commonService.app._id}/service/` + data._id,
+              { filter: { app: this.commonService.app._id } }
+            )
+            .subscribe(
+              (service) => {
+                // this.setServiceDetails(service);
+                // this.serviceList.push(service);
+              },
+              (err) => {
+                this.commonService.errorToast(err);
+              }
+            );
+        }
       }
-    });
+    );
 
-    // this.changeAppSubscription = this.commonService.appChange.subscribe(
-    //   (_app) => {
-    //     this.app = this.commonService.app._id;
-    //     this.showLazyLoader = true;
-    //     this.commonService.apiCalls.componentLoading = false;
-    //     this.serviceList = [];
-    //     this.resetSearch();
-    //     this.getServices();
-    //   }
-    // );
+    this.changeAppSubscription = this.commonService.appChange.subscribe(
+      (_app) => {
+        this.app = this.commonService.app._id;
+        this.showLazyLoader = true;
+        this.commonService.apiCalls.componentLoading = false;
+        this.serviceList = [];
+        this.resetSearch();
+        this.getServices();
+      }
+    );
     // this.form.get('name').valueChanges.subscribe(_val => {
     //     this.form.controls.api.patchValue('/' + _.camelCase(_val));
     //     this.form.get(['definition', 0, '_id', 'prefix']).patchValue(_.toUpper(_.camelCase(_val.substring(0, 3))));
@@ -192,6 +226,15 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     if (this.alertModalTemplateRef) {
       this.alertModalTemplateRef.close();
     }
+  }
+
+
+  get isAppAdmin() {
+    return this.commonService.isAppAdmin;
+  }
+
+  get isSuperAdmin() {
+    return this.commonService.userDetails.isSuperAdmin;
   }
 
   newService() {
@@ -232,6 +275,9 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
           }
           request.subscribe(
             (res) => {
+              Object.keys(this.showCardDraft).forEach((key) => {
+                this.showCardDraft[key] = false;
+              });
               this.ts.success('Draft Deleted.');
               if (service.status !== 'Draft') {
                 this.router.navigate([
@@ -287,6 +333,14 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   editService(index: number) {
+    // if (
+    //   (this.serviceList[index].status === 'Draft' ||
+    //     this.serviceList[index].draftVersion) &&
+    //   !this.showCardDraft[index]
+    // ) {
+    //   this.showCardDraft[index] = true;
+    //   return;
+    // }
     this.appService.editServiceId = this.serviceList[index]._id;
     this.router.navigate([
       '/app/',
@@ -424,50 +478,92 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       );
   }
 
+  loadMore(event) {
+    if (event.target.scrollTop >= 244) {
+      this.showAddButton = true;
+    } else {
+      this.showAddButton = false;
+    }
+    if (
+      event.target.scrollTop + event.target.offsetHeight ===
+      event.target.children[0].offsetHeight
+    ) {
+      this.service.page = this.service.page + 1;
+      this.showLazyLoader = true;
+      this.getServices();
+    }
+  }
+
+  resetSearch() {
+    this.searchTerm = null;
+    this.serviceList = [];
+    this.service = {
+      page: 1,
+      count: 30,
+      select: null,
+      filter: { app: this.commonService.app._id },
+    };
+  }
+
   getServices() {
     if (this.subscriptions['getservice']) {
       this.subscriptions['getservice'].unsubscribe();
     }
     this.showLazyLoader = true;
-    this.serviceList = [];
     this.subscriptions['getservice'] = this.commonService
-      .get('serviceManager', `/${this.commonService.app._id}/service/utils/count`)
-      .pipe(switchMap((ev: any) => {
-        return this.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, {
-          count: ev
-        })
-      })).subscribe((res) => {
-        this.showLazyLoader = false;
-        if (res.length > 0) {
-          res.forEach((service, i) => {
-            this.setServiceDetails(service);
-            service.docapi = `${environment.url.doc}/?q=/api/a/sm/${service.app}/service/utils/${service._id}/swagger/${service.app}${service.api}`;
-            service._records = 0;
-            this.serviceList.push(service);
-          });
-          if (this.commonService.userDetails.verifyDeploymentUser) {
-            this.getServicesWithDraftData();
-          }
-          this._getAllServiceRecords(res.map((e) => e._id)).subscribe(
-            (counts: any) => {
-              if (counts && counts.length > 0) {
-                this.serviceRecordCounts = counts;
-                this.serviceRecordCounts.forEach((item) => {
-                  const temp = this.serviceList.find((e) => e._id === item._id);
-                  if (temp) {
-                    temp._records = item.count;
-                  }
-                });
-              }
-            },
-            (err) => {
-              this.commonService.errorToast(err, 'We are unable to fetch Data Service documents count, please try again later');
+      .get(
+        'serviceManager',
+        `/${this.commonService.app._id}/service`,
+        this.service
+      )
+      .subscribe(
+        (res) => {
+          this.showLazyLoader = false;
+          if (res.length > 0) {
+            const len = this.serviceList.length;
+            res.forEach((service, i) => {
+              this.showCardMenu[len + i] = false;
+              // if (service.definition || service.webHook || service.status === 'Draft') {
+              this.setServiceDetails(service);
+              // service['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}?app=${this.commonService.app._id}`;
+              service.docapi = `${environment.url.doc}/?q=/api/a/sm/${service.app}/service/utils/${service._id}/swagger/${service.app}${service.api}`;
+              service._records = 0;
+              this.serviceList.push(service);
+              // }
+            });
+            if (this.commonService.userDetails.verifyDeploymentUser) {
+              this.getServicesWithDraftData();
             }
+            this._getAllServiceRecords(res.map((e) => e._id)).subscribe(
+              (counts: any) => {
+                if (counts && counts.length > 0) {
+                  this.serviceRecordCounts = counts;
+                  this.serviceRecordCounts.forEach((item) => {
+                    const temp = this.serviceList.find(
+                      (e) => e._id === item._id
+                    );
+                    if (temp) {
+                      temp._records = item.count;
+                    }
+                  });
+                }
+              },
+              (err) => {
+                this.commonService.errorToast(
+                  err,
+                  'We are unable to fetch Data Service documents count, please try again later'
+                );
+              }
+            );
+          }
+        },
+        (err) => {
+          this.commonService.errorToast(
+            err,
+            'We are unable to fetch records, please try again later'
           );
         }
-      }, (err) => {
-        this.commonService.errorToast(err, 'We are unable to fetch records, please try again later');
-      });
+      );
   }
 
   getServicesWithDraftData() {
@@ -476,7 +572,11 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
     this.showLazyLoader = true;
     this.subscriptions['getDraftservice'] = this.commonService
-      .get('serviceManager', `/${this.commonService.app._id}/service` + '?draft=true', this.service)
+      .get(
+        'serviceManager',
+        `/${this.commonService.app._id}/service` + '?draft=true',
+        this.service
+      )
       .subscribe((res) => {
         this.showLazyLoader = false;
         res.forEach((item) => {
@@ -500,27 +600,83 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     } else {
       service._attributes = service.attributeCount;
     }
-    service._references = service.relatedSchemas && service.relatedSchemas.incoming ? service.relatedSchemas.incoming.length : 0;
+    service._references =
+      service.relatedSchemas && service.relatedSchemas.incoming
+        ? service.relatedSchemas.incoming.length
+        : 0;
     service._preHooks = service.preHooks ? service.preHooks.length : 0;
-    service._webHooks = service.webHooks ? service.webHooks.length + service._preHooks : 0 + service._preHooks;
+    service._webHooks = service.webHooks
+      ? service.webHooks.length + service._preHooks
+      : 0 + service._preHooks;
+    // service.docapi = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}?app=${this.commonService.app._id}`;
     service.docapi = `${environment.url.doc}/?q=/api/a/sm/${service.app}/service/utils/${service._id}/swagger/${service.app}${service.api}`;
   }
 
   _getServiceRecords(service) {
     this.subscriptions['getservicerecord_' + service._id] = this.commonService
-      .get('serviceManager', `/${this.commonService.app._id}/service/utils/count/${service._id}`,
-        { filter: { app: this.commonService.app._id } }).subscribe((res) => {
+      .get(
+        'serviceManager',
+        `/${this.commonService.app._id}/service/utils/count/${service._id}`,
+        { filter: { app: this.commonService.app._id } }
+      )
+      .subscribe(
+        (res) => {
           service._records = res;
-        }, (err) => {
+        },
+        (err) => {
           service._records = 0;
-        });
+        }
+      );
   }
 
   _getAllServiceRecords(serviceIds: Array<string>) {
-    return this.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/all/count`, {
-      serviceIds: serviceIds.join(','),
-      filter: { app: this.commonService.app._id },
-    });
+    return this.commonService.get(
+      'serviceManager',
+      `/${this.commonService.app._id}/service/utils/all/count`,
+      {
+        serviceIds: serviceIds.join(','),
+        filter: { app: this.commonService.app._id },
+      }
+    );
+  }
+
+  _getUpTime(lastUpdated) {
+    lastUpdated = new Date(lastUpdated);
+    const now = new Date();
+    const diff = now.getTime() - lastUpdated.getTime();
+    const d = new Date(diff);
+    let msg = '';
+    msg += d.getUTCHours() ? d.getUTCHours() + 'h ' : '';
+    msg += d.getUTCMinutes() ? d.getUTCMinutes() + 'm ' : '';
+    msg += d.getUTCSeconds() ? d.getUTCSeconds() + 's' : '';
+    return msg;
+  }
+
+  _getNoOfRecords(service) {
+    const url = service.api + '/utils/count';
+    this.subscriptions['getnoofrecord'] = this.commonService
+      .get('apis', url)
+      .subscribe(
+        (res) => {
+          service._records = res;
+        },
+        (err) => {
+          service._records = 0;
+        }
+      );
+  }
+
+  search(value) {
+    if (!value || !value.trim()) {
+      return;
+    }
+    if (!this.service.filter) {
+      this.service.filter = {};
+    }
+    this.searchTerm = value;
+    this.service.filter.name = '/' + value.trim() + '/';
+    this.serviceList = [];
+    this.getServices();
   }
 
   deleteService(index) {
@@ -537,21 +693,32 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   closeDeleteModal(data) {
     if (data) {
-      const url = `/${this.commonService.app._id}/service/` + this.serviceList[data.index]._id;
+      const url =
+        `/${this.commonService.app._id}/service/` +
+        this.serviceList[data.index]._id;
       this.showLazyLoader = true;
-      this.subscriptions['deleteservice'] = this.commonService.delete('serviceManager', url).subscribe((d) => {
-        this.showLazyLoader = false;
-        this.ts.info(d.message ? d.message : 'Deleting data service...');
-        this.serviceList[data.index].status = 'Working';
-      }, (err) => {
-        this.showLazyLoader = false;
-        this.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
-      });
+      this.subscriptions['deleteservice'] = this.commonService
+        .delete('serviceManager', url)
+        .subscribe(
+          (d) => {
+            this.showLazyLoader = false;
+            this.ts.info(d.message ? d.message : 'Deleting data service...');
+            this.serviceList[data.index].status = 'Working';
+          },
+          (err) => {
+            this.showLazyLoader = false;
+            this.commonService.errorToast(
+              err,
+              'Oops, something went wrong. Please try again later.'
+            );
+          }
+        );
     }
   }
 
   toggleServiceStatus(index: number) {
     this.alertModal.statusChange = true;
+
     if (this.serviceList[index].status === 'Active') {
       this.alertModal.title = 'Stop ' + this.serviceList[index].name + '?';
       this.alertModal.message =
@@ -571,9 +738,15 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.alertModalTemplateRef.result.then(
       (close) => {
         if (close) {
-          let url = `/${this.commonService.app._id}/service/utils/` + this.serviceList[index]._id + '/start';
+          let url =
+            `/${this.commonService.app._id}/service/utils/` +
+            this.serviceList[index]._id +
+            '/start';
           if (this.serviceList[index].status === 'Active') {
-            url = `/${this.commonService.app._id}/service/utils/` + this.serviceList[index]._id + '/stop';
+            url =
+              `/${this.commonService.app._id}/service/utils/` +
+              this.serviceList[index]._id +
+              '/stop';
           }
           this.subscriptions['updateservice'] = this.commonService
             .put('serviceManager', url, { app: this.commonService.app._id })
@@ -616,15 +789,21 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.alertModalTemplateRef.result.then(
       (close) => {
         if (close) {
-          const url = `/${this.commonService.app._id}/service/utils/` + this.serviceList[index]._id + '/deploy';
+          const url =
+            `/${this.commonService.app._id}/service/utils/` +
+            this.serviceList[index]._id +
+            '/deploy';
           this.subscriptions['updateservice'] = this.commonService
             .put('serviceManager', url, { app: this.commonService.app._id })
-            .subscribe((d) => {
-              this.ts.info('Deploying data service...');
-              this.serviceList[index].status = 'Pending';
-            }, (err) => {
-              this.commonService.errorToast(err);
-            });
+            .subscribe(
+              (d) => {
+                this.ts.info('Deploying data service...');
+                this.serviceList[index].status = 'Pending';
+              },
+              (err) => {
+                this.commonService.errorToast(err);
+              }
+            );
         }
       },
       (dismiss) => { }
@@ -765,6 +944,32 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     return this.commonService.hasPermission('PMDSBC', entity);
   }
 
+  getTooltipText(status: string) {
+    if (status === 'Active') {
+      return 'Running';
+    }
+    if (status === 'Stopped') {
+      return 'Stopped';
+    }
+    if (status === 'Maintenance') {
+      return 'Under maintenance';
+    }
+    if (status === 'Pending') {
+      return 'Pending';
+    }
+    if (status === 'Draft') {
+      return 'Draft';
+    }
+  }
+
+  autoAdjust(ele: HTMLElement) {
+    if (!ele.classList.contains('active')) {
+      const hideOffset = ele.clientHeight - 32;
+      ele.style.bottom = '-' + hideOffset + 'px';
+    } else {
+      ele.style.bottom = '0px';
+    }
+  }
   getLatestRecord(service, index) {
     const indx = this.serviceList.findIndex((s) => {
       if (s._id === service._id) {
@@ -796,26 +1001,20 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
   }
 
-  applySort(field: string) {
-    if (!this.sortModel[field]) {
-      this.sortModel = {};
-      this.sortModel[field] = 1;
-    } else if (this.sortModel[field] == 1) {
-      this.sortModel[field] = -1;
-    } else {
-      delete this.sortModel[field];
-    }
-  }
-
   hasPermission(type: string, entity?: string) {
     return this.commonService.hasPermission(type, entity);
   }
 
-  getStatusClass(srvc: any) {
+  transactionDoc() {
+    const docsAPI = `${environment.url.doc}/?q=/api/a/common/txn`;
+    window.open(docsAPI, '_blank');
+  }
+
+  getStatusClass(srvc) {
     if (srvc.status === 'Active') {
       return 'text-success';
     }
-    if (srvc.status === 'Stopped' || srvc.status === 'Undeployed') {
+    if (srvc.status === 'Stopped') {
       return 'text-danger';
     }
     if (srvc.status === 'Draft') {
@@ -827,95 +1026,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     return 'text-secondary';
   }
 
-  getStatusLabel(srvc: any) {
-    if (srvc.status === 'Active') {
-      return 'Running';
-    }
-    if (srvc.status === 'Stopped' || srvc.status === 'Undeployed') {
-      return 'Stopped';
-    }
-    if (srvc.status === 'Draft') {
-      return 'Draft';
-    }
-    if (srvc.status === 'Pending') {
-      return 'Pending';
-    }
-    return 'Maintainance';
-  }
-
-  showDropDown(event: any, i: number) {
-    console.log(event);
-    this.selectedItemEvent = event;
-    Object.keys(this.showOptionsDropdown).forEach(key => {
-      this.showOptionsDropdown[key] = false;
-    })
-    this.selectedService = this.serviceList[i];
-    this.showOptionsDropdown[i] = true;
-  }
-
-  private compare(a: any, b: any) {
-    if (a > b) {
-      return 1;
-    } else if (a < b) {
-      return -1;
-    } else {
-      return 0;
-    }
-  }
-
-  get dropDownStyle() {
-    let top = (this.selectedItemEvent.clientY + 10);
-    if (this.selectedItemEvent.clientY > 430) {
-      top = this.selectedItemEvent.clientY - 170
-    }
-    return {
-      top: top + 'px',
-      right: '50px'
-    };
-  }
-
-  get records() {
-    let records = this.commonPipe.transform(this.serviceList, 'name', this.searchTerm);
-    const field = Object.keys(this.sortModel)[0];
-    if (field) {
-      records = records.sort((a, b) => {
-        if (this.sortModel[field] == 1) {
-          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
-            return this.compare((a[field]), (b[field]));
-          } else {
-            return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
-          }
-        } else if (this.sortModel[field] == -1) {
-          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
-            return this.compare((b[field]), (a[field]));
-          } else {
-            return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
-          }
-        } else {
-          return 0;
-        }
-      });
-    } else {
-      records = records.sort((a, b) => {
-        return this.compare(b._metadata.lastUpdated, a._metadata.lastUpdated);
-      });
-    }
-    return records;
-  }
-
-  get isAppAdmin() {
-    return this.commonService.isAppAdmin;
-  }
-
-  get isSuperAdmin() {
-    return this.commonService.userDetails.isSuperAdmin;
-  }
-
   get isExperimental() {
     return this.commonService.userDetails.experimentalFeatures;
-  }
-
-  get app() {
-    return this.commonService.app._id;
   }
 }

@@ -1,6 +1,6 @@
 <!-- <div [@toggleOverlay]="state" class="overlay" (click)="onCancel()"></div> -->
 <div class="app-switcher-window d-flex flex-column justify-content-start align-items-center" odpClickOutside (outside)="onCancel()">
-  <div class="d-flex align-items-center pt-3 pb-2 position-relative">
+  <div class="d-flex align-items-center pt-3 pb-2 position-relative w-100 px-3">
     <!-- <div class="active-app d-flex align-items-center hover position-absolute" (click)="onCancel()">
       <div class="app-thumbnail d-flex align-items-center justify-content-center hover" [ngStyle]="{ 'background-color': activeApp.bg }">
         <img *ngIf="activeApp.logo && activeApp.logo.thumbnail" [src]="activeApp.logo.thumbnail" alt="Logo">
@@ -10,7 +10,7 @@
       <span class="text-accent ml-auto fas fa-angle-down"></span>
     </div> -->
     <input #searchBox type="text" class="form-control search-box" placeholder="Search" (keyup.enter)="onEnter($event)" [(ngModel)]="searchTerm">
-    <span class="fas fa-search position-absolute text-muted srch-pos" [ngClass]="{'d-none': searchBox.value}"></span>
+    <span class="dsi dsi-search position-absolute text-muted srch-pos" [ngClass]="{'d-none': searchBox.value}"></span>
   </div>
   <div class="d-flex flex-wrap justify-content-center w-100">
     <div class="app-card d-flex mx-3 w-100 p-2 rounded hover" *ngFor="let app of appList|filterApp:searchTerm;let appIndex = index;"

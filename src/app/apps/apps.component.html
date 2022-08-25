@@ -252,12 +252,12 @@
                         </button>
                     </div> -->
             <div (click)="loadAdminPage()"
-              class="admin-settings btn-white btn-sm border d-flex flex-column justify-content-center align-items-center mr-3 hover"
+              class="admin-settings d-flex flex-column justify-content-center align-items-center mr-3 hover"
               ngbTooltip="Admin Panel" placement="bottom">
-              <div class="dsi dsi-admin"></div>
+              <div class="dsi dsi-agent font-22"></div>
             </div>
           </ng-container>
-          <div class="current-app d-flex align-items-center border rounded mr-3 hover ignore-outside"
+          <div class="current-app d-flex align-items-center border border-light rounded mr-3 hover ignore-outside"
             (click)="toggleAppOptions()">
             <div class="current-app-thumbnail d-flex align-items-center justify-content-center mx-2"
               ngbTooltip="Switch App" placement="bottom" [ngStyle]="{ 'background-color': selectedApp.bg }" [ngClass]="{
@@ -265,59 +265,55 @@
               }">
               <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail"
                 alt="Logo" />
-              <span *ngIf="!selectedApp?.logo?.thumbnail">{{selectedApp.firstLetter}}</span>
+              <span class="font-12" *ngIf="!selectedApp?.logo?.thumbnail">{{selectedApp.firstLetter}}</span>
             </div>
             <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" placement="bottom">
               {{ selectedApp._id }}
             </div>
-            <div class="text-primary"></div>
-            <div *ngIf="isAppAdmin" class="d-flex align-items-center justify-content-center ml-1">
-              <span class="fa fa-star text-warning" ngbTooltip="You are admin of this App" placement="bottom"></span>
-            </div>
             <div *ngIf="commonService.appList.length > 1" class="ml-auto mr-2">
-              <span class="fas fa-angle-down text-accent"></span>
+              <span class="fas fa-angle-down text-dark"></span>
             </div>
           </div>
           <div
-            class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle bg-light border border-border hover"
+            class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle border border-light hover"
             (click)="showProfileOptions = !showProfileOptions">
-            <span class="far fa-user fa-lg text-secondary"></span>
+            <span class="dsi dsi-user sub-heading font-14"></span>
+            <div *ngIf="isAppAdmin" class="d-flex align-items-center justify-content-center ml-1">
+              <span class="dsi dsi-admin text-warning" ngbTooltip="You are admin of this App" placement="bottom"></span>
+            </div>
           </div>
-          <div [@userProfile] class="profile position-absolute bg-white border border-border" *ngIf="showProfileOptions"
-            odpClickOutside [ignore]="['.profile-icon', '.fa-user']" (outside)="showProfileOptions = false">
-            <div class="profile-container position-relative d-flex align-items-center h-100 w-100">
+          <div class="profile position-absolute bg-white p-4" *ngIf="showProfileOptions" odpClickOutside
+            [ignore]="['.profile-icon', '.dsi-user']" (outside)="showProfileOptions = false">
+            <div class="profile-container position-relative d-flex align-items-center h-100 w-100 pb-4 border-bottom">
               <div
-                class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-border mx-4">
-                <span class="far fa-user fa-2x text-secondary"></span>
+                class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-light mr-4">
+                <span class="dsi dsi-user sub-heading"></span>
               </div>
               <div class="profile-data d-flex flex-column">
-                <h4 class="profile-data-name text-truncate font-weight-bold">
-                  {{ name }}
-                </h4>
-                <div class="profile-data-more d-flex align-items-center">
-                  <div class="text-secondary profile-data-more-item pr-3 username-holder text-truncate"
-                    [ngbTooltip]="username">
-                    {{ username }}
-                  </div>
-                  <div class="profile-data-more-item px-1" *ngIf="authType && authType === 'local'">
-                    <button type="button" class="btn btn-link btn-sm" (click)="
-                        showProfileOptions = false; toggleChangePassword = true
-                      ">
-                      Change Password
-                    </button>
-                  </div>
-                  <div class="profile-data-more-item px-1">
-                    <button type="button" class="btn btn-link btn-sm" (click)="logout()" id="logout">
-                      Logout
-                    </button>
-                  </div>
+                <div class="profile-data-name text-truncate font-20 fw-600">{{ name }}</div>
+                <div class="profile-data-more text-truncate font-14 fw-400 sub-heading" [ngbTooltip]="username">
+                  {{ username }}
                 </div>
               </div>
-              <small class="position-absolute text-border app-version">v{{ version }}</small>
-              <small class="last-login text-muted">Last Login:
-                {{
-                lastLogin | dateFormat: 'YYYY MMM DD, HH:mm:ss, z':'Etc/Zulu'
-                }}</small>
+            </div>
+
+            <div class="profile-options py-3">
+              <div *ngIf="authType && authType === 'local'" class="fw-500 py-2 hover d-flex align-items-center"
+                (click)="showProfileOptions = false; toggleChangePassword = true">
+                <span class="dsi dsi-settings sub-heading mr-2"></span>
+                <span>Change Password</span>
+              </div>
+              <div class="fw-500 py-2 hover d-flex align-items-center" (click)="logout()" id="logout">
+                <span class="dsi dsi-logout sub-heading mr-2"></span>
+                <span>Logout</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between font-12 fw-400 sub-heading">
+              <span class="last-login">Last Login:
+                {{ lastLogin | dateFormat: 'YYYY MMM DD, HH:mm:ss, z':'Etc/Zulu' }}
+              </span>
+              <span class="app-version">v{{ version }}</span>
             </div>
           </div>
         </div>

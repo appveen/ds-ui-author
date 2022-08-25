@@ -20,6 +20,8 @@ import { FormsModule } from '@angular/forms';
 import { ServiceImportWizardModule } from 'src/app/utils/service-import-wizard/service-import-wizard.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
+import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
+import { OrderByModule } from 'src/app/utils/pipes/order-by/order-by.module';
 
 
 const routes = [
@@ -46,7 +48,10 @@ const routes = [
         CheckboxBtnModule,
         ServiceImportWizardModule,
         SwitchModule,
-        CheckboxModule
+        CheckboxModule,
+        CommonFilterModule,
+        ClickOutsideModule,
+        OrderByModule
     ],
     exports: [
         RouterModule

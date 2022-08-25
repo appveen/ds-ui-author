@@ -16,9 +16,9 @@
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
       <!-- <odp-search-box (enteredText)="searchGroup($event)" (reset)="resetSearch()"></odp-search-box> -->
-      <button class="add-new btn btn-primary ml-3 d-flex align-items-center justify-content-center btn-min-width" (click)="addNewGroup()" *ngIf="hasPermission('PMGBC')">
+      <button class="add-new btn btn-primary ml-3 d-flex align-items-center justify-content-center" (click)="addNewGroup()" *ngIf="hasPermission('PMGBC')">
         <span class="dsi dsi-plus mr-2"></span>
-        <span class="text">New Group</span>
+        <span class="text">New</span>
       </button>
     </div>
   </div>

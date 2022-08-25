@@ -13,53 +13,74 @@
       <span *ngIf="searchTerm" ngbTooltip="Filter Applied" class="dsi dsi-filter-alt text-secondary ml-2"></span>
     </div>
     <div class="d-flex align-items-center">
-      <odp-search-box (enteredText)="search($event)" (reset)="resetSearch(); getServices()"></odp-search-box>
-      <button type="button" id="data-management" class="btn btn-white border ml-3" [routerLink]="['settings']"
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+      <button type="button" id="data-management" class="btn btn-white d-flex align-items-center border ml-3" [routerLink]="['settings']"
         *ngIf="isAppAdmin || isSuperAdmin">
         <span class="dsi dsi-settings text-secondary"></span>
       </button>
-      <button *ngIf="isExperimental" type="button" class="btn btn-white border ml-3" (click)="toggleImportWizard=true">
+      <button *ngIf="isExperimental" type="button" class="btn btn-white d-flex align-items-center border ml-3" (click)="toggleImportWizard=true">
         <span class="dsi dsi-upload text-secondary"></span>
       </button>
-      <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3 btn-min-width d-flex align-items-center"
+      <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3 d-flex align-items-center"
         (click)="newService()" *ngIf="hasCreatePermission('SM')">
         <span class="dsi dsi-plus mr-2"></span>
-        <span class="text">New Data Service</span>
+        <span class="text">New</span>
       </button>
     </div>
   </div>
   <div class="d-flex flex-column w-100  position-relative">
-    <div class="card-container" (scroll)="loadMore($event)">
-      <div *ngIf="hasCreatePermission('SM') && (!serviceList || serviceList.length == 0) && !showLazyLoader"
+    <div class="card-container">
+      <div *ngIf="hasCreatePermission('SM') && (!records || records.length == 0) && !showLazyLoader"
         class="bg-white rounded-lg border p-4">
         <p class="m-0">No Records Found, <button type="button" class="btn btn-link px-1 py-0"
-            (click)="newService()">Click
-            Here</button> to create a new Data Service
+            (click)="newService()">Click Here</button> to create a new Data Service
           <span *ngIf="searchTerm">:&nbsp;<span class="fw-500">{{searchTerm}}</span></span>
         </p>
       </div>
-      <div *ngIf="serviceList.length > 0" class="list-group">
+      <div *ngIf="records.length > 0" class="list-group">
         <div
           class="list-group-item d-flex align-items-center justify-content-start header py-0 bg-light text-uppercase font-11 fw-500">
-          <div class="item-name d-flex align-items-center">
-            <odp-checkbox [edit]="{status:true}"></odp-checkbox>
-            <span class="ml-2">Name</span>
+          <div (click)="applySort('name')" class="hover d-flex align-items-center item-name d-flex align-items-center">
+            <!-- <odp-checkbox [edit]="{status:true}"></odp-checkbox> -->
+            <span class="mr-2">Name</span>
+            <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
           </div>
           <div class="d-flex align-items-center justify-content-center">
-            <div class="item-record-count">Records</div>
-            <div class="item-attribute-count">Attributes</div>
-            <div class="item-reference-count">References</div>
-            <div class="item-hook-count">Hooks</div>
-            <div class="item-status">Status</div>
+            <div (click)="applySort('_records')" class="hover d-flex align-items-center item-record-count">
+              <span class="mr-2">Records</span>
+              <span *ngIf="sortModel['_records']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_records']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('_attributes')" class="hover d-flex align-items-center item-attribute-count">
+              <span class="mr-2">Attributes</span>
+              <span *ngIf="sortModel['_attributes']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_attributes']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('_references')" class="hover d-flex align-items-center item-reference-count">
+              <span class="mr-2">References</span>
+              <span *ngIf="sortModel['_references']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_references']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('_webHooks')" class="hover d-flex align-items-center item-hook-count">
+              <span class="mr-2">Hooks</span>
+              <span *ngIf="sortModel['_webHooks']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_webHooks']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('status')" class="hover d-flex align-items-center item-status">
+              <span class="mr-2">Status</span>
+              <span *ngIf="sortModel['status']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['status']==-1" class="dsi dsi-drop-up"></span>
+            </div>
           </div>
           <div class="d-flex align-items-center justify-content-end w-100">
             <div class="item-actions"></div>
           </div>
         </div>
-        <ng-container *ngFor="let srvc of serviceList;let i=index">
-          <div class="list-group-item d-flex align-items-center justify-content-start">
+        <ng-container *ngFor="let srvc of records;let i=index">
+          <div class="list-group-item d-flex align-items-center justify-content-start" (dblclick)="viewService(i)">
             <div class="item-name fw-500 d-flex align-items-center">
-              <odp-checkbox [edit]="{status:true}"></odp-checkbox>
+              <!-- <odp-checkbox [edit]="{status:true}"></odp-checkbox> -->
               <span class="ml-2 pl-1 text-dark hover" (click)="viewService(i)">{{srvc.name}}</span>
               <span class="ml-2 version sub-heading font-11 text-uppercase">(v{{srvc.version}})</span>
               <span *ngIf="srvc.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
@@ -71,12 +92,12 @@
               <div class="sub-heading item-hook-count">{{srvc._webHooks}}</div>
               <div class="item-status d-flex align-items-center">
                 <span class="fa fa-circle mr-2" [ngClass]="getStatusClass(srvc)"></span>
-                <span class="text font-12 fw-400">{{srvc.status}}</span>
+                <span class="text font-12 fw-400">{{getStatusLabel(srvc)}}</span>
               </div>
             </div>
             <div class="d-flex align-items-center justify-content-end w-100">
-              <div class="item-actions bg-white p-3 border-left">
-                <div class="actions d-flex justify-content-end hover align-items-center">
+              <div class="item-actions">
+                <!-- <div class="actions d-flex justify-content-end hover align-items-center">
                   <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintainance' ">
                     <span *ngIf="isDeploy(i)" id='deploy_{{i}}' class="dsi dsi-skip-forward text-primary mr-2"
                       (click)="deployService(i)" [ngbTooltip]="'Deploy v'+(srvc.draftVersion || srvc.version)"
@@ -98,13 +119,46 @@
                   <span class="dsi dsi-trash hover mr-2" *ngIf="canDeleteService(srvc._id)" ngbTooltip="Delete"
                     (click)="deleteService(i)"></span>
                   <span class="api-icon hover mr-2 font-11" (click)="openDocs(i)" ngbTooltip="Open Docs">API</span>
-
                   <ng-container *ngIf="canEditService(srvc._id) && easterEggEnabled">
                     <span class="text-muted mr-2">|</span>
                     <span id="getYamls" class="hover text-accent mr-2 font-11" (click)="getYamls(i)">YAMLs</span>
                     <span [ngbTooltip]="'Repair v'+srvc.version" id="repairDataService"
                       class="fa fa-toolbox text-accent mr-2 hover" (click)="repairService(i)"></span>
                   </ng-container>
+                </div> -->
+                <div class="actions d-flex justify-content-end hover align-items-center">
+                  <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintainance'">
+                    <span *ngIf="isDeploy(i)" id='deploy_{{i}}' class="fw-600 font-13 text-primary mr-3"
+                      (click)="deployService(i)">Deploy</span>
+                    <span class="fw-600 font-13 hover mr-3" *ngIf="srvc.status == 'Stopped' && isStartStopService(i)"
+                      (click)="toggleServiceStatus(i)">Start</span>
+                    <span class="fw-600 font-13 hover mr-3" *ngIf="srvc.status == 'Active' && isStartStopService(i)"
+                      (click)="toggleServiceStatus(i)">Stop</span>
+                    <span class="dsi dsi-more-vertical hover mr-3 ignore-outside"
+                      (click)="showDropDown($event,i)"></span>
+                  </ng-container>
+                  <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed"
+                    (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
+                    (outside)="showOptionsDropdown[i]=false">
+                    <button class="list-group-item list-group-item-action py-2" *ngIf="canEditService(srvc._id)"
+                      (click)="viewService(i)">View</button>
+                    <button class="list-group-item list-group-item-action py-2" *ngIf="canEditService(srvc._id)"
+                      (click)="editService(i)">Edit</button>
+                    <button class="list-group-item list-group-item-action py-2"
+                      *ngIf="srvc.draftVersion && canEditService(srvc._id)" (click)="discardDraft(srvc._id)">Discard
+                      Draft</button>
+                    <button class="list-group-item list-group-item-action py-2" *ngIf="canCloneService(srvc._id)"
+                      (click)="cloneService(i)">Clone</button>
+                    <button class="list-group-item list-group-item-action py-2" *ngIf="canDeleteService(srvc._id)"
+                      (click)="deleteService(i)">Delete</button>
+                    <button class="list-group-item list-group-item-action py-2" (click)="openDocs(i)">API Docs</button>
+                    <ng-container *ngIf="canEditService(srvc._id) && easterEggEnabled">
+                      <button class="list-group-item list-group-item-action py-2 text-accent"
+                        (click)="getYamls(i)">YAMLs</button>
+                      <button class="list-group-item list-group-item-action py-2 text-accent"
+                        (click)="repairService(i)">Repair</button>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
             </div>

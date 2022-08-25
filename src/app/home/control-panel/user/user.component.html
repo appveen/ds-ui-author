@@ -27,10 +27,10 @@
           routerLink="bulk-import" ngbTooltip="Bulk Import" id="bulkimport">
           <span class="dsi dsi-upload"></span>
         </button>
-        <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary"
+        <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary d-flex align-items-center"
           (click)="newUser()">
           <span class="dsi dsi-plus mr-2"></span>
-          <span>New User</span>
+          <span>New</span>
         </button>
       </div>
     </div>

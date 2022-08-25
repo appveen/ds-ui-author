@@ -33,13 +33,13 @@
 
 .app-switcher-window {
   //transform: scale(0);
-  min-width: 330px;
-  max-width: 330px;
+  min-width: 260px;
+  max-width: 260px;
   min-height: 376px;
   max-height: 376px;
   position: fixed;
   z-index: 1073;
-  bottom: calc(100vh - 436px);
+  top: 48px;
   right: 66px;
   background: #fff;
   border-top-left-radius: 4px;
@@ -47,6 +47,7 @@
   border-bottom-right-radius: 4px;
   box-sizing: border-box;
   box-shadow: 4px 4px 10px rgba($color: #000, $alpha: 0.4);
+  border-radius: 8px;
 
   .active-app {
     top: -40px;
@@ -68,9 +69,8 @@
   }
 
   .search-box {
-    min-width: 283px;
-    max-width: 283px;
-    padding-left: 35px;
+    height: 28px;
+    font-size: 12px;
   }
 
   .d-flex.flex-wrap {
@@ -86,14 +86,10 @@
 
     &:hover {
       background: #f7f7f7;
-      // .app-thumbnail {
-      //   // box-shadow: 0 0 10px rgba($color: #000000, $alpha: 0.2);
-      //   border-color: rgba($white, 0.5);
-      // }
     }
 
     .app-name {
-      max-width: 210px;
+      max-width: 160px;
       word-break: break-all;
     }
   }
@@ -139,6 +135,6 @@
 }
 
 .srch-pos {
-  left: 38%;
+  left: 24px;
   pointer-events: none;
 }
