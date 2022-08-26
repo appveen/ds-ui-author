@@ -22,11 +22,8 @@
       *ngFor="let formItem of formList;let formIndex = index; let isLastFormItem = last; let isFirstFormItem = first"
       [formGroup]="formItem">
       <div class="schemaProperties-body" formGroupName="properties">
-        <div class="w-100">
-          <div class="font-14 text-dark mb-2">
-            <ng-container *ngIf="formItem.get('key').value !== '_self'">Type</ng-container>
-            <ng-container *ngIf="formItem.get('key').value === '_self'">Collection of</ng-container>
-          </div>
+        <div class="w-100" *ngIf="formItem.get('key').value !== '_self'">
+          <div class="font-14 text-dark mb-2">Type</div>
           <div class="w-100 bg-white position-relative">
             <button type="button"
               class="d-flex w-100 align-items-center justify-content-between bg-white px-2 py-1 border rounded ignore-click"
@@ -45,9 +42,32 @@
           </div>
         </div>
 
+        <div *ngIf="formItem.get('type').value=='Array'" class="w-100" [formGroup]="formList[formIndex+1]">
+          <div class="font-14 text-dark mb-2 mt-3">Collection of</div>
+          <div class="w-100 bg-white position-relative">
+            <button type="button"
+              class="d-flex w-100 align-items-center justify-content-between bg-white px-2 py-1 border rounded ignore-click"
+              (click)="showDataTypes[formIndex+1]=true" [disabled]="!canEdit || checkStateModel()">
+              <odp-field-type
+                [field]="{type:formList[formIndex+1].value.type,properties:formList[formIndex+1].value.properties}"
+                [label]="true">
+              </odp-field-type>
+              <span *ngIf="canEdit" class="fas fa-angle-down text-accent"></span>
+            </button>
+            <small class='text-secondary' *ngIf="canEdit && checkStateModel()">
+              Type can't be changed because there is a state model configured
+            </small>
+            <odp-field-type-selector *ngIf="showDataTypes[formIndex+1]" [(toggle)]="showDataTypes[formIndex+1]"
+              [form]="formList[formIndex+1]" [edit]="edit" [isLibrary]="isLibrary" [isDataFormat]="isDataFormat"
+              [formatType]="formatType">
+            </odp-field-type-selector>
+          </div>
+        </div>
+
         <div class="w-100 justify-content-center" *ngIf="!(isDataFormat || checkStateModel())">
-          <div class="font-16 fw-500 mt-40">Properties</div>
-          <div (click)="toggleCheck(formItem.get('properties.required'))" class=" d-flex align-items-center w-100 py-3" [ngClass]="{'hover':canEdit}"
+          <div class="font-16 fw-500 mt-40 mb-3">Properties</div>
+          <div (click)="toggleCheck(formItem.get('properties.required'))" class=" d-flex align-items-center w-100 pb-3"
+            [ngClass]="{'hover':canEdit}"
             *ngIf="formItem.get('properties.required') && formItem.get('key').value !== '_self'">
             <odp-checkbox id="reqAttr" [edit]="{ status: canEdit }"
               (checkedChange)="toggleCheck(formItem.get('properties.required'))"
@@ -56,7 +76,8 @@
               class="ml-2 rounded-circle properties required d-flex justify-content-center align-items-center text-white fw-500 font-12">R</span>
             <span class="ml-2 text-dark font-14">Required</span>
           </div>
-          <div (click)="toggleCheck(formItem.get('properties.createOnly'))" class=" d-flex align-items-center pb-3" [ngClass]="{'hover':canEdit}"
+          <div (click)="toggleCheck(formItem.get('properties.createOnly'))" class=" d-flex align-items-center pb-3"
+            [ngClass]="{'hover':canEdit}"
             *ngIf="formItem.get('properties.createOnly') && formItem.get('key').value !=='_self'">
             <odp-checkbox id="createAttr" [edit]="{ status: canEdit }"
               (checkedChange)="toggleCheck(formItem.get('properties.createOnly'))"
@@ -65,7 +86,8 @@
               class="ml-2 rounded-circle properties create-only d-flex justify-content-center align-items-center text-white fw-500 font-12">C</span>
             <span class="ml-2 text-dark font-14">Create Only</span>
           </div>
-          <div (click)="toggleCheck(formItem.get('properties.unique'))" class=" d-flex align-items-center pb-3" [ngClass]="{'hover':canEdit}"
+          <div (click)="toggleCheck(formItem.get('properties.unique'))" class=" d-flex align-items-center pb-3"
+            [ngClass]="{'hover':canEdit}"
             *ngIf="formItem.get('properties.unique') && formItem.get('key').value !== '_self'">
             <odp-checkbox id="UniqAttr" [edit]="{ status: canEdit }"
               (checkedChange)="toggleCheck(formItem.get('properties.unique'))"
@@ -74,7 +96,8 @@
               class="ml-2 rounded-circle properties unique d-flex justify-content-center align-items-center text-white fw-500 font-12">U</span>
             <span class="ml-2 text-dark font-14">Unique</span>
           </div>
-          <div (click)="toggleCheck(formItem.get('properties.password'))" class=" d-flex align-items-center pb-3" [ngClass]="{'hover':canEdit}"
+          <div (click)="toggleCheck(formItem.get('properties.password'))" class=" d-flex align-items-center pb-3"
+            [ngClass]="{'hover':canEdit}"
             *ngIf="formItem.get('properties.password') && formItem.get('key').value !== '_self' && (formItem.get('properties._detailedType').value !== 'email' && form.get('properties._detailedType').value !== 'enum')">
             <odp-checkbox id="secureAttr" [edit]="{ status: canEdit }"
               (checkedChange)="toggleCheck(formItem.get('properties.password'))"
