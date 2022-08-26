@@ -1,123 +1,121 @@
 <div class="d-flex flex-column w-100">
-    <div class="field-wrapper row no-gutters d-flex align-items-center justify-content-between w-100 rounded"
-        [ngClass]="{'active bg-light':active}" [formGroup]="form">
-        <div class="d-flex align-items-center justify-content-start">
-            <div class="field-name-holder d-flex align-items-center" formGroupName="properties">
-                <span class="spacer" [ngStyle]="getSpacing()"></span>
-                <span class="icon mr-2 ml-3 d-flex align-items-center">
-                    <span class="fa fa-bars text-muted hover"
-                        *ngIf="!idField && edit.status && type!=='internal'"></span>
-                </span>
-                <div class="input-control position-relative mr-3">
-                    <span class="d-flex align-items-center field form-control-plaintext word-elipsis"
-                        *ngIf="!edit.status || type==='internal'" [ngbTooltip]="form.get('properties.name').value"
-                        #tooltip="ngbTooltip">{{form.get('properties.name').value}}</span>
-                    <input #inputField *ngIf="edit.status && type!=='internal'" placement="top"
-                        [ngbTooltip]="tipContent" #tooltip="ngbTooltip" triggers="manual"
-                        (blur)="checkType(inputField.value);searchService();" (focus)="activateProperty()"
-                        (keyup.enter)="addField()" (shift.delete)="deleteField($event)" type="text" class="field mr-2"
-                        formControlName="name" (paste)="pasteOnField($event)" [attr.placeholder]="placeholder"
-                        [attr.id]="fieldId"
-                        [ngClass]="{'form-control-plaintext':!active,'form-control':active, 'is-invalid pl-2': hasError}"
-                        odpKeyStrokes (shift.enter)="addField(true)">
-                    <span class="dsi dsi-danger-circle text-danger position-absolute error-icon" *ngIf="hasError"
-                        [ngbTooltip]="validationError" placement="right"></span>
-                    <!-- <span class="fa fa-spinner fa-pulse position-absolute searching-relation"
-                        *ngIf="searchingRelation"></span> -->
-                    <div *ngIf="searchingRelation"
-                        class="spinner-border text-dark position-absolute searching-relation fa-xs" role="status">
-                        <span class="sr-only">Processing...</span>
+    <div class="field-wrapper w-100 rounded" [ngClass]="{'active':active}" [formGroup]="form">
+        <div class="field-row d-flex align-items-center justify-content-between w-100 py-3">
+            <div class="d-flex align-items-center justify-content-start">
+                <div class="field-name-holder d-flex align-items-center" formGroupName="properties">
+                    <!-- <span class="spacer" [ngStyle]="getSpacing()"></span> -->
+                    <span class="icon mr-2 ml-3 d-flex align-items-center">
+                        <span class="dsi dsi-more-vertical-6 sub-heading hover"
+                            *ngIf="!idField && edit.status && type!=='internal'"></span>
+                    </span>
+                    <div class="input-control position-relative mr-3">
+                        <span class="d-flex align-items-center field form-control-plaintext word-elipsis"
+                            *ngIf="!edit.status || type==='internal'" [ngbTooltip]="form.get('properties.name').value"
+                            #tooltip="ngbTooltip">{{form.get('properties.name').value}}</span>
+                        <input #inputField *ngIf="edit.status && type!=='internal'" placement="top"
+                            [ngbTooltip]="tipContent" #tooltip="ngbTooltip" triggers="manual"
+                            (blur)="checkType(inputField.value);searchService();" (focus)="activateProperty()"
+                            (keyup.enter)="addField()" (shift.delete)="deleteField($event)" type="text"
+                            class="field mr-2" formControlName="name" (paste)="pasteOnField($event)"
+                            [attr.placeholder]="placeholder" [attr.id]="fieldId"
+                            [ngClass]="{'form-control-plaintext':!active,'form-control':active, 'is-invalid pl-2': hasError}"
+                            odpKeyStrokes (shift.enter)="addField(true)">
+                        <span class="dsi dsi-danger-circle text-danger position-absolute error-icon" *ngIf="hasError"
+                            [ngbTooltip]="validationError" placement="right"></span>
+                        <!-- <span class="fa fa-spinner fa-pulse position-absolute searching-relation"
+                            *ngIf="searchingRelation"></span> -->
+                        <div *ngIf="searchingRelation"
+                            class="spinner-border text-dark position-absolute searching-relation fa-xs" role="status">
+                            <span class="sr-only">Processing...</span>
+                        </div>
+                        <!-- <div class="" id="tooltip" placement="top" [ngbTooltip]="tipContent" #tooltip="ngbTooltip"
+                            triggers="manual"></div> -->
                     </div>
-                    <!-- <div class="" id="tooltip" placement="top" [ngbTooltip]="tipContent" #tooltip="ngbTooltip"
-                        triggers="manual"></div> -->
+                </div>
+                <div class="field-type-holder">
+                    <odp-field-type [field]="field" label="true"></odp-field-type>
+                </div>
+                <div class="field-flag-holder d-flex justify-content-start">
+                    <span
+                        class="ml-2 rounded-circle properties required d-flex justify-content-center align-items-center text-white fw-500 font-12"
+                        *ngIf="form.get('properties.required') && form.get('properties.required').value"
+                        ngbTooltip="Required">R</span>
+                    <span
+                        class="ml-2 rounded-circle properties create-only d-flex justify-content-center align-items-center text-white fw-500 font-12"
+                        *ngIf="form.get('properties.createOnly') && form.get('properties.createOnly').value"
+                        ngbTooltip="Create Only">C</span>
+                    <span
+                        class="ml-2 rounded-circle properties unique d-flex justify-content-center align-items-center text-white fw-500 font-12"
+                        *ngIf="form.get('properties.unique') && form.get('properties.unique').value"
+                        ngbTooltip="Unique">U</span>
+                    <span
+                        class="ml-2 rounded-circle properties password d-flex justify-content-center align-items-center text-white fw-500 font-12"
+                        *ngIf="form.get('properties.password') && form.get('properties.password').value"
+                        ngbTooltip="Secure">S</span>
+                    <span class="state-model hover" (click)="_viewStateModel(true)" *ngIf="checkStateModel()">
+                        State Model
+                    </span>
                 </div>
             </div>
-            <div class="field-type-holder">
-                <odp-field-type [field]="field" label="true"></odp-field-type>
-                <a class='state-model hover' (click)='_viewStateModel(true)' *ngIf='checkStateModel()'>State Model</a>
-            </div>
-            <div class="field-flag-holder d-flex justify-content-start">
-                <span
-                    class="ml-2 rounded-circle properties required d-flex justify-content-center align-items-center text-white fw-500 font-12"
-                    *ngIf="form.get('properties.required') && form.get('properties.required').value"
-                    ngbTooltip="Required">R</span>
-                <span
-                    class="ml-2 rounded-circle properties create-only d-flex justify-content-center align-items-center text-white fw-500 font-12"
-                    *ngIf="form.get('properties.createOnly') && form.get('properties.createOnly').value"
-                    ngbTooltip="Create Only">C</span>
-                <span
-                    class="ml-2 rounded-circle properties unique d-flex justify-content-center align-items-center text-white fw-500 font-12"
-                    *ngIf="form.get('properties.unique') && form.get('properties.unique').value"
-                    ngbTooltip="Unique">U</span>
-                <span
-                    class="ml-2 rounded-circle properties password d-flex justify-content-center align-items-center text-white fw-500 font-12"
-                    *ngIf="form.get('properties.password') && form.get('properties.password').value"
-                    ngbTooltip="Secure">S</span>
-
+            <div class="d-flex field-options justify-content-end pr-3">
+                <div class="readonly d-flex align-items-center justify-content-center rounded-circle ml-4 hover"
+                    [ngClass]="{'active':form.get('properties.readonly')?.value}" placement="top"
+                    ngbTooltip="Mark as read-only" (click)="setReadOnly(form.get('properties.readonly'))"
+                    *ngIf="  (!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
+                && form.get('type').value !== 'Object') &&  edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
+                    <span class="dsi dsi-view font-12"></span>
+                </div>
+                <div class="readonly d-flex align-items-center justify-content-center rounded-circle ml-4"
+                    [ngClass]="{'active':form.get('properties.readonly')?.value}" placement="top"
+                    ngbTooltip="Marked as read-only"
+                    *ngIf="(!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
+                && form.get('type').value !== 'Object') && form.get('properties.readonly')?.value &&  !edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
+                    <span class="dsi dsi-view font-12"></span>
+                </div>
+                <span *ngIf="edit.status && type!=='internal'" class="dsi dsi-edit text-secondary hover ml-4"
+                    (click)="activateProperty()"> </span>
+                <span *ngIf="canDelete && edit.status && type!=='internal'"
+                    class="dsi dsi-copy text-secondary d-flex align-items-center hover ml-4"
+                    (click)="cloneField()"></span>
+                <span *ngIf="canDelete && edit.status && type!=='internal'"
+                    class="dsi dsi-trash text-secondary hover ml-4" (click)="remove()"></span>
+                <span class="dsi sub-heading fa-lg hover ml-4 text-center d-flex align-items-center"
+                    (click)="collapse=!collapse" *ngIf="canCollapse"
+                    [ngClass]="{'dsi-drop-up':collapse,'dsi-drop-down':!collapse}"></span>
             </div>
         </div>
-        <div class="d-flex field-options justify-content-end pr-3">
-            <div class="readonly d-flex align-items-center justify-content-center rounded-circle ml-4 hover"
-                [ngClass]="{'active':form.get('properties.readonly')?.value}" placement="top"
-                ngbTooltip="Mark as read-only" (click)="setReadOnly(form.get('properties.readonly'))"
-                *ngIf="  (!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
-            && form.get('type').value !== 'Object') &&  edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
-                <span class="odp-no-edit"></span>
+        <div class="mx-3" *ngIf="objectFields" [ngClass]="{'d-none':collapse}">
+            <div [sortablejs]="objectFields.controls" [sortablejsOptions]="{sort:editable}">
+                <ng-container *ngFor="let def of objectFields.controls;let i = index">
+                    <odp-structure-field [all]="objectFields" [index]="i" [isLibrary]="isLibrary"
+                        [isDataFormat]="isDataFormat" [formatType]="formatType" [edit]="edit" [level]="level+1"
+                        [isDataFormatUsed]="isDataFormatUsed" [stateModelAttr]='stateModelAttr'
+                        (deleteStateModel)='_deleteStateModel($event)' (viewStateModel)='_viewStateModel($event)'>
+                    </odp-structure-field>
+                </ng-container>
             </div>
-            <div class="readonly d-flex align-items-center justify-content-center rounded-circle ml-4"
-                [ngClass]="{'active':form.get('properties.readonly')?.value}" placement="top"
-                ngbTooltip="Marked as read-only"
-                *ngIf="(!(form.get('type').value === 'Array' && form.value.definition[0].type==='Object') 
-            && form.get('type').value !== 'Object') && form.get('properties.readonly')?.value &&  !edit.status && type!=='internal' && !isDataFormat && !checkStateModel()">
-                <span class="odp-no-edit"></span>
+        </div>
+
+        <div class="mx-3" *ngIf="arrayFields" [ngClass]="{'d-none':collapse}">
+            <div [sortablejs]="arrayFields.controls" [sortablejsOptions]="{sort:editable}">
+                <ng-container *ngFor="let def of arrayFields.controls;let i = index">
+                    <odp-structure-field [all]="arrayFields" [index]="i" [isLibrary]="isLibrary"
+                        [isDataFormat]="isDataFormat" [formatType]="formatType" [edit]="edit" [level]="level+1"
+                        [isDataFormatUsed]="isDataFormatUsed" [stateModelAttr]='stateModelAttr'
+                        (deleteStateModel)='_deleteStateModel($event)' (viewStateModel)='_viewStateModel($event)'>
+                    </odp-structure-field>
+                </ng-container>
             </div>
-            <span *ngIf="edit.status && type!=='internal'" class="dsi dsi-edit text-secondary hover ml-4"
-                (click)="activateProperty()"> </span>
-            <span *ngIf="canDelete && edit.status && type!=='internal'"
-                class="dsi dsi-copy text-secondary d-flex align-items-center hover ml-4" (click)="cloneField()"></span>
-            <span *ngIf="canDelete && edit.status && type!=='internal'" class="dsi dsi-trash text-secondary hover ml-4"
-                (click)="remove()"></span>
-            <span class="fa text-secondary fa-lg hover ml-4 text-center d-flex align-items-center"
-                (click)="collapse=!collapse" *ngIf="canCollapse"
-                [ngClass]="{'fa-caret-right':collapse,'fa-caret-down':!collapse}"></span>
         </div>
     </div>
 </div>
 
-<div class="add-attribute d-flex align-items-center alert alert-primary hover mb-4" (click)="addField()"
+<div class="add-attribute d-flex align-items-center hover mb-4 mt-3" (click)="addField()"
     *ngIf="edit.status && canAdd && type!=='internal'">
     <span [ngStyle]="style" class="d-flex align-items-center" id="schemaFieldObjectAddField">
-        <span class="dsi dsi-plus fa-xs mr-1"></span>
-        <span class="text">Add Attribute</span>
+        <span class="dsi dsi-plus-circle fa-xs mr-1 text-primary"></span>
+        <span class="text">Add</span>
     </span>
-</div>
-
-<div *ngIf="objectFields" [ngClass]="{'d-none':collapse}">
-    <div [sortablejs]="objectFields.controls" [sortablejsOptions]="{sort:editable}">
-        <ng-container *ngFor="let def of objectFields.controls;let i = index">
-            <div>
-                <odp-structure-field [all]="objectFields" [index]="i" [isLibrary]="isLibrary"
-                    [isDataFormat]="isDataFormat" [formatType]="formatType" [edit]="edit" [level]="level+1"
-                    [isDataFormatUsed]="isDataFormatUsed" [stateModelAttr]='stateModelAttr'
-                    (deleteStateModel)='_deleteStateModel($event)' (viewStateModel)='_viewStateModel($event)'>
-                </odp-structure-field>
-            </div>
-        </ng-container>
-    </div>
-</div>
-
-<div *ngIf="arrayFields" [ngClass]="{'d-none':collapse}">
-    <div [sortablejs]="arrayFields.controls" [sortablejsOptions]="{sort:editable}">
-        <ng-container *ngFor="let def of arrayFields.controls;let i = index">
-            <div>
-                <odp-structure-field [all]="arrayFields" [index]="i" [isLibrary]="isLibrary"
-                    [isDataFormat]="isDataFormat" [formatType]="formatType" [edit]="edit" [level]="level+1"
-                    [isDataFormatUsed]="isDataFormatUsed" [stateModelAttr]='stateModelAttr'
-                    (deleteStateModel)='_deleteStateModel($event)' (viewStateModel)='_viewStateModel($event)'>
-                </odp-structure-field>
-            </div>
-        </ng-container>
-    </div>
 </div>
 
 <ng-template #tipContent let-message="message">

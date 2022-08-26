@@ -1,17 +1,52 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
+
+@mixin altBox($n) {
+  $n: $n + 1;
+
+  .field-wrapper {
+    @if $n % 2==0 {
+      background: $light;
+    }
+
+    @else {
+      background: $white;
+    }
+
+    @if ($n < 9) {
+      @include altBox($n);
+    }
+  }
+}
+
+@include altBox(1);
+
+
+
 .field-wrapper {
   min-height: 52px;
   border-radius: 6px;
-  max-height: 52px;
+  // max-height: 52px;
   margin-bottom: 6px;
-  background: $light;
+  // background: $light;
   font-size: 14px;
 
-  &.active {
-    border-left-color: $dark;
+  .field-row {
+    max-height: 52px;
   }
+
+  // .field-wrapper {
+  //   background: $white;
+
+  //   .field-wrapper {
+  //     background: $light;
+  //   }
+  // }
+
+  // &.active {
+  //   border-left-color: $dark;
+  // }
 
   .properties {
     width: 20px;
@@ -74,29 +109,35 @@
     font-size: 16px;
   }
 
-  .field-options {
-    .readonly {
-      min-width: 18px;
-      max-width: 18px;
-      min-height: 18px;
-      max-height: 18px;
-      color: $border;
-      font-size: 10px;
+  .field-row {
+    .field-options {
       opacity: 0;
-      transition: 0.25s;
 
-      &.active {
-        opacity: 1;
-        background: #000;
-        color: #fff;
+      .readonly {
+        min-width: 18px;
+        max-width: 18px;
+        min-height: 18px;
+        max-height: 18px;
+        color: $dark;
+        font-size: 10px;
+        // opacity: 0;
+        transition: 0.25s;
+        border: 1px solid $dark;
+
+        &.active {
+          opacity: 1;
+          background: #000;
+          color: #fff;
+        }
       }
     }
-  }
 
-  &:hover {
-    .field-options {
-      .readonly {
+    &:hover {
+      .field-options {
         opacity: 1;
+        // .readonly {
+        //   opacity: 1;
+        // }
       }
     }
   }
@@ -109,10 +150,12 @@
 }
 
 .state-model {
-  background: #c4c4c4;
-  border-radius: 4px;
-  padding: 2px 5px;
-  margin-left: 12px;
+  background: $white;
+  border-radius: 16px;
+  padding: 2px 12px;
+  border: 1px solid $border-color;
+  font-size: 11px;
+  color: $sub-headings;
 }
 
 

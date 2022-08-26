@@ -711,7 +711,7 @@ export class SchemaBuilderComponent implements
                             self.breadcrumbPaths.pop();
                             this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                             self.fillDetails(self.edit.id);
-                            this.activeTab = 1;
+                            this.activeTab = 0;
                         }
                     } else {
                         self.router.navigate(['/app/', self.commonService.app._id, 'sm']);
@@ -725,7 +725,7 @@ export class SchemaBuilderComponent implements
                 } else {
                     if (self.edit.status) {
                         self.edit.status = false;
-                        this.activeTab = 1;
+                        this.activeTab = 0;
                     } else {
                         self.router.navigate(['/app/', self.commonService.app._id, 'sm']);
                     }

@@ -560,7 +560,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
     }
     get style() {
         const self = this;
-        const margin = self.level * 44;
+        const margin = self.level * 16;
         return {
             marginLeft: margin + 'px'
         };
