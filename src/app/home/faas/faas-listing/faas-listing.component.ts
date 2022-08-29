@@ -125,6 +125,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   }
 
   getFaas() {
+    this.faasList = [];
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`).pipe(
       switchMap((ev: any) => {
         this.totalCount = ev;
