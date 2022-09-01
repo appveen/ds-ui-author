@@ -260,12 +260,11 @@
           <div class="current-app d-flex align-items-center border border-light rounded mr-3 hover ignore-outside"
             (click)="toggleAppOptions()">
             <div class="current-app-thumbnail d-flex align-items-center justify-content-center mx-2"
-              ngbTooltip="Switch App" placement="bottom" [ngStyle]="{ 'background-color': selectedApp.bg }" [ngClass]="{
-                'img-app': selectedApp.logo && selectedApp.logo.thumbnail
-              }">
+              ngbTooltip="Switch App" placement="bottom" [ngStyle]="{ 'background-color': selectedApp.bg }">
               <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail"
                 alt="Logo" />
-              <span class="font-12" *ngIf="!selectedApp?.logo?.thumbnail">{{selectedApp.firstLetter}}</span>
+              <span class="font-12"
+                *ngIf="!selectedApp.logo || !selectedApp?.logo?.thumbnail">{{selectedApp.firstLetter}}</span>
             </div>
             <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" placement="bottom">
               {{ selectedApp._id }}
@@ -278,9 +277,8 @@
             class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle border border-light hover"
             (click)="showProfileOptions = !showProfileOptions">
             <span class="dsi dsi-user sub-heading font-14"></span>
-            <div *ngIf="isAppAdmin" class="d-flex align-items-center justify-content-center ml-1">
-              <span class="dsi dsi-admin text-warning" ngbTooltip="You are admin of this App" placement="bottom"></span>
-            </div>
+            <span *ngIf="isAppAdmin" class="dsi dsi-admin text-warning font-10 position-absolute"
+              ngbTooltip="You are admin of this App" placement="left"></span>
           </div>
           <div class="profile position-absolute bg-white p-4" *ngIf="showProfileOptions" odpClickOutside
             [ignore]="['.profile-icon', '.dsi-user']" (outside)="showProfileOptions = false">

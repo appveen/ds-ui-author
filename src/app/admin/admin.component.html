@@ -5,10 +5,8 @@
     </div>
     <div class="w-50 d-flex align-items-center justify-content-end">
       <div class="current-app d-flex align-items-center mr-3" *ngIf="selectedApp && selectedApp._id">
-        <div class="current-app-thumbnail d-flex align-items-center justify-content-center border border-border mr-2"
-          ngbTooltip="Current App" placement="bottom" [ngClass]="{
-            'img-app': selectedApp.logo && selectedApp.logo.thumbnail
-          }">
+        <div class="current-app-thumbnail d-flex align-items-center justify-content-center mr-2"
+          ngbTooltip="Current App" placement="bottom">
           <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail" alt="Logo" />
           <!-- <odp-app-icon class="pt-1" *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail" color="aaa" size="24">
           </odp-app-icon> -->

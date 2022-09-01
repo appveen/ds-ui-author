@@ -15,93 +15,7 @@ import { Breadcrumb } from '../../utils/interfaces/breadcrumb';
 @Component({
     selector: 'odp-app-manage',
     templateUrl: './app-manage.component.html',
-    styleUrls: ['./app-manage.component.scss'],
-    animations: [
-        trigger('stopping', [
-            state('disabled', style({
-                opacity: '0.5',
-            })), state('enable', style({
-                opacity: '1',
-            })),
-            transition('* => *', animate('1s'))
-        ]),
-        trigger('cardAction', [
-            state('expand', style({
-                'min-height': '174px',
-                'max-height': '230px'
-            })),
-            state('collapse', style({
-                'min-height': '40px',
-                'max-height': '40px'
-            })),
-            state('centerLocate', style({
-                transform: 'translate(-100px,42px)'
-            })),
-            state('initLocate', style({
-                transform: 'translate(0px,0px)'
-            })),
-            state('circleExpand', style({
-                background: 'rgba(209,239,218,1)'
-            })),
-            state('stopCircleExpand', style({
-                background: 'rgba(248,220,220,1)'
-            })),
-            state('stopCircleShrink', style({
-                background: 'rgba(248,220,220,0)'
-            })),
-            state('circleShrink', style({
-                background: 'rgba(209,239,218,0)'
-            })),
-            state('buttonGroupShow', style({
-                height: '87px',
-                opacity: '1'
-            })),
-            state('buttonGroupHide', style({
-                height: '0px',
-                opacity: '0',
-                display: 'none'
-            })),
-            state('loadingShow', style({
-                opacity: '1',
-                display: 'block'
-            })),
-            state('loadingHide', style({
-                opacity: '0',
-                display: 'none'
-            })),
-            state('showProcessing', style({
-                opacity: '1',
-                display: 'block',
-                height: '13px'
-
-            })),
-            state('hideProcessing', style({
-                opacity: '0',
-                display: 'none',
-                height: '0px'
-            })),
-            state('playIcon', style({
-                opacity: '1',
-                display: 'block',
-                color: '#0d9e1b'
-            })),
-            state('midStage', style({
-                opacity: '1',
-                display: 'block',
-                color: '#BDBDBD'
-            })),
-            state('playIconHide', style({
-                opacity: '0',
-                display: 'none',
-                color: '#BDBDBD'
-            })),
-
-            transition('initLocate => centerLocate', animate('0.5s ease-in')),
-            transition('buttonGroupHide => buttonGroupShow', animate('0.25s  ease-out')),
-            transition('collapse => expand', animate('0.25s')),
-            transition('* => *', animate('0.25s')),
-        ]),
-    ]
+    styleUrls: ['./app-manage.component.scss']
 })
 export class AppManageComponent implements OnInit, OnDestroy {
 
@@ -169,8 +83,8 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.appData = {};
         self.appData.appCenterStyle = {
             bannerColor: true,
-            primaryColor: 'EB5F66',
-            theme: 'light',
+            primaryColor: '44a8f1',
+            theme: 'Light',
             textColor: 'FFFFFF'
         };
         self.appData.workflowConfig = {
@@ -733,7 +647,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         });
     }
 
-    patchVersionValue(reset?) {
+    patchVersionValue(reset?: boolean) {
         const self = this;
         let value;
         if (reset) {
@@ -1065,6 +979,15 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.activeTab = 3;
         self.getFlowCount();
         self.getManagementDetails();
+    }
+
+    reset() {
+        this.appData.appCenterStyle = {
+            bannerColor: true,
+            primaryColor: '44a8f1',
+            theme: 'Light',
+            textColor: 'FFFFFF'
+        };
     }
 
     set enabledTrustedIP(val) {

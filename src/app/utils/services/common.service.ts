@@ -265,7 +265,7 @@ export class CommonService {
             self.appList = res;
             self.appList.forEach(app => {
               app.firstLetter = app._id.charAt(0);
-              app.bg = this.appColor();
+              app.bg = self.appColor();
             })
             self.app = self.appList[0];
             resolve(res);
@@ -291,6 +291,14 @@ export class CommonService {
         .subscribe(
           (res) => {
             self.appList = res;
+            self.appList.forEach(app => {
+              if (!app.firstLetter) {
+                app.firstLetter = app._id.charAt(0);
+              }
+              if (!app.bg) {
+                app.bg = self.appColor();
+              }
+            });
             self.app = self.appList[0];
             resolve(res);
           },
@@ -384,6 +392,12 @@ export class CommonService {
             app.appCenterStyle = res.appCenterStyle;
             app.description = res.description;
             app.serviceVersionValidity = res.serviceVersionValidity;
+            if (!app.firstLetter) {
+              app.firstLetter = app._id.charAt(0);
+            }
+            if (!app.bg) {
+              app.bg = self.appColor();
+            }
             resolve(res);
           },
           (err: any) => {
@@ -443,6 +457,12 @@ export class CommonService {
                     app.appCenterStyle = temp.appCenterStyle;
                     app.description = temp.description;
                     app.serviceVersionValidity = temp.serviceVersionValidity;
+                    if (!app.firstLetter) {
+                      app.firstLetter = app._id.charAt(0);
+                    }
+                    if (!app.bg) {
+                      app.bg = self.appColor();
+                    }
                   }
                 });
                 resolve(res);

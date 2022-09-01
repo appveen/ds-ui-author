@@ -8,21 +8,22 @@
     </div>
   </div>
   <div class="d-flex flex-column position-relative">
-    <div class="d-flex options">
-      <div class="my-auto">
+    <div class="d-flex align-items-center options">
+      <div class="">
         <odp-basic-info holderStyle="square" [(name)]="appData._id" [(description)]="appData.description"
           [edit]="{ status: true }">
         </odp-basic-info>
       </div>
-      <button class="btn btn-primary mt-2 ml-auto my-auto" (click)="save()" [disabled]="!changesDone || isInvalid">
-        <span class="dsi dsi-plus mr-2"></span>
-        <span class="text">Save</span>
+      <button class="btn btn-primary ml-auto d-flex align-items-center justify-content-center btn-min-width" (click)="save()"
+        [disabled]="!changesDone || isInvalid">
+        <!-- <span class="dsi dsi-plus mr-2"></span> -->
+        <span class="text-center">Save</span>
       </button>
     </div>
   </div>
 
 
-  <div class="d-flex flex-column border-top bg-white content">
+  <div class="d-flex flex-column rounded rounded-lg border bg-white content">
     <div class="tabs d-flex w-100 border-bottom">
       <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{ active: activeTab == 1 }"
         (click)="activeTab = 1">
@@ -45,21 +46,21 @@
                     <span class="text">Trusted IP List</span>
                 </div> -->
     </div>
-    <div class="tab-content w-100 pt-3">
+    <div class="tab-content w-100">
       <ng-container *ngIf="activeTab == 1">
-        <div class="row" style="max-height: inherit">
-          <div class="col-4 upload-section">
-            <span class="ml-3 font-weight-bold">Logo</span>
-            <div class="d-flex align-items-start pt-2 mb-4">
+        <div class="d-flex">
+          <div class="upload-section p-4">
+            <span class="fw-500 font-14 mb-2">Logo</span>
+            <div class="d-flex align-items-start mb-4">
               <div class="d-flex flex-column">
-                <span class="d-flex">
-                  <span class="text-secondary pl-3" style="width: 20vw">Upload your logo, to add your brand identity to
+                <span class="d-flex mb-3">
+                  <span class="text-secondary">Upload your logo, to add your brand identity to
                     app center
                     (Recommended size: 216px x 72 px)</span>
-                  <span class="ml-auto text-danger mr-3 hover" (click)="appData.logo.full = undefined"
+                  <span class="ml-auto text-danger hover" (click)="appData.logo.full = undefined"
                     *ngIf="appData.logo.full">Remove</span>
                 </span>
-                <label class="drop-box-logo drop-box d-flex align-items-center justify-content-center m-3">
+                <label class="drop-box-logo drop-box d-flex align-items-center justify-content-center rounded">
                   <input type="file" name="logoFile" id="logoFile" class="d-none"
                     (odpUploadImage)="imageUpload($event, 'logo')" imageWidth="216" />
                   <img *ngIf="appData.logo.full" [src]="appData.logo.full" class="drop-box-logo-holder" />
@@ -68,41 +69,23 @@
                 </label>
               </div>
             </div>
-            <!-- <span class="ml-3 font-weight-bold">Thumbnail</span>
-            <div class="d-flex align-items-start pt-2 mb-4">
+            <span class="fw-500 font-14 mb-2">Accent Color</span>
+            <div class="d-flex align-items-start mb-4">
               <div class="d-flex flex-column">
-                <span class="d-flex">
-                  <span class="text-secondary pl-3" style="width: 22vw">Upload your thumbnail for the app
-                    (Recommended size: 72px x 72 px)</span>
-                  <span class="ml-auto text-danger mr-3 hover" (click)="appData.logo.thumbnail = undefined"
-                    *ngIf="appData.logo.thumbnail">Remove</span>
+                <span class="text-secondary mb-4">
+                  Pick accent colour for the app center that complements your brand look.
                 </span>
-                <label class="drop-box-thumbnail drop-box d-flex align-items-center justify-content-center m-3">
-                  <input type="file" name="logoFile" id="logoFile" class="d-none"
-                    (odpUploadImage)="imageUpload($event, 'thumbnail')" imageWidth="216" />
-                  <img *ngIf="appData.logo.thumbnail" [src]="appData.logo.thumbnail"
-                    class="drop-box-thumbnail-holder" />
-                  <i *ngIf="!appData.logo.thumbnail" class="dsi dsi-upload mr-1" style="color:#44A8F1"></i>
-                  <span *ngIf="!appData.logo.thumbnail" style="color:#44A8F1">Upload</span>
-                </label>
-              </div>
-            </div> -->
-            <span class="ml-3 font-weight-bold">Accent Color</span>
-            <div class="d-flex align-items-start pt-2">
-              <div class="d-flex flex-column">
-                <span class="text-secondary pl-3 mb-4">Pick accent colour for the app center that complements your brand
-                  look.</span>
-                <div class="ml-2 mt-2">
+                <div class="mb-4">
                   <odp-color-picker [(color)]="appData.appCenterStyle.primaryColor">
                   </odp-color-picker>
                 </div>
-
               </div>
             </div>
-
+            <div class="d-flex align-items-start">
+              <button type="button" class="btn btn-sm btn-outline-dark w-100" (click)="reset()">Reset</button>
+            </div>
           </div>
-
-          <div class="col-8">
+          <div class="preview-section">
             <odp-app-center-preview [logo]="appData.logo.full" [color]="appData.appCenterStyle.primaryColor"
               (textColor)="(appData.appCenterStyle.textColor)" [theme]="appData.appCenterStyle.theme"
               [bannerColor]="appData.appCenterStyle.bannerColor"></odp-app-center-preview>

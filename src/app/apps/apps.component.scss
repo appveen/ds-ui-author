@@ -136,6 +136,15 @@
   overflow: hidden;
 }
 
+.profile-icon {
+  .dsi-admin {
+    right: 5px;
+    background: #fff;
+    border-radius: 6px;
+    top: 13px;
+  }
+}
+
 .profile-icon,
 .admin-settings {
   min-width: 32px;
@@ -203,10 +212,6 @@
       width: 290px;
     }
   }
-}
-
-.img-app {
-  border: 0px !important;
 }
 
 .username-holder {
