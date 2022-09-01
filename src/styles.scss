@@ -102,68 +102,18 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   margin-top: 40px;
 }
 
-.font-22 {
-  font-size: 22px;
+@for $i from 7 through 26 {
+  .font-#{$i} {
+    font-size: #{$i}px;
+  }
 }
 
-.font-20 {
-  font-size: 20px;
-}
+$weights: 200, 300, 400, 500, 600, 700, 800, 900;
 
-.font-18 {
-  font-size: 18px;
-}
-
-.font-16 {
-  font-size: 16px;
-}
-
-.font-14 {
-  font-size: 14px;
-}
-
-.font-13 {
-  font-size: 13px;
-}
-
-.font-12 {
-  font-size: 12px;
-}
-
-.font-11 {
-  font-size: 11px;
-}
-
-.fw-900 {
-  font-weight: 900 !important;
-}
-
-.fw-800 {
-  font-weight: 800 !important;
-}
-
-.fw-700 {
-  font-weight: 700 !important;
-}
-
-.fw-600 {
-  font-weight: 600 !important;
-}
-
-.fw-500 {
-  font-weight: 500 !important;
-}
-
-.fw-400 {
-  font-weight: 400 !important;
-}
-
-.fw-300 {
-  font-weight: 300 !important;
-}
-
-.fw-200 {
-  font-weight: 200 !important;
+@each $size in $weights {
+  .fw-#{$size} {
+    font-weight: $size;
+  }
 }
 
 .k8s-icon {
