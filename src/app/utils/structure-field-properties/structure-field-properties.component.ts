@@ -64,6 +64,8 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
         self.form = form;
         self.showProperties = true;
         self.collectForms();
+      } else {
+        this.showProperties = false;
       }
     });
     self.schemaService.typechanged.subscribe(() => {

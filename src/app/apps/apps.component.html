@@ -253,20 +253,20 @@
                     </div> -->
             <div (click)="loadAdminPage()"
               class="admin-settings d-flex flex-column justify-content-center align-items-center mr-3 hover"
-              ngbTooltip="Admin Panel" placement="bottom">
+              ngbTooltip="Admin Panel" container="body" placement="bottom">
               <div class="dsi dsi-agent font-22"></div>
             </div>
           </ng-container>
           <div class="current-app d-flex align-items-center border border-light rounded mr-3 hover ignore-outside"
             (click)="toggleAppOptions()">
             <div class="current-app-thumbnail d-flex align-items-center justify-content-center mx-2"
-              ngbTooltip="Switch App" placement="bottom" [ngStyle]="{ 'background-color': selectedApp.bg }">
+              ngbTooltip="Switch App" container="body" placement="bottom" [ngStyle]="{ 'background-color': selectedApp.bg }">
               <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail"
                 alt="Logo" />
               <span class="font-12"
                 *ngIf="!selectedApp.logo || !selectedApp?.logo?.thumbnail">{{selectedApp.firstLetter}}</span>
             </div>
-            <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" placement="bottom">
+            <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" container="body" placement="bottom">
               {{ selectedApp._id }}
             </div>
             <div *ngIf="commonService.appList.length > 1" class="ml-auto mr-2">
@@ -278,9 +278,9 @@
             (click)="showProfileOptions = !showProfileOptions">
             <span class="dsi dsi-user sub-heading font-14"></span>
             <span *ngIf="isAppAdmin" class="dsi dsi-admin text-warning font-10 position-absolute"
-              ngbTooltip="You are admin of this App" placement="left"></span>
+              ngbTooltip="You are admin of this App" container="body" placement="left"></span>
           </div>
-          <div class="profile position-absolute bg-white p-4" *ngIf="showProfileOptions" odpClickOutside
+          <div class="profile position-absolute bg-white p-4 border" *ngIf="showProfileOptions" odpClickOutside
             [ignore]="['.profile-icon', '.dsi-user']" (outside)="showProfileOptions = false">
             <div class="profile-container position-relative d-flex align-items-center h-100 w-100 pb-4 border-bottom">
               <div

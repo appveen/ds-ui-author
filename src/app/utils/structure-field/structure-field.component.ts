@@ -465,6 +465,8 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
 
     pasteOnField(e) {
         const self = this;
+        // self.schemaService.selectedFieldId = null;
+        self.schemaService.activeProperty.emit(null);
         if (!self.all.get([self.index, '_id'])) {
             let val = e.clipboardData.getData('text/plain');
             try {

@@ -201,7 +201,7 @@
       </label>
       <div class="name-wrapper position-relative">
         <input newServiceName type="text" class="form-control" id="name" placeholder="Untitled Service"
-          formControlName="name" odpAutoFocus [ngClass]="{
+          formControlName="name" odpAutoFocus (keyup.enter)="triggerServiceCreate()" [ngClass]="{
             'is-invalid': form.get('name').invalid && form.get('name').dirty
           }" />
         <ng-container *ngIf="form.get('name').dirty">
