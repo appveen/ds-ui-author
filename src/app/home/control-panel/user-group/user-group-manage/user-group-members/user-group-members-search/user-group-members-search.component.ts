@@ -89,7 +89,7 @@ export class UserGroupMembersSearchComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSearch(searchTerm) {
+  onSearch(searchTerm: string) {
     this.apiConfig.filter = { $or: [{ '_id': `/${searchTerm}/` }, { 'basicDetails.name': `/${searchTerm}/` }] };
     this.getUsers();
   }
@@ -99,7 +99,7 @@ export class UserGroupMembersSearchComponent implements OnInit, OnDestroy {
     this.getUsers();
   }
 
-  toggleUser(flag, user) {
+  toggleUser(flag: boolean, user: any) {
     if (flag) {
       this.selectUser(user);
     } else {

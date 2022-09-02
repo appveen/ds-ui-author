@@ -21,14 +21,15 @@
                 <div class="d-flex scrollable border rounded">
                     <div class="list-group list-group-flush">
                         <div class="list-group-item d-flex align-items-center bg-light-gray text-secondary">
-                            <div class="user-check">
+                            <div class="user-check" (click)="selectAll=!selectAll">
                                 <odp-checkbox [edit]="{status:true}" [(checked)]="selectAll"></odp-checkbox>
                             </div>
                             <div class="user-name text-uppercase">Name</div>
                             <div class="user-username text-uppercase">Username</div>
                         </div>
                         <ng-container *ngIf="userList && userList.length>0">
-                            <div class="list-group-item d-flex align-items-center " *ngFor="let user of userList">
+                            <div class="list-group-item d-flex align-items-center " *ngFor="let user of userList"
+                                (click)="toggleUser(!isUserSelected(user),user)">
                                 <div class="user-check">
                                     <odp-checkbox [edit]="{status:true}" [checked]="isUserSelected(user)"
                                         (checkedChange)="toggleUser($event,user)"></odp-checkbox>
