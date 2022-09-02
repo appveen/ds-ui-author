@@ -194,8 +194,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.showNewServiceWindow = true;
   }
 
-  viewService(selectedRow) {
-    this.router.navigate(['/app', this.app, 'sb', this.serviceList[selectedRow]._id]);
+  viewService(selectedRow: number) {
+    this.router.navigate(['/app', this.app, 'sb', this.records[selectedRow]._id]);
   }
 
   discardDraft(id: string) {
@@ -282,7 +282,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   editService(index: number) {
-    this.appService.editServiceId = this.serviceList[index]._id;
+    this.appService.editServiceId = this.records[index]._id;
     this.router.navigate([
       '/app/',
       this.commonService.app._id,
@@ -294,14 +294,14 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   repairService(index: number) {
     const url =
       `/${this.commonService.app._id}/service/utils/` +
-      this.serviceList[index]._id +
+      this.records[index]._id +
       '/repair';
     this.subscriptions['updateservice'] = this.commonService
       .put('serviceManager', url, null)
       .subscribe(
         (d) => {
           this.ts.info('Repairing data service...');
-          this.serviceList[index].status = 'Pending';
+          this.records[index].status = 'Pending';
         },
         (err) => {
           this.commonService.errorToast(err);
@@ -310,7 +310,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   getYamls(index: number) {
-    this.selectedService = this.serviceList[index];
+    this.selectedService = this.records[index];
     if (!this.selectedService.serviceYaml || !this.selectedService.deploymentYaml) {
       const url = `/${this.commonService.app._id}/service/utils/${this.selectedService._id}/yamls`;
       this.subscriptions['updateservice'] = this.commonService
@@ -349,7 +349,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   cloneService(index: number) {
     this.cloneForm.reset({ desTab: true });
-    this.cloneData = this.serviceList[index];
+    this.cloneData = this.records[index];
     this.cloneForm.get('name').patchValue(this.cloneData.name + ' Copy');
     this.cloneForm.get('description').patchValue(this.cloneData.description);
     this.showCloneServiceWindow = true;
@@ -481,12 +481,12 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         });
       });
   }
-  openDocs(index) {
-    const docsAPI = this.serviceList[index].docapi;
+  openDocs(index: number) {
+    const docsAPI = this.records[index].docapi;
     window.open(docsAPI, '_blank');
   }
 
-  setServiceDetails(service) {
+  setServiceDetails(service: any) {
     if (service.status === 'Undeployed') {
       service.status = 'Stopped';
     }
@@ -501,7 +501,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     service.docapi = `${environment.url.doc}/?q=/api/a/sm/${service.app}/service/utils/${service._id}/swagger/${service.app}${service.api}`;
   }
 
-  _getServiceRecords(service) {
+  _getServiceRecords(service: any) {
     this.subscriptions['getservicerecord_' + service._id] = this.commonService
       .get('serviceManager', `/${this.commonService.app._id}/service/utils/count/${service._id}`,
         { filter: { app: this.commonService.app._id } }).subscribe((res) => {
@@ -518,26 +518,26 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteService(index) {
+  deleteService(index: number) {
     this.alertModal.statusChange = false;
     this.alertModal.title = 'Delete Data Service?';
     this.alertModal.message =
       'Are you sure you want to delete this data service? This action will delete ' +
       'the design, settings and integration configuration for <span class="font-weight-bold text-delete">' +
-      this.serviceList[index].name +
+      this.records[index].name +
       '</span>. It is highly recommended that you take a backup of your data before doing this, as the delete cannot be be undone.';
     this.alertModal.index = index;
     this.openDeleteModal.emit(this.alertModal);
   }
 
-  closeDeleteModal(data) {
+  closeDeleteModal(data: any) {
     if (data) {
-      const url = `/${this.commonService.app._id}/service/` + this.serviceList[data.index]._id;
+      const url = `/${this.commonService.app._id}/service/` + this.records[data.index]._id;
       this.showLazyLoader = true;
       this.subscriptions['deleteservice'] = this.commonService.delete('serviceManager', url).subscribe((d) => {
         this.showLazyLoader = false;
         this.ts.info(d.message ? d.message : 'Deleting data service...');
-        this.serviceList[data.index].status = 'Working';
+        this.records[data.index].status = 'Working';
       }, (err) => {
         this.showLazyLoader = false;
         this.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
@@ -547,17 +547,17 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   toggleServiceStatus(index: number) {
     this.alertModal.statusChange = true;
-    if (this.serviceList[index].status === 'Active') {
-      this.alertModal.title = 'Stop ' + this.serviceList[index].name + '?';
+    if (this.records[index].status === 'Active') {
+      this.alertModal.title = 'Stop ' + this.records[index].name + '?';
       this.alertModal.message =
         'Are you sure you want to stop this data service? Once stopped, "' +
-        this.serviceList[index].name +
+        this.records[index].name +
         '" will no longer appear in the App Center. This action will also stop the API.';
     } else {
-      this.alertModal.title = 'Start ' + this.serviceList[index].name + '?';
+      this.alertModal.title = 'Start ' + this.records[index].name + '?';
       this.alertModal.message =
         'Are you sure you want to start this data service? Once started, "' +
-        this.serviceList[index].name +
+        this.records[index].name +
         '" will appear in the App Center for users to work with. This action will also start the API.';
     }
     this.alertModalTemplateRef = this.commonService.modal(
@@ -566,20 +566,20 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.alertModalTemplateRef.result.then(
       (close) => {
         if (close) {
-          let url = `/${this.commonService.app._id}/service/utils/` + this.serviceList[index]._id + '/start';
-          if (this.serviceList[index].status === 'Active') {
-            url = `/${this.commonService.app._id}/service/utils/` + this.serviceList[index]._id + '/stop';
+          let url = `/${this.commonService.app._id}/service/utils/` + this.records[index]._id + '/start';
+          if (this.records[index].status === 'Active') {
+            url = `/${this.commonService.app._id}/service/utils/` + this.records[index]._id + '/stop';
           }
           this.subscriptions['updateservice'] = this.commonService
             .put('serviceManager', url, { app: this.commonService.app._id })
             .subscribe(
               (d) => {
-                if (this.serviceList[index].status === 'Active') {
+                if (this.records[index].status === 'Active') {
                   this.ts.info('Stopping data service...');
                 } else {
                   this.ts.info('Starting data service...');
                 }
-                this.serviceList[index].status = 'Pending';
+                this.records[index].status = 'Pending';
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -594,13 +594,13 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   deployService(index: number) {
     this.alertModal.statusChange = true;
     if (
-      this.serviceList[index].status === 'Draft' ||
-      this.serviceList[index].draftVersion
+      this.records[index].status === 'Draft' ||
+      this.records[index].draftVersion
     ) {
-      this.alertModal.title = 'Deploy ' + this.serviceList[index].name + '?';
+      this.alertModal.title = 'Deploy ' + this.records[index].name + '?';
       this.alertModal.message =
         'Are you sure you want to Deploy this data service? Once Deployed, "' +
-        this.serviceList[index].name +
+        this.records[index].name +
         '" will be running the latest version.';
     } else {
       return;
@@ -611,12 +611,12 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.alertModalTemplateRef.result.then(
       (close) => {
         if (close) {
-          const url = `/${this.commonService.app._id}/service/utils/` + this.serviceList[index]._id + '/deploy';
+          const url = `/${this.commonService.app._id}/service/utils/` + this.records[index]._id + '/deploy';
           this.subscriptions['updateservice'] = this.commonService
             .put('serviceManager', url, { app: this.commonService.app._id })
             .subscribe((d) => {
               this.ts.info('Deploying data service...');
-              this.serviceList[index].status = 'Pending';
+              this.records[index].status = 'Pending';
             }, (err) => {
               this.commonService.errorToast(err);
             });
@@ -627,7 +627,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   showDeploy(index: number) {
-    const srvc = this.serviceList[index];
+    const srvc = this.records[index];
     if (srvc.status === 'Draft' || srvc.draftVersion) {
       return true;
     }
@@ -635,13 +635,13 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   isDeploy(index) {
-    return this.showDeploy(index) && this.canDeployService(this.serviceList[index]) && this.serviceList[index].type != 'internal'
+    return this.showDeploy(index) && this.canDeployService(this.records[index]) && this.records[index].type != 'internal'
   }
 
 
   isStartStopService(index) {
-    return this.canStartStopService(this.serviceList[index]._id) &&
-      this.serviceList[index].type != 'internal'
+    return this.canStartStopService(this.records[index]._id) &&
+      this.records[index].type != 'internal'
   }
 
 
@@ -760,7 +760,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     return this.commonService.hasPermission('PMDSBC', entity);
   }
 
-  getLatestRecord(service, index) {
+  getLatestRecord(service: any, index: number) {
     const indx = this.serviceList.findIndex((s) => {
       if (s._id === service._id) {
         return s;
@@ -838,13 +838,13 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     return 'Maintainance';
   }
 
-  showDropDown(event: any, i: number) {
+  showDropDown(event: any, id: string) {
     this.selectedItemEvent = event;
     Object.keys(this.showOptionsDropdown).forEach(key => {
       this.showOptionsDropdown[key] = false;
     })
-    this.selectedService = this.serviceList[i];
-    this.showOptionsDropdown[i] = true;
+    this.selectedService = this.serviceList.find(e => e._id == id);
+    this.showOptionsDropdown[id] = true;
   }
 
   private compare(a: any, b: any) {

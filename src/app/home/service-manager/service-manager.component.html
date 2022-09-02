@@ -135,11 +135,11 @@
                     <span class="fw-600 font-13 hover mr-3" *ngIf="srvc.status == 'Active' && isStartStopService(i)"
                       (click)="toggleServiceStatus(i)">Stop</span>
                     <span class="dsi dsi-more-vertical hover mr-3 ignore-outside"
-                      (click)="showDropDown($event,i)"></span>
+                      (click)="showDropDown($event,srvc._id)"></span>
                   </ng-container>
-                  <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed"
-                    (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
-                    (outside)="showOptionsDropdown[i]=false">
+                  <div *ngIf="showOptionsDropdown[srvc._id]" class="more-options bg-white rounded list-group position-fixed"
+                    (mouseleave)="showOptionsDropdown[srvc._id]=false" [ngStyle]="dropDownStyle" odpClickOutside
+                    (outside)="showOptionsDropdown[srvc._id]=false">
                     <button class="list-group-item list-group-item-action py-2" *ngIf="canEditService(srvc._id)"
                       (click)="viewService(i)">View</button>
                     <button class="list-group-item list-group-item-action py-2" *ngIf="canEditService(srvc._id)"
