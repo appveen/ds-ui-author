@@ -93,19 +93,21 @@ export class BulkImportStatusComponent implements OnInit {
           caseSensitive: true,
           suppressAndOrCondition: true,
           suppressFilterButton: true
-        }
+        },
+        cellClass: 'd-flex align-items-center'
       },
-      // getRowClass: (params) => {
-      //   if (params?.data?.status === 'Created') {
-      //     return 'text-success';
-      //   } else if (params?.data?.status === 'Error') {
-      //     return 'text-danger';
-      //   } else if (params?.data?.status === 'Ignored') {
-      //     return 'text-muted';
-      //   } else {
-      //     return 'text-dark';
-      //   }
-      // }
+      getRowClass: (params) => {
+        // if (params?.data?.status === 'Created') {
+        //   return 'text-success';
+        // } else if (params?.data?.status === 'Error') {
+        //   return 'text-danger';
+        // } else if (params?.data?.status === 'Ignored') {
+        //   return 'text-muted';
+        // } else {
+        //   return 'text-dark';
+        // }
+        return 'p-0';
+      }
     }
     this.columnDefs = [
       {
