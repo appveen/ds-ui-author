@@ -12,7 +12,7 @@
     [ngClass]="{'hover':edit.status && !disabled}" [ngStyle]="checkBoxStyle" [ngClass]="checkedClass">
     <div *ngIf="!edit.status" class="overlay w-100 h-100 position-absolute"></div>
     <input #checkBox type="checkbox" class="custom-control-input" [attr.id]="id" [disabled]="disabled || !edit.status"
-        [ngModel]="checked" (ngModelChange)="onChange($event)">
+        [(ngModel)]="checked" (ngModelChange)="onChange($event)">
     <div *ngIf="checked" class="check text-white"></div>
     <label [attr.for]="id">
         <ng-content></ng-content>

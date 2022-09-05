@@ -257,16 +257,18 @@
               <div class="dsi dsi-agent font-22"></div>
             </div>
           </ng-container>
-          <div class="current-app d-flex align-items-center border border-light rounded mr-3 hover ignore-outside"
+          <div class="current-app d-flex align-items-center border dark-border rounded mr-3 hover ignore-outside "
             (click)="toggleAppOptions()">
             <div class="current-app-thumbnail d-flex align-items-center justify-content-center mx-2"
-              ngbTooltip="Switch App" container="body" placement="bottom" [ngStyle]="{ 'background-color': selectedApp.bg }">
+              ngbTooltip="Switch App" container="body" placement="bottom"
+              [ngStyle]="{ 'background-color': selectedApp.bg }">
               <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail"
                 alt="Logo" />
               <span class="font-12"
                 *ngIf="!selectedApp.logo || !selectedApp?.logo?.thumbnail">{{selectedApp.firstLetter}}</span>
             </div>
-            <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" container="body" placement="bottom">
+            <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" container="body"
+              placement="bottom">
               {{ selectedApp._id }}
             </div>
             <div *ngIf="commonService.appList.length > 1" class="ml-auto mr-2">
@@ -274,7 +276,7 @@
             </div>
           </div>
           <div
-            class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle border border-light hover"
+            class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle border dark-border hover"
             (click)="showProfileOptions = !showProfileOptions">
             <span class="dsi dsi-user sub-heading font-14"></span>
             <span *ngIf="isAppAdmin" class="dsi dsi-admin text-warning font-10 position-absolute"
@@ -284,7 +286,7 @@
             [ignore]="['.profile-icon', '.dsi-user']" (outside)="showProfileOptions = false">
             <div class="profile-container position-relative d-flex align-items-center h-100 w-100 pb-4 border-bottom">
               <div
-                class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-light mr-4">
+                class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border dark-border mr-4">
                 <span class="dsi dsi-user sub-heading"></span>
               </div>
               <div class="profile-data d-flex flex-column">
