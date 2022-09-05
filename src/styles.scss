@@ -882,3 +882,19 @@ $weights: 200, 300, 400, 500, 600, 700, 800, 900;
 .btn-delete {
   background: $red;
 }
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}

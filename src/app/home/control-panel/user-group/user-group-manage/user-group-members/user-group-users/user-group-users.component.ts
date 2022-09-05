@@ -86,6 +86,16 @@ export class UserGroupUsersComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleCheck(event, user) {
+    if (event) {
+      this.userList.forEach(e => {
+        if (e._id === user._id) {
+          e._selected = event
+        }
+      })
+    }
+  }
+
   get selectedUsers() {
     return this.userList.filter(e => e._selected);
   }

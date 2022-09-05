@@ -58,7 +58,7 @@
                 <div *ngIf="edit.status" class="position-relative">
                     <input #newStateBox type="text" class="form-control" id="new-state-input"
                         placeholder="Add State Value here"
-                        (keyup.enter)="addNewState(newStateBox.value); newStateBox.value=null;">
+                        (keyup.enter)="addNewState(newStateBox.value); newStateBox.value=null;" autocomplete="disabled">
                     <span class="dsi dsi-plus hover position-absolute text-accent"
                         (click)="addNewState(newStateBox.value); newStateBox.value=null;"></span>
                 </div>
@@ -123,7 +123,8 @@
                                             [matAutocomplete]="auto"
                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                             [matChipInputAddOnBlur]="addOnBlur"
-                                            (matChipInputTokenEnd)="addNewNextState($event, stateData.state , chipInput, auto)">
+                                            (matChipInputTokenEnd)="addNewNextState($event, stateData.state , chipInput, auto)"
+                                            autocomplete="disabled">
                                     </mat-chip-list>
 
                                     <mat-autocomplete #auto="matAutocomplete"

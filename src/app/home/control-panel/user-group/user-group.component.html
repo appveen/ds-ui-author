@@ -16,7 +16,8 @@
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
       <!-- <odp-search-box (enteredText)="searchGroup($event)" (reset)="resetSearch()"></odp-search-box> -->
-      <button class="add-new btn btn-primary ml-3 d-flex align-items-center justify-content-center" (click)="addNewGroup()" *ngIf="hasPermission('PMGBC')">
+      <button class="add-new btn btn-primary ml-3 d-flex align-items-center justify-content-center"
+        (click)="addNewGroup()" *ngIf="hasPermission('PMGBC')">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New</span>
       </button>
@@ -106,8 +107,8 @@
       </label>
       <div class="name-wrapper position-relative">
         <input newServiceName type="text" class="form-control" id="name" placeholder="Untitled Service"
-          formControlName="name" [ngClass]="{'is-invalid': form.get('name').invalid && form.get('name').dirty}"
-          odpAutoFocus />
+          (keydown.enter)="createGroup()" formControlName="name"
+          [ngClass]="{'is-invalid': form.get('name').invalid && form.get('name').dirty}" odpAutoFocus />
         <ng-container *ngIf="form.get('name').dirty">
           <span *ngIf="form.get('name').hasError('required')"
             class="text-danger position-absolute dsi dsi-danger-circle high-zIndex" container="body"

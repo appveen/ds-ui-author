@@ -1,4 +1,4 @@
-<div class="wizard-wrapper d-flex flex-column w-100 p-4" *ngIf="!isSchemaFree">
+<div class="wizard-wrapper d-flex flex-column w-100 p-4 overflow-x-hidden" *ngIf="!isSchemaFree">
     <div class="font-20 fw-600 mb-3">Personalize</div>
     <!-- <div class="d-flex flex-column w-50 steps-div bg-light h-auto align-items-center justify-content-center">
         <ng-container *ngIf="steps.length>0">
@@ -240,7 +240,8 @@
         </div>
     </ng-container>
     <ng-container *ngIf="steps.length>0">
-        <div class="d-flex align-items-center justify-content-between rounded bg-light mb-3 p-2">
+        <div class="d-flex align-items-center justify-content-between rounded bg-light mb-3 p-2 overflow-x-auto overflow-y-hidden"
+            style="min-height: 60px;">
             <div class="steps-container d-flex align-items-center">
                 <div class="step-block d-flex flex-column px-2 py-1 rounded hover"
                     *ngFor="let step of steps;let i=index;let l=last;" [ngClass]="{'bg-white':selectedStepIndex==i}"
