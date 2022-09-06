@@ -1,13 +1,17 @@
 <div class="wrapper d-flex align-items-center justify-content-between">
   <div class="left-side w-100 d-flex">
     <div class="title-container">
-      <div class="name-holder d-flex align-items-center">
-        <input *ngIf="enableEdit" type="text" class="form-control input-width" [ngModel]="name"
-          (ngModelChange)="onNameChange($event)" odpClickOutside (outside)="enableEdit=false" odpAutoFocus>
-        <ng-container *ngIf="!enableEdit">
-          <h4 class="name m-0 font-22 w-600">{{name}}</h4>
-          <span *ngIf="edit.status" class="edit-icon dsi dsi-edit ml-2 ignore-outside hover" (click)="enableEdit=true"></span>
-        </ng-container>
+      <div class="name-holder d-flex flex-column">
+        <div class="d-flex">
+          <input *ngIf="enableEdit" type="text" class="form-control input-width" [ngModel]="name"
+            (ngModelChange)="onNameChange($event)" odpClickOutside (outside)="enableEdit=false" odpAutoFocus>
+          <ng-container *ngIf="!enableEdit">
+            <h4 class="name m-0 font-22 w-600">{{name}}</h4>
+            <span *ngIf="edit.status" class="edit-icon dsi dsi-edit ml-2 ignore-outside hover"
+              (click)="enableEdit=true"></span>
+          </ng-container>
+        </div>
+        <span class="text-danger font-sm mt-2">{{ nameMessage }}&nbsp;</span>
       </div>
     </div>
   </div>
