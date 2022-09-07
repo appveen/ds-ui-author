@@ -34,7 +34,7 @@
 		">
 			<div *ngIf="userList && userList.length>0" class="list-group">
 				<div class="list-group-item d-flex align-items-center bg-light text-secondary">
-					<div class="user-check">
+					<div class="user-check" (click)="checkAll=!checkAll">
 						<odp-checkbox [edit]="{status:true}" [(checked)]="checkAll"></odp-checkbox>
 					</div>
 					<div class="user-name text-uppercase">Name</div>
