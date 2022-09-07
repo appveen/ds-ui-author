@@ -41,8 +41,9 @@
 					<div class="user-username text-uppercase">Username</div>
 				</div>
 				<div class="list-group-item d-flex align-items-center " *ngFor="let user of userList">
-					<div class="user-check">
-						<odp-checkbox [edit]="{status:true}" [(checked)]="user._selected"></odp-checkbox>
+					<div class="user-check" (click)="user._selected = !user._selected ">
+						<odp-checkbox [edit]="{status:true}" [checked]="user._selected"
+							(checkedChange)="toggleCheck($event, user)"></odp-checkbox>
 					</div>
 					<div class="user-name">{{user?.basicDetails?.name}}</div>
 					<div class="user-username">{{user?._id}}</div>
