@@ -418,7 +418,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
 
     get markedApp() {
         const self = this;
-        return self.appList.filter(e => e.selected).map(e => e._id).slice(0, 3).join(', '); // Will return the first 3 elements of the array
+        return self.appList.filter(e => e.selected).map(e => e._id).slice(0, 2).join(', '); // Will return the first 3 elements of the array
     }
 
     get selectedApps() {
