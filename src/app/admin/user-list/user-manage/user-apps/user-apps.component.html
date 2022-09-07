@@ -105,19 +105,19 @@
 </div>
 <ng-template #assignAppModal>
     <div class="assignApp-modal ignore-outside">
-        <div class="modal-header ignore-outside p-4">
-            <div class="text-dark d-flex ignore-outside">
+        <div class="modal-header ignore-outside">
+            <div class="text-dark d-flex ignore-outside px-3 pt-3 w-100">
                 <label for="addApp" class="label-width ignore-outside">
-                    <strong class="ignore-outside">Add App</strong>
+                    <span class="ignore-outside font-20 fw-600">Add App</span>
                 </label>
-                <div class="position-relative ignore-outside">
+                <div class="position-relative ignore-outside ml-auto">
                     <odp-search-box (enteredText)="appSearch($event)" (reset)="resetApp()" [ignoreOutside]="true">
                     </odp-search-box>
                 </div>
             </div>
         </div>
-        <div class="modal-body p-4 ignore-outside">
-            <div class="d-flex flex-wrap mt-4 ignore-outside">
+        <div class="modal-body ignore-outside">
+            <div class="d-flex flex-wrap ignore-outside">
                 <div class="app-card d-flex flex-column my-3 mx-4 ignore-outside"
                     *ngFor="let app of appList| filterApp: filterAppStr; index as appIndex;">
                     <div class="app-thumbnail d-flex align-items-center justify-content-center hover ignore-outside"
@@ -140,12 +140,12 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer p-3 d-flex w-100 bg-white mt-auto justify-content-between align-items-end">
+        <div class="modal-footer d-flex w-100 bg-white justify-content-between">
             <div class="d-flex">
                 <div class="text-secondary mr-2">Apps Added:</div>
                 <div class="font-weight-bold text-accent" *ngIf="selectedApps.length > 0">{{ markedApp }}</div>
-                <div class="font-weight-bold text-accent" *ngIf="selectedApps.length > 3">
-                    &nbsp;+&nbsp;{{ selectedApps.length - 3}}</div>
+                <div class="font-weight-bold text-accent" *ngIf="selectedApps.length > 2">
+                    &nbsp;+&nbsp;{{ selectedApps.length - 2}}</div>
             </div>
             <div>
                 <button type="button" class="btn btn-link ml-auto mb-1 ignore-outside"
