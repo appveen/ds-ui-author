@@ -378,7 +378,14 @@ export class SchemaBuilderService {
                     if (i.toLowerCase().split(' ').indexOf('date') > -1) {
                         temp.type = 'Date';
                     }
+                    if (i.toLowerCase().split('_').indexOf('date') > -1) {
+                        temp.type = 'Date';
+                    }
                     if (i.toLowerCase().split(' ').indexOf('amount') > -1) {
+                        temp.type = 'Number';
+                        temp.properties.currency = 'INR';
+                    }
+                    if (i.toLowerCase().split('_').indexOf('amount') > -1) {
                         temp.type = 'Number';
                         temp.properties.currency = 'INR';
                     }

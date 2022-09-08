@@ -267,6 +267,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         const self = this;
         if (self.isNewField) {
             let index = val.toLowerCase().split(' ').indexOf('amount');
+            if (index < 0) {
+                index = val.toLowerCase().split('_').indexOf('amount')
+            }
             if (!self.autoLink['number'] && index > -1) {
                 self.selectType({ value: 'Number', label: 'Number' });
                 self.form.get('properties._detailedType').patchValue('currency');
@@ -277,6 +280,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 }, 3000);
             }
             index = val.toLowerCase().split(' ').indexOf('date');
+            if (index < 0) {
+                index = val.toLowerCase().split('_').indexOf('date')
+            }
             if (!self.autoLink['date'] && index > -1) {
                 self.selectType({ value: 'Date', label: 'Date' });
                 self.autoLink['date'] = true;
