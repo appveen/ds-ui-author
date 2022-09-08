@@ -66,12 +66,17 @@
         <div *ngFor="let userApp of userApps; let idx = index;" class="position-relative app-wrapper">
             <div (click)="appOptions[idx] = true"
                 class="hover d-flex justify-content-center align-items-center mr-3 mb-3 ignore-outside">
-                <div class="assigned-app mr-3 d-flex justify-content-center align-items-center border ignore-outside">
+                <div class="assigned-app mr-3 d-flex justify-content-center align-items-center border ignore-outside"
+                    [ngStyle]="{ 'background-color': userApp.logo ? null : userApp.bg }">
                     <img *ngIf="userApp.logo && userApp.logo.thumbnail" [src]="userApp.logo.thumbnail" alt="Logo"
                         class="ignore-outside">
                     <!-- <odp-app-icon *ngIf="!userApp.logo || !userApp.logo.thumbnail" color="aaa ignore-outside">
                     </odp-app-icon> -->
+                    <div *ngIf="!userApp.logo" class="profileImage">
+                        {{ userApp.firstLetter }}
+                    </div>
                 </div>
+
                 <div class="mr-5 d-flex flex-column app-action ignore-outside">
                     <div class="ignore-outside">
                         <strong class="ignore-outside">{{userApp._id}}</strong>
