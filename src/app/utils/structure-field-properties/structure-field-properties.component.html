@@ -161,7 +161,7 @@
                 </span>
                 <span class="text">Yes</span>
               </span>
-              <span class="text d-flex" *ngIf="form.get('properties.default').value === false">
+              <span class="text d-flex" *ngIf=" form.get('properties.default').value !== true">
                 <span
                   class="d-flex align-items-center justify-content-center rounded-circle bg-secondary check-circle mr-1">
                 </span>
