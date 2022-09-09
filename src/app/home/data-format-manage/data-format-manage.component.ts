@@ -58,6 +58,7 @@ export class DataFormatManageComponent implements
     microflows: Array<any>;
     deleteModal: any;
     showAdvance: boolean;
+    showAdvanceSettingsWindow: boolean;
     sortableOnMove = (event: any) => {
         return !event.related.classList.contains('disabled');
     }
@@ -140,6 +141,9 @@ export class DataFormatManageComponent implements
                 self.removeGroups();
                 self.form.get('character').patchValue(',');
             }
+        });
+        self.form.get('lineSeparator').valueChanges.subscribe(val => {
+            console.log(val);
         });
         self.selectType({ class: 'odp-group', value: 'Object', label: 'Group' });
         self.subscriptions['activeproperty'] = self.schemaService.activeProperty.subscribe(val => {
@@ -264,7 +268,6 @@ export class DataFormatManageComponent implements
                     self.form.get('name').patchValue(name + ' Copy');
                     self.form.get('description').patchValue(null);
                 }
-                self.getMicroflows();
                 self.breadcrumbPaths.push({
                     active: true,
                     label: self.form.controls.name.value + (self.edit ? ' (Edit)' : '')
@@ -385,7 +388,7 @@ export class DataFormatManageComponent implements
         }
     }
 
-    selectType(type) {
+    selectType(type: any) {
         const self = this;
         self.selectedType = type.label;
         self.selectedTypeClass = self._getClass(type.value);
@@ -406,14 +409,17 @@ export class DataFormatManageComponent implements
     }
 
     selectFormat(format: any) {
+        if (!this.edit.status) {
+            return;
+        }
         this.formatList.forEach(e => {
             e.selected = false;
         });
         format.selected = true;
         this.form.get('formatType').patchValue(format.formatType);
-        this.form.get('formatType').markAsDirty();
+        // this.form.get('formatType').markAsDirty();
         if (format.formatType === 'EXCEL') {
-            this.form.get('excelType').setValue(format.excelType);
+            this.form.get('excelType').patchValue(format.excelType);
         }
         this.appService.formatTypeChange.emit(format.formatType);
     }
@@ -439,6 +445,7 @@ export class DataFormatManageComponent implements
             $event.returnValue = 'Are you sure?';
         }
     }
+
     canEditDataFormat(id: string) {
         const self = this;
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
@@ -462,36 +469,6 @@ export class DataFormatManageComponent implements
         return retValue;
     }
 
-    getMicroflows() {
-        const self = this;
-        const options: GetOptions = {
-            filter: {
-                dataFormat: self.edit.id
-            }
-        };
-        self.microflows = [];
-        self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, options).subscribe(res => {
-            if (res && res.length > 0) {
-                res.forEach(item => {
-                    const inAgent = item.blocks.find(e => e.meta.blockType === 'INPUT');
-                    if (inAgent) {
-                        self.getAgentName(inAgent.meta.source, inAgent.meta);
-                    }
-                    const outAgent = item.blocks.find(e => e.meta.blockType === 'OUTPUT');
-                    if (outAgent) {
-                        self.getAgentName(outAgent.meta.target, outAgent.meta);
-                    }
-                    self.setOutputType(item);
-                    self.microflows.push(item);
-                });
-                self.microflows = self.orderBy.transform(self.microflows, 'name');
-            }
-
-        }, err => {
-
-        });
-    }
-
     getStatus(status: string) {
         if (status === 'Draft') {
             return 'draft';
@@ -508,48 +485,6 @@ export class DataFormatManageComponent implements
         return 'offline';
     }
 
-    getAPIEnpoint(item: any) {
-        const temp = item.blocks[item.blocks.length - 1];
-        if (temp) {
-            return temp.meta.connectionDetails.url;
-        }
-        return null;
-    }
-
-    getInAgent(item: any) {
-        const self = this;
-        const temp = item.blocks.find(e => e.meta.blockType === 'INPUT');
-        if (temp) {
-            return temp.meta.agentName;
-        }
-        return null;
-    }
-
-    getOutAgent(item: any) {
-        const self = this;
-        const temp = item.blocks.find(e => e.meta.blockType === 'OUTPUT');
-        if (temp) {
-            return temp.meta.agentName;
-        }
-        return null;
-    }
-
-    getAgentName(id: string, data: any) {
-        const self = this;
-        self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, {
-            select: 'name',
-            filter: {
-                agentID: id
-            }
-        }).subscribe(res => {
-            if (res && res.length > 0) {
-                data.agentName = res[0].name;
-            }
-        }, err => {
-
-        });
-    }
-
     copyToClipboard(type: string) {
         const self = this;
         if (type === 'input') {
@@ -560,13 +495,6 @@ export class DataFormatManageComponent implements
             }
         }
         document.execCommand('copy');
-    }
-
-    setOutputType(item: any) {
-        const self = this;
-        if (item.blocks && item.blocks.length > 1 && !item.outputType) {
-            item.outputType = 'API';
-        }
     }
 
     replacePort(url: string, port: number) {
@@ -664,6 +592,12 @@ export class DataFormatManageComponent implements
         const self = this;
         return self.form.get('strictValidation').value;
     }
+
+    get formatType() {
+        const self = this;
+        return self.form.get('formatType').value;
+    }
+
     get editable() {
         const self = this;
         if (self.edit && self.edit.status) {

@@ -27,6 +27,7 @@
             <div class="item-attribute-count text-center">Attributes</div>
             <div class="item-reference-count text-center">References</div>
           </div>
+          <div class="item-format-type text-left ml-4">Format</div>
           <div class="item-actions">&nbsp;</div>
         </div>
       </div>
@@ -49,6 +50,9 @@
               <span *ngIf="canEditDataFormat(dataFormat._id)" id="lib-delete" class="dsi dsi-trash hover mr-2"
                 (click)="deleteDataFormat(i);"></span>
             </div> -->
+            <div class="item-format-type text-left ml-4">
+              <odp-format-type-badge [data]="dataFormat.formatType"></odp-format-type-badge>
+            </div>
             <div class="item-actions d-flex align-items-center justify-content-end">
               <span id="lib-view" class="fw-600 font-13 hover mr-3"
                 [routerLink]="['/app/',app,'dfm',dataFormat._id]">View</span>

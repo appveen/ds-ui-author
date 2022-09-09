@@ -16,6 +16,8 @@ import { StructureFieldPropertiesModule } from 'src/app/utils/structure-field-pr
 import { FilterTeamModule } from 'src/app/utils/pipes/filter-team.module';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { SortablejsModule } from 'ngx-sortablejs';
+import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
+import { SwitchModule } from 'src/app/utils/switch/switch.module';
 
 const routes: Routes = [
   {
@@ -40,7 +42,9 @@ const routes: Routes = [
     StructureFieldPropertiesModule,
     FilterTeamModule,
     CheckboxModule,
-    SortablejsModule
+    SortablejsModule,
+    RoundRadioModule,
+    SwitchModule
   ],
   declarations: [DataFormatManageComponent],
   exports: [RouterModule]
