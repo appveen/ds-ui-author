@@ -693,6 +693,7 @@ export class SchemaBuilderComponent implements
 
     cancel() {
         const self = this;
+        self.schemaService.activeProperty.emit(null);
         if (self.form.dirty || self.roleChange) {
             self.deleteModal.title = 'Cancel';
             self.deleteModal.message = 'Are you sure you want to cancel all the unsaved changes' +

@@ -10,22 +10,23 @@
   </div>
   <div class="d-flex flex-column">
     <div class="form-group">
-      <label class="font-14 text-dark mb-2">Prefix</label>
+      <label class="font-14 text-dark mb-2 mr-1">Prefix</label>
       <input *ngIf="canEdit" class="value-width form-control short" type="text" #idPrefix formControlName="prefix">
-      <span *ngIf="!canEdit">{{form.get('prefix').value}}</span>
+      <span *ngIf="!canEdit" class="mr-2">:</span>
+      <span *ngIf="!canEdit">{{form.get('prefix').value || '-'}}</span>
     </div>
     <div class="form-group">
-      <label class="font-14 text-dark mb-2">Suffix</label>
-      <div class="value-width">
-        <input *ngIf="canEdit" class="value-width form-control short" type="text" #idPrefix formControlName="suffix">
-        <span *ngIf="!canEdit">{{form.get('suffix').value}}</span>
-      </div>
+      <label class="font-14 text-dark mb-2 mr-1">Suffix</label>
+      <span *ngIf="!canEdit" class="mr-2">:</span>
+      <input *ngIf="canEdit" class="value-width form-control short" type="text" #idPrefix formControlName="suffix">
+      <span *ngIf="!canEdit">{{form.get('suffix').value || '-'}}</span>
     </div>
     <div class="form-group">
-      <label class="font-14 text-dark mb-2">Min Length</label>
+      <label class="font-14 text-dark mb-2 mr-1">Min Length</label>
       <input *ngIf="canEdit" class="value-width form-control short" [ngClass]="{'is-invalid':paddingError}"
         type="number" #idPrefix formControlName="padding">
-      <span *ngIf="!canEdit">{{form.get('padding').value}}</span>
+      <span *ngIf="!canEdit" class="mr-2">:</span>
+      <span *ngIf="!canEdit">{{form.get('padding').value || '-'}}</span>
     </div>
     <div class="d-flex">
       <div class="label-width"></div>
@@ -35,9 +36,10 @@
       </span>
     </div>
     <div class="form-group">
-      <label class="font-14 text-dark mb-2">Start from</label>
+      <label class="font-14 text-dark mb-2 mr-1">Start from</label>
       <input *ngIf="canEdit" class="value-width form-control short" type="number" #idPrefix formControlName="counter">
-      <span *ngIf="!canEdit">{{form.get('counter').value}}</span>
+      <span *ngIf="!canEdit" class="mr-2">:</span>
+      <span *ngIf="!canEdit">{{form.get('counter').value || '-'}}</span>
     </div>
     <div class="d-flex">
       <div class="label-width"></div>

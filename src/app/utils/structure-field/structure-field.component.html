@@ -1,5 +1,5 @@
 <div class="d-flex flex-column w-100">
-    <div class="field-wrapper w-100 rounded" [ngClass]="{'active':active}" [formGroup]="form">
+    <div class="field-wrapper w-100 rounded" [ngClass]="{'active':active}" [formGroup]="form" (dblclick)="view()">
         <div class="field-row d-flex align-items-center justify-content-between w-100 py-3">
             <div class="d-flex align-items-center justify-content-start">
                 <div class="field-name-holder d-flex align-items-center" formGroupName="properties">

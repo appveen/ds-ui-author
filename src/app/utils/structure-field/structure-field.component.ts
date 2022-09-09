@@ -566,6 +566,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         const self = this;
         field.patchValue(!field.value);
     }
+    view() {
+        this.schemaService.activeProperty.emit(this.form);
+    }
     get style() {
         const self = this;
         const margin = self.level * 16;
