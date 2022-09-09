@@ -16,6 +16,7 @@
 .lov-toggle-btn {
     min-height: 22px !important;
     min-height: 22px !important;
+    height: 22px;
     border: 1px solid #ccc;
 }
 
@@ -28,7 +29,7 @@
 
     .dropdown-list {
         overflow: auto;
-        
+
         .dropdown-itm {
             display: grid;
             align-items: center;
@@ -62,6 +63,8 @@
     display: flex !important;
     justify-content: space-between;
     min-height: 22px !important;
+    height: 22px;
+    ;
     max-height: 22px !important;
     color: #495057;
 }
