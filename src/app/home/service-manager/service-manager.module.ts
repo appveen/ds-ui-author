@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
 
 import { ServiceManagerComponent } from './service-manager.component';
@@ -16,7 +16,6 @@ import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { CheckboxBtnModule } from 'src/app/utils/checkbox-btn/checkbox-btn.module';
 import { DataManagementComponent } from './data-management/data-management.component';
-import { FormsModule } from '@angular/forms';
 import { ServiceImportWizardModule } from 'src/app/utils/service-import-wizard/service-import-wizard.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
