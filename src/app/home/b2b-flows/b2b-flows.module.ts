@@ -14,6 +14,7 @@ import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
 import { CodeEditorModule } from 'src/app/utils/code-editor/code-editor.module';
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
+import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 
 const routes: Routes = [
   {
@@ -38,7 +39,8 @@ const routes: Routes = [
     BreadcrumbModule,
     CodeEditorModule,
     DateFormatModule,
-    OnChangeModule
+    OnChangeModule,
+    AutoFocusModule
   ],
   exports: [B2bFlowsComponent]
 })

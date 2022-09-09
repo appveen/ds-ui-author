@@ -9,6 +9,7 @@ import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 import { FormatTypeBadgeModule } from 'src/app/utils/format-type-badge/format-type-badge.module';
+import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 
 const routes: Routes = [
   {
@@ -26,7 +27,8 @@ const routes: Routes = [
     BreadcrumbModule,
     SearchBoxModule,
     DeleteModalModule,
-    FormatTypeBadgeModule
+    FormatTypeBadgeModule,
+    AutoFocusModule
   ],
   declarations: [DataFormatListingComponent]
 })
