@@ -23,47 +23,47 @@
         <div class="list-group">
             <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500">
                 <div class="d-flex align-items-center justify-content-start h-100">
-                    <div class="item-name">
+                    <div (click)="applySort('name')" class="item-name">
                         <span class="mr-2">Name</span>
                         <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
                         <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
                     </div>
-                    <div class="item-password">
+                    <div (click)="applySort('password')" class="item-password">
                         <span class="mr-2">Password</span>
                         <span *ngIf="sortModel['password']==1" class="dsi dsi-drop-down"></span>
                         <span *ngIf="sortModel['password']==-1" class="dsi dsi-drop-up"></span>
                     </div>
-                    <div class="item-ip-address">
+                    <div (click)="applySort('ipAddress')" class="item-ip-address">
                         <span class="mr-2">IP Address</span>
                         <span *ngIf="sortModel['ipAddress']==1" class="dsi dsi-drop-down"></span>
                         <span *ngIf="sortModel['ipAddress']==-1" class="dsi dsi-drop-up"></span>
                     </div>
-                    <div class="item-mac-address">
+                    <div (click)="applySort('macAddress')" class="item-mac-address">
                         <span class="mr-2">MAC Address</span>
                         <span *ngIf="sortModel['macAddress']==1" class="dsi dsi-drop-down"></span>
                         <span *ngIf="sortModel['macAddress']==-1" class="dsi dsi-drop-up"></span>
                     </div>
-                    <div class="item-streak">
+                    <div (click)="applySort('streak')" class="item-streak">
                         <span class="mr-2">Streak</span>
                         <span *ngIf="sortModel['streak']==1" class="dsi dsi-drop-down"></span>
                         <span *ngIf="sortModel['streak']==-1" class="dsi dsi-drop-up"></span>
                     </div>
-                    <div class="item-status">
+                    <div (click)="applySort('status')" class="item-status">
                         <span class="mr-2">Status</span>
                         <span *ngIf="sortModel['status']==1" class="dsi dsi-drop-down"></span>
                         <span *ngIf="sortModel['status']==-1" class="dsi dsi-drop-up"></span>
                     </div>
-                    <div class="item-last-invoked-at">
+                    <div (click)="applySort('lastInvokedAt')" class="item-last-invoked-at">
                         <span class="mr-2">Last Invoked</span>
                         <span *ngIf="sortModel['lastInvokedAt']==1" class="dsi dsi-drop-down"></span>
                         <span *ngIf="sortModel['lastInvokedAt']==-1" class="dsi dsi-drop-up"></span>
                     </div>
-                    <div class="item-release">
+                    <div (click)="applySort('release')" class="item-release">
                         <span class="mr-2">Release</span>
                         <span *ngIf="sortModel['release']==1" class="dsi dsi-drop-down"></span>
                         <span *ngIf="sortModel['release']==-1" class="dsi dsi-drop-up"></span>
                     </div>
-                    <div class="item-pending-files">
+                    <div (click)="applySort('pendingFiles')" class="item-pending-files">
                         <span class="mr-2">Pending Files</span>
                         <span *ngIf="sortModel['pendingFiles']==1" class="dsi dsi-drop-down"></span>
                         <span *ngIf="sortModel['pendingFiles']==-1" class="dsi dsi-drop-up"></span>
@@ -75,9 +75,15 @@
             <ng-container *ngFor="let agent of records;let i=index">
                 <div *ngIf="hasPermissionForAgent(agent._id)" class="list-group-item">
                     <div class="d-flex align-items-center justify-content-start h-100" [attr.title]="agent.name">
-                        <div class="item-name text-dark fw-500">{{agent.name}}</div>
-                        <div class="item-attribute-count text-center">{{agent._attributes}}</div>
-                        <div class="item-reference-count text-center">{{agent._references}}</div>
+                        <div class="item-name text-truncate">{{agent.name}}</div>
+                        <div class="item-password text-truncate">{{agent.password}}</div>
+                        <div class="item-ip-address">{{agent.ipAddress}}</div>
+                        <div class="item-mac-address">{{agent.macAddress}}</div>
+                        <div class="item-streak">{{agent.streak}}</div>
+                        <div class="item-status">{{agent.status}}</div>
+                        <div class="item-last-invoked-at">{{agent.lastInvokedAt}}</div>
+                        <div class="item-release">{{agent.release}}</div>
+                        <div class="item-pending-files">{{agent.pendingFiles}}</div>
                         <div class="item-actions d-flex align-items-center justify-content-end">
                             <span id="lib-view" class="fw-600 font-13 hover mr-3"
                                 [routerLink]="['/app/',app,'dfm',agent._id]">View</span>

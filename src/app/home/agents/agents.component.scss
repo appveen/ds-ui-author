@@ -25,50 +25,96 @@
   }
 }
 
+.list-group-item {
+  overflow: hidden;
 
-.item-name {
-  min-width: 120px;
-  max-width: 120px;
-}
+  &.header {
+    min-height: 38px;
+    max-height: 38px;
+    color: #6C7584;
+  }
 
-.item-password {
-  min-width: 120px;
-  max-width: 120px;
-}
+  .item-name {
+    min-width: 120px;
+    max-width: 120px;
+  }
 
-.item-ip-address {
-  min-width: 120px;
-  max-width: 120px;
-}
+  .item-password {
+    min-width: 120px;
+    max-width: 120px;
+  }
 
-.item-mac-address {
-  min-width: 120px;
-  max-width: 120px;
-}
+  .item-ip-address {
+    min-width: 120px;
+    max-width: 120px;
+  }
 
-.item-streak {
-  min-width: 120px;
-  max-width: 120px;
-}
+  .item-mac-address {
+    min-width: 120px;
+    max-width: 120px;
+  }
 
-.item-status {
-  min-width: 120px;
-  max-width: 120px;
-}
+  .item-streak {
+    min-width: 120px;
+    max-width: 120px;
+  }
 
-.item-last-invoked-at {
-  min-width: 120px;
-  max-width: 120px;
-}
+  .item-status {
+    min-width: 120px;
+    max-width: 120px;
+  }
 
-.item-release {
-  min-width: 120px;
-  max-width: 120px;
-}
+  .item-last-invoked-at {
+    min-width: 120px;
+    max-width: 120px;
+  }
 
-.item-pending-files {
-  min-width: 120px;
-  max-width: 120px;
+  .item-release {
+    min-width: 120px;
+    max-width: 120px;
+  }
+
+  .item-pending-files {
+    min-width: 120px;
+    max-width: 120px;
+  }
+
+  .item-actions {
+    min-width: 200px;
+    max-width: 200px;
+    position: absolute;
+    right: -500px;
+    top: 12px;
+    transition: 0.2s;
+
+    .actions {
+
+      .dsi {
+        min-width: 24px;
+        max-width: 24px;
+        display: inline-block;
+        color: $sub-headings;
+      }
+
+      .dsi,
+      .api-icon {
+        &:hover {
+          color: $dark;
+        }
+      }
+    }
+  }
+
+  &:hover {
+    .item-actions {
+      right: 0px;
+    }
+  }
+
+  .scroll-pane {
+    height: 100%;
+    overflow: auto;
+  }
 }
 
 .overlay {

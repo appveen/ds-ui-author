@@ -55,6 +55,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
             active: true,
             label: 'Agents'
         }];
+        this.showOptionsDropdown = {};
         this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         this.openDeleteModal = new EventEmitter();
         this.sortModel = {};
