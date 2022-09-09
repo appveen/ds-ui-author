@@ -22,17 +22,32 @@
     <div class="list-group">
       <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500">
         <div class="d-flex align-items-center justify-content-start h-100">
-          <div class="item-name">Name</div>
-          <div class="d-flex align-items-center">
-            <div class="item-attribute-count text-center">Attributes</div>
-            <div class="item-reference-count text-center">References</div>
+          <div (click)="applySort('name')" class="item-name">
+            <span class="mr-2">Name</span>
+            <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
           </div>
-          <div class="item-format-type text-left ml-4">Format</div>
+          <div class="d-flex align-items-center">
+            <div (click)="applySort('_attributes')" class="item-attribute-count text-center">
+              <span class="mr-2">Attributes</span>
+              <span *ngIf="sortModel['_attributes']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_attributes']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('_references')" class="item-reference-count text-center">
+              <span class="mr-2">References</span>
+              <span *ngIf="sortModel['_references']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_references']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+          </div>
+          <div (click)="applySort('formatType')" class="item-format-type text-left ml-4">
+            <span class="mr-2">Format</span>
+            <span *ngIf="sortModel['formatType']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['formatType']==-1" class="dsi dsi-drop-up"></span>
+          </div>
           <div class="item-actions">&nbsp;</div>
         </div>
       </div>
       <div *ngIf="!records || records.length==0" class="list-group-item">No Records Found</div>
-
       <ng-container *ngFor="let dataFormat of records;let i=index">
         <div *ngIf="hasPermissionForDataFormat(dataFormat._id)" class="list-group-item">
           <div class="d-flex align-items-center justify-content-start h-100" [attr.title]="dataFormat.name">
@@ -41,15 +56,6 @@
               <div class="item-attribute-count text-center">{{dataFormat._attributes}}</div>
               <div class="item-reference-count text-center">{{dataFormat._references}}</div>
             </div>
-            <!-- <div class="item-actions d-flex align-items-center justify-content-end">
-              <span id="lib-view" class="dsi dsi-view hover mr-2" [routerLink]="['/app/',app,'dfm',dataFormat._id]"></span>
-              <span *ngIf="canEditDataFormat(dataFormat._id)" id="lib-edit" class="dsi dsi-edit hover mr-2"
-                (click)="editDataFormat(i)"></span>
-              <span *ngIf="canEditDataFormat(dataFormat._id) && hasManagePermission('DF')" id="lib-clone"
-                class="dsi dsi-copy hover mr-2" (click)="cloneDataFormat(i)"></span>
-              <span *ngIf="canEditDataFormat(dataFormat._id)" id="lib-delete" class="dsi dsi-trash hover mr-2"
-                (click)="deleteDataFormat(i);"></span>
-            </div> -->
             <div class="item-format-type text-left ml-4">
               <odp-format-type-badge [data]="dataFormat.formatType"></odp-format-type-badge>
             </div>
