@@ -233,7 +233,9 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
         const index = self.roles.findIndex(e => e.id === self.selectedRole.id);
         self.roles.splice(index, 1);
         Object.keys(self.fields).forEach(key => {
-          delete self.fields[key]._p[self.selectedRole.id];
+          if (self.fields[key]?._p?.[self.selectedRole.id]) {
+            delete self.fields[key]._p[self.selectedRole.id];
+          }
         });
         self.selectedRole = self.roles[0];
         self.selectedRoleIndex = 0;
@@ -277,16 +279,16 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     if (index > -1) {
       const tempRole = self.roles[index];
       let flag = false;
-      if (tempRole.operations.find(x => x.method === 'POST')) {
+      if (tempRole?.operations?.find(x => x.method === 'POST')) {
         flag = true;
       }
-      if (tempRole.operations.find(x => x.method === 'PUT')) {
+      if (tempRole?.operations?.find(x => x.method === 'PUT')) {
         flag = true;
       }
-      if (tempRole.operations.find(x => x.method === 'DELETE')) {
+      if (tempRole?.operations?.find(x => x.method === 'DELETE')) {
         flag = true;
       }
-      if (tempRole.operations.find(x => x.method === 'REVIEW')) {
+      if (tempRole?.operations?.find(x => x.method === 'REVIEW')) {
         flag = true;
       }
       return flag;

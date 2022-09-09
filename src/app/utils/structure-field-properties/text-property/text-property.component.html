@@ -111,18 +111,17 @@
     <div class="" formArrayName="enum" [sortablejs]="enumList"
       [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
       <ng-container *ngFor="let en of enumList; let i=index;">
-        <div class="enum-list-item d-flex justify-content-between align-items-center p-2"
-          [class.disabled]="!edit || !edit.status">
+        <div class="d-flex p-2" [class.disabled]="!edit || !edit.status">
           <span class="icon" *ngIf="!!edit && !!edit.status">
             <span class="fa fa-bars text-muted hover"></span>
           </span>
-          <div class="enum-mid-section">
+          <div class="ml-3">
             <span *ngIf="editStateListOfValues !== i" (click)="editStateListOfValues = i" class="text-truncate"
               placement="top" [ngbTooltip]="en.value">{{en.value}}</span>
             <input *ngIf="editStateListOfValues === i" type="text" [formControl]="en" class="field form-control"
               [id]="en.value" (keyup.enter)="editStateListOfValues = null" odpAutoFocus>
           </div>
-          <span *ngIf="edit.status" class="enum-icons-section">
+          <span *ngIf="edit.status" class="enum-icons-section ml-auto">
             <span class="dsi dsi-trash" (click)="removeFromList('enum',i)" placement="top"
               [ngbTooltip]="'Remove'"></span>
           </span>

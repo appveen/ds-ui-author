@@ -87,7 +87,7 @@
     <span class="fw-600 font-20">Create User</span>
     <span class="dsi dsi-close hover" (click)="showNewUserWindow=false"></span>
   </div>
-  <form class="d-flex flex-column" [formGroup]="userForm" autocomplete="off">
+  <form class="d-flex flex-column" [formGroup]="userForm" autocomplete="disabled">
     <div class="form-group" *ngIf="validAuthTypes?.length > 1">
       <label class="">Authentication Type</label>
       <div class="position-relative w-100" formGroupName="auth">

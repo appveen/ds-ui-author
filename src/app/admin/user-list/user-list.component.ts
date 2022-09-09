@@ -307,12 +307,12 @@ export class UserListComponent implements OnInit, OnDestroy {
             this.loadedCount = 0;
         }
         const filterModel = this.agGrid?.api?.getFilterModel();
-        if (filterModel && 'accessControl.apps._id' in filterModel) {
-            this.apiConfig.apps = JSON.parse(filterModel['accessControl.apps._id'].filter)['accessControl.apps._id'].$in.join(',');
-        } else {
-            delete this.apiConfig.apps;
-        }
-        const filterModelKeys = Object.keys(filterModel || {}).filter(k => k !== 'accessControl.apps._id');
+        // if (filterModel && 'accessControl.apps._id' in filterModel) {
+        //     this.apiConfig.apps = JSON.parse(filterModel['accessControl.apps._id'].filter)['accessControl.apps._id'].$in.join(',');
+        // } else {
+        //     delete this.apiConfig.apps;
+        // }
+        const filterModelKeys = Object.keys(filterModel || {});
         if (!!filterModelKeys.length) {
             this.apiConfig.filter = {
                 $and: filterModelKeys.map(key => {

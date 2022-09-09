@@ -52,8 +52,10 @@
             </button>
           </div>
 
-          <span class="font-normal fw-400 sub-heading" (click)="appService.copyToClipboard(selectedBot?._id)">{{
-            selectedBot?._id }}</span>
+          <div class="font-normal fw-400 sub-heading" (click)="copyId()">
+            <span>{{selectedBot?._id }}</span>
+            <span class="hover dsi dsi-copy text-secondary ml-2"></span>
+          </div>
         </div>
         <div class="d-grid">
           <div style="margin-top: 45px">
