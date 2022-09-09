@@ -1,421 +1,306 @@
-import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, EventEmitter } from '@angular/core';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AgGridColumn, AgGridAngular } from 'ag-grid-angular';
-import { GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
-import { of, Subject } from 'rxjs';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { switchMap } from 'rxjs/operators';
+import * as _ from 'lodash';
 
-import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
+import { CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
-import { environment } from 'src/environments/environment';
-import { AgentGridFilterComponent } from './agent-grid-filter/agent-grid-filter.component';
-import { AgentGridCellComponent } from './agent-grid-cell/agent-grid-cell.component';
+import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
+import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 
 @Component({
     selector: 'odp-agents',
     templateUrl: './agents.component.html',
-    styleUrls: ['./agents.component.scss']
+    styleUrls: ['./agents.component.scss'],
+    providers: [CommonFilterPipe]
 })
 export class AgentsComponent implements OnInit, OnDestroy {
-    @ViewChild('agGrid') agGrid: AgGridAngular;
-    @ViewChild('newAgentModalTemplate', { static: false }) newAgentModalTemplate: TemplateRef<HTMLElement>;
-    newAgentModalTemplateRef: NgbModalRef;
-    apiConfig: GetOptions;
-    agentType: string;
-    agentData: any;
-    columnDefs: Array<AgGridColumn>;
-    dataSource: IDatasource;
-    sortModel: any;
-    filterModel: any;
-    totalCount: number;
-    loadedCount: number;
-    subscriptions: any;
-    showContextMenu: any;
-    selectedRow: any;
-    selectedAgent: any;
-    sendOption: EventEmitter<any>;
-    noRowsTemplate;
-    colWidthMap: any;
-    processingRequest: boolean;
-    canceller = new Subject();
 
+    agentData: any;
+    subscriptions: any;
+    selectedAgent: any;
+    showLazyLoader: boolean;
+    agentList: Array<any>;
+    showNewAgentWindow: boolean;
+    searchTerm: string;
+    showOptionsDropdown: any;
+    selectedItemEvent: any;
+    sortModel: any;
+    alertModal: {
+        statusChange?: boolean;
+        title: string;
+        message: string;
+        index: number;
+    };
+    breadcrumbPaths: Array<Breadcrumb>;
+    openDeleteModal: EventEmitter<any>;
     constructor(
         public commonService: CommonService,
-        private appService: AppService
+        private appService: AppService,
+        private commonPipe: CommonFilterPipe,
+        private router: Router,
+        private ts: ToastrService
     ) {
-        const self = this;
-        self.apiConfig = {};
-        self.apiConfig.page = 1;
-        self.apiConfig.count = 30;
-        self.agentType = 'APPAGENT';
-        self.agentData = {};
-        self.subscriptions = {};
-        self.totalCount = 0;
-        self.loadedCount = 0;
-        self.sendOption = new EventEmitter();
-        self.noRowsTemplate = '<span>No records to display</span>';
+        this.agentData = {};
+        this.subscriptions = {};
+        this.agentList = [];
+        this.alertModal = {
+            statusChange: false,
+            title: '',
+            message: '',
+            index: -1
+        };
+        this.breadcrumbPaths = [{
+            active: true,
+            label: 'Agents'
+        }];
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
+        this.openDeleteModal = new EventEmitter();
+        this.sortModel = {};
     }
 
     ngOnInit() {
-        const self = this;
-        self.configureColumns();
-        self.dataSource = {
-            getRows: (params: IGetRowsParams) => {
-                if (this.processingRequest) {
-                    this.canceller.next(1);
-                }
-                this.processingRequest = true;
-                self.agGrid.api.showLoadingOverlay();
-                self.apiConfig.page = Math.ceil((params.endRow / 30));
-                if (self.apiConfig.page === 1) {
-                    self.loadedCount = 0;
-                }
-                if (!self.apiConfig.filter) {
-                    self.apiConfig.filter = {};
-                }
-                self.apiConfig.filter['type'] = self.agentType;
-                self.apiConfig.sort = self.appService.getSortFromModel(self.agGrid.api.getSortModel());
-                if (!!this.subscriptions['data_' + this.apiConfig.page]) {
-                    this.subscriptions['data_' + this.apiConfig.page].unsubscribe();
-                }
-                this.subscriptions['data_' + this.apiConfig.page] = this.getAgentCount()
-                    .pipe(
-                        takeUntil(this.canceller),
-                        switchMap(count => {
-                            this.totalCount = count;
-                            if (self.totalCount > 0) {
-                                return self.getAgentList().pipe(takeUntil(this.canceller))
-                            } else {
-                                self.agGrid.api.hideOverlay();
-                                self.agGrid.api.showNoRowsOverlay();
-                                this.processingRequest = false;
-                                return of(null);
-                            }
-                        })
-                    ).subscribe(
-                        docs => {
-                            if (!!docs) {
-                                self.loadedCount += docs.length;
-                                self.agGrid.api.hideOverlay();
-                                if (self.loadedCount < self.totalCount) {
-                                    params.successCallback(docs);
-                                } else {
-                                    self.totalCount = self.loadedCount;
-                                    params.successCallback(docs, self.totalCount);
-                                }
-                                this.processingRequest = false;
-                            }
-                        },
-                        err => {
-                            self.agGrid.api.hideOverlay();
-                            console.error(err);
-                            params.failCallback();
-                            this.processingRequest = false;
-                        }
-                    );
-            }
-        };
+        this.getAgentList();
     }
 
     ngOnDestroy() {
-        const self = this;
-        if (self.newAgentModalTemplateRef) {
-            self.newAgentModalTemplateRef.close();
-        }
-        Object.keys(self.subscriptions).forEach(key => {
-            if (self.subscriptions[key]) {
-                self.subscriptions[key].unsubscribe();
+        Object.keys(this.subscriptions).forEach(key => {
+            if (this.subscriptions[key]) {
+                this.subscriptions[key].unsubscribe();
             }
         });
-    }
-
-    configureColumns() {
-        const self = this;
-        const columns = [];
-        let col = new AgGridColumn();
-        col.headerName = 'Name';
-        col.field = 'name';
-        col.pinned = 'left';
-        col.lockPinned = true;
-        col.width = 180;
-        col.sort = 'asc';
-        columns.push(col);
-        col = new AgGridColumn();
-        col.headerName = 'Password';
-        col.field = 'password';
-        col.width = 120;
-        col.cellRendererParams = {
-            onClick: AgentGridCellComponent.bind(this),
-            label: 'Click'
-        };
-        columns.push(col);
-        col = new AgGridColumn();
-        col.headerName = 'IP Address';
-        col.field = 'ipAddress';
-        col.width = 150;
-        columns.push(col);
-        col = new AgGridColumn();
-        col.headerName = 'MAC Address';
-        col.field = 'macAddress';
-        col.width = 150;
-        columns.push(col);
-        col = new AgGridColumn();
-        col.headerName = 'Streak';
-        col.field = 'streak';
-        col.width = 100;
-        columns.push(col);
-        col = new AgGridColumn();
-        col.headerName = 'Status';
-        col.field = 'status';
-        col.width = 100;
-        columns.push(col);
-        col = new AgGridColumn();
-        col.headerName = 'Last Invoked';
-        col.field = 'lastInvokedAt';
-        col.width = 180;
-        columns.push(col);
-        col = new AgGridColumn();
-        col.headerName = 'Release';
-        col.field = 'release';
-        col.width = 110;
-        columns.push(col);
-        col = new AgGridColumn();
-        col.headerName = 'Pending Files';
-        col.field = 'pendingFiles';
-        col.width = 140;
-        columns.push(col);
-        col = new AgGridColumn();
-        col.headerName = 'Options';
-        col.field = '_options';
-        col.pinned = 'right';
-        col.lockPinned = true;
-        columns.push(col);
-        columns.forEach((item: AgGridColumn) => {
-            item.suppressMovable = true;
-            item.resizable = true;
-            if (item.field !== '_options') {
-                item.sortable = true;
-                item.filter = 'agTextColumnFilter';
-                item.floatingFilterComponentFramework = AgentGridFilterComponent;
-            }
-            item.cellRendererFramework = AgentGridCellComponent;
-        });
-        self.columnDefs = columns;
-    }
-
-    selectAgentList() {
-        this.apiConfig.filter = {
-            type: this.agentType,
-            app: this.commonService.app._id
-        };
-        this.filterModel = null;
-        this.agGrid.api.setFilterModel(null);
-        const allColumns = this.agGrid.columnApi.getAllColumns();
-        this.colWidthMap[
-            this.agentType === 'APPAGENT' ? 'PARTNERAGENT' : 'APPAGENT'
-        ] = allColumns.map(col => col.getActualWidth());
-        if (!!this.colWidthMap[this.agentType] && !!this.colWidthMap[this.agentType].length) {
-            this.agGrid.api.setColumnDefs(null);
-            this.columnDefs.forEach((col, index) => {
-                col.width = this.colWidthMap[this.agentType][index];
-            });
-            this.agGrid.api.setColumnDefs(this.columnDefs);
-        }
-    }
-
-    getAgentCount() {
-        const self = this;
-        return self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/count`, self.apiConfig);
     }
 
     getAgentList() {
-        const self = this;
-        return self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, self.apiConfig);
-    }
-
-    gridReady(event: GridReadyEvent) {
-        this.sortModel = this.agGrid.api.getSortModel();
-        const allWidth = event.columnApi.getAllColumns().map(col => col.getActualWidth());
-        this.colWidthMap = {
-            'APPAGENT': allWidth,
-            'PARTNERAGENT': allWidth
-        };
-    }
-
-    filterModified(event) {
-        const self = this;
-        const filter = [];
-        const filterModel = self.agGrid.api.getFilterModel();
-        self.filterModel = filterModel;
-        if (filterModel) {
-            Object.keys(filterModel).forEach(key => {
-                try {
-                    if (filterModel[key].filter) {
-                        filter.push(JSON.parse(filterModel[key].filter));
-                    }
-                } catch (e) {
-                    console.error(e);
-                }
-            });
-        }
-        if (filter.length > 0) {
-            self.apiConfig.filter = { $and: filter };
-        } else {
-            self.apiConfig.filter = null;
-        }
-        if (!environment.production) {
-            console.log('Filter Modified', filterModel);
-        }
-    }
-
-    sortChanged(event) {
-        const self = this;
-        const sortModel = self.agGrid.api.getSortModel();
-        self.sortModel = sortModel;
-        if (!environment.production) {
-            console.log('Sort Modified', sortModel);
-        }
-    }
-
-    clearFilter() {
-        const self = this;
-        self.filterModel = null;
-        self.apiConfig.filter = null;
-        self.agGrid.api.setFilterModel(null);
-    }
-
-    clearSort() {
-        const self = this;
-        self.sortModel = null;
-        self.agGrid.api.setSortModel([{ colId: 'name', sort: 'asc' }]);
+        return this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/count`).pipe(switchMap(count => {
+            return this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, { count: count })
+        })).subscribe(res => {
+            this.agentList = res;
+        }, err => {
+            this.commonService.errorToast(err);
+        });
     }
 
 
-    get hasFilter() {
-        const self = this;
-        if (self.filterModel) {
-            return Object.keys(self.filterModel).length > 0;
-        }
-        return false;
-    }
-
-    get hasSort() {
-        const self = this;
-        if (!self.sortModel
-            || self.sortModel.findIndex(e => e.colId === 'name') === -1
-            || self.sortModel.length !== 1) {
-            return true;
-        }
-        return false;
-    }
-
-    newAppAgent() {
-        const self = this;
-        self.agentData = {
-            app: self.commonService.app._id,
+    newAgent() {
+        this.agentData = {
+            app: this.commonService.app._id,
             type: 'APPAGENT',
             encryptFile: true,
             retainFileOnSuccess: true,
             retainFileOnError: true
         };
-        self.newAgentModalTemplateRef = self.commonService.modal(self.newAgentModalTemplate, { centered: true });
-        self.newAgentModalTemplateRef.result.then(close => {
-            if (close) {
-                if (!self.agentData.name) {
-                    return;
-                }
-                delete self.agentData.isEdit;
-                self.agGrid.api.showLoadingOverlay();
-                self.commonService.post('partnerManager', `/${this.commonService.app._id}/agent`, self.agentData).subscribe(res => {
-                    self.agentType = 'APPAGENT';
-                    self.selectAgentList();
-                    self.agGrid.api.hideOverlay();
-                }, err => {
-                    self.agGrid.api.hideOverlay();
-                    self.commonService.errorToast(err);
-                });
-            }
-        }, dismiss => { });
+        this.showNewAgentWindow = true;
     }
 
-    toCapitalize(text: string) {
-        const self = this;
-        return text ? self.appService.toCapitalize(text) : null;
-    }
-
-    hasPermission(roleId: string, entity?: string) {
-        const self = this;
-        return self.commonService.hasPermission(roleId, entity);
-    }
-
-    onRightClick(event) {
-        const self = this;
-        self.selectedRow = event;
-        self.selectedAgent = event.data;
-        self.showContextMenu = true;
-    }
-    closeContextMenu() {
-        const self = this;
-        self.showContextMenu = false;
-    }
-    getPosition() {
-        const self = this;
-        let position = {};
-        let top = 290;
-        if (self.loadedCount > 1) {
-            top = 220;
+    triggerAgentCreate() {
+        if (!this.agentData.name) {
+            return;
         }
-        if (self.selectedRow) {
-            let left = self.selectedRow.event.clientX;
-            if (left + 200 > window.outerWidth) {
-                left -= 180;
-            }
-            position = {
-                top: self.selectedRow.event.clientY - top + 'px',
-                left: left - 180 + 'px'
-            };
-        }
-        return position;
-    }
-
-    activateOption(type: string) {
-        const self = this;
-        self.sendOption.emit({
-            agent: self.selectedAgent,
-            type
+        delete this.agentData.isEdit;
+        this.showNewAgentWindow = false;
+        this.showLazyLoader = true;
+        this.commonService.post('partnerManager', `/${this.commonService.app._id}/agent`, this.agentData).subscribe(res => {
+            this.showLazyLoader = false;
+            this.getAgentList();
+        }, err => {
+            this.showLazyLoader = false;
+            this.commonService.errorToast(err);
         });
     }
 
-    updateStatus(event) {
-        const self = this;
-        if (!event.reload) {
-            if (event.type === 'disable') {
-                self.selectedAgent.status = 'DISABLED';
-            } else {
-                self.selectedAgent.status = 'STOPPED';
-            }
-        } else {
-            self.selectAgentList();
+    editAgent(_index) {
+        this.appService.editLibraryId = this.agentList[_index]._id;
+        this.router.navigate(['/app/', this.app, 'agent', this.appService.editLibraryId]);
+    }
+
+    cloneAgent(_index) {
+        this.appService.cloneLibraryId = this.agentList[_index]._id;
+        this.router.navigate(['/app/', this.app, 'agent', this.appService.cloneLibraryId]);
+    }
+
+    deleteAgent(_index) {
+        this.alertModal.statusChange = false;
+        this.alertModal.title = 'Delete Agent';
+        this.alertModal.message = 'Are you sure you want to delete <span class="text-delete font-weight-bold">'
+            + this.agentList[_index].name + '</span> Agent?';
+        this.alertModal.index = _index;
+        this.openDeleteModal.emit(this.alertModal);
+    }
+
+    closeDeleteModal(data) {
+        if (data) {
+            const url = `/${this.commonService.app._id}/agent/` + this.agentList[data.index]._id;
+            this.showLazyLoader = true;
+            this.subscriptions['deleteAgent'] = this.commonService.delete('partnerManager', url).subscribe(_d => {
+                this.showLazyLoader = false;
+                this.ts.info(_d.message ? _d.message : 'Agent deleted');
+                this.getAgentList();
+            }, err => {
+                this.showLazyLoader = false;
+                this.commonService.errorToast(err, 'Unable to delete, please try again later');
+            });
         }
     }
-    hasViewPermission(id, role: string) {
-        const self = this;
-        if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
+
+    toCapitalize(text: string) {
+        return text ? this.appService.toCapitalize(text) : null;
+    }
+
+    hasManagePermission(entity: string) {
+        return this.commonService.hasPermission('PMA', entity);
+    }
+
+    hasViewPermission(entity: string) {
+        return this.commonService.hasPermission('PVA', entity);
+    }
+
+    hasPermissionForAgent(id: string) {
+        if (
+            this.commonService.isAppAdmin ||
+            this.commonService.userDetails.isSuperAdmin
+        ) {
             return true;
+        } else {
+            if (
+                this.commonService.hasPermissionStartsWith('PMA', 'AGENT') ||
+                this.commonService.hasPermissionStartsWith('PVA', 'AGENT')
+            ) {
+                return true;
+            } else {
+                return false;
+            }
         }
-
-        const list = self.commonService.getEntityPermissions('AGENT_' + id);
-
-        let inAllPermission: boolean;
-        let inListPermission: boolean;
-
-        inAllPermission = self.hasPermission(role, 'AGENT');
-
-        inListPermission = Boolean(list.find(e => e.id === role));
-
-        if (list.length === 0 && inAllPermission) {
+    }
+    canEditAgent(id: string) {
+        if (
+            this.commonService.isAppAdmin ||
+            this.commonService.userDetails.isSuperAdmin
+        ) {
             return true;
+        } else {
+            const list2 = this.commonService.getEntityPermissions('AGENT');
+            return Boolean(
+                list2.find((e: any) => e.id.startsWith('PMA'))
+            );
         }
-        return list.length > 0 && inListPermission;
+    }
+
+    applySort(field: string) {
+        if (!this.sortModel[field]) {
+            this.sortModel = {};
+            this.sortModel[field] = 1;
+        } else if (this.sortModel[field] == 1) {
+            this.sortModel[field] = -1;
+        } else {
+            delete this.sortModel[field];
+        }
+    }
+    getStatusClass(srvc: any) {
+        if (srvc.status === 'Active') {
+            return 'text-success';
+        }
+        if (srvc.status === 'Stopped' || srvc.status === 'Undeployed') {
+            return 'text-danger';
+        }
+        if (srvc.status === 'Draft') {
+            return 'text-accent';
+        }
+        if (srvc.status === 'Pending') {
+            return 'text-warning';
+        }
+        return 'text-secondary';
+    }
+
+    getStatusLabel(srvc: any) {
+        if (srvc.status === 'Active') {
+            return 'Running';
+        }
+        if (srvc.status === 'Stopped' || srvc.status === 'Undeployed') {
+            return 'Stopped';
+        }
+        if (srvc.status === 'Draft') {
+            return 'Draft';
+        }
+        if (srvc.status === 'Pending') {
+            return 'Pending';
+        }
+        return 'Maintainance';
+    }
+
+    showDropDown(event: any, id: string) {
+        this.selectedItemEvent = event;
+        Object.keys(this.showOptionsDropdown).forEach(key => {
+            this.showOptionsDropdown[key] = false;
+        })
+        this.selectedAgent = this.agentList.find(e => e._id == id);
+        this.showOptionsDropdown[id] = true;
+    }
+
+    private compare(a: any, b: any) {
+        if (a > b) {
+            return 1;
+        } else if (a < b) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    get dropDownStyle() {
+        let top = (this.selectedItemEvent.clientY + 10);
+        if (this.selectedItemEvent.clientY > 430) {
+            top = this.selectedItemEvent.clientY - 170
+        }
+        return {
+            top: top + 'px',
+            right: '50px'
+        };
+    }
+
+    get records() {
+        let records = this.commonPipe.transform(this.agentList, 'name', this.searchTerm);
+        const field = Object.keys(this.sortModel)[0];
+        if (field) {
+            records = records.sort((a, b) => {
+                if (this.sortModel[field] == 1) {
+                    if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+                        return this.compare((a[field]), (b[field]));
+                    } else {
+                        return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
+                    }
+                } else if (this.sortModel[field] == -1) {
+                    if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+                        return this.compare((b[field]), (a[field]));
+                    } else {
+                        return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
+                    }
+                } else {
+                    return 0;
+                }
+            });
+        } else {
+            records = records.sort((a, b) => {
+                return this.compare(b._metadata.lastUpdated, a._metadata.lastUpdated);
+            });
+        }
+        return records;
+    }
+
+    get isAppAdmin() {
+        return this.commonService.isAppAdmin;
+    }
+
+    get isSuperAdmin() {
+        return this.commonService.userDetails.isSuperAdmin;
+    }
+
+    get isExperimental() {
+        return this.commonService.userDetails.experimentalFeatures;
+    }
+
+    get app() {
+        return this.commonService.app._id;
     }
 }
