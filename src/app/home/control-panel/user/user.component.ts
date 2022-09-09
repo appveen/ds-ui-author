@@ -182,7 +182,7 @@ export class UserComponent implements OnInit, OnDestroy {
     });
     this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.configureAuthTypes();
-    // this.createUserForm();
+    this.createUserForm();
     this.ngbToolTipConfig.container = 'body';
     this.username = this.commonService.userDetails.username;
     if (
