@@ -113,18 +113,22 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   triggerFaasCreate() {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
+    this.showLazyLoader = true;
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/faas`, payload).subscribe(res => {
+      this.showLazyLoader = false;
       this.form.reset();
       this.ts.success('Function has been created.');
       this.appService.edit = res._id;
       this.router.navigate(['/app/', this.commonService.app._id, 'faas', res._id]);
     }, err => {
+      this.showLazyLoader = false;
       this.form.reset();
       this.commonService.errorToast(err);
     });
   }
 
   getFaas() {
+    this.showLazyLoader = true;
     this.faasList = [];
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`).pipe(
       switchMap((ev: any) => {
@@ -132,11 +136,13 @@ export class FaasListingComponent implements OnInit, OnDestroy {
         return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, { count: ev });
       })
     ).subscribe(res => {
+      this.showLazyLoader = false;
       res.forEach(item => {
         item.url = 'https://' + this.commonService.userDetails.fqdn + item.url;
         this.faasList.push(item);
       });
     }, err => {
+      this.showLazyLoader = false;
       this.commonService.errorToast(err);
     });
   }

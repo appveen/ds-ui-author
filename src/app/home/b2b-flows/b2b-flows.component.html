@@ -1,80 +1,191 @@
-<div class="d-flex flex-column w-100 h-100">
-    <odp-breadcrumb></odp-breadcrumb>
-    <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3 mb-3">
-        <div class="font-weight-bold font-16">List of Flow</div>
-        <button type="button" class="add-new btn-min-width btn btn-primary show" id="createDataFormat"
-            *ngIf="hasWritePermission('FAAS')" (click)="newFlow()">
-            <span class="dsi dsi-plus mr-2"></span>
-            <span class="text">New Flow</span>
-        </button>
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
+        <div class="text-secondary mt-2">Processing...</div>
     </div>
-    <div class="card-container d-flex flex-column w-100 px-3">
-        <ag-grid-angular #agGrid *ngIf="columnDefs" class="ag-theme-balham ag-grid-container custom-style"
-            [columnDefs]="columnDefs" floatingFilter="true" rowModelType="infinite" [rowHeight]="32"
-            (filterModified)="filterModified($event)" [datasource]="dataSource" cacheBlockSize="30"
-            (sortChanged)="sortChanged($event)" (gridReady)="gridReady($event)"
-            [overlayNoRowsTemplate]="noRowsTemplate">
-        </ag-grid-angular>
+</div>
+<div class="flow-page d-flex flex-column w-100 bg-light-gray page-padding">
+    <div class="d-flex justify-content-between align-items-center w-100 pt-2 pb-4">
+        <div class="font-22">
+            <span class="fw-600 mr-2">Flows</span>
+            <span></span>
+        </div>
+        <div class="d-flex align-items-center">
+            <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+            <button id="createFlow" type="button" class="add-new btn btn-primary ml-3 d-flex align-items-center"
+                (click)="newFlow()" [disabled]="!hasWritePermission('FLOW')">
+                <span class="dsi dsi-plus mr-2"></span>
+                <span class="text">New</span>
+            </button>
+        </div>
+    </div>
+    <div class="card-container d-flex flex-column w-100 mb-3">
+        <div *ngIf="records.length==0" class="rounded-lg border bg-white p-4">
+            <p class="m-0">No Records Found, <button type="button" class="btn btn-link px-1 py-0"
+                    (click)="newFlow()">Click
+                    Here</button> to create a new Flow
+                <span *ngIf="searchTerm">:&nbsp;<span class="fw-500">{{searchTerm}}</span></span>
+            </p>
+        </div>
+        <div *ngIf="records.length>0" class="list-group mb-3">
+            <div
+                class="list-group-item header d-flex align-items-center justify-content-start py-0 bg-light text-uppercase font-11 fw-500">
+                <div (click)="applySort('name')" class="hover d-flex align-items-center item-name">
+                    <span class="mr-2">Name</span>
+                    <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
+                    <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div (click)="applySort('url')" class="hover d-flex align-items-center item-url">
+                        <span class="mr-2">URL</span>
+                        <span *ngIf="sortModel['url']==1" class="dsi dsi-drop-down"></span>
+                        <span *ngIf="sortModel['url']==-1" class="dsi dsi-drop-up"></span>
+                    </div>
+                    <div (click)="applySort('status')" class="hover d-flex align-items-center item-status">
+                        <span class="mr-2">Status</span>
+                        <span *ngIf="sortModel['status']==1" class="dsi dsi-drop-down"></span>
+                        <span *ngIf="sortModel['status']==-1" class="dsi dsi-drop-up"></span>
+                    </div>
+                    <div (click)="applySort('lastInvoked')" class="hover d-flex align-items-center item-last-invoked">
+                        <span class="mr-2">Last Invoked</span>
+                        <span *ngIf="sortModel['lastInvoked']==1" class="dsi dsi-drop-down"></span>
+                        <span *ngIf="sortModel['lastInvoked']==-1" class="dsi dsi-drop-up"></span>
+                    </div>
+                </div>
+                <div class="d-flex w-100 justify-content-end">
+                    <div class="item-actions"></div>
+                </div>
+            </div>
+            <div class="list-group-item d-flex align-items-center justify-content-start"
+                *ngFor="let item of records;let i=index">
+                <div class="item-name fw-500">
+                    <span class="ml-2 pl-1 text-dark">{{item.name}}</span>
+                    <span class="ml-2 version sub-heading font-11 text-uppercase">(v{{(item.version||1)}})</span>
+                    <span *ngIf="item.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="sub-heading item-url pr-3 d-flex align-items-center">
+                        <span *ngIf="copied[item._id]" class="text-accent mr-2">Copied!</span>
+                        <span *ngIf="!copied[item._id]" class="dsi dsi-copy text-accent mr-2 hover"
+                            (click)="copyUrl(item)"></span>
+                        <span class="text-truncate" [ngbTooltip]="item.url" container="body">{{item.url}}</span>
+                    </div>
+                    <div class="sub-heading item-status d-flex align-items-center">
+                        <span class="fa fa-circle mr-2" [ngClass]="getStatusClass(item)"></span>
+                        <span class="text font-12 fw-400">{{getStatusLabel(item)}}</span>
+                    </div>
+                    <div class="sub-heading item-last-invoked">
+                        <span *ngIf="item.lastInvoked">{{item.lastInvoked | date:'medium'}}</span>
+                        <span *ngIf="!item.lastInvoked" class="text-muted">-</span>
+                    </div>
+                </div>
+                <div class="d-flex w-100 align-items-center justify-content-end">
+                    <div class="item-actions d-flex align-items-center justify-content-end">
+                        <div class="actions d-flex justify-content-end hover align-items-center">
+                            <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintainance' ">
+                                <span *ngIf="canDeployFlow(item)" id='deploy_{{i}}' class="text-primary mr-3"
+                                    (click)="deployFlow(i)">Deploy</span>
+                                <span class="fw-600 font-13 hover mr-3"
+                                    *ngIf="item.status == 'Undeployed' && canStartStopFlow(i)"
+                                    (click)="toggleFlowStatus(i)">Start</span>
+                                <span class="fw-600 font-13 hover mr-3"
+                                    *ngIf="item.status == 'Active' && canStartStopFlow(i)"
+                                    (click)="toggleFlowStatus(i)">Stop</span>
+                                <span class="dsi dsi-more-vertical hover mr-3 ignore-outside"
+                                    (click)="showDropDown($event,i)"></span>
+                            </ng-container>
+                            <div *ngIf="showOptionsDropdown[i]"
+                                class="more-options bg-white rounded list-group position-fixed"
+                                (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
+                                (outside)="showOptionsDropdown[i]=false">
+                                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFlow(item._id)"
+                                    (click)="editFlow(i)">
+                                    Edit
+                                </div>
+                                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFlow(item._id)"
+                                    (click)="viewFlow(i)">
+                                    View
+                                </div>
+                                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFlow(item._id)"
+                                    (click)="cloneFlow(i)">
+                                    Clone
+                                </div>
+                                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFlow(item._id)"
+                                    (click)="deleteFlow(i)">
+                                    Delete
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 
-<ng-template #newFlowModal>
-    <div class="new-faas-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="form">
+<div [ngClass]="{'show':showNewFlowWindow}"
+    class="new-flow-window p-4 position-fixed border-left bg-white d-flex flex-column" [formGroup]="form">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <span class="font-22 fw-500">New Flow</span>
+        <span class="dsi dsi-close hover" (click)="showNewFlowWindow=false;"></span>
+    </div>
+    <div class="d-flex flex-column w-100">
         <div class="d-flex flex-column w-100">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <span class="font-22 fw-500">New Flow</span>
-                <span class="fa fa-times text-muted hover" (click)="newFlowModalRef.close(false)"></span>
+            <label for="name" class="font-13 text-secondary">
+                <span class="text">Name</span>
+                <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+            </label>
+            <div class="name-wrapper position-relative mb-3">
+                <input newFlowName type="text" class="form-control" id="name" placeholder="Untitled Flow"
+                    formControlName="name" odpAutoFocus (keyup.enter)="triggerFlowCreate()"
+                    [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
+                <ng-container *ngIf="form.get('name').dirty">
+                    <span *ngIf="form.get('name').hasError('required')"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Name is required"></span>
+                    <span *ngIf="form.get('name').hasError('maxlength')"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Name should be within 30 characters"></span>
+                    <span *ngIf="form.get('name').hasError('pattern')"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
+                </ng-container>
             </div>
-            <div class="d-flex flex-column w-100">
-                <label for="name" class="font-13 text-secondary">
-                    <span class="text">Name</span>
-                    <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
-                </label>
-                <div class="name-wrapper position-relative mb-3">
-                    <input newFlowName type="text" class="form-control" id="name" placeholder="Untitled Flow"
-                        formControlName="name" (keyup.enter)="newFlowTextarea.focus()" odpAutoFocus
-                        [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
-                    <ng-container *ngIf="form.get('name').dirty">
-                        <span *ngIf="form.get('name').hasError('required')"
-                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                            ngbTooltip="Name is required"></span>
-                        <span *ngIf="form.get('name').hasError('maxlength')"
-                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                            ngbTooltip="Name should be within 30 characters"></span>
-                        <span *ngIf="form.get('name').hasError('pattern')"
-                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                            ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
-                    </ng-container>
-                </div>
-                <label for="name" class="font-13 text-secondary">
-                    <span class="text">Type</span>
-                    <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
-                </label>
-                <div class="name-wrapper position-relative">
-                    <select class="custom-select" id="name" formControlName="type">
-                        <option value="API">API</option>
-                        <option value="FILE">FILE</option>
-                        <option value="TIMER">TIMER</option>
-                    </select>
-                </div>
-                <label for="description" class="font-13 text-secondary mt-3">Description</label>
-                <div class="name-wrapper position-relative">
-                    <textarea #newFlowTextarea class="form-control" id="description" rows="5"
-                        placeholder="No description" formControlName="description"
-                        (keydown.enter)="$event.preventDefault()"
-                        (keyup.enter)="newFlowModalRef.close(true)"></textarea>
-                    <ng-container *ngIf="form.get('description').dirty">
-                        <span *ngIf="form.get('description').hasError('maxlength')"
-                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                            ngbTooltip="Description should be within 240 characters"></span>
-                    </ng-container>
-                </div>
+            <label for="name" class="font-13 text-secondary">
+                <span class="text">Type</span>
+                <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+            </label>
+            <div class="name-wrapper position-relative">
+                <select class="custom-select" id="name" formControlName="type">
+                    <option value="API">API</option>
+                    <option value="FILE">FILE</option>
+                    <option value="TIMER">TIMER</option>
+                </select>
             </div>
         </div>
-        <div class="d-flex align-self-end justify-content-end w-100 mt-3">
-            <button type="button" class="btn btn-min-width btn-create" id="newFlowModalYes" [disabled]="form.invalid"
-                (click)="newFlowModalRef.close(true)">Create</button>
+    </div>
+    <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
+        <button type="button" class="btn btn-min-width btn-primary w-100" id="newFlowModalYes" [disabled]="form.invalid"
+            (click)="triggerFlowCreate()">Create</button>
+    </div>
+</div>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
+
+<ng-template #alertModalTemplate>
+    <div class="modal-body p-4">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <span class="font-20 fw-600">{{ alertModal.title }}</span>
+            <span class="fa fa-times text-secondary hover" (click)="alertModalTemplateRef.close(false)"></span>
+        </div>
+        <p class="text-secondary text-center my-5">{{ alertModal.message }}</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-primary" (click)="alertModalTemplateRef.close(true)">
+                Yes
+            </button>
         </div>
     </div>
 </ng-template>
