@@ -125,7 +125,7 @@
     </div>
 </div>
 
-
+<div *ngIf="showNewFlowWindow" class="overlay position-fixed"></div>
 <div [ngClass]="{'show':showNewFlowWindow}"
     class="new-flow-window p-4 position-fixed border-left bg-white d-flex flex-column" [formGroup]="form">
     <div class="d-flex align-items-center justify-content-between mb-3">
