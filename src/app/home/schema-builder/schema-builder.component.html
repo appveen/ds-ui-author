@@ -6,7 +6,7 @@
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="d-flex flex-column w-100 h-100 page-padding bg-light-gray">
+<div class="d-flex flex-column w-100 h-100 page-padding bg-light-gray pb-2">
   <div class="pt-2 pb-4">
     <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description"
       [edit]="{status:edit.status && canEditService}">
@@ -162,12 +162,13 @@
                       </div>
                     </ng-container>
                   </div>
-                  <div class="add-attribute d-flex align-items-center text-muted mt-4"
+                  <div class="add-attribute d-flex align-items-center text-muted mt-2"
                     *ngIf="edit.status && serviceObj?.type!=='internal'">
-                    <span class="d-flex align-items-center justify-content-center hover alert alert-primary w-100"
+                    <span class="d-flex align-items-center justify-content-center hover add-attribute w-100"
                       (click)="addGroup()" id="schemaFieldObjectAddField">
-                      <span class="dsi dsi-plus fa-xs mr-2"></span>
-                      <span class="text">Add Attribute</span>
+                      <!-- <span class="dsi dsi-plus fa-xs mr-2"></span> -->
+                      <span class="dsi dsi-plus-circle fa-xs mr-1 text-primary"></span>
+                      <span class="text-primary fw-400">Add Attribute</span>
                     </span>
                   </div>
                 </ng-container>

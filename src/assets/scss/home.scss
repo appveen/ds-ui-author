@@ -345,26 +345,26 @@ input[type="number"]::-webkit-outer-spin-button {
 .switch {
   &.primary {
     input:checked~.slider {
-      background: $primary  !important;
+      background: $primary !important;
     }
   }
 
   &.accent {
     input:checked~.slider {
-      background: $accent  !important;
+      background: $accent !important;
     }
   }
 
   &.success {
     input:checked~.slider {
-      background: $success  !important;
+      background: $success !important;
     }
   }
 }
 
 .dropdown .dropdown-item {
   &:hover {
-    color: $primary  !important;
+    color: $primary !important;
     background: $light;
   }
 }
@@ -388,19 +388,19 @@ input[type="number"]::-webkit-outer-spin-button {
   .del {
     display: block;
     text-decoration: none !important;
-    color: $border  !important;
+    color: $border !important;
     margin-bottom: 0;
   }
 
   .ins {
     display: block;
     text-decoration: none !important;
-    color: $primary  !important;
+    color: $primary !important;
     margin-bottom: 0;
   }
 
   .modal-footer {
-    border-top: 1px solid $secondary  !important;
+    border-top: 1px solid $secondary !important;
   }
 
   .details-block {

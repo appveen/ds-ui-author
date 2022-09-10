@@ -21,11 +21,11 @@
 
     &.active,
     &:hover {
-      color: $link-color  !important;
+      color: $link-color !important;
     }
 
     &.active {
-      color: $link-color  !important;
+      color: $link-color !important;
       font-weight: 700;
     }
 
@@ -146,4 +146,10 @@
   right: 7px;
   opacity: 0.7;
   transition: 0.5s;
+}
+
+.add-attribute {
+  background: #FFF9F5;
+  border-radius: 6px;
+  height: 55px;
 }

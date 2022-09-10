@@ -1,9 +1,10 @@
 <div [formGroup]="form.get('properties')">
 
+  <!-- DEFAULT VALUE -->
   <div class="d-flex w-100  flex-column mb-4" *ngIf="form.get('properties.default') && !form.get('properties.longText')?.value &&
     !form.get('properties.richText')?.value && !isLibrary && !isDataFormat">
     <div>
-      <div class="font-14 text-dark mb-2">Default Value</div>
+      <div class="font-14 fw-300 text-dark mb-2">Default Value</div>
       <div class=" position-relative">
         <ng-container *ngIf="canEdit">
           <input *ngIf="isPlainString(form.get('properties'))" class="form-control" type="text"
@@ -14,7 +15,7 @@
             [ngClass]="{'is-invalid':form.get('properties.default').hasError('DefaultEmail')}" formControlName="default"
             id="_default" placeholder="Default Value email"
             (blur)="validateEmail('DefaultEmail',form.get('properties.default').value,form.get('properties'))">
-          <div *ngIf=" form.get('properties._detailedType').value === 'enum'">
+          <div *ngIf="form.get('properties.enum')?.length > 0">
             <select class="form-control" formControlName="default" (change)="changeDefault($event)"
               [attr.disabled]="checkStateModel() ? '' : null">
               <option [value]=null selected>Select Value</option>
@@ -53,10 +54,12 @@
       </div>
     </div>
   </div>
+
+  <!-- PATTERN -->
   <div class="d-flex flex-column w-100 mt-4" *ngIf="form.get('properties.pattern') && (form.get('properties._detailedType').value ==='' ||
           form.get('properties._detailedType').value === 'password')">
     <div class="position-relative ">
-      <div class="font-14 text-dark mb-2">Pattern</div>
+      <div class="font-14 fw-300 text-dark mb-2">Pattern</div>
       <div>
         <input *ngIf="canEdit" class="form-control" type="text" formControlName="pattern" id="_pattern"
           placeholder="Regular Expression"
@@ -85,18 +88,20 @@
       </div>
     </div> -->
   </div>
+
+  <!-- VALUES -->
   <div class="w-100 mb-4 mt-4"
     *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
-    <div class="font-14 text-secondary mb-2">Values</div>
+    <div class="font-14 fw-300 text-dark mb-2">Values</div>
     <div class=" position-relative">
       <ng-container *ngIf="edit.status">
         <input class="form-control pr-4"
           [ngClass]="{'invalid-enum' : form.get('properties.enum').hasError('emptyEnum') }"
           (paste)="pasteOnList($event,'enum','string')" (keyup.enter)="listEnterKey($event,'enum')" type="text"
           formControlName="_listInput">
-        <button type="button" class="list-add-button btn btn-link hover position-absolute p-0"
+        <button type="button" class="list-add-button btn btn-link hover position-absolute p-0 mt-n1"
           [disabled]="form.get('properties._listInput').value===''" (click)="addToList('enum')">
-          <span class="dsi dsi-plus text-accent"></span>
+          <span class="text-primary">+ Add</span>
         </button>
       </ng-container>
       <div *ngIf="form.get('properties.enum').hasError('emptyEnum')">
@@ -106,6 +111,7 @@
       </div>
     </div>
   </div>
+
   <div class="d-flex flex-column w-100 mb-4 overflow-auto" style="max-height: 30vh;"
     *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
     <div class="" formArrayName="enum" [sortablejs]="enumList"
@@ -167,12 +173,14 @@
       All
     </button>
   </div>
+
+  <!-- MIN and MAX LENGTH -->
   <ng-container *ngIf="formatType!='FLATFILE'">
     <div class="d-flex flex-column w-100 mt-4">
       <div class="row no-gutters">
         <div class="col-6">
-          <ng-container *ngIf="form.get('properties.minlength') && form.get('properties._detailedType').value==''">
-            <div class="font-14 text-dark mb-2">Min Length</div>
+          <ng-container *ngIf="form.get('properties.minlength')">
+            <div class="font-14 fw-300 text-dark mb-2">Min Length</div>
             <input *ngIf="canEdit" class=" form-control short" placeholder="Minimum length"
               [ngClass]="{'is-invalid':form.get('properties.minlength').dirty && form.hasError('minMaxLength')}"
               type="text" min="0" #minlengthEle formControlName="minlength" id="_minLength"
@@ -183,8 +191,8 @@
           </ng-container>
         </div>
         <div class="col-6">
-          <ng-container *ngIf="form.get('properties.maxlength') && form.get('properties._detailedType').value==''">
-            <div class="font-14 text-dark mb-2">Max Length</div>
+          <ng-container *ngIf="form.get('properties.maxlength')">
+            <div class="font-14 fw-300 text-dark mb-2">Max Length</div>
             <input *ngIf="canEdit" class=" form-control short mb-2" placeholder="Maximum length"
               [ngClass]="{'is-invalid':form.get('properties.maxlength').dirty && form.hasError('minMaxLength')}"
               type="text" min="0" #maxlengthEle formControlName="maxlength" id="_maxLength"
