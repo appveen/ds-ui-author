@@ -30,15 +30,19 @@ $odp-ui-author-warn: mat-palette($mat-red);
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
-        accent: $odp-ui-author-accent,
-        warn: $odp-ui-author-warn,
-      ),
-    ));
+      accent: $odp-ui-author-accent,
+      warn: $odp-ui-author-warn,
+    ),
+  ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($odp-ui-author-theme);
+
+body {
+  letter-spacing: 0.01em;
+}
 
 .add-blur {
   -webkit-filter: blur(6px);
@@ -108,7 +112,14 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   }
 }
 
-$weights: 200, 300, 400, 500, 600, 700, 800, 900;
+$weights: 200,
+300,
+400,
+500,
+600,
+700,
+800,
+900;
 
 @each $size in $weights {
   .fw-#{$size} {
@@ -638,7 +649,7 @@ $weights: 200, 300, 400, 500, 600, 700, 800, 900;
 }
 
 .focus-accent:focus {
-  border-color: $accent  !important;
+  border-color: $accent !important;
   box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
 }
 
@@ -657,7 +668,7 @@ $weights: 200, 300, 400, 500, 600, 700, 800, 900;
 
   .form-control:not(.is-invalid):focus,
   .custom-select:not(.is-invalid):focus {
-    border-color: $accent  !important;
+    border-color: $accent !important;
     box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
   }
 
@@ -792,14 +803,14 @@ $weights: 200, 300, 400, 500, 600, 700, 800, 900;
 
   .ag-checkbox-input-wrapper.ag-checked::after {
     color: white !important;
-    background: $headings  !important;
+    background: $headings !important;
     border-radius: 4px;
   }
 }
 
 .custom-style {
   .ag-header {
-    background: $data-grid-header  !important;
+    background: $data-grid-header !important;
   }
 }
 

@@ -149,7 +149,7 @@
   line-height: 28px;
 }
 
-.state-model {
+.advanced-badge {
   background: $white;
   border-radius: 16px;
   padding: 2px 12px;
@@ -169,5 +169,5 @@
 
 .field-flag-holder {
   min-width: 120px;
-  max-width: 120px;
+  overflow: hidden;
 }

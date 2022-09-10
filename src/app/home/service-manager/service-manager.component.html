@@ -14,11 +14,12 @@
     </div>
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
-      <button type="button" id="data-management" class="btn btn-white d-flex align-items-center border ml-3" [routerLink]="['settings']"
-        *ngIf="isAppAdmin || isSuperAdmin">
+      <button type="button" id="data-management" class="btn btn-white d-flex align-items-center border ml-3"
+        [routerLink]="['settings']" *ngIf="isAppAdmin || isSuperAdmin">
         <span class="dsi dsi-settings text-secondary"></span>
       </button>
-      <button *ngIf="isExperimental" type="button" class="btn btn-white d-flex align-items-center border ml-3" (click)="toggleImportWizard=true">
+      <button *ngIf="isExperimental" type="button" class="btn btn-white d-flex align-items-center border ml-3"
+        (click)="toggleImportWizard=true">
         <span class="dsi dsi-upload text-secondary"></span>
       </button>
       <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3 d-flex align-items-center"
@@ -137,21 +138,23 @@
                     <span class="dsi dsi-more-vertical hover mr-3 ignore-outside"
                       (click)="showDropDown($event,srvc._id)"></span>
                   </ng-container>
-                  <div *ngIf="showOptionsDropdown[srvc._id]" class="more-options bg-white rounded list-group position-fixed"
+                  <div *ngIf="showOptionsDropdown[srvc._id]"
+                    class="more-options bg-white rounded list-group position-fixed border"
                     (mouseleave)="showOptionsDropdown[srvc._id]=false" [ngStyle]="dropDownStyle" odpClickOutside
                     (outside)="showOptionsDropdown[srvc._id]=false">
-                    <button class="list-group-item list-group-item-action py-2" *ngIf="canEditService(srvc._id)"
-                      (click)="viewService(i)">View</button>
-                    <button class="list-group-item list-group-item-action py-2" *ngIf="canEditService(srvc._id)"
-                      (click)="editService(i)">Edit</button>
-                    <button class="list-group-item list-group-item-action py-2"
+                    <button class="list-group-item list-group-item-action py-2 border-0"
+                      *ngIf="canEditService(srvc._id)" (click)="viewService(i)">View</button>
+                    <button class="list-group-item list-group-item-action py-2 border-0"
+                      *ngIf="canEditService(srvc._id)" (click)="editService(i)">Edit</button>
+                    <button class="list-group-item list-group-item-action py-2 border-0"
                       *ngIf="srvc.draftVersion && canEditService(srvc._id)" (click)="discardDraft(srvc._id)">Discard
                       Draft</button>
-                    <button class="list-group-item list-group-item-action py-2" *ngIf="canCloneService(srvc._id)"
-                      (click)="cloneService(i)">Clone</button>
-                    <button class="list-group-item list-group-item-action py-2" *ngIf="canDeleteService(srvc._id)"
-                      (click)="deleteService(i)">Delete</button>
-                    <button class="list-group-item list-group-item-action py-2" (click)="openDocs(i)">API Docs</button>
+                    <button class="list-group-item list-group-item-action py-2 border-0"
+                      *ngIf="canCloneService(srvc._id)" (click)="cloneService(i)">Clone</button>
+                    <button class="list-group-item list-group-item-action py-2 border-0" (click)="openDocs(i)">API
+                      Docs</button>
+                    <button class="list-group-item list-group-item-action py-2 border-0 text-danger"
+                      *ngIf="canDeleteService(srvc._id)" (click)="deleteService(i)">Delete</button>
                     <ng-container *ngIf="canEditService(srvc._id) && easterEggEnabled">
                       <button class="list-group-item list-group-item-action py-2 text-accent"
                         (click)="getYamls(i)">YAMLs</button>

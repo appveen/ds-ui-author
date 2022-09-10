@@ -89,7 +89,7 @@
       </div>
       <div class="builder-body d-flex flex-column w-100" *ngIf="hasAnyTabPermission">
         <ng-container *ngIf="activeTab == 0">
-          <div class="p-4 d-flex align-items-center">
+          <div class="pl-4 my-3 d-flex align-items-center">
             <div class="d-flex align-items-center hover mr-3" (click)="toggleSchemaType(false)">
               <odp-round-radio size="18" [edit]="edit" [checked]="isSchemaFree==false"
                 (checkedChange)="toggleSchemaType(false)">
@@ -130,18 +130,20 @@
                 <span class="text-dark font-weight-bold">Attributes</span>
                 <div class="d-flex justify-content-end align-items-center"
                   *ngIf="edit.status && serviceObj?.type!=='internal'">
-                  <button type="button" class="btn btn-link pr-0" (click)="addGroup('after')" id="sbInsertAttribute">
+                  <button type="button" class="btn btn-link pr-0 text-primary" (click)="addGroup('after')"
+                    id="sbInsertAttribute">
                     Insert
                   </button>
                   <div ngbDropdown class="d-inline-block mr-3">
-                    <button type="button" class="btn btn-link px-1 pt-2" id="insertDropDown" ngbDropdownToggle></button>
+                    <button type="button" class="btn btn-link text-primary px-1 pt-2" id="insertDropDown"
+                      ngbDropdownToggle></button>
                     <div ngbDropdownMenu>
                       <button type="button" class="dropdown-item" (click)="addGroup('before')"
                         [disabled]="idFieldId===selectedFieldId">Insert Before</button>
                       <button type="button" class="dropdown-item" (click)="addGroup('after')">Insert After</button>
                     </div>
                   </div>
-                  <button type="button" class="btn btn-link" (click)="resetBuilder()" id="sbClearAll">
+                  <button type="button" class="btn btn-link text-primary" (click)="resetBuilder()" id="sbClearAll">
                     Delete All
                   </button>
                 </div>

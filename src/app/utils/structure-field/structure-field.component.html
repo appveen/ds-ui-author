@@ -52,7 +52,20 @@
                         class="ml-2 rounded-circle properties password d-flex justify-content-center align-items-center text-white fw-500 font-12"
                         *ngIf="form.get('properties.password') && form.get('properties.password').value"
                         ngbTooltip="Secure">S</span>
-                    <span class="state-model hover" (click)="_viewStateModel(true)" *ngIf="checkStateModel()">
+                    <span class="ml-2 advanced-badge hover"
+                        *ngIf="form.get('properties.pattern') && form.get('properties.pattern').value">
+                        Regex
+                    </span>
+                    <span class="ml-2 advanced-badge hover" *ngIf="(form.get('properties.minlength') && form.get('properties.minlength').value) ||
+                        (form.get('properties.maxlength') && form.get('properties.maxlength').value)">
+                        Len
+                    </span>
+                    <span class="ml-2 advanced-badge hover"
+                        *ngIf="form.get('properties.default') && form.get('properties.default').value" placement="top"
+                        [ngbTooltip]="form.get('properties.default').value">
+                        Default
+                    </span>
+                    <span class="ml-2 advanced-badge hover" (click)="_viewStateModel(true)" *ngIf="checkStateModel()">
                         State Model
                     </span>
                 </div>
