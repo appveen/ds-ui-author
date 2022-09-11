@@ -2,18 +2,18 @@ import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef } from
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { switchMap } from 'rxjs/operators';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService } from 'src/app/utils/services/common.service';
+import { B2bFlowService } from './b2b-flow.service';
 
 @Component({
   selector: 'odp-b2b-flows-manage',
   templateUrl: './b2b-flows-manage.component.html',
   styleUrls: ['./b2b-flows-manage.component.scss']
 })
-export class B2bFlowsManageComponent implements OnInit {
+export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   @ViewChild('pageChangeModalTemplate', { static: false }) pageChangeModalTemplate: TemplateRef<HTMLElement>;
   @ViewChild('keyValModalTemplate', { static: false }) keyValModalTemplate: TemplateRef<HTMLElement>;
@@ -33,19 +33,29 @@ export class B2bFlowsManageComponent implements OnInit {
   showConsole: boolean;
   loadingLogs: boolean;
   logs: Array<any>;
+  showNewNodeDropdown: boolean;
+  newNodeDropdownPos: any;
+  selectedNode: any;
+  selectedNodeIndex: number;
+  showNodeProperties: boolean;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
     private router: Router,
     private ele: ElementRef,
-    private ts: ToastrService) {
+    private ts: ToastrService,
+    private flowService: B2bFlowService) {
     this.subscriptions = {};
     this.edit = {
       status: false,
       id: null,
       editClicked: false
     };
-    this.breadcrumbPaths = [];
+    this.breadcrumbPaths = [{
+      active: false,
+      label: 'Flows',
+      url: '/app/' + this.commonService.app._id + '/flow'
+    }];
     this.apiCalls = {};
     this.flowData = {};
     this.selectedEditorTheme = 'vs-light';
@@ -55,6 +65,19 @@ export class B2bFlowsManageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.flowService.showAddNodeDropdown.subscribe((data: any) => {
+      this.selectedNode = data.node;
+      this.selectedNodeIndex = data.nodeIndex;
+      this.newNodeDropdownPos = data.position;
+      this.showNewNodeDropdown = true;
+      this.showNodeProperties = false;
+    });
+    this.flowService.selectedNode.subscribe((data: any) => {
+      this.showNewNodeDropdown = false;
+      this.showNodeProperties = true;
+      this.selectedNode = data.node;
+      this.selectedNodeIndex = data.nodeIndex;
+    });
     this.route.params.subscribe(params => {
       if (params && params.id) {
         this.edit.id = params.id;
@@ -89,6 +112,11 @@ export class B2bFlowsManageComponent implements OnInit {
     }
     this.showCodeEditor = false;
     this.subscriptions['getFlow'] = this.commonService.get('partnerManager', path).subscribe(res => {
+      this.breadcrumbPaths.push({
+        active: true,
+        label: res.name + ' (Edit)'
+      });
+      this.commonService.changeBreadcrumb(this.breadcrumbPaths);
       this.apiCalls.getFlow = false;
       this.showCodeEditor = true;
       this.flowData = this.appService.cloneObject(res);
@@ -224,32 +252,16 @@ export class B2bFlowsManageComponent implements OnInit {
     });
   }
 
-  toggleConsole() {
-    if (this.showConsole) {
-      this.loadingLogs = true;
-      this.commonService.get('mon', `/${this.commonService.app._id}/${this.edit.id}/console/logs/count`, { noApp: true }).pipe(
-        switchMap(e => {
-          let page = 1;
-          let count = e;
-          if (e >= 150) {
-            count = 100;
-            page = Math.ceil(e / 100);
-          }
-          return this.commonService.get('mon', `/${this.commonService.app._id}/${this.edit.id}/console/logs`, {
-            page,
-            count,
-            noApp: true,
-            sort: 'startTime'
-          })
-        })
-      ).subscribe(res => {
-        this.loadingLogs = false;
-        this.logs = res;
-      }, err => {
-        this.loadingLogs = false;
-        this.commonService.errorToast(err);
-      });
+  addNode(type: string) {
+    const tempNode = this.flowService.getNodeObject(type);
+    if (this.selectedNode) {
+      const temp = this.selectedNode.onSuccess[0];
+      tempNode.onSuccess.push({ _id: temp._id });
+      temp._id = tempNode._id;
+      this.flowData.stages.splice(this.selectedNodeIndex, 0, tempNode);
     }
+    console.log(this.flowData);
+
   }
 
   get apiCallsPending() {
@@ -295,5 +307,19 @@ export class B2bFlowsManageComponent implements OnInit {
     this.flowData.inputStage = temp.inputStage;
     this.flowData.stages = temp.stages || [];
     this.flowData.dataStructures = temp.dataStructures || {};
+  }
+
+
+  get nodeList() {
+    const list = [];
+    if (this.flowData.inputStage) {
+      list.push(this.flowData.inputStage);
+    }
+    if (this.flowData.stages) {
+      this.flowData.stages.forEach(item => {
+        list.push(item);
+      });
+    }
+    return list;
   }
 }

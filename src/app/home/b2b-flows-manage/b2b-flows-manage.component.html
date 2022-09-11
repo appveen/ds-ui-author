@@ -2,76 +2,163 @@
     <div class="align-self-center text-center">
         <div class="spinner-border text-dark" role="status">
             <span class="sr-only">Processing...</span>
-          </div>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
-<div class="d-flex flex-column w-100 h-100">
-    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
-    <odp-basic-info hideLogo="true" [(name)]="flowData.name" [(description)]="flowData.description" [edit]="edit">
-        <div class="d-flex justify-content-end align-items-center">
-            <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link"
-                id="cancelNanoServiceBtn">
-                <span class="fa fa-close mr-2"></span>
-                <span class="text">Cancel</span>
-            </button>
-            <button *ngIf="edit.id && !edit.status && hasManagePermission" (click)="enableEditing()" type="button"
-                class="edit-button btn btn-min-width btn-primary ml-3" id="editNanoServiceBtn">
-                <span class="odp-edit mr-2"></span>
-                <span *ngIf="!flowData?.draftVersion" class="text">Edit</span>
-                <span *ngIf="flowData?.draftVersion" class="text">Edit Draft</span>
-            </button>
-            <div class="btn-group mr-3" *ngIf="edit.status">
-                <button class="btn btn-primary btn-min-width" (click)="saveDummyCode();" type="button">Save</button>
-                <div *ngIf="flowData?.draftVersion || flowData.status=='Draft'" ngbDropdown class="btn-group">
-                    <button class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle type="button"></button>
-                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                        <button *ngIf="flowData?.draftVersion || flowData.status=='Draft'" ngbDropdownItem
-                            (click)="discardDraft()" type="button">Discard
-                            Draft</button>
+<div class="flow-manage-page d-flex flex-column w-100 bg-light-gray page-padding">
+    <div class="mb-3">
+        <odp-basic-info hideLogo="true" [(name)]="flowData.name" [(description)]="flowData.description" [edit]="edit">
+            <div class="d-flex justify-content-end align-items-center">
+                <button (click)="cancel()" type="button"
+                    class="edit-button btn btn-min-width btn-white border d-flex align-items-center justify-content-center"
+                    id="cancelNanoServiceBtn">
+                    <span class="text">Cancel</span>
+                </button>
+                <button *ngIf="edit.id && !edit.status && hasManagePermission" (click)="enableEditing()" type="button"
+                    class="edit-button btn btn-min-width btn-primary ml-3 d-flex align-items-center justify-content-center"
+                    id="editNanoServiceBtn">
+                    <span *ngIf="!flowData?.draftVersion" class="text">Edit</span>
+                    <span *ngIf="flowData?.draftVersion" class="text">Edit Draft</span>
+                </button>
+                <div class="btn-group mx-3" *ngIf="edit.status">
+                    <button
+                        class="btn btn-outline-primary btn-min-width d-flex align-items-center justify-content-center"
+                        (click)="saveDummyCode();" type="button">Save</button>
+                    <div *ngIf="flowData?.draftVersion || flowData.status=='Draft'" ngbDropdown class="btn-group">
+                        <button class="btn btn-outline-primary dropdown-toggle-split" ngbDropdownToggle
+                            type="button"></button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <button *ngIf="flowData?.draftVersion || flowData.status=='Draft'" ngbDropdownItem
+                                (click)="discardDraft()" type="button">
+                                Discard Draft
+                            </button>
+                        </div>
                     </div>
                 </div>
+                <button *ngIf="edit.status && hasDeployPermission"
+                    class="btn btn-primary btn-min-width d-flex align-items-center justify-content-center"
+                    [disabled]="!isValidSchema" (click)="save(true);edit.status=false" type="button">
+                    Save &amp; Deploy
+                </button>
             </div>
-            <button *ngIf="edit.status && hasDeployPermission" class="btn btn-dark btn-min-width"
-                [disabled]="!isValidSchema" (click)="save(true);edit.status=false" type="button">Save &amp;
-                Deploy</button>
-        </div>
-    </odp-basic-info>
-    <div class="border-top border-bottom px-3 py-2 d-flex align-items-center justify-content-between bg-light">
-        <div class="url-info d-flex align-items-center">
+        </odp-basic-info>
+    </div>
+    <div class="border rounded bg-white">
+        <div class="url-info d-flex align-items-center p-3 border-bottom">
             <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
             <span class="url text-accent">{{flowData?.inputStage?.options?.path || 'N.A.'}}</span>
         </div>
-        <div class="editor-theme-selection d-flex align-items-center col-4">
-            <!-- <button type="button" class="btn btn-dark rounded-0 mr-3 d-flex align-items-center"
-                (click)="showConsole=!showConsole;toggleConsole()">
-                <span class="dsi dsi-console mr-2"></span>
-                <span class="text">Console</span>
-            </button> -->
-            <span class="label text-dark font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span>
-            <select class="custom-select mr-3" name="fontSize" id="fontSize" [(ngModel)]="selectedFontSize">
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="16">16</option>
-                <option value="18">18</option>
-                <option value="20">20</option>
-            </select>
-            <span class="label text-dark font-weight-bold mr-2">Theme&nbsp;:</span>
-            <select class="custom-select" name="theme" id="theme" [(ngModel)]="selectedEditorTheme">
-                <option value="vs-dark">Dark</option>
-                <option value="vs-light">Light</option>
-            </select>
-        </div>
-    </div>
-    <div class="d-flex align-items-stretch h-100 w-100">
-        <div [ngClass]="{'show':showConsole}" class="console position-absolute bg-dark text-white p-3">
-            <p *ngIf="logs.length==0">No Logs</p>
-            <pre *ngFor="let log of logs"
-                class="text-white"><span style="color:{{log.level.colour}}">[{{log.startTime}}] [{{log.level.levelStr}}] </span> {{log.data.join(' ')}}</pre>
-        </div>
-        <div class="editor-wrapper h-100">
-            <odp-code-editor *ngIf="showCodeEditor" class="code-editor" [edit]="edit" [theme]="selectedEditorTheme"
-                [fontSize]="selectedFontSize" [(code)]="code"></odp-code-editor>
+        <div class="flow-designer">
+            <svg class="flow-designer-canvas bg-light-gray" odpViewBox>
+                <!-- <rect *ngIf="showNewNodeDropdown || newNodeDropdownPos" [attr.x]="newNodeDropdownPos.left"
+                    [attr.y]="newNodeDropdownPos.top" rx="8" ry="8" width="210" height="360" -->
+                style="fill:#000;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
+                <g *ngFor="let item of nodeList;let i=index" odp-flow-node [nodeList]="nodeList" [nodeIndex]="i"
+                    style="transform: translateY({{i*100}}px)"></g>
+                <!-- <g>
+                    <rect x="32" y="120" rx="8" ry="8" width="180" height="45"
+                        style="fill:#fefefe;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
+                    <text x="60" y="148" fill="#000">Response</text>
+                </g> -->
+            </svg>
+            <div *ngIf="showNewNodeDropdown"
+                [ngStyle]="{'top':newNodeDropdownPos.top+'px','left':newNodeDropdownPos.left+'px'}"
+                class="node-options-dropdown bg-dark rounded text-white border position-absolute" odpClickOutside
+                (outside)="showNewNodeDropdown=false">
+                <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('API')">
+                    <span class="font-12 fw-400 dsi dsi-invoke-api mr-2"></span>
+                    <span class="font-12 fw-400">Invoke API</span>
+                </div>
+                <div class="node-options-item px-3 py-2 d-flex align-items-center hover"
+                    (click)="addNode('DATASERVICE')">
+                    <span class="font-12 fw-400 dsi dsi-data-service mr-2"></span>
+                    <span class="font-12 fw-400">Data Service</span>
+                </div>
+                <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('FUNCTION')">
+                    <span class="font-12 fw-400 dsi dsi-function mr-2"></span>
+                    <span class="font-12 fw-400">Function</span>
+                </div>
+                <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('MAPPING')">
+                    <span class="font-12 fw-400 dsi dsi-mapping mr-2"></span>
+                    <span class="font-12 fw-400">Mapping</span>
+                </div>
+                <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('RESPONSE')">
+                    <span class="font-12 fw-400 dsi dsi-response mr-2"></span>
+                    <span class="font-12 fw-400">Response</span>
+                </div>
+            </div>
+            <div [ngClass]="{'show':showNodeProperties}"
+                class="node-properties border-left position-absolute bg-white p-4" odpClickOutside
+                (outside)="showNodeProperties=false">
+                <div class="mb-4">
+                    <div class="font-20 fw-600">Properties</div>
+                    <hr>
+                    <div class="font-12 text-secondary">
+                        <span class="mr-1 fw-500">Node ID:</span>
+                        <span>{{selectedNode?._id}}</span>
+                    </div>
+                </div>
+                <ng-container *ngIf="showNodeProperties">
+                    <div class="form-group">
+                        <label for="name">Node Name</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Node Type</label>
+                        <select class="form-control">
+                            <option value="API">API</option>
+                            <option value="MAPPING">MAPPING</option>
+                            <option value="DATASERVICE">DATASERVICE</option>
+                            <option value="FUNCTION">FUNCTION</option>
+                            <option value="RESPONSE">RESPONSE</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <ng-container *ngIf="selectedNode?.type=='API'">
+                        <div class="form-group">
+                            <label for="name">URL</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">HTTP Method</label>
+                            <select class="form-control">
+                                <option value="POST" selected>POST</option>
+                                <option value="GET">GET</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Body</label>
+                            <textarea class="form-control" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Headers</label>
+                            <textarea class="form-control" cols="30" rows="10"></textarea>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="selectedNode?.type=='MAPPING'">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-dark w-100">Set Mapping</button>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="selectedNode?.type=='RESPONSE'">
+                        <div class="form-group">
+                            <label for="name">Status Code</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Body</label>
+                            <textarea class="form-control" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Headers</label>
+                            <textarea class="form-control" cols="30" rows="10"></textarea>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
         </div>
     </div>
 </div>

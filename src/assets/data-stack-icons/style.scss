@@ -32,6 +32,36 @@
   }
 }
 
+.dsi-logs {
+  &:before {
+    content: $dsi-logs;
+  }
+}
+
+.dsi-mapping {
+  &:before {
+    content: $dsi-mapping;
+  }
+}
+
+.dsi-response {
+  &:before {
+    content: $dsi-response;
+  }
+}
+
+.dsi-connector {
+  &:before {
+    content: $dsi-connector;
+  }
+}
+
+.dsi-invoke-api {
+  &:before {
+    content: $dsi-invoke_api;
+  }
+}
+
 .dsi-app-panel {
   &:before {
     content: $dsi-app-panel;
@@ -141,13 +171,13 @@
   }
 }
 
-.dsi-notification-active .path4 {
-  &:before {
-    content: $dsi-notification-active-path4;
-    margin-left: -1em;
-    color: rgb(255, 255, 255);
-  }
-}
+// .dsi-notification-active .path4 {
+//   &:before {
+//     content: $dsi-notification-active-path4;
+//     margin-left: -1em;
+//     color: rgb(255, 255, 255);
+//   }
+// }
 
 .dsi-notification {
   &:before {
