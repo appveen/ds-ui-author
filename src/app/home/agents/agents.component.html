@@ -75,7 +75,7 @@
             <ng-container *ngFor="let agent of records;let i=index">
                 <div *ngIf="hasPermissionForAgent(agent._id)" class="list-group-item">
                     <div class="d-flex align-items-center justify-content-start h-100" [attr.title]="agent.name">
-                        <div class="item-name text-truncate">{{agent.name}}</div>
+                        <div class="item-name text-truncate fw-500">{{agent.name}}</div>
                         <div class="item-password text-truncate">{{agent.password}}</div>
                         <div class="item-ip-address">{{agent.ipAddress}}</div>
                         <div class="item-mac-address">{{agent.macAddress}}</div>
