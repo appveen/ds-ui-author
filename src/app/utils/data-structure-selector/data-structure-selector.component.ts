@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { CommonService } from '../services/common.service';
@@ -9,7 +9,7 @@ import { AppService } from '../services/app.service';
   templateUrl: './data-structure-selector.component.html',
   styleUrls: ['./data-structure-selector.component.scss']
 })
-export class DataStructureSelectorComponent implements OnInit, OnDestroy {
+export class DataStructureSelectorComponent implements OnInit {
 
   @Input() edit: any;
   @Input() restrictToFormat: Array<string>;
@@ -17,7 +17,6 @@ export class DataStructureSelectorComponent implements OnInit, OnDestroy {
   @Output() formatChange: EventEmitter<any>;
 
   showLoader: boolean;
-  subscription: Subscription;
   selectedType: string;
   constructor(
     private commonService: CommonService,
@@ -33,10 +32,6 @@ export class DataStructureSelectorComponent implements OnInit, OnDestroy {
     } else if (this.format && this.format._id) {
       this.selectedType = 'customFormat';
     }
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 
 
