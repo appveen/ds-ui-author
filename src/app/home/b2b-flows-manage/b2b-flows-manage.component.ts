@@ -38,6 +38,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   newNodeDropdownPos: any;
   selectedNode: any;
   selectedNodeIndex: number;
+  selectedNodeBranchIndex: number;
   showNodeProperties: boolean;
   openDeleteModal: EventEmitter<any>;
   constructor(private commonService: CommonService,
@@ -70,20 +71,19 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.flowService.showAddNodeDropdown.pipe(
       tap(() => {
-        this.showNewNodeDropdown = false;
-        this.showNodeProperties = false;
+        this.resetSelection();
       }),
       delay(5)
     ).subscribe((data: any) => {
       this.selectedNode = data.node;
       this.selectedNodeIndex = data.nodeIndex;
+      this.selectedNodeBranchIndex = data.branchIndex;
       this.newNodeDropdownPos = data.position;
       this.showNewNodeDropdown = true;
     });
     this.flowService.selectedNode.pipe(
       tap(() => {
-        this.showNewNodeDropdown = false;
-        this.showNodeProperties = false;
+        this.resetSelection();
       }),
       delay(5)
     ).subscribe((data: any) => {
@@ -122,6 +122,15 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     if (this.pageChangeModalTemplateRef) {
       this.pageChangeModalTemplateRef.close(false);
     }
+  }
+
+  resetSelection() {
+    this.showNewNodeDropdown = false;
+    this.showNodeProperties = false;
+    this.selectedNodeBranchIndex = -1;
+    this.selectedNode = null;
+    this.selectedNodeIndex = null;
+    this.newNodeDropdownPos = null;
   }
 
   getFlow(id: string, draft?: boolean) {
@@ -275,18 +284,18 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   addNode(type: string) {
     const tempNode = this.flowService.getNodeObject(type);
     if (this.selectedNode) {
-      if (this.selectedNode.onSuccess && this.selectedNode.onSuccess.length > 0) {
-        const temp = this.selectedNode.onSuccess[0];
+      if (!this.selectedNode.onSuccess) {
+        this.selectedNode.onSuccess = [];
+      }
+      if (this.selectedNodeBranchIndex > -1) {
+        const temp = this.selectedNode.onSuccess[this.selectedNodeBranchIndex];
         tempNode.onSuccess.push({ _id: temp._id });
         temp._id = tempNode._id;
-        this.flowData.stages.splice(this.selectedNodeIndex, 0, tempNode);
+        // this.flowData.stages.splice(this.selectedNodeIndex, 0, tempNode);
       } else {
-        if (!this.selectedNode.onSuccess) {
-          this.selectedNode.onSuccess = [];
-        }
         this.selectedNode.onSuccess.push({ _id: tempNode._id });
-        this.flowData.stages.push(tempNode);
       }
+      this.flowData.stages.push(tempNode);
     }
     this.showNewNodeDropdown = false;
     console.log(this.flowData);

@@ -1,6 +1,4 @@
 <svg>
-    <!-- <rect *ngIf="showNewNodeDropdown" x="60" y="110" rx="8" ry="8" width="210" height="360"
-            style="fill:#000;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" /> -->
     <g class="node-block ignore-outside hover" (click)="selectNode()">
         <g *ngIf="nodeIndex>0" class="node-delete-icon" (click)="deleteNode()">
             <text x="64" y="60" fill="red">Delete</text>
@@ -17,9 +15,8 @@
     </g>
 
     <g *ngIf="node.type!=='RESPONSE'">
-        <!-- <line x1="50" y1="77" x2="50" y2="100" style="stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" /> -->
-        <g *ngFor="let item of node.onSuccess;let i=item;" [ngStyle]="{'transform':'translateX('+(i*48)+'px)'}"
-            class="hover ignore-outside" (click)="showBranchDropdown($event)">
+        <g *ngFor="let item of node.onSuccess;let i=item;" [ngStyle]="{'transform':'translateX('+((i+1)*48)+'px)'}"
+            class="hover ignore-outside" (click)="showBranchDropdown($event, i)">
             <line x1="50" y1="77" x2="50" y2="132" style="stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
             <circle cx="50" cy="100" r="10" style="fill:#fefefe;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
             <g style="transform: translate(45.5px, 95.5px)">

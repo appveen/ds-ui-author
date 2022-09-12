@@ -20,11 +20,12 @@ export class FlowNodeComponent implements OnInit {
     this.node = this.nodeList[this.nodeIndex];
   }
 
-  showBranchDropdown(event: any) {
+  showBranchDropdown(event: any, branchIndex?: number) {
     this.flowService.showAddNodeDropdown.emit({
       position: { left: event.clientX, top: event.clientY },
       node: this.node,
-      nodeIndex: this.nodeIndex
+      nodeIndex: this.nodeIndex,
+      branchIndex
     });
   }
 
