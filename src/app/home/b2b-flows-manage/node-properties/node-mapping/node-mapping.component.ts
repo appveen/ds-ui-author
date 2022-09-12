@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import * as _ from 'lodash';
+
 import { AppService } from 'src/app/utils/services/app.service';
-import * as uuid from 'uuid/v1';
 
 @Component({
   selector: 'odp-node-mapping',
@@ -29,6 +30,23 @@ export class NodeMappingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let tempSourceFields = [];
+    if (this.currNode && this.currNode.mappings) {
+      this.currNode.mappings.forEach(item => {
+        const temp = this.appService.cloneObject(item);
+        delete temp.target;
+        temp.type = item.target.type;
+        temp.dataPath = item.target.dataPath;
+        this.customTargetFields.push(temp);
+        if (temp.source && temp.source.length > 0) {
+          tempSourceFields = tempSourceFields.concat(this.appService.cloneObject(temp.source));
+          tempSourceFields = _.uniqBy(tempSourceFields, 'dataPath');
+        }
+      });
+    }
+    if (!this.sourceFields) {
+      this.customSourceFields = tempSourceFields;
+    }
   }
 
   cancel() {
@@ -37,7 +55,6 @@ export class NodeMappingComponent implements OnInit {
 
   addField(type: string, data?: any) {
     let newField = {
-      uuid: uuid(),
       type: 'String'
     };
     if (data) {
@@ -102,7 +119,7 @@ export class NodeMappingComponent implements OnInit {
   }
 
   isSourceSelected(item: any) {
-    if (this.selectedTargetField && this.selectedTargetField.source && this.selectedTargetField.source.find(e => e.uuid == item.uuid)) {
+    if (this.selectedTargetField && this.selectedTargetField.source && this.selectedTargetField.source.find(e => e.dataPath == item.dataPath)) {
       return true;
     }
     return false;
@@ -113,7 +130,7 @@ export class NodeMappingComponent implements OnInit {
       this.selectedTargetField.source = [];
     }
     if (this.selectedTargetField && this.selectedTargetField.source) {
-      const index = this.selectedTargetField.source.findIndex(e => e.uuid == item.uuid);
+      const index = this.selectedTargetField.source.findIndex(e => e.dataPath == item.dataPath);
       if (flag && index == -1) {
         this.selectedTargetField.source.push(item);
       }
@@ -123,10 +140,29 @@ export class NodeMappingComponent implements OnInit {
     }
   }
 
+  done() {
+    const mappings = this.customTargetFields.map(item => {
+      const temp: any = {};
+      temp.target = {
+        type: item.type,
+        dataPath: item.dataPath,
+      };
+      temp.source = (item.source || []).map((s) => {
+        const t = this.appService.cloneObject(s);
+        return t
+      });
+      temp.formula = item.formula;
+      return temp;
+    }).filter(e => e);
+    this.currNode.mappings = mappings;
+    this.cancel();
+    console.log(mappings);
+  }
+
   get baseCode() {
-    return 'return ' + this.selectedTargetField.source.map((src, i) => {
+    return 'return ' + (this.selectedTargetField.source || []).map((src, i) => {
       return 'input' + (i + 1);
-    }).join(' + ');
+    }).join(' + ') + ';';
   }
 
   get sourceFields() {
