@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -38,6 +38,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   selectedNode: any;
   selectedNodeIndex: number;
   showNodeProperties: boolean;
+  openDeleteModal: EventEmitter<any>;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -62,6 +63,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     this.selectedFontSize = 14;
     this.ele.nativeElement.classList.add('h-100');
     this.logs = [];
+    this.openDeleteModal = new EventEmitter();
   }
 
   ngOnInit(): void {
@@ -77,6 +79,15 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       this.showNodeProperties = true;
       this.selectedNode = data.node;
       this.selectedNodeIndex = data.nodeIndex;
+    });
+    this.flowService.deleteNode.subscribe((data: any) => {
+      // this.selectedNode = data.node;
+      // this.selectedNodeIndex = data.nodeIndex;
+      this.openDeleteModal.emit({
+        title: 'Delete Node?',
+        message: 'Are you sure you want to delete this node?, You will have to re-configure flow.',
+        data
+      })
     });
     this.route.params.subscribe(params => {
       if (params && params.id) {
@@ -255,13 +266,40 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   addNode(type: string) {
     const tempNode = this.flowService.getNodeObject(type);
     if (this.selectedNode) {
-      const temp = this.selectedNode.onSuccess[0];
-      tempNode.onSuccess.push({ _id: temp._id });
-      temp._id = tempNode._id;
-      this.flowData.stages.splice(this.selectedNodeIndex, 0, tempNode);
+      if (this.selectedNode.onSuccess && this.selectedNode.onSuccess.length > 0) {
+        const temp = this.selectedNode.onSuccess[0];
+        tempNode.onSuccess.push({ _id: temp._id });
+        temp._id = tempNode._id;
+        this.flowData.stages.splice(this.selectedNodeIndex, 0, tempNode);
+      } else {
+        if (!this.selectedNode.onSuccess) {
+          this.selectedNode.onSuccess = [];
+        }
+        this.selectedNode.onSuccess.push({ _id: tempNode._id });
+        this.flowData.stages.push(tempNode);
+      }
     }
+    this.showNewNodeDropdown = false;
     console.log(this.flowData);
+  }
 
+  closeDeleteNodeModal(val: any) {
+    if (val & val.data && val.data.nodeIndex > 0) {
+      if (val.data.nodeIndex < this.flowData.stages.length) {
+        let prev
+        if (val.data.nodeIndex > 1) {
+          prev = this.flowData.stages[val.data.nodeIndex - 2];
+        } else {
+          prev = this.flowData.inputStage;
+        }
+        const curr = this.flowData.stages[val.data.nodeIndex - 1];
+        const next = this.flowData.stages[val.data.nodeIndex];
+        const pt = prev.onSuccess.find(e => e._id == curr._id);
+        pt._id = next._id;
+      }
+      this.flowData.stages.splice(val.data.nodeIndex - 1, 1);
+    }
+    console.log(val);
   }
 
   get apiCallsPending() {

@@ -2,7 +2,7 @@
     <!-- <rect *ngIf="showNewNodeDropdown" x="60" y="110" rx="8" ry="8" width="210" height="360"
             style="fill:#000;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" /> -->
     <g class="node-block ignore-outside hover" (click)="selectNode()">
-        <g *ngIf="nodeIndex>0" class="node-delete-icon">
+        <g *ngIf="nodeIndex>0" class="node-delete-icon" (click)="deleteNode()">
             <text x="64" y="60" fill="red">Delete</text>
         </g>
         <rect x="32" y="32" rx="8" ry="8" width="180" height="45"

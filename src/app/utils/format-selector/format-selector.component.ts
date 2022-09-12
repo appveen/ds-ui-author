@@ -1,11 +1,12 @@
 import { Component, ViewChild, TemplateRef, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
+
 import { CommonService, GetOptions } from '../services/common.service';
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { SchemaStructurePipe } from 'src/app/home/schema-utils/schema-structure.pipe';
 import { AppService } from '../services/app.service';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'odp-format-selector',

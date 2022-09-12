@@ -83,9 +83,9 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.form.get('type').valueChanges.subscribe(val => {
       const name = this.form.get('name').value;
       this.form.get('inputStage').patchValue({
+        _id: uuid(),
         type: val,
         options: {
-          _id: uuid(),
           method: 'POST',
           path: name ? _.camelCase(name) : null
         }

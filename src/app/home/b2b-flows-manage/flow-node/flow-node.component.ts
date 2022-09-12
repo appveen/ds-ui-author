@@ -35,6 +35,13 @@ export class FlowNodeComponent implements OnInit {
     });
   }
 
+  deleteNode() {
+    this.flowService.deleteNode.emit({
+      node: this.node,
+      nodeIndex: this.nodeIndex
+    });
+  }
+
   get addBranchStyle() {
     const items = this.node.onSuccess || [];
     return {

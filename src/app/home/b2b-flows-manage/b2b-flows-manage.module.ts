@@ -27,6 +27,7 @@ import { ConnectorIconComponent } from './icons/connector-icon/connector-icon.co
 import { NodePropertiesComponent } from './node-properties/node-properties.component';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { NodeMappingComponent } from './node-properties/node-mapping/node-mapping.component';
+import { DataStructureSelectorModule } from 'src/app/utils/data-structure-selector/data-structure-selector.module';
 
 const routes: Routes = [
   {
@@ -65,7 +66,8 @@ const routes: Routes = [
     DateFormatModule,
     OnChangeModule,
     AutoFocusModule,
-    CheckboxModule
+    CheckboxModule,
+    DataStructureSelectorModule
   ],
   exports: [B2bFlowsManageComponent],
   providers:[B2bFlowService]

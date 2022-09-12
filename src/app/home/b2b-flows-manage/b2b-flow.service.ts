@@ -8,9 +8,11 @@ export class B2bFlowService {
 
   showAddNodeDropdown: EventEmitter<any>;
   selectedNode: EventEmitter<any>;
+  deleteNode: EventEmitter<any>;
   constructor() {
     this.showAddNodeDropdown = new EventEmitter();
     this.selectedNode = new EventEmitter();
+    this.deleteNode = new EventEmitter();
   }
 
   getNodeObject(type: string) {

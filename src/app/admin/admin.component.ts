@@ -191,7 +191,9 @@ export class AdminComponent implements OnInit, OnDestroy {
       select: 'name app',
       filter: {},
     };
-    self.commonService.connectSocket();
+    if (environment.production) {
+      self.commonService.connectSocket();
+    }
   }
 
   loadApps() {
@@ -250,8 +252,10 @@ export class AdminComponent implements OnInit, OnDestroy {
     const self = this;
     self.showProfileOptions = false;
     self.commonService.app = app;
-    self.commonService.disconnectSocket();
-    self.commonService.connectSocket();
+    if (environment.production) {
+      self.commonService.disconnectSocket();
+      self.commonService.connectSocket();
+    }
     self.router.navigate(['/app', app._id]);
   }
 

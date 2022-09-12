@@ -1,0 +1,20 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.data-structure-window {
+    top: 0px;
+    right: -600px;
+    z-index: 3;
+    width: 360px;
+    height: 100vh;
+    overflow-y: auto;
+    transition: 0.2s;
+
+    &.more-width {
+        width: 600px;
+    }
+
+    &.show {
+        right: 0px;
+    }
+}

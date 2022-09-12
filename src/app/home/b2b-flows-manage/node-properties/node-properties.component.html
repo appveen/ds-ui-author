@@ -33,7 +33,8 @@
     </div>
     <div class="form-group">
         <label for="nodeDataStructure">Data Structure <span class="text-muted"><i>(optional)</i></span></label>
-        <input id="nodeDataStructure" type="text" class="form-control" [(ngModel)]="node.name">
+        <odp-data-structure-selector></odp-data-structure-selector>
+        <!-- <input id="nodeDataStructure" type="text" class="form-control" [(ngModel)]="node.name"> -->
     </div>
     <ng-container *ngIf="nodeIndex==0">
         <ng-container *ngIf="node?.type=='API'">
