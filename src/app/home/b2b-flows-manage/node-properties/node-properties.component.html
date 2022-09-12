@@ -33,7 +33,7 @@
     </div>
     <div class="form-group">
         <label for="nodeDataStructure">Data Structure <span class="text-muted"><i>(optional)</i></span></label>
-        <odp-data-structure-selector></odp-data-structure-selector>
+        <odp-data-structure-selector [format]="node.dataStructure.outgoing" (formatChange)="onFormatChange($event)"></odp-data-structure-selector>
         <!-- <input id="nodeDataStructure" type="text" class="form-control" [(ngModel)]="node.name"> -->
     </div>
     <ng-container *ngIf="nodeIndex==0">

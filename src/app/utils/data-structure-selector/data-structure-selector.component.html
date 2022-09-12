@@ -29,7 +29,8 @@
                 <span class="dsi dsi-close text-dark"></span>
             </button>
         </div>
-        <odp-data-format-selector [edit]="edit" [(format)]="format"></odp-data-format-selector>
+        <odp-data-format-selector [edit]="edit" [(format)]="format" (formatChange)="onFormatChange($event)">
+        </odp-data-format-selector>
     </ng-container>
     <ng-container *ngIf="selectedType=='customFormat'">
         <div class="d-flex align-items-center justify-content-between mb-4">
@@ -38,7 +39,8 @@
                 <span class="dsi dsi-close text-dark"></span>
             </button>
         </div>
-        <odp-custom-format-selector [edit]="edit" [(format)]="format"></odp-custom-format-selector>
+        <odp-custom-format-selector [edit]="edit" [(format)]="format" (formatChange)="onFormatChange($event)">
+        </odp-custom-format-selector>
     </ng-container>
 </div>
 

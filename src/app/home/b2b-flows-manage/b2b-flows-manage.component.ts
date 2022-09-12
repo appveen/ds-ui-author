@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef, Event
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { delay, tap } from 'rxjs/operators';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 
 import { AppService } from 'src/app/utils/services/app.service';
@@ -67,22 +68,30 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.flowService.showAddNodeDropdown.subscribe((data: any) => {
+    this.flowService.showAddNodeDropdown.pipe(
+      tap(() => {
+        this.showNewNodeDropdown = false;
+        this.showNodeProperties = false;
+      }),
+      delay(5)
+    ).subscribe((data: any) => {
       this.selectedNode = data.node;
       this.selectedNodeIndex = data.nodeIndex;
       this.newNodeDropdownPos = data.position;
       this.showNewNodeDropdown = true;
-      this.showNodeProperties = false;
     });
-    this.flowService.selectedNode.subscribe((data: any) => {
-      this.showNewNodeDropdown = false;
+    this.flowService.selectedNode.pipe(
+      tap(() => {
+        this.showNewNodeDropdown = false;
+        this.showNodeProperties = false;
+      }),
+      delay(5)
+    ).subscribe((data: any) => {
       this.showNodeProperties = true;
       this.selectedNode = data.node;
       this.selectedNodeIndex = data.nodeIndex;
     });
     this.flowService.deleteNode.subscribe((data: any) => {
-      // this.selectedNode = data.node;
-      // this.selectedNodeIndex = data.nodeIndex;
       this.openDeleteModal.emit({
         title: 'Delete Node?',
         message: 'Are you sure you want to delete this node?, You will have to re-configure flow.',

@@ -19,6 +19,12 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.node && !this.node.dataStructure) {
+      this.node.dataStructure = {};
+    }
+    if (this.node && this.node.dataStructure && !this.node.dataStructure.outgoing) {
+      this.node.dataStructure.outgoing = {};
+    }
   }
 
   closeMapping(data: any) {
@@ -28,9 +34,15 @@ export class NodePropertiesComponent implements OnInit {
     }
   }
 
+  onFormatChange(data: any) {
+    console.log(data);
+    this.node.dataStructure.outgoing = data;
+  }
+
   cancel() {
     this.close.emit(false);
   }
+
 
   get prevNode() {
     if (this.nodeIndex > 0) {

@@ -47,6 +47,24 @@ export class NodeMappingComponent implements OnInit {
     if (!this.sourceFields) {
       this.customSourceFields = tempSourceFields;
     }
+    if (this.sourceFields) {
+      this.customSourceFields = this.prevNode.dataStructure.outgoing.definition[0].definition.map(e => {
+        const temp: any = {};
+        temp.name = e.properties.name;
+        temp.dataPath = e.properties.dataPath;
+        temp.type = e.type;
+        return temp;
+      });
+    }
+    if (this.targetFields) {
+      this.customTargetFields = this.currNode.dataStructure.outgoing.definition[0].definition.map(e => {
+        const temp: any = {};
+        temp.name = e.properties.name;
+        temp.dataPath = e.properties.dataPath;
+        temp.type = e.type;
+        return temp;
+      });
+    }
   }
 
   cancel() {
@@ -138,6 +156,9 @@ export class NodeMappingComponent implements OnInit {
         this.selectedTargetField.source.splice(index, 1);
       }
     }
+    if (!this.selectedTargetField.formula) {
+      this.selectedTargetField.formula = this.baseCode;
+    }
   }
 
   done() {
@@ -166,15 +187,23 @@ export class NodeMappingComponent implements OnInit {
   }
 
   get sourceFields() {
-    if (this.prevNode && this.prevNode.dataStructure && this.prevNode.dataStructure.outgoing && this.prevNode.dataStructure.outgoing._id) {
-      return [];
+    if (this.prevNode
+      && this.prevNode.dataStructure
+      && this.prevNode.dataStructure.outgoing
+      && this.prevNode.dataStructure.outgoing.definition
+      && this.prevNode.dataStructure.outgoing.definition[0]) {
+      return true;
     }
     return null;
   }
 
   get targetFields() {
-    if (this.currNode && this.currNode.dataStructure && this.currNode.dataStructure.outgoing && this.currNode.dataStructure.outgoing._id) {
-      return [];
+    if (this.currNode
+      && this.currNode.dataStructure
+      && this.currNode.dataStructure.outgoing
+      && this.currNode.dataStructure.outgoing.definition
+      && this.currNode.dataStructure.outgoing.definition[0]) {
+      return true;
     }
     return null;
   }

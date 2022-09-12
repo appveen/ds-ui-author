@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Subscription } from 'rxjs';
 
 import { CommonService } from '../services/common.service';
 import { AppService } from '../services/app.service';
@@ -28,9 +27,11 @@ export class DataStructureSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.format && this.format._id && this.format._id.startsWith('DF')) {
-      this.selectedType = 'dataFromat';
+      this.selectedType = 'dataFormat';
     } else if (this.format && this.format._id) {
       this.selectedType = 'customFormat';
+    } else {
+      this.selectedType = 'generic';
     }
   }
 
@@ -38,11 +39,18 @@ export class DataStructureSelectorComponent implements OnInit {
   onTypeChange(type: string) {
     this.selectedType = type;
     this.format = null;
-    if (type == 'dataFromat') {
+    this.formatChange.emit(null);
+    if (type == 'dataFormat') {
 
     } else if (type == 'customFormat') {
 
     }
+  }
+
+  onFormatChange(data: any) {
+    console.log(data);
+    this.format = data;
+    this.formatChange.emit(data);
   }
 
   get showWindow() {

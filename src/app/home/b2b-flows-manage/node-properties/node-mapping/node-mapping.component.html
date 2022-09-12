@@ -23,10 +23,27 @@
                             class="fw-500">input{{sourceIndex+1}}</span>
                     </span>
                 </div>
-                <textarea class="form-control border-0">{{baseCode}}</textarea>
+                <textarea class="form-control border-0" [(ngModel)]="selectedTargetField.formula">{{baseCode}}</textarea>
             </div>
             <ng-container *ngIf="selectedTargetField">
-                <ng-container *ngIf="sourceFields"></ng-container>
+                <ng-container *ngIf="sourceFields">
+                    <div class="sub-header d-flex align-items-start justify-content-between border-bottom mb-3 p-3">
+                        <div class="d-flex flex-column">
+                            <span class="font-14 fw-500">Select Source Fields</span>
+                            <span class="font-14 fw-500 text-secondary">For:&nbsp;
+                                <span class="text-primary">{{selectedTargetField.dataPath}}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="field-block d-flex align-items-center p-3"
+                        *ngFor="let item of customSourceFields; let i=index;">
+                        <odp-checkbox [edit]="edit" class="mr-2 ml-3" [checked]="isSourceSelected(item)"
+                            (checkedChange)="toggleSource($event,item)"></odp-checkbox>
+                        <div class="input-wrapper w-100 d-flex align-items-center position-relative mr-3">
+                            <span class="font-14 fw-400">{{item?.name}}</span>
+                        </div>
+                    </div>
+                </ng-container>
                 <ng-container *ngIf="!sourceFields">
                     <div class="sub-header d-flex align-items-start justify-content-between border-bottom mb-3 p-3">
                         <div class="d-flex flex-column">
@@ -63,7 +80,21 @@
             </ng-container>
         </div>
         <div class="destination-fields bg-light">
-            <ng-container *ngIf="targetFields"></ng-container>
+            <ng-container *ngIf="targetFields">
+                <div class="sub-header d-flex align-items-center justify-content-between border-bottom bg-white p-3"
+                    [ngClass]="{'border-left':selectedTargetField}">
+                    <span class="font-14 fw-500">Target Fields</span>
+                </div>
+                <div class="field-block d-flex align-items-center p-3 hover"
+                    *ngFor="let item of customTargetFields; let i=index;" (click)="selectedTargetField=item"
+                    [ngClass]="{'bg-white':selectedTargetField==item,'border-left':selectedTargetField && selectedTargetField!=item}">
+                    <span class="mr-3 text-success font-12 hover underline"
+                        (click)="showFormulaBuilder=true"><i>fn()</i></span>
+                    <div class="input-wrapper w-100 d-flex align-items-center position-relative">
+                        <span class="font-14 fw-400">{{item?.name}}</span>
+                    </div>
+                </div>
+            </ng-container>
             <ng-container *ngIf="!targetFields">
                 <div class="sub-header d-flex align-items-center justify-content-between border-bottom bg-white p-3"
                     [ngClass]="{'border-left':selectedTargetField}">
