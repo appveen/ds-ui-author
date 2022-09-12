@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
+import * as uuid from 'uuid/v1';
 
 import { GetOptions, CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -84,7 +85,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       this.form.get('inputStage').patchValue({
         type: val,
         options: {
-          _id: 'STAGE1000',
+          _id: uuid(),
           method: 'POST',
           path: name ? _.camelCase(name) : null
         }

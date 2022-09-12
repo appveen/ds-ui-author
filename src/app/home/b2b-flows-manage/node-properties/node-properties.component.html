@@ -1,0 +1,111 @@
+<div>
+    <div class="mb-4">
+        <div class="d-flex align-items-center justify-content-between">
+            <span class="font-20 fw-600">Properties</span>
+            <button type="button" class="btn btn-link" (click)="cancel()">
+                <span class="dsi dsi-close"></span>
+            </button>
+        </div>
+        <hr>
+        <div class="font-12 text-secondary">
+            <span class="mr-1 fw-500">Node ID:</span>
+            <span>{{node?._id}}</span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="nodeName">Node Name</label>
+        <input id="nodeName" type="text" class="form-control" [(ngModel)]="node.name">
+    </div>
+    <div class="form-group">
+        <label for="nodeType">Node Type</label>
+        <select *ngIf="nodeIndex==0" id="nodeType" class="form-control" [(ngModel)]="node.type">
+            <option value="API">API</option>
+            <option value="FILE">FILE</option>
+            <option value="TIMER">TIMER</option>
+        </select>
+        <select *ngIf="nodeIndex>0" id="nodeType" class="form-control" [(ngModel)]="node.type">
+            <option value="API">API</option>
+            <option value="MAPPING">MAPPING</option>
+            <option value="DATASERVICE">DATASERVICE</option>
+            <option value="FUNCTION">FUNCTION</option>
+            <option value="RESPONSE">RESPONSE</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="nodeDataStructure">Data Structure <span class="text-muted"><i>(optional)</i></span></label>
+        <input id="nodeDataStructure" type="text" class="form-control" [(ngModel)]="node.name">
+    </div>
+    <ng-container *ngIf="nodeIndex==0">
+        <ng-container *ngIf="node?.type=='API'">
+            <div class="form-group">
+                <label for="nodeEndpoint">API Endpoint</label>
+                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="node.options.path">
+            </div>
+            <div class="form-group">
+                <label for="nodeHTTPMethod">HTTP Method</label>
+                <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="node.options.method">
+                    <option value="POST" selected>POST</option>
+                    <option value="GET">GET</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+            </div>
+        </ng-container>
+        <div class="form-group d-flex align-items-center">
+            <odp-checkbox [edit]="edit" [(checked)]="node.options.uniqueTxnId"></odp-checkbox>
+            <span class="ml-2">Unique Remote Txn ID</span>
+        </div>
+    </ng-container>
+    <hr>
+    <ng-container *ngIf="node?.type=='API' && nodeIndex>0">
+        <div class="form-group">
+            <label for="nodeUrl">URL</label>
+            <textarea id="nodeUrl" class="form-control" cols="30" rows="4" [(ngModel)]="node.options.url"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="nodeHTTPMethod">HTTP Method</label>
+            <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="node.options.method">
+                <option value="POST" selected>POST</option>
+                <option value="GET">GET</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="nodeBody">Body</label>
+            <textarea id="nodeBody" class="form-control" cols="30" rows="4" [(ngModel)]="node.options.body"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="nodeHeaders">Headers</label>
+            <textarea id="nodeHeaders" class="form-control" cols="30" rows="4"
+                [(ngModel)]="node.options.headers"></textarea>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="node?.type=='MAPPING'">
+        <div class="form-group">
+            <button type="button" class="btn btn-dark w-100 ignore-outside" (click)="showNodeMapping=!showNodeMapping">
+                Set Mapping
+            </button>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="node?.type=='RESPONSE'">
+        <div class="form-group">
+            <label for="nodeStatusCode">Status Code</label>
+            <input id="nodeStatusCode" type="text" class="form-control" [(ngModel)]="node.options.statusCode">
+        </div>
+        <div class="form-group">
+            <label for="nodeBody">Body</label>
+            <textarea id="nodeBody" class="form-control" cols="30" rows="4" [(ngModel)]="node.options.body"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="nodeHeaders">Headers</label>
+            <textarea id="nodeHeaders" class="form-control" cols="30" rows="4"
+                [(ngModel)]="node.options.headers"></textarea>
+        </div>
+    </ng-container>
+</div>
+
+<div [ngClass]="{'show':showNodeMapping}" class="node-mapping-window border-left position-fixed bg-white p-4">
+    <odp-node-mapping *ngIf="showNodeMapping" [nodeList]="nodeList" [prevNode]="prevNode" [currNode]="currNode"
+        (close)="closeMapping($event)"></odp-node-mapping>
+</div>

@@ -8,6 +8,10 @@
   .flow-designer-canvas {
     height: calc(100vh - 240px);
   }
+
+  .flow-designer-canvas {
+    cursor: grab;
+  }
 }
 
 .name-wrapper {
@@ -48,6 +52,7 @@
   width: 360px;
   height: 100vh;
   overflow-y: auto;
+  transition: 0.2s;
 
   &.show {
     right: 0px;

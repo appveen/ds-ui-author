@@ -1,0 +1,90 @@
+<div>
+    <div class="d-flex align-items-center justify-content-between">
+        <span class="font-20 fw-500">Mappings</span>
+        <button type="button" class="btn btn-link p-0">
+            <span class="dsi dsi-close text-dark ignore-outside" (click)="cancel()"></span>
+        </button>
+    </div>
+    <div class="mapping-container my-3 d-flex border rounded">
+        <div [ngClass]="{'show':selectedTargetField}" class="source-fields position-relative">
+            <div *ngIf="showFormulaBuilder" class="formula-builder position-absolute h-100 w-100 bg-white border-right">
+                <div class="sub-header d-flex align-items-start justify-content-between border-bottom p-3">
+                    <span class="font-14 fw-500">Formula for: {{selectedTargetField.dataPath}}</span>
+                    <button type="button" class="btn btn-link text-dark" (click)="showFormulaBuilder=false">
+                        <span class="dsi dsi-close"></span>
+                    </button>
+                </div>
+                <div *ngIf="selectedTargetField.source && selectedTargetField.source.length>0"
+                    class="d-flex flex-column p-3 border-bottom text-secondary">
+                    <span *ngFor="let item of selectedTargetField.source;let sourceIndex=index"
+                        class="font-13 fw-400">Use <i>{{item.dataPath}}</i> as <span
+                            class="fw-500">input{{sourceIndex+1}}</span>
+                    </span>
+                </div>
+                <textarea class="form-control h-100 border-0">{{baseCode}}</textarea>
+            </div>
+            <ng-container *ngIf="selectedTargetField">
+                <ng-container *ngIf="sourceFields"></ng-container>
+                <ng-container *ngIf="!sourceFields">
+                    <div class="sub-header d-flex align-items-start justify-content-between border-bottom mb-3 p-3">
+                        <div class="d-flex flex-column">
+                            <span class="font-14 fw-500">Add Source Fields</span>
+                            <span class="font-12 fw-400 text-secondary">For:&nbsp;
+                                {{selectedTargetField.dataPath}}
+                            </span>
+                        </div>
+                        <button type="button" class="btn btn-link text-primary" (click)="addField('source')">
+                            <span class="dsi dsi-plus-circle"></span>
+                        </button>
+                    </div>
+                    <div *ngIf="!customSourceFields || customSourceFields.length==0" class="text-secondary p-4 font-12">
+                        No
+                        Data
+                        Structure
+                        Found. Please add a Data Structure in Previous node or create fields manually
+                        by click on the <span class="dsi dsi-plus-circle text-primary mx-1 font-11"></span> icon</div>
+                    <div class="d-flex align-items-center mb-1" *ngFor="let item of customSourceFields; let i=index;">
+                        <odp-checkbox [edit]="edit" class="mr-2 ml-3" [checked]="isSourceSelected(item)"
+                            (checkedChange)="toggleSource($event,item)"></odp-checkbox>
+                        <input type="text" class="form-control" placeholder="Data Path" odpAutoFocus
+                            (keyup.enter)="addField('source')" [(ngModel)]="item.dataPath"
+                            (paste)="onPaste($event,'source', i)">
+                        <button type="button" class="btn btn-link text-danger" (click)="removeField('source',i)">
+                            <span class="dsi dsi-trash"></span>
+                        </button>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="destination-fields bg-light">
+            <ng-container *ngIf="targetFields"></ng-container>
+            <ng-container *ngIf="!targetFields">
+                <div class="sub-header d-flex align-items-center justify-content-between border-bottom bg-white p-3">
+                    <span class="font-14 fw-500">Add Target Fields</span>
+                    <button type="button" class="btn btn-link text-primary" (click)="addField('target')">
+                        <span class="dsi dsi-plus-circle"></span>
+                    </button>
+                </div>
+                <div *ngIf="!customTargetFields || customTargetFields.length==0" class="text-secondary p-4 font-12">No
+                    Data
+                    Structure
+                    Found. Please add a Data Structure in Current node or create fields manually
+                    by click on the <span class="dsi dsi-plus-circle text-primary mx-1 font-11"></span> icon</div>
+                <div class="d-flex align-items-center px-3 py-1" *ngFor="let item of customTargetFields; let i=index;"
+                    (click)="selectedTargetField=item" [ngClass]="{'bg-white':selectedTargetField==item}">
+                    <span class="mr-3 text-success font-12 hover underline"
+                        (click)="showFormulaBuilder=!showFormulaBuilder"><i>fn()</i></span>
+                    <input type="text" class="form-control" placeholder="Data Path" odpAutoFocus
+                        (keyup.enter)="addField('target')" [(ngModel)]="item.dataPath"
+                        (paste)="onPaste($event,'target', i)">
+                    <button type="button" class="btn btn-link text-danger" (click)="removeField('target',i)">
+                        <span class="dsi dsi-trash"></span>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary btn-min-width">Done</button>
+    </div>
+</div>

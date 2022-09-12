@@ -45,7 +45,6 @@
               "src/assets/scss/bootstrap/bootstrap.scss",
               "src/assets/scss/login.scss",
               "src/assets/scss/home.scss",
-              "src/assets/scss/b2b/b2b.scss",
               "src/styles.scss"
             ],
             "scripts": []
