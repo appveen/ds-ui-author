@@ -10,7 +10,7 @@ export class CheckboxComponent implements OnInit {
 
   @Input() id: string;
   @Input() type: string;
-  @Input() disabled: boolean = false;
+  @Input() disabled: boolean;
   @Input() edit: any;
   @Input() size: number;
   @Input() checked: boolean;
@@ -23,6 +23,7 @@ export class CheckboxComponent implements OnInit {
     this.id = uuid();
     this.type = 'dark'
     this.size = 18;
+    this.disabled = false;
   }
 
   ngOnInit() {
@@ -31,8 +32,10 @@ export class CheckboxComponent implements OnInit {
 
 
   onChange(value) {
-    this.checked = value;
-    this.checkedChange.emit(value);
+    if (this.edit.status) {
+      this.checked = value;
+      this.checkedChange.emit(value);
+    }
   }
 
   get checkBoxStyle() {
@@ -44,9 +47,14 @@ export class CheckboxComponent implements OnInit {
     };
   }
 
-  get checkedClass() {
-    if (this.checked) {
-      return `bg-${this.type} border-${this.type}`;
+  get checkBoxClass() {
+    const classes = [];
+    if (this.edit.status && !this.disabled) {
+      classes.push('hover');
     }
+    if (this.checked) {
+      classes.push(`bg-${this.type} border-${this.type}`);
+    }
+    return classes.join(' ');
   }
 }

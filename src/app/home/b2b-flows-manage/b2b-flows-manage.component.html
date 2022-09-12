@@ -52,10 +52,10 @@
         <div class="flow-designer">
             <svg class="flow-designer-canvas bg-light-gray" odpViewBox>
                 <!-- <rect *ngIf="showNewNodeDropdown || newNodeDropdownPos" [attr.x]="newNodeDropdownPos.left"
-                    [attr.y]="newNodeDropdownPos.top" rx="8" ry="8" width="210" height="360" -->
-                style="fill:#000;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
+                    [attr.y]="newNodeDropdownPos.top" rx="8" ry="8" width="210" height="360"
+                style="fill:#000;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" /> -->
                 <g *ngFor="let item of nodeList;let i=index" odp-flow-node [nodeList]="nodeList" [nodeIndex]="i"
-                    style="transform: translateY({{i*100}}px)"></g>
+                    [ngStyle]="{'transform':'translateY('+(i*100)+'px)'}"></g>
                 <!-- <g>
                     <rect x="32" y="120" rx="8" ry="8" width="180" height="45"
                         style="fill:#fefefe;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
@@ -89,75 +89,10 @@
                 </div>
             </div>
             <div [ngClass]="{'show':showNodeProperties}"
-                class="node-properties border-left position-absolute bg-white p-4" odpClickOutside
-                (outside)="showNodeProperties=false">
-                <div class="mb-4">
-                    <div class="font-20 fw-600">Properties</div>
-                    <hr>
-                    <div class="font-12 text-secondary">
-                        <span class="mr-1 fw-500">Node ID:</span>
-                        <span>{{selectedNode?._id}}</span>
-                    </div>
-                </div>
-                <ng-container *ngIf="showNodeProperties">
-                    <div class="form-group">
-                        <label for="name">Node Name</label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Node Type</label>
-                        <select class="form-control">
-                            <option value="API">API</option>
-                            <option value="MAPPING">MAPPING</option>
-                            <option value="DATASERVICE">DATASERVICE</option>
-                            <option value="FUNCTION">FUNCTION</option>
-                            <option value="RESPONSE">RESPONSE</option>
-                        </select>
-                    </div>
-                    <hr>
-                    <ng-container *ngIf="selectedNode?.type=='API'">
-                        <div class="form-group">
-                            <label for="name">URL</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="name">HTTP Method</label>
-                            <select class="form-control">
-                                <option value="POST" selected>POST</option>
-                                <option value="GET">GET</option>
-                                <option value="PUT">PUT</option>
-                                <option value="DELETE">DELETE</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Body</label>
-                            <textarea class="form-control" cols="30" rows="10"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Headers</label>
-                            <textarea class="form-control" cols="30" rows="10"></textarea>
-                        </div>
-                    </ng-container>
-                    <ng-container *ngIf="selectedNode?.type=='MAPPING'">
-                        <div class="form-group">
-                            <button type="button" class="btn btn-dark w-100">Set Mapping</button>
-                        </div>
-                    </ng-container>
-                    <ng-container *ngIf="selectedNode?.type=='RESPONSE'">
-                        <div class="form-group">
-                            <label for="name">Status Code</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Body</label>
-                            <textarea class="form-control" cols="30" rows="10"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Headers</label>
-                            <textarea class="form-control" cols="30" rows="10"></textarea>
-                        </div>
-                    </ng-container>
-                </ng-container>
+                class="node-properties border-left position-fixed bg-white p-4">
+                <odp-node-properties *ngIf="showNodeProperties" [nodeIndex]="selectedNodeIndex" [nodeList]="nodeList"
+                    [node]="selectedNode" (close)="showNodeProperties=false">
+                </odp-node-properties>
             </div>
         </div>
     </div>

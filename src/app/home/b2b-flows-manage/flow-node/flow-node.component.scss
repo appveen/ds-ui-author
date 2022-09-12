@@ -1,0 +1,11 @@
+.node-block {
+    .node-delete-icon {
+        transition: 0.2s;
+    }
+
+    &:hover {
+        .node-delete-icon {
+            transform: translateX(160px);
+        }
+    }
+}

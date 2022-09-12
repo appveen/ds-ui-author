@@ -1,0 +1,32 @@
+.mapping-container {
+
+    .source-fields,
+    .destination-fields {
+        min-height: calc(100vh - 160px);
+
+        .sub-header {
+            min-height: 72px;
+            max-height: 72px;
+        }
+    }
+
+    .source-fields {
+        width: 0px;
+
+        &.show {
+            width: 340px;
+        }
+    }
+
+    .destination-fields {
+        min-width: 460px;
+    }
+
+    .formula-builder {
+        z-index: 1;
+
+        textarea.form-control {
+            font-family: monospace;
+        }
+    }
+}

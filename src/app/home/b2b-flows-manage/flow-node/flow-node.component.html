@@ -1,16 +1,25 @@
 <svg>
     <!-- <rect *ngIf="showNewNodeDropdown" x="60" y="110" rx="8" ry="8" width="210" height="360"
             style="fill:#000;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" /> -->
-    <g class="ignore-outside" (click)="selectNode()">
+    <g class="node-block ignore-outside hover" (click)="selectNode()">
+        <g *ngIf="nodeIndex>0" class="node-delete-icon">
+            <text x="64" y="60" fill="red">Delete</text>
+        </g>
         <rect x="32" y="32" rx="8" ry="8" width="180" height="45"
             style="fill:#fefefe;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
-        <text x="60" y="58" fill="#000">{{node.type}}</text>
+        <text x="64" y="60" fill="#000">{{node.type}}</text>
+        <g *ngIf="node.type=='API'" class="node-icon" odp-invoke-api-icon></g>
+        <g *ngIf="node.type=='CONNECTOR'" class="node-icon" odp-connector-icon></g>
+        <g *ngIf="node.type=='DATASERVICE'" class="node-icon" odp-data-service-icon></g>
+        <g *ngIf="node.type=='FUNCTION'" class="node-icon" odp-function-icon></g>
+        <g *ngIf="node.type=='MAPPING'" class="node-icon" odp-mapping-icon></g>
+        <g *ngIf="node.type=='RESPONSE'" class="node-icon" odp-response-icon></g>
     </g>
 
     <g *ngIf="node.type!=='RESPONSE'">
         <!-- <line x1="50" y1="77" x2="50" y2="100" style="stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" /> -->
-        <g *ngFor="let item of node.onSuccess;let i=item;" style="transform: translateX({{i*48}}px);" class="hover ignore-outside"
-            (click)="showBranchDropdown($event)">
+        <g *ngFor="let item of node.onSuccess;let i=item;" [ngStyle]="{'transform':'translateX('+(i*48)+'px)'}"
+            class="hover ignore-outside" (click)="showBranchDropdown($event)">
             <line x1="50" y1="77" x2="50" y2="132" style="stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
             <circle cx="50" cy="100" r="10" style="fill:#fefefe;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
             <g style="transform: translate(45.5px, 95.5px)">

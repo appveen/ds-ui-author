@@ -9,7 +9,7 @@
 
 
 <div class="d-flex align-items-center position-relative rounded border border-secondary"
-    [ngClass]="{'hover':edit.status && !disabled}" [ngStyle]="checkBoxStyle" [ngClass]="checkedClass">
+    (click)="onChange(!checked)" [ngStyle]="checkBoxStyle" [ngClass]="checkBoxClass">
     <div *ngIf="!edit.status" class="overlay w-100 h-100 position-absolute"></div>
     <input #checkBox type="checkbox" class="custom-control-input" [attr.id]="id" [disabled]="disabled || !edit.status"
         [(ngModel)]="checked" (ngModelChange)="onChange($event)">

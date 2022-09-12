@@ -47,7 +47,7 @@ import { AdminModule } from './admin/admin.module';
     LoginComponent,
     NotFoundComponent,
     AutoLogoutDirective,
-    HomeComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

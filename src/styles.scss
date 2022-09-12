@@ -838,7 +838,13 @@ $weights: 200,
 }
 
 .hover {
-  cursor: pointer;
+  &:hover {
+    cursor: pointer;
+
+    &.underline {
+      text-decoration: underline;
+    }
+  }
 }
 
 .heading {
@@ -911,6 +917,10 @@ $weights: 200,
 }
 
 
+
+.node-icon {
+  transform: translate(42px, 47px);
+}
 
 .node-options-item {
   .dsi-invoke-api {
