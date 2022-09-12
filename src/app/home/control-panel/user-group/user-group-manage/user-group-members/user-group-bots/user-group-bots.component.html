@@ -35,14 +35,14 @@
 		">
 			<div *ngIf="userList && userList.length>0" class="list-group">
 				<div class="list-group-item d-flex align-items-center bg-light text-secondary">
-					<div class="user-check" (click)="checkAll=!checkAll">
+					<div class="user-check">
 						<odp-checkbox [edit]="{status:true}" [(checked)]="checkAll"></odp-checkbox>
 					</div>
 					<div class="user-name text-uppercase">Name</div>
 					<div class="user-username text-uppercase">Username</div>
 				</div>
 				<div class="list-group-item d-flex align-items-center " *ngFor="let user of userList">
-					<div class="user-check" (click)="user._selected = !user._selected ">
+					<div class="user-check">
 						<odp-checkbox [edit]="{status:true}" [checked]="user._selected"
 							(checkedChange)="toggleCheck($event, user)"></odp-checkbox>
 					</div>
