@@ -27,8 +27,8 @@
           routerLink="bulk-import" ngbTooltip="Bulk Import" id="bulkimport">
           <span class="dsi dsi-upload"></span>
         </button>
-        <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser" class="add-new btn btn-primary d-flex align-items-center"
-          (click)="newUser()">
+        <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser"
+          class="add-new btn btn-primary d-flex align-items-center" (click)="newUser()">
           <span class="dsi dsi-plus mr-2"></span>
           <span>New</span>
         </button>
@@ -453,15 +453,13 @@
                   <div class="groups-list border rounded bg-white">
                     <ul class="list-group list-group-flush">
                       <li *ngFor="let group of groupList; index as groupIndex" class="list-group-item py-2">
-                        <label [attr.for]="groupList[groupIndex]._id"
-                          class="d-flex align-items-center justify-content-between m-0">
+                        <div class="d-flex align-items-center justify-content-between m-0">
                           <odp-checkbox [id]="groupList[groupIndex]._id" [edit]="{ status: canEdit }" (checkedChange)="
-                              toggleGroup($event, groupList[groupIndex]._id)
-                            " [checked]="
-                              isGroupSelected(groupList[groupIndex]._id)
-                            "></odp-checkbox>
+                              toggleGroup($event, groupList[groupIndex]._id)"
+                            [checked]="isGroupSelected(groupList[groupIndex]._id)">
+                          </odp-checkbox>
                           <span>{{ groupList[groupIndex].name }}</span>
-                        </label>
+                        </div>
                       </li>
                     </ul>
                   </div>
