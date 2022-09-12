@@ -111,7 +111,7 @@ export class UserGroupMembersSearchComponent implements OnInit, OnDestroy {
   }
 
   selectUser(user: any) {
-    this.selectedUsers.push(JSON.parse(JSON.stringify(user)));
+    this.selectedUsers.push(user);
   }
 
   isUserSelected(user: any) {

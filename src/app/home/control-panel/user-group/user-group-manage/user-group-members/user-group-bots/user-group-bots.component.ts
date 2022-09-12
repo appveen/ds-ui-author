@@ -19,6 +19,7 @@ export class UserGroupBotsComponent implements OnInit, OnDestroy {
   showLazyLoader: boolean;
 
   openSearch: EventEmitter<any>;
+  ogUserList: any[];
 
   constructor(private commonService: CommonService,
     private appService: AppService) {
@@ -30,6 +31,7 @@ export class UserGroupBotsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.users) {
       this.userList = this.users.filter(e => e.bot);
+      this.ogUserList = this.userList;
     }
   }
 
@@ -112,5 +114,24 @@ export class UserGroupBotsComponent implements OnInit, OnDestroy {
     this.userList.forEach(e => {
       e._selected = val;
     });
+  }
+
+  search(event) {
+    this.searchTerm = event
+    if (event === '' || this.searchTerm === null) {
+      this.userList = this.ogUserList
+    }
+    else {
+      this.userList = this.ogUserList.filter(ele => {
+        if (ele.basicDetails.name.toLowerCase().indexOf(this.searchTerm) >= 0) {
+          return ele
+        }
+        else {
+          if (ele._id.toLowerCase().indexOf(this.searchTerm) >= 0) {
+            return ele
+          }
+        }
+      })
+    }
   }
 }

@@ -272,7 +272,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           self.triggerAgentDownload();
         }
       },
-      (dismiss) => {}
+      (dismiss) => { }
     );
   }
 
@@ -304,7 +304,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         (res) => {
           self.agentConfig.password = res.password;
         },
-        (err) => {}
+        (err) => { }
       );
     }
   }
@@ -316,6 +316,11 @@ export class AdminComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       self.agentConfig.copied = false;
     }, 3000);
+  }
+
+  get isAppAdmin() {
+    const self = this;
+    return self.commonService.isAppAdmin;
   }
 
   get authType() {

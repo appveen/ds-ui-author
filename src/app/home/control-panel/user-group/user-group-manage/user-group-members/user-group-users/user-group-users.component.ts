@@ -15,6 +15,7 @@ export class UserGroupUsersComponent implements OnInit, OnDestroy {
   @Input() users: Array<any>;
   subscriptions: any;
   userList: Array<any>;
+  ogUserList: Array<any>;
   showLazyLoader: boolean;
   searchTerm: string;
   openSearch: EventEmitter<any>;
@@ -29,6 +30,7 @@ export class UserGroupUsersComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.users) {
       this.userList = this.users.filter(e => !e.bot);
+      this.ogUserList = this.userList
     }
   }
 
@@ -108,6 +110,25 @@ export class UserGroupUsersComponent implements OnInit, OnDestroy {
     this.userList.forEach(e => {
       e._selected = val;
     });
+  }
+
+  search(event) {
+    this.searchTerm = event
+    if (event === '' || this.searchTerm === null) {
+      this.userList = this.ogUserList
+    }
+    else {
+      this.userList = this.ogUserList.filter(ele => {
+        if (ele.basicDetails.name.toLowerCase().indexOf(this.searchTerm) >= 0) {
+          return ele
+        }
+        else {
+          if (ele.username.toLowerCase().indexOf(this.searchTerm) >= 0) {
+            return ele
+          }
+        }
+      })
+    }
   }
 
 }

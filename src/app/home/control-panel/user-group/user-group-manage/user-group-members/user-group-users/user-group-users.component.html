@@ -13,7 +13,8 @@
             </div> -->
         </div>
         <div class="d-flex align-items-center">
-            <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+            <odp-search-box [selectOnEnter]="true" (enteredText)="search($event)" (reset)="search($event)">
+            </odp-search-box>
             <button type="button" class="btn btn-white border text-danger ml-3" [disabled]="selectedUsers.length == 0"
                 (click)="removeUsers()" [ngbTooltip]="'Remove Users '+ selectedUsers.length">
                 <span class="dsi dsi-trash"></span>
@@ -34,14 +35,14 @@
         ">
             <div *ngIf="userList && userList.length>0" class="list-group">
                 <div class="list-group-item d-flex align-items-center bg-light text-secondary">
-                    <div class="user-check" (click)="checkAll=!checkAll">
+                    <div class="user-check">
                         <odp-checkbox [edit]="{status:true}" [(checked)]="checkAll"></odp-checkbox>
                     </div>
                     <div class="user-name text-uppercase">Name</div>
                     <div class="user-username text-uppercase">Username</div>
                 </div>
                 <div class="list-group-item d-flex align-items-center " *ngFor="let user of userList">
-                    <div class="user-check" (click)="user._selected = !user._selected ">
+                    <div class="user-check">
                         <odp-checkbox [edit]="{status:true}" [checked]="user._selected"
                             (checkedChange)="toggleCheck($event, user)"></odp-checkbox>
                     </div>
