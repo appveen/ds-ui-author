@@ -13,7 +13,8 @@
             </div> -->
         </div>
         <div class="d-flex align-items-center">
-            <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+            <odp-search-box [selectOnEnter]="true" (enteredText)="search($event)" (reset)="search($event)">
+            </odp-search-box>
             <button type="button" class="btn btn-white border text-danger ml-3" [disabled]="selectedUsers.length == 0"
                 (click)="removeUsers()" [ngbTooltip]="'Remove Users '+ selectedUsers.length">
                 <span class="dsi dsi-trash"></span>
