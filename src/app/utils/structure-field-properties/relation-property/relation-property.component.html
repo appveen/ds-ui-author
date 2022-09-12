@@ -16,8 +16,9 @@
       <span *ngIf="!edit.status && !relatedToName" class="text-muted">Not Defined</span>
     </div>
   </div>
-  <div class="sub-heading text-secondary bg-light mb-3 p-2">Advanced
-    Properties</div>
+  <div class="mt-4 font-16 fw-400 mb-3">
+    Advanced Properties
+  </div>
   <div class="w-100 mb-4">
     <div class="text-secondary">Search On Field</div>
     <div>
@@ -52,7 +53,7 @@
     <button type="button" class="btn btn-dark my-1 w-100" *ngIf="relatedViewFields.length>2 && edit.status"
       (click)="clearViewFields()">Clear All</button>
   </div>
-  <div class="d-flex w-100 mb-4">
+  <div class="d-flex w-100 mb-4 flex-column">
     <div class="label-width text-secondary">Default Value</div>
     <div class="value-width d-flex align-items-center">
       <ng-container *ngIf="edit.status">

@@ -65,7 +65,7 @@
         </div>
 
         <div class="w-100 justify-content-center" *ngIf="!(isDataFormat || checkStateModel())">
-          <div class="font-16 fw-400 mt-40 mb-3">Properties</div>
+          <div class="font-16 fw-400 mt-40 mb-3" *ngIf="formItem.get('key').value !== '_self'">Properties</div>
           <div class=" d-flex align-items-center w-100 pb-3" [ngClass]="{'hover':canEdit}"
             *ngIf="formItem.get('properties.required') && formItem.get('key').value !== '_self'">
             <odp-checkbox id="reqAttr" [edit]="{ status: canEdit }"
@@ -103,40 +103,6 @@
             <span class="ml-2 text-dark font-14 fw-300">Secure</span>
           </div>
         </div>
-        <div class="my-3 font-14 fw-400 border-bottom pb-2" *ngIf="formItem.get('key').value !== '_self' && !isLibrary &&  
-        formItem.get('type').value!='Relation' && formItem.get('type').value!='User'">
-          Advanced Properties
-        </div>
-        <div class="w-100 mb-4" *ngIf="isDataFormat && formatType=='FLATFILE'">
-          <div class=" text-secondary">Field Length
-            <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
-          </div>
-          <div>
-            <input *ngIf="canEdit" class="form-control" type="number" formControlName="fieldLength" id="fieldLength">
-            <span *ngIf="!canEdit">{{formItem.get('properties.fieldLength').value}}</span>
-          </div>
-        </div>
-
-        <odp-relation-property *ngIf="formItem.get('type').value=='Relation'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [type]='type'>
-        </odp-relation-property>
-        <odp-text-property *ngIf="formItem.get('type').value=='String'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType" [type]='type'
-          [(mainForm)]='mainForm'>
-        </odp-text-property>
-        <odp-number-property *ngIf="formItem.get('type').value=='Number'" [form]="formItem" [edit]="edit"
-          [(mainForm)]='mainForm' [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType"
-          [type]='type'>
-        </odp-number-property>
-        <odp-library-property *ngIf="formItem.get('type').value=='Global'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
-        </odp-library-property>
-        <odp-user-property *ngIf="formItem.get('type').value=='User'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
-        </odp-user-property>
-        <odp-date-property *ngIf="formItem.get('type').value=='Date'" [form]="formItem" [edit]="edit"
-          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
-        </odp-date-property>
         <div *ngIf="formItem.get('type').value=='Boolean' && !isDataFormat && !isLibrary ">
           <div class="w-100 text-secondary fw-300 mb-2">Default Value
           </div>
@@ -194,8 +160,51 @@
             </ng-container>
           </div>
         </div>
-        <ng-container *ngIf="showCommonFields && formItem.get('key').value !== '_self'" class="mb-4">
-          <div *ngIf="!idField" class=" w-100 mt-4">
+        <!-- <div class="my-3 font-16 fw-400 border-bottom pb-2" *ngIf="formItem.get('key').value !== '_self' && !isLibrary &&  
+        formItem.get('type').value!='Relation' && formItem.get('type').value!='User'">
+          Validations
+        </div> -->
+        <div class="w-100 mb-4" *ngIf="isDataFormat && formatType=='FLATFILE'">
+          <div class=" text-secondary">Field Length
+            <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
+          </div>
+          <div>
+            <input *ngIf="canEdit" class="form-control" type="number" formControlName="fieldLength" id="fieldLength">
+            <span *ngIf="!canEdit">{{formItem.get('properties.fieldLength').value}}</span>
+          </div>
+        </div>
+
+        <odp-relation-property *ngIf="formItem.get('type').value=='Relation'" [form]="formItem" [edit]="edit"
+          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [type]='type'>
+        </odp-relation-property>
+        <odp-text-property *ngIf="formItem.get('type').value=='String'" [form]="formItem" [edit]="edit"
+          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType" [type]='type'
+          [(mainForm)]='mainForm'>
+        </odp-text-property>
+        <odp-number-property *ngIf="formItem.get('type').value=='Number'" [form]="formItem" [edit]="edit"
+          [(mainForm)]='mainForm' [isLibrary]="isLibrary" [isDataFormat]="isDataFormat" [formatType]="formatType"
+          [type]='type'>
+        </odp-number-property>
+        <odp-library-property *ngIf="formItem.get('type').value=='Global'" [form]="formItem" [edit]="edit"
+          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
+        </odp-library-property>
+        <odp-user-property *ngIf="formItem.get('type').value=='User'" [form]="formItem" [edit]="edit"
+          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
+        </odp-user-property>
+        <odp-date-property *ngIf="formItem.get('type').value=='Date'" [form]="formItem" [edit]="edit"
+          [isLibrary]="isLibrary" [isDataFormat]="isDataFormat">
+        </odp-date-property>
+
+
+
+
+        <ng-container *ngIf="showCommonFields && formList.length == 1 || formIndex > 0">
+          <div class="mt-3 font-16 fw-400">
+            Display Properties
+          </div>
+
+
+          <div class=" w-100 mt-3">
             <div class="font-14 fw-300 text-dark mb-2">Appcenter Custom Label</div>
             <div>
               <input *ngIf="edit.status" class="form-control" type="text" formControlName="label" id="label">
@@ -208,7 +217,7 @@
               <span>Label should not be more than 40 characters</span>
             </span>
           </div>
-          <div *ngIf="!idField" class="w-100 mt-4">
+          <div class="w-100 mt-3">
             <div class="font-14 fw-300 text-dark mb-2">Appcenter Custom Error</div>
             <div>
               <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"
@@ -216,11 +225,8 @@
               <span *ngIf="!canEdit">{{formItem.get('properties.errorMessage').value}}</span>
             </div>
           </div>
-        </ng-container>
 
-        <ng-container *ngIf="showCommonFields">
-          <div class="w-100 mt-4" [ngClass]="{'mb-4': isLastFormItem && !descriptionError}"
-            *ngIf="formList.length == 1 || formIndex > 0">
+          <div class="w-100 mt-3" [ngClass]="{'mb-4': isLastFormItem && !descriptionError}">
             <div class="font-14 fw-300 text-dark mb-2">Description</div>
             <div>
               <textarea *ngIf="canEdit" class="form-control" formControlName="_description"
