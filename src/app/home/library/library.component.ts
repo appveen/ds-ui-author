@@ -289,4 +289,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
     get app() {
         return this.commonService.app._id;
     }
+
+    navigate(id) {
+        this.router.navigate(['/app/', this.app, 'gs', id])
+    }
 }
