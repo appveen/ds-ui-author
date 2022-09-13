@@ -4,9 +4,11 @@
 .flow-manage-page {
   height: calc(100vh - 60px);
 
+
   .flow-designer,
   .flow-designer-canvas {
     height: calc(100vh - 240px);
+    overflow: auto;
   }
 
   .flow-designer-canvas {

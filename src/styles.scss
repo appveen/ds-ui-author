@@ -916,13 +916,8 @@ $weights: 200,
   overflow-y: hidden;
 }
 
-
-
-.node-icon {
-  transform: translate(42px, 47px);
-}
-
-.node-options-item {
+.node-options-item,
+.node-block {
   .dsi-invoke-api {
     color: #00CCCB;
   }

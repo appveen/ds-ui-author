@@ -8,45 +8,89 @@ import { B2bFlowService } from '../b2b-flow.service';
 })
 export class FlowNodeComponent implements OnInit {
 
+  @Input() prevNode: any;
+  @Input() currNode: any;
   @Input() nodeList: any;
-  @Input() nodeIndex: number;
+  @Input() branchIndex: number;
+
   showNewNodeDropdown: boolean;
   node: any
+  clickEventPos: any;
+  addTo: string;
   constructor(private flowService: B2bFlowService) {
     this.nodeList = [];
+    this.node = {};
   }
 
   ngOnInit(): void {
-    this.node = this.nodeList[this.nodeIndex];
+    console.log(this.prevNode, this.currNode);
+    this.node = this.currNode;
+  }
+
+  getCurrentNode(item: any) {
+    return this.nodeList.find(e => e._id == item._id);
   }
 
   showBranchDropdown(event: any, branchIndex?: number) {
-    this.flowService.showAddNodeDropdown.emit({
-      position: { left: event.clientX, top: event.clientY },
-      node: this.node,
-      nodeIndex: this.nodeIndex,
-      branchIndex
-    });
+    this.clickEventPos = { left: event.clientX, top: event.clientY };
+    this.showNewNodeDropdown = true;
   }
 
   selectNode() {
     this.flowService.selectedNode.emit({
-      node: this.node,
-      nodeIndex: this.nodeIndex
+      currNode: this.currNode,
+      prevNode: this.prevNode,
     });
   }
 
   deleteNode() {
     this.flowService.deleteNode.emit({
-      node: this.node,
-      nodeIndex: this.nodeIndex
+      currNode: this.currNode,
+      prevNode: this.prevNode,
     });
   }
 
-  get addBranchStyle() {
-    const items = this.node.onSuccess || [];
+  getAddStyle(index: number) {
     return {
-      transform: `translateX(${(items.length) * 48}px)`
+      marginLeft: `${(84 + (index > 0 ? 144 : 0))}px`
+    }
+  }
+
+  addNode(type: string) {
+    const tempNode = this.flowService.getNodeObject(type);
+    let node = this.currNode;
+    if (this.addTo == 'prev') {
+      node = this.prevNode;
+    }
+    if (node) {
+      if (!node.onSuccess) {
+        node.onSuccess = [];
+      }
+      if (this.addTo == 'prev') {
+        if (this.branchIndex > -1 && node.onSuccess.length > 0) {
+          const temp = node.onSuccess.splice(this.branchIndex, 1)[0];
+          if (temp) {
+            tempNode.onSuccess.push({ _id: temp._id });
+            temp._id = tempNode._id;
+          }
+          node.onSuccess.push({ _id: tempNode._id });
+          // this.flowData.stages.splice(this.selectedNodeIndex, 0, tempNode);
+        } else {
+          node.onSuccess.push({ _id: tempNode._id });
+        }
+      } else {
+        node.onSuccess.push({ _id: tempNode._id });
+      }
+      this.nodeList.push(tempNode);
+    }
+    this.showNewNodeDropdown = false;
+    // console.log(this.flowData);
+  }
+
+  get dropDownStyle() {
+    return {
+      top: `${this.clickEventPos.top}px`,
+      left: `${this.clickEventPos.left}px`,
     }
   }
 }

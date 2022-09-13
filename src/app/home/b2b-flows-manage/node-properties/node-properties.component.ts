@@ -8,8 +8,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class NodePropertiesComponent implements OnInit {
 
   @Input() edit: any;
-  @Input() node: any;
-  @Input() nodeIndex: number;
+  @Input() prevNode: any;
+  @Input() currNode: any;
   @Input() nodeList: Array<any>;
   @Output() close: EventEmitter<any>;
   showNodeMapping: boolean;
@@ -19,11 +19,17 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.node && !this.node.dataStructure) {
-      this.node.dataStructure = {};
+    if (this.prevNode && !this.prevNode.dataStructure) {
+      this.prevNode.dataStructure = {};
     }
-    if (this.node && this.node.dataStructure && !this.node.dataStructure.outgoing) {
-      this.node.dataStructure.outgoing = {};
+    if (this.prevNode && this.prevNode.dataStructure && !this.prevNode.dataStructure.outgoing) {
+      this.prevNode.dataStructure.outgoing = {};
+    }
+    if (this.currNode && !this.currNode.dataStructure) {
+      this.currNode.dataStructure = {};
+    }
+    if (this.currNode && this.currNode.dataStructure && !this.currNode.dataStructure.outgoing) {
+      this.currNode.dataStructure.outgoing = {};
     }
   }
 
@@ -36,20 +42,10 @@ export class NodePropertiesComponent implements OnInit {
 
   onFormatChange(data: any) {
     console.log(data);
-    this.node.dataStructure.outgoing = data;
+    this.currNode.dataStructure.outgoing = data;
   }
 
   cancel() {
     this.close.emit(false);
-  }
-
-
-  get prevNode() {
-    if (this.nodeIndex > 0) {
-      return this.nodeList[this.nodeIndex - 1];
-    }
-  }
-  get currNode() {
-    return this.node;
   }
 }

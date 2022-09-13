@@ -49,49 +49,13 @@
             <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
             <span class="url text-accent">{{flowData?.inputStage?.options?.path || 'N.A.'}}</span>
         </div>
-        <div class="flow-designer">
-            <svg class="flow-designer-canvas bg-light-gray" odpViewBox>
-                <!-- <rect *ngIf="showNewNodeDropdown || newNodeDropdownPos" [attr.x]="newNodeDropdownPos.left"
-                    [attr.y]="newNodeDropdownPos.top" rx="8" ry="8" width="210" height="360"
-                style="fill:#000;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" /> -->
-                <g *ngFor="let item of nodeList;let i=index" odp-flow-node [nodeList]="nodeList" [nodeIndex]="i"
-                    [ngStyle]="{'transform':'translateY('+(i*100)+'px)'}"></g>
-                <!-- <g>
-                    <rect x="32" y="120" rx="8" ry="8" width="180" height="45"
-                        style="fill:#fefefe;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
-                    <text x="60" y="148" fill="#000">Response</text>
-                </g> -->
-            </svg>
-            <div *ngIf="showNewNodeDropdown"
-                [ngStyle]="{'top':newNodeDropdownPos.top+'px','left':newNodeDropdownPos.left+'px'}"
-                class="node-options-dropdown bg-dark rounded text-white border position-absolute" odpClickOutside
-                (outside)="showNewNodeDropdown=false">
-                <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('API')">
-                    <span class="font-12 fw-400 dsi dsi-invoke-api mr-2"></span>
-                    <span class="font-12 fw-400">Invoke API</span>
-                </div>
-                <div class="node-options-item px-3 py-2 d-flex align-items-center hover"
-                    (click)="addNode('DATASERVICE')">
-                    <span class="font-12 fw-400 dsi dsi-data-service mr-2"></span>
-                    <span class="font-12 fw-400">Data Service</span>
-                </div>
-                <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('FUNCTION')">
-                    <span class="font-12 fw-400 dsi dsi-function mr-2"></span>
-                    <span class="font-12 fw-400">Function</span>
-                </div>
-                <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('MAPPING')">
-                    <span class="font-12 fw-400 dsi dsi-mapping mr-2"></span>
-                    <span class="font-12 fw-400">Mapping</span>
-                </div>
-                <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('RESPONSE')">
-                    <span class="font-12 fw-400 dsi dsi-response mr-2"></span>
-                    <span class="font-12 fw-400">Response</span>
-                </div>
+        <div class="flow-designer p-4 bg-light-gray">
+            <div *ngIf="flowData?.inputStage" odp-flow-node [currNode]="flowData.inputStage" [nodeList]="nodeList">
             </div>
             <div [ngClass]="{'show':showNodeProperties}"
                 class="node-properties border-left position-fixed bg-white p-4">
-                <odp-node-properties *ngIf="showNodeProperties" [nodeIndex]="selectedNodeIndex" [nodeList]="nodeList"
-                    [node]="selectedNode" (close)="showNodeProperties=false">
+                <odp-node-properties *ngIf="showNodeProperties" [nodeList]="nodeList"
+                    [currNode]="selectedNode.currNode" [prevNode]="selectedNode.prevNode" (close)="showNodeProperties=false">
                 </odp-node-properties>
             </div>
         </div>

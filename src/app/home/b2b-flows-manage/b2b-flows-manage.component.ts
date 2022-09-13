@@ -37,10 +37,9 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   showNewNodeDropdown: boolean;
   newNodeDropdownPos: any;
   selectedNode: any;
-  selectedNodeIndex: number;
-  selectedNodeBranchIndex: number;
   showNodeProperties: boolean;
   openDeleteModal: EventEmitter<any>;
+  nodeList: Array<any>;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -66,6 +65,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     this.ele.nativeElement.classList.add('h-100');
     this.logs = [];
     this.openDeleteModal = new EventEmitter();
+    this.nodeList = [];
   }
 
   ngOnInit(): void {
@@ -75,9 +75,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       }),
       delay(5)
     ).subscribe((data: any) => {
-      this.selectedNode = data.node;
-      this.selectedNodeIndex = data.nodeIndex;
-      this.selectedNodeBranchIndex = data.branchIndex;
+      this.selectedNode = data;
       this.newNodeDropdownPos = data.position;
       this.showNewNodeDropdown = true;
     });
@@ -88,8 +86,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       delay(5)
     ).subscribe((data: any) => {
       this.showNodeProperties = true;
-      this.selectedNode = data.node;
-      this.selectedNodeIndex = data.nodeIndex;
+      this.selectedNode = data;
     });
     this.flowService.deleteNode.subscribe((data: any) => {
       this.openDeleteModal.emit({
@@ -127,9 +124,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   resetSelection() {
     this.showNewNodeDropdown = false;
     this.showNodeProperties = false;
-    this.selectedNodeBranchIndex = -1;
     this.selectedNode = null;
-    this.selectedNodeIndex = null;
     this.newNodeDropdownPos = null;
   }
 
@@ -152,7 +147,16 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       delete this.flowData.__v;
       delete this.flowData._metadata;
       this.oldData = this.appService.cloneObject(this.flowData);
-      this.appService.updateCodeEditorState.emit(this.edit);
+      // this.appService.updateCodeEditorState.emit(this.edit);
+      this.nodeList = [];
+      if (this.flowData.inputStage) {
+        this.nodeList.push(this.flowData.inputStage);
+      }
+      if (this.flowData.stages) {
+        this.flowData.stages.forEach(item => {
+          this.nodeList.push(item);
+        });
+      }
     }, err => {
       this.apiCalls.getFlow = false;
       this.commonService.errorToast(err);
@@ -281,26 +285,6 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     });
   }
 
-  addNode(type: string) {
-    const tempNode = this.flowService.getNodeObject(type);
-    if (this.selectedNode) {
-      if (!this.selectedNode.onSuccess) {
-        this.selectedNode.onSuccess = [];
-      }
-      if (this.selectedNodeBranchIndex > -1) {
-        const temp = this.selectedNode.onSuccess[this.selectedNodeBranchIndex];
-        tempNode.onSuccess.push({ _id: temp._id });
-        temp._id = tempNode._id;
-        // this.flowData.stages.splice(this.selectedNodeIndex, 0, tempNode);
-      } else {
-        this.selectedNode.onSuccess.push({ _id: tempNode._id });
-      }
-      this.flowData.stages.push(tempNode);
-    }
-    this.showNewNodeDropdown = false;
-    console.log(this.flowData);
-  }
-
   closeDeleteNodeModal(val: any) {
     if (val & val.data && val.data.nodeIndex > 0) {
       if (val.data.nodeIndex < this.flowData.stages.length) {
@@ -365,17 +349,4 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     this.flowData.dataStructures = temp.dataStructures || {};
   }
 
-
-  get nodeList() {
-    const list = [];
-    if (this.flowData.inputStage) {
-      list.push(this.flowData.inputStage);
-    }
-    if (this.flowData.stages) {
-      this.flowData.stages.forEach(item => {
-        list.push(item);
-      });
-    }
-    return list;
-  }
 }

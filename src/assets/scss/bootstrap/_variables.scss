@@ -88,6 +88,10 @@ $border: #ECECEC !default;
 $accordion-bg: #E8E8E8;
 $heading-highlight: #747E8D;
 
+$headings: #181818;
+$sub-headings: #6C7584;
+$lightgrey : #B5B8BC;
+
 $theme-colors: () !default;
 // stylelint-disable-next-line scss/dollar-variable-default
 $theme-colors: map-merge(("accent": $accent,
@@ -100,7 +104,8 @@ $theme-colors: map-merge(("accent": $accent,
     "light": $light,
     "dark": $dark,
     "border": $border,
-    "white": $white),
+    "white": $white,
+    "grey": $lightgrey),
   $theme-colors);
 
 // Set a specific jump point for requesting color jumps
@@ -1155,7 +1160,3 @@ sticky !default;
 
 $print-page-size: a3 !default;
 $print-body-min-width: map-get($grid-breakpoints, "lg") !default;
-
-$headings: #181818;
-$sub-headings: #6C7584;
-$lightgrey : #B5B8BC;

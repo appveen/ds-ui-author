@@ -9,21 +9,21 @@
         <hr>
         <div class="font-12 text-secondary">
             <span class="mr-1 fw-500">Node ID:</span>
-            <span>{{node?._id}}</span>
+            <span>{{currNode?._id}}</span>
         </div>
     </div>
     <div class="form-group">
         <label for="nodeName">Node Name</label>
-        <input id="nodeName" type="text" class="form-control" [(ngModel)]="node.name">
+        <input id="nodeName" type="text" class="form-control" [(ngModel)]="currNode.name">
     </div>
     <div class="form-group">
         <label for="nodeType">Node Type</label>
-        <select *ngIf="nodeIndex==0" id="nodeType" class="form-control" [(ngModel)]="node.type">
+        <select *ngIf="!prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type">
             <option value="API">API</option>
             <option value="FILE">FILE</option>
             <option value="TIMER">TIMER</option>
         </select>
-        <select *ngIf="nodeIndex>0" id="nodeType" class="form-control" [(ngModel)]="node.type">
+        <select *ngIf="prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type">
             <option value="API">API</option>
             <option value="MAPPING">MAPPING</option>
             <option value="DATASERVICE">DATASERVICE</option>
@@ -33,18 +33,18 @@
     </div>
     <div class="form-group">
         <label for="nodeDataStructure">Data Structure <span class="text-muted"><i>(optional)</i></span></label>
-        <odp-data-structure-selector [format]="node.dataStructure.outgoing" (formatChange)="onFormatChange($event)"></odp-data-structure-selector>
-        <!-- <input id="nodeDataStructure" type="text" class="form-control" [(ngModel)]="node.name"> -->
+        <odp-data-structure-selector [format]="currNode.dataStructure.outgoing" (formatChange)="onFormatChange($event)">
+        </odp-data-structure-selector>
     </div>
-    <ng-container *ngIf="nodeIndex==0">
-        <ng-container *ngIf="node?.type=='API'">
+    <ng-container *ngIf="!prevNode">
+        <ng-container *ngIf="currNode?.type=='API'">
             <div class="form-group">
                 <label for="nodeEndpoint">API Endpoint</label>
-                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="node.options.path">
+                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path">
             </div>
             <div class="form-group">
                 <label for="nodeHTTPMethod">HTTP Method</label>
-                <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="node.options.method">
+                <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method">
                     <option value="POST" selected>POST</option>
                     <option value="GET">GET</option>
                     <option value="PUT">PUT</option>
@@ -53,19 +53,20 @@
             </div>
         </ng-container>
         <div class="form-group d-flex align-items-center">
-            <odp-checkbox [edit]="edit" [(checked)]="node.options.uniqueTxnId"></odp-checkbox>
+            <odp-checkbox [edit]="edit" [(checked)]="currNode.options.uniqueTxnId"></odp-checkbox>
             <span class="ml-2">Unique Remote Txn ID</span>
         </div>
     </ng-container>
     <hr>
-    <ng-container *ngIf="node?.type=='API' && nodeIndex>0">
+    <ng-container *ngIf="currNode?.type=='API' && prevNode">
         <div class="form-group">
             <label for="nodeUrl">URL</label>
-            <textarea id="nodeUrl" class="form-control" cols="30" rows="4" [(ngModel)]="node.options.url"></textarea>
+            <textarea id="nodeUrl" class="form-control" cols="30" rows="4"
+                [(ngModel)]="currNode.options.url"></textarea>
         </div>
         <div class="form-group">
             <label for="nodeHTTPMethod">HTTP Method</label>
-            <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="node.options.method">
+            <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method">
                 <option value="POST" selected>POST</option>
                 <option value="GET">GET</option>
                 <option value="PUT">PUT</option>
@@ -74,34 +75,36 @@
         </div>
         <div class="form-group">
             <label for="nodeBody">Body</label>
-            <textarea id="nodeBody" class="form-control" cols="30" rows="4" [(ngModel)]="node.options.body"></textarea>
+            <textarea id="nodeBody" class="form-control" cols="30" rows="4"
+                [(ngModel)]="currNode.options.body"></textarea>
         </div>
         <div class="form-group">
             <label for="nodeHeaders">Headers</label>
             <textarea id="nodeHeaders" class="form-control" cols="30" rows="4"
-                [(ngModel)]="node.options.headers"></textarea>
+                [(ngModel)]="currNode.options.headers"></textarea>
         </div>
     </ng-container>
-    <ng-container *ngIf="node?.type=='MAPPING'">
+    <ng-container *ngIf="currNode?.type=='MAPPING'">
         <div class="form-group">
             <button type="button" class="btn btn-dark w-100 ignore-outside" (click)="showNodeMapping=!showNodeMapping">
                 Set Mapping
             </button>
         </div>
     </ng-container>
-    <ng-container *ngIf="node?.type=='RESPONSE'">
+    <ng-container *ngIf="currNode?.type=='RESPONSE'">
         <div class="form-group">
             <label for="nodeStatusCode">Status Code</label>
-            <input id="nodeStatusCode" type="text" class="form-control" [(ngModel)]="node.options.statusCode">
+            <input id="nodeStatusCode" type="text" class="form-control" [(ngModel)]="currNode.options.statusCode">
         </div>
         <div class="form-group">
             <label for="nodeBody">Body</label>
-            <textarea id="nodeBody" class="form-control" cols="30" rows="4" [(ngModel)]="node.options.body"></textarea>
+            <textarea id="nodeBody" class="form-control" cols="30" rows="4"
+                [(ngModel)]="currNode.options.body"></textarea>
         </div>
         <div class="form-group">
             <label for="nodeHeaders">Headers</label>
             <textarea id="nodeHeaders" class="form-control" cols="30" rows="4"
-                [(ngModel)]="node.options.headers"></textarea>
+                [(ngModel)]="currNode.options.headers"></textarea>
         </div>
     </ng-container>
 </div>

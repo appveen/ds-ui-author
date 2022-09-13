@@ -1,40 +1,70 @@
-<svg>
-    <g class="node-block ignore-outside hover" (click)="selectNode()">
-        <g *ngIf="nodeIndex>0" class="node-delete-icon" (click)="deleteNode()">
-            <text x="64" y="60" fill="red">Delete</text>
-        </g>
-        <rect x="32" y="32" rx="8" ry="8" width="180" height="45"
-            style="fill:#fefefe;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
-        <text x="64" y="60" fill="#000">{{node.type}}</text>
-        <g *ngIf="node.type=='API'" class="node-icon" odp-invoke-api-icon></g>
-        <g *ngIf="node.type=='CONNECTOR'" class="node-icon" odp-connector-icon></g>
-        <g *ngIf="node.type=='DATASERVICE'" class="node-icon" odp-data-service-icon></g>
-        <g *ngIf="node.type=='FUNCTION'" class="node-icon" odp-function-icon></g>
-        <g *ngIf="node.type=='MAPPING'" class="node-icon" odp-mapping-icon></g>
-        <g *ngIf="node.type=='RESPONSE'" class="node-icon" odp-response-icon></g>
-    </g>
-
-    <g *ngIf="node.type!=='RESPONSE'">
-        <g *ngFor="let item of node.onSuccess;let i=item;" [ngStyle]="{'transform':'translateX('+((i+1)*48)+'px)'}"
-            class="hover ignore-outside" (click)="showBranchDropdown($event, i)">
-            <line x1="50" y1="77" x2="50" y2="132" style="stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
-            <circle cx="50" cy="100" r="10" style="fill:#fefefe;stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
-            <g style="transform: translate(45.5px, 95.5px)">
-                <path d="M4.5 1.29199V7.70866" style="stroke:rgba(0,0,0,0.5)" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                <path d="M1.29169 4.5H7.70835" style="stroke:rgba(0,0,0,0.5)" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </g>
-        </g>
-        <g class="hover ignore-outside" [ngStyle]="addBranchStyle" (click)="showBranchDropdown($event)">
-            <line x1="50" y1="77" x2="50" y2="100" style="stroke:rgba(0, 0, 0, 0.3);stroke-width:1;" />
-            <circle cx="50" cy="100" r="10" class="fill-primary stroke-primary" />
-            <g style="transform: translate(45.5px, 95.5px)">
-                <path d="M4.5 1.29199V7.70866" style="stroke:#fff" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                <path d="M1.29169 4.5H7.70835" style="stroke:#fff" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </g>
-        </g>
-    </g>
-</svg>
+<div class="node-block-wrapper">
+    <div *ngIf="prevNode" class="add-button d-flex flex-column align-items-start" [ngStyle]="getAddStyle(0)">
+        <div *ngIf="branchIndex>0" class="border-left negetive border-grey"></div>
+        <div class="border-left border-grey"></div>
+        <span class="dsi dsi-plus-circle ignore-outside hover"
+            (click)="addTo='prev';showBranchDropdown($event)"></span>
+        <div class="border-left border-grey"></div>
+    </div>
+    <div class="d-flex align-items-center">
+        <div class="node-block px-3 py-2 border rounded bg-white d-flex align-items-center justify-content-start hover"
+            (click)="selectNode()">
+            <span *ngIf="node.type=='API'" class="node-icon dsi dsi-invoke-api"></span>
+            <span *ngIf="node.type=='CONNECTOR'" class="node-icon dsi dsi-connector"></span>
+            <span *ngIf="node.type=='DATASERVICE'" class="node-icon dsi dsi-data-service"></span>
+            <span *ngIf="node.type=='FUNCTION'" class="node-icon dsi dsi-function"></span>
+            <span *ngIf="node.type=='MAPPING'" class="node-icon dsi dsi-mapping"></span>
+            <span *ngIf="node.type=='RESPONSE'" class="node-icon dsi dsi-response"></span>
+            <span class="ml-3">{{node.type}}</span>
+        </div>
+        <ng-container *ngFor="let item of node.onSuccess;let f=first">
+            <ng-container *ngIf="!f">
+                <div class="path-sm border-bottom border-grey"></div>
+                <div class="path border-bottom border-grey flex-fill"></div>
+            </ng-container>
+        </ng-container>
+        <div *ngIf="node.onSuccess && node.onSuccess.length>0" class="add-button side d-flex align-items-center">
+            <div class="border-bottom border-grey"></div>
+            <span
+                class="dsi dsi-plus-circle ignore-outside bg-primary border border-primary text-white rounded-circle hover"
+                (click)="addTo='curr';showBranchDropdown($event)"></span>
+        </div>
+    </div>
+    <div *ngIf="!node.onSuccess || node.onSuccess.length==0" class="d-flex align-items-start">
+        <div class="add-button d-flex flex-column align-items-center" [ngStyle]="getAddStyle(0)">
+            <div class="border-left border-grey"></div>
+            <span
+                class="dsi dsi-plus-circle ignore-outside bg-primary border border-primary text-white rounded-circle hover"
+                (click)="addTo='curr';showBranchDropdown($event)"></span>
+        </div>
+    </div>
+    <div *ngIf="node.onSuccess && node.onSuccess.length>0" class="d-flex align-items-start">
+        <ng-container *ngFor="let item of node.onSuccess;let i=index;let f=first;">
+            <div *ngIf="getCurrentNode(item)" [ngClass]="{'ml-4':!f}" odp-flow-node [prevNode]="currNode"
+                [currNode]="getCurrentNode(item)" [nodeList]="nodeList" [branchIndex]="i"></div>
+        </ng-container>
+    </div>
+    <div *ngIf="showNewNodeDropdown" class="node-options-dropdown bg-dark rounded text-white border position-absolute"
+        odpClickOutside (outside)="showNewNodeDropdown=false" [ngStyle]="dropDownStyle">
+        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('API')">
+            <span class="font-12 fw-400 dsi dsi-invoke-api mr-2"></span>
+            <span class="font-12 fw-400">Invoke API</span>
+        </div>
+        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('DATASERVICE')">
+            <span class="font-12 fw-400 dsi dsi-data-service mr-2"></span>
+            <span class="font-12 fw-400">Data Service</span>
+        </div>
+        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('FUNCTION')">
+            <span class="font-12 fw-400 dsi dsi-function mr-2"></span>
+            <span class="font-12 fw-400">Function</span>
+        </div>
+        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('MAPPING')">
+            <span class="font-12 fw-400 dsi dsi-mapping mr-2"></span>
+            <span class="font-12 fw-400">Mapping</span>
+        </div>
+        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('RESPONSE')">
+            <span class="font-12 fw-400 dsi dsi-response mr-2"></span>
+            <span class="font-12 fw-400">Response</span>
+        </div>
+    </div>
+</div>
