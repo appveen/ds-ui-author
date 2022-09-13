@@ -118,7 +118,7 @@ export class UserGroupBotsComponent implements OnInit, OnDestroy {
 
   search(event) {
     this.searchTerm = event
-    if (event === '' || this.searchTerm === null) {
+    if (!this.searchTerm) {
       this.userList = this.ogUserList
     }
     else {

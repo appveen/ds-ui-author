@@ -433,6 +433,12 @@ export class LocalBotComponent implements OnInit {
             this.addNewKey = false
 
           }, 10000);
+        }, err => {
+          self.commonService.errorToast(
+            err,
+            err.message
+          );
+          this.showLazyLoader = false;
         })
   }
 

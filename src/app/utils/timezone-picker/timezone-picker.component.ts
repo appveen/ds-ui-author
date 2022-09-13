@@ -52,7 +52,7 @@ export class TimezonePickerComponent implements OnInit, ControlValueAccessor {
   }
 
   writeValue(obj: any): void {
-    this.value = obj;
+    this.value = obj || 'Zulu';
   }
   registerOnChange(fn: any): void {
     this.onChange = fn;

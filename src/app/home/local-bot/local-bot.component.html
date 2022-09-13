@@ -26,7 +26,7 @@
       <span class="fa fa-spinner fa-pulse fa-3x"></span>
     </div>
     <div class="row" style="max-height: inherit" *ngIf="botCount > 0">
-      <div class="col-3 bots border-right pr-0" style="max-height: 58vh;">
+      <div class="col-3 bots border-right pr-0">
         <div *ngFor="let bot of botRecords; let i = index" class="d-flex" [id]="'bot' + i" (click)="selectRecord(bot)">
           <div class="selectedTab" [ngStyle]="{
               background: bot._id === selectedBot?._id ? '#ff6f00' : 'none'

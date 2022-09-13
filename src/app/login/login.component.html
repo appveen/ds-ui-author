@@ -38,7 +38,7 @@
 
                 <!-- <a href="#" class="text-secondary">Forgot your Password?</a> -->
                 <button type="button" class="btn btn-lg btn-primary input-text form-button" (click)="onSubmit($event)"
-                  style="margin-top: 20px">
+                  style="margin-top: 20px" [disabled]="! (form.get('username').value && form.get('password').value)">
                   <span *ngIf="loader" class="fa fa-spinner fa-pulse mr-2"></span>
                   <span class="btn-text">Login</span>
                 </button>

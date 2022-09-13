@@ -309,7 +309,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       JSON.parse(localStorage.getItem('ba-user')).lastLogin
     );
   }
+  get isAppAdmin() {
+    const self = this;
+    return self.commonService.isAppAdmin;
+  }
+
 }
+
+
 
 // })
 // export class HomeComponent implements OnInit {
