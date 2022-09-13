@@ -22,7 +22,11 @@
     <div class="list-group">
       <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500">
         <div class="d-flex align-items-center justify-content-start h-100">
-          <div class="item-name">Name</div>
+          <div class="item-name" (click)="applySort('name')">
+            <span class="mr-2">Name</span>
+            <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
+          </div>
           <div class="d-flex align-items-center">
             <div class="item-attribute-count text-center">Attributes</div>
             <div class="item-reference-count text-center">References</div>
