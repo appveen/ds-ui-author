@@ -1,14 +1,4 @@
 import {
-  trigger,
-  transition,
-  query,
-  style,
-  group,
-  animate,
-  keyframes,
-  state,
-} from '@angular/animations';
-import {
   Component,
   ElementRef,
   OnDestroy,
@@ -16,7 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../environments/environment';
 import { App } from '../../models/app';
@@ -26,76 +16,7 @@ import { CommonService } from '../../utils/services/common.service';
 @Component({
   selector: 'odp-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  animations: [
-    trigger('userProfile', [
-      transition('void=>*', [
-        query(
-          '.profile-data,.profile-thumbnail,.app-version,.last-login',
-          style({ opacity: '0' })
-        ),
-        style({ height: '0px', position: 'fixed', opacity: '0.5' }),
-        group([
-          query(
-            '.user-icon',
-            animate(
-              '200ms cubic-bezier(0.23, 1, 0.32, 1)',
-              keyframes([
-                style({ position: 'fixed', top: '11.5px', right: '16px' }),
-                style({ top: '33px', right: '16px' }),
-              ])
-            )
-          ),
-          animate(
-            '200ms cubic-bezier(0.23, 1, 0.32, 1)',
-            keyframes([
-              style({ height: '40px', opacity: '0.5' }),
-              style({ height: '120px', opacity: '1' }),
-            ])
-          ),
-        ]),
-        query(
-          '.profile-data,.profile-thumbnail,.app-version,.last-login',
-          style({ opacity: '1' })
-        ),
-      ]),
-      transition('*=>void', [
-        group([
-          query(
-            '.profile-data,.profile-thumbnail,.app-version,.last-login',
-            animate(
-              '300ms cubic-bezier(0.23, 1, 0.32, 1)',
-              keyframes([style({ opacity: '0.3' }), style({ opacity: '0' })])
-            )
-          ),
-          query(
-            '.user-icon',
-            animate(
-              '300ms cubic-bezier(0.23, 1, 0.32, 1)',
-              keyframes([
-                style({ position: 'fixed', top: '33px', right: '16px' }),
-                style({ position: 'fixed', top: '11.5px', right: '16px' }),
-              ])
-            )
-          ),
-          animate(
-            '300ms cubic-bezier(0.23, 1, 0.32, 1)',
-            keyframes([
-              style({ height: '60px', border: '0' }),
-              style({ height: '0px' }),
-            ])
-          ),
-        ]),
-      ]),
-    ]),
-    trigger('userProfileIcon', [
-      state('true', style({ opacity: '0' })),
-      state('false', style({ opacity: '1' })),
-      transition('true=>false', [
-        animate('500ms cubic-bezier(0.23, 1, 0.32, 1)'),
-      ]),
-    ]),
-  ],
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('searchAppInput', { static: false }) searchAppInput: ElementRef;
