@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { B2bFlowService } from '../b2b-flow.service';
 
 @Component({
@@ -11,6 +11,7 @@ export class FlowNodeComponent implements OnInit {
   @Input() prevNode: any;
   @Input() currNode: any;
   @Input() nodeList: any;
+  @Output() nodeListChange: EventEmitter<any>;
   @Input() branchIndex: number;
 
   showNewNodeDropdown: boolean;
@@ -20,10 +21,10 @@ export class FlowNodeComponent implements OnInit {
   constructor(private flowService: B2bFlowService) {
     this.nodeList = [];
     this.node = {};
+    this.nodeListChange = new EventEmitter();
   }
 
   ngOnInit(): void {
-    console.log(this.prevNode, this.currNode);
     this.node = this.currNode;
   }
 
@@ -82,9 +83,13 @@ export class FlowNodeComponent implements OnInit {
         node.onSuccess.push({ _id: tempNode._id });
       }
       this.nodeList.push(tempNode);
+      this.nodeListChange.emit(this.nodeList);
     }
     this.showNewNodeDropdown = false;
-    // console.log(this.flowData);
+  }
+
+  onNodeChange(data: any) {
+    this.nodeListChange.emit(data);
   }
 
   get dropDownStyle() {

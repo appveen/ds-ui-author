@@ -184,6 +184,10 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     }
   }
 
+  onNodeChange(data: any) {
+    console.log(data);
+  }
+
   saveDummyCode(deploy?: boolean) {
     this.flowData.app = this.commonService.app._id;
     let request;

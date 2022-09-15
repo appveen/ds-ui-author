@@ -41,7 +41,7 @@
     <div *ngIf="node.onSuccess && node.onSuccess.length>0" class="d-flex align-items-start">
         <ng-container *ngFor="let item of node.onSuccess;let i=index;let f=first;">
             <div *ngIf="getCurrentNode(item)" [ngClass]="{'ml-4':!f}" odp-flow-node [prevNode]="currNode"
-                [currNode]="getCurrentNode(item)" [nodeList]="nodeList" [branchIndex]="i"></div>
+                [currNode]="getCurrentNode(item)" [(nodeList)]="nodeList" (nodeListChange)="onNodeChange($event)" [branchIndex]="i"></div>
         </ng-container>
     </div>
     <div *ngIf="showNewNodeDropdown" class="node-options-dropdown bg-dark rounded text-white border position-absolute"
