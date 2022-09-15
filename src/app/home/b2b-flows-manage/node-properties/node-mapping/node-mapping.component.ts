@@ -48,23 +48,22 @@ export class NodeMappingComponent implements OnInit {
       this.customSourceFields = tempSourceFields;
     }
     if (this.sourceFields) {
-      this.customSourceFields = this.prevNode.dataStructure.outgoing.definition[0].definition.map(e => {
-        const temp: any = {};
-        temp.name = e.properties.name;
-        temp.dataPath = e.properties.dataPath;
-        temp.type = e.type;
-        return temp;
-      });
+      this.customSourceFields = this.prevNode.dataStructure.outgoing.definition[0].definition.map((e) => this.convertDefinition(e));
     }
     if (this.targetFields) {
-      this.customTargetFields = this.currNode.dataStructure.outgoing.definition[0].definition.map(e => {
-        const temp: any = {};
-        temp.name = e.properties.name;
-        temp.dataPath = e.properties.dataPath;
-        temp.type = e.type;
-        return temp;
-      });
+      this.customTargetFields = this.currNode.dataStructure.outgoing.definition[0].definition.map((e) => this.convertDefinition(e));
     }
+  }
+
+  convertDefinition(def: any) {
+    const temp: any = {};
+    temp.name = def.properties.name;
+    temp.dataPath = def.properties.dataPath;
+    temp.type = def.type;
+    if (temp.type == 'Object') {
+      temp.definition = def.definition.map((e) => this.convertDefinition(e));
+    }
+    return temp;
   }
 
   cancel() {
@@ -162,22 +161,32 @@ export class NodeMappingComponent implements OnInit {
   }
 
   done() {
-    const mappings = this.customTargetFields.map(item => {
-      const temp: any = {};
-      temp.target = {
-        type: item.type,
-        dataPath: item.dataPath,
-      };
-      temp.source = (item.source || []).map((s) => {
-        const t = this.appService.cloneObject(s);
-        return t
-      });
-      temp.formula = item.formula;
-      return temp;
-    }).filter(e => e);
+    let mappings = this.customTargetFields.map(item => {
+      const temp: any = this.convertToMapping(item);
+      let arr = [temp];
+      if (item.definition) {
+        arr = arr.concat(item.definition.map(e => this.convertToMapping(e)));
+      }
+      return arr;
+    });
+    mappings = _.flatten(mappings);
     this.currNode.mappings = mappings;
     this.cancel();
     console.log(mappings);
+  }
+
+  convertToMapping(item: any) {
+    const temp: any = {};
+    temp.target = {
+      type: item.type,
+      dataPath: item.dataPath,
+    };
+    temp.source = (item.source || []).map((s) => {
+      const t = this.appService.cloneObject(s);
+      return t
+    });
+    temp.formula = item.formula;
+    return temp;
   }
 
   get baseCode() {

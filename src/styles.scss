@@ -946,3 +946,39 @@ $weights: 200,
     color: #2FC48F;
   }
 }
+
+
+
+@mixin altBox($n) {
+  $n: $n +1;
+
+  .field-wrapper {
+    @if $n % 2==0 {
+      background: $light;
+    }
+
+    @else {
+      background: $white;
+    }
+
+    @if ($n < 9) {
+      @include altBox($n);
+    }
+  }
+
+  .field-block {
+    @if $n % 2==0 {
+      background: $light;
+    }
+
+    @else {
+      background: $white;
+    }
+
+    @if ($n < 9) {
+      @include altBox($n);
+    }
+  }
+}
+
+@include altBox(1);

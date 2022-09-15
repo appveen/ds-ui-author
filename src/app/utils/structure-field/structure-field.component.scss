@@ -2,27 +2,6 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 
-@mixin altBox($n) {
-  $n: $n + 1;
-
-  .field-wrapper {
-    @if $n % 2==0 {
-      background: $light;
-    }
-
-    @else {
-      background: $white;
-    }
-
-    @if ($n < 9) {
-      @include altBox($n);
-    }
-  }
-}
-
-@include altBox(1);
-
-
 
 .field-wrapper {
   min-height: 52px;
