@@ -6,6 +6,19 @@
         max-width: 180px;
         min-height: 46px;
         max-height: 46px;
+        overflow: hidden;
+
+        .delete-icon {
+            right: -100px;
+            z-index: 1;
+            transition: 0.2;
+        }
+
+        &:hover {
+            .delete-icon {
+                right: 10px;
+            }
+        }
     }
 
     .path-sm {

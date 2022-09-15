@@ -1,4 +1,5 @@
-.node-mapping-window {
+.node-mapping-window,
+.node-agent-window {
     top: 0px;
     right: -800px;
     z-index: 3;
@@ -10,4 +11,8 @@
     &.show {
         right: 0px;
     }
+}
+
+.node-agent-window {
+    width: 360px;
 }

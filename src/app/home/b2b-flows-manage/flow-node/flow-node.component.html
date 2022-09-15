@@ -2,22 +2,51 @@
     <div *ngIf="prevNode" class="add-button d-flex flex-column align-items-start" [ngStyle]="getAddStyle(0)">
         <div *ngIf="branchIndex>0" class="border-left negetive border-grey"></div>
         <div class="border-left border-grey"></div>
-        <span class="dsi dsi-plus-circle ignore-outside hover"
-            (click)="addTo='prev';showBranchDropdown($event)"></span>
+        <span class="dsi dsi-plus-circle ignore-outside hover" (click)="addTo='prev';showBranchDropdown($event)"></span>
         <div class="border-left border-grey"></div>
     </div>
     <div class="d-flex align-items-center">
-        <div class="node-block px-3 py-2 border rounded bg-white d-flex align-items-center justify-content-start hover"
+        <div class="node-block px-3 py-2 border rounded bg-white d-flex align-items-center justify-content-start hover position-relative"
             (click)="selectNode()">
-            <span *ngIf="node.type=='FILE'" class="node-icon dsi dsi-file"></span>
-            <span *ngIf="!prevNode && node.type=='API'" class="node-icon dsi dsi-api-reciever"></span>
-            <span *ngIf="prevNode && node.type=='API'" class="node-icon dsi dsi-invoke-api"></span>
-            <span *ngIf="node.type=='CONNECTOR'" class="node-icon dsi dsi-connector"></span>
-            <span *ngIf="node.type=='DATASERVICE'" class="node-icon dsi dsi-data-service"></span>
-            <span *ngIf="node.type=='FUNCTION'" class="node-icon dsi dsi-function"></span>
-            <span *ngIf="node.type=='MAPPING'" class="node-icon dsi dsi-mapping"></span>
-            <span *ngIf="node.type=='RESPONSE'" class="node-icon dsi dsi-response"></span>
-            <span class="ml-3">{{node.type}}</span>
+            <span *ngIf="node.type=='FILE'" class="d-flex align-items-center">
+                <span class="node-icon dsi dsi-file"></span>
+                <span class="ml-3">File Agent</span>
+            </span>
+            <span *ngIf="!prevNode && node.type=='API'" class="d-flex align-items-center">
+                <span class="node-icon dsi dsi-api-reciever"></span>
+                <span class="ml-3">API Reciever</span>
+            </span>
+            <span *ngIf="prevNode && node.type=='API'" class="d-flex align-items-center">
+                <span class="node-icon dsi dsi-invoke-api"></span>
+                <span class="ml-3">Invoke API</span>
+            </span>
+            <span *ngIf="node.type=='TIMER'" class="d-flex align-items-center">
+                <span class="node-icon dsi dsi-clock"></span>
+                <span class="ml-3">Timer</span>
+            </span>
+            <span *ngIf="node.type=='CONNECTOR'" class="d-flex align-items-center">
+                <span class="node-icon dsi dsi-connector"></span>
+                <span class="ml-3">Connector</span>
+            </span>
+            <span *ngIf="node.type=='DATASERVICE'" class="d-flex align-items-center">
+                <span class="node-icon dsi dsi-data-service"></span>
+                <span class="ml-3">Data Service</span>
+            </span>
+            <span *ngIf="node.type=='FUNCTION'" class="d-flex align-items-center">
+                <span class="node-icon dsi dsi-function"></span>
+                <span class="ml-3">Function</span>
+            </span>
+            <span *ngIf="node.type=='MAPPING'" class="d-flex align-items-center">
+                <span class="node-icon dsi dsi-mapping"></span>
+                <span class="ml-3">Mapping</span>
+            </span>
+            <span *ngIf="node.type=='RESPONSE'" class="d-flex align-items-center">
+                <span class="node-icon dsi dsi-response"></span>
+                <span class="ml-3">Response</span>
+            </span>
+
+            <span class="delete-icon dsi dsi-trash text-danger position-absolute hover"
+                (click)="$event.stopPropagation();deleteNode()"></span>
         </div>
         <ng-container *ngFor="let item of node.onSuccess;let f=first">
             <ng-container *ngIf="!f">
@@ -43,14 +72,15 @@
     <div *ngIf="node.onSuccess && node.onSuccess.length>0" class="d-flex align-items-start">
         <ng-container *ngFor="let item of node.onSuccess;let i=index;let f=first;">
             <div *ngIf="getCurrentNode(item)" [ngClass]="{'ml-4':!f}" odp-flow-node [prevNode]="currNode"
-                [currNode]="getCurrentNode(item)" [(nodeList)]="nodeList" (nodeListChange)="onNodeChange($event)" [branchIndex]="i"></div>
+                [currNode]="getCurrentNode(item)" [(nodeList)]="nodeList" (nodeListChange)="onNodeChange($event)"
+                [branchIndex]="i"></div>
         </ng-container>
     </div>
     <div *ngIf="showNewNodeDropdown" class="node-options-dropdown bg-dark rounded text-white border position-absolute"
         odpClickOutside (outside)="showNewNodeDropdown=false" [ngStyle]="dropDownStyle">
         <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('FILE')">
             <span class="font-12 fw-400 dsi dsi-file mr-2"></span>
-            <span class="font-12 fw-400">FILE</span>
+            <span class="font-12 fw-400">File Agent</span>
         </div>
         <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('API')">
             <span class="font-11 fw-400 dsi dsi-invoke-api mr-2"></span>

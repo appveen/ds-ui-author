@@ -13,6 +13,7 @@ export class NodePropertiesComponent implements OnInit {
   @Input() nodeList: Array<any>;
   @Output() close: EventEmitter<any>;
   showNodeMapping: boolean;
+  showAgentSelector: boolean;
   constructor() {
     this.edit = { status: true };
     this.close = new EventEmitter();
@@ -31,6 +32,9 @@ export class NodePropertiesComponent implements OnInit {
     if (this.currNode && this.currNode.dataStructure && !this.currNode.dataStructure.outgoing) {
       this.currNode.dataStructure.outgoing = {};
     }
+    if (this.currNode && !this.currNode.option) {
+      this.currNode.option = {};
+    }
   }
 
   closeMapping(data: any) {
@@ -47,5 +51,23 @@ export class NodePropertiesComponent implements OnInit {
 
   cancel() {
     this.close.emit(false);
+  }
+
+  selectAgent(data: any) {
+    if (!this.currNode.options.agents) {
+      this.currNode.options.agents = [];
+    }
+    const index = this.currNode.options.agents.findIndex(e => e._id == data._id);
+    if (index == -1) {
+      this.currNode.options.agents.push(data);
+    }
+    this.showAgentSelector = false;
+  }
+
+  removeAgent(data: any) {
+    const index = this.currNode.options.agents.findIndex(e => e._id == data._id);
+    if (index > -1) {
+      this.currNode.options.agents.splice(index, 1);
+    }
   }
 }

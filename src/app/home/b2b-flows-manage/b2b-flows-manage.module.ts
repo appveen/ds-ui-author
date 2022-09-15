@@ -28,6 +28,10 @@ import { NodePropertiesComponent } from './node-properties/node-properties.compo
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { NodeMappingComponent } from './node-properties/node-mapping/node-mapping.component';
 import { DataStructureSelectorModule } from 'src/app/utils/data-structure-selector/data-structure-selector.module';
+import { FunctionSelectorComponent } from './node-properties/function-selector/function-selector.component';
+import { ServiceSelectorComponent } from './node-properties/service-selector/service-selector.component';
+import { AgentSelectorComponent } from './node-properties/agent-selector/agent-selector.component';
+import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 
 const routes: Routes = [
   {
@@ -47,7 +51,10 @@ const routes: Routes = [
     FunctionIconComponent,
     ConnectorIconComponent,
     NodePropertiesComponent,
-    NodeMappingComponent
+    NodeMappingComponent,
+    FunctionSelectorComponent,
+    ServiceSelectorComponent,
+    AgentSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -67,7 +74,8 @@ const routes: Routes = [
     OnChangeModule,
     AutoFocusModule,
     CheckboxModule,
-    DataStructureSelectorModule
+    DataStructureSelectorModule,
+    RoundRadioModule
   ],
   exports: [B2bFlowsManageComponent],
   providers:[B2bFlowService]

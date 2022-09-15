@@ -45,10 +45,10 @@ export class FlowNodeComponent implements OnInit {
   }
 
   deleteNode() {
-    this.flowService.deleteNode.emit({
-      currNode: this.currNode,
-      prevNode: this.prevNode,
-    });
+    // this.flowService.deleteNode.emit({
+    //   currNode: this.currNode,
+    //   prevNode: this.prevNode,
+    // });
   }
 
   getAddStyle(index: number) {
