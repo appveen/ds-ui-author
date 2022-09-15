@@ -50,12 +50,12 @@
             <span class="url text-accent">{{flowData?.inputStage?.options?.path || 'N.A.'}}</span>
         </div>
         <div class="flow-designer p-4 bg-light-gray">
-            <div *ngIf="flowData?.inputStage" odp-flow-node [currNode]="flowData.inputStage" [(nodeList)]="nodeList" (nodeListChange)="onNodeChange($event)">
+            <div *ngIf="flowData?.inputStage" odp-flow-node [currNode]="flowData.inputStage" [(nodeList)]="nodeList">
             </div>
             <div [ngClass]="{'show':showNodeProperties}"
                 class="node-properties border-left position-fixed bg-white p-4">
-                <odp-node-properties *ngIf="showNodeProperties" [nodeList]="nodeList"
-                    [currNode]="selectedNode.currNode" [prevNode]="selectedNode.prevNode" (close)="showNodeProperties=false">
+                <odp-node-properties *ngIf="showNodeProperties" [nodeList]="nodeList" [currNode]="selectedNode.currNode"
+                    [prevNode]="selectedNode.prevNode" (close)="showNodeProperties=false">
                 </odp-node-properties>
             </div>
         </div>

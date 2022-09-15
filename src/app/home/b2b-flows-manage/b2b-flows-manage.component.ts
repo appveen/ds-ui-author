@@ -7,6 +7,7 @@ import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService } from 'src/app/utils/services/common.service';
+import { environment } from 'src/environments/environment';
 import { B2bFlowService } from './b2b-flow.service';
 
 @Component({
@@ -184,70 +185,80 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     }
   }
 
-  onNodeChange(data: any) {
-    console.log(data);
+  getPayload() {
+    const dataStructures = {};
+    this.flowData.app = this.commonService.app._id;
+    const tempNodeList = JSON.parse(JSON.stringify(this.nodeList));
+    tempNodeList.forEach(item => {
+      if (item.dataStructure && item.dataStructure.outgoing && item.dataStructure.outgoing._id) {
+        dataStructures[item.dataStructure.outgoing._id] = JSON.parse(JSON.stringify(item.dataStructure.outgoing));
+        item.dataStructure.outgoing = {
+          _id: item.dataStructure.outgoing._id,
+          name: item.dataStructure.outgoing.name
+        };
+      }
+    });
+    this.flowData.inputStage = tempNodeList[0];
+    tempNodeList.splice(0, 1);
+    this.flowData.stages = tempNodeList;
+    this.flowData.dataStructures = dataStructures;
+    if (!environment.production) {
+      console.log(this.flowData);
+    }
+    return this.flowData;
   }
 
   saveDummyCode(deploy?: boolean) {
-    this.flowData.app = this.commonService.app._id;
+    const payload = this.getPayload();
     let request;
     this.apiCalls.save = true;
-
     if (deploy) {
       this.flowData.status = 'RUNNING';
     }
-
     if (this.edit.id) {
-      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, this.flowData);
+      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, payload);
     } else {
-      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, this.flowData);
+      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload);
     }
-
-    this.subscriptions['save'] = request.subscribe(res => {
+    this.subscriptions['save'] = request.subscribe((res: any) => {
       this.apiCalls.save = false;
       this.edit.status = false;
       if (deploy) {
         this.apiCalls.deploy = false;
-        this.ts.success('Saved ' + this.flowData.name + ' and deployment process has started.');
+        this.ts.success('Saved ' + payload + ' and deployment process has started.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
       } else {
-        this.ts.success('Saved ' + this.flowData.name + '.');
+        this.ts.success('Saved ' + payload + '.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
       }
-    }, err => {
+    }, (err: any) => {
       this.apiCalls.save = false;
       this.commonService.errorToast(err);
     });
-
-
   }
 
   save(deploy?: boolean) {
-    this.flowData.app = this.commonService.app._id;
+    const payload = this.getPayload();
     let request;
     this.apiCalls.save = true;
-
-
     if (this.edit.id) {
-      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, this.flowData);
+      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, payload);
     } else {
-      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, this.flowData);
+      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload);
     }
-
     this.subscriptions['save'] = request.subscribe(res => {
       this.apiCalls.save = false;
       this.edit.status = false;
       if (deploy) {
         this.deploy();
       } else {
-        this.ts.success('Saved ' + this.flowData.name + '.');
+        this.ts.success('Saved ' + payload.name + '.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
       }
     }, err => {
       this.apiCalls.save = false;
       this.commonService.errorToast(err);
     });
-
   }
 
   deploy() {
@@ -336,21 +347,6 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   get hasManagePermission() {
     return this.commonService.hasPermission('PMF')
-  }
-
-  get code() {
-    const temp: any = {};
-    temp.inputStage = JSON.parse(JSON.stringify(this.flowData.inputStage));
-    temp.stages = JSON.parse(JSON.stringify(this.flowData.stages || []));
-    temp.dataStructures = JSON.parse(JSON.stringify(this.flowData.dataStructures || []));
-    return JSON.stringify(temp, null, 4);
-  }
-
-  set code(data: string) {
-    const temp = JSON.parse(data);
-    this.flowData.inputStage = temp.inputStage;
-    this.flowData.stages = temp.stages || [];
-    this.flowData.dataStructures = temp.dataStructures || {};
   }
 
 }
