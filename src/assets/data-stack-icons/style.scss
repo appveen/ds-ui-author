@@ -23,7 +23,7 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
+  
   font-size: 18px;
   display: inline-block;
 
@@ -32,640 +32,511 @@
   }
 }
 
+.dsi-api-reciever {
+  &:before {
+    content: $dsi-api-reciever; 
+  }
+}
 .dsi-logs {
   &:before {
-    content: $dsi-logs;
+    content: $dsi-logs; 
   }
 }
-
 .dsi-mapping {
   &:before {
-    content: $dsi-mapping;
+    content: $dsi-mapping; 
   }
 }
-
 .dsi-response {
   &:before {
-    content: $dsi-response;
+    content: $dsi-response; 
   }
 }
-
 .dsi-connector {
   &:before {
-    content: $dsi-connector;
+    content: $dsi-connector; 
   }
 }
-
 .dsi-invoke-api {
   &:before {
-    content: $dsi-invoke_api;
+    content: $dsi-invoke-api; 
   }
 }
-
-.dsi-app-panel {
-  &:before {
-    content: $dsi-app-panel;
-  }
-}
-
-.dsi-user {
-  &:before {
-    content: $dsi-user;
-  }
-}
-
-.dsi-nano-service {
-  &:before {
-    content: $dsi-nano-service;
-  }
-}
-
-.dsi-group {
-  &:before {
-    content: $dsi-group;
-  }
-
-  &.dsi-bg {
-    background: #CBE7CE;
-  }
-}
-
-.dsi-data-service {
-  &:before {
-    content: $dsi-data-service;
-  }
-}
-
-.dsi-api-doc {
-  &:before {
-    content: $dsi-api-doc;
-  }
-}
-
-.dsi-library {
-  &:before {
-    content: $dsi-library;
-  }
-
-  &.dsi-bg {
-    background: #F7DEC2;
-  }
-}
-
-.dsi-bot {
-  &:before {
-    content: $dsi-bot;
-  }
-}
-
-.dsi-agent {
-  &:before {
-    content: $dsi-agent;
-  }
-}
-
-.dsi-function {
-  &:before {
-    content: $dsi-function;
-  }
-}
-
-.dsi-bookmark {
-  &:before {
-    content: $dsi-bookmark;
-  }
-}
-
-.dsi-flow {
-  &:before {
-    content: $dsi-flow;
-  }
-}
-
-.dsi-insight {
-  &:before {
-    content: $dsi-insight;
-  }
-}
-
 .dsi-notification-active .path1 {
   &:before {
-    content: $dsi-notification-active-path1;
-    color: rgb(0, 0, 0);
+    content: $dsi-notification-active-path1;  
   }
 }
-
 .dsi-notification-active .path2 {
   &:before {
-    content: $dsi-notification-active-path2;
-    margin-left: -1em;
-    color: rgb(0, 0, 0);
+    content: $dsi-notification-active-path2;  
+    margin-left: -1em;  
   }
 }
-
 .dsi-notification-active .path3 {
   &:before {
-    content: $dsi-notification-active-path3;
-    margin-left: -1em;
+    content: $dsi-notification-active-path3;  
+    margin-left: -1em;  
     color: rgb(47, 196, 143);
   }
 }
-
-// .dsi-notification-active .path4 {
-//   &:before {
-//     content: $dsi-notification-active-path4;
-//     margin-left: -1em;
-//     color: rgb(255, 255, 255);
-//   }
-// }
-
-.dsi-notification {
+.dsi-minus-circle-fill {
   &:before {
-    content: $dsi-notification;
+    content: $dsi-minus-circle-fill; 
   }
 }
-
-.dsi-stop {
+.dsi-plus-circle-fill {
   &:before {
-    content: $dsi-stop;
+    content: $dsi-plus-circle-fill; 
   }
 }
-
-.dsi-sort {
+.dsi-id {
   &:before {
-    content: $dsi-sort;
+    content: $dsi-id; 
   }
 }
-
-.dsi-pointer {
+.dsi-date {
   &:before {
-    content: $dsi-pointer;
+    content: $dsi-date; 
   }
 }
-
-.dsi-file {
+.dsi-library-alt {
   &:before {
-    content: $dsi-file;
+    content: $dsi-library-alt; 
   }
 }
-
-.dsi-collapse {
+.dsi-file-text {
   &:before {
-    content: $dsi-collapse;
+    content: $dsi-file-text; 
   }
 }
-
-.dsi-expand {
+.dsi-object {
   &:before {
-    content: $dsi-expand;
+    content: $dsi-object; 
   }
 }
-
-.dsi-admin {
+.dsi-array {
   &:before {
-    content: $dsi-admin;
+    content: $dsi-array; 
   }
 }
-
-.dsi-join {
+.dsi-relation {
   &:before {
-    content: $dsi-join;
+    content: $dsi-relation; 
   }
 }
-
-.dsi-redo {
+.dsi-number {
   &:before {
-    content: $dsi-redo;
+    content: $dsi-number; 
   }
 }
-
-.dsi-undo {
+.dsi-location {
   &:before {
-    content: $dsi-undo;
+    content: $dsi-location; 
   }
 }
-
-.dsi-align-left {
+.dsi-Profile {
   &:before {
-    content: $dsi-align-left;
+    content: $dsi-Profile; 
   }
 }
-
-.dsi-align-right {
+.dsi-plus-circle {
   &:before {
-    content: $dsi-align-right;
+    content: $dsi-plus-circle; 
   }
 }
-
-.dsi-save {
-  &:before {
-    content: $dsi-save;
-  }
-}
-
-.dsi-ban {
-  &:before {
-    content: $dsi-ban;
-  }
-}
-
-.dsi-play {
-  &:before {
-    content: $dsi-play;
-  }
-}
-
-.dsi-more-vertical {
-  &:before {
-    content: $dsi-more-vertical;
-  }
-}
-
-.dsi-attach {
-  &:before {
-    content: $dsi-attach;
-  }
-
-  &.dsi-bg {
-    background: #D7F5D1;
-  }
-}
-
-.dsi-refresh {
-  &:before {
-    content: $dsi-refresh;
-  }
-}
-
-.dsi-map-pin {
-  &:before {
-    content: $dsi-map-pin;
-  }
-}
-
-.dsi-dollar-sign {
-  &:before {
-    content: $dsi-dollar-sign;
-  }
-}
-
-.dsi-filter-alt {
-  &:before {
-    content: $dsi-filter-alt;
-  }
-}
-
-.dsi-cloud {
-  &:before {
-    content: $dsi-cloud;
-  }
-}
-
-.dsi-skip-forward {
-  &:before {
-    content: $dsi-skip-forward;
-  }
-}
-
-.dsi-more-vertical-6 {
-  &:before {
-    content: $dsi-more-vertical-6;
-  }
-}
-
-.dsi-remove {
-  &:before {
-    content: $dsi-remove;
-  }
-}
-
-.dsi-branch {
-  &:before {
-    content: $dsi-branch;
-  }
-}
-
-.dsi-calendar {
-  &:before {
-    content: $dsi-calendar;
-  }
-
-  &.dsi-bg {
-    background: #FFE6D8;
-  }
-}
-
-.dsi-json {
-  &:before {
-    content: $dsi-json;
-  }
-}
-
-.dsi-hide {
-  &:before {
-    content: $dsi-hide;
-  }
-}
-
-.dsi-done {
-  &:before {
-    content: $dsi-done;
-  }
-}
-
-.dsi-full-screen {
-  &:before {
-    content: $dsi-full-screen;
-  }
-}
-
-.dsi-upload {
-  &:before {
-    content: $dsi-upload;
-  }
-}
-
-.dsi-download {
-  &:before {
-    content: $dsi-download;
-  }
-}
-
-.dsi-check {
-  &:before {
-    content: $dsi-check;
-  }
-}
-
-.dsi-clock {
-  &:before {
-    content: $dsi-clock;
-  }
-}
-
-.dsi-mail {
-  &:before {
-    content: $dsi-mail;
-  }
-}
-
-.dsi-danger-circle {
-  &:before {
-    content: $dsi-danger-circle;
-  }
-}
-
-.dsi-info-circle {
-  &:before {
-    content: $dsi-info-circle;
-  }
-}
-
-.dsi-logout {
-  &:before {
-    content: $dsi-logout;
-  }
-}
-
-.dsi-edit {
-  &:before {
-    content: $dsi-edit;
-  }
-}
-
-.dsi-copy {
-  &:before {
-    content: $dsi-copy;
-  }
-}
-
-.dsi-arrow-left {
-  &:before {
-    content: $dsi-arrow-left;
-  }
-}
-
-.dsi-arrow-right {
-  &:before {
-    content: $dsi-arrow-right;
-  }
-}
-
-.dsi-view {
-  &:before {
-    content: $dsi-view;
-  }
-}
-
-.dsi-search {
-  &:before {
-    content: $dsi-search;
-  }
-}
-
-.dsi-minus {
-  &:before {
-    content: $dsi-minus;
-  }
-}
-
-.dsi-drop-down-alt {
-  &:before {
-    content: $dsi-drop-down-alt;
-  }
-}
-
-.dsi-trash {
-  &:before {
-    content: $dsi-trash;
-  }
-}
-
-.dsi-settings {
-  &:before {
-    content: $dsi-settings;
-  }
-}
-
-.dsi-close {
-  &:before {
-    content: $dsi-close;
-  }
-}
-
-.dsi-plus {
-  &:before {
-    content: $dsi-plus;
-  }
-}
-
-.dsi-console {
-  &:before {
-    content: $dsi-console;
-  }
-}
-
-.dsi-drop-down {
-  &:before {
-    content: $dsi-drop-down;
-  }
-}
-
-.dsi-drop-up {
-  &:before {
-    content: $dsi-drop-up;
-  }
-}
-
-.dsi-required .path1 {
-  &:before {
-    content: $dsi-required-path1;
-    color: rgb(224, 122, 95);
-  }
-}
-
-.dsi-required .path2 {
-  &:before {
-    content: $dsi-required-path2;
-    margin-left: -1em;
-    color: rgb(255, 255, 255);
-  }
-}
-
-.dsi-text {
-  &:before {
-    content: $dsi-text;
-  }
-
-  &.dsi-bg {
-    background: #E7CBD4;
-  }
-}
-
-.dsi-boolean {
-  &:before {
-    content: $dsi-boolean;
-  }
-
-  &.dsi-bg {
-    background: #CBE7CE;
-  }
-}
-
-.dsi-unique .path1 {
-  &:before {
-    content: $dsi-unique-path1;
-    color: rgb(129, 178, 154);
-  }
-}
-
-.dsi-unique .path2 {
-  &:before {
-    content: $dsi-unique-path2;
-    margin-left: -1em;
-    color: rgb(255, 255, 255);
-  }
-}
-
-.dsi-minus-circle {
-  &:before {
-    content: $dsi-minus-circle;
-  }
-}
-
 .dsi-create-only .path1 {
   &:before {
-    content: $dsi-create-only-path1;
+    content: $dsi-create-only-path1;  
     color: rgb(59, 151, 210);
   }
 }
-
 .dsi-create-only .path2 {
   &:before {
-    content: $dsi-create-only-path2;
-    margin-left: -1em;
+    content: $dsi-create-only-path2;  
+    margin-left: -1em;  
     color: rgb(255, 255, 255);
   }
 }
-
-.dsi-plus-circle {
+.dsi-minus-circle {
   &:before {
-    content: $dsi-plus-circle;
+    content: $dsi-minus-circle; 
+  }
+}
+.dsi-unique .path1 {
+  &:before {
+    content: $dsi-unique-path1;  
+    color: rgb(129, 178, 154);
+  }
+}
+.dsi-unique .path2 {
+  &:before {
+    content: $dsi-unique-path2;  
+    margin-left: -1em;  
+    color: rgb(255, 255, 255);
+  }
+}
+.dsi-boolean {
+  &:before {
+    content: $dsi-boolean; 
+  }
+}
+.dsi-text {
+  &:before {
+    content: $dsi-text; 
+  }
+}
+.dsi-required .path1 {
+  &:before {
+    content: $dsi-required-path1;  
+    color: rgb(224, 122, 95);
+  }
+}
+.dsi-required .path2 {
+  &:before {
+    content: $dsi-required-path2;  
+    margin-left: -1em;  
+    color: rgb(255, 255, 255);
+  }
+}
+.dsi-drop-up {
+  &:before {
+    content: $dsi-drop-up; 
+  }
+}
+.dsi-drop-down {
+  &:before {
+    content: $dsi-drop-down; 
+  }
+}
+.dsi-console {
+  &:before {
+    content: $dsi-console; 
+  }
+}
+.dsi-plus {
+  &:before {
+    content: $dsi-plus; 
+  }
+}
+.dsi-close {
+  &:before {
+    content: $dsi-close; 
+  }
+}
+.dsi-settings {
+  &:before {
+    content: $dsi-settings; 
+  }
+}
+.dsi-trash {
+  &:before {
+    content: $dsi-trash; 
+  }
+}
+.dsi-drop-down-alt {
+  &:before {
+    content: $dsi-drop-down-alt; 
+  }
+}
+.dsi-minus {
+  &:before {
+    content: $dsi-minus; 
+  }
+}
+.dsi-search {
+  &:before {
+    content: $dsi-search; 
+  }
+}
+.dsi-view {
+  &:before {
+    content: $dsi-view; 
+  }
+}
+.dsi-arrow-right {
+  &:before {
+    content: $dsi-arrow-right; 
+  }
+}
+.dsi-arrow-left {
+  &:before {
+    content: $dsi-arrow-left; 
+  }
+}
+.dsi-copy {
+  &:before {
+    content: $dsi-copy; 
+  }
+}
+.dsi-edit {
+  &:before {
+    content: $dsi-edit; 
+  }
+}
+.dsi-logout {
+  &:before {
+    content: $dsi-logout; 
+  }
+}
+.dsi-info-circle {
+  &:before {
+    content: $dsi-info-circle; 
+  }
+}
+.dsi-danger-circle {
+  &:before {
+    content: $dsi-danger-circle; 
+  }
+}
+.dsi-mail {
+  &:before {
+    content: $dsi-mail; 
+  }
+}
+.dsi-clock {
+  &:before {
+    content: $dsi-clock; 
+  }
+}
+.dsi-check {
+  &:before {
+    content: $dsi-check; 
+  }
+}
+.dsi-download {
+  &:before {
+    content: $dsi-download; 
+  }
+}
+.dsi-upload {
+  &:before {
+    content: $dsi-upload; 
+  }
+}
+.dsi-full-screen {
+  &:before {
+    content: $dsi-full-screen; 
+  }
+}
+.dsi-done {
+  &:before {
+    content: $dsi-done; 
+  }
+}
+.dsi-hide {
+  &:before {
+    content: $dsi-hide; 
+  }
+}
+.dsi-json {
+  &:before {
+    content: $dsi-json; 
+  }
+}
+.dsi-calendar {
+  &:before {
+    content: $dsi-calendar; 
+  }
+}
+.dsi-branch {
+  &:before {
+    content: $dsi-branch; 
+  }
+}
+.dsi-remove {
+  &:before {
+    content: $dsi-remove; 
+  }
+}
+.dsi-more-vertical-6 {
+  &:before {
+    content: $dsi-more-vertical-6; 
+  }
+}
+.dsi-skip-forward {
+  &:before {
+    content: $dsi-skip-forward; 
+  }
+}
+.dsi-cloud {
+  &:before {
+    content: $dsi-cloud; 
+  }
+}
+.dsi-filter-alt {
+  &:before {
+    content: $dsi-filter-alt; 
+  }
+}
+.dsi-dollar-sign {
+  &:before {
+    content: $dsi-dollar-sign; 
+  }
+}
+.dsi-map-pin {
+  &:before {
+    content: $dsi-map-pin; 
+  }
+}
+.dsi-refresh {
+  &:before {
+    content: $dsi-refresh; 
+  }
+}
+.dsi-attach {
+  &:before {
+    content: $dsi-attach; 
+  }
+}
+.dsi-more-vertical {
+  &:before {
+    content: $dsi-more-vertical; 
+  }
+}
+.dsi-play {
+  &:before {
+    content: $dsi-play; 
+  }
+}
+.dsi-ban {
+  &:before {
+    content: $dsi-ban; 
+  }
+}
+.dsi-save {
+  &:before {
+    content: $dsi-save; 
+  }
+}
+.dsi-align-right {
+  &:before {
+    content: $dsi-align-right; 
+  }
+}
+.dsi-align-left {
+  &:before {
+    content: $dsi-align-left; 
+  }
+}
+.dsi-undo {
+  &:before {
+    content: $dsi-undo; 
+  }
+}
+.dsi-redo {
+  &:before {
+    content: $dsi-redo; 
+  }
+}
+.dsi-join {
+  &:before {
+    content: $dsi-join; 
+  }
+}
+.dsi-admin {
+  &:before {
+    content: $dsi-admin; 
+  }
+}
+.dsi-expand {
+  &:before {
+    content: $dsi-expand; 
+  }
+}
+.dsi-collapse {
+  &:before {
+    content: $dsi-collapse; 
+  }
+}
+.dsi-file {
+  &:before {
+    content: $dsi-file; 
+  }
+}
+.dsi-pointer {
+  &:before {
+    content: $dsi-pointer; 
+  }
+}
+.dsi-sort {
+  &:before {
+    content: $dsi-sort; 
+  }
+}
+.dsi-stop {
+  &:before {
+    content: $dsi-stop; 
+  }
+}
+.dsi-notification {
+  &:before {
+    content: $dsi-notification; 
+  }
+}
+.dsi-insight {
+  &:before {
+    content: $dsi-insight; 
+  }
+}
+.dsi-flow {
+  &:before {
+    content: $dsi-flow; 
+  }
+}
+.dsi-bookmark {
+  &:before {
+    content: $dsi-bookmark; 
+  }
+}
+.dsi-function {
+  &:before {
+    content: $dsi-function; 
+  }
+}
+.dsi-agent {
+  &:before {
+    content: $dsi-agent; 
+  }
+}
+.dsi-bot {
+  &:before {
+    content: $dsi-bot; 
+  }
+}
+.dsi-library {
+  &:before {
+    content: $dsi-library; 
+  }
+}
+.dsi-api-doc {
+  &:before {
+    content: $dsi-api-doc; 
+  }
+}
+.dsi-data-service {
+  &:before {
+    content: $dsi-data-service; 
+  }
+}
+.dsi-group {
+  &:before {
+    content: $dsi-group; 
+  }
+}
+.dsi-nano-service {
+  &:before {
+    content: $dsi-nano-service; 
+  }
+}
+.dsi-user {
+  &:before {
+    content: $dsi-user; 
+  }
+}
+.dsi-app-panel {
+  &:before {
+    content: $dsi-app-panel; 
   }
 }
 
-.dsi-Profile {
-  &:before {
-    content: $dsi-Profile;
-  }
-}
-
-.dsi-location {
-  &:before {
-    content: $dsi-location;
-  }
-
-  &.dsi-bg {
-    background: #CAF0F3;
-  }
-}
-
-.dsi-number {
-  &:before {
-    content: $dsi-number;
-  }
-
-  &.dsi-bg {
-    background: #E7CBE6;
-  }
-}
-
-.dsi-relation {
-  &:before {
-    content: $dsi-relation;
-  }
-}
-
-.dsi-array {
-  &:before {
-    content: $dsi-array;
-  }
-
-  &.dsi-bg {
-    background: #D3E4FF;
-  }
-}
-
-.dsi-object {
-  &:before {
-    content: $dsi-object;
-  }
-}
-
-.dsi-file-text {
-  &:before {
-    content: $dsi-file-text;
-  }
-}
-
-.dsi-library-alt {
-  &:before {
-    content: $dsi-library-alt;
-  }
-}
-
-.dsi-date {
-  &:before {
-    content: $dsi-date;
-  }
-}
-
-.dsi-id {
-  &:before {
-    content: $dsi-id;
-  }
-
-  &.dsi-bg {
-    background: #C9D5E8;
-  }
-}

@@ -918,6 +918,10 @@ $weights: 200,
 
 .node-options-item,
 .node-block {
+  .dsi-api-reciever{
+    color: #6C7584;
+  }
+
   .dsi-invoke-api {
     color: #00CCCB;
   }
@@ -930,7 +934,8 @@ $weights: 200,
     color: #FFBB1A;
   }
 
-  .dsi-connector {
+  .dsi-connector,
+  .dsi-file {
     color: #009BFF;
   }
 
