@@ -44,14 +44,16 @@ export class NodeMappingComponent implements OnInit {
         }
       });
     }
-    if (!this.sourceFields) {
-      this.customSourceFields = tempSourceFields;
-    }
     if (this.sourceFields) {
       this.customSourceFields = this.prevNode.dataStructure.outgoing.definition[0].definition.map((e) => this.convertDefinition(e));
+    } else if (!this.sourceFields) {
+      this.customSourceFields = tempSourceFields;
     }
     if (this.targetFields) {
       this.customTargetFields = this.currNode.dataStructure.outgoing.definition[0].definition.map((e) => this.convertDefinition(e));
+    }
+    if (this.currNode && this.currNode.mappings && this.currNode.mappings.length > 0) {
+      this.findTargetMappings(this.customTargetFields);
     }
   }
 
@@ -64,6 +66,21 @@ export class NodeMappingComponent implements OnInit {
       temp.definition = def.definition.map((e) => this.convertDefinition(e));
     }
     return temp;
+  }
+
+  findTargetMappings(data: any) {
+    if (data && data.length > 0) {
+      data.forEach(def => {
+        if (def.definition && def.definition.length > 0) {
+          this.findTargetMappings(def.definition);
+        } else {
+          const temp = this.currNode.mappings.find(e => e.target.dataPath == def.dataPath);
+          if (temp && temp.source && temp.source.length > 0) {
+            def.source = temp.source;
+          }
+        }
+      });
+    }
   }
 
   cancel() {
@@ -136,6 +153,10 @@ export class NodeMappingComponent implements OnInit {
   }
 
   isSourceSelected(item: any) {
+    if (!this.selectedTargetField) {
+      return false;
+    }
+    // const target = this.currNode.mappings.find(e => e.dataPath == this.selectedTargetField.dataPath);
     if (this.selectedTargetField && this.selectedTargetField.source && this.selectedTargetField.source.find(e => e.dataPath == item.dataPath)) {
       return true;
     }
@@ -183,6 +204,7 @@ export class NodeMappingComponent implements OnInit {
     };
     temp.source = (item.source || []).map((s) => {
       const t = this.appService.cloneObject(s);
+      delete t.definition;
       return t
     });
     temp.formula = item.formula;

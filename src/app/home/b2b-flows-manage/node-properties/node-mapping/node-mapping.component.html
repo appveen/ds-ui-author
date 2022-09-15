@@ -141,8 +141,8 @@
 
 
 <ng-template #sFields let-def="def">
-    <div class="field-block d-flex flex-column p-2 mx-2 mt-2 border rounded">
-        <div class="d-flex align-items-center">
+    <div class="field-block d-flex flex-column p-2 mx-2 mt-2 border rounded w-100">
+        <div class="d-flex align-items-center w-100">
             <odp-checkbox [edit]="edit" class="mx-2" [checked]="isSourceSelected(def)"
                 (checkedChange)="toggleSource($event,def)"></odp-checkbox>
             <div class="input-wrapper w-100 d-flex align-items-center position-relative mr-3">
