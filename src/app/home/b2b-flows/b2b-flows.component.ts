@@ -99,12 +99,10 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
           type: type ? type : 'API'
         };
       }
-      if (!inputStage.options) {
-        inputStage.options = {
-          method: 'POST',
-          path: val ? _.camelCase(val) : null
-        };
-      }
+      inputStage.options = {
+        method: 'POST',
+        path: val ? '/' + _.camelCase(val) : null
+      };
       this.form.get('inputStage').patchValue(inputStage);
     });
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
