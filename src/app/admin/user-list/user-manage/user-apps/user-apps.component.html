@@ -109,7 +109,7 @@
     </div>
 </div>
 <ng-template #assignAppModal>
-    <div class="assignApp-modal ignore-outside">
+    <div class="assignApp-modal ignore-outside px-2">
         <div class="modal-header ignore-outside">
             <div class="text-dark d-flex ignore-outside px-3 pt-3 w-100">
                 <label for="addApp" class="label-width ignore-outside">
@@ -145,14 +145,14 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer d-flex w-100 bg-white justify-content-between">
-            <div class="d-flex">
+        <div class="d-flex w-100 bg-white mt-3">
+            <div class="d-flex align-items-center">
                 <div class="text-secondary mr-2">Apps Added:</div>
                 <div class="font-weight-bold text-accent" *ngIf="selectedApps.length > 0">{{ markedApp }}</div>
                 <div class="font-weight-bold text-accent" *ngIf="selectedApps.length > 2">
                     &nbsp;+&nbsp;{{ selectedApps.length - 2}}</div>
             </div>
-            <div>
+            <div class="ml-auto d-flex align-items-center">
                 <button type="button" class="btn btn-link ml-auto mb-1 ignore-outside"
                     (click)="assignAppModalRef.close(false)" id="appAddModalNo">Cancel
                 </button>
