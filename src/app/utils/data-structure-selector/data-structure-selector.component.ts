@@ -26,7 +26,7 @@ export class DataStructureSelectorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.format && this.format._id && this.format._id.startsWith('DF')) {
+    if (this.format && this.format._id && (this.format._id.startsWith('DF') || this.format._id.startsWith('SRVC'))) {
       this.selectedType = 'dataFormat';
     } else if (this.format && this.format._id) {
       this.selectedType = 'customFormat';

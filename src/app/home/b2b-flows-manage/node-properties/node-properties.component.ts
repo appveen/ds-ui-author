@@ -32,8 +32,8 @@ export class NodePropertiesComponent implements OnInit {
     if (this.currNode && this.currNode.dataStructure && !this.currNode.dataStructure.outgoing) {
       this.currNode.dataStructure.outgoing = {};
     }
-    if (this.currNode && !this.currNode.option) {
-      this.currNode.option = {};
+    if (this.currNode && !this.currNode.options) {
+      this.currNode.options = {};
     }
   }
 

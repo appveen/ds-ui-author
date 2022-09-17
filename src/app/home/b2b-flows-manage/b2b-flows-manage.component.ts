@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { delay, tap } from 'rxjs/operators';
-import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
+import * as _ from 'lodash';
 
+import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
@@ -144,6 +145,13 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       this.commonService.changeBreadcrumb(this.breadcrumbPaths);
       this.apiCalls.getFlow = false;
       this.showCodeEditor = true;
+      this.patchDataStructure(res.inputStage.dataStructure.outgoing, res.dataStructures);
+      res.stages.forEach(item => {
+        this.patchDataStructure(item.dataStructure.outgoing, res.dataStructures);
+        if (item.type == 'DATASERVICE') {
+          this.patchDataStructure(item.options, res.dataStructures);
+        }
+      });
       this.flowData = this.appService.cloneObject(res);
       delete this.flowData.__v;
       delete this.flowData._metadata;
@@ -162,6 +170,12 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       this.apiCalls.getFlow = false;
       this.commonService.errorToast(err);
     });
+  }
+
+  patchDataStructure(format: any, dataStructure: any) {
+    if (format && dataStructure && dataStructure[format._id]) {
+      _.assign(format, dataStructure[format._id]);
+    }
   }
 
   discardDraft() {
