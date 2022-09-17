@@ -8,7 +8,7 @@
         <odp-round-radio [edit]="edit" [checked]="selectedType == 'dataFormat'"
             (checkedChange)="onTypeChange('dataFormat')">
         </odp-round-radio>
-        <span class="text ml-3">Data Format</span>
+        <span class="text ml-3">Data Schema</span>
         <span *ngIf="format && selectedType=='dataFormat'" class="text-primary ml-3">({{format.name}})</span>
     </div>
     <div class="d-flex align-items-center justify-content-start w-100 mb-2">
