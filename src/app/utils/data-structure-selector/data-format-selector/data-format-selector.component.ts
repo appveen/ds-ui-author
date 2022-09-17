@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { merge } from 'rxjs';
 
 import { AppService } from '../../services/app.service';
 import { CommonService, GetOptions } from '../../services/common.service';
@@ -50,15 +51,25 @@ export class DataFormatSelectorComponent implements OnInit {
     const options: GetOptions = {
       filter: {
         name: '/' + searchTerm + '/',
-        definition: { $exists: true },
-        app: this.commonService.app._id
+        definition: { $exists: true }
       },
       select: 'name definition attributeCount formatType character excelType strictValidation lineSeparator',
       count: 5
     };
     this.searchTerm = searchTerm;
     this.showLoader = true;
-    this.commonService.get('partnerManager', `/${this.commonService.app._id}/dataFormat`, options).subscribe((res) => {
+    merge(
+      this.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options),
+      this.commonService.get('partnerManager', `/${this.commonService.app._id}/dataFormat`, options)
+    ).subscribe((res: Array<any>) => {
+      if (res && res.length > 0) {
+        res = res.map(item => {
+          if (item.formatType) {
+            item.definition = item.definition[0];
+          }
+          return item;
+        });
+      }
       this.showLoader = false;
       this.dataFormatList = res;
       this.selectDefault();

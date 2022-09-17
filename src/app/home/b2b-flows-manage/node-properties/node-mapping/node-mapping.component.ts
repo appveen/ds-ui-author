@@ -45,12 +45,12 @@ export class NodeMappingComponent implements OnInit {
       });
     }
     if (this.sourceFields) {
-      this.customSourceFields = this.prevNode.dataStructure.outgoing.definition[0].definition.map((e) => this.convertDefinition(e));
+      this.customSourceFields = this.prevNode.dataStructure.outgoing.definition.map((e) => this.convertDefinition(e));
     } else if (!this.sourceFields) {
       this.customSourceFields = tempSourceFields;
     }
     if (this.targetFields) {
-      this.customTargetFields = this.currNode.dataStructure.outgoing.definition[0].definition.map((e) => this.convertDefinition(e));
+      this.customTargetFields = this.currNode.dataStructure.outgoing.definition.map((e) => this.convertDefinition(e));
     }
     if (this.currNode && this.currNode.mappings && this.currNode.mappings.length > 0) {
       this.findTargetMappings(this.customTargetFields);
