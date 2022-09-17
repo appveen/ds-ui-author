@@ -149,9 +149,13 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       this.commonService.changeBreadcrumb(this.breadcrumbPaths);
       this.apiCalls.getFlow = false;
       this.showCodeEditor = true;
-      this.patchDataStructure(res.inputStage.dataStructure.outgoing, res.dataStructures);
+      if (res.inputStage.dataStructure && res.inputStage.dataStructure.outgoing) {
+        this.patchDataStructure(res.inputStage.dataStructure.outgoing, res.dataStructures);
+      }
       res.stages.forEach(item => {
-        this.patchDataStructure(item.dataStructure.outgoing, res.dataStructures);
+        if (item.dataStructure && item.dataStructure.outgoing) {
+          this.patchDataStructure(item.dataStructure.outgoing, res.dataStructures);
+        }
         if (item.type == 'DATASERVICE') {
           this.patchDataStructure(item.options.dataService, res.dataStructures);
         }
@@ -218,14 +222,14 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       if (item.type === 'DATASERVICE' && item.options && item.options.dataService && item.options.dataService._id) {
         dataStructures[item.options.dataService._id] = JSON.parse(JSON.stringify(item.options.dataService));
         item.options.dataService = {
-          _id: item.options._id,
-          name: item.options.name
+          _id: item.options.dataService._id,
+          name: item.options.dataService.name
         };
       }
       if (item.type === 'FAAS' && item.options && item.options.faas && item.options.faas._id) {
         item.options.faas = {
-          _id: item.options._id,
-          name: item.options.name
+          _id: item.options.faas._id,
+          name: item.options.faas.name
         };
       }
     });

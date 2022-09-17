@@ -106,7 +106,7 @@
             </div>
         </div>
     </ng-container>
-    <ng-container *ngIf="currNode?.type=='MAPPING'">
+    <ng-container *ngIf="currNode.type=='MAPPING'">
         <div class="form-group">
             <button type="button" class="btn btn-dark w-100 ignore-outside" (click)="showNodeMapping=!showNodeMapping">
                 Set Mapping
@@ -116,28 +116,28 @@
     <ng-container *ngIf="currNode?.type=='DATASERVICE'">
         <div class="form-group">
             <label class="text-secondary" for="serviceSelector">
-                {{currNode?.option?.dataService ? 'Selected' : 'Select'}} Data Service
+                {{currNode?.options?.dataService ? 'Selected' : 'Select'}} Data Service
             </label>
-            <div *ngIf="currNode?.option?.dataService"
+            <div *ngIf="currNode?.options?.dataService"
                 class="border rounded p-2 d-flex align-items-center justify-content-between">
-                <span>{{currNode?.option?.dataService.name}}</span>
-                <span class="dsi dsi-remove text-danger hover" (click)="currNode.option.dataService=null"></span>
+                <span>{{currNode?.options?.dataService?.name}}</span>
+                <span class="dsi dsi-remove text-danger hover" (click)="currNode.options.dataService=null"></span>
             </div>
-            <odp-service-selector *ngIf="!currNode?.option?.dataService" [edit]="edit"
-                [(data)]="currNode.option.dataService"></odp-service-selector>
+            <odp-service-selector *ngIf="!currNode?.options?.dataService" [edit]="edit"
+                [(data)]="currNode.options.dataService"></odp-service-selector>
         </div>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FUNCTION'">
         <div class="form-group">
-            <label class="text-secondary" for="functionSelector">{{currNode?.option?.faas ? 'Selected' : 'Select'}}
+            <label class="text-secondary" for="functionSelector">{{currNode?.options?.faas ? 'Selected' : 'Select'}}
                 Function
             </label>
-            <div *ngIf="currNode?.option?.faas"
+            <div *ngIf="currNode?.options?.faas"
                 class="border rounded p-2 d-flex align-items-center justify-content-between">
-                <span>{{currNode?.option?.faas.name}}</span>
-                <span class="dsi dsi-remove text-danger hover" (click)="currNode.option.faas=null"></span>
+                <span>{{currNode?.options?.faas.name}}</span>
+                <span class="dsi dsi-remove text-danger hover" (click)="currNode.options.faas=null"></span>
             </div>
-            <odp-function-selector *ngIf="!currNode?.option?.faas" [edit]="edit" [(data)]="currNode.option.faas">
+            <odp-function-selector *ngIf="!currNode?.options?.faas" [edit]="edit" [(data)]="currNode.options.faas">
             </odp-function-selector>
         </div>
     </ng-container>

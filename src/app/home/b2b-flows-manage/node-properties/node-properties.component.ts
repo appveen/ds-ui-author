@@ -45,6 +45,7 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   onTypeChange(type: string) {
+    console.log(type);
     if (this.prevNode) {
       this.currNode.options = {};
     }
