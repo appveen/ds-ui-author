@@ -651,4 +651,13 @@ export class AppService {
             });
         }
     }
+
+    getNodeID() {
+        let id = 'S';
+        for (let i = 0; i < 5; i++) {
+            const index = Math.floor((Math.random() * 1000) % 26);
+            id += String.fromCharCode(65 + index);
+        }
+        return id;
+    }
 }

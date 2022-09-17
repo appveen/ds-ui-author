@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { AppService } from 'src/app/utils/services/app.service';
 import * as uuid from 'uuid/v1';
 
 @Injectable({
@@ -9,7 +10,7 @@ export class B2bFlowService {
   showAddNodeDropdown: EventEmitter<any>;
   selectedNode: EventEmitter<any>;
   deleteNode: EventEmitter<any>;
-  constructor() {
+  constructor(private appService: AppService) {
     this.showAddNodeDropdown = new EventEmitter();
     this.selectedNode = new EventEmitter();
     this.deleteNode = new EventEmitter();
@@ -17,7 +18,7 @@ export class B2bFlowService {
 
   getNodeObject(type: string) {
     return {
-      _id: uuid(),
+      _id: this.appService.getNodeID(),
       type: type,
       onSuccess: [],
       onError: [],
