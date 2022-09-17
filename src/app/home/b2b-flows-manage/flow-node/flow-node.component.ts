@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { delay, tap } from 'rxjs/operators';
 import { B2bFlowService } from '../b2b-flow.service';
 
 @Component({
@@ -18,6 +19,7 @@ export class FlowNodeComponent implements OnInit {
   node: any
   clickEventPos: any;
   addTo: string;
+  isNodeSelected: boolean;
   constructor(private flowService: B2bFlowService) {
     this.nodeList = [];
     this.node = {};
@@ -26,6 +28,16 @@ export class FlowNodeComponent implements OnInit {
 
   ngOnInit(): void {
     this.node = this.currNode;
+    this.flowService.selectedNode.pipe(
+      tap(() => {
+        this.isNodeSelected = false;
+      }),
+      delay(5)
+    ).subscribe((data: any) => {
+      if (data && data.currNode == this.currNode) {
+        this.isNodeSelected = true;
+      }
+    });
   }
 
   getCurrentNode(item: any) {
@@ -49,6 +61,17 @@ export class FlowNodeComponent implements OnInit {
     //   currNode: this.currNode,
     //   prevNode: this.prevNode,
     // });
+    if (!this.prevNode) {
+      return;
+    }
+    this.prevNode.onSuccess.splice(this.branchIndex, 1);
+    this.prevNode.onSuccess = this.prevNode.onSuccess.concat(this.currNode.onSuccess);
+    const index = this.nodeList.findIndex(e => e._id == this.currNode._id);
+    if (index > -1) {
+      this.nodeList.splice(index, 1);
+    }
+    this.nodeListChange.emit(this.nodeList);
+    this.flowService.selectedNode.emit(null);
   }
 
   getAddStyle(index: number) {

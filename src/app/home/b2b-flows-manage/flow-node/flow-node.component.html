@@ -10,39 +10,39 @@
             (click)="selectNode()">
             <span *ngIf="node.type=='FILE'" class="d-flex align-items-center">
                 <span class="node-icon dsi dsi-file"></span>
-                <span class="ml-3">File Agent</span>
+                <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">File Agent</span>
             </span>
             <span *ngIf="!prevNode && node.type=='API'" class="d-flex align-items-center">
                 <span class="node-icon dsi dsi-api-reciever"></span>
-                <span class="ml-3">API Reciever</span>
+                <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">API Reciever</span>
             </span>
             <span *ngIf="prevNode && node.type=='API'" class="d-flex align-items-center">
                 <span class="node-icon dsi dsi-invoke-api"></span>
-                <span class="ml-3">Invoke API</span>
+                <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Invoke API</span>
             </span>
             <span *ngIf="node.type=='TIMER'" class="d-flex align-items-center">
                 <span class="node-icon dsi dsi-clock"></span>
-                <span class="ml-3">Timer</span>
+                <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Timer</span>
             </span>
             <span *ngIf="node.type=='CONNECTOR'" class="d-flex align-items-center">
                 <span class="node-icon dsi dsi-connector"></span>
-                <span class="ml-3">Connector</span>
+                <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Connector</span>
             </span>
             <span *ngIf="node.type=='DATASERVICE'" class="d-flex align-items-center">
                 <span class="node-icon dsi dsi-data-service"></span>
-                <span class="ml-3">Data Service</span>
+                <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Data Service</span>
             </span>
             <span *ngIf="node.type=='FUNCTION'" class="d-flex align-items-center">
                 <span class="node-icon dsi dsi-function"></span>
-                <span class="ml-3">Function</span>
+                <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Function</span>
             </span>
             <span *ngIf="node.type=='MAPPING'" class="d-flex align-items-center">
                 <span class="node-icon dsi dsi-mapping"></span>
-                <span class="ml-3">Mapping</span>
+                <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Mapping</span>
             </span>
             <span *ngIf="node.type=='RESPONSE'" class="d-flex align-items-center">
                 <span class="node-icon dsi dsi-response"></span>
-                <span class="ml-3">Response</span>
+                <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Response</span>
             </span>
 
             <span class="delete-icon dsi dsi-trash text-danger position-absolute hover"

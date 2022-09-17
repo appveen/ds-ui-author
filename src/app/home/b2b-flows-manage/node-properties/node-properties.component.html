@@ -18,12 +18,12 @@
     </div>
     <div class="form-group">
         <label class="text-secondary" for="nodeType">Node Type</label>
-        <select *ngIf="!prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type">
+        <select *ngIf="!prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type" (ngModelChange)="onTypeChange($event)">
             <option value="API">API Reciever</option>
             <option value="FILE">File Agent</option>
             <option value="TIMER">Timer</option>
         </select>
-        <select *ngIf="prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type">
+        <select *ngIf="prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type" (ngModelChange)="onTypeChange($event)">
             <option value="API">API Invoke</option>
             <option value="FILE">File Agent</option>
             <option value="MAPPING">Mapping</option>

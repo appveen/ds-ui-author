@@ -87,8 +87,12 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       }),
       delay(5)
     ).subscribe((data: any) => {
-      this.showNodeProperties = true;
       this.selectedNode = data;
+      if (data) {
+        this.showNodeProperties = true;
+      } else {
+        this.showNodeProperties = false;
+      }
     });
     this.flowService.deleteNode.subscribe((data: any) => {
       this.openDeleteModal.emit({
@@ -149,7 +153,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       res.stages.forEach(item => {
         this.patchDataStructure(item.dataStructure.outgoing, res.dataStructures);
         if (item.type == 'DATASERVICE') {
-          this.patchDataStructure(item.options, res.dataStructures);
+          this.patchDataStructure(item.options.dataService, res.dataStructures);
         }
       });
       this.flowData = this.appService.cloneObject(res);
@@ -211,9 +215,15 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
           name: item.dataStructure.outgoing.name
         };
       }
-      if (item.type === 'DATASERVICE' && item.options && item.options._id) {
-        dataStructures[item.options._id] = JSON.parse(JSON.stringify(item.options));
-        item.options = {
+      if (item.type === 'DATASERVICE' && item.options && item.options.dataService && item.options.dataService._id) {
+        dataStructures[item.options.dataService._id] = JSON.parse(JSON.stringify(item.options.dataService));
+        item.options.dataService = {
+          _id: item.options._id,
+          name: item.options.name
+        };
+      }
+      if (item.type === 'FAAS' && item.options && item.options.faas && item.options.faas._id) {
+        item.options.faas = {
           _id: item.options._id,
           name: item.options.name
         };

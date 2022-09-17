@@ -44,6 +44,12 @@ export class NodePropertiesComponent implements OnInit {
     }
   }
 
+  onTypeChange(type: string) {
+    if (this.prevNode) {
+      this.currNode.options = {};
+    }
+  }
+
   onFormatChange(data: any) {
     console.log(data);
     this.currNode.dataStructure.outgoing = data;
