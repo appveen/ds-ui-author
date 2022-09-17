@@ -39,6 +39,14 @@ export class DataFormatSelectorComponent implements OnInit {
       count: 10
     }).subscribe((res) => {
       this.showLoader = false;
+      if (res && res.length > 0) {
+        res = res.map(item => {
+          if (item.formatType) {
+            item.definition = item.definition[0].definition;
+          }
+          return item;
+        });
+      }
       this.dataFormatList = res;
       this.selectDefault();
     }, err => {
@@ -65,7 +73,7 @@ export class DataFormatSelectorComponent implements OnInit {
       if (res && res.length > 0) {
         res = res.map(item => {
           if (item.formatType) {
-            item.definition = item.definition[0];
+            item.definition = item.definition[0].definition;
           }
           return item;
         });

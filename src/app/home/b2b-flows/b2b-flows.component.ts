@@ -78,7 +78,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.getFlows();
-    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths);
     this.commonService.apiCalls.componentLoading = false;
     this.form.get('type').valueChanges.subscribe(val => {
       const name = this.form.get('name').value;

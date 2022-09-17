@@ -54,6 +54,12 @@ export class NodePropertiesComponent implements OnInit {
   onFormatChange(data: any) {
     console.log(data);
     this.currNode.dataStructure.outgoing = data;
+    (this.currNode.onSuccess || []).forEach(item => {
+      const temp = this.nodeList.find(r => r._id == item._id);
+      if (temp && temp.type == 'MAPPING') {
+        temp.mappings = [];
+      }
+    })
   }
 
   cancel() {
