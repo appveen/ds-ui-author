@@ -197,6 +197,13 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
           name: item.dataStructure.outgoing.name
         };
       }
+      if (item.type === 'DATASERVICE' && item.options && item.options._id) {
+        dataStructures[item.options._id] = JSON.parse(JSON.stringify(item.options));
+        item.options = {
+          _id: item.options._id,
+          name: item.options.name
+        };
+      }
     });
     this.flowData.inputStage = tempNodeList[0];
     tempNodeList.splice(0, 1);
