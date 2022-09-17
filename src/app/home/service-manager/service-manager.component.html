@@ -155,12 +155,11 @@
                       Docs</button>
                     <button class="list-group-item list-group-item-action py-2 border-0 text-danger"
                       *ngIf="canDeleteService(srvc._id)" (click)="deleteService(i)">Delete</button>
-                    <ng-container *ngIf="canEditService(srvc._id) && easterEggEnabled">
-                      <button class="list-group-item list-group-item-action py-2 text-accent"
-                        (click)="getYamls(i)">YAMLs</button>
-                      <button class="list-group-item list-group-item-action py-2 text-accent"
-                        (click)="repairService(i)">Repair</button>
-                    </ng-container>
+                    <button class="list-group-item list-group-item-action py-2 text-accent"
+                      (click)="getYamls(i)">YAMLs</button>
+                    <button *ngIf="canEditService(srvc._id) && easterEggEnabled"
+                      class="list-group-item list-group-item-action py-2 text-accent"
+                      (click)="repairService(i)">Repair</button>
                   </div>
                 </div>
               </div>
