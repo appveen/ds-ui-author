@@ -49,7 +49,7 @@
             <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
             <span class="url text-accent">{{flowData?.inputStage?.options?.path || 'N.A.'}}</span>
         </div>
-        <div class="flow-designer p-4 bg-light-gray">
+        <div class="flow-designer p-4">
             <div *ngIf="flowData?.inputStage" odp-flow-node [currNode]="flowData.inputStage" [(nodeList)]="nodeList">
             </div>
             <div [ngClass]="{'show':showNodeProperties}"

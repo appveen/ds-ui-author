@@ -9,6 +9,7 @@
   .flow-designer-canvas {
     height: calc(100vh - 240px);
     overflow: auto;
+    background: rgba($light, 0.4);
   }
 
   .flow-designer-canvas {
