@@ -23,11 +23,13 @@ export class UserGroupComponent implements OnInit, OnDestroy {
     totalRecords: number;
     form: FormGroup;
     showNewGroupWindow: boolean;
+    breadcrumbPaths: Array<Breadcrumb>;
 
     constructor(private commonService: CommonService,
         private router: Router,
         private fb: FormBuilder) {
         this.subscriptions = {};
+        this.breadcrumbPaths = [];
         this.groupList = [];
         this.newGroup = {};
         this.form = this.fb.group({
@@ -38,7 +40,11 @@ export class UserGroupComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.resetSearch();
-
+        this.breadcrumbPaths.push({
+            active: true,
+            label: 'Groups',
+        });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     }
 
     ngOnDestroy() {
