@@ -82,7 +82,8 @@
           <div class="list-group-item d-flex align-items-center justify-content-start" (dblclick)="viewService(i)">
             <div class="item-name fw-500 d-flex align-items-center">
               <!-- <odp-checkbox [edit]="{status:true}"></odp-checkbox> -->
-              <span class="ml-2 pl-1 text-dark hover" (click)="viewService(i)">{{srvc.name}}</span>
+              <span class="ml-2 pl-1 text-dark hover service-name" (click)="viewService(i)" [ngbTooltip]="srvc.name"
+                placement="right">{{srvc.name}}</span>
               <span class="ml-2 version sub-heading font-11 text-uppercase">(v{{srvc.version}})</span>
               <span *ngIf="srvc.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
             </div>
