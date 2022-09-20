@@ -155,6 +155,9 @@ export class FieldTypeSelectorComponent {
 
   changeDetailedType(value: string) {
     const self = this;
+    if (value == '') {
+      self.form.get('properties.password')?.patchValue(false);
+    }
     if (self.form.get('properties.email')) {
       self.form.get('properties.email').patchValue(false);
     }
