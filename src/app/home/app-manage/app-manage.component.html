@@ -9,13 +9,14 @@
   </div>
   <div class="d-flex flex-column position-relative">
     <div class="d-flex align-items-center options">
-      <div class="">
-        <odp-basic-info holderStyle="square" [(name)]="appData._id" [(description)]="appData.description"
+      <div class="text-dark fw-500 font-20">
+        {{appData._id}}
+        <!-- <odp-basic-info holderStyle="square" [(name)]="appData._id" [(description)]="appData.description"
           [edit]="{ status: true }">
-        </odp-basic-info>
+        </odp-basic-info> -->
       </div>
-      <button class="btn btn-primary ml-auto d-flex align-items-center justify-content-center btn-min-width" (click)="save()"
-        [disabled]="!changesDone || isInvalid">
+      <button class="btn btn-primary ml-auto d-flex align-items-center justify-content-center btn-min-width"
+        (click)="save()" [disabled]="!changesDone || isInvalid">
         <!-- <span class="dsi dsi-plus mr-2"></span> -->
         <span class="text-center">Save</span>
       </button>
