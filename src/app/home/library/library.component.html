@@ -22,22 +22,10 @@
     <div class="list-group">
       <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500">
         <div class="d-flex align-items-center justify-content-start h-100">
-          <div (click)="applySort('name')" class="hover d-flex align-items-center item-name">
-            <span class="mr-2">Name</span>
-            <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
-            <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
-          </div>
+          <div class="item-name">Name</div>
           <div class="d-flex align-items-center">
-            <div (click)="applySort('_attributes')" class="hover d-flex align-items-center item-name">
-              <span class="mr-2">Attributes</span>
-              <span *ngIf="sortModel['_attributes']==1" class="dsi dsi-drop-down"></span>
-              <span *ngIf="sortModel['_attributes']==-1" class="dsi dsi-drop-up"></span>
-            </div>
-            <div (click)="applySort('_references')" class="hover d-flex align-items-center item-name">
-              <span class="mr-2">References</span>
-              <span *ngIf="sortModel['_references']==1" class="dsi dsi-drop-down"></span>
-              <span *ngIf="sortModel['_references']==-1" class="dsi dsi-drop-up"></span>
-            </div>
+            <div class="item-attribute-count text-center">Attributes</div>
+            <div class="item-reference-count text-center">References</div>
           </div>
           <div class="item-actions">&nbsp;</div>
         </div>
@@ -48,10 +36,10 @@
         <div *ngIf="hasPermissionForLibrary(library._id)" class="list-group-item">
           <div class="d-flex align-items-center justify-content-start h-100 hover" [attr.title]="library.name"
             (dblclick)="navigate(library._id)">
-            <div class="d-flex align-items-center item-name text-dark fw-500">{{library.name}}</div>
+            <div class="item-name text-dark fw-500">{{library.name}}</div>
             <div class="d-flex align-items-center sub-heading">
-              <div class="item-attribute-count align-items-center">{{library._attributes}}</div>
-              <div class="item-reference-count align-items-center">{{library._references}}</div>
+              <div class="item-attribute-count text-center">{{library._attributes}}</div>
+              <div class="item-reference-count text-center">{{library._references}}</div>
             </div>
             <!-- <div class="item-actions d-flex align-items-center justify-content-end">
               <span id="lib-view" class="dsi dsi-view hover mr-2" [routerLink]="['/app/',app,'gs',library._id]"></span>
