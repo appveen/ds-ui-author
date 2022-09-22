@@ -11,8 +11,8 @@
     <div class="select-ds d-flex flex-column text-muted">
       <div class='ds-name py-2 px-3 hover' *ngFor="let srvc of serviceList; let srvcIndex = index"
         (click)="selectDataService(srvc)" [ngClass]="{'text-dark': selectedDS == srvc}">
-        <span>
-          {{ srvc.name }}
+        <span class="text-truncate d-block" style="max-width: 210px;" [ngbTooltip]="(srvc.name.length>20)? srvc.name:''" placement="bottom">
+          {{srvc.name}}
         </span>
       </div>
     </div>
