@@ -569,6 +569,14 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
     view() {
         this.schemaService.activeProperty.emit(this.form);
     }
+
+    checkSubType() {
+        if (this.form.get(['definition', 0])?.value) {
+            const subValue = this.form.get(['definition', 0]).value;
+            return subValue?.properties?.password
+        }
+        return false
+    }
     get style() {
         const self = this;
         const margin = self.level * 16;
