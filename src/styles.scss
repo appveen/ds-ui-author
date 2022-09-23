@@ -990,4 +990,8 @@ $weights: 200,
   }
 }
 
+.text-delete {
+  color: $danger
+}
+
 @include altBox(1);
