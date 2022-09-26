@@ -415,9 +415,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             const temp = self.schemaService.getDefinitionStructure({ key: '_self', _newField: true });
             self.form.addControl('definition', self.fb.array([temp]));
         }
-        if (type.value === 'Array' || type.value === 'Object') {
-            self.form.get('definition').setValidators([sameName]);
-        }
+        // if (type.value === 'Array' || type.value === 'Object') {
+        self.form.get('definition').setValidators([sameName]);
+        // }
     }
 
     remove() {
@@ -541,6 +541,8 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             const tempDef = self.schemaService.getDefinitionStructure(temp);
             (tempDef.get('properties.name') as FormGroup).patchValue(temp.properties.name);
             self.all.push(tempDef);
+            tempDef.markAsTouched()
+            tempDef.markAsDirty()
         });
         self.all.removeAt(self.index);
         self.schemaService.activeProperty.emit(null);
@@ -595,14 +597,15 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
 
     get hasError() {
         const self = this;
-        return self.form.get('properties.name').touched
-            && self.form.get('properties.name').dirty
-            && (self.form.get('key').hasError('required')
-                || self.form.get('properties.name').hasError('length')
-                || self.form.hasError('sameName'))
-            || (self.form.get('properties.relatedTo')
-                && self.form.get('properties.relatedTo').hasError('required'))
-            || this.invalidFieldName;
+        // const result = self.form.get('properties.name').touched
+        //     && self.form.get('properties.name').dirty
+        //     && (self.form.get('key').hasError('required')
+        //         || self.form.get('properties.name').hasError('length')
+        //         || self.form.hasError('sameName'))
+        //     || (self.form.get('properties.relatedTo')
+        //         && self.form.get('properties.relatedTo').hasError('required'))
+        //     || this.invalidFieldName;
+        return self.form.errors
     }
 
     get idField() {

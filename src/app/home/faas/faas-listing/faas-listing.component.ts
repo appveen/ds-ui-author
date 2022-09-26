@@ -80,7 +80,9 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.commonService.apiCalls.componentLoading = false;
-    this.getFaas();
+    if (this.faasList?.length === 0) {
+      this.getFaas();
+    }
     this.form.get('api').disable();
     this.form.get('name').valueChanges.subscribe(val => {
       this.form.get('api').patchValue(`/api/a/faas/${this.commonService.app._id}/${_.camelCase(val)}`);
