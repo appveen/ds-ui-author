@@ -1393,10 +1393,10 @@ export class CommonService {
     if (self.userDetails && !self.userDetails.accessControl) {
       self.userDetails.accessControl = {};
     }
-    if (!self.userDetails.accessControl.apps) {
+    if (self.userDetails?.accessControl && !self.userDetails?.accessControl.apps) {
       self.userDetails.accessControl.apps = [];
     }
-    const index = self.userDetails.accessControl.apps.findIndex(
+    const index = self.userDetails?.accessControl.apps.findIndex(
       (a) => a._id === self.app._id
     );
     if (index > -1) {

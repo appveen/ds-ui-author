@@ -80,23 +80,25 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.commonService.apiCalls.componentLoading = false;
-    if (this.faasList?.length === 0) {
-      this.getFaas();
-    }
+    this.getFaas();
     this.form.get('api').disable();
     this.form.get('name').valueChanges.subscribe(val => {
       this.form.get('api').patchValue(`/api/a/faas/${this.commonService.app._id}/${_.camelCase(val)}`);
     });
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
+      this.faasList = [];
       this.getFaas();
     });
     this.subscriptions['faas.delete'] = this.commonService.faas.delete.subscribe(data => {
+      this.faasList = [];
       this.getFaas();
     });
     this.subscriptions['faas.status'] = this.commonService.faas.status.subscribe(data => {
+      this.faasList = [];
       this.getFaas();
     });
     this.subscriptions['faas.new'] = this.commonService.faas.new.subscribe(data => {
+      this.faasList = [];
       this.getFaas();
     });
   }
