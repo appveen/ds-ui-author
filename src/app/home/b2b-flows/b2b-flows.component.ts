@@ -126,7 +126,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   }
 
   newFlow() {
-    this.form.reset({ type: 'API' });
+    this.form.reset({ inputNode: { type: 'API' } });
     this.showNewFlowWindow = true;
   }
 
