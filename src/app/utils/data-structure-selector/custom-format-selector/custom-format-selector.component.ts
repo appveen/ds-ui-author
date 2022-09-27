@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as uuid from 'uuid/v1';
 import { AppService } from '../../services/app.service';
 
 @Component({
@@ -21,9 +20,9 @@ export class CustomFormatSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.format) {
-      const id = uuid();
+      const id = this.appService.randomID(5);
       this.format = {
-        _id: uuid(),
+        _id: id,
         name: 'Custom_' + id
       }
     }

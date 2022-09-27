@@ -103,13 +103,13 @@ export class AppService {
         return JSON.parse(JSON.stringify(obj));
     }
 
-    rand(index) {
+    rand(index: number) {
         const i = Math.pow(10, index - 1);
         const j = Math.pow(10, index) - 1;
         return Math.floor(Math.random() * (j - i + 1)) + i;
     }
 
-    randomStr(len) {
+    randomStr(len: number) {
         let str = '';
         const possible =
             'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -119,7 +119,7 @@ export class AppService {
         return str;
     }
 
-    randomID(len) {
+    randomID(len: number) {
         let str = '';
         const possible =
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
