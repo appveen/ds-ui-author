@@ -354,7 +354,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.alertModal.statusChange = false;
     this.alertModal.title = 'Delete Function?';
     this.alertModal.message =
-      'Are you sure you want to delete this function? This action will delete : ' + this.faasList[index].name;
+      'Are you sure you want to delete this function? This action will delete : <span class="text-delete font-weight-bold">' + this.faasList[index].name + '</span>';
     this.alertModal.index = index;
     this.openDeleteModal.emit(this.alertModal);
   }
