@@ -47,10 +47,10 @@
     <div class="border rounded bg-white">
         <div class="url-info d-flex align-items-center p-3 border-bottom">
             <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
-            <span class="url text-accent">{{flowData?.inputStage?.options?.path || 'N.A.'}}</span>
+            <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
         </div>
         <div class="flow-designer p-4">
-            <div *ngIf="flowData?.inputStage" odp-flow-node [currNode]="flowData.inputStage" [(nodeList)]="nodeList">
+            <div *ngIf="flowData?.inputNode" odp-flow-node [currNode]="flowData.inputNode" [(nodeList)]="nodeList">
             </div>
             <div [ngClass]="{'show':showNodeProperties}"
                 class="node-properties border-left position-fixed bg-white p-4">

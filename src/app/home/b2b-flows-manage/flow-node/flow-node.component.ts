@@ -98,7 +98,7 @@ export class FlowNodeComponent implements OnInit {
             temp._id = tempNode._id;
           }
           node.onSuccess.push({ _id: tempNode._id });
-          // this.flowData.stages.splice(this.selectedNodeIndex, 0, tempNode);
+          // this.flowData.nodes.splice(this.selectedNodeIndex, 0, tempNode);
         } else {
           node.onSuccess.push({ _id: tempNode._id });
         }

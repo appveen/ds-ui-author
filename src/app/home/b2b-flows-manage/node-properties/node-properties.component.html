@@ -18,12 +18,14 @@
     </div>
     <div class="form-group">
         <label class="text-secondary" for="nodeType">Node Type</label>
-        <select *ngIf="!prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type" (ngModelChange)="onTypeChange($event)">
+        <select *ngIf="!prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type"
+            (ngModelChange)="onTypeChange($event)">
             <option value="API">API Reciever</option>
             <option value="FILE">File Agent</option>
             <option value="TIMER">Timer</option>
         </select>
-        <select *ngIf="prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type" (ngModelChange)="onTypeChange($event)">
+        <select *ngIf="prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type"
+            (ngModelChange)="onTypeChange($event)">
             <option value="API">API Invoke</option>
             <option value="FILE">File Agent</option>
             <option value="MAPPING">Mapping</option>
@@ -53,6 +55,28 @@
                     <option value="PUT">PUT</option>
                     <option value="DELETE">DELETE</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label class="text-secondary" for="nodeContentType">Content-Type</label>
+                <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType">
+                    <option value="application/json" selected>application/json</option>
+                    <option value="application/xml">application/xml</option>
+                    <option value="multipart/form-data">multipart/form-data</option>
+                </select>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="currNode?.type=='FILE'">
+            <div class="form-group">
+                <label class="text-secondary" for="nodeEndpoint">API Endpoint</label>
+                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path" readonly>
+            </div>
+            <div class="form-group">
+                <label class="text-secondary" for="nodeHTTPMethod">HTTP Method</label>
+                <input id="nodeHTTPMethod" type="text" class="form-control" value="POST" readonly>
+            </div>
+            <div class="form-group">
+                <label class="text-secondary" for="nodeContentType">Content-Type</label>
+                <input id="nodeContentType" type="text" class="form-control" value="multipart/form-data" readonly>
             </div>
         </ng-container>
         <div class="form-group d-flex align-items-center">
@@ -96,7 +120,8 @@
                 </button>
             </div>
             <div *ngIf="currNode.options.agents && currNode.options.agents.length > 0" class="list-group">
-                <div *ngFor="let agent of currNode.options.agents" class="list-group-item d-flex align-items-center justify-content-between">
+                <div *ngFor="let agent of currNode.options.agents"
+                    class="list-group-item d-flex align-items-center justify-content-between">
                     <span>{{agent.name}}</span>
                     <span class="dsi dsi-remove text-danger hover" (click)="removeAgent(agent)"></span>
                 </div>

@@ -149,10 +149,10 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       this.commonService.changeBreadcrumb(this.breadcrumbPaths);
       this.apiCalls.getFlow = false;
       this.showCodeEditor = true;
-      if (res.inputStage.dataStructure && res.inputStage.dataStructure.outgoing) {
-        this.patchDataStructure(res.inputStage.dataStructure.outgoing, res.dataStructures);
+      if (res.inputNode.dataStructure && res.inputNode.dataStructure.outgoing) {
+        this.patchDataStructure(res.inputNode.dataStructure.outgoing, res.dataStructures);
       }
-      res.stages.forEach(item => {
+      res.nodes.forEach(item => {
         if (item.dataStructure && item.dataStructure.outgoing) {
           this.patchDataStructure(item.dataStructure.outgoing, res.dataStructures);
         }
@@ -166,11 +166,11 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       this.oldData = this.appService.cloneObject(this.flowData);
       // this.appService.updateCodeEditorState.emit(this.edit);
       this.nodeList = [];
-      if (this.flowData.inputStage) {
-        this.nodeList.push(this.flowData.inputStage);
+      if (this.flowData.inputNode) {
+        this.nodeList.push(this.flowData.inputNode);
       }
-      if (this.flowData.stages) {
-        this.flowData.stages.forEach(item => {
+      if (this.flowData.nodes) {
+        this.flowData.nodes.forEach(item => {
           this.nodeList.push(item);
         });
       }
@@ -233,9 +233,9 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         };
       }
     });
-    this.flowData.inputStage = tempNodeList[0];
+    this.flowData.inputNode = tempNodeList[0];
     tempNodeList.splice(0, 1);
-    this.flowData.stages = tempNodeList;
+    this.flowData.nodes = tempNodeList;
     this.flowData.dataStructures = dataStructures;
     if (!environment.production) {
       console.log(this.flowData);
@@ -337,19 +337,19 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   closeDeleteNodeModal(val: any) {
     if (val & val.data && val.data.nodeIndex > 0) {
-      if (val.data.nodeIndex < this.flowData.stages.length) {
+      if (val.data.nodeIndex < this.flowData.nodes.length) {
         let prev
         if (val.data.nodeIndex > 1) {
-          prev = this.flowData.stages[val.data.nodeIndex - 2];
+          prev = this.flowData.nodes[val.data.nodeIndex - 2];
         } else {
-          prev = this.flowData.inputStage;
+          prev = this.flowData.inputNode;
         }
-        const curr = this.flowData.stages[val.data.nodeIndex - 1];
-        const next = this.flowData.stages[val.data.nodeIndex];
+        const curr = this.flowData.nodes[val.data.nodeIndex - 1];
+        const next = this.flowData.nodes[val.data.nodeIndex];
         const pt = prev.onSuccess.find(e => e._id == curr._id);
         pt._id = next._id;
       }
-      this.flowData.stages.splice(val.data.nodeIndex - 1, 1);
+      this.flowData.nodes.splice(val.data.nodeIndex - 1, 1);
     }
     console.log(val);
   }

@@ -53,7 +53,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
       type: ['API'],
-      inputStage: []
+      inputNode: []
     });
     this.apiConfig = {
       page: 1,
@@ -82,7 +82,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.commonService.apiCalls.componentLoading = false;
     this.form.get('type').valueChanges.subscribe(val => {
       const name = this.form.get('name').value;
-      this.form.get('inputStage').patchValue({
+      this.form.get('inputNode').patchValue({
         _id: this.appService.getNodeID(),
         type: val,
         options: {
@@ -92,18 +92,18 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       });
     });
     this.form.get('name').valueChanges.subscribe(val => {
-      let inputStage = this.form.get('inputStage').value;
+      let inputNode = this.form.get('inputNode').value;
       const type = this.form.get('type').value;
-      if (!inputStage) {
-        inputStage = {
+      if (!inputNode) {
+        inputNode = {
           type: type ? type : 'API'
         };
       }
-      inputStage.options = {
+      inputNode.options = {
         method: 'POST',
         path: val ? '/' + _.camelCase(val) : null
       };
-      this.form.get('inputStage').patchValue(inputStage);
+      this.form.get('inputNode').patchValue(inputNode);
     });
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
       this.getFlows()
@@ -126,7 +126,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   }
 
   newFlow() {
-    this.form.reset({ type: 'API' });
+    this.form.reset({ inputNode: { type: 'API' } });
     this.showNewFlowWindow = true;
   }
 
@@ -138,7 +138,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.showNewFlowWindow = false;
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
-    payload.stages = [];
+    payload.nodes = [];
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
       this.showLazyLoader = false;
       this.form.reset({ type: 'API' });
@@ -160,7 +160,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
       res.forEach(item => {
-        item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/${this.app}/` + item.inputStage.options.path;
+        item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/${this.app}/` + item.inputNode.options.path;
         this.flowList.push(item);
       });
     }, err => {

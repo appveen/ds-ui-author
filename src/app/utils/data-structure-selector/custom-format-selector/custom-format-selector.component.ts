@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as uuid from 'uuid/v1';
 import { AppService } from '../../services/app.service';
 
 @Component({
@@ -21,9 +20,9 @@ export class CustomFormatSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.format) {
-      const id = uuid();
+      const id = this.appService.randomID(5);
       this.format = {
-        _id: uuid(),
+        _id: id,
         name: 'Custom_' + id
       }
     }
@@ -39,7 +38,7 @@ export class CustomFormatSelectorComponent implements OnInit {
     if (index > -1) {
       this.definition.splice(index + 1, 0, { type: 'String' });
     } else {
-      this.definition.push({ type: 'String' });
+      this.definition.push({ type: 'String', properties: { name: '' } });
     }
   }
 
@@ -52,6 +51,7 @@ export class CustomFormatSelectorComponent implements OnInit {
       def.properties = {};
     }
     def.properties.name = val;
+    def.properties.dataPath = val;
   }
 
   clearSchema() {
