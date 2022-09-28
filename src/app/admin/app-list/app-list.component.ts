@@ -122,9 +122,7 @@ export class AppListComponent implements OnInit, OnDestroy {
           Validators.pattern('[a-zA-z0-9_-]+'),
         ],
       ],
-      defaultTimezone: this.commonService.userDetails?.defaultTimezone
-        ? [this.commonService.userDetails.defaultTimezone]
-        : [JSON.parse(localStorage.getItem('ba-user')).defaultTimezone],
+      defaultTimezone: [],
       description: [null],
       serviceVersionValidity: self.fb.group({
         validityType: ['count', [Validators.required]],
@@ -145,6 +143,9 @@ export class AppListComponent implements OnInit, OnDestroy {
       self.commonService.userDetails?.isSuperAdmin ||
       JSON.parse(localStorage.getItem('ba-user')).isSuperAdmin;
     self.isSuperadmin ? self.getApps() : self.getUserApps();
+    if (this.commonService.userDetails && this.commonService.userDetails?.defaultTimezone) {
+      this.form.get('defaultTimezone').patchValue(this.commonService.userDetails?.defaultTimezone);
+    }
   }
 
   ngOnDestroy() {
