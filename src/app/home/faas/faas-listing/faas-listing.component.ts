@@ -80,23 +80,25 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.commonService.apiCalls.componentLoading = false;
-    if (this.faasList?.length === 0) {
-      this.getFaas();
-    }
+    this.getFaas();
     this.form.get('api').disable();
     this.form.get('name').valueChanges.subscribe(val => {
       this.form.get('api').patchValue(`/api/a/faas/${this.commonService.app._id}/${_.camelCase(val)}`);
     });
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
+      this.faasList = [];
       this.getFaas();
     });
     this.subscriptions['faas.delete'] = this.commonService.faas.delete.subscribe(data => {
+      this.faasList = [];
       this.getFaas();
     });
     this.subscriptions['faas.status'] = this.commonService.faas.status.subscribe(data => {
+      this.faasList = [];
       this.getFaas();
     });
     this.subscriptions['faas.new'] = this.commonService.faas.new.subscribe(data => {
+      this.faasList = [];
       this.getFaas();
     });
   }
@@ -354,7 +356,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.alertModal.statusChange = false;
     this.alertModal.title = 'Delete Function?';
     this.alertModal.message =
-      'Are you sure you want to delete this function? This action will delete : ' + this.faasList[index].name;
+      'Are you sure you want to delete this function? This action will delete : <span class="text-delete font-weight-bold">' + this.faasList[index].name + '</span>';
     this.alertModal.index = index;
     this.openDeleteModal.emit(this.alertModal);
   }
