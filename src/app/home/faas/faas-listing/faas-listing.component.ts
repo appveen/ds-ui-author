@@ -8,7 +8,7 @@ import { GetOptions, CommonService } from 'src/app/utils/services/common.service
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 
 @Component({
@@ -86,19 +86,15 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       this.form.get('api').patchValue(`/api/a/faas/${this.commonService.app._id}/${_.camelCase(val)}`);
     });
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
-      this.faasList = [];
       this.getFaas();
     });
     this.subscriptions['faas.delete'] = this.commonService.faas.delete.subscribe(data => {
-      this.faasList = [];
       this.getFaas();
     });
     this.subscriptions['faas.status'] = this.commonService.faas.status.subscribe(data => {
-      this.faasList = [];
       this.getFaas();
     });
     this.subscriptions['faas.new'] = this.commonService.faas.new.subscribe(data => {
-      this.faasList = [];
       this.getFaas();
     });
   }
@@ -135,6 +131,8 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.showLazyLoader = true;
     this.faasList = [];
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`).pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
       switchMap((ev: any) => {
         this.totalCount = ev;
         return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, { count: ev });
