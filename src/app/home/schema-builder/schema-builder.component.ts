@@ -176,7 +176,6 @@ export class SchemaBuilderComponent implements
                 ),
                 self.schemaService.getDefinitionStructure()
             ]),
-
             webHooks: [[]],
             preHooks: [[]],
             workflowHooks: self.fb.group({
@@ -195,7 +194,8 @@ export class SchemaBuilderComponent implements
             }),
             disableInsights: [false],
             headers: [],
-            enableSearchIndex: ''
+            enableSearchIndex: '',
+            ingestionPoints: []
         });
 
         self.versionConfig = {
