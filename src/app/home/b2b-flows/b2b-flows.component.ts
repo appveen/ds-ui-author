@@ -367,8 +367,8 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   }
 
   editFlow(index: number) {
-    this.appService.editServiceId = this.flowList[index]._id;
-    this.router.navigate(['/app/', this.commonService.app._id, 'flow', this.appService.editServiceId,
+    this.appService.edit = this.flowList[index]._id;
+    this.router.navigate(['/app/', this.commonService.app._id, 'flow', this.appService.edit,
     ]);
   }
 
