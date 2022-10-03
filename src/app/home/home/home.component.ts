@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     self.commonService.apiCalls.componentLoading = false;
     self.username =
       self.commonService.userDetails?.username ||
-      JSON.parse(localStorage.getItem('ba-user')).username;
+      JSON.parse(localStorage.getItem('ba-user'))?.username;
     if (self.commonService.userDetails?.basicDetails?.name) {
       self.name = self.commonService.userDetails.basicDetails.name;
     }
@@ -83,7 +83,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const self = this;
     self.isSuperAdmin =
       self.commonService.userDetails?.isSuperAdmin ||
-      JSON.parse(localStorage.getItem('ba-user')).isSuperAdmin;
+      JSON.parse(localStorage.getItem('ba-user'))?.isSuperAdmin;
     if (environment.production) {
       self.commonService.connectSocket();
     }

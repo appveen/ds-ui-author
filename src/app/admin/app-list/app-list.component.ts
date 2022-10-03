@@ -141,7 +141,7 @@ export class AppListComponent implements OnInit, OnDestroy {
     self.apiConfig.sort = '_id';
     self.isSuperadmin =
       self.commonService.userDetails?.isSuperAdmin ||
-      JSON.parse(localStorage.getItem('ba-user')).isSuperAdmin;
+      JSON.parse(localStorage.getItem('ba-user'))?.isSuperAdmin;
     self.isSuperadmin ? self.getApps() : self.getUserApps();
     if (this.commonService.userDetails && this.commonService.userDetails?.defaultTimezone) {
       this.form.get('defaultTimezone').patchValue(this.commonService.userDetails?.defaultTimezone);
