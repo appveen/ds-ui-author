@@ -46,6 +46,7 @@ import { ResetServiceComponent } from './reset-service/reset-service.component';
 import { StepFieldsComponent } from './wizards/step-fields/step-fields.component';
 import { StepActionsComponent } from './wizards/step-actions/step-actions.component';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
+import { DataIngestionComponent } from './data-ingestion/data-ingestion.component';
 
 @NgModule({
     imports: [
@@ -96,7 +97,8 @@ import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.modul
         SearchSettingsComponent,
         ResetServiceComponent,
         StepFieldsComponent,
-        StepActionsComponent
+        StepActionsComponent,
+        DataIngestionComponent
     ],
     exports: [
         SchemaStructurePipe,
@@ -118,7 +120,8 @@ import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.modul
         SearchSettingsComponent,
         ResetServiceComponent,
         StepFieldsComponent,
-        StepActionsComponent
+        StepActionsComponent,
+        DataIngestionComponent
     ],
     providers: [SchemaBuilderService]
 })

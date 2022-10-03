@@ -160,7 +160,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
       res.forEach(item => {
-        item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/${this.app}/` + item.inputNode.options.path;
+        item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/${this.app}` + item.inputNode.options.path;
         this.flowList.push(item);
       });
     }, err => {
@@ -367,8 +367,8 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   }
 
   editFlow(index: number) {
-    this.appService.editServiceId = this.flowList[index]._id;
-    this.router.navigate(['/app/', this.commonService.app._id, 'flow', this.appService.editServiceId,
+    this.appService.edit = this.flowList[index]._id;
+    this.router.navigate(['/app/', this.commonService.app._id, 'flow', this.appService.edit,
     ]);
   }
 

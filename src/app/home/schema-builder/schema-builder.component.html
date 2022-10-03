@@ -82,6 +82,10 @@
           *ngIf="!edit.status && hasPermissionStartsWith('PVDSA','SM')">
           Audit
         </div>
+        <!-- <div class="px-2 hover" (click)="activeTab=7" [ngClass]="{'active':activeTab==7}"
+          *ngIf="hasPermissionForTab('S') || hasPermissionForTab('D')">
+          Ingestion
+        </div> -->
         <div class="px-2 hover" (click)="generateData();activeTab=10" [ngClass]="{'active':activeTab==10}"
           *ngIf="clickCount>9">JSON</div>
         <div class="px-2 hover" (click)="generateData();activeTab=11" [ngClass]="{'active':activeTab==11}"
@@ -244,6 +248,9 @@
         </ng-container>
         <ng-container *ngIf="activeTab == 6">
           <odp-logs [serviceObj]="serviceObj"></odp-logs>
+        </ng-container>
+        <ng-container *ngIf="activeTab == 7">
+          <odp-data-ingestion [form]="form" [edit]="edit"></odp-data-ingestion>
         </ng-container>
         <ng-container *ngIf="activeTab == 10">
           <div class="d-flex flex-column w-100 max-vh-100  overflow-auto">
