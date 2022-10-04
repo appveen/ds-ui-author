@@ -29,6 +29,7 @@
             <option value="API">API Invoke</option>
             <option value="FILE">File Agent</option>
             <option value="MAPPING">Mapping</option>
+            <option value="UNWIND">Unwind</option>
             <option value="DATASERVICE">Data Service</option>
             <option value="FUNCTION">Function</option>
             <option value="RESPONSE">Response</option>
@@ -136,6 +137,12 @@
             <button type="button" class="btn btn-dark w-100 ignore-outside" (click)="showNodeMapping=!showNodeMapping">
                 Set Mapping
             </button>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="currNode.type=='UNWIND'">
+        <div class="form-group">
+            <label class="text-secondary" for="nodeUnWind">Unwind Path</label>
+            <input id="nodeUnWind" type="text" class="form-control" [(ngModel)]="currNode.options.unwindPath">
         </div>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='DATASERVICE'">

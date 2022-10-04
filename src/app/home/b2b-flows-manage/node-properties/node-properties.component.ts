@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'odp-node-properties',
@@ -45,15 +46,20 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   onTypeChange(type: string) {
-    console.log(type);
+    if (!environment.production) {
+      console.log(type);
+    }
     if (this.prevNode) {
       this.currNode.options = {};
     }
   }
 
   onFormatChange(data: any) {
-    console.log(data);
+    if (!environment.production) {
+      console.log(data);
+    }
     this.currNode.dataStructure.outgoing = data;
+    this.currNode.mappings = [];
     (this.currNode.onSuccess || []).forEach(item => {
       const temp = this.nodeList.find(r => r._id == item._id);
       if (temp && temp.type == 'MAPPING') {
