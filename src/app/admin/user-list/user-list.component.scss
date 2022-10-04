@@ -110,8 +110,7 @@
   align-items: center;
 
   .button-group {
-    display: grid;
-    grid-template-columns: auto auto;
+    display: flex;
     column-gap: 20px;
   }
 
