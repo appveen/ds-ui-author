@@ -164,12 +164,14 @@ export class AppListComponent implements OnInit, OnDestroy {
         res.forEach((item) => {
           item.firstLetter = item._id.charAt(0);
           item.bg = this.appColor();
-          if (_.isEmpty(item.logo)) {
+          if (_.isEmpty(item.logo) || !item.logo.thumbnail) {
             delete item.logo;
           }
           self.appList.push(item);
 
+
           self.commonService.appList.push(item);
+
           if (self.navToApp) {
             this.useApp(this.navToApp._id)
           }
@@ -190,11 +192,12 @@ export class AppListComponent implements OnInit, OnDestroy {
         res.forEach((item) => {
           item.firstLetter = item._id.charAt(0);
           item.bg = this.appColor();
-          if (_.isEmpty(item.logo)) {
+          if (_.isEmpty(item.logo) || !item.logo.thumbnail) {
             delete item.logo;
           }
           self.appList.push(item);
           self.commonService.appList.push(item);
+
           if (self.navToApp) {
             this.useApp(this.navToApp._id)
           }
