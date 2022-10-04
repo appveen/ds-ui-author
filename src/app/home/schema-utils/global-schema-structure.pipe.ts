@@ -87,17 +87,21 @@ export class GlobalSchemaStructurePipe implements PipeTransform {
     }
 
 
-    transform(value: any): any {
+    transform(value: any, isDataFormat?: boolean): any {
         const temp = {};
         temp['name'] = value.name;
         temp['description'] = value.description;
         temp['character'] = value.character;
         temp['type'] = value.dataFormatType;
-        const def = {};
-        def['definition'] = this.buildDefinition(value.definition);
-        def['type'] = value.type;
-        temp['definition'] = [def];
         temp['description'] = value.description;
+        if (isDataFormat) {
+            temp['definition'] = this.buildDefinition(value.definition);
+        } else {
+            const def = {};
+            def['definition'] = this.buildDefinition(value.definition);
+            def['type'] = value.type;
+            temp['definition'] = [def];
+        }
         return temp;
     }
 

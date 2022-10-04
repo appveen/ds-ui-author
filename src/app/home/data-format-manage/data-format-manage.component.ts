@@ -116,8 +116,8 @@ export class DataFormatManageComponent implements
         self.route.params.subscribe(params => {
             if (params.id) {
                 self.edit.id = params.id;
-                if (self.appService.editServiceId) {
-                    self.appService.editServiceId = null;
+                if (self.appService.editLibraryId) {
+                    self.appService.editLibraryId = null;
                     self.edit.status = true;
                 } else {
                     self.edit.view = true;
@@ -208,18 +208,16 @@ export class DataFormatManageComponent implements
             .subscribe(res => {
                 self.showLazyLoader = false;
                 let temp;
-                if (res.definition) {
+                if (res.definition && res.definition.length > 0) {
                     temp = {
                         name: res.name,
-                        type: res.definition.type,
                         description: res.description,
                         strictValidation: res.strictValidation,
                         excelType: res.excelType
                     };
-                    delete res.definition.type;
                     self.form.patchValue(temp);
                     self.form.get('type').patchValue('Object');
-                    temp.definition = self.schemaService.generateStructure(res.definition[0].definition);
+                    temp.definition = self.schemaService.generateStructure(res.definition);
                     (self.form.get('definition') as FormArray).controls.splice(0);
                     temp.definition.forEach((element, i) => {
                         const tempDef = self.schemaService.getDefinitionStructure(temp.definition[i]);
@@ -345,8 +343,8 @@ export class DataFormatManageComponent implements
         const self = this;
         let response;
         const value = self.form.getRawValue();
-        const payload = self.globalSchemaStructurePipe.transform(value);
-        self.appService.addKeyForDataStructure(payload.definition[0].definition, 'normal');
+        const payload = self.globalSchemaStructurePipe.transform(value, true);
+        self.appService.addKeyForDataStructure(payload.definition, 'normal');
         self.commonService.commonSpinner = true;
         payload.app = self.commonService.app._id;
         payload.formatType = self.form.value.formatType;

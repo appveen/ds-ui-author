@@ -243,7 +243,8 @@ export class IntegrationFlowService {
         if (data.type === 'dataService') {
           data.definition = typeof res.definition === 'string' ? JSON.parse(res.definition) : res.definition;
         } else {
-          data.definition = typeof res.definition === 'string' ? JSON.parse(res.definition)[0].definition : res.definition[0].definition;
+          // data.definition = typeof res.definition === 'string' ? JSON.parse(res.definition)[0].definition : res.definition[0].definition;
+          data.definition = typeof res.definition === 'string' ? JSON.parse(res.definition) : res.definition;
         }
         resolve(data);
       }).catch(err => {

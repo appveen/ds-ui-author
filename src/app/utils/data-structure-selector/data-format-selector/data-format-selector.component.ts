@@ -42,7 +42,7 @@ export class DataFormatSelectorComponent implements OnInit {
       if (res && res.length > 0) {
         res = res.map(item => {
           if (item.formatType) {
-            item.definition = item.definition[0].definition;
+            item.definition = item.definition;
           }
           return item;
         });
@@ -73,7 +73,7 @@ export class DataFormatSelectorComponent implements OnInit {
       if (res && res.length > 0) {
         res = res.map(item => {
           if (item.formatType) {
-            item.definition = item.definition[0].definition;
+            item.definition = item.definition;
           }
           return item;
         });

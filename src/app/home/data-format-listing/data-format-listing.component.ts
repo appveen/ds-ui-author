@@ -35,6 +35,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
   selectedDataFormat: any;
   searchTerm: string;
   sortModel: any;
+  formatList: Array<any>;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -56,11 +57,17 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     this.openDeleteModal = new EventEmitter();
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
-      description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]]
+      description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
+      strictValidation: [false],
+      formatType: ['JSON', [Validators.required]],
+      character: [',', [Validators.required]],
+      excelType: ['xls', [Validators.required]],
+      lineSeparator: ['\\\\n']
     });
     this.showOptionsDropdown = {};
     this.showLazyLoader = true;
     this.sortModel = {};
+    this.formatList = this.appService.getFormatTypeList();;
   }
 
   ngOnInit() {
@@ -82,7 +89,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
   }
 
   newDataFormat() {
-    this.form.reset();
+    this.form.reset({ formatType: 'JSON', character: ',', excelType: 'xls', lineSeparator: '\\\\n' });
     this.showNewDataFormatWindow = true;
   }
 
@@ -92,6 +99,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     }
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
+    payload.definition = [];
     this.showLazyLoader = true;
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/dataFormat`, payload).subscribe(res => {
       this.ts.success('DataFormat Created.');
@@ -106,6 +114,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
 
   editDataFormat(_index) {
     this.appService.editLibraryId = this.dataFormatList[_index]._id;
+
     this.router.navigate(['/app/', this.app, 'dfm', this.appService.editLibraryId]);
   }
 
@@ -129,7 +138,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
         if (res.length > 0) {
           res.forEach(item => {
             if (item && item.definition) {
-              item._attributes = item.definition[0]?.definition?.length;
+              item._attributes = item?.definition?.length;
               item._references = 0;
             } else {
               item._attributes = 0;
@@ -222,6 +231,33 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     })
     this.selectedDataFormat = this.dataFormatList[i];
     this.showOptionsDropdown[i] = true;
+  }
+
+  selectFormat(format: any) {
+    this.formatList.forEach(e => {
+      e.selected = false;
+    });
+    format.selected = true;
+    this.form.get('formatType').patchValue(format.formatType);
+    if (format.formatType === 'EXCEL') {
+      this.form.get('excelType').patchValue(format.excelType);
+    }
+  }
+
+  isFormatSelected(format: any) {
+    const formatType = this.form.get('formatType').value;
+    const excelType = this.form.get('excelType').value;
+    let flag = false;
+    if (format.formatType == formatType) {
+      if (format.formatType === 'EXCEL') {
+        if (format.excelType == excelType) {
+          flag = true;
+        }
+      } else {
+        flag = true;
+      }
+    }
+    return flag;
   }
 
   private compare(a: any, b: any) {
