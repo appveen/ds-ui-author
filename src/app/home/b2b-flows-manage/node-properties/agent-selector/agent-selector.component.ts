@@ -52,7 +52,7 @@ export class AgentSelectorComponent implements OnInit {
         definition: { $exists: true },
         app: this.commonService.app._id
       },
-      select: 'name status',
+      select: 'name status agentId',
       count: 5
     };
     this.searchTerm = searchTerm;
@@ -91,7 +91,8 @@ export class AgentSelectorComponent implements OnInit {
   }
 
   selectAgent() {
-    this.data = this.agentList.find(e => e._selected);
+    this.data = this.appService.cloneObject(this.agentList.find(e => e._selected));
+    delete this.data._selected;
     this.dataChange.emit(this.data);
   }
 
