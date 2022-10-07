@@ -136,8 +136,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.showLazyLoader = true;
     this.faasList = [];
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`).pipe(
-      debounceTime(1000),
-      distinctUntilChanged(),
       switchMap((ev: any) => {
         this.totalCount = ev;
         return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, { count: ev });
