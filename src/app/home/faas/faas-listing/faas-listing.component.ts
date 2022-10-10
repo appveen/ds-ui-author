@@ -81,6 +81,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.commonService.apiCalls.componentLoading = false;
     this.getFaas();
+    this.getFaas();
     this.form.get('api').disable();
     this.form.get('name').valueChanges.subscribe(val => {
       this.form.get('api').patchValue(`/api/a/faas/${this.commonService.app._id}/${_.camelCase(val)}`);
@@ -129,16 +130,14 @@ export class FaasListingComponent implements OnInit, OnDestroy {
 
   getFaas() {
     this.showLazyLoader = true;
-    this.faasList = [];
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`).pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
       switchMap((ev: any) => {
         this.totalCount = ev;
         return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, { count: ev });
       })
     ).subscribe(res => {
       this.showLazyLoader = false;
+      this.faasList = [];
       res.forEach(item => {
         item.url = 'https://' + this.commonService.userDetails.fqdn + item.url;
         this.faasList.push(item);
@@ -147,6 +146,8 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       this.showLazyLoader = false;
       this.commonService.errorToast(err);
     });
+
+
   }
 
   canManageFaas(id: string) {
