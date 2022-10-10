@@ -43,7 +43,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   selectedLibrary: any;
   sortModel: any;
   breadcrumbPaths: Array<Breadcrumb>;
-  listCall: boolean = false;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -81,6 +80,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.commonService.apiCalls.componentLoading = false;
+    this.getFaas();
     this.getFaas();
     this.form.get('api').disable();
     this.form.get('name').valueChanges.subscribe(val => {
@@ -129,12 +129,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   }
 
   getFaas() {
-    if (this.listCall) {
-      return;
-    }
-    this.listCall = true;
     this.showLazyLoader = true;
-    this.faasList = [];
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`).pipe(
       switchMap((ev: any) => {
         this.totalCount = ev;
@@ -142,10 +137,10 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       })
     ).subscribe(res => {
       this.showLazyLoader = false;
+      this.faasList = [];
       res.forEach(item => {
         item.url = 'https://' + this.commonService.userDetails.fqdn + item.url;
         this.faasList.push(item);
-        this.listCall = false;
       });
     }, err => {
       this.showLazyLoader = false;
