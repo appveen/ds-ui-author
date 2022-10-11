@@ -1,5 +1,6 @@
-import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
@@ -8,6 +9,7 @@ import { CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'odp-agents',
@@ -17,6 +19,8 @@ import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 })
 export class AgentsComponent implements OnInit, OnDestroy {
 
+    @ViewChild('downloadAgentModal') downloadAgentModal: HTMLElement;
+    downloadAgentModalRef: NgbModalRef
     agentData: any;
     subscriptions: any;
     selectedAgent: any;
@@ -237,6 +241,23 @@ export class AgentsComponent implements OnInit, OnDestroy {
         })
         this.selectedAgent = this.agentList.find(e => e._id == id);
         this.showOptionsDropdown[id] = true;
+    }
+
+    openDownloadAgentWindow(agent: any) {
+        this.downloadAgentModalRef = this.commonService.modal(this.downloadAgentModal, { size: 'lg' });
+        this.downloadAgentModalRef.result.then(close => {
+            if (close && typeof close == 'string') {
+                const os = close.split('-')[0];
+                const arch = close.split('-')[1];
+                const url = environment.url.partnerManager + `/${this.commonService.app._id}/agent/utils/${agent._id}/download/exec?os=${os}&arch=${arch}`;
+                window.open(url, '_blank');
+            }
+        }, dismiss => { });
+    }
+
+
+    changePassword(index: number) {
+
     }
 
     private compare(a: any, b: any) {

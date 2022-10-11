@@ -85,24 +85,32 @@
                         <div class="item-release">{{agent.release}}</div>
                         <div class="item-pending-files">{{agent.pendingFiles}}</div>
                         <div class="item-actions d-flex align-items-center justify-content-end">
-                            <span id="lib-view" class="fw-600 font-13 hover mr-3"
+                            <span id="agent-view" class="fw-600 font-13 hover mr-3"
                                 [routerLink]="['/app/',app,'dfm',agent._id]">View</span>
-                            <span id="lib-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
+                            <span id="agent-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
                                 (click)="showDropDown($event,i)"></span>
                             <div *ngIf="showOptionsDropdown[i]"
                                 class="more-options bg-white rounded list-group position-fixed"
                                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                                 (outside)="showOptionsDropdown[i]=false">
-                                <div id="lib-edit" class="list-group-item list-group-item-action py-2"
+                                <div id="agent-dowload" class="list-group-item list-group-item-action py-2"
+                                    (click)="openDownloadAgentWindow(agent);">
+                                    Download
+                                </div>
+                                <div id="agent-edit" class="list-group-item list-group-item-action py-2"
                                     *ngIf="canEditAgent(agent._id)" (click)="editAgent(i)">
                                     Edit
                                 </div>
-                                <div id="lib-clone" class="list-group-item list-group-item-action py-2"
+                                <div id="agent-change-passowrd" class="list-group-item list-group-item-action py-2"
+                                    (click)="changePassword(i);">
+                                    Change Password
+                                </div>
+                                <div id="agent-clone" class="list-group-item list-group-item-action py-2"
                                     *ngIf="canEditAgent(agent._id) && hasManagePermission('AGENT')"
                                     (click)="cloneAgent(i)">
                                     Clone
                                 </div>
-                                <div id="lib-delete" class="list-group-item list-group-item-action py-2"
+                                <div id="agent-delete" class="list-group-item list-group-item-action py-2"
                                     *ngIf="canEditAgent(agent._id)" (click)="deleteAgent(i);">
                                     Delete
                                 </div>
@@ -161,7 +169,52 @@
     </div>
     <div class="d-flex w-100 mt-auto">
         <button *ngIf="showNewAgentWindow" type="button" class="btn btn-primary w-100" id="newAgentModalCreate"
-            [disabled]="!agentData.name"
-            (click)="triggerAgentCreate()">{{agentData.isEdit ? 'Save' : 'Create'}}</button>
+            [disabled]="!agentData.name" (click)="triggerAgentCreate()">{{agentData.isEdit ? 'Save' :
+            'Create'}}</button>
     </div>
 </div>
+
+
+<ng-template #downloadAgentModal>
+    <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-between mb-5">
+            <div class="d-flex flex-column">
+                <span class="font-20 fw-600">Download Agent Shipping</span>
+                <span class="font-14 fw-400 text-secondary">Please choose the operating platform for the Agent</span>
+            </div>
+            <span class="hover dsi dsi-close" (click)="downloadAgentModalRef.close(false)"></span>
+        </div>
+        <div class="mt-5 d-flex flex-wrap mx-4">
+            <button type="button"
+                class="download-option btn btn-white border d-flex align-items-center px-3 mx-1 mb-3 hover"
+                (click)="downloadAgentModalRef.close('windows-x64')">
+                <span class="fab fa-windows mr-2"></span>
+                <span class="text-dark fw-600 font-14">Windows - 64 Bit</span>
+            </button>
+            <button type="button"
+                class="download-option btn btn-white border d-flex align-items-center px-3 mx-1 mb-3 hover"
+                (click)="downloadAgentModalRef.close('linux-x64')">
+                <span class="fab fa-linux mr-2"></span>
+                <span class="text-dark fw-600 font-14">Linux - 64 Bit</span>
+            </button>
+            <button type="button"
+                class="download-option btn btn-white border d-flex align-items-center px-3 mx-1 mb-3 hover"
+                (click)="downloadAgentModalRef.close('darwin-x64')">
+                <span class="fab fa-apple mr-2"></span>
+                <span class="text-dark fw-600 font-14">Mac OS - 64 Bit</span>
+            </button>
+            <button type="button"
+                class="download-option btn btn-white border d-flex align-items-center px-3 mx-1 mb-3 hover"
+                (click)="downloadAgentModalRef.close('windows-x32')">
+                <span class="fab fa-windows mr-2"></span>
+                <span class="text-dark fw-600 font-14">Windows - 32 Bit</span>
+            </button>
+            <button type="button"
+                class="download-option btn btn-white border d-flex align-items-center px-3 mx-1 mb-3 hover"
+                (click)="downloadAgentModalRef.close('linux-x32')">
+                <span class="fab fa-linux mr-2"></span>
+                <span class="text-dark fw-600 font-14">Linux - 32 Bit</span>
+            </button>
+        </div>
+    </div>
+</ng-template>
