@@ -57,7 +57,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     };
     this.breadcrumbPaths = [{
       active: false,
-      label: 'Flows',
+      label: 'Data Pipes',
       url: '/app/' + this.commonService.app._id + '/flow'
     }];
     this.apiCalls = {};
