@@ -92,7 +92,7 @@
                 <div class="d-flex w-100 align-items-center justify-content-end">
                     <div class="item-actions d-flex align-items-center justify-content-end">
                         <div class="actions d-flex justify-content-end hover align-items-center">
-                            <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintainance' ">
+                            <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintenance' ">
                                 <span *ngIf="canDeployFlow(item)" id='deploy_{{i}}' class="text-primary mr-3"
                                     (click)="deployFlow(i)">Deploy</span>
                                 <span class="fw-600 font-13 hover mr-3"

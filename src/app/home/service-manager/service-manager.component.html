@@ -100,7 +100,7 @@
             <div class="d-flex align-items-center justify-content-end w-100">
               <div class="item-actions">
                 <!-- <div class="actions d-flex justify-content-end hover align-items-center">
-                  <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintainance' ">
+                  <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintenance' ">
                     <span *ngIf="isDeploy(i)" id='deploy_{{i}}' class="dsi dsi-skip-forward text-primary mr-2"
                       (click)="deployService(i)" [ngbTooltip]="'Deploy v'+(srvc.draftVersion || srvc.version)"
                       container="body"></span>
@@ -129,7 +129,7 @@
                   </ng-container>
                 </div> -->
                 <div class="actions d-flex justify-content-end hover align-items-center">
-                  <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintainance'">
+                  <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintenance'">
                     <span *ngIf="isDeploy(i)" id='deploy_{{i}}' class="fw-600 font-13 text-primary mr-3"
                       (click)="deployService(i)">Deploy</span>
                     <span class="fw-600 font-13 hover mr-3" *ngIf="srvc.status == 'Stopped' && isStartStopService(i)"

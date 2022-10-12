@@ -82,7 +82,7 @@
         <div class="d-flex w-100 align-items-center justify-content-end">
           <div class="item-actions d-flex align-items-center justify-content-end">
             <!-- <div class="actions d-flex justify-content-end hover align-items-center">
-              <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintainance' ">
+              <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintenance' ">
                 <span *ngIf="canDeployFunction(item)" id='deploy_{{i}}' class="dsi dsi-skip-forward text-primary mr-2"
                   (click)="deployFunction(i)" [ngbTooltip]="'Deploy v'+(item.draftVersion || item.version)"
                   container="body"></span>
@@ -98,7 +98,7 @@
               <span class="dsi dsi-trash hover mr-2" *ngIf="canManageFaas(item._id)" (click)="deleteFunction(i)"></span>
             </div> -->
             <div class="actions d-flex justify-content-end hover align-items-center">
-              <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintainance' ">
+              <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintenance' ">
                 <span *ngIf="canDeployFunction(item)" id='deploy_{{i}}' class="text-primary mr-3"
                   (click)="deployFunction(i)">Deploy</span>
                 <span class="fw-600 font-13 hover mr-3" *ngIf="item.status == 'Undeployed' && canStartStopFunction(i)"

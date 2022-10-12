@@ -231,7 +231,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
         if (srvc.status === 'Pending') {
             return 'Pending';
         }
-        return 'Maintainance';
+        return 'Maintenance';
     }
 
     showDropDown(event: any, id: string) {
