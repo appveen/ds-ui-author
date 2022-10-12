@@ -33,7 +33,7 @@ export class FunctionSelectorComponent implements OnInit {
     this.showLoader = true;
     this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, {
       sort: 'name',
-      select: 'name status',
+      select: 'name status api',
       count: 10
     }).subscribe((res) => {
       this.showLoader = false;

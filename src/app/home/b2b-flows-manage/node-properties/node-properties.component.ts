@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AppService } from 'src/app/utils/services/app.service';
+import { CommonService } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -15,7 +17,8 @@ export class NodePropertiesComponent implements OnInit {
   @Output() close: EventEmitter<any>;
   showNodeMapping: boolean;
   showAgentSelector: boolean;
-  constructor() {
+  constructor(private commonService: CommonService,
+    private appService: AppService) {
     this.edit = { status: true };
     this.close = new EventEmitter();
   }
@@ -88,5 +91,9 @@ export class NodePropertiesComponent implements OnInit {
     if (index > -1) {
       this.currNode.options.agents.splice(index, 1);
     }
+  }
+
+  setFunctionEndpoint(data: any) {
+    this.currNode.options.path = `/${this.commonService.app._id}/${this.appService.toCamelCase(data.name)}`
   }
 }

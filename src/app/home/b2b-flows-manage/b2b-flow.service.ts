@@ -17,7 +17,7 @@ export class B2bFlowService {
   }
 
   getNodeObject(type: string) {
-    return {
+    const temp: any = {
       _id: this.appService.getNodeID(),
       type: type,
       onSuccess: [],
@@ -28,6 +28,11 @@ export class B2bFlowService {
       dataStructure: {
         outgoing: {}
       }
+    };
+    if (type == 'DATASERVICE') {
+      temp.options.update = true;
+      temp.options.insert = true;
     }
+    return temp;
   }
 }

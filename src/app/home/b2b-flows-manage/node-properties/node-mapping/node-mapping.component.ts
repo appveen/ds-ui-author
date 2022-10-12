@@ -55,6 +55,9 @@ export class NodeMappingComponent implements OnInit {
     if (this.currNode && this.currNode.mappings && this.currNode.mappings.length > 0) {
       this.findTargetMappings(this.customTargetFields);
     }
+    if (this.customTargetFields && this.customTargetFields.length > 0) {
+      this.selectedTargetField = this.customTargetFields[0];
+    }
   }
 
   convertDefinition(def: any) {

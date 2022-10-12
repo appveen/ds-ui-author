@@ -101,7 +101,7 @@
                 <option value="DELETE">DELETE</option>
             </select>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label class="text-secondary" for="nodeBody">Body</label>
             <textarea id="nodeBody" class="form-control" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea>
@@ -110,7 +110,7 @@
             <label class="text-secondary" for="nodeHeaders">Headers</label>
             <textarea id="nodeHeaders" class="form-control" cols="30" rows="4"
                 [(ngModel)]="currNode.options.headers"></textarea>
-        </div>
+        </div> -->
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FILE'">
         <div class="form-group">
@@ -158,6 +158,18 @@
             <odp-service-selector *ngIf="!currNode?.options?.dataService" [edit]="edit"
                 [(data)]="currNode.options.dataService"></odp-service-selector>
         </div>
+        <div class="form-group">
+            <div class="form-group d-flex align-items-center">
+                <odp-checkbox [edit]="edit" [(checked)]="currNode.options.update"></odp-checkbox>
+                <span class="ml-2 text-secondary">Update</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-group d-flex align-items-center">
+                <odp-checkbox [edit]="edit" [(checked)]="currNode.options.insert"></odp-checkbox>
+                <span class="ml-2 text-secondary">Insert</span>
+            </div>
+        </div>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FUNCTION'">
         <div class="form-group">
@@ -169,16 +181,32 @@
                 <span>{{currNode?.options?.faas.name}}</span>
                 <span class="dsi dsi-remove text-danger hover" (click)="currNode.options.faas=null"></span>
             </div>
-            <odp-function-selector *ngIf="!currNode?.options?.faas" [edit]="edit" [(data)]="currNode.options.faas">
+            <odp-function-selector *ngIf="!currNode?.options?.faas" [edit]="edit" [(data)]="currNode.options.faas"
+                (dataChange)="setFunctionEndpoint($event)">
             </odp-function-selector>
         </div>
+        <ng-container *ngIf="currNode?.options?.faas">
+            <div class="form-group">
+                <label class="text-secondary" for="nodeEndpoint">Function Endpoint</label>
+                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path">
+            </div>
+            <div class="form-group">
+                <label class="text-secondary" for="nodeHTTPMethod">HTTP Method</label>
+                <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method">
+                    <option value="POST" selected>POST</option>
+                    <option value="GET">GET</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+            </div>
+        </ng-container>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='RESPONSE'">
         <div class="form-group">
             <label class="text-secondary" for="nodeStatusCode">Status Code</label>
             <input id="nodeStatusCode" type="text" class="form-control" [(ngModel)]="currNode.options.statusCode">
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label class="text-secondary" for="nodeBody">Body</label>
             <textarea id="nodeBody" class="form-control" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea>
@@ -187,7 +215,7 @@
             <label class="text-secondary" for="nodeHeaders">Headers</label>
             <textarea id="nodeHeaders" class="form-control" cols="30" rows="4"
                 [(ngModel)]="currNode.options.headers"></textarea>
-        </div>
+        </div> -->
     </ng-container>
 </div>
 
