@@ -64,7 +64,10 @@
             hasPermission('PML') ||
             hasPermission('PVL')
           ">
-          <span *ngIf="showSideNav" class="nav-active">INTEGRATION</span>
+          <span *ngIf="showSideNav" class="nav-active d-flex align-items-center">
+            <span>INTEGRATION</span>
+            <span class="text-uppercase ml-2 text-primary font-10">(beta)</span>
+          </span>
           <div *ngIf="showSideNav" class="dsi" [ngClass]="{
               'dsi-drop-down': openPanel['integration'],
               'dsi-drop-up': !openPanel['integration']
