@@ -216,13 +216,13 @@
           <div class="font-12 text-danger mt-1 d-flex align-items-center"
             *ngIf="form.get('properties.minlength').dirty && form.get('properties').hasError('minMaxLength')">
             <span class="dsi dsi-danger-circle mr-2"></span>
-            <span>Min Length value cannot be greater then Max Length value</span>
+            <span>Min length value cannot be greater then max length value</span>
           </div>
         </div>
         <div class="font-12 text-danger mt-1 d-flex align-items-center"
           *ngIf="form.get('properties.maxlength').dirty && form.get('properties').hasError('minMaxLength')">
           <span class="dsi dsi-danger-circle mr-2"></span>
-          <span>Max Length value cannot be lesser then Min Length value</span>
+          <span>Max length value cannot be lesser then min length value</span>
         </div>
       </div>
     </div>
