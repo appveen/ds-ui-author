@@ -260,6 +260,10 @@ export class AgentsComponent implements OnInit, OnDestroy {
 
     }
 
+    navigate(agent) {
+        this.router.navigate(['/app/', this.app, 'dfm', agent._id])
+    }
+
     private compare(a: any, b: any) {
         if (a > b) {
             return 1;
