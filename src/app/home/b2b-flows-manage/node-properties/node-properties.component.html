@@ -206,6 +206,14 @@
             <label class="text-secondary" for="nodeStatusCode">Status Code</label>
             <input id="nodeStatusCode" type="text" class="form-control" [(ngModel)]="currNode.options.statusCode">
         </div>
+        <div class="form-group">
+            <label class="text-secondary" for="nodeContentType">Content-Type</label>
+            <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType">
+                <option value="application/json" selected>application/json</option>
+                <option value="application/xml">application/xml</option>
+                <option value="multipart/form-data">multipart/form-data</option>
+            </select>
+        </div>
         <!-- <div class="form-group">
             <label class="text-secondary" for="nodeBody">Body</label>
             <textarea id="nodeBody" class="form-control" cols="30" rows="4"
