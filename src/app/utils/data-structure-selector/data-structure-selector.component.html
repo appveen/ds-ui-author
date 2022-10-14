@@ -24,6 +24,14 @@
         <span *ngIf="format && selectedType=='customFormat'"
             class="text-primary selected-format-name">({{format.name}})</span>
     </div>
+    <div *ngIf="(selectedType == 'customFormat' || selectedType == 'dataFormat') && format"
+        class="d-flex flex-column w-100 mb-2">
+        <div class="d-flex align-items-center justify-content-start w-100">
+            <odp-checkbox [edit]="edit" [(checked)]="format.strictValidation">
+            </odp-checkbox>
+            <span class="text ml-3">Strict Validation</span>
+        </div>
+    </div>
 </div>
 
 <div [ngClass]="{'show':showWindow,'more-width':selectedType=='customFormat'}"

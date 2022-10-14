@@ -8,6 +8,7 @@ import { DataFormatSelectorComponent } from './data-format-selector/data-format-
 import { CustomFormatSelectorComponent } from './custom-format-selector/custom-format-selector.component';
 import { SearchBoxModule } from '../search-box/search-box.module';
 import { AutoFocusModule } from '../directives/auto-focus/auto-focus.module';
+import { CheckboxModule } from '../checkbox/checkbox.module';
 
 
 
@@ -23,7 +24,8 @@ import { AutoFocusModule } from '../directives/auto-focus/auto-focus.module';
     FormsModule,
     ReactiveFormsModule,
     SearchBoxModule,
-    AutoFocusModule
+    AutoFocusModule,
+    CheckboxModule
   ],
   exports: [DataStructureSelectorComponent]
 })
