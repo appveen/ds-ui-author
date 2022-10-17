@@ -260,6 +260,10 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     return flag;
   }
 
+  navigate(dataFormat) {
+    this.router.navigate(['/app/', this.app, 'dfm', dataFormat._id])
+  }
+
   private compare(a: any, b: any) {
     if (a > b) {
       return 1;
