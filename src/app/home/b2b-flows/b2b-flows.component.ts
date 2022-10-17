@@ -50,7 +50,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     private commonFilter: CommonFilterPipe) {
     this.subscriptions = {};
     this.form = this.fb.group({
-      name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
+      name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
       type: ['API'],
       inputNode: []
@@ -392,7 +392,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.form.reset();
     const temp = this.flowList[index];
     this.form.get('name').patchValue(temp.name + ' Copy');
-    this.form.get('code').patchValue(temp.code);
+    this.form.get('type').patchValue(temp.inputNode.type);
     this.showNewFlowWindow = true;
   }
 
