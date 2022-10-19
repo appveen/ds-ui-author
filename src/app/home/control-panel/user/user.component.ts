@@ -1314,7 +1314,7 @@ export class UserComponent implements OnInit, OnDestroy {
   openGroupModal() {
     const dialogRef = this.dialog.open(UserToGroupModalComponent, {
       width: '60vw',
-      minHeight: '65vh',
+      minHeight: '60vh',
       data: {
         groupList: this.groupList,
         userGroups: this.userGroups,

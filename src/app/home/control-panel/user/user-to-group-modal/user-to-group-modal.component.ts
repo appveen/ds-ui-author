@@ -13,7 +13,7 @@ import * as _ from 'lodash';
 import { CommonService } from '../../../../utils/services/common.service';
 import { ToastrService } from 'ngx-toastr';
 @Component({
-  selector: 'app-user-to-group-modal',
+  selector: 'odp-user-to-group-modal',
   templateUrl: './user-to-group-modal.component.html',
   styleUrls: ['./user-to-group-modal.component.scss'],
 })

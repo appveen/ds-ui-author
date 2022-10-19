@@ -94,7 +94,7 @@
             <span class="ml-2 text-dark font-14 fw-300">Unique</span>
           </div>
           <div class=" d-flex align-items-center pb-3" [ngClass]="{'hover':canEdit}"
-            *ngIf="formItem.get('properties.password') && (formItem.get('properties._detailedType').value !== 'email')">
+            *ngIf="formItem.get('properties.password') && (formItem.get('properties._detailedType').value !== 'email') && formItem.get('properties._detailedType').value !== 'enum' ">
             <odp-checkbox id="secureAttr" [edit]="{ status: canEdit }"
               (checkedChange)="toggleCheck(formItem.get('properties.password'))"
               [checked]="formItem.get('properties.password').value"></odp-checkbox>
