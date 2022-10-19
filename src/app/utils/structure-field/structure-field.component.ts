@@ -416,7 +416,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             self.form.addControl('definition', self.fb.array([temp]));
         }
         // if (type.value === 'Array' || type.value === 'Object') {
-        self.form.get('definition').setValidators([sameName]);
+        self.form.get('definition')?.setValidators([sameName]);
         // }
     }
 

@@ -394,17 +394,18 @@ export class DatePickerComponent implements OnInit, OnDestroy, AfterViewInit, Co
 
   selectYear(val) {
     const self = this;
+    const month = self.fromDate.getMonth() || 0
     if (self.selectedRange === 0) {
       self.fromDate.setDate(1);
-      self.fromDate.setMonth(0);
+      self.fromDate.setMonth(month);
       self.fromDate.setFullYear(val.key);
     } else {
       self.toDate.setDate(1);
-      self.toDate.setMonth(0);
+      self.toDate.setMonth(month);
       self.toDate.setFullYear(val.key);
     }
-    self.selectMonth({ key: 0 });
-    self.fillMonthData(0, val.key);
+    self.selectMonth({ key: month });
+    self.fillMonthData(month, val.key);
   }
 
   fillMonthData(month, year?) {
