@@ -63,7 +63,7 @@ export class ApiLogsComponent implements OnInit, OnDestroy {
 
     @Input() set filters(val: any) {
         this._filters = val;
-        
+
     }
 
     get startNo() {
@@ -260,7 +260,7 @@ export class ApiLogsComponent implements OnInit, OnDestroy {
             if (self.subscriptions['getlogsCountFirst']) {
                 self.subscriptions['getlogsCountFirst'].unsubscribe();
             }
-           
+
         } else {
             if (self.subscriptions['getlogsCount']) {
                 self.subscriptions['getlogsCount'].unsubscribe();
@@ -271,7 +271,7 @@ export class ApiLogsComponent implements OnInit, OnDestroy {
                 self.showLazyLoader = false;
                 self.totalCount = count;
                 self.totalRecords = count;
-               
+
             }, err => {
                 self.commonService.errorToast(err, 'Unable to fetch log count');
             });
@@ -375,7 +375,7 @@ export class ApiLogsComponent implements OnInit, OnDestroy {
             noApp: true
         };
         self.showLazyLoader = true;
-        self.subscriptions['getUserList'] = self.commonService.get('user', `/usr`, options)
+        self.subscriptions['getUserList'] = self.commonService.get('user', `/${this.commonService.app._id}/user`, options)
             .subscribe((users) => {
                 self.showLazyLoader = false;
                 if (users.length > 0) {

@@ -264,7 +264,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
     getApp(id: string) {
         const self = this;
         self.showLazyLoader = true;
-        self.commonService.get('user', '/app/' + id, { noApp: true }).subscribe(res => {
+        self.commonService.get('user', '/data/app/' + id, { noApp: true }).subscribe(res => {
             self.showLazyLoader = false;
             self.tempList = res.users;
             self.appData = Object.assign(self.appData, res);
@@ -329,7 +329,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
     }
     getUserDetail() {
         const self = this;
-        self.subscriptions['userDetails'] = self.commonService.get('user', `/usr/app/${self.appData._id}`, { noApp: true, count: -1 })
+        self.subscriptions['userDetails'] = self.commonService.get('user', `/data/app/${self.appData._id}`, { noApp: true, count: -1 })
             .subscribe(d => {
                 if (d.length > 0) {
                     self.userList = d;
@@ -351,7 +351,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
                 _id: { $nin: existingUserIds }
             }
         };
-        self.subscriptions['userlist'] = self.commonService.get('user', '/usr', config).subscribe((d: Array<UserDetails>) => {
+        self.subscriptions['userlist'] = self.commonService.get('user', `/${this.appData._id}/user`, config).subscribe((d: Array<UserDetails>) => {
             if (d.length > 0) {
                 d.forEach(u => {
                     u.checked = false;
@@ -425,7 +425,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         if (!this.changesDone) {
             return;
         }
-        self.commonService.put('user', '/app/' + self.appData._id, self.appData).subscribe(res => {
+        self.commonService.put('user', '/data/app/' + self.appData._id, self.appData).subscribe(res => {
             self.oldData = self.appService.cloneObject(self.appData);
             self.ts.success('App saved successfully');
             self.commonService.appUpdates.emit(self.appData);
@@ -447,7 +447,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
     closeDeleteModal(data) {
         const self = this;
         if (data) {
-            const url = '/app/' + data._id;
+            const url = '/admin/app/' + data._id;
             self.showLazyLoader = true;
             self.subscriptions['deleteApp'] = self.commonService.delete('user', url).subscribe(d => {
                 self.showLazyLoader = false;
@@ -502,7 +502,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.groupConfig.filter = {
             app: appId
         };
-        self.commonService.get('user', '/group', self.groupConfig).subscribe(res => {
+        self.commonService.get('user', `/${this.commonService.app._id}/group`, self.groupConfig).subscribe(res => {
             if (res.length > 0) {
                 self.groupList = res;
                 const index = self.groupList.findIndex(e => e.name === '#');
@@ -521,7 +521,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         const self = this;
         if (self.selectedGroup && self.selectedGroup.length > 0) {
             self.userConfig.filter['_id'] = { $in: self.selectedGroup.users };
-            self.subscriptions['getuserlist'] = self.commonService.get('user', '/usr', self.userConfig).subscribe(d => {
+            self.subscriptions['getuserlist'] = self.commonService.get('user', `/${this.appData._id}/user`, self.userConfig).subscribe(d => {
                 if (d.length > 0) {
                     self.groupUserList = d;
                 }
@@ -536,7 +536,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         if (self.selectedUsersForAddition.length > 0) {
             const payload = { users: self.selectedUsersForAddition };
             self.subscriptions['userAddition'] = self.commonService
-                .put('user', `/app/${self.appData._id}/addUsers`, payload)
+                .put('user', `/data/app/${self.appData._id}/addUsers`, payload)
                 .subscribe(() => {
                     self.onCancel();
                     self.getUserDetail();
@@ -577,7 +577,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.startServiceAttributes['playIcon'] = 'midStage';
         self.proccessing = true;
         self.cardActionDisabled = 'disabled';
-        self.commonService.put('serviceManager', `/${self.appData._id}/service/start`, { app: this.commonService.app._id }).subscribe(res => {
+        self.commonService.put('serviceManager', `/${self.appData._id}/service/utils/startAll`, { app: this.commonService.app._id }).subscribe(res => {
             self.startAllServices['processing'] = 'playIconHide';
             if (res) {
                 self.startAllServices['processing'] = 'playIconHide';
@@ -601,7 +601,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.startServiceAttributes['processing'] = 'playIcon';
         self.proccessing = true;
         self.cardActionDisabled = 'disabled';
-        self.commonService.put('serviceManager', `/${self.appData._id}/service/stop`, { app: this.commonService.app._id }).subscribe(res => {
+        self.commonService.put('serviceManager', `/${self.appData._id}/service/utils/stopAll`, { app: this.commonService.app._id }).subscribe(res => {
             if (res) {
                 self.startAllServices['processing'] = 'playIconHide';
                 self.startAllServices['processing'] = 'playIconHide';
@@ -693,7 +693,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
 
     getManagementDetails() {
         const self = this;
-        self.commonService.get('serviceManager', `/service/status/count`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
+        self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/status/count`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
             self.serviceStatus = res;
         }, (err) => {
             self.ts.warning(err.error.message);
@@ -888,7 +888,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
                 app: self.commonService.app._id,
             }
         };
-        self.commonService.get('partnerManager', '/flow/status/count').subscribe(res => {
+        self.commonService.get('partnerManager', `/${self.commonService.app._id}/flow/utils/status/count`).subscribe(res => {
             self.partnerFlowStatus = res;
             self.showLazyLoader = false;
 
@@ -909,7 +909,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.startFlowAttributes['playIcon'] = 'midStage';
         self.proccessing = true;
         self.cardActionDisabled = 'disabled';
-        self.commonService.put('partnerManager', `/flow/${self.commonService.app._id}/startAll`, { app: this.commonService.app._id }).subscribe(res => {
+        self.commonService.put('partnerManager', `/${self.commonService.app._id}/flow/utils/startAll`, { app: this.commonService.app._id }).subscribe(res => {
 
             if (res) {
                 self.startFlowAttributes['playIcon'] = 'playIconHide';
@@ -934,7 +934,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
         self.startFlowAttributes['processing'] = 'playIcon';
         self.proccessing = true;
         self.cardActionDisabled = 'disabled';
-        self.commonService.put('partnerManager', `/flow/${self.commonService.app._id}/stopAll`).subscribe(res => {
+        self.commonService.put('partnerManager', `/${self.commonService.app._id}/flow/utils/stopAll`).subscribe(res => {
             if (res) {
                 self.startFlowAttributes['stopIcon'] = 'playIconHide';
                 self.startFlowAttributes['stopCircle'] = 'hideProcessing';
@@ -1036,7 +1036,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
                 status: 'Active'
             }
         };
-        self.commonService.get('serviceManager', '/service/', options).subscribe(res => {
+        self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options).subscribe(res => {
             if (res.length) {
                 self.isCalenderEnabled = true;
             }

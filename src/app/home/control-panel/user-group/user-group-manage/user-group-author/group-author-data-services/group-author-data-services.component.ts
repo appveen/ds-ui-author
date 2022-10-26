@@ -404,7 +404,7 @@ export class GroupAuthorDataServicesComponent implements OnInit, OnDestroy {
                 app: self.commonService.app._id,
             }
         };
-        self.subscriptions['serviceList'] = self.commonService.get('serviceManager', '/service', options).subscribe(res => {
+        self.subscriptions['serviceList'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options).subscribe(res => {
             self.serviceList = res.filter(e => e);
         });
     }

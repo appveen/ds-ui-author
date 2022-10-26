@@ -174,7 +174,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
     setAsSuperAdmin() {
         const self = this;
         self.showLazyLoader = true;
-        self.subscriptions['setSuperAdmin'] = self.commonService.put('user', `/usr/${self.user._id}/superAdmin/grant`, {})
+        self.subscriptions['setSuperAdmin'] = self.commonService.put('user', `/admin/user/${self.user._id}/superAdmin/grant`, {})
             .subscribe(() => {
                 self.showLazyLoader = false;
                 self.selectUserType = 'superadmin';
@@ -203,7 +203,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
     setAsNormalUser() {
         const self = this;
         self.showLazyLoader = true;
-        self.subscriptions['removeSuperAdmin'] = self.commonService.put('user', `/usr/${self.user._id}/superAdmin/revoke`, {})
+        self.subscriptions['removeSuperAdmin'] = self.commonService.put('user', `/admin/user/${self.user._id}/superAdmin/revoke`, {})
             .subscribe(() => {
                 self.showLazyLoader = false;
                 self.selectUserType = 'user';
@@ -239,7 +239,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
                 const appPayload = { apps: [] };
                 appPayload.apps = self.appList.filter(e => e.selected).map(e => e._id);
                 self.showLazyLoader = true;
-                self.subscriptions['assignApp'] = self.commonService.put('user', `/usr/${self.user._id}/addToApps`, appPayload)
+                self.subscriptions['assignApp'] = self.commonService.put('user', `/admin/user/utils/addToApps/${self.user._id}`, appPayload)
                     .subscribe(() => {
                         self.showLazyLoader = false;
                         self.getUserApps();
@@ -258,7 +258,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
         const appPayload = { apps: [] };
         appPayload.apps.push(userAppID);
         self.showLazyLoader = true;
-        self.subscriptions['appAdmin'] = self.commonService.put('user', `/usr/${self.user._id}/appAdmin/grant`, appPayload)
+        self.subscriptions['appAdmin'] = self.commonService.put('user', `/admin/user/utils/appAdmin/${self.user._id}/grant`, appPayload)
             .subscribe(() => {
                 self.showLazyLoader = false;
                 appPayload.apps.forEach((e) => {
@@ -281,7 +281,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
         const appPayload = { apps: [] };
         appPayload.apps.push(userAppID);
         self.showLazyLoader = true;
-        self.commonService.put('user', `/usr/${self.user._id}/appAdmin/revoke`, appPayload)
+        self.commonService.put('user', `/admin/user/utils/appAdmin/${self.user._id}/revoke`, appPayload)
             .subscribe(() => {
                 self.showLazyLoader = false;
                 self.ts.warning('User Admin Access privileges revoked');
@@ -311,7 +311,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
         const self = this;
         const payload = { userIds: [self.user._id] };
         self.showLazyLoader = true;
-        self.subscriptions['removeAppForUser'] = self.commonService.put('user', `/app/${appId}/removeUsers`, payload)
+        self.subscriptions['removeAppForUser'] = self.commonService.put('user', `/${appId}/user/utils/removeUsers`, payload)
             .subscribe(() => {
                 self.showLazyLoader = false;
                 const appIndex = self.userApps.findIndex(e => e._id === appId);
@@ -341,7 +341,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
     getAppDetails(app: App) {
         const self = this;
         self.showLazyLoader = true;
-        self.subscriptions['appDtl'] = self.commonService.get('user', '/app/' + app._id, { noApp: true })
+        self.subscriptions['appDtl'] = self.commonService.get('user', '/admin/app/' + app._id, { noApp: true })
             .subscribe((res: any) => {
                 self.showLazyLoader = false;
                 app = Object.assign(app, res);
@@ -359,7 +359,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
         const notReqApps = self.userApps.map(e => e._id);
         self.apiConfig.filter = { _id: { $nin: notReqApps } };
         self.showLazyLoader = true;
-        self.subscriptions['apps'] = self.commonService.get('user', '/app', self.apiConfig).subscribe(res => {
+        self.subscriptions['apps'] = self.commonService.get('user', '/admin/app', self.apiConfig).subscribe(res => {
             self.showLazyLoader = false;
             self.appList = [];
             res.forEach(item => {
@@ -374,7 +374,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
     getUserApps() {
         const self = this;
         self.showLazyLoader = true;
-        self.subscriptions['userApps'] = self.commonService.get('user', '/usr/' + self.user._id + '/appList', self.userAppConfig)
+        self.subscriptions['userApps'] = self.commonService.get('user', '/data/' + self.user._id + '/appList', self.userAppConfig)
             .subscribe(res => {
                 self.showLazyLoader = false;
                 if (res.apps && res.apps.length > 0) {
@@ -396,7 +396,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
     getAppLogo(app: App) {
         const self = this;
         const option: GetOptions = { select: 'logo.thumbnail', noApp: true };
-        self.subscriptions['getAppLogo_' + app._id] = self.commonService.get('user', '/app/' + app._id, option)
+        self.subscriptions['getAppLogo_' + app._id] = self.commonService.get('user', '/admin/app/' + app._id, option)
             .subscribe((res) => {
                 app.logo = res.logo;
             }, err => {

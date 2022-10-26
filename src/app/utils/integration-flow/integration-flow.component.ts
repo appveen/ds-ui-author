@@ -113,7 +113,7 @@ export class IntegrationFlowComponent implements OnInit, OnDestroy {
     const self = this;
     self.reqNodeList = [];
     self.apiCalls.getMicroflowData = true;
-    self.commonService.get('partnerManager', '/flow/' + self.id).subscribe((data: FlowData) => {
+    self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/` + self.id).subscribe((data: FlowData) => {
       self.getPartnerAgent(data.partner);
       if (!data.timer) {
         data.timer = { enabled: false, cronRegEx: '', timebounds: [] };
@@ -155,7 +155,7 @@ export class IntegrationFlowComponent implements OnInit, OnDestroy {
       count: 1,
       noApp: true
     };
-    self.commonService.get('partnerManager', '/agentRegistry', options).subscribe(res => {
+    self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, options).subscribe(res => {
       if (Array.isArray(res) && res.length > 0) {
         self.partnerAgent = res[0];
         self.flowService.patchPartnerAgent(self.data.blocks, self.partnerAgent, self.data.direction);
@@ -249,9 +249,9 @@ export class IntegrationFlowComponent implements OnInit, OnDestroy {
     let request;
     self.apiCalls.save = true;
     if (self.id) {
-      request = self.commonService.put('partnerManager', '/flow/' + id, payload);
+      request = self.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/` + id, payload);
     } else {
-      request = self.commonService.post('partnerManager', '/flow', payload);
+      request = self.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload);
     }
     request.subscribe(res => {
       if (deploy) {
@@ -272,7 +272,7 @@ export class IntegrationFlowComponent implements OnInit, OnDestroy {
     const self = this;
     self.apiCalls.deploy = true;
     const id = this.data.runningFlow ? this.data.runningFlow : this.data._id;
-    self.commonService.put('partnerManager', '/flow/' + id + '/deploy', { app: this.commonService.app._id }).subscribe(res => {
+    self.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/utils/` + id + '/deploy', { app: this.commonService.app._id }).subscribe(res => {
       self.ts.success('Flow saved and deployed successfully');
       self.toggleMicroflowChange.emit(false);
       self.apiCalls.deploy = false;

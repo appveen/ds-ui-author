@@ -175,7 +175,7 @@ export class AgentLogsComponent implements OnInit {
         agentID: self.agentId
       }
     };
-    self.commonService.get('partnerManager', '/agentRegistry', options).subscribe(res => {
+    self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, options).subscribe(res => {
       if (res.length > 0) {
         self.agentDetails = res[0];
         self.fetchPassword();
@@ -240,7 +240,7 @@ export class AgentLogsComponent implements OnInit {
   fetchPassword() {
     const self = this;
     if (!self.agentDetails.decPassword) {
-      self.commonService.get('partnerManager', '/agentRegistry/' + self.agentDetails._id + '/password').subscribe(res => {
+      self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/${self.agentDetails._id}/password`).subscribe(res => {
         self.agentDetails.decPassword = res.password;
       }, err => {
         self.commonService.errorToast(err);
@@ -274,7 +274,7 @@ export class AgentLogsComponent implements OnInit {
           return;
         }
         delete self.agentData.isEdit;
-        self.commonService.put('partnerManager', '/agentRegistry/' + agent._id, self.agentData).subscribe(res => {
+        self.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/${agent._id}`, self.agentData).subscribe(res => {
           if (res) {
             self.ts.success('Agent Saved Sucessfully');
           }
@@ -309,7 +309,7 @@ export class AgentLogsComponent implements OnInit {
       self.agentPasswordModel.message = 'Passwords do not match';
       return;
     }
-    self.commonService.put('partnerManager', '/agentRegistry/' + self.agentPasswordModel.agent._id + '/password', {
+    self.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/utils/${self.agentPasswordModel.agent._id}/password`, {
       password: self.agentPasswordModel.password
     }).subscribe(res => {
       self.ts.success(res.message);
@@ -351,7 +351,7 @@ export class AgentLogsComponent implements OnInit {
     self.alertModalTemplateRef = self.commonService.modal(self.alertModalTemplate);
     self.alertModalTemplateRef.result.then(close => {
       if (close) {
-        self.commonService.put('partnerManager', `/agentRegistry/${agent._id}/${type}`).subscribe(res => {
+        self.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/utils/${agent._id}/${type}`).subscribe(res => {
           self.ts.success(res.message);
         }, err => {
           self.commonService.errorToast(err);

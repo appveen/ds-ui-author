@@ -115,7 +115,7 @@ export class BotsComponent implements OnInit, OnDestroy {
                 bot: [true],
                 attributes: [{}],
                 basicDetails: self.fb.group({
-                    name: [null, [Validators.required,Validators.maxLength(30), Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
+                    name: [null, [Validators.required, Validators.maxLength(30), Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')]],
                     phone: [null],
                     email: [null, [Validators.pattern(/[\w]+@[a-zA-Z0-9-]{2,}(\.[a-z]{2,})+/)]],
                     description: [null],
@@ -170,7 +170,7 @@ export class BotsComponent implements OnInit, OnDestroy {
     }
 
     initConfig() {
-        const self = this;  
+        const self = this;
         self.botList = [];
         self.apiConfig.count = 10;
         self.apiConfig.page = 1;
@@ -222,8 +222,9 @@ export class BotsComponent implements OnInit, OnDestroy {
         const payload = {
             groups: teamData
         };
+
         const username = self.userForm.get('userData.username').value;
-        self.commonService.put('user', `/usr/${username}/${self.commonService.app._id}/import`, payload)
+        self.commonService.put('user', `/${self.commonService.app._id}/user/utils/import/${username}`, payload)
             .subscribe((res) => {
                 self.newBotModalRef.close(true);
                 self.initConfig();
@@ -252,7 +253,7 @@ export class BotsComponent implements OnInit, OnDestroy {
             user: userData,
             groups: teamData
         };
-        self.commonService.post('user', `/usr/app/${self.commonService.app._id}/create`, payload)
+        self.commonService.post('user', `/${self.commonService.app._id}/user`, payload)
             .subscribe((res) => {
                 self.newBotModalRef.close(true);
                 self.initConfig();
@@ -274,7 +275,7 @@ export class BotsComponent implements OnInit, OnDestroy {
             self.userForm.get('userData.username').patchValue(null);
             return;
         }
-        self.commonService.get('user', `/authType/${enteredUN}`)
+        self.commonService.get('user', `/auth/authType/${enteredUN}`)
             .subscribe(res => {
                 const temp = res;
                 self.userExist = true;
@@ -313,7 +314,7 @@ export class BotsComponent implements OnInit, OnDestroy {
         if (self.hasPermission('PMB') || self.hasPermission('PVB')) {
             self.getBotCount();
             self.showLazyLoader = true;
-            self.subscriptions['botList'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}`, self.apiConfig)
+            self.subscriptions['botList'] = self.commonService.get('user', `/${self.commonService.app._id}/bot`, self.apiConfig)
                 .subscribe((users) => {
                     self.showLazyLoader = false;
                     if (users.length > 0) {
@@ -335,7 +336,7 @@ export class BotsComponent implements OnInit, OnDestroy {
             self.subscriptions['botCount'].unsubscribe();
         }
         if (self.hasPermission('PMB') || self.hasPermission('PVB')) {
-            self.subscriptions['botCount'] = self.commonService.get('user', `/bot/app/${self.commonService.app._id}/count`, self.apiConfig)
+            self.subscriptions['botCount'] = self.commonService.get('user', `/${self.commonService.app._id}/bot/utils/count`, self.apiConfig)
                 .subscribe((res) => {
                     self.totalRecords = res;
                 }, (err) => {

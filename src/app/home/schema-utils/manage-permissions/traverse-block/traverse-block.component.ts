@@ -97,7 +97,7 @@ export class TraverseBlockComponent implements OnInit, AfterContentChecked {
       app: this.commonService.app._id
     };
     if (searchTerm) {
-      self.commonService.get('serviceManager', '/service', options).subscribe(res => {
+      self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options).subscribe(res => {
         self.searchList = res;
       }, err => {
         self.searchList = [];

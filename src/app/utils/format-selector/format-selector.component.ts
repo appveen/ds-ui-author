@@ -156,14 +156,14 @@ export class FormatSelectorComponent implements OnDestroy {
         self.searchTerm = searchTerm;
         self.showLoader = true;
         if (self.selectedType === 'dataService') {
-            request = self.commonService.get('serviceManager', '/service', options);
+            request = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options);
         } else {
             if (self.restrictToFormat && self.restrictToFormat.length > 0) {
                 options.filter['formatType'] = {
                     $in: self.restrictToFormat
                 };
             }
-            request = self.commonService.get('partnerManager', '/dataFormat', options);
+            request = self.commonService.get('partnerManager', `/${this.commonService.app._id}/dataFormat`, options);
         }
         request.subscribe(res => {
             self.showLoader = false;

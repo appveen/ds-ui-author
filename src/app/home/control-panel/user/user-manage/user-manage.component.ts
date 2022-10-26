@@ -532,7 +532,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
             if (self.subscriptions['userDtl']) {
                 self.subscriptions['userDtl'].unsubscribe();
             }
-            self.subscriptions['userDtl'] = self.commonService.put('user', '/usr/' + self.user._id + '/?app=' + this.commonService.app._id, self.user).subscribe(
+            self.subscriptions['userDtl'] = self.commonService.put('user', `/${this.commonService.app._id}/user/${self.user._id}`, self.user).subscribe(
                 res => {
                     self.editDetails = false;
                     if (res.basicDetails.name) {
@@ -572,7 +572,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
                 self.subscriptions['resetPwd'].unsubscribe();
             }
             self.subscriptions['resetPwd'] = self.commonService
-                .put('user', '/usr/' + self.user._id + '/reset', self.resetPasswordForm.value)
+                .put('user', `/${this.commonService.app._id}/user/utils/reset/${self.user._id}`, self.resetPasswordForm.value)
                 .subscribe(
                     res => {
                         self.resetPasswordModelRef.close();
@@ -651,7 +651,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
         if (data) {
             if (typeof data.attrName !== 'undefined') {
                 delete self.user.attributes[data.attrName];
-                self.commonService.put('user', '/usr/' + self.user._id + '/?app=' + this.commonService.app._id, self.user).subscribe(
+                self.commonService.put('user', `/${this.commonService.app._id}/user/${self.user._id}`, self.user).subscribe(
                     () => {
                         self.ts.success('Attribute deleted successfully');
                         self.rowData = [...this.userAttributeList];
@@ -665,7 +665,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
                 const payload = { apps: [] };
                 payload.apps.push(self.commonService.app._id);
                 self.subscriptions['removeAdminAccess'] = self.commonService
-                    .put('user', `/usr/${self.user._id}/appAdmin/revoke`, payload)
+                    .put('user', `/${this.commonService.app._id}/user/utils/appAdmin/${self.user._id}/revoke`, payload)
                     .subscribe(
                         () => {
                             self.madeAppAdmin = false;
@@ -693,7 +693,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
         if (self.hasPermission('PMUG')) {
             const payload = { apps: [] };
             payload.apps.push(self.commonService.app._id);
-            self.subscriptions['makeAdmin'] = self.commonService.put('user', `/usr/${self.user._id}/appAdmin/grant`, payload).subscribe(
+            self.subscriptions['makeAdmin'] = self.commonService.put('user', `/${this.commonService.app._id}/user/utils/appAdmin/${self.user._id}/grant`, payload).subscribe(
                 () => {
                     self.madeAppAdmin = true;
                     self.user.accessControl.accessLevel = 'Selected';
@@ -787,7 +787,8 @@ export class UserManageComponent implements OnInit, OnDestroy {
     onGroupToggle(group: any, selected: boolean) {
         group.loading = true;
         if (selected) {
-            this.commonService.put('user', `/usr/${this.user._id}/addToGroups`, { groups: [group._id], app: this.commonService.app._id }).subscribe(
+
+            this.commonService.put('user', `/${this.commonService.app._id}/user/utils/addToGroups/${this.user._id}`, { groups: [group._id], app: this.commonService.app._id }).subscribe(
                 () => {
                     this.ts.success('User has been added to group successfully');
                     this.getUserTeam();
@@ -802,7 +803,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
             if (!!foundGroup?.users?.length) {
                 foundGroup.users = foundGroup.users.filter(u => u !== this.user._id);
             }
-            this.commonService.put('user', `/usr/${this.user._id}/removeFromGroups`, { groups: [group._id], app: this.commonService.app._id }).subscribe(
+            this.commonService.put('user', `/${this.commonService.app._id}/user/utils/removeFromGroups/${this.user._id}`, { groups: [group._id], app: this.commonService.app._id }).subscribe(
                 () => {
                     this.ts.success(`${group.name} Group has been removed for user ${this.user.basicDetails.name}`);
                     this.getUserTeam();
@@ -875,7 +876,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
                     }
                     const { key, ...rest } = this.attributesForm.value;
                     this.user.attributes[key] = this.appService.cloneObject(rest);
-                    this.commonService.put('user', `/usr/${this.user._id}?app=` + this.commonService.app._id, this.user).subscribe(
+                    this.commonService.put('user', `/${this.commonService.app._id}/user/${this.user._id}`, this.user).subscribe(
                         () => {
                             this.rowData = [...this.userAttributeList];
                             this.ts.success('Custom Details Saved Successfully');

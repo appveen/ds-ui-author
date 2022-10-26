@@ -377,7 +377,7 @@ export class UserGroupMembersComponent implements OnInit, OnDestroy {
             noApp: true
         };
         self.subscriptions['getAllUsers'] = self.commonService
-            .get('user', `/usr/app/${self.commonService.app._id}/`, options)
+            .get('user', `/${self.commonService.app._id}/user`, options)
             .subscribe(res => {
                 self.allUsers = res;
                 self.allUsers.forEach(user => {

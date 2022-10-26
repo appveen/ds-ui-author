@@ -51,7 +51,7 @@ export class GroupAuthorLibraryComponent implements OnInit, OnDestroy {
         app: self.commonService.app._id,
       }
     };
-    self.commonService.get('serviceManager', '/globalSchema', options).subscribe(res => {
+    self.commonService.get('serviceManager', `/${this.commonService.app._id}/globalSchema`, options).subscribe(res => {
       self.libraryList = res;
       self.libraryList.forEach(_lib => {
         _lib['attribute'] = GroupAuthorLibraryComponent.libAttrCount(_lib['definition']);

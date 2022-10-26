@@ -116,12 +116,12 @@
                 </div>
                 <span *ngIf="functionRoute.isActive" class="fa fa-angle-right mr-3"></span>
             </div>
-            <ng-container *ngIf="enableB2b">
+            <ng-container>
                 <div class="icon-block-group text-secondary border-top border-border pt-3 pl-2"
                     *ngIf="(hasPermission('PMDS') || hasPermission('PVDS')) || (hasPermission('PML') || hasPermission('PVL'))">
                     Integration
                 </div>
-                <div *ngIf="hasPartnerPermission" #partnerRoute="routerLinkActive"
+                <!-- <div *ngIf="hasPartnerPermission" #partnerRoute="routerLinkActive"
                     class="icon-block hover d-flex align-items-center justify-content-between my-2"
                     routerLinkActive="text-accent bg-white active" [routerLink]="['pm']" id="partnerManager"
                     (mouseover)="hover.partner = true" (mouseleave)="hover.partner = false">
@@ -131,6 +131,17 @@
                         <span class="text" [ngClass]="{'text-accent':hover.partner}">Partners</span>
                     </div>
                     <span *ngIf="partnerRoute.isActive" class="fa fa-angle-right mr-3"></span>
+                </div> -->
+                <div #flowRoute="routerLinkActive"
+                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
+                    routerLinkActive="text-accent bg-white active" [routerLink]="['flow']" id="flowManager"
+                    (mouseover)="hover.flow = true" (mouseleave)="hover.flow = false">
+                    <div class="d-flex align-items-center">
+                        <odp-partner-icon class="mx-2" [color]="hover.flow?'0082C9':'222'" size="18"
+                            [active]="flowRoute.isActive"></odp-partner-icon>
+                        <span class="text" [ngClass]="{'text-accent':hover.flow}">Flows</span>
+                    </div>
+                    <span *ngIf="flowRoute.isActive" class="fa fa-angle-right mr-3"></span>
                 </div>
                 <div *ngIf="hasDataFormatPermission" #dataFormatRoute="routerLinkActive"
                     class="icon-block hover d-flex align-items-center justify-content-between my-2"
@@ -143,7 +154,7 @@
                     </div>
                     <span *ngIf="dataFormatRoute.isActive" class="fa fa-angle-right mr-3"></span>
                 </div>
-                <div *ngIf="hasNanoServicePermission" #nanoServiceRoute="routerLinkActive"
+                <!-- <div *ngIf="hasNanoServicePermission" #nanoServiceRoute="routerLinkActive"
                     class="icon-block hover d-flex align-items-center justify-content-between my-2"
                     routerLinkActive="text-accent bg-white active" [routerLink]="['nsl']" id="nanoService"
                     (mouseover)="hover.nanoService = true" (mouseleave)="hover.nanoService = false">
@@ -153,7 +164,7 @@
                         <span class="text" [ngClass]="{'text-accent':hover.nanoService}">Nano Services</span>
                     </div>
                     <span *ngIf="nanoServiceRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
+                </div> -->
                 <div *ngIf="hasAgentsPermission" #agentRoute="routerLinkActive"
                     class="icon-block hover d-flex align-items-center justify-content-between my-2"
                     routerLinkActive="text-accent bg-white active" [routerLink]="['agent']" id="agent"

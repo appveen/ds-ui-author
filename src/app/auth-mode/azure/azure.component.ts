@@ -100,7 +100,7 @@ export class AzureComponent implements OnInit, OnDestroy, AfterContentInit {
       pending: true,
       isError: false
     };
-    self.commonService.post('user', '/azure/test', self.ldapForm.value).subscribe(res => {
+    self.commonService.post('user', '/auth/azure/test', self.ldapForm.value).subscribe(res => {
       self.validateResponse = res;
       self.validateResponse.isError = false;
       self.validateResponse.pending = false;
@@ -128,7 +128,7 @@ export class AzureComponent implements OnInit, OnDestroy, AfterContentInit {
     payload.adToken = self.azureToken;
     payload.filter = `startswith(displayName,'${payload.searchText}') or startswith(mail,'${payload.searchText}')`;
     delete payload.searchText;
-    self.commonService.post('user', '/azure/search', payload).subscribe(res => {
+    self.commonService.post('user', '/auth/azure/search', payload).subscribe(res => {
       self.users = res;
       self.users.forEach(u => {
         if (self.ldapForm.get('admin').value && u.username
@@ -177,7 +177,7 @@ export class AzureComponent implements OnInit, OnDestroy, AfterContentInit {
     self.applyingChangesModalRef = self.commonService.modal(self.applyingChangesModal);
     const payload = self.ldapForm.value;
     // payload.adToken = self.azureToken;
-    self.commonService.post('user', '/azure', payload).subscribe(res => {
+    self.commonService.post('user', '/auth/azure', payload).subscribe(res => {
       self.completed.status = true;
       self.completed.pending = false;
     }, err => {

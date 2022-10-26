@@ -1,0 +1,42 @@
+.editor-theme-selection {
+    min-width: 200px;
+  }
+  
+  .monaco-editor {
+    height: 42px;
+    .view-line {
+      font-size: 14px !important;
+    }
+  }
+  
+  .code-editor {
+    height: calc(100vh - 340px);
+  }
+  
+  .editor-wrapper {
+    width: calc(100% - 360px);
+  }
+  
+  .helper-panel {
+    width: 360px;
+    width: 360px;
+    height: calc(100vh - 230px);
+    overflow: auto;
+  }
+  .env-vars {
+    font-size: 10px;
+    overflow: auto;
+  }
+  
+  .console {
+    height: calc(100vh - 230px) !important;
+    width: 600px !important;
+    right: -600px;
+    z-index: 2;
+    transition: 0.2s;
+    overflow: auto;
+    &.show {
+      right: 0;
+    }
+  }
+  

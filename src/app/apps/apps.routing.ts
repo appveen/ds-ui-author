@@ -5,11 +5,9 @@ import { BuilderGuard } from '../utils/guards/builder.guard';
 import { LibraryGuard } from '../utils/guards/library.guard';
 import { ControlPanelGuard } from '../utils/guards/control-panel.guard';
 import { AppsComponent } from 'src/app/apps/apps.component';
-import { PartnerGuard } from '../utils/guards/partner.guard';
 import { BeforeGuard } from '../utils/guards/before.guard';
 import { DataFormatGuard } from '../utils/guards/data-format.guard';
 import { AgentGuard } from '../utils/guards/agent.guard';
-import { NanoServiceGuard } from '../utils/guards/nano-service.guard';
 import { AppPanelGuard } from '../utils/guards/app-panel.guard';
 import { BotGuard } from '../utils/guards/bot.guard';
 import { InsightsGuard } from '../utils/guards/insights.guard';
@@ -50,16 +48,6 @@ const routes: Routes = [
                 canActivate: [LibraryGuard]
             },
             {
-                path: 'pm',
-                loadChildren: () => import('../home/partner-listing/partner-listing.module').then(m => m.PartnerListingModule),
-                canActivate: [PartnerGuard]
-            },
-            {
-                path: 'po/:id',
-                loadChildren: () => import('../home/partner-onboard/partner-onboard.module').then(m => m.PartnerOnboardModule),
-                canActivate: [PartnerGuard]
-            },
-            {
                 path: 'dfl',
                 loadChildren: () => import('../home/data-format-listing/data-format-listing.module').then(m => m.DataFormatListingModule),
                 canActivate: [DataFormatGuard]
@@ -70,20 +58,9 @@ const routes: Routes = [
                 canActivate: [DataFormatGuard]
             },
             {
-                path: 'nsl',
-                loadChildren: () => import('../home/nano-service-listing/nano-service-listing.module').then(m => m.NanoServiceListingModule),
-                canActivate: [NanoServiceGuard]
-            },
-            {
-                path: 'nsm/:id',
-                loadChildren: () => import('../home/nano-service-manage/nano-service-manage.module').then(m => m.NanoServiceManageModule),
-                canActivate: [NanoServiceGuard]
-            },
-            {
                 path: 'agent',
                 loadChildren: () => import('../home/agents/agents.module').then(m => m.AgentsModule),
                 canActivate: [AgentGuard]
-
             },
             {
                 path: 'insight',
@@ -116,6 +93,14 @@ const routes: Routes = [
             {
                 path: 'faas',
                 loadChildren: () => import('../home/faas/faas.module').then(m => m.FaasModule),
+            },
+            {
+                path: 'flow',
+                loadChildren: () => import('../home/b2b-flows/b2b-flows.module').then(m => m.B2bFlowsModule),
+            },
+            {
+                path: 'flow/:id',
+                loadChildren: () => import('../home/b2b-flows-manage/b2b-flows-manage.module').then(m => m.B2bFlowsManageModule),
             },
         ]
     },

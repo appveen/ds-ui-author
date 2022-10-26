@@ -133,7 +133,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
                 }
             };
             self.apiCalls.fetchMicroflow = true;
-            self.commonService.get('partnerManager', '/flow/' + id, option).subscribe(res => {
+            self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/` + id, option).subscribe(res => {
                 self.apiCalls.fetchMicroflow = false;
                 const inAgent = res.blocks.find(e => e.meta.blockType === 'INPUT');
                 if (inAgent) {
@@ -165,7 +165,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
                 }
             };
             self.apiCalls.fetchMicroflow = true;
-            self.commonService.get('partnerManager', '/flow/' + id, option).subscribe(res => {
+            self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/` + id, option).subscribe(res => {
                 self.apiCalls.fetchMicroflow = false;
                 res.agentName = self.microflows[index].agentName;
                 res.outputType = self.microflows[index].outputType;
@@ -243,7 +243,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
         payload.app = self.commonService.app._id;
         delete payload.inputType;
         self.apiCalls.saveFlow = true;
-        self.commonService.post('partnerManager', '/flow', payload).subscribe(res => {
+        self.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
             self.apiCalls.saveFlow = false;
             let temp = self.partner.get('flows').value;
             if (!temp) {
@@ -269,7 +269,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
         self.alertModalTemplateRef = self.commonService.modal(self.alertModalTemplate);
         self.alertModalTemplateRef.result.then(close => {
             if (close) {
-                self.commonService.put('partnerManager', `/flow/${flow._id}/stop`, { app: this.commonService.app._id }).subscribe(res => {
+                self.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/utils/${flow._id}/stop`, { app: this.commonService.app._id }).subscribe(res => {
                     self.ts.success('Stopping flow');
                     flow.status = 'Pending';
                 }, err => {
@@ -288,7 +288,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
         self.alertModalTemplateRef = self.commonService.modal(self.alertModalTemplate);
         self.alertModalTemplateRef.result.then(close => {
             if (close) {
-                self.commonService.put('partnerManager', `/flow/${flow._id}/start`, { app: this.commonService.app._id }).subscribe(res => {
+                self.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/utils/${flow._id}/start`, { app: this.commonService.app._id }).subscribe(res => {
                     self.ts.success('Starting flow');
                     flow.status = 'Pending';
                 }, err => {
@@ -307,7 +307,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
         self.alertModalTemplateRef = self.commonService.modal(self.alertModalTemplate);
         self.alertModalTemplateRef.result.then(close => {
             if (close) {
-                self.commonService.put('partnerManager', `/flow/${flow._id}/deploy`, { app: this.commonService.app._id }).subscribe(res => {
+                self.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/utils/${flow._id}/deploy`, { app: this.commonService.app._id }).subscribe(res => {
                     self.ts.success('Deploying flow');
                     flow.status = 'Pending';
                 }, err => {
@@ -347,7 +347,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
             if (self.subscriptions['deleteFlow']) {
                 self.subscriptions['deleteFlow'].unsubscribe();
             }
-            self.subscriptions['deleteFlow'] = self.commonService.delete('partnerManager', `/flow/${temp._id}`).subscribe(res => {
+            self.subscriptions['deleteFlow'] = self.commonService.delete('partnerManager', `/${this.commonService.app._id}/flow/${temp._id}`).subscribe(res => {
                 self.ts.success('Flow Deleted');
                 self.microflows.splice(data.index, 1);
                 let arr: Array<string> = self.partner.get('flows').value;
@@ -438,7 +438,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
 
     getAgentName(id: string, data: any) {
         const self = this;
-        self.commonService.get('partnerManager', '/agentRegistry', {
+        self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, {
             select: 'name',
             filter: {
                 agentID: id

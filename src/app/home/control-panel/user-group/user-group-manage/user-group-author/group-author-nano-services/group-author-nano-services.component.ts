@@ -260,7 +260,7 @@ export class GroupAuthorNanoServicesComponent implements OnInit {
       self.subscriptions['getDataFormats'].unsubscribe();
     }
     self.showLazyLoader = true;
-    self.subscriptions['getDataFormats'] = self.commonService.get('partnerManager', '/nanoService', options)
+    self.subscriptions['getDataFormats'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/nanoService`, options)
       .subscribe(res => {
         self.showLazyLoader = false;
         if (res.length > 0) {

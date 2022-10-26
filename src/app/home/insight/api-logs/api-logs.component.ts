@@ -309,11 +309,11 @@ export class ApiLogsComponent implements OnInit, OnDestroy {
       self.subscriptions['getRecords_data'].unsubscribe();
     }
     self.subscriptions['getRecords_data'] = self.commonService
-      .get('log', `/mon/dataService/log` + '/count', { filter: self.apiConfig.filter, noApp: true })
+      .get('log', `/mon/${self.commonService.app._id}/dataService/log` + '/count', { filter: self.apiConfig.filter, noApp: true })
       .pipe(
         switchMap(count => {
           self.currentRecordsCount = count;
-          return !!count ? self.commonService.get('log', `/mon/dataService/log`, self.apiConfig) : of(null);
+          return !!count ? self.commonService.get('log', `/mon/${self.commonService.app._id}/dataService/log`, self.apiConfig) : of(null);
         })
       ).subscribe(
         data => {
@@ -374,7 +374,7 @@ export class ApiLogsComponent implements OnInit, OnDestroy {
       select: 'name',
       count: -1
     };
-    self.subscriptions['getservice'] = self.commonService.get('serviceManager', '/service', options).subscribe(
+    self.subscriptions['getservice'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options).subscribe(
       res => {
         self.dataservices = res.map(itm => ({ value: itm._id, label: itm.name }));
       },

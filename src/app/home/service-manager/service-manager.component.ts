@@ -39,6 +39,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     @ViewChild('alertModalTemplate', { static: false }) alertModalTemplate: TemplateRef<HTMLElement>;
     @ViewChild('newServiceModal', { static: false }) newServiceModal: TemplateRef<HTMLElement>;
     @ViewChild('cloneServiceModal', { static: false }) cloneServiceModal: TemplateRef<HTMLElement>;
+    @ViewChild('yamlModalTemplate', { static: false }) yamlModalTemplate: TemplateRef<HTMLElement>;
     app: string;
     serviceSearchForm: FormGroup;
     serviceList: Array<any> = [];
@@ -62,9 +63,12 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     alertModalTemplateRef: NgbModalRef;
     newServiceModalRef: NgbModalRef;
     cloneServiceModalRef: NgbModalRef;
+    yamlModalTemplateRef: NgbModalRef;
     cloneData: any;
     easterEggEnabled: boolean;
     serviceRecordCounts: Array<any>;
+    serviceYaml: any;
+    deploymentYaml: any;
     constructor(public commonService: CommonService,
         private appService: AppService,
         private router: Router,
@@ -163,7 +167,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             if (index > -1) {
                 self.serviceList[index].status = 'Active';
             } else {
-                self.commonService.get('serviceManager', '/service/' + data._id, { filter: { app: this.commonService.app._id } }).subscribe(service => {
+                self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/` + data._id, { filter: { app: this.commonService.app._id } }).subscribe(service => {
                     // self.setServiceDetails(service);
                     // self.serviceList.push(service);
                 }, err => {
@@ -230,9 +234,9 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             if (close) {
                 let request;
                 if (service.status === 'Draft') {
-                    request = self.commonService.delete('serviceManager', '/service/' + id);
+                    request = self.commonService.delete('serviceManager', `/${this.commonService.app._id}/service/` + id);
                 } else {
-                    request = self.commonService.delete('serviceManager', '/' + id + '/draftDelete');
+                    request = self.commonService.delete('serviceManager', `/${this.commonService.app._id}/service/utils/${id}/draftDelete`);
                 }
                 request.subscribe(res => {
                     Object.keys(self.showCardDraft).forEach(key => {
@@ -262,7 +266,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         if (!self.hasPermission('PMDSSDH', 'SM')) {
             delete payload.versionValidity;
         }
-        self.commonService.post('serviceManager', '/service', payload).subscribe(res => {
+        self.commonService.post('serviceManager', `/${this.commonService.app._id}/service`, payload).subscribe(res => {
             self.ts.success('Service Created.');
             self.appService.editServiceId = res._id;
             self.showLazyLoader = false;
@@ -286,10 +290,29 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
     repairService(index: number) {
         const self = this;
-        const url = '/' + self.serviceList[index]._id + '/repair';
+        const url = `/${this.commonService.app._id}/service/utils/` + self.serviceList[index]._id + '/repair';
         self.subscriptions['updateservice'] = self.commonService.put('serviceManager', url, null).subscribe(d => {
             self.ts.info('Repairing data service...');
             self.serviceList[index].status = 'Pending';
+        }, err => {
+            self.commonService.errorToast(err);
+        });
+    }
+
+    getYamls(index: number) {
+        const self = this;
+        const url = `/${this.commonService.app._id}/service/utils/${self.serviceList[index]._id}/yamls`;
+        self.subscriptions['updateservice'] = self.commonService.get('serviceManager', url, null).subscribe(data => {
+            this.serviceYaml = data.service;
+            this.deploymentYaml = data.deployment;
+            this.yamlModalTemplateRef = this.commonService.modal(this.yamlModalTemplate);
+            this.yamlModalTemplateRef.result.then(close => {
+                this.serviceYaml = null;
+                this.deploymentYaml = null;
+            }, dismiss => {
+                this.serviceYaml = null;
+                this.deploymentYaml = null;
+            });
         }, err => {
             self.commonService.errorToast(err);
         });
@@ -350,7 +373,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         delete payload.expTab;
         delete payload.rolTab;
         delete payload.setTab;
-        self.commonService.post('serviceManager', '/service', payload).subscribe(res => {
+        self.commonService.post('serviceManager', `/${this.commonService.app._id}/service`, payload).subscribe(res => {
             self.ts.success('Service Cloned.');
             self.appService.editServiceId = res._id;
             self.cloneServiceModalRef.close(false);
@@ -391,7 +414,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             self.subscriptions['getservice'].unsubscribe();
         }
         self.showLazyLoader = true;
-        self.subscriptions['getservice'] = self.commonService.get('serviceManager', '/service', self.service)
+        self.subscriptions['getservice'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, self.service)
             .subscribe(res => {
                 self.showLazyLoader = false;
                 if (res.length > 0) {
@@ -400,7 +423,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                         self.showCardMenu[len + i] = false;
                         // if (service.definition || service.webHook || service.status === 'Draft') {
                         self.setServiceDetails(service);
-                        service['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}?app=${this.commonService.app._id}`;
+                        // service['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}?app=${this.commonService.app._id}`;
+                        service.docapi = `${environment.url.doc}/?q=/api/a/sm/${service.app}/service/utils/${service._id}/swagger/${service.app}${service.api}`;
                         service._records = 0;
                         self.serviceList.push(service);
                         // }
@@ -434,7 +458,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             self.subscriptions['getDraftservice'].unsubscribe();
         }
         self.showLazyLoader = true;
-        self.subscriptions['getDraftservice'] = self.commonService.get('serviceManager', '/service' + '?draft=true', self.service)
+        self.subscriptions['getDraftservice'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service` + '?draft=true', self.service)
             .subscribe(res => {
                 self.showLazyLoader = false;
                 res.forEach(item => {
@@ -463,13 +487,14 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         service._references = service.relatedSchemas && service.relatedSchemas.incoming ? service.relatedSchemas.incoming.length : 0;
         service._preHooks = service.preHooks ? service.preHooks.length : 0;
         service._webHooks = service.webHooks ? service.webHooks.length + service._preHooks : 0 + service._preHooks;
-        service.docapi = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}?app=${this.commonService.app._id}`;
+        // service.docapi = `${environment.url.doc}/?q=/api/a/sm/service/${service._id}/swagger/${service.app}${service.api}?app=${this.commonService.app._id}`;
+        service.docapi = `${environment.url.doc}/?q=/api/a/sm/${service.app}/service/utils/${service._id}/swagger/${service.app}${service.api}`;
     }
 
     _getServiceRecords(service) {
         const self = this;
         self.subscriptions['getservicerecord_' + service._id] =
-            self.commonService.get('serviceManager', '/' + service._id + '/utils/count', { filter: { app: this.commonService.app._id } }).subscribe(res => {
+            self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/count/${service._id}`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
                 service._records = res;
             }, err => {
                 service._records = 0;
@@ -478,7 +503,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
     _getAllServiceRecords(serviceIds: Array<string>) {
         const self = this;
-        return self.commonService.get('serviceManager', '/all/count', {
+        return self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/all/count`, {
             serviceIds: serviceIds.join(','),
             filter: { app: this.commonService.app._id }
         });
@@ -534,7 +559,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     closeDeleteModal(data) {
         const self = this;
         if (data) {
-            const url = '/service/' + self.serviceList[data.index]._id;
+            const url = `/${this.commonService.app._id}/service/` + self.serviceList[data.index]._id;
             self.showLazyLoader = true;
             self.subscriptions['deleteservice'] = self.commonService.delete('serviceManager', url).subscribe(d => {
                 self.showLazyLoader = false;
@@ -565,9 +590,9 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         self.alertModalTemplateRef = self.commonService.modal(self.alertModalTemplate);
         self.alertModalTemplateRef.result.then((close) => {
             if (close) {
-                let url = '/' + self.serviceList[index]._id + '/start';
+                let url = `/${this.commonService.app._id}/service/utils/` + self.serviceList[index]._id + '/start';
                 if (self.serviceList[index].status === 'Active') {
-                    url = '/' + self.serviceList[index]._id + '/stop';
+                    url = `/${this.commonService.app._id}/service/utils/` + self.serviceList[index]._id + '/stop';
                 }
                 self.subscriptions['updateservice'] = self.commonService.put('serviceManager', url, { app: this.commonService.app._id }).subscribe(d => {
                     if (self.serviceList[index].status === 'Active') {
@@ -597,7 +622,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         self.alertModalTemplateRef = self.commonService.modal(self.alertModalTemplate);
         self.alertModalTemplateRef.result.then((close) => {
             if (close) {
-                const url = '/' + self.serviceList[index]._id + '/deploy';
+                const url = `/${this.commonService.app._id}/service/utils/` + self.serviceList[index]._id + '/deploy';
                 self.subscriptions['updateservice'] = self.commonService.put('serviceManager', url, { app: this.commonService.app._id }).subscribe(d => {
                     self.ts.info('Deploying data service...');
                     self.serviceList[index].status = 'Pending';
@@ -745,7 +770,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         });
         if (indx > -1) {
             self.subscriptions['getservicerecord_' + service._id] =
-                self.commonService.get('serviceManager', '/service/' + service._id, { filter: { app: this.commonService.app._id } }).subscribe(res => {
+                self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/` + service._id, { filter: { app: this.commonService.app._id } }).subscribe(res => {
                     self.setServiceDetails(res);
                     self.serviceList.splice(index, 1, res);
                     this.serviceRecordCounts.forEach(item => {
@@ -766,7 +791,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
 
     transactionDoc() {
-        const docsAPI = `${environment.url.doc}/?q=/api/common/txn`;
+        const docsAPI = `${environment.url.doc}/?q=/api/a/common/txn`;
         window.open(docsAPI, '_blank');
     }
 

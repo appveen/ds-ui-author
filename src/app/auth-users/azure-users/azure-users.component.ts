@@ -83,9 +83,9 @@ export class AzureUsersComponent implements OnInit, OnDestroy {
       const payload = self.appService.cloneObject(self.searchModal);
       payload.adToken = self.azureToken;
       payload.filter = `startswith(displayName,'${payload.searchText}') or startswith(${adUsernameAttribute},'${payload.searchText}')`;
-      request = self.commonService.post('user', '/azure/search', payload);
+      request = self.commonService.post('user', '/auth/azure/search', payload);
     } else {
-      request = self.commonService.get('user', '/usr/app/' + self.commonService.app._id, options);
+      request = self.commonService.get('user', `/${self.commonService.app._id}/user`, options);
     }
     request.subscribe(res => {
       self.users = res;
@@ -142,9 +142,9 @@ export class AzureUsersComponent implements OnInit, OnDestroy {
     self.importingUsersModalRef.result.then(close => { }, dismiss => { });
     let request;
     if (self.admin) {
-      request = self.commonService.post('user', '/azure/import', self.selectedUsers);
+      request = self.commonService.post('user', '/auth/azure/import', self.selectedUsers);
     } else {
-      request = self.commonService.post('user', '/azure/import', self.selectedUsers);
+      request = self.commonService.post('user', '/auth/azure/import', self.selectedUsers);
     }
     request.subscribe(res => {
       self.importingUsersModalRef.close();
@@ -160,7 +160,7 @@ export class AzureUsersComponent implements OnInit, OnDestroy {
 
   checkIfUserExist(user: UsersResponse) {
     const self = this;
-    self.commonService.get('user', '/usr', { filter: { username: user.username }, select: '_id', noApp: true }).subscribe(res => {
+    self.commonService.get('user', `/${this.commonService.app._id}/user`, { filter: { username: user.username }, select: '_id', noApp: true }).subscribe(res => {
       if (res && res.length > 0) {
         user.selected = true;
         user.exist = true;

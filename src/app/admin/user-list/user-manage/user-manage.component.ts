@@ -63,10 +63,10 @@ export class UserManageComponent implements OnInit, OnDestroy {
             password: [null],
             cpassword: [null, [Validators.required]],
         });
-        if(self.commonService.userDetails.rbacPasswordComplexity){
+        if (self.commonService.userDetails.rbacPasswordComplexity) {
             self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*?~]).+$/)])
         }
-        else{
+        else {
             self.resetPasswordForm.get('password').setValidators([Validators.required, Validators.minLength(8)])
         }
         self.resetPasswordForm.get('password').updateValueAndValidity();
@@ -75,7 +75,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-      
+
     }
 
     ngOnDestroy() {
@@ -133,7 +133,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
             return;
         } else {
             this.showSpinner = true;
-            this.commonService.put('user', '/usr/' + this.user._id + '/reset', this.resetPasswordForm.value)
+            this.commonService.put('user', '/admin/user/utils/reset/' + this.user._id, this.resetPasswordForm.value)
                 .subscribe(() => {
                     this.showSpinner = false;
                     this.resetPasswordModelRef.close();

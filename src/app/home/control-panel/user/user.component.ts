@@ -196,10 +196,10 @@ export class UserComponent implements OnInit, OnDestroy {
                 Validators.required,
                 Validators.pattern('[a-zA-Z0-9\\s-_@#.]+')
             ]);
-            if(this.commonService.userDetails.rbacPasswordComplexity){
+            if (this.commonService.userDetails.rbacPasswordComplexity) {
                 this.userForm.get('userData.password').setValidators([Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*?~]).+$/)])
             }
-            else{
+            else {
                 this.userForm.get('userData.password').setValidators([Validators.required, Validators.minLength(8)]);
             }
             this.userForm.get('userData.cpassword').setValidators([Validators.required, Validators.minLength(8)]);
@@ -484,10 +484,10 @@ export class UserComponent implements OnInit, OnDestroy {
     }
 
     get invalidPasswordPattern() {
-        if(this.commonService.userDetails.rbacPasswordComplexity){
+        if (this.commonService.userDetails.rbacPasswordComplexity) {
             return this.userForm.get('userData.password').dirty && this.userForm.get('userData.password').hasError('pattern');
         }
-        else{
+        else {
             return false;
         }
     }
@@ -573,7 +573,7 @@ export class UserComponent implements OnInit, OnDestroy {
         };
         const username = this.userForm.get('userData.username').value;
         this.showLazyLoader = true;
-        this.commonService.put('user', `/usr/${username}/${this.commonService.app._id}/import`, payload).subscribe(
+        this.commonService.put('user', `/${this.commonService.app._id}/user/utils/import/${username}`, payload).subscribe(
             res => {
                 this.showLazyLoader = false;
                 this.newUserModalRef.close(true);
@@ -611,7 +611,7 @@ export class UserComponent implements OnInit, OnDestroy {
             groups: teamData
         };
         this.showLazyLoader = true;
-        this.commonService.post('user', `/usr/app/${this.commonService.app._id}/create`, payload).subscribe(
+        this.commonService.post('user', `/${this.commonService.app._id}/user`, payload).subscribe(
             res => {
                 this.showLazyLoader = false;
                 this.newUserModalRef.close(true);
@@ -639,7 +639,7 @@ export class UserComponent implements OnInit, OnDestroy {
             return;
         }
         this.showLazyLoader = true;
-        this.commonService.get('user', `/authType/${enteredUN}`).subscribe(
+        this.commonService.get('user', `/auth/authType/${enteredUN}`).subscribe(
             res => {
                 this.showLazyLoader = false;
                 this.userInLocal = true;
@@ -687,11 +687,11 @@ export class UserComponent implements OnInit, OnDestroy {
             filter: this.apiConfig.filter,
             noApp: true
         };
-        return this.commonService.get('user', `/usr/app/${this.commonService.app._id}/count`, options);
+        return this.commonService.get('user', `/${this.commonService.app._id}/user/utils/count`, options);
     }
 
     getUserList() {
-        return this.commonService.get('user', `/usr/app/${this.commonService.app._id}`, this.apiConfig);
+        return this.commonService.get('user', `/${this.commonService.app._id}/user`, this.apiConfig);
     }
 
     hasPermission(type: string) {
@@ -769,7 +769,7 @@ export class UserComponent implements OnInit, OnDestroy {
             return;
         }
         this.subscriptions['removeUsers'] = this.commonService
-            .put('user', `/app/${this.commonService.app._id}/removeUsers`, { userIds })
+            .put('user', `/${this.commonService.app._id}/user/utils/removeUsers`, { userIds })
             .subscribe(() => {
                 this.agGrid.api.deselectAll();
                 setTimeout(() => {
