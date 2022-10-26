@@ -143,6 +143,20 @@ const routes: Routes = [
             (m) => m.B2bFlowsManageModule
           ),
       },
+      {
+        path: 'con',
+        loadChildren: () =>
+          import('../home/connectors/connectors.module').then(
+            (m) => m.ConnectorsModule
+          ),
+      },
+      {
+        path: 'con/:id',
+        loadChildren: () =>
+          import('../home/connectors-manage/connectors-manage.module').then(
+            (m) => m.ConnectorsManageModule
+          ),
+      },
     ],
   },
 ];

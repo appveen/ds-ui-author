@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 import { CommonService } from '../../utils/services/common.service';
 import { AppService } from '../../utils/services/app.service';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
-import { switchMap } from 'rxjs/operators';
 import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 
 @Component({

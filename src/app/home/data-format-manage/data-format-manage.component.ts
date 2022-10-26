@@ -5,21 +5,20 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+
 import { CanComponentDeactivate } from 'src/app/utils/guards/route.guard';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
-import { SchemaAttributesPipe } from '../schema-utils/schema-attributes.pipe';
 import { SchemaBuilderService } from '../schema-utils/schema-builder.service';
 import { GlobalSchemaStructurePipe } from '../schema-utils/global-schema-structure.pipe';
 import { sameName } from '../custom-validators/same-name-validator';
-import { OrderByPipe } from 'src/app/utils/pipes/order-by/order-by.pipe';
 
 @Component({
     selector: 'odp-data-format-manage',
     templateUrl: './data-format-manage.component.html',
     styleUrls: ['./data-format-manage.component.scss'],
-    providers: [GlobalSchemaStructurePipe, SchemaAttributesPipe, OrderByPipe]
+    providers: [GlobalSchemaStructurePipe]
 })
 export class DataFormatManageComponent implements
     OnInit, AfterViewInit, AfterContentChecked, CanComponentDeactivate, OnDestroy {
@@ -68,13 +67,11 @@ export class DataFormatManageComponent implements
         private fb: FormBuilder,
         private commonService: CommonService,
         private appService: AppService,
-        private schemaAttributesPipe: SchemaAttributesPipe,
         private schemaService: SchemaBuilderService,
         private ts: ToastrService,
         private globalSchemaStructurePipe: GlobalSchemaStructurePipe,
         private cdr: ChangeDetectorRef,
-        private ngbToolTipConfig: NgbTooltipConfig,
-        private orderBy: OrderByPipe) {
+        private ngbToolTipConfig: NgbTooltipConfig) {
         const self = this;
         self.edit = {
             status: false,
