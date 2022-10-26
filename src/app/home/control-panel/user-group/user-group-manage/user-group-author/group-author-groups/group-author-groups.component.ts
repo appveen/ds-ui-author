@@ -24,9 +24,14 @@ export class GroupAuthorGroupsComponent implements OnInit {
     this.rolesChange = new EventEmitter();
     this.roles = [];
     this.dropdownToggle = {};
-    this.managePermissions = ['PMGBC', 'PMGBU', 'PMGBD', 'PMGBD', 'PMGMBC', 'PMGMBD', 'PMGMUC', 'PMGMUD', 'PMGADS', 'PMGAL', 'PMGAP', 'PMGADF', 'PMGAF', 'PMGAA', 'PMGABM', 'PMGAU', 'PMGAB', 'PMGAG', 'PMGAIS', 'PMGCDS', 'PMGCI', 'PMGCBM'];
-    this.viewPermissions = ['PVGB', 'PVGMB', 'PVGMU', 'PVGADS', 'PVGAL', 'PVGAP', 'PVGADF', 'PVGAF', 'PVGAA', 'PVGABM', 'PVGAU', 'PVGAB', 'PVGAG', 'PVGAIS', 'PVGCDS', 'PVGCI', 'PVGCBM'];
+    this.managePermissions = ['PMGBC', 'PMGBU', 'PMGBD', 'PMGBD', 'PMGMBC', 'PMGMBD', 'PMGMUC', 'PMGMUD', 'PMGADS', 'PMGAL', 'PMGACON', 'PMGADF', 'PMGAF', 'PMGAA', 'PMGABM', 'PMGAU', 'PMGAB', 'PMGAG', 'PMGAIS', 'PMGCDS', 'PMGCI', 'PMGCBM'];
+    this.viewPermissions = ['PVGB', 'PVGMB', 'PVGMU', 'PVGADS', 'PVGAL', 'PVGACON', 'PVGADF', 'PVGAF', 'PVGAA', 'PVGABM', 'PVGAU', 'PVGAB', 'PVGAG', 'PVGAIS', 'PVGCDS', 'PVGCI', 'PVGCBM'];
     this.authorModulesList = [
+      {
+        label: 'Connectors',
+        segment: 'GACON',
+        entity: 'GROUP'
+      },
       {
         label: 'Data Service',
         segment: 'GADS',
@@ -37,26 +42,21 @@ export class GroupAuthorGroupsComponent implements OnInit {
         segment: 'GAL',
         entity: 'GROUP'
       },
-      // {
-      //   label: 'Partners',
-      //   segment: 'GAP',
-      //   entity: 'GROUP'
-      // },
-      // {
-      //   label: 'Data Formats',
-      //   segment: 'GADF',
-      //   entity: 'GROUP'
-      // },
+      {
+        label: 'Data Formats',
+        segment: 'GADF',
+        entity: 'GROUP'
+      },
       {
         label: 'Functions',
         segment: 'GAF',
         entity: 'GROUP'
       },
-      // {
-      //   label: 'Agents',
-      //   segment: 'GAA',
-      //   entity: 'GROUP'
-      // },
+      {
+        label: 'Agents',
+        segment: 'GAA',
+        entity: 'GROUP'
+      },
       // {
       //   label: 'Bookmarks',
       //   segment: 'GABM',

@@ -74,6 +74,7 @@ import { FilterPipeModule } from '../../utils/pipes/filter.module';
 import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 import { UserGroupUsersComponent } from './user-group/user-group-manage/user-group-members/user-group-users/user-group-users.component';
 import { UserGroupMembersSearchComponent } from './user-group/user-group-manage/user-group-members/user-group-members-search/user-group-members-search.component';
+import { GroupAuthorConnectorsComponent } from './user-group/user-group-manage/user-group-author/group-author-connectors/group-author-connectors.component';
 
 @NgModule({
   imports: [
@@ -155,7 +156,8 @@ import { UserGroupMembersSearchComponent } from './user-group/user-group-manage/
     UserToGroupModalComponent,
     UserGridAppsRendererComponent,
     UserGroupUsersComponent,
-    UserGroupMembersSearchComponent
+    UserGroupMembersSearchComponent,
+    GroupAuthorConnectorsComponent
   ],
   exports: [UserGridAppsRendererComponent, UserToGroupModalComponent]
 })
