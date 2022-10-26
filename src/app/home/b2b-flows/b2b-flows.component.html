@@ -63,10 +63,10 @@
                     <div class="item-actions"></div>
                 </div>
             </div>
-            <div class="list-group-item d-flex align-items-center justify-content-start"
-                *ngFor="let item of records;let i=index">
-                <div class="item-name fw-500" (dblclick)="viewFlow(i)">
-                    <span class="ml-2 pl-1 text-dark">{{item.name}}</span>
+            <div class="list-group-item d-flex align-items-center justify-content-start hover"
+                *ngFor="let item of records;let i=index" (dblclick)="viewFlow(i)">
+                <div class="item-name fw-500 d-flex align-items-center">
+                    <span class="ml-2 pl-1 text-dark text-truncate" [ngbTooltip]="item.name" placement="right">{{item.name}}</span>
                     <span class="ml-2 version sub-heading font-11 text-uppercase">(v{{(item.version||1)}})</span>
                     <span *ngIf="item.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
                 </div>
