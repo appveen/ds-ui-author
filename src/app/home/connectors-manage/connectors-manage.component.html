@@ -148,7 +148,17 @@
                         <input id="connectionString" type="text" class="form-control"
                             [(ngModel)]="connector.values.connectionString" [disabled]="!edit.status">
                     </div>
-
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="sharedKey">Azure Shared Key</label>
+                        <input id="sharedKey" type="password" class="form-control" [(ngModel)]="connector.values.sharedKey"
+                            [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="timeout">Link Validity</label>
+                        <input id="timeout" type="number" class="form-control" [(ngModel)]="connector.values.timeout"
+                            [disabled]="!edit.status">
+                        <small class="form-text">Enter Value in Seconds</small>
+                    </div>
                 </ng-container>
             </div>
         </div>
