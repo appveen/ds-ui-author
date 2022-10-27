@@ -61,7 +61,7 @@
                     </div>
                     <div class="form-group">
                         <label class="text-secondary font-12 fw-500" for="port">Database Port</label>
-                        <input id="port" type="text" class="form-control" [(ngModel)]="connector.values.port"
+                        <input id="port" type="number" class="form-control" [(ngModel)]="connector.values.port"
                             [disabled]="!edit.status">
                     </div>
                     <div class="form-group">
@@ -83,7 +83,7 @@
                     </div>
                     <div class="form-group">
                         <label class="text-secondary font-12 fw-500" for="port">SFTP Port</label>
-                        <input id="port" type="text" class="form-control" [(ngModel)]="connector.values.port"
+                        <input id="port" type="number" class="form-control" [(ngModel)]="connector.values.port"
                             [disabled]="!edit.status">
                     </div>
                     <div class="form-group">
@@ -149,9 +149,14 @@
                             [(ngModel)]="connector.values.connectionString" [disabled]="!edit.status">
                     </div>
                     <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="container">Azure Container Name</label>
+                        <input id="container" type="text" class="form-control"
+                            [(ngModel)]="connector.values.container" [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
                         <label class="text-secondary font-12 fw-500" for="sharedKey">Azure Shared Key</label>
-                        <input id="sharedKey" type="password" class="form-control" [(ngModel)]="connector.values.sharedKey"
-                            [disabled]="!edit.status">
+                        <input id="sharedKey" type="password" class="form-control"
+                            [(ngModel)]="connector.values.sharedKey" [disabled]="!edit.status">
                     </div>
                     <div class="form-group">
                         <label class="text-secondary font-12 fw-500" for="timeout">Link Validity</label>
