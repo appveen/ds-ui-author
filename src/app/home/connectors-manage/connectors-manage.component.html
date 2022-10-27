@@ -37,6 +37,44 @@
                     <select id="type" class="form-control" [(ngModel)]="connector.type" [disabled]="!edit.status"
                         (ngModelChange)="onTypeChange($event)">
                         <option value="">--select--</option>
+                        <option *ngFor="let item of availableConnectors" [value]="item.type">{{item.label}}</option>
+                        <!-- <option value="MONGODB">MongoDB</option>
+                            <option value="MYSQL">MySQL</option>
+                            <option value="PG">Postgres SQL</option>
+                            <option value="SFTP">SFTP</option>
+                            <option value="KAFKA">Apache Kafka</option>
+                            <option value="AZBLOB">Azure Blob</option> -->
+                    </select>
+                </div>
+                <ng-container *ngFor="let item of availableConnectors">
+                    <ng-container *ngIf="item.type==connector.type">
+                        <ng-container *ngFor="let field of item.fields">
+                            <div *ngIf="!field.authType || (field.authType == getValue('authType'))" class="form-group">
+                                <label class="text-secondary font-12 fw-500"
+                                    [attr.for]="field.key">{{field.label}}</label>
+                                <input *ngIf="field.htmlInputType=='text' || field.htmlInputType=='password' || field.htmlInputType=='number'"
+                                    [id]="field.key" [type]="field.htmlInputType" class="form-control"
+                                    [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
+                                    [disabled]="!edit.status">
+                                <textarea *ngIf="field.htmlInputType=='textarea'" [id]="field.key" class="form-control"
+                                    [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
+                                    [disabled]="!edit.status"></textarea>
+                                <select *ngIf="field.htmlInputType=='select'" [id]="field.key" class="form-control"
+                                    [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
+                                    [disabled]="!edit.status">
+                                    <option *ngFor="let sel of field.options" [value]="sel.value">{{sel.label}}</option>
+                                </select>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <!-- <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-4">
+                <div class="form-group">
+                    <label class="text-secondary font-12 fw-500" for="type">Select Connector Type</label>
+                    <select id="type" class="form-control" [(ngModel)]="connector.type" [disabled]="!edit.status"
+                        (ngModelChange)="onTypeChange($event)">
+                        <option value="">--select--</option>
                         <option value="MONGODB">MongoDB</option>
                         <option value="MYSQL">MySQL</option>
                         <option value="PG">Postgres SQL</option>
@@ -165,7 +203,7 @@
                         <small class="form-text">Enter Value in Seconds</small>
                     </div>
                 </ng-container>
-            </div>
+            </div> -->
         </div>
     </div>
 

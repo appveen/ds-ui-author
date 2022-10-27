@@ -37,6 +37,7 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
   connector: any;
   oldData: any;
   edit: any;
+  availableConnectors: Array<any>;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -59,7 +60,8 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
     };
     this.connector = {
       values: {}
-    }
+    };
+    this.availableConnectors = [];
   }
 
   ngOnInit() {
@@ -69,6 +71,7 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
       url: '/app/' + this.commonService.app._id + '/con'
     });
     this.commonService.changeBreadcrumb(this.breadcrumbPaths)
+    this.getAvailableConnectors();
     this.route.params.subscribe(param => {
       if (param.id) {
         if (this.appService.editLibraryId) {
@@ -77,6 +80,19 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
         }
         this.getConnector(param.id);
       }
+    });
+  }
+
+  getAvailableConnectors() {
+    this.showLazyLoader = true;
+    this.subscriptions['getAvailableConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/availableConnectors`).subscribe(res => {
+      this.showLazyLoader = false;
+      console.log(res);
+      this.availableConnectors = res;
+    }, err => {
+      this.activeTab = 0;
+      this.showLazyLoader = false;
+      this.commonService.errorToast(err, 'Unable to fetch user groups, please try again later');
     });
   }
 
@@ -213,6 +229,16 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
       });
     }
     return true;
+  }
+
+  setValue(field: string, value: string) {
+    this.connector.values[field] = value;
+    console.log(this.connector);
+    
+  }
+
+  getValue(field: string) {
+    return this.connector.values[field];
   }
 
   get canEditGroup() {
