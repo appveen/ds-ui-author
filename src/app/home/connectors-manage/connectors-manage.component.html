@@ -77,15 +77,6 @@
                 </ng-container>
                 <ng-container *ngIf="connector.type=='SFTP'">
                     <div class="form-group">
-                        <label class="text-secondary font-12 fw-500" for="sftpAuthType">SFTP Auth Type</label>
-                        <select id="sftpAuthType" class="form-control" [(ngModel)]="connector.values.sftpAuthType"
-                            [disabled]="!edit.status">
-                            <option value="none">None</option>
-                            <option value="password">Password</option>
-                            <option value="publickey">Public Key</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label class="text-secondary font-12 fw-500" for="host">SFTP Host</label>
                         <input id="host" type="text" class="form-control" [(ngModel)]="connector.values.host"
                             [disabled]="!edit.status">
@@ -100,14 +91,23 @@
                         <input id="username" type="text" class="form-control" [(ngModel)]="connector.values.username"
                             [disabled]="!edit.status">
                     </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="sftpAuthType">SFTP Auth Type</label>
+                        <select id="sftpAuthType" class="form-control" [(ngModel)]="connector.values.sftpAuthType"
+                            [disabled]="!edit.status">
+                            <option value="none">None</option>
+                            <option value="password">Password</option>
+                            <option value="publickey">Public Key</option>
+                        </select>
+                    </div>
                     <div *ngIf="connector.values.sftpAuthType=='publickey'" class="form-group">
                         <label class="text-secondary font-12 fw-500" for="keyFile">SFTP Public Key</label>
                         <textarea id="keyFile" type="text" class="form-control" [(ngModel)]="connector.values.publicKey"
                             [disabled]="!edit.status"></textarea>
                     </div>
-                    <div class="form-group">
+                    <div *ngIf="connector.values.sftpAuthType!='none'" class="form-group">
                         <label *ngIf="connector.values.sftpAuthType=='publickey'" class="text-secondary font-12 fw-500"
-                            for="password">SFTP Key File Passphrase</label>
+                            for="password">SFTP Key Passphrase</label>
                         <label *ngIf="connector.values.sftpAuthType=='password'" class="text-secondary font-12 fw-500"
                             for="password">Password</label>
                         <input id="password" type="password" class="form-control"

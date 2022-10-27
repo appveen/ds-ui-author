@@ -117,6 +117,9 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
 
   onTypeChange(val: string) {
     this.connector.values = {};
+    if (val == 'SFTP') {
+      this.connector.values.sftpAuthType = 'none';
+    }
   }
 
   saveConnector() {
