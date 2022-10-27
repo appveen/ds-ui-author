@@ -57,6 +57,7 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     this.openDeleteModal = new EventEmitter();
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
+      type: ['MONGODB', [Validators.required]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]]
     });
     this.showOptionsDropdown = {};
@@ -83,7 +84,7 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
   }
 
   newConnector() {
-    this.form.reset();
+    this.form.reset({ type: 'MONGODB' });
     this.showNewConnectorWindow = true;
   }
 

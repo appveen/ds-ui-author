@@ -12,6 +12,7 @@ import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
+import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
 
 const routes: Routes = [
   { path: '', component: ConnectorsManageComponent }
@@ -33,7 +34,8 @@ const routes: Routes = [
     SearchBoxModule,
     DeleteModalModule,
     FieldTypeModule,
-    SwitchModule
+    SwitchModule,
+    BasicInfoModule
   ],
   exports: [
     ConnectorsManageComponent,

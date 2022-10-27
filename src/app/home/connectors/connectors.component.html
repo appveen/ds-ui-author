@@ -121,6 +121,17 @@
           </ng-container>
         </div>
       </div>
+      <div class="form-group">
+        <label class="font-13 text-secondary" for="type">Connector Type</label>
+        <select id="type" class="form-control" formControlName="type">
+            <option value="MONGODB">MongoDB</option>
+            <option value="MYSQL">MySQL</option>
+            <option value="PG">Postgres SQL</option>
+            <option value="SFTP">SFTP</option>
+            <option value="KAFKA">Apache Kafka</option>
+            <option value="AZBLOB">Azure Blob</option>
+        </select>
+    </div>
     </div>
     <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
       <button type="button" class="btn btn-primary w-100" id="newConnectorModalYes" [disabled]="form.invalid"
