@@ -6,15 +6,22 @@
         <div class="text-secondary mt-2">Processing</div>
     </div>
 </div>
-<div *ngIf="selectedConnector" class="list-group">
-    <div class="list-group-item d-flex align-items-center justify-content-between">
-        <span>{{selectedConnector.name}}</span>
-        <div class="d-flex align-items-center">
-            <span class="text-secondary mr-2">({{selectedConnector.type}})</span>
-            <span class="dsi dsi-remove text-danger hover" (click)="removeConnector()"></span>
+<ng-container *ngIf="selectedConnector">
+    <div class="list-group">
+        <div class="list-group-item d-flex align-items-center justify-content-between mb-3">
+            <span>{{selectedConnector.name}}</span>
+            <div class="d-flex align-items-center">
+                <span class="text-secondary mr-2">({{selectedConnector.type}})</span>
+                <span class="dsi dsi-remove text-danger hover" (click)="removeConnector()"></span>
+            </div>
         </div>
     </div>
-</div>
+    <odp-sftp-connector *ngIf="selectedConnector.type=='SFTP'" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-sftp-connector>
+    <odp-mysql-connector *ngIf="selectedConnector.type=='MYSQL'" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-mysql-connector>
+    <odp-postgre-connector *ngIf="selectedConnector.type=='PG'" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-postgre-connector>
+    <odp-kafka-connector *ngIf="selectedConnector.type=='KAFKA'" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-kafka-connector>
+    <odp-mongodb-connector *ngIf="selectedConnector.type=='MONGODB'" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-mongodb-connector>
+</ng-container>
 <div *ngIf="!selectedConnector" class="data-format-selector-wrapper">
     <div>
         <odp-search-box open="true" (enteredText)="searchConnector($event)" (reset)="clearSearch()"></odp-search-box>

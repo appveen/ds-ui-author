@@ -1,0 +1,16 @@
+<div class="form-group">
+    <label for="directoryPath">Directory Path</label>
+    <input id="directoryPath" class="form-control" type="text" [(ngModel)]="currNode.options.directoryPath">
+</div>
+<div class="d-flex flex-column">
+    <div class="form-group d-flex align-items-center">
+        <odp-checkbox [edit]="edit" [(checked)]="currNode.options.get" (checkedChange)="setSFTPAction('get',$event)">
+        </odp-checkbox>
+        <span class="ml-2 text-secondary">Get File</span>
+    </div>
+    <div class="form-group d-flex align-items-center">
+        <odp-checkbox [edit]="edit" [(checked)]="currNode.options.put" (checkedChange)="setSFTPAction('put',$event)">
+        </odp-checkbox>
+        <span class="ml-2 text-secondary">Put File</span>
+    </div>
+</div>

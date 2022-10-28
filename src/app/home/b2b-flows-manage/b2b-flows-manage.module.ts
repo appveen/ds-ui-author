@@ -34,6 +34,11 @@ import { AgentSelectorComponent } from './node-properties/agent-selector/agent-s
 import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 import { DataServicePropertiesComponent } from './node-properties/data-service-properties/data-service-properties.component';
 import { ConnectorPropertiesComponent } from './node-properties/connector-properties/connector-properties.component';
+import { SftpConnectorComponent } from './node-properties/connector-properties/sftp-connector/sftp-connector.component';
+import { MysqlConnectorComponent } from './node-properties/connector-properties/mysql-connector/mysql-connector.component';
+import { PostgreConnectorComponent } from './node-properties/connector-properties/postgre-connector/postgre-connector.component';
+import { KafkaConnectorComponent } from './node-properties/connector-properties/kafka-connector/kafka-connector.component';
+import { MongodbConnectorComponent } from './node-properties/connector-properties/mongodb-connector/mongodb-connector.component';
 
 const routes: Routes = [
   {
@@ -58,7 +63,12 @@ const routes: Routes = [
     ServiceSelectorComponent,
     AgentSelectorComponent,
     DataServicePropertiesComponent,
-    ConnectorPropertiesComponent
+    ConnectorPropertiesComponent,
+    SftpConnectorComponent,
+    MysqlConnectorComponent,
+    PostgreConnectorComponent,
+    KafkaConnectorComponent,
+    MongodbConnectorComponent
   ],
   imports: [
     CommonModule,

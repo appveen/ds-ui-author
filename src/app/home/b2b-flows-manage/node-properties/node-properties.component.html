@@ -42,7 +42,7 @@
         <label class="text-secondary mb-0" for="nodeDataStructure">Data Structure
             <span class="text-muted"><i>(optional)</i></span>
         </label>
-        <small class="form-text text-muted mb-3">This is the data structure that this node will return</small>
+        <small class="form-text text-muted mb-3">Set the data structure that this node will return</small>
         <odp-data-structure-selector [format]="currNode.dataStructure.outgoing" (formatChange)="onFormatChange($event)">
         </odp-data-structure-selector>
     </div>
