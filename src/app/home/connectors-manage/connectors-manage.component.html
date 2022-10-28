@@ -64,6 +64,7 @@
                                     [disabled]="!edit.status">
                                     <option *ngFor="let sel of field.options" [value]="sel.value">{{sel.label}}</option>
                                 </select>
+                                <div *ngIf="field.htmlInputType=='password'" class="form-text text-muted font-11">This value will be stored encrypted</div>
                             </div>
                         </ng-container>
                     </ng-container>

@@ -36,7 +36,7 @@
           [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
           routerLinkActive="text-primary bg-white active" [routerLink]="['con']" id="_con">
           <div class="d-flex align-items-center">
-            <span [ngClass]="{'nav-inactive':!connectorRoute.isActive}" class="dsi dsi-branch"></span>
+            <span [ngClass]="{'nav-inactive':!connectorRoute.isActive}" class="dsi dsi-connector"></span>
             <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
                 'fw-600 nav-active': connectorRoute.isActive,
                 'nav-inactive': !connectorRoute.isActive

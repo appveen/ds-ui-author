@@ -23,6 +23,7 @@
             <option value="API">API Reciever</option>
             <option value="FILE">File Agent</option>
             <option value="TIMER">Timer</option>
+            <option value="CONNECTOR">Connector</option>
         </select>
         <select *ngIf="prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type"
             (ngModelChange)="onTypeChange($event)">
@@ -30,16 +31,18 @@
             <option value="FILE">File Agent</option>
             <option value="MAPPING">Mapping</option>
             <option value="CODEBLOCK">Code Block</option>
+            <option value="CONNECTOR">Connector</option>
             <option value="UNWIND">Unwind</option>
             <option value="DATASERVICE">Data Service</option>
             <option value="FUNCTION">Function</option>
             <option value="RESPONSE">Response</option>
         </select>
     </div>
-    <div *ngIf="currNode?.type!='DATASERVICE' && currNode?.type!='CODEBLOCK'" class="form-group">
-        <label class="text-secondary" for="nodeDataStructure">Data Structure
+    <div *ngIf="currNode?.type!='DATASERVICE'" class="form-group">
+        <label class="text-secondary mb-0" for="nodeDataStructure">Data Structure
             <span class="text-muted"><i>(optional)</i></span>
         </label>
+        <small class="form-text text-muted mb-3">This is the data structure that this node will return</small>
         <odp-data-structure-selector [format]="currNode.dataStructure.outgoing" (formatChange)="onFormatChange($event)">
         </odp-data-structure-selector>
     </div>
@@ -152,6 +155,10 @@
             <label class="text-secondary" for="nodeUnWind">Unwind Path</label>
             <input id="nodeUnWind" type="text" class="form-control" [(ngModel)]="currNode.options.unwindPath">
         </div>
+    </ng-container>
+    <ng-container *ngIf="currNode?.type=='CONNECTOR'">
+        <odp-connector-properties [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode">
+        </odp-connector-properties>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='DATASERVICE'">
         <odp-data-service-properties [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode">
