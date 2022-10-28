@@ -55,7 +55,7 @@
                                 <input *ngIf="field.htmlInputType=='text' || field.htmlInputType=='password' || field.htmlInputType=='number'"
                                     [id]="field.key" [type]="field.htmlInputType" class="form-control"
                                     [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
-                                    [disabled]="!edit.status">
+                                    [disabled]="!edit.status" [odpPasswordField]="field.htmlInputType=='password'" [edit]="edit">
                                 <textarea *ngIf="field.htmlInputType=='textarea'" [id]="field.key" class="form-control"
                                     [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
                                     [disabled]="!edit.status"></textarea>

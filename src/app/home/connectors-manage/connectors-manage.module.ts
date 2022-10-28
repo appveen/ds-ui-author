@@ -13,6 +13,7 @@ import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.modul
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
+import { PasswordFieldModule } from 'src/app/utils/password-field/password-field.module';
 
 const routes: Routes = [
   { path: '', component: ConnectorsManageComponent }
@@ -35,7 +36,8 @@ const routes: Routes = [
     DeleteModalModule,
     FieldTypeModule,
     SwitchModule,
-    BasicInfoModule
+    BasicInfoModule,
+    PasswordFieldModule
   ],
   exports: [
     ConnectorsManageComponent,
