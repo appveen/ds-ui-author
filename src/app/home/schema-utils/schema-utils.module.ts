@@ -47,6 +47,7 @@ import { StepFieldsComponent } from './wizards/step-fields/step-fields.component
 import { StepActionsComponent } from './wizards/step-actions/step-actions.component';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 import { DataIngestionComponent } from './data-ingestion/data-ingestion.component';
+import { FileSettingsComponent } from './configuration/file-settings/file-settings.component';
 
 @NgModule({
     imports: [
@@ -98,7 +99,8 @@ import { DataIngestionComponent } from './data-ingestion/data-ingestion.componen
         ResetServiceComponent,
         StepFieldsComponent,
         StepActionsComponent,
-        DataIngestionComponent
+        DataIngestionComponent,
+        FileSettingsComponent
     ],
     exports: [
         SchemaStructurePipe,
