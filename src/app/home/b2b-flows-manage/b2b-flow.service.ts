@@ -36,11 +36,11 @@ export class B2bFlowService {
     if (type == 'CODEBLOCK') {
       const tempCode = [];
       tempCode.push('//use logger for logging');
-      tempCode.push('async function execute(statusCode, body) {');
+      tempCode.push('async function execute(context, node) {');
       tempCode.push('\ttry {');
       tempCode.push('\t\t//Write Your code here');
       tempCode.push('\t\t');
-      tempCode.push('\t\treturn body;');
+      tempCode.push('\t\treturn context;');
       tempCode.push('\t} catch(err) {');
       tempCode.push('\t\tlogger.error(err);');
       tempCode.push('\t\tthrow err;');

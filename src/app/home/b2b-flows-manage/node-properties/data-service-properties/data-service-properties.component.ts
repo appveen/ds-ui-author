@@ -26,7 +26,7 @@ export class DataServicePropertiesComponent implements OnInit {
         this.currNode.options.fields = '_id';
       }
       if ((this.currNode.options.update || this.currNode.options.insert) && !this.currNode.options.body) {
-        this.currNode.options.body = `{{stage["${this.prevNode._id}"].body}}`;
+        this.currNode.options.body = `{{node["${this.prevNode._id}"].body}}`;
       }
       if (this.currNode.options.get) {
         if (!this.currNode.options.select) {
@@ -43,7 +43,7 @@ export class DataServicePropertiesComponent implements OnInit {
         }
       }
       if (this.currNode.options.delete) {
-        this.currNode.options.documentId = `{{stage["${this.prevNode._id}"].body._id}}`;
+        this.currNode.options.documentId = `{{node["${this.prevNode._id}"].body._id}}`;
       }
     }
   }
