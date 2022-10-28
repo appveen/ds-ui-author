@@ -39,7 +39,7 @@ export class FileSettingsComponent implements OnInit {
       this.form.addControl('fileStorage', this.fileSettingForm)
     }
 
-    this.showConnectors = this.type === 'azure';
+    this.showConnectors = this.type === 'AZBLOB';
     this.form.get('fileStorage').get('type').setValue(this.type)
     this.form.get('fileStorage').get('connectorId').setValue(this.connectorId)
 
@@ -71,8 +71,8 @@ export class FileSettingsComponent implements OnInit {
   }
 
   changeType() {
-    this.showConnectors = this.type === 'azure';
-    if (this.type === 'azure') {
+    this.showConnectors = this.type === 'AZBLOB';
+    if (this.type === 'AZBLOB') {
       this.form.get('fileStorage').get('connectorId').setValidators([Validators.required])
     }
     else {
