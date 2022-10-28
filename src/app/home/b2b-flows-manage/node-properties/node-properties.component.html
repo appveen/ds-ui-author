@@ -29,13 +29,14 @@
             <option value="API">API Invoke</option>
             <option value="FILE">File Agent</option>
             <option value="MAPPING">Mapping</option>
+            <option value="CODEBLOCK">Code Block</option>
             <option value="UNWIND">Unwind</option>
             <option value="DATASERVICE">Data Service</option>
             <option value="FUNCTION">Function</option>
             <option value="RESPONSE">Response</option>
         </select>
     </div>
-    <div *ngIf="currNode?.type!='DATASERVICE'" class="form-group">
+    <div *ngIf="currNode?.type!='DATASERVICE' && currNode?.type!='CODEBLOCK'" class="form-group">
         <label class="text-secondary" for="nodeDataStructure">Data Structure
             <span class="text-muted"><i>(optional)</i></span>
         </label>
@@ -139,6 +140,13 @@
             </button>
         </div>
     </ng-container>
+    <ng-container *ngIf="currNode.type=='CODEBLOCK'">
+        <div class="form-group">
+            <button type="button" class="btn btn-dark w-100 ignore-outside" (click)="showCodeBlock=!showCodeBlock">
+                Write Code
+            </button>
+        </div>
+    </ng-container>
     <ng-container *ngIf="currNode.type=='UNWIND'">
         <div class="form-group">
             <label class="text-secondary" for="nodeUnWind">Unwind Path</label>
@@ -146,30 +154,8 @@
         </div>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='DATASERVICE'">
-        <div class="form-group">
-            <label class="text-secondary" for="serviceSelector">
-                {{currNode?.options?.dataService ? 'Selected' : 'Select'}} Data Service
-            </label>
-            <div *ngIf="currNode?.options?.dataService"
-                class="border rounded p-2 d-flex align-items-center justify-content-between">
-                <span>{{currNode?.options?.dataService?.name}}</span>
-                <span class="dsi dsi-remove text-danger hover" (click)="currNode.options.dataService=null"></span>
-            </div>
-            <odp-service-selector *ngIf="!currNode?.options?.dataService" [edit]="edit"
-                [(data)]="currNode.options.dataService"></odp-service-selector>
-        </div>
-        <div class="form-group">
-            <div class="form-group d-flex align-items-center">
-                <odp-checkbox [edit]="edit" [(checked)]="currNode.options.update"></odp-checkbox>
-                <span class="ml-2 text-secondary">Update</span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="form-group d-flex align-items-center">
-                <odp-checkbox [edit]="edit" [(checked)]="currNode.options.insert"></odp-checkbox>
-                <span class="ml-2 text-secondary">Insert</span>
-            </div>
-        </div>
+        <odp-data-service-properties [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode">
+        </odp-data-service-properties>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FUNCTION'">
         <div class="form-group">
@@ -230,6 +216,17 @@
 <div [ngClass]="{'show':showNodeMapping}" class="node-mapping-window border-left position-fixed bg-white p-4">
     <odp-node-mapping *ngIf="showNodeMapping" [nodeList]="nodeList" [prevNode]="prevNode" [currNode]="currNode"
         (close)="closeMapping($event)"></odp-node-mapping>
+</div>
+
+<div [ngClass]="{'show':showCodeBlock}" class="node-mapping-window border-left position-fixed bg-white p-4">
+    <ng-container *ngIf="showCodeBlock">
+        <div class="d-flex flex-column">
+            <odp-code-editor class="codeblock-editor" [edit]="edit" [(code)]="currNode.options.code"></odp-code-editor>
+            <div class="d-flex justify-content-end mt-3">
+                <button type="button" class="btn btn-primary btn-min-width" (click)="showCodeBlock=false">Done</button>
+            </div>
+        </div>
+    </ng-container>
 </div>
 
 <div [ngClass]="{'show':showAgentSelector}" class="node-agent-window border-left position-fixed bg-white p-4">

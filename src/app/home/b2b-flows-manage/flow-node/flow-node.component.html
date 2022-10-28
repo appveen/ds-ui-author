@@ -24,6 +24,10 @@
                 <span class="node-icon dsi dsi-clock"></span>
                 <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Timer</span>
             </span>
+            <span *ngIf="node.type=='CODEBLOCK'" class="d-flex align-items-center">
+                <span class="node-icon dsi dsi-object text-muted"></span>
+                <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Code Block</span>
+            </span>
             <span *ngIf="node.type=='CONNECTOR'" class="d-flex align-items-center">
                 <span class="node-icon dsi dsi-connector"></span>
                 <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Connector</span>
@@ -101,6 +105,10 @@
         <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('MAPPING')">
             <span class="font-12 fw-400 dsi dsi-mapping mr-2"></span>
             <span class="font-12 fw-400">Mapping</span>
+        </div>
+        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('CODEBLOCK')">
+            <span class="font-12 fw-400 dsi dsi-object mr-2 text-muted"></span>
+            <span class="font-12 fw-400">Code Block</span>
         </div>
         <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('UNWIND')">
             <span class="font-11 fw-400 dsi dsi-expand mr-2"></span>

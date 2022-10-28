@@ -17,6 +17,7 @@ export class NodePropertiesComponent implements OnInit {
   @Output() close: EventEmitter<any>;
   showNodeMapping: boolean;
   showAgentSelector: boolean;
+  showCodeBlock: boolean;
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.edit = { status: true };
@@ -96,4 +97,5 @@ export class NodePropertiesComponent implements OnInit {
   setFunctionEndpoint(data: any) {
     this.currNode.options.path = `/${this.commonService.app._id}/${this.appService.toCamelCase(data.name)}`
   }
+
 }

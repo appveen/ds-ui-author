@@ -1,0 +1,74 @@
+<div class="form-group">
+    <label class="text-secondary" for="serviceSelector">
+        {{currNode?.options?.dataService ? 'Selected' : 'Select'}} Data Service
+    </label>
+    <div *ngIf="currNode?.options?.dataService"
+        class="border rounded p-2 d-flex align-items-center justify-content-between">
+        <span>{{currNode?.options?.dataService?.name}}</span>
+        <span class="dsi dsi-remove text-danger hover" (click)="currNode.options.dataService=null"></span>
+    </div>
+    <odp-service-selector *ngIf="!currNode?.options?.dataService" [edit]="edit" [(data)]="currNode.options.dataService">
+    </odp-service-selector>
+</div>
+<ng-container *ngIf="currNode?.options?.dataService">
+    <div class="d-flex flex-column">
+        <div class="form-group d-flex align-items-center">
+            <odp-checkbox [edit]="edit" [(checked)]="currNode.options.get"
+                (checkedChange)="setDataServiceOperation('get',$event)"></odp-checkbox>
+            <span class="ml-2 text-secondary">Fetch</span>
+        </div>
+        <div class="form-group d-flex align-items-center">
+            <odp-checkbox [edit]="edit" [(checked)]="currNode.options.update"
+                (checkedChange)="setDataServiceOperation('update',$event)"></odp-checkbox>
+            <span class="ml-2 text-secondary">Update</span>
+        </div>
+        <div class="form-group d-flex align-items-center">
+            <odp-checkbox [edit]="edit" [(checked)]="currNode.options.insert"
+                (checkedChange)="setDataServiceOperation('insert',$event)"></odp-checkbox>
+            <span class="ml-2 text-secondary">Insert</span>
+        </div>
+        <div class="form-group d-flex align-items-center">
+            <odp-checkbox [edit]="edit" [(checked)]="currNode.options.delete"
+                (checkedChange)="setDataServiceOperation('delete',$event)"></odp-checkbox>
+            <span class="ml-2 text-secondary">Delete</span>
+        </div>
+    </div>
+    <ng-container *ngIf="currNode.options.get">
+        <div class="form-group">
+            <label for="select">Select</label>
+            <input id="select" type="text" class="form-control" [(ngModel)]="currNode.options.select">
+            <small class="form-text text-muted">Provide Comma Separated Fields</small>
+        </div>
+        <div class="form-group">
+            <label for="count">Count</label>
+            <input id="count" type="number" class="form-control" [(ngModel)]="currNode.options.count">
+        </div>
+        <div class="form-group">
+            <label for="sort">Sort</label>
+            <input id="sort" type="text" class="form-control" [(ngModel)]="currNode.options.sort">
+            <small class="form-text text-muted">Provide Comma Separated Fields<br><i>(prefix: "-" for descending order)</i></small>
+        </div>
+        <div class="form-group">
+            <label for="filter">Filter</label>
+            <textarea id="filter" class="form-control" [(ngModel)]="currNode.options.filter"></textarea>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="currNode.options.delete">
+        <div class="form-group">
+            <label for="docId">ID</label>
+            <input id="docId" type="text" class="form-control" [(ngModel)]="currNode.options.documentId">
+        </div>
+    </ng-container>
+    <ng-container *ngIf="currNode.options.update">
+        <div class="form-group">
+            <label for="fields">Update Based on Fields</label>
+            <input id="fields" type="text" class="form-control" [(ngModel)]="currNode.options.fields">
+        </div>
+    </ng-container>
+    <ng-container *ngIf="currNode.options.update || currNode.options.insert">
+        <div class="form-group">
+            <label for="fields">Body</label>
+            <input id="fields" type="text" class="form-control" [(ngModel)]="currNode.options.body">
+        </div>
+    </ng-container>
+</ng-container>

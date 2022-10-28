@@ -33,6 +33,21 @@ export class B2bFlowService {
       temp.options.update = true;
       temp.options.insert = true;
     }
+    if (type == 'CODEBLOCK') {
+      const tempCode = [];
+      tempCode.push('//use logger for logging');
+      tempCode.push('async function execute(statusCode, body) {');
+      tempCode.push('\ttry {');
+      tempCode.push('\t\t//Write Your code here');
+      tempCode.push('\t\t');
+      tempCode.push('\t\treturn body;');
+      tempCode.push('\t} catch(err) {');
+      tempCode.push('\t\tlogger.error(err);');
+      tempCode.push('\t\tthrow err;');
+      tempCode.push('\t}');
+      tempCode.push('}');
+      temp.options.code = tempCode.join('\n');
+    }
     return temp;
   }
 }

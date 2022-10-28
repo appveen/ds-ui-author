@@ -32,6 +32,7 @@ import { FunctionSelectorComponent } from './node-properties/function-selector/f
 import { ServiceSelectorComponent } from './node-properties/service-selector/service-selector.component';
 import { AgentSelectorComponent } from './node-properties/agent-selector/agent-selector.component';
 import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
+import { DataServicePropertiesComponent } from './node-properties/data-service-properties/data-service-properties.component';
 
 const routes: Routes = [
   {
@@ -54,7 +55,8 @@ const routes: Routes = [
     NodeMappingComponent,
     FunctionSelectorComponent,
     ServiceSelectorComponent,
-    AgentSelectorComponent
+    AgentSelectorComponent,
+    DataServicePropertiesComponent
   ],
   imports: [
     CommonModule,
