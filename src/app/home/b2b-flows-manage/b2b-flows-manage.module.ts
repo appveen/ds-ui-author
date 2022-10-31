@@ -39,10 +39,11 @@ import { MysqlConnectorComponent } from './node-properties/connector-properties/
 import { PostgreConnectorComponent } from './node-properties/connector-properties/postgre-connector/postgre-connector.component';
 import { KafkaConnectorComponent } from './node-properties/connector-properties/kafka-connector/kafka-connector.component';
 import { MongodbConnectorComponent } from './node-properties/connector-properties/mongodb-connector/mongodb-connector.component';
+import { RouteGuard } from '../../utils/guards/route.guard';
 
 const routes: Routes = [
   {
-    path: '', component: B2bFlowsManageComponent
+    path: '', component: B2bFlowsManageComponent, canDeactivate: [RouteGuard]
   }
 ];
 
@@ -92,6 +93,6 @@ const routes: Routes = [
     RoundRadioModule
   ],
   exports: [B2bFlowsManageComponent],
-  providers:[B2bFlowService]
+  providers: [B2bFlowService]
 })
 export class B2bFlowsManageModule { }

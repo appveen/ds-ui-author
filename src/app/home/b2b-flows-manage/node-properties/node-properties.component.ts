@@ -15,6 +15,7 @@ export class NodePropertiesComponent implements OnInit {
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
   @Output() close: EventEmitter<any>;
+  @Output() changesDone: EventEmitter<any>;
   showNodeMapping: boolean;
   showAgentSelector: boolean;
   showCodeBlock: boolean;
@@ -22,6 +23,7 @@ export class NodePropertiesComponent implements OnInit {
     private appService: AppService) {
     this.edit = { status: true };
     this.close = new EventEmitter();
+    this.changesDone = new EventEmitter();
   }
 
   ngOnInit(): void {
@@ -56,6 +58,7 @@ export class NodePropertiesComponent implements OnInit {
     if (this.prevNode) {
       this.currNode.options = {};
     }
+    this.changesDone.emit()
   }
 
   onFormatChange(data: any) {
@@ -70,6 +73,7 @@ export class NodePropertiesComponent implements OnInit {
         temp.mappings = [];
       }
     })
+    this.changesDone.emit()
   }
 
   cancel() {
@@ -85,6 +89,7 @@ export class NodePropertiesComponent implements OnInit {
       this.currNode.options.agents.push(data);
     }
     this.showAgentSelector = false;
+    this.changesDone.emit()
   }
 
   removeAgent(data: any) {
@@ -92,10 +97,12 @@ export class NodePropertiesComponent implements OnInit {
     if (index > -1) {
       this.currNode.options.agents.splice(index, 1);
     }
+    this.changesDone.emit()
   }
 
   setFunctionEndpoint(data: any) {
     this.currNode.options.path = `/${this.commonService.app._id}/${this.appService.toCamelCase(data.name)}`
+    this.changesDone.emit()
   }
 
 }

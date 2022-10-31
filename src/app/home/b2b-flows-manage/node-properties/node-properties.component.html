@@ -14,19 +14,20 @@
     </div>
     <div class="form-group">
         <label class="text-secondary" for="nodeName">Node Name</label>
-        <input id="nodeName" type="text" class="form-control" [(ngModel)]="currNode.name">
+        <input id="nodeName" type="text" class="form-control" [(ngModel)]="currNode.name"
+            (ngModelChange)="changesDone.emit()">
     </div>
     <div class="form-group">
         <label class="text-secondary" for="nodeType">Node Type</label>
         <select *ngIf="!prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type"
-            (ngModelChange)="onTypeChange($event)">
+            (ngModelChange)="onTypeChange($event); changesDone.emit()">
             <option value="API">API Reciever</option>
             <option value="FILE">File Agent</option>
             <option value="TIMER">Timer</option>
             <option value="CONNECTOR">Connector</option>
         </select>
         <select *ngIf="prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type"
-            (ngModelChange)="onTypeChange($event)">
+            (ngModelChange)="onTypeChange($event); changesDone.emit()">
             <option value="API">API Invoke</option>
             <option value="FILE">File Agent</option>
             <option value="MAPPING">Mapping</option>
@@ -50,11 +51,13 @@
         <ng-container *ngIf="currNode?.type=='API'">
             <div class="form-group">
                 <label class="text-secondary" for="nodeEndpoint">API Endpoint</label>
-                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path">
+                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
+                    (ngModelChange)="changesDone.emit()">
             </div>
             <div class="form-group">
                 <label class="text-secondary" for="nodeHTTPMethod">HTTP Method</label>
-                <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method">
+                <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
+                    (ngModelChange)="changesDone.emit()">
                     <option value="POST" selected>POST</option>
                     <option value="GET">GET</option>
                     <option value="PUT">PUT</option>
@@ -63,7 +66,8 @@
             </div>
             <div class="form-group">
                 <label class="text-secondary" for="nodeContentType">Content-Type</label>
-                <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType">
+                <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
+                    (ngModelChange)="changesDone.emit()">
                     <option value="application/json" selected>application/json</option>
                     <option value="application/xml">application/xml</option>
                     <option value="multipart/form-data">multipart/form-data</option>
@@ -73,7 +77,8 @@
         <ng-container *ngIf="currNode?.type=='FILE'">
             <div class="form-group">
                 <label class="text-secondary" for="nodeEndpoint">API Endpoint</label>
-                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path" readonly>
+                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path" readonly
+                    (ngModelChange)="changesDone.emit()">
             </div>
             <div class="form-group">
                 <label class="text-secondary" for="nodeHTTPMethod">HTTP Method</label>
@@ -98,7 +103,8 @@
         </div>
         <div class="form-group">
             <label class="text-secondary" for="nodeHTTPMethod">HTTP Method</label>
-            <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method">
+            <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
+                (ngModelChange)="changesDone.emit()">
                 <option value="POST" selected>POST</option>
                 <option value="GET">GET</option>
                 <option value="PUT">PUT</option>
@@ -153,7 +159,8 @@
     <ng-container *ngIf="currNode.type=='UNWIND'">
         <div class="form-group">
             <label class="text-secondary" for="nodeUnWind">Unwind Path</label>
-            <input id="nodeUnWind" type="text" class="form-control" [(ngModel)]="currNode.options.unwindPath">
+            <input id="nodeUnWind" type="text" class="form-control" [(ngModel)]="currNode.options.unwindPath"
+                (ngModelChange)="changesDone.emit()">
         </div>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='CONNECTOR'">
@@ -181,11 +188,13 @@
         <ng-container *ngIf="currNode?.options?.faas">
             <div class="form-group">
                 <label class="text-secondary" for="nodeEndpoint">Function Endpoint</label>
-                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path">
+                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
+                    (ngModelChange)="changesDone.emit()">
             </div>
             <div class="form-group">
                 <label class="text-secondary" for="nodeHTTPMethod">HTTP Method</label>
-                <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method">
+                <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
+                    (ngModelChange)="changesDone.emit()">
                     <option value="POST" selected>POST</option>
                     <option value="GET">GET</option>
                     <option value="PUT">PUT</option>
@@ -197,11 +206,13 @@
     <ng-container *ngIf="currNode?.type=='RESPONSE'">
         <div class="form-group">
             <label class="text-secondary" for="nodeStatusCode">Status Code</label>
-            <input id="nodeStatusCode" type="text" class="form-control" [(ngModel)]="currNode.options.statusCode">
+            <input id="nodeStatusCode" type="text" class="form-control" [(ngModel)]="currNode.options.statusCode"
+                (ngModelChange)="changesDone.emit()">
         </div>
         <div class="form-group">
             <label class="text-secondary" for="nodeContentType">Content-Type</label>
-            <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType">
+            <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
+                (ngModelChange)="changesDone.emit()">
                 <option value="application/json" selected>application/json</option>
                 <option value="application/xml">application/xml</option>
                 <option value="multipart/form-data">multipart/form-data</option>
