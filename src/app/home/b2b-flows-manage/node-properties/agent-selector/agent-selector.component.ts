@@ -33,7 +33,7 @@ export class AgentSelectorComponent implements OnInit {
     this.showLoader = true;
     this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, {
       sort: 'name',
-      select: 'name status',
+      select: 'name status agentId',
       count: 10
     }).subscribe((res) => {
       this.showLoader = false;
