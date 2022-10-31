@@ -7,7 +7,14 @@
         </div> -->
     </div>
     <div class="d-flex flex-column">
-      <div class="btn-group btn-group-toggle" ngbRadioGroup (change)="changeType()" [(ngModel)]="type">
+      <ng-container>
+        <select class="form-control my-2" [(ngModel)]="type" [ngModelOptions]="{ standalone: true }"
+          [disabled]="!edit.status || !canEdit('S')" (change)="changeType()">
+          <option *ngFor="let type of storageTypes" [value]="type">{{type}}</option>
+
+        </select>
+      </ng-container>
+      <!-- <div class="btn-group btn-group-toggle" ngbRadioGroup (change)="changeType()" [(ngModel)]="type">
         <label ngbButtonLabel class="btn btn-outline-dark">
           <input ngbButton type="radio" value="gridfs" [disabled]="!edit.status || !canEdit('S')"
             [checked]="type === 'gridfs'" />
@@ -18,7 +25,7 @@
             [checked]="type === 'AZBLOB'" />
           Azure blob
         </label>
-      </div>
+      </div> -->
     </div>
   </div>
   <div class="d-flex justify-content-between mt-4" *ngIf="canView('S') && showConnectors">
@@ -32,7 +39,7 @@
       <ng-container>
         <select class="form-control my-2" [(ngModel)]="connectorId" [ngModelOptions]="{ standalone: true }"
           [disabled]="!edit.status || !canEdit('S')" (change)="selectConnector()">
-          <option *ngFor="let connector of connectorList" [value]="connector._id">{{connector.name}}</option>
+          <option *ngFor="let connector of typeBasedConnectors" [value]="connector._id">{{connector.name}}</option>
 
         </select>
       </ng-container>
