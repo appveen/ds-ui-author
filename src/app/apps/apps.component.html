@@ -31,18 +31,6 @@
               }">Services</span>
           </div>
         </div>
-        <div *ngIf="hasConnectorsPermission" #connectorRoute="routerLinkActive"
-          class="icon-block d-flex align-items-center my-3"
-          [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
-          routerLinkActive="text-primary bg-white active" [routerLink]="['con']" id="_con">
-          <div class="d-flex align-items-center">
-            <span [ngClass]="{'nav-inactive':!connectorRoute.isActive}" class="dsi dsi-connector"></span>
-            <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
-                'fw-600 nav-active': connectorRoute.isActive,
-                'nav-inactive': !connectorRoute.isActive
-              }">Connectors</span>
-          </div>
-        </div>
         <div *ngIf="hasDataLibraryPermission" #libraryRoute="routerLinkActive"
           class="icon-block d-flex align-items-center my-3"
           [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
@@ -96,6 +84,18 @@
                     <span *ngIf="partnerRoute.isActive" class="fa fa-angle-right mr-3"></span>
                 </div> -->
         <div *ngIf="openPanel['integration']">
+          <div *ngIf="hasConnectorsPermission" #connectorRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['con']" id="_con">
+            <div class="d-flex align-items-center">
+              <span [ngClass]="{'nav-inactive':!connectorRoute.isActive}" class="dsi dsi-connector"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                'fw-600 nav-active': connectorRoute.isActive,
+                'nav-inactive': !connectorRoute.isActive
+              }">Connectors</span>
+            </div>
+          </div>
           <div #flowRoute="routerLinkActive" class="icon-block d-flex align-items-center my-3"
             [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
             routerLinkActive="text-primary bg-white active" [routerLink]="['flow']" id="flowManager">
