@@ -605,7 +605,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         //     || (self.form.get('properties.relatedTo')
         //         && self.form.get('properties.relatedTo').hasError('required'))
         //     || this.invalidFieldName;
-        return self.form.errors
+        return self.form.invalid
     }
 
     get idField() {
