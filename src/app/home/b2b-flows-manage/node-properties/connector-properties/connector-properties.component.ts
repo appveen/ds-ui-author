@@ -50,7 +50,6 @@ export class ConnectorPropertiesComponent implements OnInit {
     const options: GetOptions = {
       filter: {
         name: '/' + searchTerm + '/',
-        definition: { $exists: true },
         app: this.commonService.app._id
       },
       select: 'name status connectorId',
@@ -75,9 +74,9 @@ export class ConnectorPropertiesComponent implements OnInit {
   }
 
   selectDefault() {
-    if (this.currNode.options && this.currNode.options._id) {
+    if (this.currNode.options && this.currNode.options.connector && this.currNode.options.connector._id) {
       this.connectorList.forEach(item => {
-        if (item._id == this.currNode.options._id) {
+        if (item._id == this.currNode.options.connector._id) {
           item._selected = true;
         }
       });
@@ -93,11 +92,13 @@ export class ConnectorPropertiesComponent implements OnInit {
 
   selectConnector() {
     let temp = this.appService.cloneObject(this.connectorList.find(e => e._selected));
-    this.currNode.options._id = temp._id;
+    this.currNode.options.connector = {
+      _id: temp._id
+    };
   }
 
   removeConnector() {
-    delete this.currNode.options._id;
+    delete this.currNode.options.connector;
     this.connectorList.forEach(e => {
       delete e._selected;
     });
@@ -108,7 +109,7 @@ export class ConnectorPropertiesComponent implements OnInit {
   }
 
   get selectedConnector() {
-    if (this.currNode.options._id) {
+    if (this.currNode.options.connector && this.currNode.options.connector._id) {
       return this.connectorList.find(e => e._selected);
     }
     return null;
