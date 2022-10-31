@@ -195,7 +195,11 @@ export class SchemaBuilderComponent implements
             disableInsights: [false],
             headers: [],
             enableSearchIndex: '',
-            ingestionPoints: []
+            ingestionPoints: [],
+            fileStorage: self.fb.group({
+                connectorId: [],
+                type: []
+            })
         });
 
         self.versionConfig = {

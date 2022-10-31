@@ -16,12 +16,14 @@ export class FileSettingsComponent implements OnInit {
   showConnectors: boolean = false;
   connectorId: any;
   connectorList: any;
+  storageTypes: any;
   subscriptions: any = {};
   constructor(
     private commonService: CommonService,
     private fb: FormBuilder
   ) {
-    this.type = 'gridfs';
+    this.type = 'GRIDFS';
+    this.storageTypes = ['GRIDFS', 'AZBLOB', 'S3']
   }
 
   ngOnInit() {
@@ -33,13 +35,13 @@ export class FileSettingsComponent implements OnInit {
       this.form.addControl('fileStorage', this.fileSettingForm)
     }
     else {
-      this.type = this.form.get('fileStorage').value['type'];
+      this.type = this.form.get('fileStorage').value['type'] || 'GRIDFS';
       this.connectorId = this.form.get('fileStorage').value['connectorId']
       this.form.removeControl('fileStorage');
       this.form.addControl('fileStorage', this.fileSettingForm)
     }
 
-    this.showConnectors = this.type === 'AZBLOB';
+    this.showConnectors = this.type !== 'GRIDFS';
     this.form.get('fileStorage').get('type').setValue(this.type)
     this.form.get('fileStorage').get('connectorId').setValue(this.connectorId)
 
@@ -59,9 +61,7 @@ export class FileSettingsComponent implements OnInit {
       .subscribe(res => {
         if (res.length > 0) {
           res.forEach(_connector => {
-            if (_connector.type === 'AZBLOB') {
-              this.connectorList.push(_connector);
-            }
+            this.connectorList.push(_connector);
           });
         }
       }, err => {
@@ -71,8 +71,8 @@ export class FileSettingsComponent implements OnInit {
   }
 
   changeType() {
-    this.showConnectors = this.type === 'AZBLOB';
-    if (this.type === 'AZBLOB') {
+    this.showConnectors = this.type !== 'GRIDFS';
+    if (this.type !== 'GRIDFS') {
       this.form.get('fileStorage').get('connectorId').setValidators([Validators.required])
     }
     else {
@@ -110,6 +110,10 @@ export class FileSettingsComponent implements OnInit {
 
   hasPermissionStartsWith(type: string, entity?: string) {
     return this.commonService.hasPermissionStartsWith(type, entity);
+  }
+
+  get typeBasedConnectors() {
+    return this.connectorList.length > 0 ? this.connectorList.filter(ele => ele.type === this.type) : []
   }
 
 }
