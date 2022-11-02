@@ -51,7 +51,8 @@
               <div class="d-flex hover">
                 <input type="checkbox" value="false" [attr.id]="'checkbox' + usrIndex" class="mr-3"
                   style="margin-top: 5px" (change)="clickCheckbox($event, user)" />
-                <span class="name"> {{ user.basicDetails?.name }}</span>
+                <span class="name text-truncate" style="max-width: 200px" [ngbTooltip]="user.basicDetails?.name"> {{
+                  user.basicDetails?.name }}</span>
                 <span class="time text-muted font-11 float-right"> {{ formatLastLogin(user.lastLogin) }}</span>
               </div>
               <span class="email text-secondary font-12">{{ user.username }}</span>
