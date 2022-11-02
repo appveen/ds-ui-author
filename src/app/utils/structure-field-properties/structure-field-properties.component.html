@@ -6,9 +6,9 @@
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="new-user-window position-fixed bg-white border-left p-4 d-flex flex-column schemaProperties"
+<div class="new-user-window position-fixed bg-white border-left d-flex flex-column schemaProperties"
   [ngClass]="{'show': showProperties}">
-  <div class="d-flex align-items-center mb-4">
+  <div class="d-flex align-items-center px-4 pt-4 pb-3 border-bottom">
     <span class="font-20 text-dark font-weight-bold w-100 d-flex align-items-center justify-content-between">
       <div class="d-flex schemaProperties-header " style="max-width: 300px">
         <span *ngIf="name" class="text-truncate" [ngbTooltip]="name">{{name}}&nbsp;</span>
@@ -17,7 +17,7 @@
       <span class="dsi dsi-close text-dark hover" id="closeicon" (click)="showProperties=false"></span>
     </span>
   </div>
-  <div class="schemaProperties-wrapper" *ngIf="!idField">
+  <div class="schemaProperties-wrapper px-4 pb-4 pt-3" *ngIf="!idField">
     <ng-container
       *ngFor="let formItem of formList;let formIndex = index; let isLastFormItem = last; let isFirstFormItem = first"
       [formGroup]="formItem">
@@ -249,7 +249,7 @@
       </div>
     </ng-container>
   </div>
-  <div class="schemaProperties-wrapper" *ngIf="idField">
+  <div class="schemaProperties-wrapper  px-4 pb-4 pt-3" *ngIf="idField">
     <odp-id-property [form]="form" [edit]="edit" [type]='type'></odp-id-property>
   </div>
 </div>
