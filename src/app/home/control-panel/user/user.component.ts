@@ -641,6 +641,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.initConfig();
           // this.agGrid.api?.purgeInfiniteCache();
           this.ts.success('User Imported successfully');
+          this.fetchUsers()
           this.userInLocal = false;
           this.userInAzureAD = false;
         },
@@ -674,6 +675,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.initConfig();
           // this.agGrid.api?.purgeInfiniteCache();
           this.ts.success('User Imported successfully');
+          this.fetchUsers()
           this.userInLocal = false;
           this.userInAzureAD = false;
         },
