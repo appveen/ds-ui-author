@@ -50,12 +50,14 @@
             <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
         </div>
         <div class="flow-designer p-4">
-            <div *ngIf="flowData?.inputNode" odp-flow-node [currNode]="flowData.inputNode" [(nodeList)]="nodeList">
+            <div *ngIf="flowData?.inputNode" odp-flow-node [currNode]="flowData.inputNode" [(nodeList)]="nodeList"
+                (nodeListChange)="changesDone = true">
             </div>
             <div [ngClass]="{'show':showNodeProperties}"
                 class="node-properties border-left position-fixed bg-white p-4">
                 <odp-node-properties *ngIf="showNodeProperties" [nodeList]="nodeList" [currNode]="selectedNode.currNode"
-                    [prevNode]="selectedNode.prevNode" (close)="showNodeProperties=false">
+                    [prevNode]="selectedNode.prevNode" (close)="showNodeProperties=false"
+                    (changesDone)="changesDone = true">
                 </odp-node-properties>
             </div>
         </div>
@@ -64,3 +66,19 @@
 
 
 <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteNodeModal($event)"></odp-delete-modal>
+
+<ng-template #pageChangeModalTemplate>
+    <div class="modal-body p-4">
+        <div class="circle bg-dark">
+            <span class="fa fa-exclamation-triangle text-white"></span>
+        </div>
+        <p class="text-dark font-weight-bold text-center">Unsaved changes</p>
+        <p class="text-secondary text-center">You have unsaved changes, are you sure you want to leave?</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-outline-primary mx-3"
+                (click)="pageChangeModalTemplateRef.close(false)">No</button>
+            <button type="button" class="btn btn-min-width btn-primary mx-3"
+                (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+        </div>
+    </div>
+</ng-template>

@@ -42,6 +42,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   showNodeProperties: boolean;
   openDeleteModal: EventEmitter<any>;
   nodeList: Array<any>;
+  changesDone: boolean = false;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -352,6 +353,21 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       this.flowData.nodes.splice(val.data.nodeIndex - 1, 1);
     }
     console.log(val);
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    const self = this;
+    if (this.changesDone) {
+      return new Promise((resolve, reject) => {
+        self.pageChangeModalTemplateRef = this.commonService.modal(this.pageChangeModalTemplate);
+        self.pageChangeModalTemplateRef.result.then(close => {
+          resolve(close);
+        }, dismiss => {
+          resolve(false);
+        });
+      });
+    }
+    return true;
   }
 
   get apiCallsPending() {
