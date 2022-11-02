@@ -22,8 +22,8 @@ export class FileSettingsComponent implements OnInit {
     private commonService: CommonService,
     private fb: FormBuilder
   ) {
-    this.type = 'MongoDB';
-    this.storageTypes = ['MongoDB', 'Azure Blob Storage', 'Amazon S3', 'Google Cloud Storage']
+    this.type = 'GridFS';
+    this.storageTypes = ['GridFS', 'Azure Blob Storage', 'Amazon S3', 'Google Cloud Storage']
   }
 
   ngOnInit() {
@@ -35,13 +35,13 @@ export class FileSettingsComponent implements OnInit {
       this.form.addControl('fileStorage', this.fileSettingForm)
     }
     else {
-      this.type = this.form.get('fileStorage').value['type'] || 'MongoDB';
+      this.type = this.form.get('fileStorage').value['type'] || 'GridFS';
       this.connectorId = this.form.get('fileStorage').value['connectorId']
       this.form.removeControl('fileStorage');
       this.form.addControl('fileStorage', this.fileSettingForm)
     }
 
-    this.showConnectors = this.type !== 'MongoDB';
+    this.showConnectors = this.type !== 'GridFS';
     this.form.get('fileStorage').get('type').setValue(this.type)
     this.form.get('fileStorage').get('connectorId').setValue(this.connectorId)
 
@@ -71,8 +71,8 @@ export class FileSettingsComponent implements OnInit {
   }
 
   changeType() {
-    this.showConnectors = this.type !== 'MongoDB';
-    if (this.type !== 'MongoDB') {
+    this.showConnectors = this.type !== 'GridFS';
+    if (this.type !== 'GridFS') {
       this.form.get('fileStorage').get('connectorId').setValidators([Validators.required])
     }
     else {
