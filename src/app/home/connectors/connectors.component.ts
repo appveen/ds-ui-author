@@ -9,6 +9,7 @@ import { CommonService } from '../../utils/services/common.service';
 import { AppService } from '../../utils/services/app.service';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'odp-connectors',
@@ -36,6 +37,7 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
   selectedConnector: any;
   searchTerm: string;
   sortModel: any;
+  typeList: Array<any> = [];
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -57,12 +59,21 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     this.openDeleteModal = new EventEmitter();
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
-      type: ['MONGODB', [Validators.required]],
+      type: ['MongoDB', [Validators.required]],
+      category: ['DB', [Validators.required]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]]
     });
     this.showOptionsDropdown = {};
     this.showLazyLoader = true;
     this.sortModel = {};
+    this.typeList = [{ label: 'MongoDB', category: 'DB' },
+    { label: 'MySQL', category: 'DB' },
+    { label: 'PostgreSQL', category: 'DB' },
+    { label: 'SFTP', category: 'SFTP' },
+    { label: 'Apache Kafka', category: 'MESSAGING' },
+    { label: 'Azure Blob Storage', category: 'STORAGE' },
+    { label: 'Amazon S3', category: 'STORAGE' },
+    { label: 'Google Cloud Storage', category: 'STORAGE' }]
   }
 
   ngOnInit() {
@@ -84,7 +95,7 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
   }
 
   newConnector() {
-    this.form.reset({ type: 'MONGODB' });
+    this.form.reset({ category: 'DB', type: 'MongoDB' });
     this.showNewConnectorWindow = true;
   }
 
@@ -261,8 +272,17 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     return records;
   }
 
+
+  onConnectorChange(event) {
+    this.form.get('type').setValue(event.target.value)
+  }
   get app() {
     return this.commonService.app._id;
+  }
+  get getTypes() {
+    const list = this.typeList.filter(ele => ele.category === this.form.get('category').value) || [];
+    this.form.get('type').setValue(list[0]?.label || '');
+    return list;
   }
 
   navigate(id) {

@@ -10,7 +10,7 @@
       <ng-container>
         <select class="form-control my-2" [(ngModel)]="type" [ngModelOptions]="{ standalone: true }"
           [disabled]="!edit.status || !canEdit('S')" (change)="changeType()">
-          <option *ngFor="let type of storageTypes" [value]="type">{{type}}</option>
+          <option *ngFor="let type of fileStorageTypes" [value]="type.label">{{type.label}}</option>
 
         </select>
       </ng-container>

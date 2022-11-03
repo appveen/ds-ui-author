@@ -34,7 +34,16 @@ export class ConnectorPropertiesComponent implements OnInit {
       select: 'name type',
       count: 10,
       filter: {
-        type: { $in: ['MYSQL', 'PG', 'MONGODB', 'SFTP', 'KAFKA'] }
+        type: {
+          $in: ['MongoDB',
+            'MySQL',
+            'PostgreSQL',
+            'SFTP',
+            'Apache Kafka',
+            'Azure Blob Storage',
+            'Amazon S3',
+            'Google Cloud Storage']
+        }
       }
     }).subscribe((res) => {
       this.showLoader = false;
