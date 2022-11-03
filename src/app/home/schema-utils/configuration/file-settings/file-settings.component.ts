@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { switchMap } from 'rxjs/operators';
 import { CommonService } from '../../../../utils/services/common.service';
 import * as _ from 'lodash'
+import { AppService } from '../../../../utils/services/app.service';
 
 @Component({
   selector: 'odp-file-settings',
@@ -22,7 +23,8 @@ export class FileSettingsComponent implements OnInit {
   subscriptions: any = {};
   constructor(
     private commonService: CommonService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private appService: AppService
   ) {
     this.type = 'MongoDB';
     this.storageTypes = [{ label: 'MongoDB', category: 'DB' },
@@ -56,33 +58,17 @@ export class FileSettingsComponent implements OnInit {
   }
 
   getConnectors() {
-    let differentTypes = []
-    if (this.subscriptions?.['getConnectors']) {
-      this.subscriptions['getConnectors'].unsubscribe();
+    this.connectorList = this.appService.connectorsList;
+    if (this.connectorList.length > 0) {
+      const differentTypes = this.connectorList.map(ele => ele.type)
+      this.uniqueTypes = _.uniq(differentTypes);
+      if (this.fileStorageTypes.length > 0) {
+        this.form.get('fileStorage').get('connectorId').setValidators([Validators.required])
+      }
+      if (this.fileStorageTypes.length === 1) {
+        this.form.get('fileStorage').get('type').setValue(this.fileStorageTypes[0].label)
+      }
     }
-    this.connectorList = [];
-    this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
-      .pipe(switchMap((ev: any) => {
-        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: 'name,type,_id' });
-      }))
-      .subscribe(res => {
-        if (res.length > 0) {
-          res.forEach(_connector => {
-            this.connectorList.push(_connector);
-            differentTypes.push(_connector.type)
-          });
-          this.uniqueTypes = _.uniq(differentTypes);
-          if (this.fileStorageTypes.length > 0) {
-            this.form.get('fileStorage').get('connectorId').setValidators([Validators.required])
-          }
-          if (this.fileStorageTypes.length === 1) {
-            this.form.get('fileStorage').setValue(this.fileStorageTypes[0].label)
-          }
-        }
-      }, err => {
-        this.commonService.errorToast(err, 'We are unable to fetch records, please try again later');
-      });
-
   }
 
   changeType() {

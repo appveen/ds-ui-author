@@ -35,6 +35,7 @@ export class AppService {
     formatTypeChange: EventEmitter<any>;
     validAuthTypes: string[];
     updateCodeEditorState: EventEmitter<any>;
+    connectorsList: Array<any>
 
     constructor() {
         const self = this;

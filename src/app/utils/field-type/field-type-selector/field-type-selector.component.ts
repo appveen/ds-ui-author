@@ -5,13 +5,14 @@ import { sameName } from 'src/app/home/custom-validators/same-name-validator';
 import { emptyEnum } from 'src/app/home/custom-validators/empty-enum-validator';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../services/common.service';
+import { AppService } from '../../services/app.service';
 
 @Component({
   selector: 'odp-field-type-selector',
   templateUrl: './field-type-selector.component.html',
   styleUrls: ['./field-type-selector.component.scss']
 })
-export class FieldTypeSelectorComponent {
+export class FieldTypeSelectorComponent implements OnInit {
 
   @ViewChild('typeChangeModalTemplate', { static: false }) typeChangeModalTemplate: TemplateRef<HTMLElement>;
   @Input() form: FormGroup;
@@ -28,6 +29,7 @@ export class FieldTypeSelectorComponent {
   selectedType: any;
   constructor(private schemaService: SchemaBuilderService,
     private commonService: CommonService,
+    private appService: AppService,
     private fb: FormBuilder) {
     const self = this;
     self.toggleChange = new EventEmitter();
@@ -36,6 +38,12 @@ export class FieldTypeSelectorComponent {
     self.edit = {
       status: false
     };
+  }
+
+  ngOnInit(): void {
+    if (this.appService.connectorsList.length === 0) {
+      this.types = this.types.filter(ele => ele.value !== 'File')
+    }
   }
 
   getTooltipText(index: number) {
