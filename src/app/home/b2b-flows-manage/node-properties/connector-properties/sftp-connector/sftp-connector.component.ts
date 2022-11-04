@@ -14,6 +14,9 @@ export class SftpConnectorComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    if (!this.currNode.options.put && !this.currNode.options.get) {
+      this.currNode.options.put = true;
+    }
   }
 
   setSFTPAction(action: string, flag: boolean) {
