@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'odp-connector-properties',
@@ -16,6 +17,8 @@ export class ConnectorPropertiesComponent implements OnInit {
   connectorList: Array<any>;
   searchTerm: string;
   showLoader: boolean;
+  subscriptions: any;
+  typeList: any;
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.edit = {
@@ -24,7 +27,17 @@ export class ConnectorPropertiesComponent implements OnInit {
     this.connectorList = [];
   }
   ngOnInit(): void {
-    this.loadInitial();
+    this.getAvailableConnectors();
+  }
+
+  getAvailableConnectors() {
+    this.subscriptions['getAvailableConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/availableConnectors`).subscribe(res => {
+      this.typeList = _.uniq(res.map(ele => ele.type).filter(ele => ele));
+      this.loadInitial()
+    }, err => {
+
+      this.commonService.errorToast(err, 'Unable to fetch user groups, please try again later');
+    });
   }
 
   loadInitial() {
@@ -35,14 +48,7 @@ export class ConnectorPropertiesComponent implements OnInit {
       count: 10,
       filter: {
         type: {
-          $in: ['MongoDB',
-            'MySQL',
-            'PostgreSQL',
-            'SFTP',
-            'Apache Kafka',
-            'Azure Blob Storage',
-            'Amazon S3',
-            'Google Cloud Storage']
+          $in: this.typeList
         }
       }
     }).subscribe((res) => {
