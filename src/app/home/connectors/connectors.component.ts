@@ -36,6 +36,8 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
   selectedConnector: any;
   searchTerm: string;
   sortModel: any;
+  typeList: Array<any> = [];
+  categoryList: Array<any> = [];
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -58,11 +60,20 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       type: ['MONGODB', [Validators.required]],
+      category: ['DB', [Validators.required]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]]
     });
     this.showOptionsDropdown = {};
     this.showLazyLoader = true;
     this.sortModel = {};
+    // this.typeList = [{ label: 'MONGODB', category: 'DB' },
+    // { label: 'MySQL', category: 'DB' },
+    // { label: 'PostgreSQL', category: 'DB' },
+    // { label: 'SFTP', category: 'SFTP' },
+    // { label: 'Apache Kafka', category: 'MESSAGING' },
+    // { label: 'Azure Blob Storage', category: 'STORAGE' },
+    // { label: 'Amazon S3', category: 'STORAGE' },
+    // { label: 'Google Cloud Storage', category: 'STORAGE' }]
   }
 
   ngOnInit() {
@@ -83,8 +94,18 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     });
   }
 
+  getAvailableConnectors() {
+    this.subscriptions['getAvailableConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/availableConnectors`).subscribe(res => {
+      this.typeList = res;
+      this.categoryList = _.uniq(res.map(ele => ele.category).filter(ele => ele));
+    }, err => {
+
+      this.commonService.errorToast(err, 'Unable to fetch user groups, please try again later');
+    });
+  }
+
   newConnector() {
-    this.form.reset({ type: 'MONGODB' });
+    this.form.reset({ category: 'DB', type: 'MONGODB' });
     this.showNewConnectorWindow = true;
   }
 
@@ -112,6 +133,7 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     if (this.subscriptions['getConnectors']) {
       this.subscriptions['getConnectors'].unsubscribe();
     }
+    this.getAvailableConnectors();
     this.showLazyLoader = true;
     this.connectorList = [];
     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
@@ -261,9 +283,24 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     return records;
   }
 
+  getLabel(type) {
+    return this.typeList?.find(ele => ele.type === type)?.label || ''
+  }
+
+
+  onConnectorChange(event) {
+    this.form.get('type').setValue(event.target.value)
+    // console.log(this.form.value)
+  }
   get app() {
     return this.commonService.app._id;
   }
+  get getTypes() {
+    const list = this.typeList.filter(ele => ele.category === this.form.get('category').value) || [];
+    // this.form.get('type').setValue(list[0]?.label || '');
+    return list;
+  }
+
 
   navigate(id) {
     this.router.navigate(['/app/', this.app, 'con', id])

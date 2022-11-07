@@ -52,10 +52,12 @@
                             <div *ngIf="!field.authType || (field.authType == getValue('authType'))" class="form-group">
                                 <label class="text-secondary font-12 fw-500"
                                     [attr.for]="field.key">{{field.label}}</label>
-                                <input *ngIf="field.htmlInputType=='text' || field.htmlInputType=='password' || field.htmlInputType=='number'"
+                                <input
+                                    *ngIf="field.htmlInputType=='text' || field.htmlInputType=='password' || field.htmlInputType=='number'"
                                     [id]="field.key" [type]="field.htmlInputType" class="form-control"
                                     [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
-                                    [disabled]="!edit.status" [odpPasswordField]="field.htmlInputType=='password'" [edit]="edit">
+                                    [disabled]="!edit.status" [odpPasswordField]="field.htmlInputType=='password'"
+                                    [edit]="edit">
                                 <textarea *ngIf="field.htmlInputType=='textarea'" [id]="field.key" class="form-control"
                                     [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
                                     [disabled]="!edit.status"></textarea>
@@ -64,7 +66,8 @@
                                     [disabled]="!edit.status">
                                     <option *ngFor="let sel of field.options" [value]="sel.value">{{sel.label}}</option>
                                 </select>
-                                <div *ngIf="field.htmlInputType=='password'" class="form-text text-muted font-11">This value will be stored encrypted</div>
+                                <div *ngIf="field.htmlInputType=='password'" class="form-text text-muted font-11">This
+                                    value will be stored encrypted</div>
                             </div>
                         </ng-container>
                     </ng-container>

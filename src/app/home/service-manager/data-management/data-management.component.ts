@@ -4,6 +4,7 @@ import { CommonService, GetOptions } from 'src/app/utils/services/common.service
 import { App } from 'src/app/utils/interfaces/app';
 import { AppService } from 'src/app/utils/services/app.service';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'odp-data-management',
@@ -21,6 +22,7 @@ export class DataManagementComponent implements OnInit {
   oldData: App;
   versionConfig: any;
   defaultVersionValues: Array<any> = [null, '', '-1', '10', '25', '50', '100', '1 months', '3 months', '6 months', '1 years'];
+  connectorList: Array<any>
 
   constructor(
     private commonService: CommonService,
@@ -38,6 +40,10 @@ export class DataManagementComponent implements OnInit {
     const self = this;
     self.getManagementDetails();
     self.getApp(self.commonService.app._id);
+    this.connectorList = this.appService.connectorsList
+    if (!this.connectorList) {
+      this.getConnectors()
+    }
   }
 
   getManagementDetails() {
@@ -56,6 +62,16 @@ export class DataManagementComponent implements OnInit {
     self.retainDataHistory = true;
     self.commonService.get('user', '/data/app/' + id, { noApp: true }).subscribe(res => {
       self.appData = Object.assign(self.appData, res);
+      if (!self.appData['connectors']) {
+        self.appData['connectors'] = {
+          data: {
+            _id: ''
+          },
+          file: {
+            _id: ''
+          }
+        };
+      }
       self.oldData = self.appService.cloneObject(self.appData);
       self.configureVersionSettings();
       self.showLazyLoader = false;
@@ -154,6 +170,16 @@ export class DataManagementComponent implements OnInit {
     if (!this.changesDone) {
       return;
     }
+
+    if (this.dataConnectors.length === 1 || !this.appData['connectors']['data']['_id']) {
+      this.appData['connectors']['data']['_id'] = this.dataConnectors[0]._id
+    }
+    if (this.fileConnectors.length === 1 || !this.appData['connectors']['file']['_id']) {
+      this.appData['connectors']['file']['_id'] = this.fileConnectors[0]._id
+    }
+    // if (this.connectorList.length === 1) {
+    //   this.appData['connectors']['data']['_id'] = this.connectorList[0]._id
+    // }
     self.commonService.put('user', '/data/app/' + self.appData._id, self.appData).subscribe(res => {
       self.oldData = self.appService.cloneObject(self.appData);
       self.ts.success('App saved successfully');
@@ -162,6 +188,21 @@ export class DataManagementComponent implements OnInit {
     }, err => {
       self.commonService.errorToast(err);
     });
+  }
+
+
+
+  getConnectors() {
+    this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
+      .pipe(switchMap((ev: any) => {
+        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev });
+      }))
+      .subscribe(res => {
+        this.connectorList = res;
+      }, err => {
+        this.commonService.errorToast(err, 'We are unable to fetch records, please try again later');
+      });
+
   }
 
 
@@ -187,6 +228,36 @@ export class DataManagementComponent implements OnInit {
       self.getManagementDetails();
     })
 
+  }
+
+
+  selectConnector(event, type) {
+    this.appData['connectors'][type]['_id'] = event.target.value
+  }
+
+  get dataConnectors() {
+    const list = this.connectorList?.filter(ele => ele.category === 'DB').sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    }) || []
+    return list
+  }
+
+  get fileConnectors() {
+    return this.connectorList?.filter(ele => ele.category === 'STORAGE').sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    }) || []
   }
 
   get changesDone() {

@@ -62,6 +62,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   showOptionsDropdown: any;
   selectedItemEvent: any;
   sortModel: any;
+  connectorList: Array<any>;
   constructor(
     public commonService: CommonService,
     private appService: AppService,
@@ -83,10 +84,16 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       index: -1,
     };
     this.openDeleteModal = new EventEmitter();
+    const connectorForm = this.fb.group({
+      data: [{}],
+      file: [{}]
+    })
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
+      connectors: connectorForm,
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]]
     });
+
     this.cloneForm = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
@@ -111,6 +118,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.showLazyLoader = true;
     // this.resetSearch();
     this.getServices();
+    this.getConnectors();
     this.commonService.apiCalls.componentLoading = false;
     this.subscriptions['entity.delete'] = this.commonService.entity.delete.subscribe((data) => {
       const index = this.serviceList.findIndex((s) => {
@@ -178,6 +186,26 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     //   this.form.get(['definition', 0, '_id', 'prefix']).patchValue(_.toUpper(_.camelCase(_val.substring(0, 3))));
     //   this.form.get(['definition', 0, '_id', 'counter']).patchValue(1001);
     // });
+  }
+
+
+
+  getConnectors() {
+
+    if (this.subscriptions?.['getConnectors']) {
+      this.subscriptions['getConnectors'].unsubscribe();
+    }
+    this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
+      .pipe(switchMap((ev: any) => {
+        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev });
+      }))
+      .subscribe(res => {
+        this.connectorList = res;
+        this.appService.connectorsList = res;
+      }, err => {
+        this.commonService.errorToast(err, 'We are unable to fetch records, please try again later');
+      });
+
   }
 
   ngOnDestroy() {
@@ -252,10 +280,26 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   triggerServiceCreate() {
+    if (this.dataConnectors.length === 1 || !this.form.get('connectors').get('data').value) {
+      this.form.get('connectors').get('data').setValue({
+        _id: this.dataConnectors[0]?._id || ''
+      })
+    }
+    if (this.fileConnectors.length === 1 || !this.form.get('connectors').get('file').value) {
+      this.form.get('connectors').get('file').setValue({
+        _id: this.fileConnectors[0]?._id || ''
+      })
+    }
+    // if (this.connectorList.length === 1) {
+    //   this.form.get('connectors').get('data').setValue({
+    //     _id: this.connectorList[0]._id
+    //   })
+    // }
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     this.showLazyLoader = true;
     payload.versionValidity = this.commonService.app.serviceVersionValidity;
+
     if (!this.hasPermission('PMDSSDH', 'SM')) {
       delete payload.versionValidity;
     }
@@ -847,6 +891,12 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.showOptionsDropdown[id] = true;
   }
 
+  selectConnector(event, type) {
+    this.form.get('connectors').get(type).setValue({
+      _id: event.target.value
+    })
+  }
+
   private compare(a: any, b: any) {
     if (a > b) {
       return 1;
@@ -911,5 +961,35 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   get app() {
     return this.commonService.app._id;
+  }
+
+  get dataConnectors() {
+    const list = this.connectorList?.filter(ele => ele.category === 'DB').sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    }) || []
+    return list
+  }
+
+  get fileConnectors() {
+    return this.connectorList?.filter(ele => ele.category === 'STORAGE').sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    }) || []
+  }
+
+  checkDefault(id) {
+    const defaultIds = [this.commonService.appData['connectors']?.data?._id, this.commonService.appData['connectors']?.file?._id];
+    return defaultIds.indexOf(id) > -1
   }
 }

@@ -1,59 +1,65 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
-    <div class="align-self-center text-center">
-      <div class="spinner-border text-dark" role="status">
-        <span class="sr-only">Processing...</span>
-      </div>
-      <div class="text-secondary mt-2">Processing...</div>
+  <div class="align-self-center text-center">
+    <div class="spinner-border text-dark" role="status">
+      <span class="sr-only">Processing...</span>
+    </div>
+    <div class="text-secondary mt-2">Processing...</div>
+  </div>
+</div>
+<div class="connector-page d-flex flex-column w-100 page-padding bg-light-gray">
+  <div class="options d-flex justify-content-between align-items-center w-100 pt-2 mb-4">
+    <div class="fw-600 font-22">Connectors</div>
+    <div class="d-flex align-items-center">
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+      <button class="add-new btn btn-primary ml-3 d-flex align-items-center" *ngIf="hasManagePermission('GS')"
+        (click)="newConnector()">
+        <span class="dsi dsi-plus mr-2"></span>
+        <span class="text">New</span>
+      </button>
     </div>
   </div>
-  <div class="connector-page d-flex flex-column w-100 page-padding bg-light-gray">
-    <div class="options d-flex justify-content-between align-items-center w-100 pt-2 mb-4">
-      <div class="fw-600 font-22">Connectors</div>
-      <div class="d-flex align-items-center">
-        <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
-        <button class="add-new btn btn-primary ml-3 d-flex align-items-center" *ngIf="hasManagePermission('GS')"
-          (click)="newConnector()">
-          <span class="dsi dsi-plus mr-2"></span>
-          <span class="text">New</span>
-        </button>
-      </div>
-    </div>
-    <div class="card-container">
-      <div class="list-group">
-        <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500">
-          <div class="d-flex align-items-center justify-content-start h-100">
-            <div (click)="applySort('name')" class="hover d-flex align-items-center item-name">
-              <span class="mr-2">Name</span>
-              <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
-              <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
-            </div>
-            <div class="d-flex align-items-center">
-              <div (click)="applySort('type')" class="hover d-flex align-items-center item-name">
-                <span class="mr-2">Type</span>
-                <span *ngIf="sortModel['type']==1" class="dsi dsi-drop-down"></span>
-                <span *ngIf="sortModel['type']==-1" class="dsi dsi-drop-up"></span>
-              </div>
-              <div (click)="applySort('_references')" class="hover d-flex align-items-center item-name">
-                <span class="mr-2">References</span>
-                <span *ngIf="sortModel['_references']==1" class="dsi dsi-drop-down"></span>
-                <span *ngIf="sortModel['_references']==-1" class="dsi dsi-drop-up"></span>
-              </div>
-            </div>
-            <div class="item-actions">&nbsp;</div>
+  <div class="card-container">
+    <div class="list-group">
+      <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500">
+        <div class="d-flex align-items-center justify-content-start h-100">
+          <div (click)="applySort('name')" class="hover d-flex align-items-center item-name">
+            <span class="mr-2">Name</span>
+            <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
           </div>
+          <div class="d-flex align-items-center">
+            <div (click)="applySort('type')" class="hover d-flex align-items-center item-name">
+              <span class="mr-2">Type</span>
+              <span *ngIf="sortModel['type']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['type']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('category')" class="hover d-flex align-items-center item-name">
+              <span class="mr-2">Category</span>
+              <span *ngIf="sortModel['category']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['category']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('_references')" class="hover d-flex align-items-center item-name">
+              <span class="mr-2">References</span>
+              <span *ngIf="sortModel['_references']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_references']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+          </div>
+          <div class="item-actions">&nbsp;</div>
         </div>
-        <div *ngIf="!records || records.length==0" class="list-group-item">No Records Found</div>
-  
-        <ng-container *ngFor="let connector of records;let i=index">
-          <div *ngIf="hasPermissionForConnector(connector._id)" class="list-group-item">
-            <div class="d-flex align-items-center justify-content-start h-100 hover" [attr.title]="connector.name"
-              (dblclick)="navigate(connector._id)">
-              <div class="d-flex align-items-center item-name text-dark fw-500">{{connector.name}}</div>
-              <div class="d-flex align-items-center sub-heading">
-                <div class="item-attribute-count align-items-center">{{connector.type}}</div>
-                <div class="item-reference-count align-items-center">{{connector._references}}</div>
-              </div>
-              <!-- <div class="item-actions d-flex align-items-center justify-content-end">
+      </div>
+      <div *ngIf="!records || records.length==0" class="list-group-item">No Records Found</div>
+
+      <ng-container *ngFor="let connector of records;let i=index">
+        <div *ngIf="hasPermissionForConnector(connector._id)" class="list-group-item">
+          <div class="d-flex align-items-center justify-content-start h-100 hover" [attr.title]="connector.name"
+            (dblclick)="navigate(connector._id)">
+            <div class="d-flex align-items-center item-name text-dark fw-500">{{connector.name}}</div>
+            <div class="d-flex align-items-center sub-heading">
+              <div class="item-attribute-count align-items-center">{{getLabel(connector.type)}}</div>
+              <div class="item-attribute-count align-items-center">{{connector.category}}</div>
+              <div class="item-reference-count align-items-center">{{connector._references}}</div>
+            </div>
+            <!-- <div class="item-actions d-flex align-items-center justify-content-end">
                 <span id="con-view" class="dsi dsi-view hover mr-2" [routerLink]="['/app/',app,'con',connector._id]"></span>
                 <span *ngIf="canEditConnector(connector._id)" id="con-edit" class="dsi dsi-edit hover mr-2"
                   (click)="editConnector(i)"></span>
@@ -62,81 +68,80 @@
                 <span *ngIf="canEditConnector(connector._id)" id="con-delete" class="dsi dsi-trash hover mr-2"
                   (click)="deleteConnector(i);"></span>
               </div> -->
-              <div class="item-actions d-flex align-items-center justify-content-end">
-                <span id="con-view" class="fw-600 font-13 hover mr-3"
-                  [routerLink]="['/app/',app,'con',connector._id]">View</span>
-                <span id="con-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
-                  (click)="showDropDown($event,i)"></span>
-                <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed"
-                  (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
-                  (outside)="showOptionsDropdown[i]=false">
-                  <div id="con-edit" class="list-group-item list-group-item-action py-2"
-                    *ngIf="canEditConnector(connector._id)" (click)="editConnector(i)">
-                    Edit
-                  </div>
-                  <div id="con-delete" class="list-group-item list-group-item-action py-2"
-                    *ngIf="canEditConnector(connector._id)" (click)="deleteConnector(i);">
-                    Delete
-                  </div>
+            <div class="item-actions d-flex align-items-center justify-content-end">
+              <span id="con-view" class="fw-600 font-13 hover mr-3"
+                [routerLink]="['/app/',app,'con',connector._id]">View</span>
+              <span id="con-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
+                (click)="showDropDown($event,i)"></span>
+              <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed"
+                (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
+                (outside)="showOptionsDropdown[i]=false">
+                <div id="con-edit" class="list-group-item list-group-item-action py-2"
+                  *ngIf="canEditConnector(connector._id)" (click)="editConnector(i)">
+                  Edit
+                </div>
+                <div id="con-delete" class="list-group-item list-group-item-action py-2"
+                  *ngIf="canEditConnector(connector._id)" (click)="deleteConnector(i);">
+                  Delete
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
+
+
+<div *ngIf="showNewConnectorWindow" class="overlay position-fixed"></div>
+<div [ngClass]="{'show':showNewConnectorWindow}"
+  class="new-connector-window position-fixed p-4 d-flex flex-column align-items-center bg-white border-left"
+  [formGroup]="form">
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <span class="font-20 fw-600">New Connector</span>
+      <span class="dsi dsi-close hover" (click)="showNewConnectorWindow=false"></span>
+    </div>
+    <div *ngIf="showNewConnectorWindow" class="form-group">
+      <label for="name" class="font-13 text-secondary">
+        <span class="text">Name</span>
+        <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+      </label>
+      <div class="name-wrapper position-relative">
+        <input newConnectorName type="text" class="form-control" id="name" placeholder="Untitled Connector"
+          formControlName="name" odpAutoFocus
+          [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
+        <ng-container *ngIf="form.get('name').dirty">
+          <span *ngIf="form.get('name').hasError('required')"
+            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+            ngbTooltip="Name is required"></span>
+          <span *ngIf="form.get('name').hasError('maxlength')"
+            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+            ngbTooltip="Name should be within 40 characters"></span>
+          <span *ngIf="form.get('name').hasError('pattern')"
+            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+            ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
         </ng-container>
       </div>
     </div>
-  </div>
-  
-  <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
-  
-  
-  <div *ngIf="showNewConnectorWindow" class="overlay position-fixed"></div>
-  <div [ngClass]="{'show':showNewConnectorWindow}"
-    class="new-connector-window position-fixed p-4 d-flex flex-column align-items-center bg-white border-left"
-    [formGroup]="form">
-    <div class="d-flex flex-column w-100">
-      <div class="d-flex align-items-center justify-content-between mb-3">
-        <span class="font-20 fw-600">New Connector</span>
-        <span class="dsi dsi-close hover" (click)="showNewConnectorWindow=false"></span>
-      </div>
-      <div *ngIf="showNewConnectorWindow" class="form-group">
-        <label for="name" class="font-13 text-secondary">
-          <span class="text">Name</span>
-          <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
-        </label>
-        <div class="name-wrapper position-relative">
-          <input newConnectorName type="text" class="form-control" id="name" placeholder="Untitled Connector"
-            formControlName="name" odpAutoFocus
-            [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
-          <ng-container *ngIf="form.get('name').dirty">
-            <span *ngIf="form.get('name').hasError('required')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-              ngbTooltip="Name is required"></span>
-            <span *ngIf="form.get('name').hasError('maxlength')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-              ngbTooltip="Name should be within 40 characters"></span>
-            <span *ngIf="form.get('name').hasError('pattern')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-              ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
-          </ng-container>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="font-13 text-secondary" for="type">Connector Type</label>
-        <select id="type" class="form-control" formControlName="type">
-            <option value="MongoDB">MongoDB</option>
-            <option value="MySQL">MySQL</option>
-            <option value="PostgreSQL">PostgreSQL</option>
-            <option value="SFTP">SFTP</option>
-            <option value="Apache Kafka">Apache Kafka</option>
-            <option value="Azure Blob Storage">Azure Blob Storage</option>
-            <option value="Amazon S3">Amazon S3</option>
-            <option value="Google Cloud Storage">Google Cloud Storage</option>
-        </select>
+    <div class="form-group">
+      <label class="font-13 text-secondary" for="category">Category</label>
+      <select id="type" class="form-control" formControlName="category">
+        <option [value]="category" *ngFor="let category of categoryList">{{category}}</option>
+      </select>
     </div>
-    </div>
-    <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
-      <button type="button" class="btn btn-primary w-100" id="newConnectorModalYes" [disabled]="form.invalid"
-        (click)="triggerConnectorCreate()">Create</button>
+    <div class="form-group">
+      <label class="font-13 text-secondary" for="type">Connector Type</label>
+      <select id="type" class="form-control" (change)="onConnectorChange($event)">
+        <option [value]="type.type" [label]="type.label" *ngFor="let type of getTypes">{{type.label}}</option>
+      </select>
     </div>
   </div>
+  <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
+    <button type="button" class="btn btn-primary w-100" id="newConnectorModalYes" [disabled]="form.invalid"
+      (click)="triggerConnectorCreate()">Create</button>
+  </div>
+</div>

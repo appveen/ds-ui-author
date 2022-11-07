@@ -36,6 +36,7 @@ import { EditConfig, ActionConfig, VersionConfig, DeleteModalConfig } from 'src/
 import { SchemaValuePipe } from '../schema-utils/schema-value.pipe';
 import { PrettyJsonPipe } from 'src/app/utils/pretty-json/pretty-json.pipe';
 import { wizardSteps } from '../custom-validators/wizard-steps.validator';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'odp-schema-builder',
@@ -316,6 +317,8 @@ export class SchemaBuilderComponent implements
                 }
             }
         });
+        // this.getConnectors();
+        this.getAvailableConnectors();
     }
 
     ngOnDestroy() {
@@ -1181,6 +1184,32 @@ export class SchemaBuilderComponent implements
         } else if (self.hasPermissionForTab('A')) {
             self.activeTab = 5;
         }
+    }
+
+    // getConnectors() {
+    //     let connectorList = []
+    //     if (this.subscriptions?.['getConnectors']) {
+    //         this.subscriptions['getConnectors'].unsubscribe();
+    //     }
+    //     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
+    //         .pipe(switchMap((ev: any) => {
+    //             return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: 'name,type,_id' });
+    //         }))
+    //         .subscribe(res => {
+    //             this.appService.connectorsList = res;
+    //         }, err => {
+    //             this.commonService.errorToast(err, 'We are unable to fetch records, please try again later');
+    //         });
+
+    // }
+
+    getAvailableConnectors() {
+        this.subscriptions['getAvailableConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/availableConnectors`).subscribe(res => {
+            this.appService.storageTypes = res;
+        }, err => {
+
+            this.commonService.errorToast(err, 'Unable to fetch user groups, please try again later');
+        });
     }
     get idFieldId() {
         const self = this;
