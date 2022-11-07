@@ -108,6 +108,7 @@ export class CommonService {
   private stallCount = 0;
   breadcrumbPaths: Array<Breadcrumb>;
   breadcrumbTrigger: Subject<any> = new Subject();
+  appData: any;
 
   constructor(
     private http: HttpClient,
@@ -388,6 +389,7 @@ export class CommonService {
         .get('user', '/data/app/' + app._id)
         .subscribe(
           (res: any) => {
+            self.appData = res;
             app.logo = res.logo;
             app.appCenterStyle = res.appCenterStyle;
             app.description = res.description;

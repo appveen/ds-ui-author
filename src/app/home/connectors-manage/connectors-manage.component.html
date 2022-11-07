@@ -37,7 +37,7 @@
                     <select id="type" class="form-control" [(ngModel)]="connector.type" [disabled]="!edit.status"
                         (ngModelChange)="onTypeChange($event)">
                         <option value="">--select--</option>
-                        <option *ngFor="let item of availableConnectors" [value]="item.label">{{item.label}}</option>
+                        <option *ngFor="let item of availableConnectors" [value]="item.type">{{item.label}}</option>
                         <!-- <option value="MONGODB">MongoDB</option>
                             <option value="MYSQL">MySQL</option>
                             <option value="PG">Postgres SQL</option>

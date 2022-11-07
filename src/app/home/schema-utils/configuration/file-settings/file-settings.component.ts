@@ -27,14 +27,6 @@ export class FileSettingsComponent implements OnInit {
     private appService: AppService
   ) {
     this.type = 'MongoDB';
-    this.storageTypes = [{ label: 'MongoDB', category: 'DB' },
-    { label: 'MySQL', category: 'DB' },
-    { label: 'PostgreSQL', category: 'DB' },
-    { label: 'SFTP', category: 'SFTP' },
-    { label: 'Apache Kafka', category: 'MESSAGING' },
-    { label: 'Azure Blob Storage', category: 'STORAGE' },
-    { label: 'Amazon S3', category: 'STORAGE' },
-    { label: 'Google Cloud Storage', category: 'STORAGE' }]
   }
 
   ngOnInit() {
@@ -51,10 +43,15 @@ export class FileSettingsComponent implements OnInit {
       this.form.removeControl('fileStorage');
       this.form.addControl('fileStorage', this.fileSettingForm)
     }
+    this.getAvailableConnectors();
     this.getConnectors();
     this.form.get('fileStorage').get('type').setValue(this.type)
     this.form.get('fileStorage').get('connectorId').setValue(this.connectorId)
 
+  }
+
+  getAvailableConnectors() {
+    this.storageTypes = this.appService.storageTypes;
   }
 
   getConnectors() {
