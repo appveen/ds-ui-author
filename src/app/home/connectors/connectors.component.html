@@ -33,6 +33,11 @@
               <span *ngIf="sortModel['type']==1" class="dsi dsi-drop-down"></span>
               <span *ngIf="sortModel['type']==-1" class="dsi dsi-drop-up"></span>
             </div>
+            <div (click)="applySort('category')" class="hover d-flex align-items-center item-name">
+              <span class="mr-2">Category</span>
+              <span *ngIf="sortModel['category']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['category']==-1" class="dsi dsi-drop-up"></span>
+            </div>
             <div (click)="applySort('_references')" class="hover d-flex align-items-center item-name">
               <span class="mr-2">References</span>
               <span *ngIf="sortModel['_references']==1" class="dsi dsi-drop-down"></span>
@@ -51,6 +56,7 @@
             <div class="d-flex align-items-center item-name text-dark fw-500">{{connector.name}}</div>
             <div class="d-flex align-items-center sub-heading">
               <div class="item-attribute-count align-items-center">{{getLabel(connector.type)}}</div>
+              <div class="item-attribute-count align-items-center">{{connector.category}}</div>
               <div class="item-reference-count align-items-center">{{connector._references}}</div>
             </div>
             <!-- <div class="item-actions d-flex align-items-center justify-content-end">

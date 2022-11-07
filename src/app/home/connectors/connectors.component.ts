@@ -284,7 +284,7 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
   }
 
   getLabel(type) {
-    return this.typeList?.find(ele => ele.type === type).label || ''
+    return this.typeList?.find(ele => ele.type === type)?.label || ''
   }
 
 
