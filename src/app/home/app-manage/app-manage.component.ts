@@ -11,6 +11,7 @@ import { AppService } from 'src/app/utils/services/app.service';
 import { UserDetails } from 'src/app/utils/interfaces/userDetails';
 import { environment } from 'src/environments/environment';
 import { Breadcrumb } from '../../utils/interfaces/breadcrumb';
+import { ColorPickerComponent } from 'src/app/utils/color-picker/color-picker.component';
 
 @Component({
     selector: 'odp-app-manage',
@@ -61,6 +62,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
     startFlowAttributes: any = {};
     @ViewChild('keyValModalTemplate', { static: false }) keyValModalTemplate: TemplateRef<HTMLElement>;
     @ViewChild('imageCropModal', { static: false }) imageCropModal: TemplateRef<HTMLElement>;
+    @ViewChild('colorpicker') colorpicker: ColorPickerComponent;
     keyValModalTemplateRef: NgbModalRef;
     data: any;
     toggleColorPicker: boolean;
@@ -988,6 +990,7 @@ export class AppManageComponent implements OnInit, OnDestroy {
             theme: 'Light',
             textColor: 'FFFFFF'
         };
+        this.colorpicker.selected=null;
     }
 
     set enabledTrustedIP(val) {
