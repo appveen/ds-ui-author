@@ -49,7 +49,7 @@
                 <ng-container *ngFor="let item of availableConnectors">
                     <ng-container *ngIf="item.type==connector.type">
                         <ng-container *ngFor="let field of item.fields">
-                            <div *ngIf="!field.authType || (field.authType == getValue('authType'))" class="form-group">
+                            <div *ngIf="parseCondition(field.condition)" class="form-group">
                                 <label class="text-secondary font-12 fw-500"
                                     [attr.for]="field.key">{{field.label}}</label>
                                 <input
