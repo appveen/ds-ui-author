@@ -24,7 +24,7 @@
             <option value="API">API Reciever</option>
             <option value="FILE">File Agent</option>
             <option value="TIMER">Timer</option>
-            <option value="CONNECTOR">Connector</option>
+            <!-- <option value="CONNECTOR">Connector</option> -->
         </select>
         <select *ngIf="prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type"
             (ngModelChange)="onTypeChange($event); changesDone.emit()">
@@ -74,7 +74,7 @@
                 </select>
             </div>
         </ng-container>
-        <ng-container *ngIf="currNode?.type=='FILE'">
+        <!-- <ng-container *ngIf="currNode?.type=='FILE'">
             <div class="form-group">
                 <label class="text-secondary" for="nodeEndpoint">API Endpoint</label>
                 <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path" readonly
@@ -87,6 +87,13 @@
             <div class="form-group">
                 <label class="text-secondary" for="nodeContentType">Content-Type</label>
                 <input id="nodeContentType" type="text" class="form-control" value="multipart/form-data" readonly>
+            </div>
+        </ng-container> -->
+        <ng-container *ngIf="currNode?.type=='TIMER'">
+            <div class="form-group">
+                <label class="text-secondary" for="nodeEndpoint">CRON Expression</label>
+                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.cron"
+                    (ngModelChange)="changesDone.emit()">
             </div>
         </ng-container>
         <div class="form-group d-flex align-items-center">
