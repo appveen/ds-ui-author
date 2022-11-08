@@ -149,7 +149,7 @@
                     <h6 class="font-weight-bold">File Connectors</h6>
                 </div>
                 <div class="col-4 switch-container">
-                    <select id="data" class="form-control" (change)="selectConnector($event,'data')">
+                    <select id="data" class="form-control" (change)="selectConnector($event,'file')">
                         <option [value]="connector._id" *ngFor="let connector of fileConnectors"
                             [selected]="connector._id === appData.connectors.file._id">{{connector.name}}
                         </option>
