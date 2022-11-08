@@ -185,6 +185,7 @@ export class DataManagementComponent implements OnInit {
       self.ts.success('App saved successfully');
       self.commonService.appUpdates.emit(self.appData);
       self.commonService.app = res;
+      self.commonService.appData = res;
     }, err => {
       self.commonService.errorToast(err);
     });
