@@ -289,15 +289,7 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
 
   onCategoryChange(event: any) {
     this.form.get('category').setValue(event.target.value);
-    if (event.target.value == 'FILE') {
-      this.form.get('type').setValue('SFTP');
-    } else if (event.target.value == 'MESSAGING') {
-      this.form.get('type').setValue('KAFKA');
-    } else if (event.target.value == 'STORAGE') {
-      this.form.get('type').setValue('GRIDFS');
-    } else if (event.target.value == 'DB') {
-      this.form.get('type').setValue('MONGODB');
-    }
+    this.form.get('type').setValue(this.getTypes[0].type)
   }
 
   onConnectorChange(event: any) {

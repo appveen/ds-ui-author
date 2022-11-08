@@ -140,6 +140,10 @@ export class SchemaBuilderComponent implements
             status: false,
             message: null
         };
+        const connectorForm = this.fb.group({
+            data: [{}],
+            file: [{}]
+        })
         self.form = self.fb.group({
             name: ['', [Validators.required, maxLenValidator(40)]],
             description: [null, [maxLenValidator(250)]],
@@ -197,10 +201,7 @@ export class SchemaBuilderComponent implements
             headers: [],
             enableSearchIndex: '',
             ingestionPoints: [],
-            fileStorage: self.fb.group({
-                connectorId: [],
-                type: []
-            })
+            connectors: connectorForm
         });
 
         self.versionConfig = {
@@ -777,6 +778,7 @@ export class SchemaBuilderComponent implements
                 self.schemaService.initialState(res);
                 res.definition = self.schemaService.patchType(res.definition);
                 self.serviceObj = res;
+                self.commonService.serviceData = res;
                 if (self.editServiceId || self.cloneServiceId) {
                     self.enableEdit(true);
                 }

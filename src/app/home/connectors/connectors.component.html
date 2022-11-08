@@ -53,7 +53,12 @@
         <div *ngIf="hasPermissionForConnector(connector._id)" class="list-group-item">
           <div class="d-flex align-items-center justify-content-start h-100 hover" [attr.title]="connector.name"
             (dblclick)="navigate(connector._id)">
-            <div class="d-flex align-items-center item-name text-dark fw-500">{{connector.name}}</div>
+            <div class="d-flex align-items-center item-name text-dark fw-500">
+              {{connector.name}}
+              <div class="d-flex align-items-center text-primary font-12 mt-auto" *ngIf="connector?.options?.default">
+                &nbsp;(Default)</div>
+            </div>
+
             <div class="d-flex align-items-center sub-heading">
               <div class="item-attribute-count align-items-center">{{getLabel(connector.type)}}</div>
               <div class="item-attribute-count align-items-center">{{connector.category}}</div>
@@ -73,14 +78,14 @@
                 [routerLink]="['/app/',app,'con',connector._id]">View</span>
               <span id="con-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
                 (click)="showDropDown($event,i)"></span>
-              <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed"
+              <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed border"
                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                 (outside)="showOptionsDropdown[i]=false">
-                <div id="con-edit" class="list-group-item list-group-item-action py-2"
+                <div id="con-edit" class="list-group-item list-group-item-action py-2 border-0"
                   *ngIf="canEditConnector(connector._id)" (click)="editConnector(i)">
                   Edit
                 </div>
-                <div id="con-delete" class="list-group-item list-group-item-action py-2"
+                <div id="con-delete" class="list-group-item list-group-item-action py-2 text-danger border-0"
                   *ngIf="canEditConnector(connector._id)" (click)="deleteConnector(i);">
                   Delete
                 </div>

@@ -109,6 +109,7 @@ export class CommonService {
   breadcrumbPaths: Array<Breadcrumb>;
   breadcrumbTrigger: Subject<any> = new Subject();
   appData: any;
+  serviceData: any;
 
   constructor(
     private http: HttpClient,

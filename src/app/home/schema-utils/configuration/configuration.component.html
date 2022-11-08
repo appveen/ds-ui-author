@@ -13,8 +13,8 @@
           Settings</span>
       </div>
       <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView('S')">
-        <span class="hover" (click)="activeTab=4" [ngClass]="{'text-dark fw-600': activeTab==4}" id="fileSettings">File
-          Settings</span>
+        <span class="hover" (click)="activeTab=4" [ngClass]="{'text-dark fw-600': activeTab==4}"
+          id="connectorSettings">Connector Settings</span>
       </div>
     </div>
   </div>
@@ -23,6 +23,6 @@
     </odp-data-settings>
     <odp-search-settings *ngIf="activeTab==2" [form]="form" [edit]="edit"></odp-search-settings>
     <odp-common-settings *ngIf="activeTab==3" [form]="form" [edit]="edit"></odp-common-settings>
-    <odp-file-settings *ngIf="activeTab==4" [form]="form" [edit]="edit"></odp-file-settings>
+    <odp-connector-settings *ngIf="activeTab==4" [form]="form" [edit]="edit"></odp-connector-settings>
   </div>
 </div>
