@@ -76,7 +76,7 @@
                   *ngIf="canEditDataFormat(dataFormat._id) && hasManagePermission('DF')" (click)="cloneDataFormat(i)">
                   Clone
                 </div>
-                <div id="lib-delete" class="list-group-item list-group-item-action py-2"
+                <div id="lib-delete" class="list-group-item list-group-item-action py-2 text-danger"
                   *ngIf="canEditDataFormat(dataFormat._id)" (click)="deleteDataFormat(i);">
                   Delete
                 </div>
