@@ -1,5 +1,6 @@
 .settings-page {
   height: 100vh;
+
   .service-details {
     width: 175px;
     height: 100px;
@@ -9,15 +10,19 @@
     &.bg-info {
       background-color: rgba(10, 108, 255, 0.06) !important;
     }
+
     &.bg-success {
       background-color: rgba(47, 196, 143, 0.06) !important;
     }
+
     &.bg-primary {
       background-color: rgba(255, 144, 82, 0.06) !important;
     }
+
     &.bg-danger {
       background-color: rgba(242, 100, 100, 0.06) !important;
     }
+
     &.bg-secondary {
       background-color: rgba(155, 158, 164, 0.06) !important;
     }
@@ -26,6 +31,7 @@
   .data-settings {
     margin-top: 40px;
     margin-bottom: 32px;
+
     .retain-data-options {
       width: 160px;
       margin-bottom: 32px;
@@ -35,4 +41,9 @@
   .hr {
     border: 1px solid #ececec;
   }
+}
+
+.dm-settings {
+  max-height: 80vh;
+  overflow: auto;
 }

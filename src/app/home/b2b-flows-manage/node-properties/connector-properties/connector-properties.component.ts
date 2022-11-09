@@ -25,9 +25,11 @@ export class ConnectorPropertiesComponent implements OnInit {
       status: true
     };
     this.connectorList = [];
+    this.typeList = ['SFTP', 'MYSQL'];
   }
   ngOnInit(): void {
-    this.getAvailableConnectors();
+    // this.getAvailableConnectors();
+    this.loadInitial();
   }
 
   getAvailableConnectors() {
@@ -35,7 +37,6 @@ export class ConnectorPropertiesComponent implements OnInit {
       this.typeList = _.uniq(res.map(ele => ele.type).filter(ele => ele));
       this.loadInitial()
     }, err => {
-
       this.commonService.errorToast(err, 'Unable to fetch user groups, please try again later');
     });
   }
@@ -44,7 +45,7 @@ export class ConnectorPropertiesComponent implements OnInit {
     this.showLoader = true;
     this.commonService.get('user', `/${this.commonService.app._id}/connector`, {
       sort: 'name',
-      select: 'name type',
+      select: 'name type category',
       count: 10,
       filter: {
         type: {
@@ -63,11 +64,15 @@ export class ConnectorPropertiesComponent implements OnInit {
 
   searchConnector(searchTerm: string) {
     const options: GetOptions = {
+      sort: 'name',
       filter: {
+        type: {
+          $in: this.typeList
+        },
         name: '/' + searchTerm + '/',
         app: this.commonService.app._id
       },
-      select: 'name status connectorId',
+      select: 'name type category',
       count: 5
     };
     this.searchTerm = searchTerm;

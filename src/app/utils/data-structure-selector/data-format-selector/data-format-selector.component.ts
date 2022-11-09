@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { merge } from 'rxjs';
+import { zip } from 'rxjs';
+import * as _ from 'lodash';
 
 import { AppService } from '../../services/app.service';
 import { CommonService, GetOptions } from '../../services/common.service';
@@ -15,9 +16,11 @@ export class DataFormatSelectorComponent implements OnInit {
   @Input() format: any;
   @Output() formatChange: EventEmitter<any>;
 
+  apiOptions: GetOptions;
   dataFormatList: Array<any>;
   searchTerm: string;
   showLoader: boolean;
+  searchSubscription: any;
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.edit = {
@@ -25,6 +28,12 @@ export class DataFormatSelectorComponent implements OnInit {
     };
     this.dataFormatList = [];
     this.formatChange = new EventEmitter();
+    this.apiOptions = {
+      page: 1,
+      count: 5,
+      select: 'name definition attributeCount formatType character excelType strictValidation lineSeparator',
+      sort: 'name'
+    }
   }
 
   ngOnInit(): void {
@@ -33,21 +42,21 @@ export class DataFormatSelectorComponent implements OnInit {
 
   loadInitial() {
     this.showLoader = true;
-    this.commonService.get('partnerManager', `/${this.commonService.app._id}/dataFormat`, {
-      sort: 'name',
-      select: 'name definition attributeCount formatType character excelType strictValidation lineSeparator',
-      count: 10
-    }).subscribe((res) => {
+    zip(
+      this.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, this.apiOptions),
+      this.commonService.get('partnerManager', `/${this.commonService.app._id}/dataFormat`, this.apiOptions)
+    ).subscribe((res) => {
       this.showLoader = false;
-      if (res && res.length > 0) {
-        res = res.map(item => {
-          if (item.formatType) {
-            item.definition = item.definition;
+      let allResult = _.flatten(res);
+      if (allResult && allResult.length > 0) {
+        allResult = allResult.map(item => {
+          if (!item.formatType) {
+            item.formatType = 'JSON';
           }
           return item;
         });
       }
-      this.dataFormatList = res;
+      this.dataFormatList = allResult;
       this.selectDefault();
     }, err => {
       this.showLoader = false;
@@ -56,30 +65,31 @@ export class DataFormatSelectorComponent implements OnInit {
   }
 
   searchFormat(searchTerm: string) {
-    const options: GetOptions = {
-      filter: {
-        name: '/' + searchTerm + '/',
-        definition: { $exists: true }
-      },
-      select: 'name definition attributeCount formatType character excelType strictValidation lineSeparator',
-      count: 5
+    this.apiOptions.filter = {
+      name: '/' + searchTerm + '/',
+      definition: { $exists: true }
     };
     this.searchTerm = searchTerm;
     this.showLoader = true;
-    merge(
-      this.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, options),
-      this.commonService.get('partnerManager', `/${this.commonService.app._id}/dataFormat`, options)
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+    this.searchSubscription = zip(
+      this.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, this.apiOptions),
+      this.commonService.get('partnerManager', `/${this.commonService.app._id}/dataFormat`, this.apiOptions)
     ).subscribe((res: Array<any>) => {
-      if (res && res.length > 0) {
-        res = res.map(item => {
-          if (item.formatType) {
-            item.definition = item.definition;
+      this.showLoader = false;
+      let allResult = _.flatten(res);
+      if (allResult && allResult.length > 0) {
+        allResult = allResult.map(item => {
+          if (!item.formatType) {
+            item.formatType = 'JSON';
           }
           return item;
         });
       }
-      this.showLoader = false;
-      this.dataFormatList = res;
+      this.dataFormatList = allResult;
+
       this.selectDefault();
     }, err => {
       this.showLoader = false;

@@ -1,0 +1,39 @@
+<div class="wrapper d-flex flex-column w-100 p-4 ">
+  <div class="d-flex justify-content-between mt-4" *ngIf="canView('S')">
+    <div class="d-flex flex-column">
+      <label class="font-14 fw-700 text-secondary" for="category">Data Connector</label>
+    </div>
+    <div class="d-flex flex-column">
+      <ng-container>
+        <div class="form-group">
+
+          <select id="data" class="form-control" (change)="selectConnector($event,'data')"
+            [disabled]="!edit.status || !canEdit('S')">
+            <option [value]="connector._id" *ngFor="let connector of dataConnectors"
+              [selected]="checkDefault(connector._id)">{{connector.name}}</option>
+          </select>
+        </div>
+      </ng-container>
+
+
+    </div>
+  </div>
+  <div class="d-flex justify-content-between mt-4" *ngIf="canView('S') && showConnectors">
+    <div class="d-flex flex-column">
+      <label class="font-14 fw-700 text-secondary" for="category">File Connector</label>
+    </div>
+    <div class="d-flex flex-column">
+      <ng-container>
+
+        <div class="form-group">
+
+          <select id="file" class="form-control" (change)="selectConnector($event,'file')"
+            [disabled]="!edit.status || !canEdit('S')">
+            <option [value]="connector._id" *ngFor="let connector of fileConnectors"
+              [selected]="checkDefault(connector._id)">{{connector.name}}</option>
+          </select>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

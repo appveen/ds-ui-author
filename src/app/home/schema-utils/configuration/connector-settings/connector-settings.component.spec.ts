@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { FileSettingsComponent } from './file-settings.component';
+import { FileSettingsComponent } from './connector-settings.component';
 
 describe('FileSettingsComponent', () => {
   let component: FileSettingsComponent;
@@ -11,9 +11,9 @@ describe('FileSettingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FileSettingsComponent ]
+      declarations: [FileSettingsComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

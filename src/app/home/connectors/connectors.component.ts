@@ -283,15 +283,24 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     return records;
   }
 
-  getLabel(type) {
+  getLabel(type: string) {
     return this.typeList?.find(ele => ele.type === type)?.label || ''
   }
 
+  onCategoryChange(event: any) {
+    this.form.get('category').setValue(event.target.value);
+    this.form.get('type').setValue(this.getTypes[0].type)
+  }
 
-  onConnectorChange(event) {
-    this.form.get('type').setValue(event.target.value)
+  onConnectorChange(event: any) {
+    this.form.get('type').setValue(event.target.value);
     // console.log(this.form.value)
   }
+
+  navigate(id: string) {
+    this.router.navigate(['/app/', this.app, 'con', id])
+  }
+
   get app() {
     return this.commonService.app._id;
   }
@@ -299,11 +308,6 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     const list = this.typeList.filter(ele => ele.category === this.form.get('category').value) || [];
     // this.form.get('type').setValue(list[0]?.label || '');
     return list;
-  }
-
-
-  navigate(id) {
-    this.router.navigate(['/app/', this.app, 'con', id])
   }
 
 }

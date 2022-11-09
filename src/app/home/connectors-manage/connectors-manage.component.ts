@@ -233,12 +233,19 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
 
   setValue(field: string, value: string) {
     this.connector.values[field] = value;
-    console.log(this.connector);
-    
   }
 
   getValue(field: string) {
     return this.connector.values[field];
+  }
+
+  parseCondition(condition: any) {
+    if (!condition) {
+      return true;
+    }
+    return Object.keys(condition).every(key => {
+      return this.connector.values[key] == condition[key];
+    });
   }
 
   get canEditGroup() {
