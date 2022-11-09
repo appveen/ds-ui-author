@@ -7,7 +7,8 @@
         <span>{{currNode?.options?.dataService?.name}}</span>
         <span class="dsi dsi-remove text-danger hover" (click)="currNode.options.dataService=null"></span>
     </div>
-    <odp-service-selector *ngIf="!currNode?.options?.dataService" [edit]="edit" [(data)]="currNode.options.dataService">
+    <odp-service-selector *ngIf="!currNode?.options?.dataService" [edit]="edit" [(data)]="currNode.options.dataService"
+        (dataChange)="selectDataService($event)">
     </odp-service-selector>
 </div>
 <ng-container *ngIf="currNode?.options?.dataService">
@@ -46,7 +47,8 @@
         <div class="form-group">
             <label for="sort">Sort</label>
             <input id="sort" type="text" class="form-control" [(ngModel)]="currNode.options.sort">
-            <small class="form-text text-muted">Provide Comma Separated Fields<br><i>(prefix: "-" for descending order)</i></small>
+            <small class="form-text text-muted">Provide Comma Separated Fields<br><i>(prefix: "-" for descending
+                    order)</i></small>
         </div>
         <div class="form-group">
             <label for="filter">Filter</label>

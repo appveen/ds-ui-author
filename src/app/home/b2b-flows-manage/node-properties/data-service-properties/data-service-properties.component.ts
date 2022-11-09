@@ -48,6 +48,10 @@ export class DataServicePropertiesComponent implements OnInit {
     }
   }
 
+  selectDataService(data: any) {
+    this.currNode.dataStructure.outgoing = data;
+  }
+
   setDataServiceOperation(type: string, val: any) {
     delete this.currNode.options.documentId;
     delete this.currNode.options.body;
