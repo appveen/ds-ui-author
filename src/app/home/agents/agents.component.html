@@ -91,27 +91,27 @@
                             <span id="agent-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
                                 (click)="showDropDown($event,i)"></span>
                             <div *ngIf="showOptionsDropdown[i]"
-                                class="more-options bg-white rounded list-group position-fixed"
+                                class="more-options bg-white rounded list-group position-fixed border"
                                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                                 (outside)="showOptionsDropdown[i]=false">
-                                <div id="agent-dowload" class="list-group-item list-group-item-action py-2"
+                                <div id="agent-dowload" class="list-group-item list-group-item-action py-2 border-0"
                                     (click)="openDownloadAgentWindow(agent);">
                                     Download
                                 </div>
-                                <div id="agent-edit" class="list-group-item list-group-item-action py-2"
+                                <div id="agent-edit" class="list-group-item list-group-item-action py-2 border-0"
                                     *ngIf="canEditAgent(agent._id)" (click)="editAgent(i)">
                                     Edit
                                 </div>
-                                <div id="agent-change-passowrd" class="list-group-item list-group-item-action py-2"
+                                <div id="agent-change-passowrd" class="list-group-item list-group-item-action py-2 border-0"
                                     (click)="changePassword(i);">
                                     Change Password
                                 </div>
-                                <div id="agent-clone" class="list-group-item list-group-item-action py-2"
+                                <div id="agent-clone" class="list-group-item list-group-item-action py-2 border-0"
                                     *ngIf="canEditAgent(agent._id) && hasManagePermission('AGENT')"
                                     (click)="cloneAgent(i)">
                                     Clone
                                 </div>
-                                <div id="agent-delete" class="list-group-item list-group-item-action py-2"
+                                <div id="agent-delete" class="list-group-item list-group-item-action py-2 border-0 text-danger"
                                     *ngIf="canEditAgent(agent._id)" (click)="deleteAgent(i);">
                                     Delete
                                 </div>
