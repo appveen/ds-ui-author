@@ -107,22 +107,22 @@
                   (click)="toggleFunctionStatus(i)">Stop</span>
                 <span class="dsi dsi-more-vertical hover mr-3 ignore-outside" (click)="showDropDown($event,i)"></span>
               </ng-container>
-              <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed"
+              <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed border"
                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                 (outside)="showOptionsDropdown[i]=false">
-                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFaas(item._id)"
+                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFaas(item._id)"
                   (click)="editFunction(i)">
                   Edit
                 </div>
-                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFaas(item._id)"
+                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFaas(item._id)"
                   (click)="viewFunction(i)">
                   View
                 </div>
-                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFaas(item._id)"
+                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFaas(item._id)"
                   (click)="cloneFunction(i)">
                   Clone
                 </div>
-                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFaas(item._id)"
+                <div class="list-group-item list-group-item-action py-2 border-0 text-danger" *ngIf="canManageFaas(item._id)"
                   (click)="deleteFunction(i)">
                   Delete
                 </div>
