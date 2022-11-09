@@ -105,22 +105,22 @@
                                     (click)="showDropDown($event,i)"></span>
                             </ng-container>
                             <div *ngIf="showOptionsDropdown[i]"
-                                class="more-options bg-white rounded list-group position-fixed"
+                                class="more-options bg-white rounded list-group position-fixed border"
                                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                                 (outside)="showOptionsDropdown[i]=false">
-                                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFlow(item._id)"
+                                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFlow(item._id)"
                                     (click)="editFlow(i)">
                                     Edit
                                 </div>
-                                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFlow(item._id)"
+                                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFlow(item._id)"
                                     (click)="viewFlow(i)">
                                     View
                                 </div>
-                                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFlow(item._id)"
+                                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFlow(item._id)"
                                     (click)="cloneFlow(i)">
                                     Clone
                                 </div>
-                                <div class="list-group-item list-group-item-action py-2" *ngIf="canManageFlow(item._id)"
+                                <div class="list-group-item list-group-item-action py-2 border-0 text-danger" *ngIf="canManageFlow(item._id)"
                                     (click)="deleteFlow(i)">
                                     Delete
                                 </div>
