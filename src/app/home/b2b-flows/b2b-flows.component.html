@@ -125,6 +125,10 @@
                                     *ngIf="canManageFlow(item._id)" (click)="deleteFlow(i)">
                                     Delete
                                 </div>
+                                <div class="list-group-item list-group-item-action py-2 text-accent"
+                                    *ngIf="canManageFlow(item._id)" (click)="getYamls(i)">
+                                    Yamls
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -197,6 +201,43 @@
         <button type="button" class="btn btn-min-width btn-primary w-100" id="newFlowModalYes" [disabled]="form.invalid"
             (click)="triggerFlowCreate()">Create</button>
     </div>
+</div>
+
+
+<div [ngClass]="{'show':showYamlWindow}" class="yaml-window position-fixed p-4 border-left bg-white">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-5">
+        <span class="font-20 fw-600">Yamls</span>
+        <span class="dsi dsi-close hover" (click)="closeYamlWindow()"></span>
+    </div>
+    <button type="button" class="btn btn-link p-0 mb-4" (click)="downloadYamls()">Download Yamls</button>
+    <ng-container *ngIf="showYamlWindow">
+        <div class="form-group">
+            <label for="service">Service</label>
+            <div class="position-relative">
+                <pre class="form-control">{{selectedFlow.serviceYaml}}</pre>
+                <small class="form-text position-absolute">
+                    <span class="text-secondary hover" *ngIf="!copied['service']"
+                        (click)="copyText(selectedFlow.serviceYaml,'service')">Copy</span>
+                    <span class="text-accent" *ngIf="copied['service']">Copied!</span>
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="deployment">Deployment</label>
+            <div class="position-relative">
+                <pre class="form-control">{{selectedFlow.deploymentYaml}}</pre>
+                <small class="form-text position-absolute">
+                    <span class="text-secondary hover" *ngIf="!copied['deployment']"
+                        (click)="copyText(selectedFlow.deploymentYaml,'deployment')">Copy</span>
+                    <span class="text-accent" *ngIf="copied['deployment']">Copied!</span>
+                </small>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+
+<div *ngIf="showYamlWindow" class="overlay">
 </div>
 
 <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
