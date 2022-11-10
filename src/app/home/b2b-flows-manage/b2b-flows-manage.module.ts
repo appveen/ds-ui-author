@@ -40,6 +40,7 @@ import { PostgreConnectorComponent } from './node-properties/connector-propertie
 import { KafkaConnectorComponent } from './node-properties/connector-properties/kafka-connector/kafka-connector.component';
 import { MongodbConnectorComponent } from './node-properties/connector-properties/mongodb-connector/mongodb-connector.component';
 import { RouteGuard } from '../../utils/guards/route.guard';
+import { NodeDataSelectorComponent } from './node-properties/node-data-selector/node-data-selector.component';
 
 const routes: Routes = [
   {
@@ -69,7 +70,8 @@ const routes: Routes = [
     MysqlConnectorComponent,
     PostgreConnectorComponent,
     KafkaConnectorComponent,
-    MongodbConnectorComponent
+    MongodbConnectorComponent,
+    NodeDataSelectorComponent
   ],
   imports: [
     CommonModule,
