@@ -164,7 +164,7 @@
         formItem.get('type').value!='Relation' && formItem.get('type').value!='User'">
           Validations
         </div> -->
-        <div class="w-100 mb-4" *ngIf="isDataFormat && formatType=='FLATFILE'">
+        <div class="w-100 mb-4 mt-2" *ngIf="isDataFormat && formatType=='FLATFILE'">
           <div class=" text-secondary">Field Length
             <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
           </div>
@@ -199,25 +199,25 @@
 
 
         <ng-container *ngIf="showCommonFields && formList.length == 1 || formIndex > 0">
-          <div class="mt-3 font-16 fw-400">
+          <div class="mt-3 font-16 fw-400" *ngIf="!isDataFormat">
             Display Properties
           </div>
 
 
-          <div class=" w-100 mt-3">
+          <div class=" w-100 mt-3" *ngIf="!isDataFormat">
             <div class="font-14 fw-300 text-dark mb-2">Appcenter Custom Label</div>
             <div>
               <input *ngIf="edit.status" class="form-control" type="text" formControlName="label" id="label">
               <span *ngIf="!edit.status">{{formItem.get('properties.label').value}}</span>
             </div>
           </div>
-          <div class="d-flex">
+          <div class="d-flex" *ngIf="!isDataFormat">
             <div></div>
             <span class="text-danger" *ngIf="labelError"><span class="dsi dsi-danger-circle mr-1"></span>
               <span>Label should not be more than 40 characters</span>
             </span>
           </div>
-          <div class="w-100 mt-3">
+          <div class="w-100 mt-3" *ngIf="!isDataFormat">
             <div class="font-14 fw-300 text-dark mb-2">Appcenter Custom Error</div>
             <div>
               <input *ngIf="canEdit" class="form-control" type="text" formControlName="errorMessage" id="errorMessage"

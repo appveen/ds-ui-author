@@ -37,19 +37,19 @@
                 <div class="d-flex flex-column w-100 builder-body">
                     <div class="options d-flex justify-content-between align-items-center border-bottom px-3">
                         <div>
-                            <button type="button" class="btn btn-link ignore-outside d-flex align-items-center"
+                            <button type="button" class="btn text-primary ignore-outside d-flex align-items-center"
                                 (click)="showAdvanceSettingsWindow=true">
                                 Configure -
                                 <odp-format-type-badge [data]="selectedFormat"></odp-format-type-badge>
                             </button>
                         </div>
                         <div class="d-flex justify-content-end align-items-center" *ngIf="edit.status">
-                            <button type="button" class="btn btn-link pr-0" (click)="addField('after')"
+                            <button type="button" class="btn text-primary pr-0" (click)="addField('after')"
                                 id="sbInsertAttribute">
                                 Insert
                             </button>
                             <div ngbDropdown class="d-inline-block mr-3">
-                                <button type="button" class="btn btn-link px-1 pt-2" id="insertDropDown"
+                                <button type="button" class="btn text-primary px-1 pt-2" id="insertDropDown"
                                     ngbDropdownToggle></button>
                                 <div ngbDropdownMenu>
                                     <button type="button" class="dropdown-item" (click)="addField('before')">Insert
@@ -60,7 +60,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-link" (click)="clearSchema()" id="sbClearAll">
+                            <button type="button" class="btn text-primary" (click)="clearSchema()" id="sbClearAll">
                                 Delete All
                             </button>
                         </div>
@@ -128,6 +128,8 @@
     class="advance-settings-window position-fixed p-4 d-flex flex-column align-items-center bg-white border-left">
     <div class="d-flex w-100 mb-4">
         <span class="font-20 text-dark fw-500">Configuration</span>
+        <span class="dsi dsi-close mr-2 d-flex ml-auto align-items-center hover"
+            (click)="showAdvanceSettingsWindow=false"></span>
     </div>
     <div *ngIf="showAdvanceSettingsWindow" class="form-group">
         <label class="font-14 text-dark">Type</label>
@@ -172,10 +174,11 @@
             </div>
             <div class="form-group d-flex align-items-center" *ngIf="formatType">
                 <!-- <odp-checkbox [edit]="edit" [(checked)]="strictValidation"></odp-checkbox> -->
-                <odp-switch [edit]="edit" [(checked)]="strictValidation"></odp-switch>
-                <label class="font-14 text-dark ml-2 mb-0">
+
+                <label class="font-14 text-dark mr-2 mb-0">
                     Strict Validation
                 </label>
+                <odp-switch [edit]="edit" [(checked)]="strictValidation"></odp-switch>
             </div>
         </ng-container>
         <ng-container *ngIf="!edit.status">
@@ -195,8 +198,8 @@
             </div>
             <div class="form-group d-flex align-items-center" *ngIf="formatType">
                 <!-- <odp-checkbox [edit]="edit" [checked]="strictValidation"></odp-checkbox> -->
+                <label class="font-14 text-dark mr-2 mb-0">Strict Validation</label>
                 <odp-switch [edit]="edit" [checked]="strictValidation"></odp-switch>
-                <label class="font-14 text-dark ml-2 mb-0">Strict Validation</label>
             </div>
         </ng-container>
     </div>
