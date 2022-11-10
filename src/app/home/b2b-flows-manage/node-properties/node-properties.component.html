@@ -33,7 +33,7 @@
             <option value="MAPPING">Mapping</option>
             <option value="CODEBLOCK">Code Block</option>
             <option value="CONNECTOR">Connector</option>
-            <option value="UNWIND">Change Route</option>
+            <option value="UNWIND">Change Root</option>
             <option value="DATASERVICE">Data Service</option>
             <option value="FUNCTION">Function</option>
             <option value="RESPONSE">Response</option>
@@ -165,7 +165,7 @@
     </ng-container>
     <ng-container *ngIf="currNode.type=='UNWIND'">
         <div class="form-group">
-            <label class="font-14 fw-300 text-dark" for="nodeUnWind">Change Route Path</label>
+            <label class="font-14 fw-300 text-dark" for="nodeUnWind">Change Root Path</label>
             <input id="nodeUnWind" type="text" class="form-control" [(ngModel)]="currNode.options.unwindPath"
                 (ngModelChange)="changesDone.emit()">
         </div>

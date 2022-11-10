@@ -47,7 +47,7 @@
                 </span>
                 <span *ngIf="node.type=='UNWIND'" class="d-flex align-items-center">
                     <span class="node-icon dsi dsi-expand"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Change Route</span>
+                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Change Root</span>
                 </span>
                 <span *ngIf="node.type=='RESPONSE'" class="d-flex align-items-center">
                     <span class="node-icon dsi dsi-response"></span>
@@ -120,7 +120,7 @@
         </div>
         <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('UNWIND')">
             <span class="font-11 fw-400 dsi dsi-expand mr-2"></span>
-            <span class="font-12 fw-400">Change Route</span>
+            <span class="font-12 fw-400">Change Root</span>
         </div>
         <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('RESPONSE')">
             <span class="font-12 fw-400 dsi dsi-response mr-2"></span>
