@@ -27,9 +27,9 @@
     <div *ngIf="(selectedType == 'customFormat' || selectedType == 'dataFormat') && format"
         class="d-flex flex-column w-100 mb-2">
         <div class="d-flex align-items-center justify-content-start w-100">
+            <span class="text mr-3">Strict Validation</span>
             <odp-checkbox [edit]="edit" [(checked)]="format.strictValidation">
             </odp-checkbox>
-            <span class="text ml-3">Strict Validation</span>
         </div>
     </div>
 </div>

@@ -6,7 +6,7 @@
         <div class="border-left border-grey"></div>
     </div>
     <div class="d-flex align-items-center">
-        <div class="node-block px-3 py-2 border rounded bg-white d-flex flex-column align-items-start justify-content-start hover position-relative"
+        <div class="node-block px-3 py-2 border rounded bg-white d-flex flex-column align-items-start justify-content-center hover position-relative"
             (click)="selectNode()">
             <div class="node-type">
                 <span *ngIf="node.type=='FILE'" class="d-flex align-items-center">
@@ -47,14 +47,14 @@
                 </span>
                 <span *ngIf="node.type=='UNWIND'" class="d-flex align-items-center">
                     <span class="node-icon dsi dsi-expand"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Unwind</span>
+                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Change Root</span>
                 </span>
                 <span *ngIf="node.type=='RESPONSE'" class="d-flex align-items-center">
                     <span class="node-icon dsi dsi-response"></span>
                     <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Response</span>
                 </span>
             </div>
-            <div class="node-name w-100 text-center text-truncate text-muted font-12">
+            <div class="node-name w-100 text-center text-truncate text-muted font-12" *ngIf="node.name">
                 <span class="">{{node.name}}</span>
             </div>
             <span class="delete-icon dsi dsi-trash text-danger position-absolute hover"
@@ -120,7 +120,7 @@
         </div>
         <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('UNWIND')">
             <span class="font-11 fw-400 dsi dsi-expand mr-2"></span>
-            <span class="font-12 fw-400">Unwind</span>
+            <span class="font-12 fw-400">Change Root</span>
         </div>
         <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('RESPONSE')">
             <span class="font-12 fw-400 dsi dsi-response mr-2"></span>

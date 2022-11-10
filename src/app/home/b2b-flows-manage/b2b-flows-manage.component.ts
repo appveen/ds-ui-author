@@ -43,6 +43,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   openDeleteModal: EventEmitter<any>;
   nodeList: Array<any>;
   changesDone: boolean = false;
+  saved: boolean = false
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -115,6 +116,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.edit.status = true;
       }
     });
+    this.saved = false
   }
 
   ngOnDestroy() {
@@ -248,6 +250,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     const payload = this.getPayload();
     let request;
     this.apiCalls.save = true;
+    this.saved = true
     if (deploy) {
       this.flowData.status = 'RUNNING';
     }
@@ -261,10 +264,10 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       this.edit.status = false;
       if (deploy) {
         this.apiCalls.deploy = false;
-        this.ts.success('Saved ' + payload + ' and deployment process has started.');
+        this.ts.success('Saved ' + payload.name + ' and deployment process has started.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
       } else {
-        this.ts.success('Saved ' + payload + '.');
+        this.ts.success('Saved ' + payload.name + '.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
       }
     }, (err: any) => {
@@ -277,6 +280,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     const payload = this.getPayload();
     let request;
     this.apiCalls.save = true;
+    this.saved = true
     if (this.edit.id) {
       request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, payload);
     } else {
@@ -357,7 +361,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   canDeactivate(): Promise<boolean> | boolean {
     const self = this;
-    if (this.changesDone) {
+    if (this.changesDone && !this.saved) {
       return new Promise((resolve, reject) => {
         self.pageChangeModalTemplateRef = this.commonService.modal(this.pageChangeModalTemplate);
         self.pageChangeModalTemplateRef.result.then(close => {

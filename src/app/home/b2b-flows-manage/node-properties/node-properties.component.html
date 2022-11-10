@@ -1,24 +1,24 @@
 <div>
-    <div class="mb-4">
-        <div class="d-flex align-items-center justify-content-between">
-            <span class="font-20 fw-600">Properties</span>
-            <button type="button" class="btn btn-link" (click)="cancel()">
-                <span class="dsi dsi-close"></span>
-            </button>
-        </div>
-        <hr>
-        <div class="font-12 text-secondary">
-            <span class="mr-1 fw-500">Node ID:</span>
-            <span>{{currNode?._id}}</span>
-        </div>
+    <div class="d-flex align-items-center justify-content-between px-4 py-2 mt-4">
+        <span class="font-20 fw-600">{{currNode.name ? currNode.name : 'Properties'}}</span>
+        <button type="button" class="btn btn-link" (click)="cancel()">
+            <span class="dsi dsi-close"></span>
+        </button>
     </div>
+    <hr>
+    <div class="font-12 text-secondary px-4 py-2">
+        <span class="mr-1 fw-500">Node ID:</span>
+        <span>{{currNode?._id}}</span>
+    </div>
+</div>
+<div class="p-4">
     <div class="form-group">
-        <label class="text-secondary" for="nodeName">Node Name</label>
+        <label class="font-14 fw-300 text-dark" for="nodeName">Node Name</label>
         <input id="nodeName" type="text" class="form-control" [(ngModel)]="currNode.name"
             (ngModelChange)="changesDone.emit()">
     </div>
     <div class="form-group">
-        <label class="text-secondary" for="nodeType">Node Type</label>
+        <label class="font-14 fw-300 text-dark" for="nodeType">Node Type</label>
         <select *ngIf="!prevNode" id="nodeType" class="form-control" [(ngModel)]="currNode.type"
             (ngModelChange)="onTypeChange($event); changesDone.emit()">
             <option value="API">API Reciever</option>
@@ -33,14 +33,14 @@
             <option value="MAPPING">Mapping</option>
             <option value="CODEBLOCK">Code Block</option>
             <option value="CONNECTOR">Connector</option>
-            <option value="UNWIND">Unwind</option>
+            <option value="UNWIND">Change Root</option>
             <option value="DATASERVICE">Data Service</option>
             <option value="FUNCTION">Function</option>
             <option value="RESPONSE">Response</option>
         </select>
     </div>
     <div *ngIf="currNode?.type!='DATASERVICE'" class="form-group">
-        <label class="text-secondary mb-0" for="nodeDataStructure">Data Structure
+        <label class="font-14 fw-300 text-dark mb-0" for="nodeDataStructure">Data Structure
             <span class="text-muted"><i>(optional)</i></span>
         </label>
         <small class="form-text text-muted mb-3">Set the data structure that this node will return</small>
@@ -50,12 +50,7 @@
     <ng-container *ngIf="!prevNode">
         <ng-container *ngIf="currNode?.type=='API'">
             <div class="form-group">
-                <label class="text-secondary" for="nodeEndpoint">API Endpoint</label>
-                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
-                    (ngModelChange)="changesDone.emit()">
-            </div>
-            <div class="form-group">
-                <label class="text-secondary" for="nodeHTTPMethod">HTTP Method</label>
+                <label class="font-14 fw-300 text-dark" for="nodeHTTPMethod">HTTP Method</label>
                 <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
                     (ngModelChange)="changesDone.emit()">
                     <option value="POST" selected>POST</option>
@@ -65,7 +60,12 @@
                 </select>
             </div>
             <div class="form-group">
-                <label class="text-secondary" for="nodeContentType">Content-Type</label>
+                <label class="font-14 fw-300 text-dark" for="nodeEndpoint">API Endpoint</label>
+                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
+                    (ngModelChange)="changesDone.emit()">
+            </div>
+            <div class="form-group">
+                <label class="font-14 fw-300 text-dark" for="nodeContentType">Content-Type</label>
                 <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
                     (ngModelChange)="changesDone.emit()">
                     <option value="application/json" selected>application/json</option>
@@ -91,7 +91,7 @@
         </ng-container> -->
         <ng-container *ngIf="currNode?.type=='TIMER'">
             <div class="form-group">
-                <label class="text-secondary" for="nodeEndpoint">CRON Expression</label>
+                <label class="font-14 fw-300 text-dark" for="nodeEndpoint">CRON Expression</label>
                 <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.cron"
                     (ngModelChange)="changesDone.emit()">
             </div>
@@ -101,15 +101,15 @@
             <span class="ml-2">Unique Remote Txn ID</span>
         </div>
     </ng-container>
-    <hr>
+    <!-- <hr> -->
     <ng-container *ngIf="currNode?.type=='API' && prevNode">
         <div class="form-group">
-            <label class="text-secondary" for="nodeUrl">URL</label>
+            <label class="font-14 fw-300 text-dark" for="nodeUrl">URL</label>
             <textarea id="nodeUrl" class="form-control" cols="30" rows="4"
                 [(ngModel)]="currNode.options.url"></textarea>
         </div>
         <div class="form-group">
-            <label class="text-secondary" for="nodeHTTPMethod">HTTP Method</label>
+            <label class="font-14 fw-300 text-dark" for="nodeHTTPMethod">HTTP Method</label>
             <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
                 (ngModelChange)="changesDone.emit()">
                 <option value="POST" selected>POST</option>
@@ -119,12 +119,12 @@
             </select>
         </div>
         <!-- <div class="form-group">
-            <label class="text-secondary" for="nodeBody">Body</label>
+            <label class="font-14 fw-300 text-dark" for="nodeBody">Body</label>
             <textarea id="nodeBody" class="form-control" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea>
         </div>
         <div class="form-group">
-            <label class="text-secondary" for="nodeHeaders">Headers</label>
+            <label class="font-14 fw-300 text-dark" for="nodeHeaders">Headers</label>
             <textarea id="nodeHeaders" class="form-control" cols="30" rows="4"
                 [(ngModel)]="currNode.options.headers"></textarea>
         </div> -->
@@ -132,7 +132,7 @@
     <ng-container *ngIf="currNode?.type=='FILE'">
         <div class="form-group">
             <div class="d-flex align-items-center justify-content-between">
-                <label class="text-secondary" for="agentSelector">Agents</label>
+                <label class="font-14 fw-300 text-dark" for="agentSelector">Agents</label>
                 <button type="button" class="btn btn-link btn-sm py-0" (click)="showAgentSelector=true">
                     Select Agent
                 </button>
@@ -165,7 +165,7 @@
     </ng-container>
     <ng-container *ngIf="currNode.type=='UNWIND'">
         <div class="form-group">
-            <label class="text-secondary" for="nodeUnWind">Unwind Path</label>
+            <label class="font-14 fw-300 text-dark" for="nodeUnWind">Change Root Path</label>
             <input id="nodeUnWind" type="text" class="form-control" [(ngModel)]="currNode.options.unwindPath"
                 (ngModelChange)="changesDone.emit()">
         </div>
@@ -180,7 +180,8 @@
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FUNCTION'">
         <div class="form-group">
-            <label class="text-secondary" for="functionSelector">{{currNode?.options?.faas ? 'Selected' : 'Select'}}
+            <label class="font-14 fw-300 text-dark" for="functionSelector">{{currNode?.options?.faas ? 'Selected' :
+                'Select'}}
                 Function
             </label>
             <div *ngIf="currNode?.options?.faas"
@@ -194,12 +195,12 @@
         </div>
         <ng-container *ngIf="currNode?.options?.faas">
             <div class="form-group">
-                <label class="text-secondary" for="nodeEndpoint">Function Endpoint</label>
+                <label class="font-14 fw-300 text-dark" for="nodeEndpoint">Function Endpoint</label>
                 <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
                     (ngModelChange)="changesDone.emit()">
             </div>
             <div class="form-group">
-                <label class="text-secondary" for="nodeHTTPMethod">HTTP Method</label>
+                <label class="font-14 fw-300 text-dark" for="nodeHTTPMethod">HTTP Method</label>
                 <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
                     (ngModelChange)="changesDone.emit()">
                     <option value="POST" selected>POST</option>
@@ -212,12 +213,12 @@
     </ng-container>
     <ng-container *ngIf="currNode?.type=='RESPONSE'">
         <div class="form-group">
-            <label class="text-secondary" for="nodeStatusCode">Status Code</label>
+            <label class="font-14 fw-300 text-dark" for="nodeStatusCode">Status Code</label>
             <input id="nodeStatusCode" type="text" class="form-control" [(ngModel)]="currNode.options.statusCode"
                 (ngModelChange)="changesDone.emit()">
         </div>
         <div class="form-group">
-            <label class="text-secondary" for="nodeContentType">Content-Type</label>
+            <label class="font-14 fw-300 text-dark" for="nodeContentType">Content-Type</label>
             <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
                 (ngModelChange)="changesDone.emit()">
                 <option value="application/json" selected>application/json</option>
@@ -226,12 +227,12 @@
             </select>
         </div>
         <!-- <div class="form-group">
-            <label class="text-secondary" for="nodeBody">Body</label>
+            <label class="font-14 fw-300 text-dark" for="nodeBody">Body</label>
             <textarea id="nodeBody" class="form-control" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea>
         </div>
         <div class="form-group">
-            <label class="text-secondary" for="nodeHeaders">Headers</label>
+            <label class="font-14 fw-300 text-dark" for="nodeHeaders">Headers</label>
             <textarea id="nodeHeaders" class="form-control" cols="30" rows="4"
                 [(ngModel)]="currNode.options.headers"></textarea>
         </div> -->

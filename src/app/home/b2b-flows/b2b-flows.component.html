@@ -66,7 +66,8 @@
             <div class="list-group-item d-flex align-items-center justify-content-start hover"
                 *ngFor="let item of records;let i=index" (dblclick)="viewFlow(i)">
                 <div class="item-name fw-500 d-flex align-items-center">
-                    <span class="ml-2 pl-1 text-dark text-truncate" [ngbTooltip]="item.name" placement="right">{{item.name}}</span>
+                    <span class="ml-2 pl-1 text-dark text-truncate" [ngbTooltip]="item.name"
+                        placement="right">{{item.name}}</span>
                     <span class="ml-2 version sub-heading font-11 text-uppercase">(v{{(item.version||1)}})</span>
                     <span *ngIf="item.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
                 </div>
@@ -108,20 +109,20 @@
                                 class="more-options bg-white rounded list-group position-fixed border"
                                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                                 (outside)="showOptionsDropdown[i]=false">
-                                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFlow(item._id)"
-                                    (click)="editFlow(i)">
+                                <div class="list-group-item list-group-item-action py-2 border-0"
+                                    *ngIf="canManageFlow(item._id)" (click)="editFlow(i)">
                                     Edit
                                 </div>
-                                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFlow(item._id)"
-                                    (click)="viewFlow(i)">
+                                <div class="list-group-item list-group-item-action py-2 border-0"
+                                    *ngIf="canManageFlow(item._id)" (click)="viewFlow(i)">
                                     View
                                 </div>
-                                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFlow(item._id)"
-                                    (click)="cloneFlow(i)">
+                                <div class="list-group-item list-group-item-action py-2 border-0"
+                                    *ngIf="canManageFlow(item._id)" (click)="cloneFlow(i)">
                                     Clone
                                 </div>
-                                <div class="list-group-item list-group-item-action py-2 border-0 text-danger" *ngIf="canManageFlow(item._id)"
-                                    (click)="deleteFlow(i)">
+                                <div class="list-group-item list-group-item-action py-2 border-0 text-danger"
+                                    *ngIf="canManageFlow(item._id)" (click)="deleteFlow(i)">
                                     Delete
                                 </div>
                             </div>
@@ -166,13 +167,30 @@
                 <span class="text">Input Node</span>
                 <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
             </label>
-            <div class="name-wrapper position-relative">
-                <select class="custom-select" id="name" formControlName="type">
-                    <option value="API" selected>API</option>
-                    <option value="FILE">FILE</option>
-                    <option value="TIMER">TIMER</option>
-                </select>
+            <div class="d-flex flex-column">
+                <label>
+                    <input class="mr-3" type="radio" value="API" formControlName="type"
+                        [checked]="form.get('type').value === 'API'">
+                    <span>API</span>
+                </label>
+                <label>
+                    <input class="mr-3" type="radio" value="FILE" formControlName="type"
+                        [checked]="form.get('type').value === 'FILE'">
+                    <span>FILE</span>
+                </label>
+                <label>
+                    <input class="mr-3" type="radio" value="TIMER" formControlName="type"
+                        [checked]="form.get('type').value === 'TIMER'">
+                    <span>TIMER</span>
+                </label>
             </div>
+
+            <!-- <select class="form-control" id="name" formControlName="type">
+                <option value="API" selected>API</option>
+                <option value="FILE">FILE</option>
+                <option value="TIMER">TIMER</option>
+            </select> -->
+
         </div>
     </div>
     <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
