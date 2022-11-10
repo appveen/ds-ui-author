@@ -10,7 +10,7 @@
     <div class="wrapper">
         <div class="w-100 position-relative px-4 py-5">
             <odp-basic-info hideLogo="true" [(name)]="connector.name" [(description)]="connector.description"
-                [hideLogo]="true" [edit]="{status:(connector.name === 'Default DB Connector' || connector.name === 'Default File Connector')? '':editBasicDetails}">
+                [hideLogo]="true" [edit]="{status:(connector.name != 'Default DB Connector' && connector.name != 'Default File Connector' && edit.status)? editBasicDetails:''}">
                 <div class="d-flex align-items-end align-self-start">
                     <button *ngIf="hasPermission('PMCONBD') && edit.status" type="button"
                         class="btn btn-white border mr-3" (click)="deleteConnector()">
