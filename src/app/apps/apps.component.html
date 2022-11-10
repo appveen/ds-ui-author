@@ -12,7 +12,7 @@
       <div class="icon-block-group text-secondary border-border pt-3"
         *ngIf="hasDataServicePermission || hasDataLibraryPermission">
         <span *ngIf="showSideNav" class="nav-active">DATA</span>
-        <div *ngIf="showSideNav" class="dsi" [ngClass]="{
+        <div *ngIf="showSideNav" class="dsi padding" [ngClass]="{
             'dsi-drop-down': openPanel['data'],
             'dsi-drop-up': !openPanel['data']
           }" (click)="togglePanel('data')"></div>
@@ -68,7 +68,7 @@
             <span>INTEGRATION</span>
             <span class="text-uppercase ml-2 text-primary font-10">(beta)</span>
           </span>
-          <div *ngIf="showSideNav" class="dsi" [ngClass]="{
+          <div *ngIf="showSideNav" class="dsi padding" [ngClass]="{
               'dsi-drop-down': openPanel['integration'],
               'dsi-drop-up': !openPanel['integration']
             }" (click)="togglePanel('integration')"></div>
@@ -142,7 +142,7 @@
         ">
         <div class="icon-block-group text-secondary border-top border-border pt-3">
           <span *ngIf="showSideNav" class="nav-active">MANAGEMENT</span>
-          <div *ngIf="showSideNav" class="dsi" [ngClass]="{
+          <div *ngIf="showSideNav" class="dsi padding" [ngClass]="{
               'dsi-drop-down': openPanel['management'],
               'dsi-drop-up': !openPanel['management']
             }" (click)="togglePanel('management')"></div>
