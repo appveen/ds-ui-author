@@ -80,6 +80,7 @@ export class NodeMappingComponent implements OnInit {
           const temp = this.currNode.mappings.find(e => e.target.dataPath == def.dataPath);
           if (temp && temp.source && temp.source.length > 0) {
             def.source = temp.source;
+            def.formula = temp.formula;
           }
         }
       });
