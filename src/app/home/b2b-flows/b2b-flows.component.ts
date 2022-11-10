@@ -34,6 +34,8 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   subscriptions: any;
   showNewFlowWindow: boolean;
   showLazyLoader: boolean;
+  showYamlWindow: boolean;
+  selectedFlow: any;
   copied: any;
   showOptionsDropdown: any;
   selectedItemEvent: any
@@ -71,6 +73,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.showOptionsDropdown = {};
     this.showLazyLoader = true;
     this.sortModel = {};
+    this.selectedFlow = {};
     this.breadcrumbPaths = [{
       active: true,
       label: 'Data Pipes'
@@ -394,6 +397,41 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.form.get('name').patchValue(temp.name + ' Copy');
     this.form.get('type').patchValue(temp.inputNode.type);
     this.showNewFlowWindow = true;
+  }
+
+  closeYamlWindow() {
+    this.showYamlWindow = false;
+    this.selectedFlow = null;
+  }
+
+  getYamls(index: number) {
+    this.selectedFlow = this.flowList[index];
+
+    if (!this.selectedFlow.serviceYaml || !this.selectedFlow.deploymentYaml) {
+      this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/${this.flowList[index]._id}/yamls`, {})
+        .subscribe(data => {
+          this.selectedFlow.serviceYaml = data.service;
+          this.selectedFlow.deploymentYaml = data.deployment;
+          this.showYamlWindow = true;
+        },
+          (err) => {
+            this.commonService.errorToast(err);
+          });
+    } else {
+      this.showYamlWindow = true;
+    }
+  }
+
+  downloadYamls() {
+    this.appService.downloadText(this.selectedFlow.name + '.yaml', this.selectedFlow.serviceYaml + '\n---\n' + this.selectedFlow.deploymentYaml);
+  }
+
+  copyText(text: string, type: string) {
+    this.appService.copyToClipboard(text);
+    this.copied[type] = true;
+    setTimeout(() => {
+      this.copied[type] = false;
+    }, 2000);
   }
 
   copyUrl(flow: any) {
