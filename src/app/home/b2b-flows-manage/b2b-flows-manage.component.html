@@ -50,7 +50,7 @@
             <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
         </div>
         <div class="flow-designer p-4">
-            <div *ngIf="flowData?.inputNode" odp-flow-node [currNode]="flowData.inputNode" [(nodeList)]="nodeList"
+            <div class="flow-designer-canvas" *ngIf="flowData?.inputNode" odp-flow-node [currNode]="flowData.inputNode" [(nodeList)]="nodeList"
                 (nodeListChange)="changesDone = true">
             </div>
             <div [ngClass]="{'show':showNodeProperties}" class="node-properties border-left position-fixed bg-white">

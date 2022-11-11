@@ -4,16 +4,14 @@
 .flow-manage-page {
   height: calc(100vh - 60px);
 
-
-  .flow-designer,
-  .flow-designer-canvas {
-    height: calc(100vh - 240px);
+  .flow-designer {
+    max-height: calc(100vh - 200px);
     overflow: auto;
     background: rgba($light, 0.4);
   }
 
   .flow-designer-canvas {
-    cursor: grab;
+    height: 200vh;
   }
 }
 
