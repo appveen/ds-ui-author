@@ -139,7 +139,7 @@
     <div class="form-group mt-4 w-100">
         <label class="font-14 text-dark">Enter Agent name</label>
         <div *ngIf="showNewAgentWindow" class="position-relative agent-name-wrapper">
-            <input #agentName="ngModel" type="text" class="form-control" [(ngModel)]="agentData.name"
+            <input #agentName="ngModel" autocomplete="off" type="text" class="form-control" [(ngModel)]="agentData.name"
                 [ngClass]="{'is-invalid':agentName.invalid && (agentName.dirty || agentName.touched)}" maxlength="24"
                 required [pattern]="'[a-z0-9A-Z\\s_-]+'" odpAutoFocus (keyup.enter)="triggerAgentCreate()"
                 [disabled]="agentData.isEdit">

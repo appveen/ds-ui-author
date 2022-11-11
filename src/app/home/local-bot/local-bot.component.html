@@ -157,7 +157,7 @@
         </label>
 
         <div class="input-group">
-          <input class="form-control" type="text" formControlName="botName" placeholder="Type here" odpAutoFocus
+          <input class="form-control" type="text" autocomplete="off" formControlName="botName" placeholder="Type here" odpAutoFocus
             (keyup.enter)="createBot()" />
           <span *ngIf="
             (botForm.get('botName').touched || botForm.get('botName').dirty) &&

@@ -87,7 +87,7 @@
     <span class="fw-600 font-20">Create User</span>
     <span class="dsi dsi-close hover" (click)="showNewUserWindow=false"></span>
   </div>
-  <form class="d-flex flex-column" [formGroup]="userForm" autocomplete="disabled">
+  <form class="d-flex flex-column" [formGroup]="userForm" autocomplete="off">
     <div class="form-group" *ngIf="validAuthTypes?.length > 1">
       <label class="">Authentication Type</label>
       <div class="position-relative w-100" formGroupName="auth">
@@ -106,7 +106,7 @@
         <sup class="text-danger">*</sup>
       </label>
       <div class="position-relative w-100">
-        <input class="form-control" type="text" placeholder="Enter Username" formControlName="username" odpAutoFocus
+        <input class="form-control" type="text" autocomplete="off" placeholder="Enter Username" formControlName="username" odpAutoFocus
           (blur)="checkForDuplicate()" [ngClass]="{
               'is-invalid':
                 invalidUsername ||
@@ -137,7 +137,7 @@
         <sup *ngIf="userForm.get('auth.authType').value === 'local'" class="text-danger">*</sup>
       </label>
       <div class="position-relative w-100" formGroupName="basicDetails">
-        <input #newUserName class="form-control pr-4" type="text" placeholder="Enter Name" formControlName="name"
+        <input #newUserName class="form-control pr-4" autocomplete="off" type="text" placeholder="Enter Name" formControlName="name"
           [ngClass]="{ 'is-invalid': invalidName }" />
         <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="invalidName"
           ngbTooltip="This is a required field"></span>
@@ -153,7 +153,7 @@
           <sup class="text-danger">*</sup>
         </label>
         <div class="position-relative w-100">
-          <input #newUserPassword class="form-control password-input" [type]="showPassword['new'] ? 'text' : 'password'"
+          <input #newUserPassword class="form-control password-input" autocomplete="off" [type]="showPassword['new'] ? 'text' : 'password'"
             placeholder="Password" formControlName="password" autocomplete="new-password" [ngClass]="{
                 'is-invalid': invalidPassword || invalidPasswordLength
               }" (keyup.enter)="newUserCPassword.focus()" />
@@ -173,7 +173,7 @@
           <sup class="text-danger">*</sup>
         </label>
         <div class="position-relative w-100">
-          <input #newUserCPassword class="form-control password-input"
+          <input #newUserCPassword class="form-control password-input" autocomplete="off"
             [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"
             formControlName="cpassword" (keyup.enter)="newUserPhone.focus()" [ngClass]="{
                 'is-invalid': invalidCPassword || invalidPasswordMatch
@@ -192,7 +192,7 @@
     <div class="form-group">
       <label class="">Phone</label>
       <div class="position-relative w-100" formGroupName="basicDetails">
-        <input #newUserPhone class="form-control" type="text" placeholder="Enter Phone Number" formControlName="phone"
+        <input #newUserPhone class="form-control" autocomplete="off" type="text" placeholder="Enter Phone Number" formControlName="phone"
           (keyup.enter)="newUserEmail.focus()" />
         <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="invalidPhone"
           ngbTooltip="Phone must be of 10-digits"></span>
@@ -201,7 +201,7 @@
     <div class="form-group">
       <label class="">Alternate Email</label>
       <div class="position-relative w-100" formGroupName="basicDetails">
-        <input #newUserEmail class="form-control" type="text" placeholder="Enter Alternate Email"
+        <input #newUserEmail class="form-control" type="text" autocomplete="off" placeholder="Enter Alternate Email"
           formControlName="alternateEmail" [ngClass]="{ 'is-invalid': invalidEmail }"
           (keyup.enter)="newUserCreate.click()" />
         <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="invalidEmail"

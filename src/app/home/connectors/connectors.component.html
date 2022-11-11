@@ -76,7 +76,7 @@
             <div class="item-actions d-flex align-items-center justify-content-end">
               <span id="con-view" class="fw-600 font-13 hover mr-3"
                 [routerLink]="['/app/',app,'con',connector._id]">View</span>
-              <span id="con-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
+              <span *ngIf="connector.name!= 'Default DB Connector' && connector.name!= 'Default File Connector'" id="con-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
                 (click)="showDropDown($event,i)"></span>
               <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed border"
                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
@@ -116,7 +116,7 @@
         <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
       </label>
       <div class="name-wrapper position-relative">
-        <input newConnectorName type="text" class="form-control" id="name" placeholder="Untitled Connector"
+        <input newConnectorName type="text" autocomplete="off" class="form-control" id="name" placeholder="Untitled Connector"
           formControlName="name" odpAutoFocus
           [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
         <ng-container *ngIf="form.get('name').dirty">

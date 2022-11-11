@@ -4,7 +4,7 @@
     odpClickOutside (outside)="open || searchTerm ? '': openSearchBox=false">
     <input type="text" name="searchTerm" id="searchTerm" maxlength="40" #searchInput [ngModel]="searchTerm"
       (ngModelChange)="onChange($event)" (keyup.enter)="onEnterKey($event)" (keyup.backspace)="onBackspaceKey($event)"
-      (keydown.control.backspace)="onCtrlBackspace($event)" (focus)="onFocus($event)" autocomplete="disabled"
+      (keydown.control.backspace)="onCtrlBackspace($event)" (focus)="onFocus($event)" autocomplete="off"
       (blur)="onBlur($event)" class="form-control" [ngClass]="{'ignore-outside': ignoreOutside}" odpAutoFocus>
     <div *ngIf="!searchInput.value" [@slide]="slideState" class="position-absolute text-muted"
       [ngClass]="{'ignore-outside': ignoreOutside}" (click)="searchInput.focus()">

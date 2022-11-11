@@ -109,7 +109,7 @@
         <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
       </label>
       <div class="name-wrapper position-relative">
-        <input newLibraryName type="text" class="form-control" id="name" placeholder="Untitled Library"
+        <input newLibraryName autocomplete="off" type="text" class="form-control" id="name" placeholder="Untitled Library"
           formControlName="name" odpAutoFocus
           [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
         <ng-container *ngIf="form.get('name').dirty">

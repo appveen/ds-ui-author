@@ -152,7 +152,7 @@
                 <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
             </label>
             <div class="name-wrapper position-relative mb-3">
-                <input newFlowName type="text" class="form-control" id="name" placeholder="Untitled Flow"
+                <input newFlowName autocomplete="off" type="text" class="form-control" id="name" placeholder="Untitled Flow"
                     formControlName="name" odpAutoFocus (keyup.enter)="triggerFlowCreate()"
                     [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
                 <ng-container *ngIf="form.get('name').dirty">
