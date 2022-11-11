@@ -1,0 +1,40 @@
+<div class="">
+    <div class="font-14 fw-300 text-dark">Custom Headers</div>
+    <button type="button" class="btn btn-link px-0 text-left" (click)="showHeadersWindow=true">
+        <span *ngIf="headerList.length==0">Configure</span>
+        <span *ngIf="headerList.length>0">Re-Configure ({{headerList.length}})</span>
+    </button>
+</div>
+
+<div *ngIf="showHeadersWindow" class="node-data-selector-wrapper p-4 bg-white position-fixed">
+    <div class="d-flex align-items-center justify-content-between">
+        <h3 class="font-20 fw-600">Headers</h3>
+        <span class="dsi dsi-close hover" (click)="cancel()"></span>
+    </div>
+    <div class="headers-list">
+        <div class="">
+            <button type="button" class="btn btn-link px-0 text-left d-flex align-items-center mt-3 mb-2"
+                (click)="addHeader()">
+                <span class="dsi dsi-plus-circle mr-2"></span>
+                <span class="">Add New</span>
+            </button>
+        </div>
+        <div *ngFor="let item of headerList" class="d-flex align-items-center mb-2">
+            <div class="header-key mr-3 position-relative">
+                <input type="text" class="form-control" [(ngModel)]="item.key" placeholder="Header Key"
+                    (keyup.enter)="addHeader()" odpAutoFocus>
+            </div>
+            <div class="header-value w-100 position-relative">
+                <input type="text" class="form-control dynamic-variable-addon" [(ngModel)]="item.value"
+                    placeholder="Header Value" (keyup.enter)="addHeader()">
+                <odp-node-data-selector class="node-data-selector" [edit]="edit" [nodeList]="nodeList"
+                    [(value)]="item.value">
+                </odp-node-data-selector>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center"
+            [disabled]="headerList.length==0" (click)="save()">
+            <span class="">Done</span>
+        </button>
+    </div>
+</div>

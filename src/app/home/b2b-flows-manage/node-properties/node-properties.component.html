@@ -118,6 +118,11 @@
                 <option value="DELETE">DELETE</option>
             </select>
         </div>
+        <div class="form-group">
+            <odp-add-headers [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
+                [(value)]="currNode.options.headers">
+            </odp-add-headers>
+        </div>
         <!-- <div class="form-group">
             <label class="font-14 fw-300 text-dark" for="nodeBody">Body</label>
             <textarea id="nodeBody" class="form-control" cols="30" rows="4"
@@ -209,6 +214,11 @@
                     <option value="DELETE">DELETE</option>
                 </select>
             </div>
+            <div class="form-group">
+                <odp-add-headers [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
+                    [(value)]="currNode.options.headers">
+                </odp-add-headers>
+            </div>
         </ng-container>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='RESPONSE'">
@@ -225,6 +235,11 @@
                 <option value="application/xml">application/xml</option>
                 <option value="multipart/form-data">multipart/form-data</option>
             </select>
+        </div>
+        <div class="form-group">
+            <odp-add-headers [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
+                [(value)]="currNode.options.headers">
+            </odp-add-headers>
         </div>
         <!-- <div class="form-group">
             <label class="font-14 fw-300 text-dark" for="nodeBody">Body</label>

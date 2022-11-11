@@ -23,7 +23,8 @@ export class B2bFlowService {
       onSuccess: [],
       onError: [],
       options: {
-        method: 'POST'
+        method: 'POST',
+        headers: {}
       },
       dataStructure: {
         outgoing: {}
