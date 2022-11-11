@@ -10,7 +10,7 @@ import { AppService } from 'src/app/utils/services/app.service';
 import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { environment } from 'src/environments/environment';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'odp-agents',
@@ -45,7 +45,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     breadcrumbPaths: Array<Breadcrumb>;
     openDeleteModal: EventEmitter<any>;
     agentDetails: any;
-    resetPasswordForm: any;
+    resetPasswordForm: FormGroup;
     showPassword: any;
     showPasswordSide: boolean = false;
     constructor(
@@ -314,11 +314,13 @@ export class AgentsComponent implements OnInit, OnDestroy {
         } else {
             this.commonService.put('agent', `/${this.commonService.app._id}/agent/utils/${this.agentDetails._id}/password`, payload)
                 .subscribe(() => {
+                    this.resetPasswordForm.reset()
                     this.getAgentList();
                     this.ts.success('Password changed successfully');
                     this.showPassword = false
                     this.showPasswordSide = false
                 }, err => {
+                    this.resetPasswordForm.reset()
                     this.showPassword = false
                     this.showPasswordSide = false
                     this.commonService.errorToast(err, 'Unable to process request');
