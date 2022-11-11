@@ -53,7 +53,7 @@
     <div *ngIf="selectedNode && nodeDataField">
         <div class="form-group my-3" *ngIf="selectedNode && nodeDataField && (nodeDataField=='headers' || nodeDataField=='body')">
             <label for="fieldKey">Field</label>
-            <input type="text" class="form-control" [(ngModel)]="tempDataKey">
+            <input type="text" class="form-control" [(ngModel)]="tempDataKey" odpAutoFocus>
         </div>
         <button type="button" class="btn btn-primary" (click)="saveData()">Done</button>
     </div>
