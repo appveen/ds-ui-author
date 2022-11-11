@@ -106,7 +106,7 @@
         <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
       </label>
       <div class="name-wrapper position-relative">
-        <input newServiceName type="text" class="form-control" id="name" placeholder="Untitled Service"
+        <input newServiceName type="text" class="form-control" autocomplete="off" id="name" placeholder="Untitled Service"
           (keydown.enter)="createGroup()" formControlName="name"
           [ngClass]="{'is-invalid': form.get('name').invalid && form.get('name').dirty}" odpAutoFocus />
         <ng-container *ngIf="form.get('name').dirty">
