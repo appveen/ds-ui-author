@@ -2,12 +2,15 @@
     <span ngbTooltip="Add Dynamic Variable" container="body"
         class="dynamic-variable-button dsi dsi-object text-primary position-absolute hover"
         (click)="onClick($event)"></span>
-    <span *ngIf="value">{{value}}</span>
-
+    <!-- <span *ngIf="value">{{currentValue}}</span> -->
 </div>
 
 <div *ngIf="toggleNodeSelector" class="node-data-selector-wrapper p-3 bg-white position-fixed">
-    <h3 class="font-20 fw-600">Node List</h3>
+    <div class="d-flex align-items-center justify-content-between">
+        <h3 class="font-20 fw-600">Node List</h3>
+        <span class="dsi dsi-close hover" (click)="cancel()"></span>
+    </div>
+    <span class="fw-500 badge badge-info font-12 my-3"> {{'\{\{'+currentValue +'\}\}'}}</span>
     <div *ngIf="!selectedNode && !nodeDataField" class="list-group my-3">
         <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
             *ngFor="let item of nodeList" (click)="selectNode(item)">
@@ -47,11 +50,10 @@
             </div>
         </div>
     </div>
-    <div *ngIf="selectedNode && nodeDataField && (nodeDataField=='headers' || nodeDataField=='body')">
-        <div class="form-group my-3">
+    <div *ngIf="selectedNode && nodeDataField">
+        <div class="form-group my-3" *ngIf="selectedNode && nodeDataField && (nodeDataField=='headers' || nodeDataField=='body')">
             <label for="fieldKey">Field</label>
-            <input type="text" class="form-control" [(ngModel)]="tempDataKey"
-                (ngModelChange)="selectTempDataKey($event)">
+            <input type="text" class="form-control" [(ngModel)]="tempDataKey">
         </div>
         <button type="button" class="btn btn-primary" (click)="saveData()">Done</button>
     </div>

@@ -649,7 +649,7 @@ $weights: 200,
 }
 
 .focus-accent:focus {
-  border-color: $accent  !important;
+  border-color: $accent !important;
   box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
 }
 
@@ -668,7 +668,7 @@ $weights: 200,
 
   .form-control:not(.is-invalid):focus,
   .custom-select:not(.is-invalid):focus {
-    border-color: $accent  !important;
+    border-color: $accent !important;
     box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
   }
 
@@ -803,14 +803,14 @@ $weights: 200,
 
   .ag-checkbox-input-wrapper.ag-checked::after {
     color: white !important;
-    background: $headings  !important;
+    background: $headings !important;
     border-radius: 4px;
   }
 }
 
 .custom-style {
   .ag-header {
-    background: $data-grid-header  !important;
+    background: $data-grid-header !important;
   }
 }
 
@@ -996,6 +996,16 @@ $weights: 200,
 
 .text-delete {
   color: $danger
+}
+
+.dynamic-variable-addon {
+  text-indent: 20px;
+}
+
+.node-data-selector {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 @include altBox(1);

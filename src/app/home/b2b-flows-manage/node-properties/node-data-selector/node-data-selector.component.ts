@@ -41,12 +41,23 @@ export class NodeDataSelectorComponent implements OnInit {
     this.nodeDataField = dataKey;
     this.tempValue += `.${dataKey}`;
   }
-  selectTempDataKey(dataKey: string) {
-    this.tempDataKey = dataKey;
-    this.tempValue += `.${dataKey}`;
-  }
+
   saveData() {
-    this.value = this.tempValue;
-    this.valueChange.emit(this.tempValue);
+    this.value = '{{' + this.currentValue + '}}';
+    this.valueChange.emit(this.value);
+    this.toggleNodeSelector = false;
+  }
+  cancel() {
+    this.toggleNodeSelector = false;
+    this.selectedNode = null;
+    this.nodeDataField = null;
+    this.tempDataKey = null;
+  }
+
+  get currentValue() {
+    if (this.tempDataKey) {
+      return this.tempValue + '.' + this.tempDataKey;
+    }
+    return this.tempValue;
   }
 }
