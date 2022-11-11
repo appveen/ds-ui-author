@@ -116,7 +116,7 @@
         <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
       </label>
       <div class="name-wrapper position-relative">
-        <input newConnectorName type="text" class="form-control" id="name" placeholder="Untitled Connector"
+        <input newConnectorName type="text" autocomplete="off" class="form-control" id="name" placeholder="Untitled Connector"
           formControlName="name" odpAutoFocus
           [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
         <ng-container *ngIf="form.get('name').dirty">
