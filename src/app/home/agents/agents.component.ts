@@ -44,7 +44,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
     };
     breadcrumbPaths: Array<Breadcrumb>;
     openDeleteModal: EventEmitter<any>;
-    agentDetails: any;
     resetPasswordForm: FormGroup;
     showPassword: any;
     showPasswordSide: boolean = false;
@@ -103,7 +102,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
 
-    newAgent() {
+    newAgent(agent?) {
         this.agentData = {
             app: this.commonService.app._id,
             type: 'APPAGENT',
@@ -111,6 +110,10 @@ export class AgentsComponent implements OnInit, OnDestroy {
             retainFileOnSuccess: true,
             retainFileOnError: true
         };
+        if (agent) {
+            this.agentData.name = agent.name
+            this.agentData.isEdit = true
+        }
         this.showNewAgentWindow = true;
     }
 
@@ -128,11 +131,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
             this.showLazyLoader = false;
             this.commonService.errorToast(err);
         });
-    }
-
-    editAgent(_index) {
-        this.appService.editLibraryId = this.agentList[_index]._id;
-        this.router.navigate(['/app/', this.app, 'agent', this.appService.editLibraryId]);
     }
 
     cloneAgent(_index) {
@@ -271,20 +269,14 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
     openAgentDetailsWindow(agent: any) {
-        this.agentDetails = agent;
+        this.agentData = agent;
         this.getAgentPassword(agent._id)
         this.agentDetailsModalRef = this.commonService.modal(this.agentDetailsModal, { size: 'md' });
         this.agentDetailsModalRef.result.then(close => { }, dismiss => { });
     }
 
-
-    changePassword(index: number) {
-
-    }
-
-
     navigate(agent) {
-        this.router.navigate(['/app/', this.app, 'dfm', agent._id])
+        this.router.navigate(['/app/', this.app, 'agent', agent._id])
     }
 
     copyPassword(password) {
@@ -297,7 +289,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     getAgentPassword(id) {
         this.commonService.get('agent', `/${this.commonService.app._id}/agent/utils/${id}/password`
         ).subscribe(res => {
-            this.agentDetails['thePassword'] = res?.password || ''
+            this.agentData['thePassword'] = res?.password || ''
         }, err => {
             this.commonService.errorToast(err);
         });
@@ -312,7 +304,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
         if (this.resetPasswordForm.invalid) {
             return;
         } else {
-            this.commonService.put('agent', `/${this.commonService.app._id}/agent/utils/${this.agentDetails._id}/password`, payload)
+            this.commonService.put('agent', `/${this.commonService.app._id}/agent/utils/${this.agentData._id}/password`, payload)
                 .subscribe(() => {
                     this.resetPasswordForm.reset()
                     this.getAgentList();

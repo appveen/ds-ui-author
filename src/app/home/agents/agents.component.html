@@ -90,7 +90,7 @@
                         <div class="item-pending-files">{{agent.pendingFiles}}</div>
                         <div class="item-actions d-flex align-items-center justify-content-end">
                             <span id="agent-view" class="fw-600 font-13 hover mr-3"
-                                [routerLink]="['/app/',app,'dfm',agent._id]">View</span>
+                                [routerLink]="['/app/',app,'agent',agent._id]">View</span>
                             <span id="agent-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
                                 (click)="showDropDown($event,i)"></span>
                             <div *ngIf="showOptionsDropdown[i]"
@@ -102,12 +102,12 @@
                                     Download
                                 </div>
                                 <div id="agent-edit" class="list-group-item list-group-item-action py-2 border-0"
-                                    *ngIf="canEditAgent(agent._id)" (click)="editAgent(i)">
+                                    *ngIf="canEditAgent(agent._id)" (click)="newAgent(agent)">
                                     Edit
                                 </div>
                                 <div id="agent-change-passowrd"
                                     class="list-group-item list-group-item-action py-2 border-0"
-                                    (click)="showPasswordSide = true; agentDetails=agent">
+                                    (click)="showPasswordSide = true; agentData=agent">
                                     Change Password
                                 </div>
                                 <div id="agent-clone" class="list-group-item list-group-item-action py-2 border-0"
@@ -236,21 +236,21 @@
         <div class="d-flex mx-4 flex-column">
             <div class="d-flex flex-column mb-3">
                 <label class="fw-500 text-dark ">Agent Name</label>
-                <span class="fw-400 text-secondary">{{agentDetails.name}}</span>
+                <span class="fw-400 text-secondary">{{agentData.name}}</span>
             </div>
             <div class="d-flex flex-column mb-3">
                 <label class="fw-500 text-dark">Agent ID</label>
-                <span class="fw-400 text-secondary">{{agentDetails._id}}</span>
+                <span class="fw-400 text-secondary">{{agentData._id}}</span>
             </div>
             <div class="d-flex flex-column mb-3">
                 <label class="fw-500 text-dark">Agent Password</label>
                 <div class="d-flex">
-                    <span class="fw-400 text-secondary" *ngIf="agentDetails.thePassword">{{agentDetails.thePassword ||
+                    <span class="fw-400 text-secondary" *ngIf="agentData.thePassword">{{agentData.thePassword ||
                         ''}}</span>
-                    <span class="hover dsi dsi-copy text-secondary ml-2" *ngIf="agentDetails.thePassword"
-                        (click)="copyPassword(agentDetails.thePassword)"></span>
+                    <span class="hover dsi dsi-copy text-secondary ml-2" *ngIf="agentData.thePassword"
+                        (click)="copyPassword(agentData.thePassword)"></span>
                 </div>
-                <span class="fw-400 text-secondary" *ngIf="!agentDetails.thePassword">
+                <span class="fw-400 text-secondary" *ngIf="!agentData.thePassword">
                     <span class="spinner-border text-secondary"></span>
                 </span>
             </div>

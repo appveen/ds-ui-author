@@ -109,11 +109,11 @@
             <span class="text-accent font-weight-bold">{{totalCount}}</span>
         </div>
     </div>
-    <ag-grid-angular #agGrid *ngIf="columnDefs" class="ag-theme-balham ag-grid-container custom-style"
+    <!-- <ag-grid-angular #agGrid *ngIf="columnDefs" class="ag-theme-balham ag-grid-container custom-style"
         [columnDefs]="columnDefs" [floatingFilter]="true" rowModelType="infinite"
         (filterModified)="filterModified($event)" [datasource]="dataSource" cacheBlockSize="30"
         (sortChanged)="sortChanged($event)" (gridReady)="gridReady($event)">
-    </ag-grid-angular>
+    </ag-grid-angular> -->
 </div>
 
 <ng-template #alertModalTemplate>
