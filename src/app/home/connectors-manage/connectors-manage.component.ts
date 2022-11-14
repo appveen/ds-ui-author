@@ -159,7 +159,7 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
       this.updatedGrpName = res.name;
       this.updatedGrpDesc = res.description;
       this.showLazyLoader = false;
-      this.ts.success('Group saved sucessfully');
+      this.ts.success('Connector saved sucessfully');
       this.connector = res;
       this.oldData = this.appService.cloneObject(this.connector);
       this.router.navigate(['/app', this.commonService.app._id, 'con']);
