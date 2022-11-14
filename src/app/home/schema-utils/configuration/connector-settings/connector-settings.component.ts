@@ -18,6 +18,7 @@ export class FileSettingsComponent implements OnInit {
   showConnectors: boolean = true;
   connectorId: any;
   connectorList: any;
+  selectedType: any = {};
   storageTypes: any;
   uniqueTypes: Array<any>
   subscriptions: any = {};
@@ -61,6 +62,10 @@ export class FileSettingsComponent implements OnInit {
 
   getConnectors() {
     this.connectorList = this.appService.connectorsList;
+    const temp=this.connectorList.find(ele=> ele._id===this.form.value.connectors.file._id).type;
+    const temp1=this.connectorList.find(ele=> ele._id===this.form.value.connectors.data._id).type;
+    this.selectedType['file']=this.storageTypes.find(ele=>ele.type===temp).label;
+    this.selectedType['data']=this.storageTypes.find(ele=>ele.type===temp1).label;
   }
 
   canEdit(type: string) {
@@ -91,6 +96,8 @@ export class FileSettingsComponent implements OnInit {
     this.form.get('connectors').get(type).setValue({
       _id: event.target.value
     })
+    const connectorType=this.connectorList.find(ele=> ele._id===event.target.value).type;
+    this.selectedType[type]=this.storageTypes.find(ele=>ele.type===connectorType).label;
   }
 
   get dataConnectors() {
