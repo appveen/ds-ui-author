@@ -319,6 +319,7 @@ export class SchemaBuilderComponent implements
             }
         });
         // this.getConnectors();
+
         this.getAvailableConnectors();
     }
 
@@ -512,6 +513,9 @@ export class SchemaBuilderComponent implements
 
     save(deploy?: boolean) {
         const self = this;
+        if (self.form.get('schemaFree').value) {
+            self.form.get('connectors').get('file').setValue({})
+        }
         const value = self.form.getRawValue();
         self.action.loading = true;
         self.action.message = null;
@@ -783,6 +787,9 @@ export class SchemaBuilderComponent implements
                     self.enableEdit(true);
                 }
                 self.nameChange.emit(res.name);
+                if (res.schemaFree) {
+                    this.schemaFreeConfiguration()
+                }
                 // self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${self.serviceObj._id}/swagger/${self.serviceObj.app}${self.serviceObj.api}`;
                 self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/${self.serviceObj.app}/service/utils/${self.serviceObj._id}/swagger/${self.serviceObj.app}${self.serviceObj.api}`;
 

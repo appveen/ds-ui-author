@@ -55,7 +55,7 @@
             (dblclick)="navigate(connector._id)">
             <div class="d-flex align-items-center item-name text-dark fw-500">
               {{connector.name}}
-              <div class="d-flex align-items-center text-primary font-12 mt-auto" *ngIf="connector?.options?.default">
+              <div class="d-flex align-items-center text-primary font-12 mt-auto" *ngIf="checkDefault(connector._id)">
                 &nbsp;(Default)</div>
             </div>
 

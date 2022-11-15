@@ -47,7 +47,7 @@ import { StepFieldsComponent } from './wizards/step-fields/step-fields.component
 import { StepActionsComponent } from './wizards/step-actions/step-actions.component';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 import { DataIngestionComponent } from './data-ingestion/data-ingestion.component';
-import { FileSettingsComponent } from './configuration/connector-settings/connector-settings.component';
+import { ConnectorSettingsComponent } from './configuration/connector-settings/connector-settings.component';
 
 @NgModule({
     imports: [
@@ -100,7 +100,7 @@ import { FileSettingsComponent } from './configuration/connector-settings/connec
         StepFieldsComponent,
         StepActionsComponent,
         DataIngestionComponent,
-        FileSettingsComponent
+        ConnectorSettingsComponent
     ],
     exports: [
         SchemaStructurePipe,

@@ -21,6 +21,7 @@ import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
 import { OrderByModule } from 'src/app/utils/pipes/order-by/order-by.module';
+import { RoundRadioModule } from '../../utils/round-radio/round-radio.module';
 
 
 const routes = [
@@ -50,7 +51,8 @@ const routes = [
         CheckboxModule,
         CommonFilterModule,
         ClickOutsideModule,
-        OrderByModule
+        OrderByModule,
+        RoundRadioModule
     ],
     exports: [
         RouterModule

@@ -1,12 +1,27 @@
 <div class="wrapper d-flex flex-column w-100 p-4 ">
-  <span class="font-20 fw-600 mb-3">Connector Settings</span>
+  <span class="font-20 fw-600">Connector Settings</span>
   <div class="my-3">
     <div class="custom-alert d-flex align-items-center p-4 rounded">
-        <span class="dsi dsi-danger-circle text-danger"></span>
-        <span class="ml-3 text-dark font-12 fw-400">"Changing the connectors would lead to potential data loss. Unless you
-          are fully aware of what you are doing, it is highly recommended that you don't change the connectors"</span>
+      <span class="dsi dsi-danger-circle text-danger"></span>
+      <span class="ml-3 text-dark font-12 fw-400">Changing the connectors would lead to potential data loss. Unless you
+        are fully aware of what you are doing, it is highly recommended that you don't change the connectors</span>
     </div>
-</div>
+  </div>
+
+  <div class="mb-3 mt-2 d-flex align-items-center">
+    <div class="d-flex align-items-center hover mr-3" (click)="toggleSchemaType(false)">
+      <odp-round-radio size="18" [edit]="true" [checked]="form.get('schemaFree').value==false"
+        (checkedChange)="toggleSchemaType(false)">
+      </odp-round-radio>
+      <span class="text ml-2">Schema Based</span>
+    </div>
+    <div class="d-flex align-items-center hover" (click)="toggleSchemaType(true)">
+      <odp-round-radio size="18" [edit]="true" [checked]="form.get('schemaFree').value==true"
+        (checkedChange)="toggleSchemaType(true)">
+      </odp-round-radio>
+      <span class="text ml-2">Schema Free</span>
+    </div>
+  </div>
   <span class="font-14 fw-700 my-2">Data Connector</span>
   <div class="d-flex justify-content-between" *ngIf="canView('S')">
     <div class="d-flex flex-column">
@@ -29,13 +44,13 @@
   </div>
   <div class="d-flex justify-content-between" *ngIf="canView('S')">
     <div class="d-flex flex-column">
-      <div class="sub-heading font-14 fw-400">type</div>
+      <div class="sub-heading font-14 fw-400">Type</div>
     </div>
-     {{selectedType['data']}}
+    {{selectedType['data']}}
   </div>
   <br>
-  <span class="font-14 fw-700 my-2">File Connector</span>
-  <div class="d-flex justify-content-between" *ngIf="canView('S') && showConnectors">
+  <span class="font-14 fw-700 my-2" *ngIf="!form.get('schemaFree').value">File Connector</span>
+  <div class="d-flex justify-content-between" *ngIf="canView('S') && !form.get('schemaFree').value">
     <div class="d-flex flex-column">
       <label class="sub-heading font-14 fw-400" for="category">Connector</label>
     </div>
@@ -53,12 +68,28 @@
       </ng-container>
     </div>
   </div>
-  <div class="d-flex justify-content-between" *ngIf="canView('S')">
+  <div class="d-flex justify-content-between" *ngIf="canView('S') && !form.get('schemaFree').value">
     <div class="d-flex flex-column">
-      <div class="sub-heading font-14 fw-400">type</div>
+      <div class="sub-heading font-14 fw-400">Type</div>
     </div>
     <div>
       {{selectedType['file']}}
     </div>
   </div>
 </div>
+
+<ng-template #schemaToggleTemplate>
+  <div class="modal-body p-4">
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <span class="font-20 fw-600">{{toggleSchemaModal.title}}</span>
+      <span class="fa fa-times text-secondary hover " (click)="schemaToggleTemplateRef.close(false)"></span>
+    </div>
+    <p class="text-secondary my-5">{{toggleSchemaModal.message}}</p>
+    <div class="d-flex align-items-center justify-content-end">
+      <button type="button" class="btn btn-min-width btn-outline-dark mr-3"
+        (click)="schemaToggleTemplateRef.close(false)" id="sbDeleteModalYes">Cancel</button>
+      <button type="button" class="btn btn-min-width btn-primary" (click)="schemaToggleTemplateRef.close(true)"
+        id="sbDeleteModalYes">Enable</button>
+    </div>
+  </div>
+</ng-template>

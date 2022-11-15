@@ -11,6 +11,7 @@ import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filte
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { environment } from 'src/environments/environment';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as moment from 'moment';
 
 @Component({
     selector: 'odp-agents',
@@ -164,15 +165,15 @@ export class AgentsComponent implements OnInit, OnDestroy {
 
     closeDeleteModal(data) {
         if (data) {
-            const url = `/${this.commonService.app._id}/agent/` + this.agentList[data.index]._id;
-            this.showLazyLoader = true;
-            this.subscriptions['deleteAgent'] = this.commonService.delete('partnerManager', url).subscribe(_d => {
-                this.showLazyLoader = false;
-                this.ts.info(_d.message ? _d.message : 'Agent deleted');
-                this.getAgentList();
+            this.subscriptions['deleteAgent'] = this.commonService.delete('partnerManager', `/${this.commonService.app._id}/agent/` + this.agentData._id, this.agentData).subscribe(res => {
+                if (res) {
+                    this.ts.success('Agent Deleted Sucessfully');
+                    this.getAgentList();
+                }
+
             }, err => {
-                this.showLazyLoader = false;
                 this.commonService.errorToast(err, 'Unable to delete, please try again later');
+                this.showNewAgentWindow = false;
             });
         }
     }
@@ -335,7 +336,10 @@ export class AgentsComponent implements OnInit, OnDestroy {
         }
     }
 
-
+    convertDate(dateString) {
+        const date = new Date(dateString);
+        return moment(date).format('DD-MMM\'YY, hh:mm:ss A')
+    }
 
     private compare(a: any, b: any) {
         if (a > b) {
