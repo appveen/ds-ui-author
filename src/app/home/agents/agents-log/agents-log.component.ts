@@ -12,6 +12,7 @@ import { CommonService, GetOptions } from 'src/app/utils/services/common.service
 import { environment } from 'src/environments/environment';
 import { data } from 'src/app/home/agents/agents-log/sample';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Breadcrumb } from '../../../utils/interfaces/breadcrumb';
 
 @Component({
   selector: 'odp-agents-log',
@@ -59,6 +60,7 @@ export class AgentsLogComponent implements OnInit {
     message: string;
   };
   openDeleteModal: EventEmitter<any> = new EventEmitter();
+  breadcrumbPaths: Array<Breadcrumb>;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -76,6 +78,7 @@ export class AgentsLogComponent implements OnInit {
       password: '',
       cpassword: ''
     };
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     self.agentLogObject = [];
     self.agentConfig = {};
     self.subscriptions = [];
@@ -116,7 +119,6 @@ export class AgentsLogComponent implements OnInit {
   getLogs() {
     const self = this;
     this.agentLogObject = data.agentLogs;
-    console.log(this.agentLogObject)
     // return self.commonService.get('partnerManager', `/${self.commonService.app._id}/agent/utils/${this.agentDetails.agentId}/logs`, {}).subscribe(res => {
     //   this.agentLogObject = res
     // });
@@ -138,11 +140,12 @@ export class AgentsLogComponent implements OnInit {
     self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, self.apiConfig).subscribe(res => {
       if (res.length > 0) {
         self.agentDetails = res[0];
+        this.breadcrumbPaths = [{
+          active: true,
+          label: this.agentDetails.name
+        }];
         self.getAgentPassword(self.agentDetails._id)
         this.getLogs();
-        // self.getHeartbeats();
-        // self.getInteractions();
-        // self.fetchPassword();
       }
     });
   }
@@ -380,7 +383,6 @@ export class AgentsLogComponent implements OnInit {
 
   test() {
     this.showSettingsDropdown = !this.showSettingsDropdown
-    console.log(this.showSettingsDropdown)
   }
 
   copyPassword(password) {

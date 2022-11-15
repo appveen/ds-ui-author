@@ -121,16 +121,31 @@ export class AgentsComponent implements OnInit, OnDestroy {
         if (!this.agentData.name) {
             return;
         }
+        const isEdit = this.agentData.isEdit;
         delete this.agentData.isEdit;
         this.showNewAgentWindow = false;
         this.showLazyLoader = true;
-        this.commonService.post('partnerManager', `/${this.commonService.app._id}/agent`, this.agentData).subscribe(res => {
-            this.showLazyLoader = false;
-            this.getAgentList();
-        }, err => {
-            this.showLazyLoader = false;
-            this.commonService.errorToast(err);
-        });
+        if (isEdit) {
+            this.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/` + this.agentData._id, this.agentData).subscribe(res => {
+                if (res) {
+                    this.ts.success('Agent Saved Sucessfully');
+                    this.showNewAgentWindow = false;
+                }
+
+            }, err => {
+                this.commonService.errorToast(err);
+                this.showNewAgentWindow = false;
+            });
+        }
+        else {
+            this.commonService.post('partnerManager', `/${this.commonService.app._id}/agent`, this.agentData).subscribe(res => {
+                this.showLazyLoader = false;
+                this.getAgentList();
+            }, err => {
+                this.showLazyLoader = false;
+                this.commonService.errorToast(err);
+            });
+        }
     }
 
     cloneAgent(_index) {
