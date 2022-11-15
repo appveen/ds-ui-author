@@ -49,7 +49,7 @@ export class FileSettingsComponent implements OnInit {
   getConnectorsApi() {
     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
       .pipe(switchMap((ev: any) => {
-        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev });
+        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type' });
       }))
       .subscribe(res => {
         this.appService.connectorsList = res;
@@ -62,10 +62,10 @@ export class FileSettingsComponent implements OnInit {
 
   getConnectors() {
     this.connectorList = this.appService.connectorsList;
-    const temp=this.connectorList.find(ele=> ele._id===this.form.value.connectors.file._id).type;
-    const temp1=this.connectorList.find(ele=> ele._id===this.form.value.connectors.data._id).type;
-    this.selectedType['file']=this.storageTypes.find(ele=>ele.type===temp).label;
-    this.selectedType['data']=this.storageTypes.find(ele=>ele.type===temp1).label;
+    const temp = this.connectorList.find(ele => ele._id === this.form.value.connectors.file._id).type;
+    const temp1 = this.connectorList.find(ele => ele._id === this.form.value.connectors.data._id).type;
+    this.selectedType['file'] = this.storageTypes.find(ele => ele.type === temp).label;
+    this.selectedType['data'] = this.storageTypes.find(ele => ele.type === temp1).label;
   }
 
   canEdit(type: string) {
@@ -96,8 +96,8 @@ export class FileSettingsComponent implements OnInit {
     this.form.get('connectors').get(type).setValue({
       _id: event.target.value
     })
-    const connectorType=this.connectorList.find(ele=> ele._id===event.target.value).type;
-    this.selectedType[type]=this.storageTypes.find(ele=>ele.type===connectorType).label;
+    const connectorType = this.connectorList.find(ele => ele._id === event.target.value).type;
+    this.selectedType[type] = this.storageTypes.find(ele => ele.type === connectorType).label;
   }
 
   get dataConnectors() {
