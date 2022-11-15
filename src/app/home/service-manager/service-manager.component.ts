@@ -197,7 +197,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
       .pipe(switchMap((ev: any) => {
-        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev });
+        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type' });
       }))
       .subscribe(res => {
         this.connectorList = res;

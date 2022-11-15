@@ -196,9 +196,8 @@ export class DataManagementComponent implements OnInit {
   getConnectors() {
     this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
       .pipe(switchMap((ev: any) => {
-        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev });
-      }))
-      .subscribe(res => {
+        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type' });
+      })).subscribe(res => {
         this.connectorList = res;
       }, err => {
         this.commonService.errorToast(err, 'We are unable to fetch records, please try again later');
