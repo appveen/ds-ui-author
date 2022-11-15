@@ -5,14 +5,17 @@
   height: 100vh;
   background: #f2f2f2;
 }
+
 .card-container {
   height: calc(100vh - 214px);
   // overflow: auto;
 }
+
 .platform {
   min-width: 90px;
   min-height: 90px;
 }
+
 .filter-container {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   min-height: 259px;
@@ -20,6 +23,7 @@
   border-radius: 4px;
   z-index: 15;
 }
+
 .streak {
   min-width: 4px;
   max-width: 4px;
@@ -28,7 +32,9 @@
   display: inline-block;
   border-radius: 2px;
 }
+
 .strength-tower {
+
   .strength-high,
   .strength-medium,
   .strength-low {
@@ -38,31 +44,39 @@
     background: $border;
     margin-top: 2px;
   }
+
   .strength-high {
     min-width: 12px;
     max-width: 12px;
   }
+
   .strength-medium {
     min-width: 8px;
     max-width: 8px;
   }
+
   .strength-low {
     min-width: 4px;
     max-width: 4px;
   }
+
   &.high {
+
     .strength-high,
     .strength-medium,
     .strength-low {
       background: $success;
     }
   }
+
   &.medium {
+
     .strength-medium,
     .strength-low {
       background: $primary;
     }
   }
+
   &.low {
     .strength-low {
       background: $danger;
@@ -70,7 +84,102 @@
   }
 }
 
-.ag-grid-container {
-  width: 100%;
-  height: calc(100vh - 138px);
+.grid-container {
+  height: calc(100vh - 214px);
+
+  .ag-grid-options {
+    height: 32px;
+  }
+
+  .ag-grid-container {
+    height: calc(100vh - 246px);
+  }
+}
+
+.agent-name-wrapper {
+  .dsi-danger-circle {
+    top: 9px;
+    right: 6px;
+  }
+}
+
+.list-group-item {
+  overflow: hidden;
+
+  &.header {
+    min-height: 38px;
+    max-height: 38px;
+    color: #6C7584;
+  }
+
+  .item-timestamp {
+    min-width: 120px;
+    max-width: 120px;
+  }
+
+  .item-level {
+    min-width: 120px;
+    max-width: 120px;
+  }
+
+  .item-content {
+    min-width: 240px;
+    max-width: 240px;
+  }
+
+}
+
+.item-actions {
+  min-width: 200px;
+  max-width: 200px;
+  position: absolute;
+  right: 30px;
+  top: 185px;
+  z-index: 1;
+  transition: 0.2s;
+
+  .actions {
+
+    .dsi {
+      min-width: 24px;
+      max-width: 24px;
+      display: inline-block;
+      color: $sub-headings;
+    }
+
+    .dsi,
+    .api-icon {
+      &:hover {
+        color: $dark;
+      }
+    }
+  }
+}
+
+.settings-btn {
+  width: 150px;
+}
+
+.overlay {
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: rgba($color: #000000, $alpha: 0.6);
+}
+
+.new-data-format-window {
+  height: 100vh;
+  width: 360px;
+  top: 0;
+  right: -360px;
+  z-index: 2;
+  transition: 0.2s;
+  overflow: auto;
+  padding-top: 40px !important;
+
+  &.show {
+    right: 0px !important;
+  }
 }

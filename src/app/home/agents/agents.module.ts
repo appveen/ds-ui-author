@@ -1,24 +1,28 @@
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { AgentsComponent } from './agents.component';
-import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
-import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
-import { TableCheckboxModule } from 'src/app/utils/table-checkbox/table-checkbox.module';
 import { DataGridModule } from 'src/app/utils/data-grid/data-grid.module';
-import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
+import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
+import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
+import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
+import { TableCheckboxModule } from 'src/app/utils/table-checkbox/table-checkbox.module';
+import { AgentsComponent } from './agents.component';
 // import { AgentLogsComponent } from './agent-logs/agent-logs.component';
-import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
+import { AgGridModule } from 'ag-grid-angular';
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
+import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
 import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
+import { AgentsLogComponent } from './agents-log/agents-log.component';
+import { BasicInfoModule } from '../../utils/basic-info/basic-info.module';
 
 const routes: Routes = [
+    { path: ':id', component: AgentsLogComponent },
     { path: '', component: AgentsComponent, pathMatch: 'full' },
     // { path: ':id', component: AgentLogsComponent }
 ];
@@ -32,20 +36,23 @@ const routes: Routes = [
         BreadcrumbModule,
         SearchBoxModule,
         TableCheckboxModule,
-        ReactiveFormsModule,
         FormsModule,
+        ReactiveFormsModule,
         DataGridModule,
         AutoFocusModule,
         DeleteModalModule,
         SwitchModule,
         DateFormatModule,
         OnChangeModule,
-        CommonFilterModule
+        CommonFilterModule,
+        AgGridModule,
+        BasicInfoModule
     ],
     declarations: [
         AgentsComponent,
-        // AgentLogsComponent
+        AgentsLogComponent,
     ],
-    exports: [RouterModule]
+    exports: [RouterModule],
+    providers: [DatePipe]
 })
 export class AgentsModule { }

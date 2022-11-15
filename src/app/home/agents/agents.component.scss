@@ -40,8 +40,8 @@
   }
 
   .item-password {
-    min-width: 120px;
-    max-width: 120px;
+    min-width: 150px;
+    max-width: 150px;
   }
 
   .item-ip-address {
@@ -164,6 +164,16 @@
   height: 48px;
 }
 
-.modal-body{
-  
+.eye-icon {
+  right: 10px;
+  top: 10px
+}
+
+.error-icon-password {
+  right: 30px;
+  top: 10px
+}
+
+.password {
+  padding-right: 48px;
 }

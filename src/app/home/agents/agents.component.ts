@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -10,6 +10,7 @@ import { AppService } from 'src/app/utils/services/app.service';
 import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { environment } from 'src/environments/environment';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'odp-agents',
@@ -20,7 +21,11 @@ import { environment } from 'src/environments/environment';
 export class AgentsComponent implements OnInit, OnDestroy {
 
     @ViewChild('downloadAgentModal') downloadAgentModal: HTMLElement;
-    downloadAgentModalRef: NgbModalRef
+    downloadAgentModalRef: NgbModalRef;
+    @ViewChild('agentDetailsModal') agentDetailsModal: HTMLElement;
+    agentDetailsModalRef: NgbModalRef;
+    @ViewChild('resetPasswordModel', { static: false }) resetPasswordModel: TemplateRef<HTMLElement>;
+    resetPasswordModelRef: NgbModalRef;
     agentData: any;
     subscriptions: any;
     selectedAgent: any;
@@ -39,12 +44,16 @@ export class AgentsComponent implements OnInit, OnDestroy {
     };
     breadcrumbPaths: Array<Breadcrumb>;
     openDeleteModal: EventEmitter<any>;
+    resetPasswordForm: FormGroup;
+    showPassword: any;
+    showPasswordSide: boolean = false;
     constructor(
         public commonService: CommonService,
         private appService: AppService,
         private commonPipe: CommonFilterPipe,
         private router: Router,
-        private ts: ToastrService
+        private ts: ToastrService,
+        private fb: FormBuilder,
     ) {
         this.agentData = {};
         this.subscriptions = {};
@@ -63,6 +72,11 @@ export class AgentsComponent implements OnInit, OnDestroy {
         this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         this.openDeleteModal = new EventEmitter();
         this.sortModel = {};
+        this.showPassword = {};
+        this.resetPasswordForm = this.fb.group({
+            password: [null],
+            cpassword: [null, [Validators.required]],
+        });
     }
 
     ngOnInit() {
@@ -88,7 +102,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
 
-    newAgent() {
+    newAgent(agent?) {
         this.agentData = {
             app: this.commonService.app._id,
             type: 'APPAGENT',
@@ -96,6 +110,10 @@ export class AgentsComponent implements OnInit, OnDestroy {
             retainFileOnSuccess: true,
             retainFileOnError: true
         };
+        if (agent) {
+            this.agentData.name = agent.name
+            this.agentData.isEdit = true
+        }
         this.showNewAgentWindow = true;
     }
 
@@ -113,11 +131,6 @@ export class AgentsComponent implements OnInit, OnDestroy {
             this.showLazyLoader = false;
             this.commonService.errorToast(err);
         });
-    }
-
-    editAgent(_index) {
-        this.appService.editLibraryId = this.agentList[_index]._id;
-        this.router.navigate(['/app/', this.app, 'agent', this.appService.editLibraryId]);
     }
 
     cloneAgent(_index) {
@@ -255,14 +268,59 @@ export class AgentsComponent implements OnInit, OnDestroy {
         }, dismiss => { });
     }
 
-
-    changePassword(index: number) {
-
+    openAgentDetailsWindow(agent: any) {
+        this.agentData = agent;
+        this.getAgentPassword(agent._id)
+        this.agentDetailsModalRef = this.commonService.modal(this.agentDetailsModal, { size: 'md' });
+        this.agentDetailsModalRef.result.then(close => { }, dismiss => { });
     }
 
     navigate(agent) {
-        this.router.navigate(['/app/', this.app, 'dfm', agent._id])
+        this.router.navigate(['/app/', this.app, 'agent', agent._id])
     }
+
+    copyPassword(password) {
+        const self = this;
+        self.appService.copyToClipboard(password);
+        self.ts.success('Id copied successfully');
+    }
+
+
+    getAgentPassword(id) {
+        this.commonService.get('agent', `/${this.commonService.app._id}/agent/utils/${id}/password`
+        ).subscribe(res => {
+            this.agentData['thePassword'] = res?.password || ''
+        }, err => {
+            this.commonService.errorToast(err);
+        });
+    }
+
+    resetPassword() {
+        this.resetPasswordForm.get('password').markAsDirty();
+        this.resetPasswordForm.get('cpassword').markAsDirty();
+        const payload = {
+            password: this.resetPasswordForm.get('password').value
+        }
+        if (this.resetPasswordForm.invalid) {
+            return;
+        } else {
+            this.commonService.put('agent', `/${this.commonService.app._id}/agent/utils/${this.agentData._id}/password`, payload)
+                .subscribe(() => {
+                    this.resetPasswordForm.reset()
+                    this.getAgentList();
+                    this.ts.success('Password changed successfully');
+                    this.showPassword = false
+                    this.showPasswordSide = false
+                }, err => {
+                    this.resetPasswordForm.reset()
+                    this.showPassword = false
+                    this.showPasswordSide = false
+                    this.commonService.errorToast(err, 'Unable to process request');
+                });
+        }
+    }
+
+
 
     private compare(a: any, b: any) {
         if (a > b) {
@@ -328,5 +386,34 @@ export class AgentsComponent implements OnInit, OnDestroy {
 
     get app() {
         return this.commonService.app._id;
+    }
+
+    get matchPwd() {
+        const self = this;
+        return (
+            self.resetPasswordForm.get('password').value !==
+            self.resetPasswordForm.get('cpassword').value
+        );
+    }
+
+    get pwdError() {
+        const self = this;
+        return (
+            (self.resetPasswordForm.get('password').dirty &&
+                self.resetPasswordForm.get('password').hasError('required')) ||
+            (self.resetPasswordForm.get('password').dirty &&
+                self.resetPasswordForm.get('password').hasError('minlength')) ||
+            (self.resetPasswordForm.get('password').dirty &&
+                self.resetPasswordForm.get('password').hasError('pattern'))
+        );
+    }
+
+    get cPwdError() {
+        const self = this;
+        return (
+            (self.resetPasswordForm.get('cpassword').dirty &&
+                self.resetPasswordForm.get('cpassword').hasError('required')) ||
+            (self.resetPasswordForm.get('cpassword').dirty && self.matchPwd)
+        );
     }
 }
