@@ -9,7 +9,9 @@
 <div class="d-flex flex-column w-100 h-100 position-relative bg-light-gray">
     <div class="wrapper">
         <div class="w-100 position-relative px-4 pt-5 d-flex" *ngIf="agentDetails">
-            <odp-basic-info hideLogo="true" [(name)]="agentDetails.name" [hideLogo]="true" [edit]="{status:false}">
+            <span class="dsi dsi-arrow-left text-secondary mr-3 hover" style="font-size:24px"
+                [routerLink]="['../../agent']"></span>
+            <odp-basic-info hideLogo=" true" [(name)]="agentDetails.name" [hideLogo]="true" [edit]="{status:false}">
                 <div class="d-flex align-items-end align-self-start">
                     <!-- <button *ngIf="hasPermission('PMCONBD') && edit.status" type="button"
                         class="btn btn-white border mr-3" (click)="deleteConnector()">
@@ -28,25 +30,31 @@
                     </ng-container> -->
                 </div>
             </odp-basic-info>
-            <div class="d-flex ml-auto">
-                <button class="btn d-flex settings-btn" (click)="test()">
-                    <span class="dsi dsi-settings"></span>
+            <div class="d-flex ml-auto" odpClickOutside (outside)="showSettingsDropdown=false">
+                <button class="btn d-flex settings-btn align-items-center border bg-white"
+                    (click)="showSettingsDropdown = !showSettingsDropdown">
+                    <span class="dsi dsi-settings mr-2"></span>
                     <span>Settings</span>
+                    <span class="dsi dsi-drop-down ml-auto"></span>
                 </button>
                 <div class="item-actions d-flex align-items-center justify-content-end">
                     <div *ngIf="showSettingsDropdown"
                         class="more-options bg-white rounded list-group position-fixed border">
+                        <div id="agent-details" class="list-group-item list-group-item-action py-2 border-0"
+                            (click)="openAgentDetailsWindow(agentDetails);">
+                            Agent Details
+                        </div>
                         <div id="agent-dowload" class="list-group-item list-group-item-action py-2 border-0"
                             (click)="openDownloadAgentWindow(agentDetails);">
                             Download
                         </div>
+                        <div id="agent-change-password" class="list-group-item list-group-item-action py-2 border-0"
+                            (click)="test()">
+                            Change Password
+                        </div>
                         <div id=" agent-edit" class="list-group-item list-group-item-action py-2 border-0"
                             *ngIf="canEditAgent()" (click)="showEditAgentWindow = true">
                             Edit
-                        </div>
-                        <div id="agent-change-password" class="list-group-item list-group-item-action py-2 border-0"
-                            (click)="showPasswordSide = true;">
-                            Change Password
                         </div>
                         <div id=" agent-clone" class="list-group-item list-group-item-action py-2 border-0">
                             Clone
@@ -59,46 +67,50 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column px-4 pb-4" *ngIf="agentDetails">
+        <div class="d-flex flex-column px-4 pb-3" *ngIf="agentDetails">
             <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-4">
                 <div class="d-flex">
-                    <div class="d-flex flex-column mr-4">
+                    <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Type</label>
                         <span class="fw-500 text-dark">{{agentDetails.type}}</span>
                     </div>
-                    <div class="d-flex flex-column mr-4">
+                    <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Streak</label>
                         <span class="fw-500 text-dark">{{agentDetails.type}}</span>
                     </div>
-                    <div class="d-flex flex-column mr-4">
+                    <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Status</label>
-                        <span class="fw-500 text-dark">{{agentDetails.status}}</span>
+                        <span class="fw-500 status font-11" [ngClass]="{
+                            'text-success': agentDetails.status === 'RUNNING',
+                            'text-warning': agentDetails.status === 'PENDING',
+                            'text-danger': agentDetails.status === 'STOPPED'
+                          }">{{agentDetails.status}}</span>
                     </div>
-                    <div class="d-flex flex-column mr-4">
+                    <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Last Invoked</label>
                         <span class="fw-500 text-dark">{{convertDate(agentDetails._metadata.lastUpdated )}}</span>
                     </div>
-                    <div class="d-flex flex-column mr-4">
+                    <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Pending Files</label>
                         <span class="fw-500 text-dark">{{agentDetails.type}}</span>
                     </div>
-                    <div class="d-flex flex-column mr-4">
+                    <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Version</label>
                         <span class="fw-500 text-dark">{{agentDetails._metadata.version.document}} </span>
                     </div>
-                    <div class="d-flex flex-column mr-4">
+                    <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">IP Address</label>
                         <span class="fw-500 text-dark">{{agentLogObject[0].ipAddress}}</span>
                     </div>
-                    <div class="d-flex flex-column mr-4">
+                    <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Mac Address</label>
                         <span class="fw-500 text-dark">{{agentLogObject[0].macAddress}}</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column px-4 pb-4" *ngIf="agentDetails">
-            <div class="grid-container position-relative">
+        <div class="d-flex flex-column px-4 pb-4 bg-white">
+            <div class="grid-container position-relative mt-3" *ngIf="agentLogObject.length > 0">
                 <div class="list-group">
                     <div
                         class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500 d-flex align-items-center">
@@ -121,18 +133,31 @@
                             <!-- <div class="item-actions">&nbsp;</div> -->
                         </div>
                     </div>
-                    <div *ngIf="!agentLogObject" class="list-group-item">No Records Found</div>
                     <ng-container *ngFor="let agent of agentLogObject;let i=index">
                         <div class="list-group-item">
                             <div class="d-flex align-items-center justify-content-start h-100">
                                 <div class="item-timestamp text-truncate fw-500">{{convertDate(agent.timestamp )}}</div>
-                                <div class="item-level">{{agent.level}}</div>
-                                <div class="item-message">{{agent.content}}</div>
+                                <div class="item-level ">
+                                    <span class="font-11 fw-500 status" [ngClass]="{
+                                    'text-success': agent.level === 'TRACE',
+                                    'text-warning': agent.level === 'DEBUG',
+                                    'text-danger': agent.level === 'ERROR',
+                                    'text-info': agent.level === 'INFO'
+                                  }">{{agent.level}}</span>
+                                </div>
+                                <div class="item-message text-secondary">{{agent.content}}</div>
                             </div>
                         </div>
                     </ng-container>
                 </div>
-
+            </div>
+            <div class="d-flex flex-column">
+                <span *ngIf="agentLogObject.length === 0" class="no-logs">
+                </span>
+                <div class="d-flex flex-column mx-auto">
+                    <span class="font-20 fw-600">No Logs Generated</span>
+                    <span>Activate agent to generate logs</span>
+                </div>
             </div>
         </div>
     </div>
@@ -158,14 +183,14 @@
 
     <div *ngIf="showPasswordSide" class="overlay position-fixed"></div>
     <div [ngClass]="{'show':showPasswordSide}"
-        class="new-data-format-window position-fixed p-4 d-flex flex-column bg-white border-left" odpClickOutside
-        (outside)="showPasswordSide=false">
+        class="new-data-format-window position-fixed p-4 d-flex flex-column bg-white border-left">
         <div class="d-flex flex-column h-100" *ngIf="showPasswordSide">
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <div class="d-flex align-items-center">
                     <h5 class="fw-600 font-20">Reset Password</h5>
                 </div>
-                <span class="dsi dsi-close hover closeicon" id="closeicon" (click)="showPasswordSide = false"></span>
+                <span class="dsi dsi-close hover closeicon" id="closeicon"
+                    (click)="showEditAgentWindow = false; showPasswordSide = false"></span>
             </div>
             <form class="d-flex flex-column h-100" [formGroup]="resetPasswordForm" odpFocusNext>
                 <div class="form-group position-relative">
@@ -276,7 +301,8 @@
         class="new-data-format-window position-fixed p-4 d-flex flex-column align-items-center bg-white border-left">
         <div class="d-flex align-items-center justify-content-between w-100">
             <span class="font-20 fw-600">Edit App Agent</span>
-            <button type="button" class="btn btn-link text-dark" (click)="showEditAgentWindow=false">
+            <button type="button" class="btn btn-link text-dark"
+                (click)="showEditAgentWindow = false; showPasswordSide = false">
                 <span class="dsi dsi-close"></span>
             </button>
         </div>
@@ -320,4 +346,39 @@
         </div>
     </div>
 
-    <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal()"></odp-delete-modal>
+    <ng-template #agentDetailsModal>
+        <div class="modal-body">
+            <div class="d-flex align-items-center justify-content-between mb-4 mx-4 mt-2">
+                <div class="d-flex flex-column">
+                    <span class="font-20 fw-600">Agent Details</span>
+                </div>
+                <span class="hover dsi dsi-close" (click)="agentDetailsModalRef.close(false)"></span>
+            </div>
+            <div class="d-flex mx-4 flex-column">
+                <div class="d-flex flex-column mb-3">
+                    <label class="fw-500 text-dark ">Agent Name</label>
+                    <span class="fw-400 text-secondary">{{agentDetails.name}}</span>
+                </div>
+                <div class="d-flex flex-column mb-3">
+                    <label class="fw-500 text-dark">Agent ID</label>
+                    <span class="fw-400 text-secondary">{{agentDetails._id}}</span>
+                </div>
+                <div class="d-flex flex-column mb-3">
+                    <label class="fw-500 text-dark">Agent Password</label>
+                    <div class="d-flex">
+                        <span class="fw-400 text-secondary" *ngIf="agentDetails.thePassword">{{agentDetails.thePassword
+                            ||
+                            ''}}</span>
+                        <span class="hover dsi dsi-copy text-secondary ml-2" *ngIf="agentDetails.thePassword"
+                            (click)="copyPassword(agentDetails.thePassword)"></span>
+                    </div>
+                    <span class="fw-400 text-secondary" *ngIf="!agentDetails.thePassword">
+                        <span class="spinner-border text-secondary"></span>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </ng-template>
+
+    <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

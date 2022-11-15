@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { FileSettingsComponent } from './connector-settings.component';
+import { ConnectorSettingsComponent } from './connector-settings.component';
 
-describe('FileSettingsComponent', () => {
-  let component: FileSettingsComponent;
-  let fixture: ComponentFixture<FileSettingsComponent>;
+describe('ConnectorSettingsComponent', () => {
+  let component: ConnectorSettingsComponent;
+  let fixture: ComponentFixture<ConnectorSettingsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FileSettingsComponent]
+      declarations: [ConnectorSettingsComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FileSettingsComponent);
+    fixture = TestBed.createComponent(ConnectorSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

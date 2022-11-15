@@ -84,8 +84,12 @@
                         <div class="item-ip-address">{{agent.ipAddress}}</div>
                         <div class="item-mac-address">{{agent.macAddress}}</div>
                         <div class="item-streak">{{agent.streak}}</div>
-                        <div class="item-status">{{agent.status}}</div>
-                        <div class="item-last-invoked-at">{{agent.lastInvokedAt}}</div>
+                        <div class="item-status"><span class="status font-11 fw-500" [ngClass]="{
+                            'text-success': agent.status === 'RUNNING',
+                            'text-warning': agent.status === 'PENDING',
+                            'text-danger': agent.status === 'STOPPED'
+                          }">{{agent.status}}</span></div>
+                        <div class="item-last-invoked-at font-12">{{convertDate(agent._metadata.lastUpdated)}}</div>
                         <div class="item-release">{{agent.release}}</div>
                         <div class="item-pending-files">{{agent.pendingFiles}}</div>
                         <div class="item-actions d-flex align-items-center justify-content-end">
@@ -98,7 +102,7 @@
                                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                                 (outside)="showOptionsDropdown[i]=false">
                                 <div id="agent-dowload" class="list-group-item list-group-item-action py-2 border-0"
-                                    (click)="openAgentDetailsWindow(agent);">
+                                    (click)="openDownloadAgentWindow(agent);">
                                     Download
                                 </div>
                                 <div id="agent-edit" class="list-group-item list-group-item-action py-2 border-0"
@@ -325,3 +329,5 @@
         </form>
     </div>
 </div>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

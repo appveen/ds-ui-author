@@ -65,8 +65,8 @@
   }
 
   .item-last-invoked-at {
-    min-width: 120px;
-    max-width: 120px;
+    min-width: 150px;
+    max-width: 150px;
   }
 
   .item-release {
@@ -176,4 +176,11 @@
 
 .password {
   padding-right: 48px;
+}
+
+
+.status {
+  border: 1px solid;
+  border-radius: 16px;
+  padding: 2px 12px
 }

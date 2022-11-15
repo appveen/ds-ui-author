@@ -27,6 +27,8 @@ export class AgentsLogComponent implements OnInit {
   @ViewChild('downloadAgentModal') downloadAgentModal: HTMLElement;
   downloadAgentModalRef: NgbModalRef;
   @ViewChild('changePasswordModalTemplate', { static: false }) changePasswordModalTemplate: TemplateRef<HTMLElement>;
+  @ViewChild('agentDetailsModal') agentDetailsModal: HTMLElement;
+  agentDetailsModalRef: NgbModalRef;
   agentId: string;
   subscriptions: any;
   apiConfig: APIConfig;
@@ -78,7 +80,6 @@ export class AgentsLogComponent implements OnInit {
       password: '',
       cpassword: ''
     };
-    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     self.agentLogObject = [];
     self.agentConfig = {};
     self.subscriptions = [];
@@ -92,6 +93,7 @@ export class AgentsLogComponent implements OnInit {
       title: '',
       message: '',
     };
+    self.breadcrumbPaths = [];
   }
 
   ngOnInit() {
@@ -107,6 +109,11 @@ export class AgentsLogComponent implements OnInit {
         // self.configureColumns();
       }
     });
+    self.breadcrumbPaths.push({
+      active: false,
+      label: 'Agents',
+      url: '/app/' + self.commonService.app._id + '/agent'
+    });
     this.getAgentDetails();
 
   }
@@ -118,20 +125,9 @@ export class AgentsLogComponent implements OnInit {
 
   getLogs() {
     const self = this;
-    this.agentLogObject = data.agentLogs;
-    // return self.commonService.get('partnerManager', `/${self.commonService.app._id}/agent/utils/${this.agentDetails.agentId}/logs`, {}).subscribe(res => {
-    //   this.agentLogObject = res
-    // });
-  }
-
-
-  filterModified(event) {
-    const self = this;
-
-  }
-
-  sortChanged(event) {
-    const self = this;
+    self.commonService.get('partnerManager', `/${self.commonService.app._id}/agent/utils/${this.agentDetails.agentId}/logs`, {}).subscribe(res => {
+      this.agentLogObject = res.agentLogs.length > 0 ? res.agentLogs.length : data.agentLogs
+    });
   }
 
   getAgentDetails() {
@@ -140,10 +136,11 @@ export class AgentsLogComponent implements OnInit {
     self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, self.apiConfig).subscribe(res => {
       if (res.length > 0) {
         self.agentDetails = res[0];
-        this.breadcrumbPaths = [{
+        self.breadcrumbPaths.push({
           active: true,
           label: this.agentDetails.name
-        }];
+        });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         self.getAgentPassword(self.agentDetails._id)
         this.getLogs();
       }
@@ -382,13 +379,13 @@ export class AgentsLogComponent implements OnInit {
   }
 
   test() {
-    this.showSettingsDropdown = !this.showSettingsDropdown
+    this.showPasswordSide = true;
   }
 
   copyPassword(password) {
     const self = this;
     self.appService.copyToClipboard(password);
-    self.ts.success('Id copied successfully');
+    self.ts.success('Password copied successfully');
   }
 
 
@@ -450,10 +447,18 @@ export class AgentsLogComponent implements OnInit {
     this.openDeleteModal.emit(this.alertModal);
   }
 
+  openAgentDetailsWindow(agent: any) {
+    this.agentData = agent;
+    this.getAgentPassword(agent._id)
+    this.agentDetailsModalRef = this.commonService.modal(this.agentDetailsModal, { size: 'md' });
+    this.agentDetailsModalRef.result.then(close => { }, dismiss => { });
+  }
 
-  closeDeleteModal() {
+
+
+  closeDeleteModal(data) {
     const self = this;
-    if (this.agentDetails) {
+    if (data) {
       // const url = '/admin/app/' + data._id;
       // self.showLazyLoader = true;
       //   self.subscriptions['deleteApp'] = self.commonService
@@ -505,4 +510,5 @@ export class AgentsLogComponent implements OnInit {
       (self.resetPasswordForm.get('cpassword').dirty && self.matchPwd)
     );
   }
+
 }

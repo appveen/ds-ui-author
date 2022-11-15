@@ -4,6 +4,7 @@ export const data = {
     {
       "_id": "636d54c336f130ed5d11d0ca",
       "agentId": "fb07af89-8f21-4203-9850-47a46a878f08",
+      "level": "TRACE",
       "app": "Adam",
       "agentName": "TestAgent1",
       "ipAddress": "169.254.86.30",
@@ -25,6 +26,7 @@ export const data = {
     {
       "_id": "636d553136f130ed5d11d0dc",
       "agentId": "fb07af89-8f21-4203-9850-47a46a878f08",
+      "level": "INFO",
       "app": "Adam",
       "agentName": "TestAgent1",
       "ipAddress": "169.254.86.30",
@@ -46,6 +48,7 @@ export const data = {
     {
       "_id": "636d554236f130ed5d11d0e4",
       "agentId": "fb07af89-8f21-4203-9850-47a46a878f08",
+      "level": "DEBUG",
       "app": "Adam",
       "agentName": "TestAgent1",
       "ipAddress": "169.254.86.30",
@@ -67,6 +70,7 @@ export const data = {
     {
       "_id": "636d555f36f130ed5d11d0e8",
       "agentId": "fb07af89-8f21-4203-9850-47a46a878f08",
+      "level": "ERROR",
       "app": "Adam",
       "agentName": "TestAgent1",
       "ipAddress": "169.254.86.30",

@@ -133,8 +133,8 @@
   min-width: 200px;
   max-width: 200px;
   position: absolute;
-  right: 30px;
-  top: 185px;
+  right: 24px;
+  top: 204px;
   z-index: 1;
   transition: 0.2s;
 
@@ -182,4 +182,36 @@
   &.show {
     right: 0px !important;
   }
+}
+
+.eye-icon {
+  right: 10px;
+  top: 10px
+}
+
+.error-icon-password {
+  right: 30px;
+  top: 10px
+}
+
+.password {
+  padding-right: 48px;
+}
+
+.status {
+  border: 1px solid;
+  border-radius: 16px;
+  padding: 2px 12px
+}
+
+.no-logs {
+  min-height: 150px;
+  max-height: 150px;
+  min-width: 150px;
+  max-width: 150px;
+  background-repeat: no-repeat;
+  background-size: 150px;
+  background-position: center;
+  display: flex;
+  margin: 150px auto 20px auto;
 }

@@ -1,18 +1,23 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { switchMap } from 'rxjs/operators';
 import { CommonService } from '../../../../utils/services/common.service';
 import * as _ from 'lodash'
 import { AppService } from '../../../../utils/services/app.service';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'odp-connector-settings',
   templateUrl: './connector-settings.component.html',
   styleUrls: ['./connector-settings.component.scss']
 })
-export class FileSettingsComponent implements OnInit {
+export class ConnectorSettingsComponent implements OnInit {
   @Input() form: FormGroup;
   @Input() edit: any;
+  @ViewChild('schemaToggleTemplate') schemaToggleTemplate: TemplateRef<HTMLElement>;
+  schemaToggleTemplateRef: NgbModalRef;
+  toggleTemplateRef: NgbModalRef;
+  toggleSchemaModal: any;
   type: any;
   fileSettingForm: FormGroup
   showConnectors: boolean = true;
@@ -23,6 +28,7 @@ export class FileSettingsComponent implements OnInit {
   uniqueTypes: Array<any>
   subscriptions: any = {};
   fileStorageTypes: any;
+  mongoList: any[];
   constructor(
     private commonService: CommonService,
     private fb: FormBuilder,
@@ -49,7 +55,7 @@ export class FileSettingsComponent implements OnInit {
   getConnectorsApi() {
     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
       .pipe(switchMap((ev: any) => {
-        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type' });
+        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type, options, _metadata' });
       }))
       .subscribe(res => {
         this.appService.connectorsList = res;
@@ -62,6 +68,7 @@ export class FileSettingsComponent implements OnInit {
 
   getConnectors() {
     this.connectorList = this.appService.connectorsList;
+    this.mongoList = this.appService.connectorsList.filter(ele => ele.type === 'MONGODB');
     const temp = this.connectorList.find(ele => ele._id === this.form.value.connectors.file._id).type;
     const temp1 = this.connectorList.find(ele => ele._id === this.form.value.connectors.data._id).type;
     this.selectedType['file'] = this.storageTypes.find(ele => ele.type === temp).label;
@@ -101,7 +108,8 @@ export class FileSettingsComponent implements OnInit {
   }
 
   get dataConnectors() {
-    const list = this.connectorList?.filter(ele => ele.category === 'DB').sort((a, b) => {
+    const typeList = this.form.get('schemaFree').value ? this.mongoList : this.connectorList
+    const list = typeList?.filter(ele => ele.category === 'DB').sort((a, b) => {
       if (a.name < b.name) {
         return -1;
       }
@@ -128,6 +136,42 @@ export class FileSettingsComponent implements OnInit {
   checkDefault(id) {
     const defaultIds = [this.commonService.serviceData['connectors']?.data?._id, this.commonService.serviceData['connectors']?.file?._id];
     return defaultIds.indexOf(id) > -1
+  }
+
+  toggleSchemaType(schemaFree: boolean) {
+    const self = this;
+    if (!this.edit || !this.edit.status) {
+      return false;
+    }
+    if (schemaFree) {
+      self.toggleSchemaModal = {
+        title: 'Enable Schema Free',
+        message: 'Allows you to use Appcenter as a repository for unstructured data storage.',
+        info: '(Enabling schema free will remove all the Validations)'
+      };
+    } else {
+      self.toggleSchemaModal = {
+        title: 'Enabling Schema Designer',
+        message: 'Define data in collection, existing data will be maintained but might not be accessible. New documents will require validations',
+        info: ''
+      };
+    }
+    if (self.schemaToggleTemplateRef) {
+      self.schemaToggleTemplateRef.close(false);
+    }
+    self.schemaToggleTemplateRef = self.commonService.modal(self.schemaToggleTemplate);
+    self.schemaToggleTemplateRef.result.then((response) => {
+      if (response) {
+        if (self.form && self.form.get('schemaFree')) {
+          // if (schemaFree) {
+          //   self.schemaFreeConfiguration();
+          // }
+
+          self.form.get('schemaFree').patchValue(schemaFree);
+        }
+      }
+    }, dismiss => { });
+
   }
 
 }

@@ -138,7 +138,7 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     this.connectorList = [];
     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
       .pipe(switchMap((ev: any) => {
-        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type, _metadata' });
+        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type, options, _metadata' });
       }))
       .subscribe(res => {
         this.showLazyLoader = false;
@@ -299,6 +299,18 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
 
   navigate(id: string) {
     this.router.navigate(['/app/', this.app, 'con', id])
+  }
+
+  checkDefault(id) {
+    let defaultIds = [this.commonService.appData['connectors']?.data?._id, this.commonService.appData['connectors']?.file?._id];
+    if (defaultIds.length === 0) {
+      defaultIds = this.connectorList.map(ele => {
+        if (ele?.options?.default) {
+          return ele._id
+        }
+      })
+    }
+    return defaultIds.indexOf(id) > -1
   }
 
   get app() {
