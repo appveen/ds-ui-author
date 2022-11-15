@@ -101,6 +101,8 @@
         </div>
         <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
         <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-outline-primary mx-3"
+                (click)="pageChangeModalTemplateRef.close(false)">No</button>
             <button type="button" class="btn btn-min-width btn-dark"
                 (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
         </div>
