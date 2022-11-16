@@ -435,6 +435,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       payload.versionValidity = this.cloneData.versionValidity;
       payload.headers = this.cloneData.headers;
       payload.enableSearchIndex = this.cloneData.enableSearchIndex;
+      payload.connectors=this.cloneData.connectors;
     }
     if (payload.intTab) {
       payload.preHooks = this.cloneData.preHooks;
