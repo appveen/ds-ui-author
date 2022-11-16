@@ -99,12 +99,28 @@ export class ConnectorSettingsComponent implements OnInit {
     return this.commonService.hasPermissionStartsWith(type, entity);
   }
 
-  selectConnector(event, type) {
+  selectConnector(event: any, type: string) {
     this.form.get('connectors').get(type).setValue({
       _id: event.target.value
     })
     const connectorType = this.connectorList.find(ele => ele._id === event.target.value).type;
     this.selectedType[type] = this.storageTypes.find(ele => ele.type === connectorType).label;
+  }
+
+  set tableName(name: string) {
+    const data = this.form.get('connectors').get('data').value;
+    data.options = {
+      tableName: name
+    };
+    this.form.get('connectors').get('data').setValue(data);
+  }
+
+  get tableName() {
+    const data = this.form.get('connectors').get('data').value;
+    if (data && data.options && data.options.tableName) {
+      return data.options.tableName;
+    }
+    return null;
   }
 
   get dataConnectors() {

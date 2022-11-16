@@ -30,7 +30,6 @@
     <div class="d-flex">
       <ng-container>
         <div class="form-group">
-
           <select id="data" class="form-control" (change)="selectConnector($event,'data')"
             [disabled]="!edit.status || !canEdit('S')">
             <option [value]="connector._id" *ngFor="let connector of dataConnectors"
@@ -38,8 +37,6 @@
           </select>
         </div>
       </ng-container>
-
-
     </div>
   </div>
   <div class="d-flex justify-content-between" *ngIf="canView('S')">
@@ -47,6 +44,18 @@
       <div class="sub-heading font-14 fw-400">Type</div>
     </div>
     {{selectedType['data']}}
+  </div>
+  <div class="d-flex justify-content-between mt-3" *ngIf="canView('S') && selectedType['data']!=='MongoDB'">
+    <div class="d-flex flex-column">
+      <label class="sub-heading font-14 fw-400" for="category">Table Name</label>
+    </div>
+    <div class="d-flex">
+      <ng-container>
+        <div class="form-group">
+          <input type="text" class="form-control" [(ngModel)]="tableName" [disabled]="!edit.status || !canEdit('S')">
+        </div>
+      </ng-container>
+    </div>
   </div>
   <br>
   <span class="font-14 fw-700 my-2" *ngIf="!form.get('schemaFree').value">File Connector</span>
