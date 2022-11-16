@@ -43,6 +43,10 @@ export class AddHeadersComponent implements OnInit {
     this.headerList.push({ key: "", value: "" });
   }
 
+  removeHeader(index: number) {
+    this.headerList.splice(index, 1);
+  }
+
   save() {
     this.currNode.options.headers = this.headerList.reduce((prev, curr) => {
       prev[curr.key] = curr.value;

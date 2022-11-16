@@ -103,10 +103,12 @@
     </ng-container>
     <!-- <hr> -->
     <ng-container *ngIf="currNode?.type=='API' && prevNode">
-        <div class="form-group">
+        <div class="form-group position-relative">
             <label class="font-14 fw-300 text-dark" for="nodeUrl">URL</label>
-            <textarea id="nodeUrl" class="form-control" cols="30" rows="4"
+            <textarea id="nodeUrl" class="form-control dynamic-variable-addon" cols="30" rows="4"
                 [(ngModel)]="currNode.options.url"></textarea>
+            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.body">
+            </odp-node-data-selector>
         </div>
         <div class="form-group">
             <label class="font-14 fw-300 text-dark" for="nodeHTTPMethod">HTTP Method</label>
@@ -118,21 +120,26 @@
                 <option value="DELETE">DELETE</option>
             </select>
         </div>
+        <div class="form-group position-relative">
+            <label class="font-14 fw-300 text-dark" for="nodeContentType">Content-Type</label>
+            <select id="nodeContentType" class="form-control" disabled>
+                <option value="application/json" selected>application/json</option>
+                <option value="application/xml">application/xml</option>
+                <option value="multipart/form-data">multipart/form-data</option>
+            </select>
+        </div>
         <div class="form-group">
             <odp-add-headers [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
                 [(value)]="currNode.options.headers">
             </odp-add-headers>
         </div>
-        <!-- <div class="form-group">
+        <div class="form-group position-relative">
             <label class="font-14 fw-300 text-dark" for="nodeBody">Body</label>
-            <textarea id="nodeBody" class="form-control" cols="30" rows="4"
+            <textarea id="nodeBody" class="form-control dynamic-variable-addon" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea>
+            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.body">
+            </odp-node-data-selector>
         </div>
-        <div class="form-group">
-            <label class="font-14 fw-300 text-dark" for="nodeHeaders">Headers</label>
-            <textarea id="nodeHeaders" class="form-control" cols="30" rows="4"
-                [(ngModel)]="currNode.options.headers"></textarea>
-        </div> -->
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FILE'">
         <div class="form-group">
@@ -169,10 +176,13 @@
         </div>
     </ng-container>
     <ng-container *ngIf="currNode.type=='UNWIND'">
-        <div class="form-group">
+        <div class="form-group position-relative">
             <label class="font-14 fw-300 text-dark" for="nodeUnWind">Change Root Path</label>
-            <input id="nodeUnWind" type="text" class="form-control" [(ngModel)]="currNode.options.unwindPath"
-                (ngModelChange)="changesDone.emit()">
+            <input id="nodeUnWind" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.unwindPath" (ngModelChange)="changesDone.emit()">
+            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList"
+                [(value)]="currNode.options.unwindPath">
+            </odp-node-data-selector>
         </div>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='CONNECTOR'">
@@ -185,8 +195,8 @@
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FUNCTION'">
         <div class="form-group">
-            <label class="font-14 fw-300 text-dark" for="functionSelector">{{currNode?.options?.faas ? 'Selected' :
-                'Select'}}
+            <label class="font-14 fw-300 text-dark" for="functionSelector">
+                {{currNode?.options?.faas ? 'Selected' : 'Select'}}
                 Function
             </label>
             <div *ngIf="currNode?.options?.faas"
@@ -222,12 +232,14 @@
         </ng-container>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='RESPONSE'">
-        <div class="form-group">
+        <div class="form-group position-relative">
             <label class="font-14 fw-300 text-dark" for="nodeStatusCode">Status Code</label>
-            <input id="nodeStatusCode" type="text" class="form-control" [(ngModel)]="currNode.options.statusCode"
-                (ngModelChange)="changesDone.emit()">
+            <input id="nodeStatusCode" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.statusCode" (ngModelChange)="changesDone.emit()">
+            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.body">
+            </odp-node-data-selector>
         </div>
-        <div class="form-group">
+        <div class="form-group position-relative">
             <label class="font-14 fw-300 text-dark" for="nodeContentType">Content-Type</label>
             <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
                 (ngModelChange)="changesDone.emit()">
@@ -241,16 +253,13 @@
                 [(value)]="currNode.options.headers">
             </odp-add-headers>
         </div>
-        <!-- <div class="form-group">
+        <div *ngIf="currNode.options.contentType=='application/json'" class="form-group position-relative">
             <label class="font-14 fw-300 text-dark" for="nodeBody">Body</label>
-            <textarea id="nodeBody" class="form-control" cols="30" rows="4"
+            <textarea id="nodeBody" class="form-control dynamic-variable-addon" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea>
+            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.body">
+            </odp-node-data-selector>
         </div>
-        <div class="form-group">
-            <label class="font-14 fw-300 text-dark" for="nodeHeaders">Headers</label>
-            <textarea id="nodeHeaders" class="form-control" cols="30" rows="4"
-                [(ngModel)]="currNode.options.headers"></textarea>
-        </div> -->
     </ng-container>
 </div>
 
