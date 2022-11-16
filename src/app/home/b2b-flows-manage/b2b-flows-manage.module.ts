@@ -42,6 +42,7 @@ import { MongodbConnectorComponent } from './node-properties/connector-propertie
 import { RouteGuard } from '../../utils/guards/route.guard';
 import { NodeDataSelectorComponent } from './node-properties/node-data-selector/node-data-selector.component';
 import { AddHeadersComponent } from './node-properties/add-headers/add-headers.component';
+import { MssqlConnectorComponent } from './node-properties/connector-properties/mssql-connector/mssql-connector.component';
 
 const routes: Routes = [
   {
@@ -73,7 +74,8 @@ const routes: Routes = [
     KafkaConnectorComponent,
     MongodbConnectorComponent,
     NodeDataSelectorComponent,
-    AddHeadersComponent
+    AddHeadersComponent,
+    MssqlConnectorComponent
   ],
   imports: [
     CommonModule,
