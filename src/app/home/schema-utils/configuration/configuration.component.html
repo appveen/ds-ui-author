@@ -2,19 +2,19 @@
   <div class="sidenav p-4">
     <div class="d-flex flex-column text-muted">
       <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView('S')">
-        <span class="hover" (click)="activeTab=1" [ngClass]="{'text-dark fw-600': activeTab==1}">Data Settings</span>
+        <span class="hover" (click)="activeTab=1" [ngClass]="{'text-dark fw-600': activeTab==1}">Data</span>
       </div>
       <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView('S')">
-        <span class="hover" (click)="activeTab=2" [ngClass]="{'text-dark fw-600': activeTab==2}" id="postHooks">Search
-          Settings</span>
-      </div>
-      <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView('S')">
-        <span class="hover" (click)="activeTab=3" [ngClass]="{'text-dark fw-600': activeTab==3}" id="postHooks">Common
-          Settings</span>
+        <span class="hover" (click)="activeTab=2" [ngClass]="{'text-dark fw-600': activeTab==2}"
+          id="postHooks">Search</span>
       </div>
       <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView('S')">
         <span class="hover" (click)="activeTab=4" [ngClass]="{'text-dark fw-600': activeTab==4}"
-          id="connectorSettings">Connector Settings</span>
+          id="connectorSettings">Connector</span>
+      </div>
+      <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView('S')">
+        <span class="hover" (click)="activeTab=3" [ngClass]="{'text-dark fw-600': activeTab==3}"
+          id="postHooks">Common</span>
       </div>
     </div>
   </div>
