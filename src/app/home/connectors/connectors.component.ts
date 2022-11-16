@@ -301,16 +301,14 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/app/', this.app, 'con', id])
   }
 
-  checkDefault(id) {
+  // checkDefault(id) {
+  //   let defaultIds = [this.commonService.appData['connectors']?.data?._id, this.commonService.appData['connectors']?.file?._id];
+  //   return defaultIds.indexOf(id) > -1
+  // }
+
+  checkDSDefault(_id) {
     let defaultIds = [this.commonService.appData['connectors']?.data?._id, this.commonService.appData['connectors']?.file?._id];
-    if (defaultIds.length === 0) {
-      defaultIds = this.connectorList.map(ele => {
-        if (ele?.options?.default) {
-          return ele._id
-        }
-      })
-    }
-    return defaultIds.indexOf(id) > -1
+    return defaultIds.indexOf(_id) > -1
   }
 
   get app() {

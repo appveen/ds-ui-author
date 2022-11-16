@@ -55,8 +55,12 @@
             (dblclick)="navigate(connector._id)">
             <div class="d-flex align-items-center item-name text-dark fw-500">
               {{connector.name}}
-              <div class="d-flex align-items-center text-primary font-12 mt-auto" *ngIf="checkDefault(connector._id)">
+              <div class="d-flex align-items-center text-primary font-12 mt-auto" *ngIf="connector?.options?.default">
                 &nbsp;(Default)</div>
+              <div class="d-flex align-items-center mt-auto ml-1" *ngIf="checkDSDefault(connector._id)">
+                <span class="dsi dsi-info-circle text-info" ngbTooltip="This is the default connector for Data Services"
+                  placement="right"></span>
+              </div>
             </div>
 
             <div class="d-flex align-items-center sub-heading">
