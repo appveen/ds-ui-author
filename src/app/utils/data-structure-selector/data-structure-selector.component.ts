@@ -17,6 +17,7 @@ export class DataStructureSelectorComponent implements OnInit {
 
   showLoader: boolean;
   selectedType: string;
+  showWindow: boolean;
   constructor(
     private commonService: CommonService,
     private appService: AppService) {
@@ -37,23 +38,35 @@ export class DataStructureSelectorComponent implements OnInit {
 
 
   onTypeChange(type: string) {
+    if (this.selectedType === type) {
+      return;
+    }
+    if (type != 'generic') {
+      this.showWindow = true;
+    }
     this.selectedType = type;
     this.format = null;
     this.formatChange.emit(null);
-    if (type == 'dataFormat') {
-
-    } else if (type == 'customFormat') {
-
-    }
   }
 
   onFormatChange(data: any) {
-    console.log(data);
     this.format = data;
     this.formatChange.emit(data);
+    this.showWindow = false;
   }
 
-  get showWindow() {
-    return this.selectedType !== 'generic' && !this.format;
+  changeDataFormat() {
+    this.showWindow = true;
+  }
+
+  changeCustomFormat() {
+    this.showWindow = true;
+  }
+
+  closeWindow() {
+    this.showWindow = false;
+    if (!this.format) {
+      this.selectedType = 'generic';
+    }
   }
 }

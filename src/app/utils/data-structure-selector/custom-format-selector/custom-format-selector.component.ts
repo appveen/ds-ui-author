@@ -96,6 +96,6 @@ export class CustomFormatSelectorComponent implements OnInit {
 
   createFormat() {
     this.format.definition = this.definition;
-    this.formatChange.emit(this.format);
+    this.formatChange.emit(JSON.parse(JSON.stringify(this.format)));
   }
 }
