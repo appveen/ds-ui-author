@@ -14,7 +14,7 @@ export class NodeDataSelectorComponent implements OnInit {
   toggleNodeSelector: boolean;
   selectedNode: any;
   nodeDataField: string;
-  tempValue: string;
+  tempValue: Array<string>;
   tempDataKey: string;
   constructor() {
     this.nodeList = [];
@@ -22,6 +22,7 @@ export class NodeDataSelectorComponent implements OnInit {
       status: true
     };
     this.valueChange = new EventEmitter();
+    this.tempValue = [];
   }
 
   ngOnInit(): void {
@@ -35,11 +36,19 @@ export class NodeDataSelectorComponent implements OnInit {
 
   selectNode(item: any) {
     this.selectedNode = item;
-    this.tempValue = `node["${this.selectedNode._id}"]`;
+    if (item) {
+      this.tempValue.push(`node["${this.selectedNode._id}"]`);
+    } else {
+      this.tempValue.splice(0, 1);
+    }
   }
   selectNodeDataKey(dataKey: string) {
     this.nodeDataField = dataKey;
-    this.tempValue += `.${dataKey}`;
+    if (dataKey) {
+      this.tempValue.push(dataKey);
+    } else {
+      this.tempValue.splice(1, 1);
+    }
   }
 
   saveData() {
@@ -56,8 +65,8 @@ export class NodeDataSelectorComponent implements OnInit {
 
   get currentValue() {
     if (this.tempDataKey) {
-      return this.tempValue + '.' + this.tempDataKey;
+      return this.tempValue.join('.') + `['${this.tempDataKey}']`;
     }
-    return this.tempValue;
+    return this.tempValue.join('.');
   }
 }
