@@ -164,4 +164,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AppsRoutingModule {}
+export class AppsRoutingModule { }

@@ -11,15 +11,16 @@
     <div class="my-3">
         <div class="custom-alert d-flex align-items-center p-4 rounded">
             <span class="dsi dsi-danger-circle text-danger"></span>
-            <span class="ml-3 text-dark font-12 fw-400">"Changing the API endpoint would result in the data service
+            <span class="ml-3 text-dark font-12 fw-400">Changing the API endpoint would result in the data service
                 being not accessible for sometime. Unless you are fully aware of what you are doing, it is highly
-                recommended that you don't change the system generated endpoint"</span>
+                recommended that you don't change the system generated endpoint</span>
         </div>
     </div>
     <div class="d-flex flex-column w-100 mt-4 mb-3" *ngIf="canView('S')">
         <div class="d-flex justify-content-between">
             <span class="font-14 fw-700 mb-2">Properties</span>
-            <button *ngIf="edit.status && canEdit('S')" type="button" class="btn btn-link text-dark font-14 fw-500" (click)="openHeadersModal()">
+            <button *ngIf="edit.status && canEdit('S')" type="button" class="btn btn-link text-dark font-14 fw-500"
+                (click)="openHeadersModal()">
                 <span class="dsi dsi-plus-circle text-primary mr-2"></span>
                 <span class="text">Add Property</span>
             </button>
@@ -78,8 +79,8 @@
                     <span *ngIf="headerKey?.errors?.required"
                         class="text-danger position-absolute dsi dsi-danger-circle" container="body"
                         ngbTooltip="Key is required"></span>
-                    <span *ngIf="headerKey?.errors?.pattern"
-                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                    <span *ngIf="headerKey?.errors?.pattern" class="text-danger position-absolute dsi dsi-danger-circle"
+                        container="body"
                         ngbTooltip="Key can be only alphanumeric and can only contain underscore(_) and dash(-)"></span>
                 </ng-container>
             </div>

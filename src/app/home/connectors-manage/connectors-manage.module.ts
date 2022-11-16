@@ -14,9 +14,10 @@ import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
 import { PasswordFieldModule } from 'src/app/utils/password-field/password-field.module';
+import { RouteGuard } from '../../utils/guards/route.guard';
 
 const routes: Routes = [
-  { path: '', component: ConnectorsManageComponent }
+  { path: '', component: ConnectorsManageComponent, canDeactivate: [RouteGuard] }
 ];
 
 @NgModule({

@@ -93,7 +93,7 @@
       </div>
       <div class="builder-body d-flex flex-column w-100" *ngIf="hasAnyTabPermission">
         <ng-container *ngIf="activeTab == 0">
-          <div class="pl-4 my-3 d-flex align-items-center">
+          <!-- <div class="pl-4 my-3 d-flex align-items-center">
             <div class="d-flex align-items-center hover mr-3" (click)="toggleSchemaType(false)">
               <odp-round-radio size="18" [edit]="edit" [checked]="isSchemaFree==false"
                 (checkedChange)="toggleSchemaType(false)">
@@ -106,17 +106,7 @@
               </odp-round-radio>
               <span class="text ml-2">Schema Free</span>
             </div>
-            <!-- <div ngbDropdown class="d-inline-block">
-              <button type="button" class="btn btn-outline-secondary" id="dropdownBasic1" ngbDropdownToggle
-                [disabled]="!edit.status">{{isSchemaFree ? "Schema Free Design": "Schema Designer"}}</button>
-              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <button ngbDropdownItem type="button" (click)='toggleSchemaType(true)' *ngIf="!isSchemaFree">Schema Free
-                  Design</button>
-                <button ngbDropdownItem type="button" (click)='toggleSchemaType(false)' *ngIf="isSchemaFree">Schema
-                  Designer</button>
-              </div>
-            </div> -->
-          </div>
+          </div> -->
           <div *ngIf="isSchemaFree" class="schema-free d-flex align-items-center justify-content-center">
             <div class="text-center w-25">
               <img src="./assets/img/Book.png" alt="Schema Free">
@@ -303,6 +293,8 @@
     </div>
     <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
     <div class="d-flex align-items-center justify-content-end">
+      <button type="button" class="btn btn-min-width btn-outline-primary mx-3"
+        (click)="pageChangeModalTemplateRef.close(false)">No</button>
       <button type="button" class="btn btn-min-width btn-primary"
         (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
     </div>

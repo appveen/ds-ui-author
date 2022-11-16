@@ -159,7 +159,7 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
       this.updatedGrpName = res.name;
       this.updatedGrpDesc = res.description;
       this.showLazyLoader = false;
-      this.ts.success('Group saved sucessfully');
+      this.ts.success('Connector saved successfully');
       this.connector = res;
       this.oldData = this.appService.cloneObject(this.connector);
       this.router.navigate(['/app', this.commonService.app._id, 'con']);
@@ -211,11 +211,13 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
   }
 
   isChangesDone() {
-    if (this.updatedGrpName.length > 0 || this.updatedGrpDesc.length > 0) {
-      return false;
-    } else {
-      return !(this.connector.name === this.oldData.name && this.connector.description === this.oldData.description);
-    }
+    const isEqual = _.isEqual(this.connector, this.oldData)
+    return !isEqual;
+    // if (this.updatedGrpName.length > 0 || this.updatedGrpDesc.length > 0) {
+    //   return false;
+    // } else {
+    //   return !(this.connector.name === this.oldData.name && this.connector.description === this.oldData.description);
+    // }
   }
   canDeactivate(): Promise<boolean> | boolean {
     if (this.isChangesDone()) {
@@ -232,7 +234,12 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
   }
 
   setValue(field: string, value: string) {
-    this.connector.values[field] = value;
+    if (!value) {
+      delete this.connector.values[field]
+    }
+    else {
+      this.connector.values[field] = value;
+    }
   }
 
   getValue(field: string) {

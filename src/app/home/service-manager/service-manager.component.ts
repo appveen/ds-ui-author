@@ -63,6 +63,9 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   selectedItemEvent: any;
   sortModel: any;
   connectorList: Array<any>;
+  defaultDC: any;
+  defaultFC: any;
+  mongoList: any[];
   constructor(
     public commonService: CommonService,
     private appService: AppService,
@@ -91,7 +94,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       connectors: connectorForm,
-      description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]]
+      description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
+      schemaFree: []
     });
 
     this.cloneForm = this.fb.group({
@@ -197,10 +201,15 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
       .pipe(switchMap((ev: any) => {
-        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev });
+        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type, options, _metadata' });
       }))
       .subscribe(res => {
         this.connectorList = res;
+        this.mongoList = res.filter(ele => ele.type === 'MONGODB');
+        if (res.length > 0) {
+          this.defaultDC = res.filter(ele => ele.category === 'DB').find(ele => this.checkDefault(ele._id))?._id;
+          this.defaultFC = res.filter(ele => ele.category === 'STORAGE').find(ele => this.checkDefault(ele._id))?._id;
+        }
         this.appService.connectorsList = res;
       }, err => {
         this.commonService.errorToast(err, 'We are unable to fetch records, please try again later');
@@ -219,6 +228,13 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   newService() {
     this.form.reset({ name: this.searchTerm });
+    this.form.get('schemaFree').setValue(false);
+    this.form.get('connectors').get('data').setValue({
+      _id: this.defaultDC
+    })
+    this.form.get('connectors').get('file').setValue({
+      _id: this.defaultFC
+    })
     this.showNewServiceWindow = true;
   }
 
@@ -280,21 +296,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   triggerServiceCreate() {
-    if (this.dataConnectors.length === 1 || !this.form.get('connectors').get('data').value) {
-      this.form.get('connectors').get('data').setValue({
-        _id: this.dataConnectors[0]?._id || ''
-      })
-    }
-    if (this.fileConnectors.length === 1 || !this.form.get('connectors').get('file').value) {
-      this.form.get('connectors').get('file').setValue({
-        _id: this.fileConnectors[0]?._id || ''
-      })
-    }
-    // if (this.connectorList.length === 1) {
-    //   this.form.get('connectors').get('data').setValue({
-    //     _id: this.connectorList[0]._id
-    //   })
-    // }
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     this.showLazyLoader = true;
@@ -897,6 +898,25 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     })
   }
 
+  toggleSchemaType(schemaFree) {
+    this.form.get('schemaFree').setValue(schemaFree);
+    if (schemaFree) {
+      this.form.get('connectors').reset();
+      this.form.get('connectors').get('data').setValue({
+        _id: this.mongoList[0]._id
+      });
+      this.form.get('connectors').get('file').setValue({});
+    }
+    else {
+      this.form.get('connectors').get('data').setValue({
+        _id: this.defaultDC
+      })
+      this.form.get('connectors').get('file').setValue({
+        _id: this.defaultFC
+      })
+    }
+  }
+
   private compare(a: any, b: any) {
     if (a > b) {
       return 1;
@@ -964,7 +984,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   get dataConnectors() {
-    const list = this.connectorList?.filter(ele => ele.category === 'DB').sort((a, b) => {
+    const typeList = this.form.get('schemaFree').value ? this.mongoList : this.connectorList
+    const list = typeList?.filter(ele => ele.category === 'DB').sort((a, b) => {
       if (a.name < b.name) {
         return -1;
       }

@@ -18,12 +18,12 @@
         [routerLink]="['settings']" *ngIf="isAppAdmin || isSuperAdmin">
         <span class="dsi dsi-settings text-secondary"></span>
       </button>
-      <button *ngIf="isExperimental" type="button" class="btn btn-white d-flex align-items-center border ml-3"
+      <!-- <button *ngIf="isExperimental" type="button" class="btn btn-white d-flex align-items-center border ml-3"
         (click)="toggleImportWizard=true">
         <span class="dsi dsi-upload text-secondary"></span>
-      </button>
+      </button> -->
       <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3 d-flex align-items-center"
-        (click)="newService()" *ngIf="hasCreatePermission('SM')">
+        (click)="newService()" *ngIf="hasCreatePermission('SM') && hasCreatePermission('CON')">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New</span>
       </button>
@@ -203,8 +203,9 @@
         <sup class="text-danger font-normal high-zIndex sup-top" ngbTooltip="Mandatory field">*</sup>
       </label>
       <div class="name-wrapper position-relative">
-        <input newServiceName autocomplete="off" type="text" class="form-control" id="name" placeholder="Untitled Service"
-          formControlName="name" odpAutoFocus (keyup.enter)="triggerServiceCreate()" [ngClass]="{
+        <input newServiceName autocomplete="off" type="text" class="form-control" id="name"
+          placeholder="Untitled Service" formControlName="name" odpAutoFocus (keyup.enter)="triggerServiceCreate()"
+          [ngClass]="{
             'is-invalid': form.get('name').invalid && form.get('name').dirty
           }" />
         <ng-container *ngIf="form.get('name').dirty">
@@ -220,6 +221,20 @@
         </ng-container>
       </div>
     </div>
+    <div class="mb-3 mt-2 d-flex align-items-center">
+      <div class="d-flex align-items-center hover mr-3" (click)="toggleSchemaType(false)">
+        <odp-round-radio size="18" [edit]="true" [checked]="form.get('schemaFree').value==false"
+          (checkedChange)="toggleSchemaType(false)">
+        </odp-round-radio>
+        <span class="text ml-2">Schema Based</span>
+      </div>
+      <div class="d-flex align-items-center hover" (click)="toggleSchemaType(true)">
+        <odp-round-radio size="18" [edit]="true" [checked]="form.get('schemaFree').value==true"
+          (checkedChange)="toggleSchemaType(true)">
+        </odp-round-radio>
+        <span class="text ml-2">Schema Free</span>
+      </div>
+    </div>
     <div class="form-group">
       <label class="font-13 text-secondary" for="category">Data Connector</label>
       <select id="data" class="form-control" (change)="selectConnector($event,'data')">
@@ -227,7 +242,7 @@
           [selected]="checkDefault(connector._id)">{{connector.name}}</option>
       </select>
     </div>
-    <div class="form-group">
+    <div class="form-group" *ngIf="!form.get('schemaFree').value">
       <label class="font-13 text-secondary" for="category">File Connector</label>
       <select id="file" class="form-control" (change)="selectConnector($event,'file')">
         <option [value]="connector._id" *ngFor="let connector of fileConnectors"
@@ -261,8 +276,8 @@
           <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
         </label>
         <div class="name-wrapper position-relative">
-          <input cloneServiceName autocomplete="off" type="text" class="form-control" id="name" placeholder="Untitled Service"
-            formControlName="name" odpAutoFocus [ngClass]="{
+          <input cloneServiceName autocomplete="off" type="text" class="form-control" id="name"
+            placeholder="Untitled Service" formControlName="name" odpAutoFocus [ngClass]="{
               'is-invalid': form.get('name').invalid && form.get('name').dirty
             }" />
           <ng-container *ngIf="form.get('name').dirty">

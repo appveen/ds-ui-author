@@ -11,7 +11,7 @@
     <div class="fw-600 font-22">Connectors</div>
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
-      <button class="add-new btn btn-primary ml-3 d-flex align-items-center" *ngIf="hasManagePermission('GS')"
+      <button class="add-new btn btn-primary ml-3 d-flex align-items-center" *ngIf="hasManagePermission('CON')"
         (click)="newConnector()">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New</span>
@@ -55,7 +55,7 @@
             (dblclick)="navigate(connector._id)">
             <div class="d-flex align-items-center item-name text-dark fw-500">
               {{connector.name}}
-              <div class="d-flex align-items-center text-primary font-12 mt-auto" *ngIf="connector?.options?.default">
+              <div class="d-flex align-items-center text-primary font-12 mt-auto" *ngIf="checkDefault(connector._id)">
                 &nbsp;(Default)</div>
             </div>
 
@@ -76,7 +76,8 @@
             <div class="item-actions d-flex align-items-center justify-content-end">
               <span id="con-view" class="fw-600 font-13 hover mr-3"
                 [routerLink]="['/app/',app,'con',connector._id]">View</span>
-              <span *ngIf="connector.name!= 'Default DB Connector' && connector.name!= 'Default File Connector'" id="con-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
+              <span *ngIf="connector.name!= 'Default DB Connector' && connector.name!= 'Default File Connector'"
+                id="con-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
                 (click)="showDropDown($event,i)"></span>
               <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed border"
                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
@@ -116,8 +117,8 @@
         <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
       </label>
       <div class="name-wrapper position-relative">
-        <input newConnectorName type="text" autocomplete="off" class="form-control" id="name" placeholder="Untitled Connector"
-          formControlName="name" odpAutoFocus
+        <input newConnectorName type="text" autocomplete="off" class="form-control" id="name"
+          placeholder="Untitled Connector" formControlName="name" odpAutoFocus
           [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
         <ng-container *ngIf="form.get('name').dirty">
           <span *ngIf="form.get('name').hasError('required')"

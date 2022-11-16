@@ -226,6 +226,10 @@ input[type="number"]::-webkit-outer-spin-button {
   background: url("../img/bookmarkActive.svg");
 }
 
+.no-logs {
+  background-image: url("../img/no-logs.svg");
+}
+
 @keyframes rotate {
   to {
     transform: rotate(360deg);
