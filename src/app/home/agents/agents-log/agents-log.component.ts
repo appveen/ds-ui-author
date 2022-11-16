@@ -10,7 +10,6 @@ import { APIConfig } from 'src/app/utils/interfaces/apiConfig';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
-import { data } from 'src/app/home/agents/agents-log/sample';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Breadcrumb } from '../../../utils/interfaces/breadcrumb';
 
@@ -126,7 +125,7 @@ export class AgentsLogComponent implements OnInit {
   getLogs() {
     const self = this;
     self.commonService.get('partnerManager', `/${self.commonService.app._id}/agent/utils/${this.agentDetails.agentId}/logs`, {}).subscribe(res => {
-      this.agentLogObject = res.agentLogs.length > 0 ? res.agentLogs.length : data.agentLogs
+      this.agentLogObject = res.agentLogs
     });
   }
 

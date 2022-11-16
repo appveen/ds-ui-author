@@ -195,7 +195,7 @@ export class DataManagementComponent implements OnInit {
 
   getConnectors() {
     const filter = {
-      "options.IsValid": true
+      "options.isValid": true
     }
     this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
       .pipe(switchMap((ev: any) => {

@@ -54,7 +54,7 @@ export class ConnectorSettingsComponent implements OnInit {
 
   getConnectorsApi() {
     const filter = {
-      "options.IsValid": true
+      "options.isValid": true
     }
     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
       .pipe(switchMap((ev: any) => {

@@ -196,7 +196,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   getConnectors() {
     const filter = {
-      "options.IsValid": true
+      "options.isValid": true
     }
     if (this.subscriptions?.['getConnectors']) {
       this.subscriptions['getConnectors'].unsubscribe();
