@@ -136,9 +136,12 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     this.getAvailableConnectors();
     this.showLazyLoader = true;
     this.connectorList = [];
+    const filter = {
+      "options.IsValid": true
+    }
     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
       .pipe(switchMap((ev: any) => {
-        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type, options, _metadata' });
+        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type, options, _metadata', filter: filter });
       }))
       .subscribe(res => {
         this.showLazyLoader = false;
