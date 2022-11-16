@@ -136,9 +136,12 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     this.getAvailableConnectors();
     this.showLazyLoader = true;
     this.connectorList = [];
+    const filter = {
+      "options.isValid": true
+    }
     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
       .pipe(switchMap((ev: any) => {
-        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type, options, _metadata' });
+        return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: '_id, name, category, type, options, _metadata', filter: filter });
       }))
       .subscribe(res => {
         this.showLazyLoader = false;
@@ -301,16 +304,14 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/app/', this.app, 'con', id])
   }
 
-  checkDefault(id) {
+  // checkDefault(id) {
+  //   let defaultIds = [this.commonService.appData['connectors']?.data?._id, this.commonService.appData['connectors']?.file?._id];
+  //   return defaultIds.indexOf(id) > -1
+  // }
+
+  checkDSDefault(_id) {
     let defaultIds = [this.commonService.appData['connectors']?.data?._id, this.commonService.appData['connectors']?.file?._id];
-    if (defaultIds.length === 0) {
-      defaultIds = this.connectorList.map(ele => {
-        if (ele?.options?.default) {
-          return ele._id
-        }
-      })
-    }
-    return defaultIds.indexOf(id) > -1
+    return defaultIds.indexOf(_id) > -1
   }
 
   get app() {
