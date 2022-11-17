@@ -23,7 +23,7 @@
         <span class="dsi dsi-upload text-secondary"></span>
       </button> -->
       <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3 d-flex align-items-center"
-        (click)="newService()" *ngIf="hasCreatePermission('SM') && hasCreatePermission('CON')">
+        (click)="newService()" *ngIf="hasCreatePermission('SM') && hasPermission('PMCON','CON')">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New</span>
       </button>
