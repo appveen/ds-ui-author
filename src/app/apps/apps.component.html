@@ -57,13 +57,12 @@
         </div>
       </div>
 
-      <ng-container>
-        <div class="icon-block-group text-secondary border-top border-border pt-3" *ngIf="
-            hasPermission('PMDS') ||
-            hasPermission('PVDS') ||
-            hasPermission('PML') ||
-            hasPermission('PVL')
-          ">
+      <ng-container *ngIf="
+      hasConnectorsPermission||
+      hasDataFormatPermission||
+      hasAgentsPermission
+    ">
+        <div class="icon-block-group text-secondary border-top border-border pt-3">
           <span *ngIf="showSideNav" class="nav-active d-flex align-items-center">
             <span>INTEGRATION</span>
             <span class="text-uppercase ml-2 text-primary font-10">(beta)</span>
