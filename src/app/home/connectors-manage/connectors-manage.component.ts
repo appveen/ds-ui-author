@@ -38,6 +38,7 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
   oldData: any;
   edit: any;
   availableConnectors: Array<any>;
+  isDeleted: boolean = false;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -142,9 +143,9 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
     const payload = this.appService.cloneObject(this.connector);
     delete payload?.options
     let response;
-    if (_.isEmpty(payload.values)) {
-      delete payload.values
-    }
+    // if (_.isEmpty(payload.values)) {
+    //   delete payload.values
+    // }
     payload.app = this.commonService.app._id;
     if (!this.canEditGroup) {
       delete payload.name;
@@ -184,11 +185,12 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
 
   closeDeleteModal(data) {
     if (data) {
+      this.isDeleted = true
       const url = `/${this.commonService.app._id}/connector/${data._id}`
       this.showLazyLoader = true;
       this.subscriptions['deleteConnector'] = this.commonService.delete('user', url).subscribe(d => {
         this.showLazyLoader = false;
-        this.ts.success('Group deleted sucessfully');
+        this.ts.success('Connector deleted sucessfully');
         this.router.navigate(['/app', this.commonService.app._id, 'con']);
       }, err => {
         this.showLazyLoader = false;
@@ -217,14 +219,9 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
   isChangesDone() {
     const isEqual = _.isEqual(this.connector, this.oldData)
     return !isEqual;
-    // if (this.updatedGrpName.length > 0 || this.updatedGrpDesc.length > 0) {
-    //   return false;
-    // } else {
-    //   return !(this.connector.name === this.oldData.name && this.connector.description === this.oldData.description);
-    // }
   }
   canDeactivate(): Promise<boolean> | boolean {
-    if (this.isChangesDone()) {
+    if (this.isChangesDone() && !this.isDeleted) {
       return new Promise((resolve, reject) => {
         this.pageChangeModalTemplateRef = this.commonService.modal(this.pageChangeModalTemplate);
         this.pageChangeModalTemplateRef.result.then(close => {
