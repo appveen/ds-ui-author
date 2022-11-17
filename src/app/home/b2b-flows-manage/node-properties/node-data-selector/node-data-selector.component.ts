@@ -37,7 +37,7 @@ export class NodeDataSelectorComponent implements OnInit {
   selectNode(item: any) {
     this.selectedNode = item;
     if (item) {
-      this.tempValue.push(`node["${this.selectedNode._id}"]`);
+      this.tempValue.push(`node['${this.selectedNode._id}']`);
     } else {
       this.tempValue.splice(0, 1);
     }
