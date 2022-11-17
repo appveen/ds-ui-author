@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'odp-add-headers',
@@ -48,7 +49,16 @@ export class AddHeadersComponent implements OnInit {
   }
 
   save() {
-    this.currNode.options.headers = this.headerList.reduce((prev, curr) => {
+    if (this.currNode.options.headers && !_.isEmpty(this.currNode.options.headers)) {
+      Object.keys(this.currNode.options.headers).forEach(key => {
+        delete this.currNode.options.headers[key];
+      });
+    }
+    if (!this.currNode.options.headers) {
+      this.currNode.options.headers = {};
+    }
+    this.headerList.reduce((prev, curr) => {
+      this.currNode.options.headers[curr.key] = curr.value;
       prev[curr.key] = curr.value;
       return prev;
     }, {});
