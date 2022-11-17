@@ -20,7 +20,8 @@
                         <span>Cancel</span>
                     </button>
                     <ng-container *ngIf="hasPermissionStartsWith('PMCON')">
-                        <button *ngIf="!edit.status" class="btn btn-primary btn-min-width" (click)="edit.status=true" [disabled]="connector.name === 'Default DB Connector' || connector.name === 'Default File Connector'">
+                        <button *ngIf="!edit.status" class="btn btn-primary btn-min-width" (click)="edit.status=true"
+                            [disabled]="connector.name === 'Default DB Connector' || connector.name === 'Default File Connector'">
                             <span>Edit</span>
                         </button>
                         <button *ngIf="edit.status" class="btn btn-primary btn-min-width" (click)="saveConnector()">
@@ -34,7 +35,7 @@
             <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-4">
                 <div class="form-group">
                     <label class="text-secondary font-12 fw-500" for="type">Select Connector Type</label>
-                    <select id="type" class="form-control" [(ngModel)]="connector.type" [disabled]="!edit.status"
+                    <select id="type" class="form-control" [(ngModel)]="connector.type" [disabled]="true"
                         (ngModelChange)="onTypeChange($event)">
                         <option value="">--select--</option>
                         <option *ngFor="let item of availableConnectors" [value]="item.type">{{item.label}}</option>
