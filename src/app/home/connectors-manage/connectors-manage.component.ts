@@ -239,7 +239,7 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
 
   setValue(field: string, value: string) {
     if (!value) {
-      delete this.connector.values[field]
+      this.connector.values[field] = null;
     }
     else {
       this.connector.values[field] = value;
