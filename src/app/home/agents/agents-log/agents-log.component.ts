@@ -421,7 +421,7 @@ export class AgentsLogComponent implements OnInit {
     if (this.resetPasswordForm.invalid) {
       return;
     } else {
-      this.commonService.put('partner', `/${this.commonService.app._id}/agent/utils/${this.agentDetails._id}/password`, payload)
+      this.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/utils/${this.agentDetails._id}/password`, payload)
         .subscribe(() => {
           this.resetPasswordForm.reset()
           this.ts.success('Password changed successfully');
