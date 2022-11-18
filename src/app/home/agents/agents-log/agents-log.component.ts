@@ -12,6 +12,7 @@ import { CommonService, GetOptions } from 'src/app/utils/services/common.service
 import { environment } from 'src/environments/environment';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Breadcrumb } from '../../../utils/interfaces/breadcrumb';
+import * as _ from 'lodash'
 
 @Component({
   selector: 'odp-agents-log',
@@ -62,6 +63,7 @@ export class AgentsLogComponent implements OnInit {
   };
   openDeleteModal: EventEmitter<any> = new EventEmitter();
   breadcrumbPaths: Array<Breadcrumb>;
+  completeLogs: Array<any> = [];
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -124,9 +126,22 @@ export class AgentsLogComponent implements OnInit {
 
   getLogs() {
     const self = this;
+    this.showLazyLoader = true;
     self.commonService.get('partnerManager', `/${self.commonService.app._id}/agent/utils/${this.agentDetails.agentId}/logs`, {}).subscribe(res => {
-      this.agentLogObject = res.agentLogs
+      this.agentLogObject = res.agentLogs;
+      this.completeLogs = res.agentLogs;
+      this.showLazyLoader = false;
     });
+  }
+
+  filterLevel(event) {
+    console.log(event.target.value)
+    if (event.target.value !== 'ALL') {
+      this.agentLogObject = this.completeLogs.filter(ele => ele.logLevel === event.target.value)
+    }
+    else {
+      this.agentLogObject = _.cloneDeep(this.completeLogs)
+    }
   }
 
   getAgentDetails() {
@@ -406,7 +421,7 @@ export class AgentsLogComponent implements OnInit {
     if (this.resetPasswordForm.invalid) {
       return;
     } else {
-      this.commonService.put('agent', `/${this.commonService.app._id}/agent/utils/${this.agentDetails._id}/password`, payload)
+      this.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/utils/${this.agentDetails._id}/password`, payload)
         .subscribe(() => {
           this.resetPasswordForm.reset()
           this.ts.success('Password changed successfully');
@@ -509,5 +524,6 @@ export class AgentsLogComponent implements OnInit {
       (self.resetPasswordForm.get('cpassword').dirty && self.matchPwd)
     );
   }
+
 
 }

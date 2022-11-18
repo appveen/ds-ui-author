@@ -320,7 +320,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
         if (this.resetPasswordForm.invalid) {
             return;
         } else {
-            this.commonService.put('agent', `/${this.commonService.app._id}/agent/utils/${this.agentData._id}/password`, payload)
+            this.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/utils/${this.agentData._id}/password`, payload)
                 .subscribe(() => {
                     this.resetPasswordForm.reset()
                     this.getAgentList();
