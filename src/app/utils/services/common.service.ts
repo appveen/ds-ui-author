@@ -47,6 +47,7 @@ import { Breadcrumb } from '../interfaces/breadcrumb';
   providedIn: 'root',
 })
 export class CommonService {
+  invokeEvent: Subject<any> = new Subject();
   private autoRefreshRoutine: any;
   private heartBeatRoutine: any;
   private sessionWarningRoutine: any;
@@ -198,6 +199,10 @@ export class CommonService {
         }
       };
     });
+  }
+
+  getconnectors() { 
+    this.invokeEvent.next()
   }
 
   afterAuthentication(): Promise<any> {
