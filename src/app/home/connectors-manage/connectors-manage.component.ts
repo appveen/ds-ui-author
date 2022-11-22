@@ -257,7 +257,7 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
   }
 
   get canEditGroup() {
-    if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
+    if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin || this.hasPermissionStartsWith('PMCON')) {
       return true;
     } else {
       const list = this.commonService.getEntityPermissions('CON');
