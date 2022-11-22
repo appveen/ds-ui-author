@@ -116,6 +116,9 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.selectedService = {};
     this.showOptionsDropdown = {};
     this.sortModel = {};
+    this.commonService.invokeEvent.subscribe(value => {
+       this.getConnectors();
+    }); 
   }
 
   ngOnInit() {
