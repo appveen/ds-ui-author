@@ -303,7 +303,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
 
 
     getAgentPassword(id) {
-        this.commonService.get('agent', `/${this.commonService.app._id}/agent/utils/${id}/password`
+        this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/${id}/password`
         ).subscribe(res => {
             this.agentData['thePassword'] = res?.password || ''
         }, err => {
