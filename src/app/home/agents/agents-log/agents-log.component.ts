@@ -404,7 +404,7 @@ export class AgentsLogComponent implements OnInit {
 
 
   getAgentPassword(id) {
-    this.commonService.get('agent', `/${this.commonService.app._id}/agent/utils/${id}/password`
+    this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/${id}/password`
     ).subscribe(res => {
       this.agentDetails['thePassword'] = res?.password || ''
     }, err => {
