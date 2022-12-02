@@ -93,6 +93,10 @@ export class AppListComponent implements OnInit, OnDestroy {
   userDetails: UserDetails;
   isSuperadmin: boolean;
   showNewAppWindow: boolean;
+  showOptionsDropdown: any;
+  selectedItemEvent: any;
+  selectedService: any;
+  sortModel: any;
   constructor(
     private commonService: CommonService,
     private appService: AppService,
@@ -130,6 +134,9 @@ export class AppListComponent implements OnInit, OnDestroy {
       }),
     });
     this.timezones = this.appService.getTimezones();
+    this.sortModel={};
+    this.selectedService = {};
+    this.showOptionsDropdown = {};
   }
 
   ngOnInit() {
@@ -328,5 +335,36 @@ export class AppListComponent implements OnInit, OnDestroy {
       '#E6EE9C',
     ];
     return _.sample(colorArray);
+  }
+
+  applySort(field: string) {
+    if (!this.sortModel[field]) {
+      this.sortModel = {};
+      this.sortModel[field] = 1;
+    } else if (this.sortModel[field] == 1) {
+      this.sortModel[field] = -1;
+    } else {
+      delete this.sortModel[field];
+    }
+  }
+
+  showDropDown(event: any, id: string) {
+    this.selectedItemEvent = event;
+    Object.keys(this.showOptionsDropdown).forEach(key => {
+      this.showOptionsDropdown[key] = false;
+    })
+    this.selectedService = this.appList.find(e => e._id == id);
+    this.showOptionsDropdown[id] = true;
+  }
+
+  get dropDownStyle() {
+    let top = (this.selectedItemEvent.clientY + 10);
+    if (this.selectedItemEvent.clientY > 430) {
+      top = this.selectedItemEvent.clientY - 106
+    }
+    return {
+      top: top + 'px',
+      right: '50px'
+    };
   }
 }

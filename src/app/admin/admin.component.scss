@@ -59,22 +59,13 @@
   overflow-y: auto;
 }
 
-.sub-header {
-  min-height: 60px;
-  max-height: 60px;
+.item {
+  color: $dark;
+  outline: none !important;
 
-  .item {
-    min-height: 60px;
-    max-height: 60px;
-    min-width: 90px;
-    color: $light;
-    border-bottom: 4px solid transparent;
-    outline: none !important;
-
-    &.active {
-      color: lighten($primary, 20%);
-      border-color: lighten($primary, 20%);
-    }
+  .active {
+    font-weight: 700;
+    border-bottom: 2px solid #FF6F00;;
   }
 }
 
