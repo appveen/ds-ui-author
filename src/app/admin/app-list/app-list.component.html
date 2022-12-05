@@ -92,11 +92,11 @@
           <div class="d-flex align-items-center justify-content-end w-100">
             <div class="item-actions"></div>
           </div>
-          <ng-container *ngIf="!appList || appList.length == 0">
-            <odp-loading-placeholder width="48" height="48" *ngFor="let app of dummyRows" class="mt-5 mx-5">
-            </odp-loading-placeholder>
-          </ng-container>
         </div>
+        <ng-container *ngIf="!appList || appList.length == 0">
+          <odp-loading-placeholder *ngFor="let app of dummyRows" class="list-group-item">
+          </odp-loading-placeholder>
+        </ng-container>
         <ng-container *ngFor="let app of appList | filterApp: searchTerm; let appIndex = index">
           <div class="list-group-item d-flex align-items-center justify-content-start" (dblclick)="useApp(app._id)">
             <div class="item-name fw-500 d-flex align-items-center">

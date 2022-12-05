@@ -28,6 +28,7 @@ import { FilterPipe } from 'src/app/utils/pipes/filter.pipe';
 import { AppService } from 'src/app/utils/services/app.service';
 import { UserDetails } from '../../definitions/userDetails';
 import * as _ from 'lodash';
+import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 
 @Component({
   selector: 'odp-app-list',
@@ -64,7 +65,7 @@ import * as _ from 'lodash';
       ]),
     ]),
   ],
-  providers: [FilterPipe],
+  providers: [FilterPipe, CommonFilterPipe],
 })
 export class AppListComponent implements OnInit, OnDestroy {
 
@@ -103,6 +104,7 @@ export class AppListComponent implements OnInit, OnDestroy {
     private router: Router,
     private fb: FormBuilder,
     private ts: ToastrService,
+    private commonPipe:CommonFilterPipe,
     private appFilter: FilterPipe
   ) {
     const self = this;
@@ -337,6 +339,16 @@ export class AppListComponent implements OnInit, OnDestroy {
     return _.sample(colorArray);
   }
 
+  private compare(a: any, b: any) {
+    if (a > b) {
+      return 1;
+    } else if (a < b) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
   applySort(field: string) {
     if (!this.sortModel[field]) {
       this.sortModel = {};
@@ -346,6 +358,35 @@ export class AppListComponent implements OnInit, OnDestroy {
     } else {
       delete this.sortModel[field];
     }
+  }
+
+  get records() {
+    let records = this.commonPipe.transform(this.appList, 'name', this.searchTerm);
+    const field = Object.keys(this.sortModel)[0];
+    if (field) {
+      records = records.sort((a, b) => {
+        if (this.sortModel[field] == 1) {
+          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+            return this.compare((a[field]), (b[field]));
+          } else {
+            return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
+          }
+        } else if (this.sortModel[field] == -1) {
+          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+            return this.compare((b[field]), (a[field]));
+          } else {
+            return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
+          }
+        } else {
+          return 0;
+        }
+      });
+    } else {
+      records = records.sort((a, b) => {
+        return this.compare(b._metadata.lastUpdated, a._metadata.lastUpdated);
+      });
+    }
+    return records;
   }
 
   showDropDown(event: any, id: string) {
