@@ -152,8 +152,9 @@
                 <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
             </label>
             <div class="name-wrapper position-relative mb-3">
-                <input newFlowName autocomplete="off" type="text" class="form-control" id="name" placeholder="Untitled Flow"
-                    formControlName="name" odpAutoFocus (keyup.enter)="triggerFlowCreate()"
+                <input newFlowName autocomplete="off" type="text" class="form-control" id="name"
+                    placeholder="Untitled Flow" formControlName="name" odpAutoFocus
+                    (keyup.enter)="isClone ? triggerFlowClone() : triggerFlowCreate()"
                     [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
                 <ng-container *ngIf="form.get('name').dirty">
                     <span *ngIf="form.get('name').hasError('required')"
@@ -199,7 +200,7 @@
     </div>
     <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
         <button type="button" class="btn btn-min-width btn-primary w-100" id="newFlowModalYes" [disabled]="form.invalid"
-            (click)="triggerFlowCreate()">Create</button>
+            (click)="isClone ? triggerFlowClone() : triggerFlowCreate()">Create</button>
     </div>
 </div>
 
