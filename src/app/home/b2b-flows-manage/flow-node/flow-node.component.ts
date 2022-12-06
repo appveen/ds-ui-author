@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { delay, tap } from 'rxjs/operators';
 import { B2bFlowService } from '../b2b-flow.service';
+import { B2bFlowsManageComponent } from '../b2b-flows-manage.component';
 
 @Component({
   selector: '[odp-flow-node]',
@@ -20,7 +21,8 @@ export class FlowNodeComponent implements OnInit {
   clickEventPos: any;
   addTo: string;
   isNodeSelected: boolean;
-  constructor(private flowService: B2bFlowService) {
+  constructor(private flowService: B2bFlowService,
+    public b2bflowsmanage: B2bFlowsManageComponent) {
     this.nodeList = [];
     this.node = {};
     this.nodeListChange = new EventEmitter();
@@ -45,15 +47,19 @@ export class FlowNodeComponent implements OnInit {
   }
 
   showBranchDropdown(event: any, branchIndex?: number) {
-    this.clickEventPos = { left: event.clientX, top: event.clientY };
-    this.showNewNodeDropdown = true;
+    if(this.b2bflowsmanage.edit.status){
+      this.clickEventPos = { left: event.clientX, top: event.clientY };
+      this.showNewNodeDropdown = true;
+    }
   }
 
   selectNode() {
-    this.flowService.selectedNode.emit({
-      currNode: this.currNode,
-      prevNode: this.prevNode,
-    });
+    if(this.b2bflowsmanage.edit.status){
+      this.flowService.selectedNode.emit({
+        currNode: this.currNode,
+        prevNode: this.prevNode,
+      });
+    }
   }
 
   deleteNode() {
