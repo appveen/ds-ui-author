@@ -93,11 +93,11 @@
             <div class="item-actions"></div>
           </div>
         </div>
-        <ng-container *ngIf="!appList || appList.length == 0">
+        <ng-container *ngIf="!records || records.length == 0">
           <odp-loading-placeholder *ngFor="let app of dummyRows" class="list-group-item">
           </odp-loading-placeholder>
         </ng-container>
-        <ng-container *ngFor="let app of appList | filterApp: searchTerm; let appIndex = index">
+        <ng-container *ngFor="let app of records | filterApp: searchTerm; let appIndex = index">
           <div class="list-group-item d-flex align-items-center justify-content-start" (dblclick)="useApp(app._id)">
             <div class="item-name fw-500 d-flex align-items-center">
               <span class="ml-2 pl-1 text-dark hover app-name"  [ngbTooltip]="app._id"

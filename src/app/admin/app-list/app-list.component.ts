@@ -361,7 +361,7 @@ export class AppListComponent implements OnInit, OnDestroy {
   }
 
   get records() {
-    let records = this.commonPipe.transform(this.appList, 'name', this.searchTerm);
+    let records = this.commonPipe.transform(this.appList, '_id', this.searchTerm);
     const field = Object.keys(this.sortModel)[0];
     if (field) {
       records = records.sort((a, b) => {
