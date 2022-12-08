@@ -720,10 +720,10 @@ export class LocalBotComponent implements OnInit {
   }
   getUserTeam() {
     const self = this;
+    self.showLazyLoader = true;
     self.userGroupConfig.filter.users = self.selectedBot._id;
     self.userGroupConfig.count = -1;
-    self.showLazyLoader = true;
-
+    self.userTeams=[];
     self.subscriptions['userTeams'] = self.commonService
       .get(
         'user',
@@ -732,12 +732,17 @@ export class LocalBotComponent implements OnInit {
       )
       .subscribe(
         (_teams) => {
-          self.showLazyLoader = false;
-          self.userTeams = _teams;
-          const index = self.userTeams.findIndex((e) => e.name === '#');
-          if (index >= 0) {
-            self.userTeams.splice(index, 1);
-          }
+          _teams.forEach(item => {
+            const authorPermissions = item.roles.filter(e => e.id.match(/^[A-Z]{2,}$/));
+            item.hasAuthorRoles = authorPermissions.length > 0;
+            item.hasAppcenterRoles = authorPermissions.length != item.roles.length;
+            this.userTeams.push(item);
+            const index = this.userTeams.findIndex(e => e.name === '#');
+            if (index >= 0) {
+              this.userTeams.splice(index, 1);
+            }
+          })
+          this.showLazyLoader = false;
         },
         (err) => {
           self.showLazyLoader = false;
@@ -745,6 +750,7 @@ export class LocalBotComponent implements OnInit {
         }
       );
   }
+
   onDataChange(event) {
     const self = this;
     this.selectRecord(event)
