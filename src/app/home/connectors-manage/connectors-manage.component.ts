@@ -266,7 +266,7 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
     }
 
     this.subscriptions['saveConnector'] = this.commonService.post('user', `/${this.commonService.app._id}/connector/utils/test`, payload).subscribe(res => {
-      console.log(res)
+      this.ts.success(res.message);
     }, err => {
 
       this.commonService.errorToast(err);
