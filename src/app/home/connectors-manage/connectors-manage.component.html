@@ -16,6 +16,9 @@
                         class="btn btn-white border mr-3" (click)="deleteConnector()">
                         <span class="dsi dsi-trash"></span>
                     </button>
+                    <button class="btn btn-outline-primary btn-min-width mr-3" (click)="testConnection()">
+                        <span>Test</span>
+                    </button>
                     <button class="btn btn-white border btn-min-width mr-3" routerLink="../">
                         <span>Cancel</span>
                     </button>
@@ -58,13 +61,13 @@
                                     [id]="field.key" [type]="field.htmlInputType" class="form-control"
                                     [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
                                     [disabled]="!edit.status" [odpPasswordField]="field.htmlInputType=='password'"
-                                    [edit]="edit">
+                                    [edit]="edit" [required]="field.required">
                                 <textarea *ngIf="field.htmlInputType=='textarea'" [id]="field.key" class="form-control"
                                     [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
-                                    [disabled]="!edit.status"></textarea>
+                                    [disabled]="!edit.status" [required]="field.required"></textarea>
                                 <select *ngIf="field.htmlInputType=='select'" [id]="field.key" class="form-control"
                                     [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
-                                    [disabled]="!edit.status">
+                                    [disabled]="!edit.status" [required]="field.required">
                                     <option *ngFor="let sel of field.options" [value]="sel.value">{{sel.label}}</option>
                                 </select>
                                 <div *ngIf="field.htmlInputType=='password'" class="form-text text-muted font-11">This

@@ -256,6 +256,23 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
     });
   }
 
+  testConnection() {
+    const payload = this.appService.cloneObject(this.connector);
+    delete payload?.options
+    payload.app = this.commonService.app._id;
+    if (!this.canEditGroup) {
+      delete payload.name;
+      delete payload.description;
+    }
+
+    this.subscriptions['saveConnector'] = this.commonService.post('user', `/${this.commonService.app._id}/connector/utils/test`, payload).subscribe(res => {
+      console.log(res)
+    }, err => {
+
+      this.commonService.errorToast(err);
+    });
+  }
+
   get canEditGroup() {
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin || this.hasPermissionStartsWith('PMCON')) {
       return true;
