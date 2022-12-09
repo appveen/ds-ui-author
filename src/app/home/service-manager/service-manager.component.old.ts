@@ -21,7 +21,7 @@ import { AppService } from 'src/app/utils/services/app.service';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 @Component({
   selector: 'odp-service-manager',
-  templateUrl: './service-manager.component.html',
+  template: '<div></div>',
   styleUrls: ['./service-manager.component.scss'],
 })
 export class ServiceManagerComponent implements OnInit, OnDestroy {
