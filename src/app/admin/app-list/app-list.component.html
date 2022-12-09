@@ -78,7 +78,7 @@
             <span *ngIf="sortModel['_id']==1" class="dsi dsi-drop-down"></span>
             <span *ngIf="sortModel['_id']==-1" class="dsi dsi-drop-up"></span>
           </div>
-          <div class="d-flex align-items-center justify-content-center">
+          <!-- <div class="d-flex align-items-center justify-content-center">
             <div  class="hover d-flex align-items-center item-owner">
               <span class="mr-2 text-uppercase">Owner</span>
             </div>
@@ -88,7 +88,7 @@
             <div  class="hover d-flex align-items-center item-validity">
               <span class="mr-2 text-uppercase">Validity</span>
             </div>
-          </div>
+          </div> -->
           <div class="d-flex align-items-center justify-content-end w-100">
             <div class="item-actions"></div>
           </div>
@@ -100,7 +100,7 @@
         <ng-container *ngFor="let app of records | filterApp: searchTerm; let appIndex = index">
           <div class="list-group-item d-flex align-items-center justify-content-start" (dblclick)="useApp(app._id)">
             <div class="item-name fw-500 d-flex align-items-center">
-              <span class="ml-2 pl-1 text-dark hover app-name"  [ngbTooltip]="app._id"
+              <span class="mr-2 pl-1 text-dark hover app-name"  [ngbTooltip]="app._id"
                 placement="right">{{app._id}}</span>
             </div>
             <div class="item-actions d-flex align-items-center justify-content-end">
@@ -109,12 +109,12 @@
                 <span  class="fw-600 font-13 hover mr-3"
                   >View</span>
               </div>
-              <div >
-                <span class="dsi dsi-edit mr-1"></span>
-                <span  class="fw-600 font-13 hover mr-3"
-                >Edit</span>
+              <div (click)="$event.stopPropagation();deleteApp(app, appIndex)">
+                <span class="fas fa-trash mr-1 text-danger"></span>
+                <span  class="fw-600 font-13 hover mr-3 text-danger"
+                >Delete</span>
               </div>
-              <span
+              <!-- <span
                class="dsi dsi-more-vertical hover mr-3 ignore-outside"
                 (click)="showDropDown($event,app._id)"></span>
               <div *ngIf="showOptionsDropdown[app._id]" class="more-options bg-white rounded list-group position-fixed border"
@@ -128,9 +128,9 @@
                   (click)="$event.stopPropagation();deleteApp(app, appIndex)">
                   Delete
                 </button>
-              </div>
+              </div> -->
             </div>
-            </div>
+          </div>
         </ng-container>
       </div>
     </div>

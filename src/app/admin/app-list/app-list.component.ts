@@ -383,7 +383,7 @@ export class AppListComponent implements OnInit, OnDestroy {
       });
     } else {
       records = records.sort((a, b) => {
-        return this.compare(b._metadata.lastUpdated, a._metadata.lastUpdated);
+        return this.compare(b._metadata?.lastUpdated, a._metadata?.lastUpdated);
       });
     }
     return records;
