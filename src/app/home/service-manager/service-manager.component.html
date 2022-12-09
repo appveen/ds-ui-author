@@ -242,6 +242,12 @@
           [selected]="checkDefault(connector._id)">{{connector.name}}</option>
       </select>
     </div>
+    <div class="form-group">
+      <label class="font-13 text-secondary" for="category">Tables</label>
+      <select id="data" class="form-control" (change)="selectTables($event)">
+        <option [value]="table" *ngFor="let table of tables">{{table}}</option>
+      </select>
+    </div>
     <div class="form-group" *ngIf="!form.get('schemaFree').value">
       <label class="font-13 text-secondary" for="category">File Connector</label>
       <select id="file" class="form-control" (change)="selectConnector($event,'file')">
