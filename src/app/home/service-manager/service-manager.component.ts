@@ -916,9 +916,14 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   }
 
   selectTables(event) {
-    this.form.get('connectors').get('table').setValue({
-      table: event.target.value
-    })
+    let data = this.form.get('connectors').get('data');
+    let _id = data.value._id;
+    data.setValue({
+      _id: _id,
+      options: {
+        tableName: event.target.value
+      }
+    });
   }
 
   toggleSchemaType(schemaFree) {
