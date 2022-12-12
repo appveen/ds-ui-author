@@ -66,6 +66,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   defaultDC: any;
   defaultFC: any;
   mongoList: any[];
+  tables: any[] = [];
   constructor(
     public commonService: CommonService,
     private appService: AppService,
@@ -117,8 +118,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.showOptionsDropdown = {};
     this.sortModel = {};
     this.commonService.invokeEvent.subscribe(value => {
-       this.getConnectors();
-    }); 
+      this.getConnectors();
+    });
   }
 
   ngOnInit() {
@@ -237,6 +238,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.form.get('connectors').get('data').setValue({
       _id: this.defaultDC
     })
+    this.fetchTables(this.defaultDC)
     this.form.get('connectors').get('file').setValue({
       _id: this.defaultFC
     })
@@ -438,7 +440,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       payload.versionValidity = this.cloneData.versionValidity;
       payload.headers = this.cloneData.headers;
       payload.enableSearchIndex = this.cloneData.enableSearchIndex;
-      payload.connectors=this.cloneData.connectors;
+      payload.connectors = this.cloneData.connectors;
     }
     if (payload.intTab) {
       payload.preHooks = this.cloneData.preHooks;
@@ -902,6 +904,26 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.form.get('connectors').get(type).setValue({
       _id: event.target.value
     })
+    this.fetchTables(event.target.value);
+  }
+
+  fetchTables(id) {
+    this.subscriptions['fetchTables'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/${id}/utils/fetchTables`).subscribe(res => {
+      this.tables = res;
+    }, err => {
+      this.commonService.errorToast(err, 'Unable to fetch user groups, please try again later');
+    });
+  }
+
+  selectTables(event) {
+    let data = this.form.get('connectors').get('data');
+    let _id = data.value._id;
+    data.setValue({
+      _id: _id,
+      options: {
+        tableName: event.target.value
+      }
+    });
   }
 
   toggleSchemaType(schemaFree) {
