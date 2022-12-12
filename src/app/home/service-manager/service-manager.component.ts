@@ -67,6 +67,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   defaultFC: any;
   mongoList: any[];
   tables: any[] = [];
+  showDropdownOptions: any;
   constructor(
     public commonService: CommonService,
     private appService: AppService,
@@ -311,6 +312,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     if (!this.hasPermission('PMDSSDH', 'SM')) {
       delete payload.versionValidity;
     }
+
     this.commonService
       .post('serviceManager', `/${this.commonService.app._id}/service`, payload)
       .subscribe(
@@ -921,7 +923,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     data.setValue({
       _id: _id,
       options: {
-        tableName: event.target.value
+        tableName: event
       }
     });
   }
