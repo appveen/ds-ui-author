@@ -161,3 +161,33 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.popover {
+  border: 1px solid #ECECEC;
+  display: grid;
+  width: 100%;
+  top: 390px;
+  left: 35px;
+  overflow-y: auto;
+  max-height: 200px;
+  min-height: 50px;
+}
+
+.popover-options {
+  padding: 15px;
+  cursor: pointer;
+  color: $headings;
+  font-size: 14px;
+
+  &:hover {
+    background: #F7F7F7;
+  }
+}
+
+.dsi-drop-down {
+  position: absolute;
+  top: 365px;
+  right: 35px;
+  font-weight: 800;
+  font-size: 16px;
+}
