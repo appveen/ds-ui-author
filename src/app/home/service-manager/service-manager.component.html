@@ -243,10 +243,20 @@
       </select>
     </div>
     <div class="form-group">
-      <label class="font-13 text-secondary" for="category">Tables</label>
-      <select id="data" class="form-control" (change)="selectTables($event)">
+      <label class="font-13 text-secondary" for="table">Tables</label>
+      <div odpClickOutside (outside)="showDropdownOptions=false">
+        <input type="text" name="city" list="tableName" class="form-control" (click)="showDropdownOptions = true"
+          autocomplete="off" [value]="form.get('connectors')?.get('data')?.value?.options?.tableName || ''"
+          (blur)="selectTables($event?.target?.value)">
+        <i class="dsi dsi-drop-down"></i>
+        <div class="popover" *ngIf="showDropdownOptions">
+          <span class="popover-options" *ngFor="let table of tables"
+            (click)="selectTables(table.name);showDropdownOptions=false ">{{table.name}}</span>
+        </div>
+      </div>
+      <!-- <select id="data" class="form-control" (change)="selectTables($event)">
         <option [value]="table.name" *ngFor="let table of tables">{{table.name}}</option>
-      </select>
+      </select> -->
     </div>
     <div class="form-group" *ngIf="!form.get('schemaFree').value">
       <label class="font-13 text-secondary" for="category">File Connector</label>
