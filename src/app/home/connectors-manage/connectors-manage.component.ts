@@ -258,7 +258,6 @@ export class ConnectorsManageComponent implements OnInit, OnDestroy {
 
   testConnection() {
     const payload = this.appService.cloneObject(this.connector);
-    delete payload?.options
     payload.app = this.commonService.app._id;
     if (!this.canEditGroup) {
       delete payload.name;
