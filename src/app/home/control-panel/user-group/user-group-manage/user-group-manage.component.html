@@ -19,7 +19,7 @@
           <button class="btn btn-white border btn-min-width mr-3" routerLink="../../gr">
             <span>Cancel</span>
           </button>
-          <button *ngIf="hasPermissionStartsWith('PMG')" class="btn btn-primary btn-min-width" (click)="saveGroup()">
+          <button *ngIf="hasPermissionStartsWith('PMG')" class="btn btn-primary btn-min-width" (click)="saveGroup()" [disabled]="group.name==''">
             <span>Save</span>
           </button>
         </div>
