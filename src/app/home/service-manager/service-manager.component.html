@@ -294,16 +294,16 @@
         <div class="name-wrapper position-relative">
           <input cloneServiceName autocomplete="off" type="text" class="form-control" id="name"
             placeholder="Untitled Service" formControlName="name" odpAutoFocus [ngClass]="{
-              'is-invalid': form.get('name').invalid && form.get('name').dirty
+              'is-invalid': cloneForm.get('name').invalid && cloneForm.get('name').dirty
             }" />
-          <ng-container *ngIf="form.get('name').dirty">
-            <span *ngIf="form.get('name').hasError('required')"
+          <ng-container *ngIf="cloneForm.get('name').dirty">
+            <span *ngIf="cloneForm.get('name').hasError('required')"
               class="text-danger position-absolute dsi dsi-danger-circle high-zIndex" container="body"
               ngbTooltip="Name is required"></span>
-            <span *ngIf="form.get('name').hasError('maxlength')"
+            <span *ngIf="cloneForm.get('name').hasError('maxlength')"
               class="text-danger position-absolute dsi dsi-danger-circle high-zIndex" container="body"
-              ngbTooltip="Name should be within 30 characters"></span>
-            <span *ngIf="form.get('name').hasError('pattern')"
+              ngbTooltip="Name should be within 40 characters"></span>
+            <span *ngIf="cloneForm.get('name').hasError('pattern')"
               class="text-danger position-absolute dsi dsi-danger-circle high-zIndex" container="body"
               ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
           </ng-container>
