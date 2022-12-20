@@ -439,6 +439,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
     if (payload.setTab) {
       payload.tags = this.cloneData.tags;
+      payload.disableInsights=this.cloneData.disableInsights;
+      payload.permanentDeleteData=this.cloneData.permanentDeleteData;
       payload.versionValidity = this.cloneData.versionValidity;
       payload.headers = this.cloneData.headers;
       payload.enableSearchIndex = this.cloneData.enableSearchIndex;
