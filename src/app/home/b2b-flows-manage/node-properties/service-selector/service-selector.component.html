@@ -17,7 +17,7 @@
             <div class="d-flex align-items-center">
                 <odp-round-radio [edit]="edit" [checked]="item._selected">
                 </odp-round-radio>
-                <span class="ml-3">{{item.name}}</span>
+                <span [ngbTooltip]="item.name" class="ml-3 text-truncate" style="max-width: 200px;">{{item.name}}</span>
             </div>
             <span>{{item.attributeCount}}</span>
         </div>
