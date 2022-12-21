@@ -64,10 +64,13 @@
             </div>
             <div class="schema-creator scroll position-relative p-4" id="schema-creator">
                 <ng-container formArrayName="definition">
+                    <div [sortablejs]="definitions"
+                    [sortablejsOptions]="{sort: editable, filter: '.disabled', onMove: sortableOnMove }">
                     <ng-container *ngFor="let def of definitions;let i = index;let first = first;">
                         <odp-structure-field [formGroupName]="i" [all]="form.get('definition')" [index]="i"
                             [first]="first" [edit]="edit" [isLibrary]="true"></odp-structure-field>
                     </ng-container>
+                    </div>
                     <div class="add-attribute d-flex align-items-center mt-4" *ngIf="edit.status">
                         <span class="d-flex align-items-center justify-content-center hover alert alert-primary w-100"
                             (click)="addField()" id="schemaFieldObjectAddField">
