@@ -12,6 +12,7 @@ import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.
 import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
 import { StructureFieldModule } from 'src/app/utils/structure-field/structure-field.module';
 import { StructureFieldPropertiesModule } from 'src/app/utils/structure-field-properties/structure-field-properties.module';
+import { SortablejsModule } from 'ngx-sortablejs';
 
 const routes: Routes = [
     {
@@ -32,7 +33,8 @@ const routes: Routes = [
         AutoFocusModule,
         BasicInfoModule,
         StructureFieldModule,
-        StructureFieldPropertiesModule
+        StructureFieldPropertiesModule,
+        SortablejsModule
     ],
     exports: [RouterModule],
     declarations: [

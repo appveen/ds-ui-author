@@ -20,6 +20,7 @@ export class SchemaBuilderService {
     selectedFieldId: string;
     typechanged: EventEmitter<any>;
     idFieldId: string;
+    stateModel:any;
     constructor(
         private fb: FormBuilder,
         private commonService: CommonService) {

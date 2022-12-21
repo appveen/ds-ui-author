@@ -29,7 +29,7 @@
         <ng-container *ngIf="remainingFields.length">
             <ng-container *ngFor="let field of remainingFields;let fieldIndex = index">
                 <div class="attribute-item bg-light rounded px-3 mb-1 d-flex align-items-center justify-content-between"
-                    *ngIf="!field.get('_id')" id="uxAttributes">
+                    *ngIf="!field.get('_id') && checkStateModel(field)" id="uxAttributes">
                     <div class="d-flex align-items-center">
                         <div class="attribute-action d-flex align-items-center justify-content-center mr-3">
                             <span class="dsi dsi-plus-circle mr-2 hover" (click)="addToStep(field,fieldIndex)"
