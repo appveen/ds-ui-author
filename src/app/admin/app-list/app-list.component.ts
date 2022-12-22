@@ -224,6 +224,7 @@ export class AppListComponent implements OnInit, OnDestroy {
   newApp() {
     const self = this;
     self.form.reset({
+      _id: this.searchTerm,
       type: 'Management',
       serviceVersionValidity: {
         validityType: 'count',

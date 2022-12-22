@@ -93,9 +93,17 @@
             <div class="item-actions"></div>
           </div>
         </div>
-        <ng-container *ngIf="!records || records.length == 0">
+        <ng-container *ngIf="!appList || appList.length == 0">
           <odp-loading-placeholder *ngFor="let app of dummyRows" class="list-group-item">
           </odp-loading-placeholder>
+        </ng-container>
+        <ng-container *ngIf="!records || records.length == 0">
+          <div class="list-group-item">
+           <p class="m-0">No Application Found, <button type="button" class="btn btn-link px-1 py-0"
+            (click)="newApp()">Click Here</button> to create a new App
+            <span *ngIf="searchTerm">:&nbsp;<span class="fw-500">{{searchTerm}}</span></span>
+           </p>
+          </div>
         </ng-container>
         <ng-container *ngFor="let app of records | filterApp: searchTerm; let appIndex = index">
           <div class="list-group-item d-flex align-items-center justify-content-start" (dblclick)="useApp(app._id)">
