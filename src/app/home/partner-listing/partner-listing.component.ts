@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -15,7 +15,7 @@ import { GetOptions, CommonService } from 'src/app/utils/services/common.service
 export class PartnerListingComponent implements OnInit, OnDestroy {
 
   @ViewChild('newPartnerModal', { static: false }) newPartnerModal: TemplateRef<HTMLElement>;
-  form: FormGroup;
+  form: UntypedFormGroup;
   app: string;
   partnerList: Array<any> = [];
   apiConfig: GetOptions;
@@ -37,7 +37,7 @@ export class PartnerListingComponent implements OnInit, OnDestroy {
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder) {
     const self = this;
     self.alertModal = {
       statusChange: false,

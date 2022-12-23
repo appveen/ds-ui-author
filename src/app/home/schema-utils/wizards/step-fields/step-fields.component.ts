@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { SchemaBuilderService } from '../../schema-builder.service';
 
 @Component({
@@ -9,11 +9,11 @@ import { SchemaBuilderService } from '../../schema-builder.service';
 })
 export class StepFieldsComponent implements OnInit {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
 
   constructor(private schemaService: SchemaBuilderService,
-    private fb: FormBuilder) { }
+    private fb: UntypedFormBuilder) { }
 
   ngOnInit(): void {
 
@@ -29,28 +29,28 @@ export class StepFieldsComponent implements OnInit {
   }
 
   addToStep(field, index) {
-    (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'fields']) as FormArray).push(field);
-    (this.form.get('wizard.usedFields') as FormArray).push(field);
+    (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'fields']) as UntypedFormArray).push(field);
+    (this.form.get('wizard.usedFields') as UntypedFormArray).push(field);
     this.form.get('wizard').markAsDirty();
     this.form.markAsDirty();
   }
 
   removeFromStep(index) {
-    const temp = (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'fields']) as FormArray).at(index);
+    const temp = (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'fields']) as UntypedFormArray).at(index);
     this.removeFromUsed(temp);
-    (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'fields']) as FormArray).removeAt(index);
+    (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'fields']) as UntypedFormArray).removeAt(index);
     this.form.get('wizard').markAsDirty();
     this.form.markAsDirty();
   }
 
   removeFromUsed(field) {
-    const i = (this.form.get('wizard.usedFields') as FormArray).controls.findIndex(e => {
+    const i = (this.form.get('wizard.usedFields') as UntypedFormArray).controls.findIndex(e => {
       if (e.value.key === field.value.key) {
         return true;
       }
     });
     if (i > -1) {
-      (this.form.get('wizard.usedFields') as FormArray).removeAt(i);
+      (this.form.get('wizard.usedFields') as UntypedFormArray).removeAt(i);
     }
   }
 
@@ -79,25 +79,25 @@ export class StepFieldsComponent implements OnInit {
   }
 
   get definitions() {
-    return (this.form.get('definition') as FormArray).controls;
+    return (this.form.get('definition') as UntypedFormArray).controls;
   }
 
   get steps() {
-    return (this.form.get('wizard.steps') as FormArray).controls;
+    return (this.form.get('wizard.steps') as UntypedFormArray).controls;
   }
 
   get selectedStepFields() {
-    const temp = (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'fields']) as FormArray);
+    const temp = (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'fields']) as UntypedFormArray);
     return temp ? temp.controls : [];
   }
 
   get remainingFields() {
     let temp = [];
-    if ((this.form.get('wizard.usedFields') as FormArray).controls.length === 0) {
+    if ((this.form.get('wizard.usedFields') as UntypedFormArray).controls.length === 0) {
       temp = this.definitions.slice();
     } else {
       this.definitions.forEach(e => {
-        const index = (this.form.get('wizard.usedFields') as FormArray).controls.findIndex(f => f.value.key === e.value.key);
+        const index = (this.form.get('wizard.usedFields') as UntypedFormArray).controls.findIndex(f => f.value.key === e.value.key);
         if (e.get('key').value === '_id') {
           if (index === -1) {
             temp.push(this.schemaService.getDefinitionStructure({

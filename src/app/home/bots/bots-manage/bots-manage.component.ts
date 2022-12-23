@@ -19,7 +19,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { noop } from 'rxjs';
@@ -102,9 +102,9 @@ export class BotsManageComponent implements OnInit, OnDestroy {
   // tslint:disable-next-line: no-output-rename
   @Output() removeBot: EventEmitter<any>;
   editAttributeModalRef: NgbModalRef;
-  userDetails: FormGroup;
-  additionalDetails: FormGroup;
-  resetPasswordForm: FormGroup;
+  userDetails: UntypedFormGroup;
+  additionalDetails: UntypedFormGroup;
+  resetPasswordForm: UntypedFormGroup;
   subscriptions: any;
   deleteModal: DeleteModalConfig;
   userGroupConfig: GetOptions = {};
@@ -186,7 +186,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private commonService: CommonService,
     private ts: ToastrService,
     private ngbToolTipConfig: NgbTooltipConfig,
@@ -269,11 +269,11 @@ export class BotsManageComponent implements OnInit, OnDestroy {
 
   get additionalInfoArr() {
     const self = this;
-    return (self.additionalDetails.get('extraInfo') as FormArray).controls;
+    return (self.additionalDetails.get('extraInfo') as UntypedFormArray).controls;
   }
   get userAttributes() {
     const self = this;
-    return (self.additionalDetails.get('extraInfo') as FormArray).controls;
+    return (self.additionalDetails.get('extraInfo') as UntypedFormArray).controls;
   }
   getLabelError(i) {
     const self = this;
@@ -399,7 +399,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
       value: ['', [Validators.required]],
       label: ['', [Validators.required]],
     });
-    (self.additionalDetails.get('extraInfo') as FormArray).push(newData);
+    (self.additionalDetails.get('extraInfo') as UntypedFormArray).push(newData);
     setTimeout(() => {
       if (self.newLabel.length >= 1) {
         self.newLabel.last.nativeElement.focus();
@@ -541,7 +541,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
           label: ['', Validators.required],
         });
         form.patchValue(element);
-        (self.additionalDetails.get('extraInfo') as FormArray).push(form);
+        (self.additionalDetails.get('extraInfo') as UntypedFormArray).push(form);
       });
     } else {
       const form = self.fb.group({
@@ -550,7 +550,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
         value: ['', [Validators.required]],
         label: ['', [Validators.required]],
       });
-      (self.additionalDetails.get('extraInfo') as FormArray).push(form);
+      (self.additionalDetails.get('extraInfo') as UntypedFormArray).push(form);
     }
     if (self.manageUser) {
       self.newAttributeModalRef = self.commonService.modal(
@@ -575,7 +575,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
    */
   removeField(index) {
     const self = this;
-    (self.additionalDetails.get('extraInfo') as FormArray).removeAt(index);
+    (self.additionalDetails.get('extraInfo') as UntypedFormArray).removeAt(index);
     setTimeout(() => {
       if (self.newLabel.length >= 1) {
         self.newLabel.last.nativeElement.focus();
@@ -734,7 +734,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
     }
     if (self.addInfo) {
       self.addInfo = false;
-      (self.additionalDetails.get('extraInfo') as FormArray).controls.splice(1);
+      (self.additionalDetails.get('extraInfo') as UntypedFormArray).controls.splice(1);
       self.additionalDetails.reset();
     }
   }

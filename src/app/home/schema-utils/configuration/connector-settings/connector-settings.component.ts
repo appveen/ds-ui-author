@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { switchMap } from 'rxjs/operators';
 import { CommonService } from '../../../../utils/services/common.service';
 import * as _ from 'lodash'
@@ -12,14 +12,14 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./connector-settings.component.scss']
 })
 export class ConnectorSettingsComponent implements OnInit {
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   @ViewChild('schemaToggleTemplate') schemaToggleTemplate: TemplateRef<HTMLElement>;
   schemaToggleTemplateRef: NgbModalRef;
   toggleTemplateRef: NgbModalRef;
   toggleSchemaModal: any;
   type: any;
-  fileSettingForm: FormGroup
+  fileSettingForm: UntypedFormGroup
   showConnectors: boolean = true;
   connectorId: any;
   connectorList: any;
@@ -31,7 +31,7 @@ export class ConnectorSettingsComponent implements OnInit {
   mongoList: any[];
   constructor(
     private commonService: CommonService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private appService: AppService
   ) {
     // this.type = 'MONGODB';

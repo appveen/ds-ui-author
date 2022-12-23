@@ -10,7 +10,7 @@ import { APIConfig } from 'src/app/utils/interfaces/apiConfig';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Breadcrumb } from '../../../utils/interfaces/breadcrumb';
 import * as _ from 'lodash'
 
@@ -54,7 +54,7 @@ export class AgentsLogComponent implements OnInit {
   showSettingsDropdown: boolean = false;
   showPasswordSide: boolean = false;
   showPassword: boolean = false;
-  resetPasswordForm: FormGroup;
+  resetPasswordForm: UntypedFormGroup;
   showEditAgentWindow: boolean = false;
   alertModal: {
     statusChange?: boolean;
@@ -67,7 +67,7 @@ export class AgentsLogComponent implements OnInit {
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private ts: ToastrService) {
     const self = this;
     self.totalCount = 0;

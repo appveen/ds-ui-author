@@ -5,7 +5,7 @@ import {
   TemplateRef,
   EventEmitter,
 } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder, UntypedFormArray } from '@angular/forms';
 import {
   trigger,
   state,
@@ -66,9 +66,9 @@ export class LocalBotComponent implements OnInit {
   @ViewChild('editAttributeModal', { static: false })
   editAttributeModal: TemplateRef<HTMLElement>;
   botRecords: Array<any>;
-  botForm: FormGroup;
-  keyForm: FormGroup;
-  attributeForm: FormGroup;
+  botForm: UntypedFormGroup;
+  keyForm: UntypedFormGroup;
+  attributeForm: UntypedFormGroup;
   newBotModalRef: NgbModalRef;
   editBotModalRef: NgbModalRef;
   newKeyModalRef: NgbModalRef;
@@ -82,7 +82,7 @@ export class LocalBotComponent implements OnInit {
   filterTeamStr = '';
   teamOptions: GetOptions = {};
   allTeams: Array<any>;
-  additionalDetails: FormGroup;
+  additionalDetails: UntypedFormGroup;
   types: Array<any>;
   openDeleteModal: EventEmitter<any>;
   openDeleteBotModal: EventEmitter<any>;
@@ -112,7 +112,7 @@ export class LocalBotComponent implements OnInit {
     public appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private filterTerm: FilterPipe
   ) {
     const self = this;
@@ -582,11 +582,11 @@ export class LocalBotComponent implements OnInit {
       value: ['', [Validators.required, Validators.maxLength(30)]],
       label: ['', [Validators.required, Validators.maxLength(30)]],
     });
-    (self.additionalDetails.get('extraInfo') as FormArray).push(newData);
+    (self.additionalDetails.get('extraInfo') as UntypedFormArray).push(newData);
   }
   get userAttributes() {
     const self = this;
-    return (self.additionalDetails.get('extraInfo') as FormArray).controls;
+    return (self.additionalDetails.get('extraInfo') as UntypedFormArray).controls;
   }
 
   getLabelError(i) {
@@ -711,7 +711,7 @@ export class LocalBotComponent implements OnInit {
   }
   removeField(index) {
     const self = this;
-    (self.additionalDetails.get('extraInfo') as FormArray).removeAt(index);
+    (self.additionalDetails.get('extraInfo') as UntypedFormArray).removeAt(index);
   }
   assignTeam() {
     const self = this;

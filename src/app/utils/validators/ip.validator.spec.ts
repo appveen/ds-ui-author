@@ -1,13 +1,13 @@
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ipValidate } from './ip.validator';
 
 describe('maxLen.validator.natural', () => {
-    const invalidIP1 = new FormControl('123.124.345.345');
-    const invalidIP2 = new FormControl('123.124.345');
-    const invalidIP3 = new FormControl('123.124.345/24');
-    const validIP = new FormControl('192.168.13.56');
-    const invalidCIDR = new FormControl('123.124.345.345/34');
-    const validCIDR = new FormControl('192.168.13.56/24');
+    const invalidIP1 = new UntypedFormControl('123.124.345.345');
+    const invalidIP2 = new UntypedFormControl('123.124.345');
+    const invalidIP3 = new UntypedFormControl('123.124.345/24');
+    const validIP = new UntypedFormControl('192.168.13.56');
+    const invalidCIDR = new UntypedFormControl('123.124.345.345/34');
+    const validCIDR = new UntypedFormControl('192.168.13.56/24');
     it('should be valid IP', () => {
         expect(ipValidate(validIP)).toBeNull();
     });

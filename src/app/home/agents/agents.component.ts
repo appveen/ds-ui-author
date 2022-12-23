@@ -10,7 +10,7 @@ import { AppService } from 'src/app/utils/services/app.service';
 import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { environment } from 'src/environments/environment';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 
 @Component({
@@ -45,7 +45,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     };
     breadcrumbPaths: Array<Breadcrumb>;
     openDeleteModal: EventEmitter<any>;
-    resetPasswordForm: FormGroup;
+    resetPasswordForm: UntypedFormGroup;
     showPassword: any;
     showPasswordSide: boolean = false;
     constructor(
@@ -54,7 +54,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
         private commonPipe: CommonFilterPipe,
         private router: Router,
         private ts: ToastrService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
     ) {
         this.agentData = {};
         this.subscriptions = {};

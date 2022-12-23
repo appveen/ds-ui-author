@@ -19,7 +19,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
 import { GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
@@ -110,8 +110,8 @@ export class UserManageComponent implements OnInit, OnDestroy {
   private _toggleUserMng: boolean;
   resetPasswordModelRef: NgbModalRef;
   attributeModalRef: NgbModalRef;
-  userDetails: FormGroup;
-  resetPasswordForm: FormGroup;
+  userDetails: UntypedFormGroup;
+  resetPasswordForm: UntypedFormGroup;
   subscriptions: any;
   deleteModal: DeleteModalConfig;
   userGroupConfig: GetOptions = {};
@@ -136,7 +136,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
   showSettings: boolean = false;
   filterModel: any;
   rowData: Array<any>;
-  attributesForm: FormGroup;
+  attributesForm: UntypedFormGroup;
   editMode = true;
   chipChecked = false;
   toggleGroups: Array<any>;
@@ -168,7 +168,7 @@ export class UserManageComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private commonService: CommonService,
     private appService: AppService,
     private ts: ToastrService,

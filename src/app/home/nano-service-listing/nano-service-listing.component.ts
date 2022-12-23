@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, EventEmitter, } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,7 @@ import { AppService } from 'src/app/utils/services/app.service';
 export class NanoServiceListingComponent implements OnInit, OnDestroy {
 
   @ViewChild('newNanoServiceModal', { static: false }) newNanoServiceModal: TemplateRef<HTMLElement>;
-  form: FormGroup;
+  form: UntypedFormGroup;
   app: string;
   nanoServiceList: Array<any> = [];
   apiConfig: GetOptions;
@@ -35,7 +35,7 @@ export class NanoServiceListingComponent implements OnInit, OnDestroy {
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder) {
     const self = this;
     self.alertModal = {
       statusChange: false,

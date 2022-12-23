@@ -1,5 +1,5 @@
 import { Component, OnDestroy, Input, TemplateRef, ViewChild, AfterViewInit, AfterContentChecked } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { CommonService } from '../services/common.service';
@@ -23,10 +23,10 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
   showDatePicker: boolean;
   showLazyLoader: boolean;
   sampleRegexValue: Array<any> = [];
-  formList: Array<FormGroup>;
+  formList: Array<UntypedFormGroup>;
   showDataTypes: any;
   _dateFrom: Date;
-  form: FormGroup;
+  form: UntypedFormGroup;
   showCommonFields: boolean;
   private subscriptions: any;
   public get dateFrom(): Date {
@@ -112,10 +112,10 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       let subType = self.form.get(['definition', 0]);
       if (subType) {
         while (subType.get('type').value === 'Array') {
-          self.formList.push(subType as FormGroup);
+          self.formList.push(subType as UntypedFormGroup);
           subType = subType.get(['definition', 0]);
         }
-        self.formList.push(subType as FormGroup);
+        self.formList.push(subType as UntypedFormGroup);
       }
     }
     if (this.formatType === 'FLATFILE') {

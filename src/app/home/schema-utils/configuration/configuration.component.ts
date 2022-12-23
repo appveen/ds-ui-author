@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
-import { FormGroup, FormArray, FormControl } from '@angular/forms';
+import { UntypedFormGroup, FormArray, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,7 @@ import { VersionConfig } from 'src/app/utils/interfaces/schemaBuilder';
 })
 export class ConfigurationComponent implements OnInit {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   @Input() versionConfig: VersionConfig;
   activeTab: number;

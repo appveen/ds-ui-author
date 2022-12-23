@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { FormArray, FormControl, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
 import * as deepmerge from 'deepmerge';
 import * as uuid from 'uuid/v1';
 import * as _ from 'lodash';
@@ -254,7 +254,7 @@ export class AppService {
         return fields;
     }
 
-    removeField(arr: FormArray, fieldId) {
+    removeField(arr: UntypedFormArray, fieldId) {
         const self = this;
         let temp = -1;
         arr.controls.forEach((e, i) => {
@@ -262,9 +262,9 @@ export class AppService {
                 if (e.get('_fieldId').value === fieldId) {
                     temp = i;
                 } else if (e.get('type').value === 'Object') {
-                    self.removeField(e.get('definition') as FormArray, fieldId);
+                    self.removeField(e.get('definition') as UntypedFormArray, fieldId);
                 } else if (e.get('type').value === 'Array' && e.get(['definition', 0, 'type']).value === 'Object') {
-                    self.removeField(e.get(['definition', 0, 'definition']) as FormArray, fieldId);
+                    self.removeField(e.get(['definition', 0, 'definition']) as UntypedFormArray, fieldId);
                 }
             }
         });
@@ -547,7 +547,7 @@ export class AppService {
     }
 
     getIpFormControl(val?: string) {
-        return new FormControl(val, [Validators.required, ipValidate]);
+        return new UntypedFormControl(val, [Validators.required, ipValidate]);
     }
 
     countAttr(definition) {

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -20,7 +20,7 @@ export class PartnerOnboardComponent implements OnInit, OnDestroy, CanComponentD
     @ViewChild('pageChangeModalTemplate', { static: false }) pageChangeModalTemplate: TemplateRef<HTMLElement>;
     activeTab: number;
     value: any;
-    form: FormGroup;
+    form: UntypedFormGroup;
     subscriptions: any;
     alertModal: {
         title: string;
@@ -34,7 +34,7 @@ export class PartnerOnboardComponent implements OnInit, OnDestroy, CanComponentD
     openDeleteModal: EventEmitter<any>;
     showLazyLoader: boolean;
     edit: any;
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private commonService: CommonService,
         private appService: AppService,
         private router: Router,
@@ -114,7 +114,7 @@ export class PartnerOnboardComponent implements OnInit, OnDestroy, CanComponentD
             self.value = res;
             if (res.agentTrustedIP && res.agentTrustedIP.list) {
                 res.agentTrustedIP.list.forEach(item => {
-                    (self.form.get('agentTrustedIP.list') as FormArray).push(self.appService.getIpFormControl(item));
+                    (self.form.get('agentTrustedIP.list') as UntypedFormArray).push(self.appService.getIpFormControl(item));
                 });
             }
             self.form.patchValue(res);

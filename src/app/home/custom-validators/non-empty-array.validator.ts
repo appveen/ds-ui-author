@@ -1,6 +1,6 @@
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 
-export function arrayNonEmpty(control: FormControl) {
+export function arrayNonEmpty(control: UntypedFormControl) {
     const arr = control.value;
     if (arr.length == 0) {
         return { emptyArray: true };

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
@@ -17,7 +17,7 @@ export class ManageBookmarksComponent implements OnInit {
   @Output() cancelBookMarkPage: EventEmitter<boolean>;
   @ViewChild('pageChangeModalTemplate', { static: false }) pageChangeModalTemplate: TemplateRef<HTMLElement>;
   private _bookmark: any;
-  bookmarkForm: FormGroup;
+  bookmarkForm: UntypedFormGroup;
   showLazyLoader: boolean;
   breadcrumbPaths: string;
   private _toggleBookmarkMng: boolean;
@@ -50,7 +50,7 @@ export class ManageBookmarksComponent implements OnInit {
     }
   }
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private commonService: CommonService,
     private ts: ToastrService,
     private appservice: AppService) {
@@ -158,11 +158,11 @@ export class ManageBookmarksComponent implements OnInit {
   }
   done() {
     const self = this;
-    let list: FormArray = <FormArray>(<FormGroup>self.bookmarkForm.get('parameters')).get('custom');
+    let list: UntypedFormArray = <UntypedFormArray>(<UntypedFormGroup>self.bookmarkForm.get('parameters')).get('custom');
     if (!list.value) {
-      (<FormGroup>self.bookmarkForm.get('parameters')).removeControl('custom');
-      (<FormGroup>self.bookmarkForm.get('parameters')).addControl('custom', self.fb.array([]));
-      list = <FormArray>(<FormGroup>self.bookmarkForm.get('parameters')).get('custom');
+      (<UntypedFormGroup>self.bookmarkForm.get('parameters')).removeControl('custom');
+      (<UntypedFormGroup>self.bookmarkForm.get('parameters')).addControl('custom', self.fb.array([]));
+      list = <UntypedFormArray>(<UntypedFormGroup>self.bookmarkForm.get('parameters')).get('custom');
     }
     if (self.editIndex < 0) {
       const tempIndex = list.value.findIndex(d => d.key === self.keyValuePair.key && d.value === self.keyValuePair.value);
@@ -201,7 +201,7 @@ export class ManageBookmarksComponent implements OnInit {
   }
   removekeyValue(index?) {
     const self = this;
-    const list: FormArray = <FormArray>(<FormGroup>self.bookmarkForm.get('parameters')).get('custom');
+    const list: UntypedFormArray = <UntypedFormArray>(<UntypedFormGroup>self.bookmarkForm.get('parameters')).get('custom');
     if (!index) {
       index = self.editIndex;
     }
@@ -224,9 +224,9 @@ export class ManageBookmarksComponent implements OnInit {
   fillForm() {
     const self = this;
     self.bookmarkForm.patchValue(self._bookmark);
-    (<FormGroup>self.bookmarkForm.get('parameters')).removeControl('custom');
-    (<FormGroup>self.bookmarkForm.get('parameters')).addControl('custom', self.fb.array([]));
-    const list: FormArray = <FormArray>(<FormGroup>self.bookmarkForm.get('parameters')).get('custom');
+    (<UntypedFormGroup>self.bookmarkForm.get('parameters')).removeControl('custom');
+    (<UntypedFormGroup>self.bookmarkForm.get('parameters')).addControl('custom', self.fb.array([]));
+    const list: UntypedFormArray = <UntypedFormArray>(<UntypedFormGroup>self.bookmarkForm.get('parameters')).get('custom');
     if (self._bookmark && self._bookmark.parameters && self._bookmark.parameters.custom) {
       self._bookmark.parameters.custom.forEach(element => {
         list.push(self.fb.group({
@@ -244,7 +244,7 @@ export class ManageBookmarksComponent implements OnInit {
   get isDuplicate() {
     const self = this;
     let retVal = false;
-    const list: FormArray = <FormArray>(<FormGroup>self.bookmarkForm.get('parameters')).get('custom');
+    const list: UntypedFormArray = <UntypedFormArray>(<UntypedFormGroup>self.bookmarkForm.get('parameters')).get('custom');
     const tempIndex = list.value.findIndex(d => d.key === self.keyValuePair.key);
     if (tempIndex > -1) {
       retVal = true;

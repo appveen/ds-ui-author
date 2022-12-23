@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, TemplateRef, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Form } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Form } from '@angular/forms';
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { sameName } from 'src/app/home/custom-validators/same-name-validator';
 import { emptyEnum } from 'src/app/home/custom-validators/empty-enum-validator';
@@ -15,7 +15,7 @@ import { AppService } from '../../services/app.service';
 export class FieldTypeSelectorComponent implements OnInit {
 
   @ViewChild('typeChangeModalTemplate', { static: false }) typeChangeModalTemplate: TemplateRef<HTMLElement>;
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() isLibrary: boolean;
   @Input() isDataFormat: boolean;
   @Input() formatType: string;
@@ -30,7 +30,7 @@ export class FieldTypeSelectorComponent implements OnInit {
   constructor(private schemaService: SchemaBuilderService,
     private commonService: CommonService,
     private appService: AppService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder) {
     const self = this;
     self.toggleChange = new EventEmitter();
     self.types = self.schemaService.getSchemaTypes();
@@ -126,17 +126,17 @@ export class FieldTypeSelectorComponent implements OnInit {
 
         type: type.value
       });
-    for (const i in (self.form.get('properties') as FormGroup).controls) {
+    for (const i in (self.form.get('properties') as UntypedFormGroup).controls) {
       if (i === 'name') {
         continue;
       }
-      (self.form.get('properties') as FormGroup).removeControl(i);
+      (self.form.get('properties') as UntypedFormGroup).removeControl(i);
     }
     for (const i in tempProp.controls) {
       if (i === 'name') {
         continue;
       }
-      (self.form.get('properties') as FormGroup).addControl(i, tempProp.controls[i]);
+      (self.form.get('properties') as UntypedFormGroup).addControl(i, tempProp.controls[i]);
     }
 
     if (type.value === 'Object') {
@@ -185,12 +185,12 @@ export class FieldTypeSelectorComponent implements OnInit {
       self.form.get('properties.pattern').patchValue(null);
     }
     if (self.form.get('properties.enum')) {
-      (self.form.get('properties') as FormGroup).removeControl('enum');
-      (self.form.get('properties') as FormGroup).addControl('enum', self.fb.array([]));
+      (self.form.get('properties') as UntypedFormGroup).removeControl('enum');
+      (self.form.get('properties') as UntypedFormGroup).addControl('enum', self.fb.array([]));
     }
     if (self.form.get('properties.hasTokens')) {
-      (self.form.get('properties') as FormGroup).removeControl('hasTokens');
-      (self.form.get('properties') as FormGroup).addControl('hasTokens', self.fb.array([]));
+      (self.form.get('properties') as UntypedFormGroup).removeControl('hasTokens');
+      (self.form.get('properties') as UntypedFormGroup).addControl('hasTokens', self.fb.array([]));
     }
     if (value == 'enum') {
       self.form.get('properties.enum').setValidators([emptyEnum]);

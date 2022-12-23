@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { VersionConfig } from 'src/app/utils/interfaces/schemaBuilder';
@@ -13,7 +13,7 @@ import { CommonService } from 'src/app/utils/services/common.service';
 })
 export class DataSettingsComponent implements OnInit {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   @Input() versionConfig: VersionConfig;
   retainDataHistory: boolean;

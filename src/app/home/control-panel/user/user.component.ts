@@ -7,7 +7,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbModalRef, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
 import {
@@ -50,8 +50,8 @@ export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('removeSelectedModal', { static: false })
   removeSelectedModal: TemplateRef<HTMLElement>;
   deleteModalRef: NgbModalRef;
-  searchForm: FormGroup;
-  userForm: FormGroup;
+  searchForm: UntypedFormGroup;
+  userForm: UntypedFormGroup;
   apiConfig: GetOptions = {};
   subscriptions: any = {};
   username: string;
@@ -92,9 +92,9 @@ export class UserComponent implements OnInit, OnDestroy {
   showSettings: boolean = false;
   showResetPassword: boolean = false;
   showPasswordSide: boolean = false;
-  resetPasswordForm: FormGroup;
+  resetPasswordForm: UntypedFormGroup;
   showAddAttribute: boolean = false;
-  attributesForm: FormGroup;
+  attributesForm: UntypedFormGroup;
   editMode: boolean = false;
   types: Array<any>;
   userGroups: Array<any> = [];
@@ -108,7 +108,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private commonService: CommonService,
     private ngbToolTipConfig: NgbTooltipConfig,
     private ts: ToastrService,

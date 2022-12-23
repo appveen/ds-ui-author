@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -12,7 +12,7 @@ import { CommonService } from 'src/app/utils/services/common.service';
 })
 export class SearchSettingsComponent implements OnInit {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   constructor(private commonService: CommonService,
     private appService: AppService,

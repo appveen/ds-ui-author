@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, AfterContentInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService } from 'src/app/utils/services/common.service';
@@ -18,7 +18,7 @@ export class AzureComponent implements OnInit, OnDestroy, AfterContentInit {
   @ViewChild('applyingChangesModal', { static: false }) applyingChangesModal: TemplateRef<HTMLElement>;
   subscriptions: any;
   activeStep: number;
-  ldapForm: FormGroup;
+  ldapForm: UntypedFormGroup;
   validateResponse: ValidateResponse;
   setSuperAdminBtn: boolean;
   users: Array<UsersResponse>;
@@ -33,7 +33,7 @@ export class AzureComponent implements OnInit, OnDestroy, AfterContentInit {
   constructor(
     private appService: AppService,
     private commonService: CommonService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private ts: ToastrService) {
     const self = this;

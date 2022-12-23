@@ -1,6 +1,6 @@
-import { FormArray, FormControl } from "@angular/forms";
+import { UntypedFormArray, FormControl } from "@angular/forms";
 
-export function duplicateStepName(control: FormArray) {
+export function duplicateStepName(control: UntypedFormArray) {
     const arr = control.value;
 
     var duplicates = arr.map(step => step.name).reduce(function (acc, el, i, arr) {
