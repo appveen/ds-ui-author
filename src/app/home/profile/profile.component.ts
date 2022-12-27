@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { CommonService } from '../../utils/services/common.service';
 import { matchPassword } from '../custom-validators/same-password-validator';
 import { SessionService } from 'src/app/utils/services/session.service';
@@ -12,7 +12,7 @@ import { SessionService } from 'src/app/utils/services/session.service';
 
 export class ProfileComponent implements OnInit {
     user: any;
-    passwordForm: FormGroup;
+    passwordForm: UntypedFormGroup;
     name: string;
     cp: boolean;
     cfp: boolean;
@@ -25,7 +25,7 @@ export class ProfileComponent implements OnInit {
 
     permissions: Array<any> = [];
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private commonService: CommonService,
         private sessionService: SessionService) {
         this.passwordForm = this.fb.group({

@@ -1,148 +1,125 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, EventEmitter, } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy, EventEmitter, TemplateRef, ViewChild } from '@angular/core';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { AgGridAngular, AgGridColumn } from 'ag-grid-angular';
-import { GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
 import * as _ from 'lodash';
 
 import { GetOptions, CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
-import { B2bFlowFilterComponent } from './b2b-flow-filter/b2b-flow-filter.component';
-import { B2bFlowCellComponent } from './b2b-flow-cell/b2b-flow-cell.component';
-import { environment } from 'src/environments/environment';
+import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
+import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'odp-b2b-flows',
   templateUrl: './b2b-flows.component.html',
-  styleUrls: ['./b2b-flows.component.scss']
+  styleUrls: ['./b2b-flows.component.scss'],
+  providers: [CommonFilterPipe]
 })
 export class B2bFlowsComponent implements OnInit, OnDestroy {
 
-  @ViewChild('agGrid') agGrid: AgGridAngular;
-  @ViewChild('newFlowModal', { static: false }) newFlowModal: TemplateRef<HTMLElement>;
-  form: FormGroup;
+  @ViewChild('alertModalTemplate', { static: false }) alertModalTemplate: TemplateRef<HTMLElement>;
+  alertModalTemplateRef: NgbModalRef;
+  form: UntypedFormGroup;
   apiConfig: GetOptions;
+  flowList: Array<any>;
+  alertModal: {
+    statusChange?: boolean;
+    title: string;
+    message: string;
+    index: number;
+  };
   subscriptions: any;
-  newFlowModalRef: NgbModalRef;
-  columnDefs: Array<AgGridColumn>;
-  dataSource: IDatasource;
+  showNewFlowWindow: boolean;
+  showLazyLoader: boolean;
+  showYamlWindow: boolean;
+  selectedFlow: any;
+  copied: any;
+  showOptionsDropdown: any;
+  selectedItemEvent: any
+  selectedLibrary: any;
   sortModel: any;
-  filterModel: any;
-  totalCount: number;
-  loadedCount: number;
-  noRowsTemplate: string;
+  breadcrumbPaths: Array<Breadcrumb>;
+  openDeleteModal: EventEmitter<any>;
+  searchTerm: string;
+  isClone: boolean = false;
+  cloneData: any;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder,
+    private commonFilter: CommonFilterPipe) {
     this.subscriptions = {};
     this.form = this.fb.group({
-      name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
+      name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
       type: ['API'],
-      inputStage: []
+      inputNode: []
     });
     this.apiConfig = {
       page: 1,
       count: 30
     };
-    this.noRowsTemplate = '<span>No records to display</span>';
+    this.flowList = [];
+    this.alertModal = {
+      statusChange: false,
+      title: '',
+      message: '',
+      index: -1,
+    };
+    this.openDeleteModal = new EventEmitter();
+    this.copied = {};
+    this.showOptionsDropdown = {};
+    this.showLazyLoader = true;
+    this.sortModel = {};
+    this.selectedFlow = {};
+    this.breadcrumbPaths = [{
+      active: true,
+      label: 'Data Pipes'
+    }];
   }
   ngOnInit() {
-    this.configureColumns();
-    this.dataSource = {
-      getRows: (params: IGetRowsParams) => {
-        this.agGrid.api.showLoadingOverlay();
-        this.apiConfig.page = Math.ceil((params.endRow / 30));
-        if (this.apiConfig.page === 1) {
-          this.loadedCount = 0;
-        }
-        if (!this.apiConfig.filter) {
-          this.apiConfig.filter = {};
-        }
-        this.apiConfig.sort = this.appService.getSortFromModel(this.agGrid.api.getSortModel());
-        if (!!this.subscriptions['data_' + this.apiConfig.page]) {
-          this.subscriptions['data_' + this.apiConfig.page].unsubscribe();
-        }
-        this.subscriptions['data_' + this.apiConfig.page] = this.getFlowCount()
-          .pipe(
-            switchMap(count => {
-              this.totalCount = count;
-              if (this.totalCount > 0) {
-                return this.getFlow();
-              } else {
-                this.agGrid.api.hideOverlay();
-                this.agGrid.api.showNoRowsOverlay();
-                return of(null);
-              }
-            })
-          ).subscribe(
-            docs => {
-              if (!!docs) {
-                this.loadedCount += docs.length;
-                this.agGrid.api.hideOverlay();
-                if (this.loadedCount < this.totalCount) {
-                  params.successCallback(docs);
-                } else {
-                  this.totalCount = this.loadedCount;
-                  params.successCallback(docs, this.totalCount);
-                }
-              } else {
-                params.successCallback([], 0);
-              }
-            },
-            err => {
-              this.agGrid.api.hideOverlay();
-              console.error(err);
-              params.failCallback();
-            }
-          );
-      }
-    };
+    this.getFlows();
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths);
     this.commonService.apiCalls.componentLoading = false;
     this.form.get('type').valueChanges.subscribe(val => {
       const name = this.form.get('name').value;
-      this.form.get('inputStage').patchValue({
+      this.form.get('inputNode').patchValue({
+        _id: this.appService.getNodeID(),
         type: val,
         options: {
-          _id: 'STAGE1000',
           method: 'POST',
           path: name ? _.camelCase(name) : null
         }
       });
     });
     this.form.get('name').valueChanges.subscribe(val => {
-      let inputStage = this.form.get('inputStage').value;
+      let inputNode = this.form.get('inputNode').value;
       const type = this.form.get('type').value;
-      if (!inputStage) {
-        inputStage = {
+      if (!inputNode) {
+        inputNode = {
           type: type ? type : 'API'
         };
       }
-      if (!inputStage.options) {
-        inputStage.options = {
-          method: 'POST',
-          path: val ? _.camelCase(val) : null
-        };
-      }
-      this.form.get('inputStage').patchValue(inputStage);
+      inputNode.options = {
+        method: 'POST',
+        path: val ? '/' + _.camelCase(val) : null
+      };
+      this.form.get('inputNode').patchValue(inputNode);
     });
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
-      this.agGrid.api.purgeInfiniteCache();
+      this.getFlows()
     });
     this.subscriptions['flow.delete'] = this.commonService.flow.delete.subscribe(data => {
-      this.agGrid.api.purgeInfiniteCache();
+      this.getFlows()
     });
     this.subscriptions['flow.status'] = this.commonService.flow.status.subscribe(data => {
-      this.agGrid.api.purgeInfiniteCache();
+      this.getFlows()
     });
     this.subscriptions['flow.new'] = this.commonService.flow.new.subscribe(data => {
-      this.agGrid.api.purgeInfiniteCache();
+      this.getFlows()
     });
   }
 
@@ -150,159 +127,105 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     Object.keys(this.subscriptions).forEach(e => {
       this.subscriptions[e].unsubscribe();
     });
-    if (this.newFlowModalRef) {
-      this.newFlowModalRef.close();
-    }
-  }
-
-  configureColumns() {
-    const columns = [];
-    let col = new AgGridColumn();
-    col.headerName = 'Name';
-    col.field = 'name';
-    col.pinned = 'left';
-    col.lockPinned = true;
-    col.width = 180;
-    col.sort = 'asc';
-    columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'URL';
-    col.field = 'url';
-    columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'Description';
-    col.field = 'description';
-    columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'Status';
-    col.field = 'status';
-    col.width = 100;
-    columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'Last Invoked';
-    col.field = 'lastInvoked';
-    col.width = 180;
-    columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'Options';
-    col.field = '_options';
-    col.pinned = 'right';
-    col.lockPinned = true;
-    columns.push(col);
-    columns.forEach((item: AgGridColumn) => {
-      item.suppressMovable = true;
-      item.resizable = true;
-      item.suppressMenu = true;
-      if (item.field !== '_options') {
-        item.sortable = true;
-        item.filter = 'agTextColumnFilter';
-        item.floatingFilterComponentFramework = B2bFlowFilterComponent;
-      }
-      item.cellRendererFramework = B2bFlowCellComponent;
-    });
-    this.columnDefs = columns;
   }
 
   newFlow() {
-    this.newFlowModalRef = this.commonService.modal(this.newFlowModal, { size: 'sm' });
-    this.newFlowModalRef.result.then(close => {
-      if (close && this.form.valid) {
-        this.triggerFlowCreate();
-      }
-    }, dismiss => {
-      this.form.reset();
-    });
+    this.form.reset({ inputNode: { type: 'API' } });
+    this.showNewFlowWindow = true;
   }
 
   triggerFlowCreate() {
+    if (this.form.invalid) {
+      return;
+    }
+    this.showLazyLoader = true;
+    this.showNewFlowWindow = false;
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
-    payload.stages = [];
+    payload.nodes = [];
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
-      this.form.reset();
-      this.ts.success('Function has been created.');
+      this.showLazyLoader = false;
+      this.form.reset({ type: 'API' });
+      this.ts.success('Flow has been created.');
       this.appService.edit = res._id;
       this.router.navigate(['/app/', this.commonService.app._id, 'flow', res._id]);
     }, err => {
-      this.form.reset();
+      this.showLazyLoader = false;
+      this.form.reset({ type: 'API' });
       this.commonService.errorToast(err);
     });
   }
 
-  getFlow() {
-    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, this.apiConfig);
+  triggerFlowClone() {
+    if (this.form.invalid) {
+      return;
+    }
+    this.showLazyLoader = true;
+    this.showNewFlowWindow = false;
+    const payload = _.cloneDeep(this.form.value);
+    payload['nodes'] = this.cloneData.nodes || [];
+    payload.app = this.commonService.app._id;
+    this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
+      this.showLazyLoader = false;
+      this.isClone = false;
+      this.form.reset({ type: 'API' });
+      this.ts.success('Flow has been created.');
+      this.appService.edit = res._id;
+      this.router.navigate(['/app/', this.commonService.app._id, 'flow', res._id]);
+    }, err => {
+      this.showLazyLoader = false;
+      this.form.reset({ type: 'API' });
+      this.isClone = false;
+      this.commonService.errorToast(err);
+    });
   }
 
-  getFlowCount() {
-    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/count`, { filter: this.apiConfig.filter });
-  }
-
-  gridReady(event: GridReadyEvent) {
-    this.sortModel = this.agGrid.api.getSortModel();
-    this.agGrid.api.sizeColumnsToFit();
-  }
-
-
-  filterModified(event) {
-    const filter = [];
-    const filterModel = this.agGrid.api.getFilterModel();
-    this.filterModel = filterModel;
-    if (filterModel) {
-      Object.keys(filterModel).forEach(key => {
-        try {
-          if (filterModel[key].filter) {
-            filter.push(JSON.parse(filterModel[key].filter));
-          }
-        } catch (e) {
-          console.error(e);
-        }
+  getFlows() {
+    this.showLazyLoader = true;
+    this.flowList = [];
+    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/count`).pipe(switchMap((count: any) => {
+      return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, {
+        count: count,
+        select: 'name inputNode status lastInvoked _metadata nodes'
       });
-    }
-    if (filter.length > 0) {
-      this.apiConfig.filter = { $and: filter };
-    } else {
-      this.apiConfig.filter = null;
-    }
-    if (!environment.production) {
-      console.log('Filter Modified', filterModel);
-    }
-  }
-
-  sortChanged(event) {
-    const sortModel = this.agGrid.api.getSortModel();
-    this.sortModel = sortModel;
-    if (!environment.production) {
-      console.log('Sort Modified', sortModel);
-    }
-  }
-
-  clearFilter() {
-    this.filterModel = null;
-    this.apiConfig.filter = null;
-    this.agGrid.api.setFilterModel(null);
-  }
-
-  clearSort() {
-    this.sortModel = null;
-    this.agGrid.api.setSortModel([{ colId: 'name', sort: 'asc' }]);
+    })).subscribe((res: any) => {
+      this.showLazyLoader = false;
+      res.forEach(item => {
+        item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/pipes/${this.app}` + item.inputNode.options.path;
+        this.flowList.push(item);
+      });
+    }, err => {
+      this.showLazyLoader = false;
+      console.log(err);
+      this.commonService.errorToast(err);
+    });
   }
 
 
-  get hasFilter() {
-    if (this.filterModel) {
-      return Object.keys(this.filterModel).length > 0;
+  getStatusClass(srvc) {
+    if (srvc.status.toLowerCase() === 'active') {
+      return 'text-success';
     }
-    return false;
+    if (srvc.status.toLowerCase() === 'stopped' || srvc.status.toLowerCase() === 'undeployed') {
+      return 'text-danger';
+    }
+    if (srvc.status.toLowerCase() === 'draft') {
+      return 'text-accent';
+    }
+    if (srvc.status.toLowerCase() === 'pending') {
+      return 'text-warning';
+    }
+    return 'text-secondary';
   }
 
-  get hasSort() {
-    if (!this.sortModel
-      || this.sortModel.findIndex(e => e.colId === 'name') === -1
-      || this.sortModel.length !== 1) {
-      return true;
+  getStatusLabel(srvc) {
+    if (srvc.status.toLowerCase() === 'stopped' || srvc.status.toLowerCase() === 'undeployed') {
+      return 'Stopped';
     }
-    return false;
+    return srvc.status;
   }
+
+
 
   canManageFlow(id: string) {
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
@@ -316,6 +239,42 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     return this.hasPermission('PMF');
   }
 
+  canDeployFlow(flow) {
+    if (!flow.draftVersion) {
+      return false;
+    }
+    if (this.commonService.userDetails.isSuperAdmin) {
+      return true;
+    } else if (
+      this.commonService.isAppAdmin &&
+      !this.commonService.userDetails.verifyDeploymentUser
+    ) {
+      return true;
+    } else if (
+      this.commonService.userDetails.verifyDeploymentUser &&
+      this.commonService.userDetails._id === flow._metadata.lastUpdatedBy
+    ) {
+      return false;
+    } else {
+      return this.commonService.hasPermission('PMFPD', 'FLOW');
+    }
+  }
+
+  canStartStopFlow(id: string) {
+    const temp = this.flowList.find((e) => e._id === id);
+    if (temp && temp.status !== 'Stopped' && temp.status !== 'Active') {
+      return false;
+    }
+    if (
+      this.commonService.isAppAdmin ||
+      this.commonService.userDetails.isSuperAdmin
+    ) {
+      return true;
+    } else {
+      return this.commonService.hasPermission('PMFPS', 'FLOW');
+    }
+  }
+
   hasPermission(type: string, entity?: string) {
     return this.commonService.hasPermission(type, entity);
   }
@@ -323,4 +282,266 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     return this.commonService.hasPermission('PMF', entity);
   }
 
+  deployFlow(index: number) {
+    this.alertModal.statusChange = true;
+    if (
+      this.flowList[index].status === 'Draft' ||
+      this.flowList[index].draftVersion
+    ) {
+      this.alertModal.title = 'Deploy ' + this.flowList[index].name + '?';
+      this.alertModal.message =
+        'Are you sure you want to Deploy this function? Once Deployed, "' +
+        this.flowList[index].name +
+        '" will be running the latest version.';
+    } else {
+      return;
+    }
+    this.alertModalTemplateRef = this.commonService.modal(
+      this.alertModalTemplate
+    );
+    this.alertModalTemplateRef.result.then(
+      (close) => {
+        if (close) {
+          const url =
+            `/${this.commonService.app._id}/flow/utils/` +
+            this.flowList[index]._id +
+            '/deploy';
+          this.subscriptions['updateservice'] = this.commonService
+            .put('partnerManager', url, { app: this.commonService.app._id })
+            .subscribe(
+              (d) => {
+                this.ts.info('Deploying function...');
+                this.flowList[index].status = 'Pending';
+              },
+              (err) => {
+                this.commonService.errorToast(err);
+              }
+            );
+        }
+      },
+      (dismiss) => { }
+    );
+  }
+
+  toggleFlowStatus(index: number) {
+    this.alertModal.statusChange = true;
+
+    if (this.flowList[index].status === 'Active') {
+      this.alertModal.title = 'Stop ' + this.flowList[index].name + '?';
+      this.alertModal.message =
+        'Are you sure you want to stop this function? : ' + this.flowList[index].name;
+    } else {
+      this.alertModal.title = 'Start ' + this.flowList[index].name + '?';
+      this.alertModal.message =
+        'Are you sure you want to start this function? : ' + this.flowList[index].name;
+    }
+    this.alertModalTemplateRef = this.commonService.modal(
+      this.alertModalTemplate
+    );
+    this.alertModalTemplateRef.result.then(
+      (close) => {
+        if (close) {
+          let url =
+            `/${this.commonService.app._id}/flow/utils/` +
+            this.flowList[index]._id +
+            '/start';
+          if (this.flowList[index].status === 'Active') {
+            url =
+              `/${this.commonService.app._id}/flow/utils/` +
+              this.flowList[index]._id +
+              '/stop';
+          }
+          this.subscriptions['updateservice'] = this.commonService
+            .put('partnerManager', url, { app: this.commonService.app._id })
+            .subscribe(
+              (d) => {
+                if (this.flowList[index].status === 'Active') {
+                  this.ts.info('Stopping function...');
+                } else {
+                  this.ts.info('Starting function...');
+                }
+                this.flowList[index].status = 'Pending';
+              },
+              (err) => {
+                this.commonService.errorToast(err);
+              }
+            );
+        }
+      },
+      (dismiss) => { }
+    );
+  }
+
+  closeDeleteModal(data) {
+    if (data) {
+      const url =
+        `/${this.commonService.app._id}/flow/` +
+        this.flowList[data.index]._id;
+      this.showLazyLoader = true;
+      this.subscriptions['deleteservice'] = this.commonService
+        .delete('partnerManager', url)
+        .subscribe(
+          (d) => {
+            this.showLazyLoader = false;
+            this.ts.info(d.message ? d.message : 'Deleting flow...');
+            this.flowList[data.index].status = 'Pending';
+          },
+          (err) => {
+            this.showLazyLoader = false;
+            this.commonService.errorToast(
+              err,
+              'Oops, something went wrong. Please try again later.'
+            );
+          }
+        );
+    }
+  }
+
+  editFlow(index: number) {
+    this.appService.edit = this.flowList[index]._id;
+    this.router.navigate(['/app/', this.commonService.app._id, 'flow', this.appService.edit,
+    ]);
+  }
+
+  viewFlow(index: number) {
+    this.router.navigate(['/app', this.commonService.app._id, 'flow', this.flowList[index]._id]);
+  }
+
+  deleteFlow(index: number) {
+    this.alertModal.statusChange = false;
+    this.alertModal.title = 'Delete Flow?';
+    this.alertModal.message =
+      'Are you sure you want to delete this flow? This action will delete : ' + this.flowList[index].name;
+    this.alertModal.index = index;
+    this.openDeleteModal.emit(this.alertModal);
+  }
+
+  cloneFlow(index: number) {
+    this.cloneData = null;
+    this.form.reset();
+    this.isClone = true;
+    const temp = this.flowList[index];
+    this.form.get('name').patchValue(temp.name + ' Copy');
+    this.form.get('type').patchValue(temp.inputNode.type);
+    this.form.get('inputNode').patchValue(temp.inputNode);
+    this.cloneData = temp;
+    this.showNewFlowWindow = true;
+  }
+
+  closeYamlWindow() {
+    this.showYamlWindow = false;
+    this.selectedFlow = null;
+  }
+
+  getYamls(index: number) {
+    this.selectedFlow = this.flowList[index];
+
+    if (!this.selectedFlow.serviceYaml || !this.selectedFlow.deploymentYaml) {
+      this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/${this.flowList[index]._id}/yamls`, {})
+        .subscribe(data => {
+          this.selectedFlow.serviceYaml = data.service;
+          this.selectedFlow.deploymentYaml = data.deployment;
+          this.showYamlWindow = true;
+        },
+          (err) => {
+            this.commonService.errorToast(err);
+          });
+    } else {
+      this.showYamlWindow = true;
+    }
+  }
+
+  downloadYamls() {
+    this.appService.downloadText(this.selectedFlow.name + '.yaml', this.selectedFlow.serviceYaml + '\n---\n' + this.selectedFlow.deploymentYaml);
+  }
+
+  copyText(text: string, type: string) {
+    this.appService.copyToClipboard(text);
+    this.copied[type] = true;
+    setTimeout(() => {
+      this.copied[type] = false;
+    }, 2000);
+  }
+
+  copyUrl(flow: any) {
+    this.copied[flow._id] = true;
+    this.appService.copyToClipboard(flow.url);
+    setTimeout(() => {
+      this.copied[flow._id] = false;
+    }, 2000);
+  }
+
+  applySort(field: string) {
+    if (!this.sortModel[field]) {
+      this.sortModel = {};
+      this.sortModel[field] = 1;
+    } else if (this.sortModel[field] == 1) {
+      this.sortModel[field] = -1;
+    } else {
+      delete this.sortModel[field];
+    }
+  }
+
+  showDropDown(event: any, i: number) {
+    this.selectedItemEvent = event;
+    Object.keys(this.showOptionsDropdown).forEach(key => {
+      this.showOptionsDropdown[key] = false;
+    })
+    this.selectedLibrary = this.flowList[i];
+    this.showOptionsDropdown[i] = true;
+  }
+
+  private compare(a: any, b: any) {
+    if (a > b) {
+      return 1;
+    } else if (a < b) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
+  get dropDownStyle() {
+    let top = (this.selectedItemEvent.clientY + 10);
+    if (this.selectedItemEvent.clientY > 430) {
+      top = this.selectedItemEvent.clientY - 106
+    }
+    return {
+      top: top + 'px',
+      right: '50px'
+    };
+  }
+
+  get records() {
+    let records = this.commonFilter.transform(this.flowList, 'name', this.searchTerm);
+    const field = Object.keys(this.sortModel)[0];
+    if (field) {
+      records = records.sort((a, b) => {
+        if (this.sortModel[field] == 1) {
+          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+            return this.compare((a[field]), (b[field]));
+          } else {
+            return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
+          }
+        } else if (this.sortModel[field] == -1) {
+          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+            return this.compare((b[field]), (a[field]));
+          } else {
+            return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
+          }
+        } else {
+          return 0;
+        }
+      });
+    } else {
+      records = records.sort((a, b) => {
+        return this.compare(b._metadata.lastUpdated, a._metadata.lastUpdated);
+      });
+    }
+    return records;
+  }
+
+  get app() {
+    return this.commonService.app._id;
+  }
 }

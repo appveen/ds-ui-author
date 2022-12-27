@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
@@ -29,7 +28,6 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes),
         NgbModule,
-        IconsModule,
         ClickOutsideModule,
         BreadcrumbModule,
         SearchBoxModule,

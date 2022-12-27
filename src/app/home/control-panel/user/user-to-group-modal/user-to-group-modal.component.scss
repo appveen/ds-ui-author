@@ -1,0 +1,38 @@
+@import 'src/assets/scss/bootstrap/_functions.scss';
+@import 'src/assets/scss/bootstrap/_variables.scss';
+
+
+
+::ng-deep .mat-dialog-container {
+  overflow: hidden !important;
+  padding: 32px
+}
+
+
+.title {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  color: $headings;
+}
+
+
+.sub-title {
+  margin-top: 20px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: $sub-headings;
+}
+
+.grid {
+  height: 45vh;
+  max-height: 45vh;
+  overflow-x: hidden;
+  padding: 10px;
+
+}
+
+//   ::ng-deep .ag-theme-balham .ag-checkbox  {
+//     padding-bottom: 15px !important;
+//   }

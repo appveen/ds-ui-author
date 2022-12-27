@@ -36,7 +36,20 @@ export class FieldTypeComponent {
     if (temp) {
       return temp.class;
     } else {
-      return 'odp-abc';
+      return 'dsi-text';
+    }
+  }
+
+  getStyle(field?: any) {
+    this.makeStructure();
+    if (!field) {
+      field = this.field;
+    }
+    const temp = this.types.find(e => e.value === field.type);
+    if (temp) {
+      return temp.bgColor;
+    } else {
+      return '#E7CBD4';
     }
   }
 
@@ -79,9 +92,9 @@ export class FieldTypeComponent {
     } else {
       label = temp ? temp.label : 'Text';
     }
-    if (field.properties.password) {
-      label += '  [secure]';
-    }
+    // if (field.properties.password) {
+    //   label += '  [secure]';
+    // }
     if (!label) {
       label = 'Text';
     }
@@ -98,6 +111,13 @@ export class FieldTypeComponent {
   get collectionClass() {
     if (this.field.type === 'Array' && this.field.definition && this.field.definition.length > 0) {
       return this.getClass(this.field.definition[0]);
+    }
+    return null;
+  }
+
+  get collectionStyle() {
+    if (this.field.type === 'Array' && this.field.definition && this.field.definition.length > 0) {
+      return this.getStyle(this.field.definition[0]);
     }
     return null;
   }

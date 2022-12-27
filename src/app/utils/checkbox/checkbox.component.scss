@@ -1,7 +1,18 @@
-.custom-checkbox {
-  .overlay {
-    top: 0;
-    left: 0;
-    z-index: 10;
-  }
+.overlay {
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.check {
+  display: inline-block;
+  height: 10px;
+  width: 5px;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+  margin-left: 6px;
+  margin-top: -2px;
 }

@@ -4,12 +4,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DataFormatListingComponent } from './data-format-listing.component';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 import { FormatTypeBadgeModule } from 'src/app/utils/format-type-badge/format-type-badge.module';
+import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
+import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 
 const routes: Routes = [
   {
@@ -23,12 +24,13 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     NgbModule,
-    IconsModule,
     ClickOutsideModule,
     BreadcrumbModule,
     SearchBoxModule,
     DeleteModalModule,
-    FormatTypeBadgeModule
+    FormatTypeBadgeModule,
+    AutoFocusModule,
+    RoundRadioModule
   ],
   declarations: [DataFormatListingComponent]
 })

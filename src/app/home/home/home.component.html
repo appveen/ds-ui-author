@@ -1,0 +1,57 @@
+<div class="d-flex flex-column w-100 h-100">
+  <div class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white border-bottom border-dark">
+    <div class="left d-flex align-items-center" [ngClass]="{ 'add-blur': addBlur }">
+      <div class="logo"></div>
+    </div>
+    <div class="w-50 d-flex align-items-center justify-content-end">
+      <div class="d-flex align-items-center mr-3"></div>
+      <div
+        class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle border dark-border hover"
+        (click)="showProfileOptions = !showProfileOptions">
+        <span class="dsi dsi-user sub-heading font-14"></span>
+        <span *ngIf="isAppAdmin" class="dsi dsi-admin text-warning font-10 position-absolute"
+          ngbTooltip="You are admin of this App" container="body" placement="left"></span>
+      </div>
+      <div class="profile position-absolute bg-white p-4 border" *ngIf="showProfileOptions" odpClickOutside
+        [ignore]="['.profile-icon', '.dsi-user']" (outside)="showProfileOptions = false">
+        <div class="profile-container position-relative d-flex align-items-center h-100 w-100 pb-4 border-bottom">
+          <div
+            class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border dark-border mr-4">
+            <span class="dsi dsi-user sub-heading"></span>
+          </div>
+          <div class="profile-data d-flex flex-column">
+            <div class="profile-data-name text-truncate font-20 fw-600">{{ name }}</div>
+            <div class="profile-data-more text-truncate font-14 fw-400 sub-heading" [ngbTooltip]="username">
+              {{ username }}
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-options py-3">
+          <div *ngIf="authType && authType === 'local'" class="fw-500 py-2 hover d-flex align-items-center"
+            (click)="showProfileOptions = false; toggleChangePassword = true">
+            <span class="dsi dsi-settings sub-heading mr-2"></span>
+            <span>Change Password</span>
+          </div>
+          <div class="fw-500 py-2 hover d-flex align-items-center" (click)="logout()" id="logout">
+            <span class="dsi dsi-logout sub-heading mr-2"></span>
+            <span>Logout</span>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between font-12 fw-400 sub-heading">
+          <span class="last-login">Last Login:
+            {{ lastLogin | dateFormat: 'YYYY MMM DD, HH:mm:ss, z':'Etc/Zulu' }}
+          </span>
+          <span class="app-version">v{{ version }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="overflow-y: auto">
+    <odp-app-list [isHome]="true" [navToApp]="navToApp"></odp-app-list>
+  </div>
+  <div>
+    <odp-change-password *ngIf="toggleChangePassword" [(toggleModal)]="toggleChangePassword"></odp-change-password>
+  </div>
+</div>

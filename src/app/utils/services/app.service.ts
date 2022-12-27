@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { FormArray, FormControl, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
 import * as deepmerge from 'deepmerge';
 import * as uuid from 'uuid/v1';
 import * as _ from 'lodash';
@@ -35,6 +35,8 @@ export class AppService {
     formatTypeChange: EventEmitter<any>;
     validAuthTypes: string[];
     updateCodeEditorState: EventEmitter<any>;
+    connectorsList: Array<any>;
+    storageTypes: Array<any>
 
     constructor() {
         const self = this;
@@ -103,13 +105,13 @@ export class AppService {
         return JSON.parse(JSON.stringify(obj));
     }
 
-    rand(index) {
+    rand(index: number) {
         const i = Math.pow(10, index - 1);
         const j = Math.pow(10, index) - 1;
         return Math.floor(Math.random() * (j - i + 1)) + i;
     }
 
-    randomStr(len) {
+    randomStr(len: number) {
         let str = '';
         const possible =
             'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -119,7 +121,7 @@ export class AppService {
         return str;
     }
 
-    randomID(len) {
+    randomID(len: number) {
         let str = '';
         const possible =
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -252,7 +254,7 @@ export class AppService {
         return fields;
     }
 
-    removeField(arr: FormArray, fieldId) {
+    removeField(arr: UntypedFormArray, fieldId) {
         const self = this;
         let temp = -1;
         arr.controls.forEach((e, i) => {
@@ -260,9 +262,9 @@ export class AppService {
                 if (e.get('_fieldId').value === fieldId) {
                     temp = i;
                 } else if (e.get('type').value === 'Object') {
-                    self.removeField(e.get('definition') as FormArray, fieldId);
+                    self.removeField(e.get('definition') as UntypedFormArray, fieldId);
                 } else if (e.get('type').value === 'Array' && e.get(['definition', 0, 'type']).value === 'Object') {
-                    self.removeField(e.get(['definition', 0, 'definition']) as FormArray, fieldId);
+                    self.removeField(e.get(['definition', 0, 'definition']) as UntypedFormArray, fieldId);
                 }
             }
         });
@@ -512,6 +514,16 @@ export class AppService {
         document.body.removeChild(el);
     }
 
+    downloadText(filename: string, text: string) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+
     toCamelCase(text: string) {
         if (text) {
             return _.camelCase(text);
@@ -535,7 +547,7 @@ export class AppService {
     }
 
     getIpFormControl(val?: string) {
-        return new FormControl(val, [Validators.required, ipValidate]);
+        return new UntypedFormControl(val, [Validators.required, ipValidate]);
     }
 
     countAttr(definition) {
@@ -640,5 +652,14 @@ export class AppService {
                 step.id = 'C' + this.rand(10);
             });
         }
+    }
+
+    getNodeID() {
+        let id = 'S';
+        for (let i = 0; i < 5; i++) {
+            const index = Math.floor((Math.random() * 1000) % 26);
+            id += String.fromCharCode(65 + index);
+        }
+        return id;
     }
 }

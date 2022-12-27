@@ -11,7 +11,7 @@ import {
     AfterViewInit,
     TemplateRef
 } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, UntypedFormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -29,7 +29,6 @@ import { ManagePermissionsComponent } from '../schema-utils/manage-permissions/m
 import { AppService } from '../../utils/services/app.service';
 import { ShortcutService } from '../../utils/shortcut/shortcut.service';
 import { maxLenValidator } from 'src/app/home/custom-validators/min-max-validator';
-import { counterPaddingValidator, counterValidator } from 'src/app/home/custom-validators/counter-padding.validator';
 import { CanComponentDeactivate } from 'src/app/utils/guards/route.guard';
 import { IntegrationComponent } from 'src/app/home/schema-utils/integration/integration.component';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
@@ -37,6 +36,7 @@ import { EditConfig, ActionConfig, VersionConfig, DeleteModalConfig } from 'src/
 import { SchemaValuePipe } from '../schema-utils/schema-value.pipe';
 import { PrettyJsonPipe } from 'src/app/utils/pretty-json/pretty-json.pipe';
 import { wizardSteps } from '../custom-validators/wizard-steps.validator';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'odp-schema-builder',
@@ -59,7 +59,7 @@ export class SchemaBuilderComponent implements
     schemaToggleTemplateRef: NgbModalRef;
     toggleTemplateRef: NgbModalRef;
     app: string;
-    form: FormGroup;
+    form: UntypedFormGroup;
     showLazyLoader: boolean;
     cloneServiceId: string;
     editServiceId: string;
@@ -101,7 +101,7 @@ export class SchemaBuilderComponent implements
         }
     }
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private router: Router,
         private schemaService: SchemaBuilderService,
         private commonService: CommonService,
@@ -140,6 +140,10 @@ export class SchemaBuilderComponent implements
             status: false,
             message: null
         };
+        const connectorForm = this.fb.group({
+            data: [{}],
+            file: [{}]
+        })
         self.form = self.fb.group({
             name: ['', [Validators.required, maxLenValidator(40)]],
             description: [null, [maxLenValidator(250)]],
@@ -177,7 +181,6 @@ export class SchemaBuilderComponent implements
                 ),
                 self.schemaService.getDefinitionStructure()
             ]),
-
             webHooks: [[]],
             preHooks: [[]],
             workflowHooks: self.fb.group({
@@ -196,7 +199,9 @@ export class SchemaBuilderComponent implements
             }),
             disableInsights: [false],
             headers: [],
-            enableSearchIndex: ''
+            enableSearchIndex: '',
+            ingestionPoints: [],
+            connectors: connectorForm
         });
 
         self.versionConfig = {
@@ -222,6 +227,7 @@ export class SchemaBuilderComponent implements
             label: 'Data Services',
             url: '/app/' + self.commonService.app._id + '/sm'
         });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         self.enableEdit(false);
         self.route.params.subscribe(param => {
             if (param.id) {
@@ -244,6 +250,7 @@ export class SchemaBuilderComponent implements
                     active: true,
                     label: 'New Data Service'
                 });
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                 if (self.commonService.app.serviceVersionValidity) {
                     self.form.get('versionValidity.validityType').patchValue(self.commonService.app.serviceVersionValidity.validityType);
                     self.form.get('versionValidity.validityValue').patchValue(self.commonService.app.serviceVersionValidity.validityValue);
@@ -311,12 +318,9 @@ export class SchemaBuilderComponent implements
                 }
             }
         });
-        self.form.valueChanges.subscribe(val => {
-            if (val && val.definition) {
-                self.exampleJSON = self.schemaValuePipe.transform(val.definition);
-                self.exampleSchema = self.schemaStructurePipe.transform(val);
-            }
-        });
+        // this.getConnectors();
+
+        this.getAvailableConnectors();
     }
 
     ngOnDestroy() {
@@ -345,6 +349,11 @@ export class SchemaBuilderComponent implements
         if (self.schemaName) {
             self.schemaName.nativeElement.focus();
         }
+    }
+
+    generateData() {
+        this.exampleJSON = this.schemaValuePipe.transform(this.form.get('definition').value);
+        this.exampleSchema = this.schemaStructurePipe.transform(this.form.value);
     }
 
     fetchPermissions(id) {
@@ -377,6 +386,7 @@ export class SchemaBuilderComponent implements
     get stateModelIfEnabled() {
         const self = this;
         if (self.form.get(['stateModel', 'enabled']).value) {
+            this.schemaService.stateModel=self.form.get(['stateModel', 'attribute'])
             return self.form.get(['stateModel', 'attribute'])
         }
         else {
@@ -404,6 +414,9 @@ export class SchemaBuilderComponent implements
 
     toggleSchemaType(schemaFree: boolean) {
         const self = this;
+        if (!this.edit || !this.edit.status) {
+            return false;
+        }
         if (schemaFree) {
             self.toggleSchemaModal = {
                 title: 'Enable Schema Free',
@@ -416,6 +429,9 @@ export class SchemaBuilderComponent implements
                 message: 'Define data in collection, existing data will be maintained but might not be accessible. New documents will require validations',
                 info: ''
             };
+        }
+        if (self.schemaToggleTemplateRef) {
+            self.schemaToggleTemplateRef.close(false);
         }
         self.schemaToggleTemplateRef = self.commonService.modal(self.schemaToggleTemplate);
         self.schemaToggleTemplateRef.result.then((response) => {
@@ -444,19 +460,19 @@ export class SchemaBuilderComponent implements
         });
 
         // reset personalize 
-        (self.form.get('wizard.steps') as FormArray).clear();
-        (self.form.get('wizard.usedFields') as FormArray).clear();
+        (self.form.get('wizard.steps') as UntypedFormArray).clear();
+        (self.form.get('wizard.usedFields') as UntypedFormArray).clear();
         self.form.get('wizard.selectedStep').patchValue([0]);
 
         // remove all attributes 
-        (self.form.controls.definition as FormArray).clear();
+        (self.form.controls.definition as UntypedFormArray).clear();
 
         // reset maker checker 
-        (self.form.get('workflowConfig.makerCheckers') as FormArray).clear()
+        (self.form.get('workflowConfig.makerCheckers') as UntypedFormArray).clear()
         self.form.get('workflowConfig.enabled').patchValue(false);
 
         // reset workflow hooks
-        (self.form.get(['workflowHooks', 'postHooks']) as FormGroup).reset({
+        (self.form.get(['workflowHooks', 'postHooks']) as UntypedFormGroup).reset({
             submit: [],
             rework: [],
             discard: [],
@@ -473,7 +489,7 @@ export class SchemaBuilderComponent implements
 
         const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
         tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
-        (self.form.controls.definition as FormArray).push(self.fb.group({
+        (self.form.controls.definition as UntypedFormArray).push(self.fb.group({
             key: ['_id'],
             type: ['id'],
             prefix: [null],
@@ -498,6 +514,9 @@ export class SchemaBuilderComponent implements
 
     save(deploy?: boolean) {
         const self = this;
+        if (self.form.get('schemaFree').value) {
+            self.form.get('connectors').get('file').setValue({})
+        }
         const value = self.form.getRawValue();
         self.action.loading = true;
         self.action.message = null;
@@ -647,7 +666,7 @@ export class SchemaBuilderComponent implements
         if (place && self.schemaService.selectedFieldId) {
             self.schemaService.addAttribute.emit(place);
         } else {
-            const tempArr = self.form.controls.definition as FormArray;
+            const tempArr = self.form.controls.definition as UntypedFormArray;
             const temp = self.schemaService.getDefinitionStructure({ _newField: true });
             tempArr.push(temp);
 
@@ -663,11 +682,11 @@ export class SchemaBuilderComponent implements
         self.deleteModalTemplateRef = self.commonService.modal(self.deleteModalTemplate);
         self.deleteModalTemplateRef.result.then((close) => {
             if (close) {
-                (self.form.controls.definition as FormArray).clear();
+                (self.form.controls.definition as UntypedFormArray).clear();
                 const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
                 tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
 
-                (self.form.controls.definition as FormArray).push(self.fb.group({
+                (self.form.controls.definition as UntypedFormArray).push(self.fb.group({
                     key: ['_id'],
                     type: ['id'],
                     prefix: [null],
@@ -687,6 +706,7 @@ export class SchemaBuilderComponent implements
 
     cancel() {
         const self = this;
+        self.schemaService.activeProperty.emit(null);
         if (self.form.dirty || self.roleChange) {
             self.deleteModal.title = 'Cancel';
             self.deleteModal.message = 'Are you sure you want to cancel all the unsaved changes' +
@@ -703,7 +723,9 @@ export class SchemaBuilderComponent implements
                             self.roleChange = false;
                             self.edit.status = false;
                             self.breadcrumbPaths.pop();
+                            this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                             self.fillDetails(self.edit.id);
+                            this.activeTab = 0;
                         }
                     } else {
                         self.router.navigate(['/app/', self.commonService.app._id, 'sm']);
@@ -717,6 +739,7 @@ export class SchemaBuilderComponent implements
                 } else {
                     if (self.edit.status) {
                         self.edit.status = false;
+                        this.activeTab = 0;
                     } else {
                         self.router.navigate(['/app/', self.commonService.app._id, 'sm']);
                     }
@@ -752,7 +775,7 @@ export class SchemaBuilderComponent implements
 
     fillDetails(id) {
         const self = this;
-        (self.form.get('definition') as FormArray).clear();
+        (self.form.get('definition') as UntypedFormArray).clear();
         self.edit.loading = true;
         self.subscriptions['getservice'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/` + id + '?draft=true', { filter: { app: this.commonService.app._id } })
             .subscribe(res => {
@@ -760,10 +783,14 @@ export class SchemaBuilderComponent implements
                 self.schemaService.initialState(res);
                 res.definition = self.schemaService.patchType(res.definition);
                 self.serviceObj = res;
+                self.commonService.serviceData = res;
                 if (self.editServiceId || self.cloneServiceId) {
                     self.enableEdit(true);
                 }
                 self.nameChange.emit(res.name);
+                if (res.schemaFree) {
+                    this.schemaFreeConfiguration()
+                }
                 // self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/service/${self.serviceObj._id}/swagger/${self.serviceObj.app}${self.serviceObj.api}`;
                 self.serviceObj['docapi'] = `${environment.url.doc}/?q=/api/a/sm/${self.serviceObj.app}/service/utils/${self.serviceObj._id}/swagger/${self.serviceObj.app}${self.serviceObj.api}`;
 
@@ -776,7 +803,7 @@ export class SchemaBuilderComponent implements
                 self.fillMakerChecker(res);
 
                 if (!self.form.get(['definition', 0])) {
-                    (self.form.get(['definition']) as FormArray).push(self.fb.group({
+                    (self.form.get(['definition']) as UntypedFormArray).push(self.fb.group({
                         key: ['_id'],
                         type: ['id'],
                         prefix: [null],
@@ -793,15 +820,15 @@ export class SchemaBuilderComponent implements
                 temp.definition.filter(def => def.key !== '_id').forEach(def => {
                     const tempDef = self.schemaService.getDefinitionStructure(self.appService.cloneObject(def));
                     tempDef.get('properties.name').patchValue(def.properties.name);
-                    (self.form.get('definition') as FormArray).push(tempDef);
+                    (self.form.get('definition') as UntypedFormArray).push(tempDef);
                 });
 
                 temp.tags.forEach(tag => {
-                    (self.form.get('tags') as FormArray).push(new FormControl(tag));
+                    (self.form.get('tags') as UntypedFormArray).push(new UntypedFormControl(tag));
                 });
                 if (res.wizard && res.wizard.length > 0) {
                     res.wizard.forEach((step, i) => {
-                        (self.form.get('wizard.steps') as FormArray).push(self.fb.group({
+                        (self.form.get('wizard.steps') as UntypedFormArray).push(self.fb.group({
                             name: [null, [Validators.required, maxLenValidator(40)]],
                             fields: self.fb.array([]),
                             actions: self.fb.array([])
@@ -815,15 +842,15 @@ export class SchemaBuilderComponent implements
                                 type: [action.type],
                                 hookId: [action.hookId]
                             });
-                            (((self.form.get('wizard.steps') as FormArray)
-                                .at(+i) as FormGroup).get('actions') as FormArray).push(actionHookForm);
+                            (((self.form.get('wizard.steps') as UntypedFormArray)
+                                .at(+i) as UntypedFormGroup).get('actions') as UntypedFormArray).push(actionHookForm);
                         }
                         for (const field of step.fields) {
-                            (self.form.get('definition') as FormArray).controls.forEach(e => {
+                            (self.form.get('definition') as UntypedFormArray).controls.forEach(e => {
                                 if (!e.get('_id')) {
                                     if (e.value.key === field) {
-                                        (self.form.get('wizard.usedFields') as FormArray).push(e);
-                                        (self.form.get(['wizard', 'steps', +i, 'fields']) as FormArray).push(e);
+                                        (self.form.get('wizard.usedFields') as UntypedFormArray).push(e);
+                                        (self.form.get(['wizard', 'steps', +i, 'fields']) as UntypedFormArray).push(e);
 
                                     }
                                 } else {
@@ -835,8 +862,8 @@ export class SchemaBuilderComponent implements
                                                 readonly: e.value._id.properties.readonly,
                                             }
                                         });
-                                        (self.form.get('wizard.usedFields') as FormArray).push(temp2);
-                                        (self.form.get(['wizard', 'steps', +i, 'fields']) as FormArray).push(temp2);
+                                        (self.form.get('wizard.usedFields') as UntypedFormArray).push(temp2);
+                                        (self.form.get(['wizard', 'steps', +i, 'fields']) as UntypedFormArray).push(temp2);
 
                                     }
                                 }
@@ -854,6 +881,7 @@ export class SchemaBuilderComponent implements
                     active: true,
                     label: serviceName
                 });
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                 if (self.cloneServiceId) {
                     const name = self.form.get('name').value;
                     self.form.get('name').patchValue(name + ' Copy');
@@ -870,12 +898,12 @@ export class SchemaBuilderComponent implements
         const self = this;
         if (res.workflowConfig && res.workflowConfig.makerCheckers.length > 0) {
             res.workflowConfig.makerCheckers.forEach(makerChecker => {
-                let makerCheckerFormArray = (self.form.get(['workflowConfig', 'makerCheckers']) as FormArray);
+                let makerCheckerFormArray = (self.form.get(['workflowConfig', 'makerCheckers']) as UntypedFormArray);
                 let makerCheckerFormGrp = self.fb.group({
                     steps: self.fb.array([])
                 });
                 makerChecker.steps.forEach(step => {
-                    (makerCheckerFormGrp.get('steps') as FormArray).push(self.fb.group({
+                    (makerCheckerFormGrp.get('steps') as UntypedFormArray).push(self.fb.group({
                         id: [step.id],
                         name: step.name,
                         approvals: step.approvals
@@ -952,12 +980,12 @@ export class SchemaBuilderComponent implements
 
     get changesDoneInDesign() {
         const self = this;
-        return (self.form.get('definition') as FormArray).dirty;
+        return (self.form.get('definition') as UntypedFormArray).dirty;
     }
 
     get errorInDesign() {
         const self = this;
-        const arr = (self.form.get('definition') as FormArray).controls.filter(c => c.get('_id') ? false : true).map(c => c.invalid);
+        const arr = (self.form.get('definition') as UntypedFormArray).controls.filter(c => c.get('_id') ? false : true).map(c => c.invalid);
         if (arr.length > 0) {
             return Math.max.apply(null, arr);
         }
@@ -1028,7 +1056,7 @@ export class SchemaBuilderComponent implements
         if (!self.form.valid) {
             return false;
         }
-        if (!self.isSchemaFree && (self.form.get('definition') as FormArray).length < 2) {
+        if (!self.isSchemaFree && (self.form.get('definition') as UntypedFormArray).length < 2) {
             return false;
         }
         if (self.errorInRoles) {
@@ -1038,9 +1066,36 @@ export class SchemaBuilderComponent implements
         return true;
     }
 
+    get canSchemaBeSaved() {
+        if (!this.isSchemaFree && this.hasSameNameError(this.definitions)) {
+            return false;
+        }
+        if (!this.isSchemaFree && this.form.hasError('invalidDynamicFilter')) {
+            return false;
+        }
+        if (!this.isSchemaFree && (this.form.get('definition') as UntypedFormArray).length < 2) {
+            return false;
+        }
+        return true;
+    }
+
     get definitions() {
         const self = this;
-        return (self.form.get('definition') as FormArray).controls;
+        return (self.form.get('definition') as UntypedFormArray).controls;
+    }
+
+    hasSameNameError(definition: any[]) {
+        let flag = false;
+        if (definition) {
+            definition.forEach(item => {
+                if (item.hasError('sameName')) {
+                    flag = true;
+                } else if (item.get('definition')) {
+                    flag = this.hasSameNameError((item.get('definition') as UntypedFormArray).controls);
+                }
+            });
+        }
+        return flag;
     }
 
     populateWH(data) {
@@ -1139,6 +1194,32 @@ export class SchemaBuilderComponent implements
         } else if (self.hasPermissionForTab('A')) {
             self.activeTab = 5;
         }
+    }
+
+    // getConnectors() {
+    //     let connectorList = []
+    //     if (this.subscriptions?.['getConnectors']) {
+    //         this.subscriptions['getConnectors'].unsubscribe();
+    //     }
+    //     this.subscriptions['getConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/count`)
+    //         .pipe(switchMap((ev: any) => {
+    //             return this.commonService.get('user', `/${this.commonService.app._id}/connector`, { count: ev, select: 'name,type,_id' });
+    //         }))
+    //         .subscribe(res => {
+    //             this.appService.connectorsList = res;
+    //         }, err => {
+    //             this.commonService.errorToast(err, 'We are unable to fetch records, please try again later');
+    //         });
+
+    // }
+
+    getAvailableConnectors() {
+        this.subscriptions['getAvailableConnectors'] = this.commonService.get('user', `/${this.commonService.app._id}/connector/utils/availableConnectors`).subscribe(res => {
+            this.appService.storageTypes = res;
+        }, err => {
+
+            this.commonService.errorToast(err, 'Unable to fetch user groups, please try again later');
+        });
     }
     get idFieldId() {
         const self = this;

@@ -10,7 +10,6 @@ import { AgGridFiltersComponent } from './ag-grid-filters/ag-grid-filters.compon
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { AgGridSharedFloatingFilterModule } from 'src/app/utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.module';
 
 @NgModule({
@@ -27,7 +26,6 @@ import { AgGridSharedFloatingFilterModule } from 'src/app/utils/ag-grid-shared-f
     CheckboxModule,
     ClickOutsideModule,
     OnChangeModule,
-    IconsModule,
     AgGridModule.withComponents([
       AgGridFiltersComponent,
     ]),

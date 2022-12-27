@@ -1,139 +1,206 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
   <div class="align-self-center text-center">
-    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="spinner-border text-dark" role="status">
+      <span class="sr-only">Processing...</span>
+    </div>
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="d-flex flex-column w-100 h-100 app-list">
+<div class="d-flex flex-column w-100 h-100 px-4">
   <!-- <div class="d-flex flex-column align-items-center justify-content-center">
     <odp-search-box (enteredText)="searchTerm = $event" (reset)="searchTerm = '';"></odp-search-box>
   </div> -->
-  <div class="d-flex justify-content-between align-items-center border-bottom py-4">
-    <div class="font-weight-bold font-lg text-accent">Apps</div>
-    <odp-search-box (enteredText)="searchTerm = $event" (reset)="searchTerm = '';" [selectOnEnter]="true"
+  <div class="d-flex justify-content-between align-items-center py-2">
+    <div class="font-weight-bold font-16 text-accent">
+      {{ isHome ? 'Select an app to proceed' : '' }}
+    </div>
+    <div class="ml-2 pl-1 text-muted" style="margin: auto;">
+      {{isHome? '':'All applications across the platform'}}
+    </div>
+    <!-- <odp-search-box (enteredText)="searchTerm = $event" (reset)="searchTerm = ''" [selectOnEnter]="true" open="true"
       (enteredPressed)="enterToSelect($event)"></odp-search-box>
-    <button class="add-new btn-min-width btn btn-primary" (click)="newApp()">
-      <span class="fa fa-plus mr-2"></span>
-      <span class="text">Add New App</span>
-    </button>
+    <button class="add-new btn-min-width btn btn-primary d-flex align-items-center justify-content-center" (click)="newApp()" *ngIf="isSuperadmin">
+      <span class="dsi dsi-plus mr-2"></span>
+      <span class="text">New</span>
+    </button> -->
+    <div class="d-flex align-items-center">
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=''"  [selectOnEnter]="true" (enteredPressed)="enterToSelect($event)"></odp-search-box>
+      <button class="add-new btn btn-primary ml-3 d-flex align-items-center"
+        (click)="newApp()" *ngIf="isSuperadmin">
+        <span class="dsi dsi-plus mr-2"></span>
+        <span class="text">New</span>
+      </button>
+    </div>
   </div>
-  <div class="apps-container d-flex flex-wrap">
+  <!-- <div class="apps-container d-flex flex-wrap"> -->
     <!-- <div class="app-card add d-flex flex-column m-3 px-4 py-3">
       <div class="app-thumbnail d-flex align-items-center justify-content-center border hover ml-2" (click)="newApp()">
         <div class="rounded-circle d-flex align-items-center justify-content-center bg-light">
-          <span class="fa fa-plus fa-lg text-secondary"></span>
+          <span class="dsi dsi-plus fa-lg text-secondary"></span>
         </div>
       </div>
       <div class="app-name text-center mt-2 text-primary hover" (click)="newApp()">New app</div>
     </div> -->
-    <ng-container *ngIf="!appList || appList.length==0">
+    <!-- <ng-container *ngIf="!appList || appList.length == 0">
       <odp-loading-placeholder width="48" height="48" *ngFor="let app of dummyRows" class="mt-5 mx-5">
       </odp-loading-placeholder>
     </ng-container>
-    <ng-container *ngFor="let app of appList|filterApp:searchTerm;let appIndex = index;">
-      <div class="app-card d-flex flex-column mt-3 mr-3 rounded position-relative"
+    <ng-container *ngFor="let app of appList | filterApp: searchTerm; let appIndex = index"> -->
+      <!-- <div class="app-card d-flex flex-column mt-4 mx-3 rounded position-relative"
         (click)="appOptions[appIndex] = true">
-        <div class="d-flex justify-content-end mt-2 mr-2 delete-option">
-          <div class="ml-3 hover ignore-outside">
-            <span class="fas fa-ellipsis-h text-primary ignore-outside"></span>
-          </div>
-        </div>
-        <div class="position-absolute hover app-options p-2 bg-white" (outside)="appOptions[appIndex] = false"
-          [ngClass]="{'d-none': !appOptions[appIndex], 'd-flex': appOptions[appIndex]}" id="moreOptions" odpClickOutside
-          [ignore]="['.ignore-outside']">
-          <div class="text-primary" (click)="deleteApp(app,appIndex)">Delete App</div>
-        </div>
         <div class="settings-wrapper d-flex flex-column align-items-center px-4 pt-2 position-relative">
-          <div class=" app-thumbnail
-                d-flex align-items-center justify-content-center bg-light hover" (click)="useApp(app._id)">
-            <img *ngIf="app.logo && app.logo.thumbnail" [src]="app.logo.thumbnail" alt="Logo">
-            <odp-app-icon *ngIf="!app.logo || !app.logo.thumbnail" color="aaa"></odp-app-icon>
+          <div class="app-thumbnail d-flex align-items-center justify-content-center bg-light hover"
+            (click)="useApp(app._id)">
+            <img *ngIf="app.logo && app.logo.thumbnail" [src]="app.logo.thumbnail" alt="Logo" />
+            <div *ngIf="!app.logo" class="profileImage" [ngStyle]="{ 'background-color': app.bg }">
+              {{ app.firstLetter }}
+            </div>
+            <div
+              class="delete-option border-right bg-danger d-flex align-items-center justify-content-center hover ignore-outside"
+              (click)="$event.stopPropagation();deleteApp(app, appIndex)">
+              <span class="fas fa-trash text-white fa-xs"></span>
+            </div>
           </div>
-          <!-- <div class="app-settings rounded-circle position-absolute bg-primary d-flex align-items-center justify-content-center align-self-end hover"
-          ngbTooltip="App settings" routerLink="{{app._id}}">
-          <span class="fa fa-cog text-white"></span>
-        </div> -->
           <div class="app-name text-center text-truncate mt-2" [ngbTooltip]="app._id">
-            {{app._id}}
+            {{ app._id }}
           </div>
         </div>
-
-        <!-- <div class="app-status text-center mt-2 d-flex justify-content-between bg-white px-4 pb-3">
-      <div class="d-flex align-items-center symbol">
-        <small class="fa fa-circle text-success"></small>
-        <small class="fa fa-angle-right ml-2 text-secondary"></small>
-        <small class="text text-secondary ml-2">Services</small>
+      </div> -->
+    <!-- </ng-container>
+  </div> -->
+  <div class="d-flex flex-column w-100 h-100 position-relative">
+    <div class="card-container">
+      <div class="list-group">
+        <div
+          class="list-group-item d-flex align-items-center justify-content-start header py-0 bg-light text-uppercase font-11 fw-500">
+          <div (click)="applySort('_id')" class="hover d-flex align-items-center item-name d-flex align-items-center">
+            <span class="mr-2 text-uppercase">App Name</span>
+            <span *ngIf="sortModel['_id']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['_id']==-1" class="dsi dsi-drop-up"></span>
+          </div>
+          <!-- <div class="d-flex align-items-center justify-content-center">
+            <div  class="hover d-flex align-items-center item-owner">
+              <span class="mr-2 text-uppercase">Owner</span>
+            </div>
+            <div  class="hover d-flex align-items-center item-plan">
+              <span class="mr-2 text-uppercase">Plan</span>
+            </div>
+            <div  class="hover d-flex align-items-center item-validity">
+              <span class="mr-2 text-uppercase">Validity</span>
+            </div>
+          </div> -->
+          <div class="d-flex align-items-center justify-content-end w-100">
+            <div class="item-actions"></div>
+          </div>
+        </div>
+        <ng-container *ngIf="!appList || appList.length == 0">
+          <odp-loading-placeholder *ngFor="let app of dummyRows" class="list-group-item">
+          </odp-loading-placeholder>
+        </ng-container>
+        <ng-container *ngIf="!records || records.length == 0">
+          <div class="list-group-item">
+           <p class="m-0">No Application Found, <button type="button" class="btn btn-link px-1 py-0"
+            (click)="newApp()">Click Here</button> to create a new App
+            <span *ngIf="searchTerm">:&nbsp;<span class="fw-500">{{searchTerm}}</span></span>
+           </p>
+          </div>
+        </ng-container>
+        <ng-container *ngFor="let app of records | filterApp: searchTerm; let appIndex = index">
+          <div class="list-group-item d-flex align-items-center justify-content-start" (dblclick)="useApp(app._id)">
+            <div class="item-name fw-500 d-flex align-items-center">
+              <span class="mr-2 pl-1 text-dark hover app-name"  [ngbTooltip]="app._id"
+                placement="right">{{app._id}}</span>
+            </div>
+            <div class="item-actions d-flex align-items-center justify-content-end">
+              <div (click)="useApp(app._id)" >
+                <span class="dsi dsi-view mr-1"></span>
+                <span  class="fw-600 font-13 hover mr-3"
+                  >View</span>
+              </div>
+              <div (click)="$event.stopPropagation();deleteApp(app, appIndex)">
+                <span class="fas fa-trash mr-1 text-danger"></span>
+                <span  class="fw-600 font-13 hover mr-3 text-danger"
+                >Delete</span>
+              </div>
+              <!-- <span
+               class="dsi dsi-more-vertical hover mr-3 ignore-outside"
+                (click)="showDropDown($event,app._id)"></span>
+              <div *ngIf="showOptionsDropdown[app._id]" class="more-options bg-white rounded list-group position-fixed border"
+                (mouseleave)="showOptionsDropdown[app._id]=false" [ngStyle]="dropDownStyle" odpClickOutside
+                (outside)="showOptionsDropdown[app._id]=false">
+                <button  class="list-group-item list-group-item-action py-2 border-0"
+                  >
+                  Edit
+                </button>
+                <button class="list-group-item list-group-item-action py-2 border-0 text-danger"
+                  (click)="$event.stopPropagation();deleteApp(app, appIndex)">
+                  Delete
+                </button>
+              </div> -->
+            </div>
+          </div>
+        </ng-container>
       </div>
-      <div class="d-flex align-items-center action mr-2">
-        <small class="fa fa-play text-success hover" ngbTooltip="Start all services"></small>
-        <small class="fa fa-stop ml-2 text-danger hover" ngbTooltip="Stop all services"></small>
-      </div>
-    </div> -->
-      </div>
-    </ng-container>
+    </div>
   </div>
 </div>
 
-<ng-template #newAppModal>
-  <div class="modal-body p-4 d-flex flex-column align-items-center">
-    <div class="d-flex flex-column w-100">
-      <div class="d-flex align-items-center justify-content-between mb-3">
-        <div class="d-flex align-items-center">
-          <span class="icon-circle d-flex align-items-center justify-content-center mr-2">
-            <odp-partner-icon size="16" color="1CAD49"></odp-partner-icon>
-          </span>
-          <span class="font-weight-bold ">Create New App</span>
-        </div>
-        <span class="fa fa-times text-muted hover" (click)="!createAppLoader && newAppModalRef.close(false)"></span>
-      </div>
-      <div class="d-flex flex-column w-100" [formGroup]="form">
-        <label for="name" class="font-sm text-secondary">
+<div *ngIf="showNewAppWindow" class="new-app-window overlay position-fixed"></div>
+<div [ngClass]="{'show':showNewAppWindow}"
+  class="new-app-window position-fixed p-4 d-flex flex-column bg-white border-left">
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center justify-content-between mb-5">
+      <span class="font-20 fw-600">New App</span>
+      <span class="fa fa-times text-muted hover" (click)="!createAppLoader && showNewAppWindow=false"></span>
+    </div>
+    <div class="d-flex flex-column w-100" [formGroup]="form">
+      <div *ngIf="showNewAppWindow" class="form-group">
+        <label for="name" class="">
           <span class="text">Name</span>
-          <sup class="text-danger font-normal ml-2" ngbTooltip="Mandatory field">&bull;</sup>
+          <sup class="text-danger fa fa-asterik" ngbTooltip="Mandatory field"></sup>
         </label>
         <div class="name-wrapper position-relative">
           <input type="text" class="form-control" id="name" formControlName="_id" placeholder="Give a name" odpAutoFocus
-            (keyup.enter)="newAppDesc.focus()"
-            [ngClass]="{'is-invalid':form.get('_id').invalid && (form.get('_id').dirty || form.get('_id').touched)}">
-          <ng-container *ngIf="form.get('_id').invalid && (form.get('_id').dirty || form.get('_id').touched)">
+            [ngClass]="{
+              'is-invalid':
+                form.get('_id').invalid &&
+                (form.get('_id').dirty || form.get('_id').touched)
+            }" />
+          <ng-container *ngIf="
+              form.get('_id').invalid &&
+              (form.get('_id').dirty || form.get('_id').touched)
+            ">
             <span *ngIf="form.get('_id').hasError('required')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute dsi dsi-danger-circle" container="body"
               ngbTooltip="Name is required"></span>
             <span *ngIf="form.get('_id').hasError('pattern')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute dsi dsi-danger-circle" container="body"
               ngbTooltip="Name can be only be alphanumeric and can contain dash(-)"></span>
             <span *ngIf="form.get('_id').hasError('maxlength')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute dsi dsi-danger-circle" container="body"
               ngbTooltip="Name should be within 40 characters"></span>
           </ng-container>
         </div>
-        <label for="description" class="font-sm text-secondary mt-3">Description</label>
-        <textarea #newAppDesc class="form-control" id="description" rows="5" placeholder="A brief description. Optional"
-          formControlName="description" (keydown.enter)="$event.preventDefault()"
-          (keyup.enter)="createNewAppBtn.click();"></textarea>
-        <label for="timezone" class="font-sm text-secondary mt-3">Timezone</label>
-        <odp-timezone-picker [edit]="{status:true}" formControlName="defaultTimezone"></odp-timezone-picker>
-        <!-- <select id="timezone" class="form-control" formControlName="defaultTimezone">
-            <option *ngFor="let tz of timezones" [value]="tz">{{tz}}</option>
-          </select> -->
-        <!-- <textarea #newAppDesc class="form-control" id="description" rows="5" placeholder="A brief description. Optional"
-          formControlName="description" (keydown.enter)="$event.preventDefault()"
-          (keyup.enter)="createNewAppBtn.click();"></textarea> -->
       </div>
-      <div class="text-danger mt-3">{{errorMessage}} &nbsp;</div>
+      <div class="form-group">
+        <label for="description" class="">Description</label>
+        <textarea #newAppDesc class="form-control" id="description" rows="5" placeholder="A brief description. Optional"
+          formControlName="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="timezone" class="">Timezone</label>
+        <odp-timezone-picker [edit]="{ status: true }" formControlName="defaultTimezone"></odp-timezone-picker>
+      </div>
     </div>
-    <div class="d-flex align-self-end justify-content-end w-100 mt-3">
-      <button #createNewAppBtn type="button"
-        class="btn btn-min-width btn-create"
-        [disabled]="form.invalid || createAppLoader"
-        (click)="createApp()">
-        <span class="fa fa-spinner fa-pulse mr-1" *ngIf="createAppLoader"></span>
-        Create App
-      </button>
-    </div>
+    <div class="text-danger mt-3">{{ errorMessage }} &nbsp;</div>
   </div>
-</ng-template>
+  <div class="d-flex flex-column mt-auto">
+    <button #createNewAppBtn type="button" class="btn btn-primary w-100" [disabled]="form.invalid || createAppLoader"
+      (click)="createApp()">
+      <span class="fa fa-spinner fa-pulse mr-1" *ngIf="createAppLoader"></span>
+      Create
+    </button>
+  </div>
+</div>
 
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-  <odp-app-icon [size]="18" color="DD5151" class="mt-1"></odp-app-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

@@ -10,6 +10,15 @@
   }
 }
 
+@each $color, $value in $theme-colors {
+  .fill-#{$color} {
+    fill: $value;
+  }
+  .stroke-#{$color} {
+    fill: $value;
+  }
+}
+
 .bg-white {
   background-color: $white !important;
 }
@@ -20,4 +29,8 @@
 
 .bg-transparent {
   background-color: transparent !important;
+}
+
+.bg-light-gray{
+  background: #f7f7f7;
 }

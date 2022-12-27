@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { DeleteModalConfig } from 'src/app/utils/interfaces/schemaBuilder';
 import { App } from 'src/app/utils/interfaces/app';
+import * as _ from 'lodash'
 
 @Component({
     selector: 'odp-user-apps',
@@ -399,6 +400,11 @@ export class UserAppsComponent implements OnInit, OnDestroy {
         self.subscriptions['getAppLogo_' + app._id] = self.commonService.get('user', '/admin/app/' + app._id, option)
             .subscribe((res) => {
                 app.logo = res.logo;
+                app.firstLetter = app._id.charAt(0);
+                app.bg = this.appColor();
+                if (_.isEmpty(app.logo)) {
+                    delete app.logo;
+                }
             }, err => {
                 if (err.status === 404) {
                     const index = self.userApps.findIndex(e => e._id === app._id);
@@ -418,7 +424,7 @@ export class UserAppsComponent implements OnInit, OnDestroy {
 
     get markedApp() {
         const self = this;
-        return self.appList.filter(e => e.selected).map(e => e._id).slice(0, 3).join(', '); // Will return the first 3 elements of the array
+        return self.appList.filter(e => e.selected).map(e => e._id).slice(0, 2).join(', '); // Will return the first 3 elements of the array
     }
 
     get selectedApps() {
@@ -446,5 +452,16 @@ export class UserAppsComponent implements OnInit, OnDestroy {
         if (self.assignAppModalRef) {
             self.assignAppModalRef.close();
         }
+    }
+    appColor() {
+        const colorArray = [
+            '#B2DFDB',
+            '#B2EBF2',
+            '#B3E5FC',
+            '#A5D6A7',
+            '#C5E1A5',
+            '#E6EE9C',
+        ];
+        return _.sample(colorArray);
     }
 }

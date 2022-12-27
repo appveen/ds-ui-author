@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -39,11 +42,9 @@
             "styles": [
               "node_modules/ngx-toastr/toastr.css",
               "src/assets/fontawesome/css/all.min.css",
-              "src/assets/odp-icons.css",
               "src/assets/scss/bootstrap/bootstrap.scss",
               "src/assets/scss/login.scss",
               "src/assets/scss/home.scss",
-              "src/assets/scss/b2b/b2b.scss",
               "src/styles.scss"
             ],
             "scripts": []
@@ -59,7 +60,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -83,8 +83,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "odp-ui-author:build",
-            "proxyConfig": "proxy.conf.json",
-            "baseHref": "/"
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {
@@ -115,19 +114,6 @@
             "scripts": []
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
@@ -142,6 +128,5 @@
         }
       }
     }
-  },
-  "defaultProject": "odp-ui-author"
+  }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input, EventEmitter, OnDestroy, TemplateRef, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { NgbModalRef, NgbButtonLabel } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -19,6 +19,7 @@ export interface Definition {
 export class ManagePermissionsComponent implements OnInit, OnDestroy {
 
   @ViewChild('deleteModal', { static: false }) deleteModal: TemplateRef<HTMLElement>;
+  @Input() form: UntypedFormGroup;
   @Input() definitions: any;
   @Input() role: any;
   @Input() firstInit: boolean;
@@ -51,12 +52,13 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
   activeTab: number;
   toggleDropdown: any;
   blockFocus: any;
+  permissionOption: any;
 
   selectedMode: string;
 
   constructor(private commonService: CommonService,
     private appService: AppService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder) {
     const self = this;
     self.roles = [];
     self.selectedRole = {};
@@ -68,6 +70,9 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     self.firstInitChange = new EventEmitter();
     self.blockFocus = {};
     this.selectedMode = 'Advance';
+    this.edit = {
+      status: false
+    };
   }
 
   ngOnInit() {
@@ -103,6 +108,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
         self.role.fields = [];
       }
     }
+    this.permissionOption = [{ label: 'Manage', value: 'manage' }, { label: 'View', value: 'view' }]
     self.initRoles();
   }
 
@@ -127,7 +133,8 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     self.selectedRole = self.roles[0];
     self.selectedRoleIndex = 0;
     if (self.selectedRole.rule && self.selectedRole.rule.length > 0) {
-      this.selectedMode = self.selectedRole.rule[0].type;
+      // this.selectedMode = self.selectedRole.rule[0].type;
+      this.selectedMode = 'Advance';
     }
     self.oldData = self.appService.cloneObject(self.role);
     self.fields = self.flattenPermission(self.role.fields);
@@ -218,7 +225,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     }
     self.delete = {
       title: 'Delete ' + self.roles.find(e => e.id === self.selectedRole.id).name,
-      label: 'Are you sure you want to delete this role?'
+      label: self.roles.find(e => e.id === self.selectedRole.id).name
     };
     self.deleteModalRef = self.commonService.modal(self.deleteModal);
     self.deleteModalRef.result.then(close => {
@@ -226,7 +233,9 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
         const index = self.roles.findIndex(e => e.id === self.selectedRole.id);
         self.roles.splice(index, 1);
         Object.keys(self.fields).forEach(key => {
-          delete self.fields[key]._p[self.selectedRole.id];
+          if (self.fields[key]?._p?.[self.selectedRole.id]) {
+            delete self.fields[key]._p[self.selectedRole.id];
+          }
         });
         self.selectedRole = self.roles[0];
         self.selectedRoleIndex = 0;
@@ -245,11 +254,13 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     const self = this;
     self.selectedRole = role;
     self.selectedRoleIndex = index;
-    if (self.selectedRole.rule && self.selectedRole.rule.length > 0) {
-      this.selectedMode = self.selectedRole.rule[0].type;
-    } else {
-      this.selectedMode = 'Advance';
-    }
+    self.activeTab = 1;
+    // if (self.selectedRole.rule && self.selectedRole.rule.length > 0) {
+    //   this.selectedMode = self.selectedRole.rule[0].type;
+    // } else {
+    //   this.selectedMode = 'Advance';
+    // }
+    this.selectedMode = 'Advance';
     self.selectedRole.operations.forEach(item => {
       if (item.method === 'POST') {
         self.canCreateFlag = true;
@@ -268,16 +279,16 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     if (index > -1) {
       const tempRole = self.roles[index];
       let flag = false;
-      if (tempRole.operations.find(x => x.method === 'POST')) {
+      if (tempRole?.operations?.find(x => x.method === 'POST')) {
         flag = true;
       }
-      if (tempRole.operations.find(x => x.method === 'PUT')) {
+      if (tempRole?.operations?.find(x => x.method === 'PUT')) {
         flag = true;
       }
-      if (tempRole.operations.find(x => x.method === 'DELETE')) {
+      if (tempRole?.operations?.find(x => x.method === 'DELETE')) {
         flag = true;
       }
-      if (tempRole.operations.find(x => x.method === 'REVIEW')) {
+      if (tempRole?.operations?.find(x => x.method === 'REVIEW')) {
         flag = true;
       }
       return flag;
@@ -472,7 +483,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
 
   get hasConditions() {
     const self = this;
-    if (self.selectedRole && self.selectedRole.rule && self.selectedRole.rule.length > 0) {
+    if (self.selectedRole && self.selectedRole.enableFilter) {
       return true;
     }
     return false;
@@ -484,6 +495,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
       return;
     }
     if (val) {
+      self.selectedRole.enableFilter = true;
       if (!self.selectedRole.rule) {
         self.selectedRole.rule = [];
       }
@@ -494,7 +506,7 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     } else {
       self.blockInvalidRole = {};
       self.blockInvalidRoleChange.emit(self.blockInvalidRole);
-      self.selectedRole.rule = [];
+      self.selectedRole.enableFilter = false;
     }
     self.updateRole();
   }
@@ -675,6 +687,25 @@ export class ManagePermissionsComponent implements OnInit, OnDestroy {
     // self.blockInvalidRole[key] = data;
     // self.blockInvalidRoleChange.emit(self.blockInvalidRole);
   }
+
+  changePermission(event) {
+    if (this.edit && this.edit.status) {
+      this.selectRoleType = event;
+    }
+  }
+
+  get isInvalidJSON() {
+    if (this.dynamicFilter) {
+      try {
+        JSON.parse(this.dynamicFilter);
+        this.form.setErrors(null);
+        return false;
+      } catch (err) {
+        this.form.setErrors({ invalidDynamicFilter: true });
+        return true;
+      }
+    }
+  }
 }
 
 export interface RoleModel {
@@ -688,6 +719,7 @@ export interface RoleModel {
   viewRole?: boolean;
   skipReviewRole?: boolean;
   rule?: Array<Rule>;
+  enableFilter?: boolean;
 }
 
 export interface Rule {

@@ -14,8 +14,8 @@
   min-height: calc(100vh - 163px);
   max-height: calc(100vh - 163px);
   .schema-creator {
-    min-height: calc(100vh - 203px);
-    max-height: calc(100vh - 203px);
+    min-height: calc(100vh - 220px);
+    max-height: calc(100vh - 220px);
     padding-bottom: 10px !important;
   }
 }
@@ -27,12 +27,6 @@
     min-height: 40px;
     max-height: 40px;
   }
-}
-
-.add-attribute {
-  min-height: 36px;
-  max-height: 36px;
-  margin-left: 65px;
 }
 
 .field-error-symbol {

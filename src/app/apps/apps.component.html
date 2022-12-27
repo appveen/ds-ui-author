@@ -1,362 +1,345 @@
 <div class="d-flex flex-column w-100 h-100">
-    <div class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white border-bottom border-dark">
-        <div class="left d-flex align-items-center" [ngClass]="{'add-blur':addBlur}">
-            <span class="fa fa-bars fa-lg hover mr-3" (click)="showSideNav=!showSideNav"></span>
-            <div class="logo"></div>
+  <div class="d-flex w-100 h-100">
+    <div class="sidenav d-flex flex-column pl-3 border-right" id="_sideNavBar"
+      [ngStyle]="{ 'min-width': showSideNav ? '260px' : '48px'}">
+      <!-- <div class="left" [ngClass]="{ 'add-blur': addBlur }" [ngStyle]="{ width: showSideNav ? '15vw' : '4vw' }"> -->
+
+      <div class="mt-2 mb-3">
+        <div *ngIf="showSideNav" class="logo" (click)="toggleNav()"></div>
+        <div *ngIf="!showSideNav" class="logo-mini" (click)="toggleNav()"></div>
+      </div>
+      <!-- </div> -->
+      <div class="icon-block-group text-secondary border-border pt-3"
+        *ngIf="hasDataServicePermission || hasDataLibraryPermission">
+        <span *ngIf="showSideNav" class="nav-active">DATA</span>
+        <div *ngIf="showSideNav" class="dsi padding" [ngClass]="{
+            'dsi-drop-down': openPanel['data'],
+            'dsi-drop-up': !openPanel['data']
+          }" (click)="togglePanel('data')"></div>
+      </div>
+      <div *ngIf="openPanel['data']">
+        <div *ngIf="hasDataServicePermission" #serviceRoute="routerLinkActive"
+          class="icon-block d-flex align-items-center my-3"
+          [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+          routerLinkActive="text-primary bg-white active" [routerLink]="['sm']" id="_entities"
+          (click)="getBreadcrumbs()" Data>
+          <div class="d-flex align-items-center">
+            <span [ngClass]="{'nav-inactive':!serviceRoute.isActive}" class="dsi dsi-data-service"></span>
+            <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                'fw-600 nav-active': serviceRoute.isActive,
+                'nav-inactive': !serviceRoute.isActive
+              }">Services</span>
+          </div>
         </div>
-        <div class="w-50 d-flex align-items-center justify-content-end">
-            <ng-container *ngIf="isSuperAdmin">
-                <!-- <div class="d-flex align-items-center mr-3">
-                    <button type="button" class="btn btn-link font-sm" (click)="downloadIEG()">
-                        <span class="fa fa-download"></span>
-                        <span class="ml-2">Edge Agent</span>
-                    </button>
-                </div> -->
-                <div (click)="loadAdminPage()"
-                    class="admin-settings bg-light rounded d-flex flex-column justify-content-center align-items-center mr-3 hover"
-                    ngbTooltip="Admin Panel" placement="bottom">
-                    <odp-admin-console-icon size="28"></odp-admin-console-icon>
-                </div>
-            </ng-container>
-            <div class="current-app d-flex align-items-center bg-light mr-3 hover" (click)="toggleAppOptions()">
-                <div class="current-app-thumbnail d-flex align-items-center justify-content-center mr-2"
-                    ngbTooltip="Switch App" placement="bottom"
-                    [ngClass]="{'img-app':selectedApp.logo && selectedApp.logo.thumbnail}">
-                    <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail"
-                        alt="Logo">
-                    <odp-app-icon class="pt-1" *ngIf="!selectedApp.logo || !selectedApp.logo.thumbnail" color="aaa"
-                        size="24"></odp-app-icon>
-                </div>
-                <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" placement="bottom">
-                    {{selectedApp._id}}
-                </div>
-                <div class="text-primary "></div>
-                <div *ngIf="isAppAdmin" class="d-flex align-items-center justify-content-center ml-1">
-                    <span class="fa fa-star text-warning" ngbTooltip="You are admin of this App"
-                        placement="bottom"></span>
-                </div>
-                <div *ngIf="commonService.appList.length > 1" class="ml-auto mr-2">
-                    <span class="fas fa-angle-down text-accent"></span>
-                </div>
-            </div>
-            <div class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle bg-light border border-border hover"
-                (click)="showProfileOptions=!showProfileOptions">
-                <span class="far fa-user fa-lg text-secondary"></span>
-            </div>
-            <div [@userProfile] class="profile position-absolute bg-white border border-border"
-                *ngIf="showProfileOptions" odpClickOutside [ignore]="['.profile-icon','.fa-user']"
-                (outside)="showProfileOptions=false">
-                <div class="profile-container position-relative d-flex align-items-center h-100 w-100">
-                    <div
-                        class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-border mx-4">
-                        <span class="far fa-user fa-2x text-secondary"></span>
-                    </div>
-                    <div class="profile-data  d-flex flex-column">
-                        <h4 class="profile-data-name text-truncate font-weight-bold">{{name}}</h4>
-                        <div class="profile-data-more d-flex align-items-center">
-                            <div class="text-secondary profile-data-more-item pr-3 username-holder text-truncate"
-                                [ngbTooltip]="username">{{username}}</div>
-                            <div class="profile-data-more-item px-1" *ngIf="authType && authType === 'local'">
-                                <button type="button" class="btn btn-link btn-sm"
-                                    (click)="showProfileOptions = false; toggleChangePassword = true">
-                                    Change Password
-                                </button>
-                            </div>
-                            <div class="profile-data-more-item px-1">
-                                <button type="button" class="btn btn-link btn-sm" (click)="logout();" id="logout">
-                                    Logout
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <small class="position-absolute text-border app-version">v{{version}}</small>
-                    <small class="last-login text-muted">Last Login:
-                        {{lastLogin | dateFormat :'YYYY MMM DD, HH:mm:ss, z' : 'Etc/Zulu' }}</small>
-                </div>
-            </div>
+        <div *ngIf="hasDataLibraryPermission" #libraryRoute="routerLinkActive"
+          class="icon-block d-flex align-items-center my-3"
+          [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+          routerLinkActive="text-primary bg-white active" [routerLink]="['lib']" id="_lib">
+          <div class="d-flex align-items-center">
+            <span [ngClass]="{'nav-inactive':!libraryRoute.isActive}" class="dsi dsi-library"></span>
+            <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                'fw-600 nav-active': libraryRoute.isActive,
+                'nav-inactive': !libraryRoute.isActive
+              }">Library</span>
+          </div>
         </div>
-    </div>
-    <div class="d-flex w-100 h-100">
-        <div class="sidenav bg-light d-flex flex-column pl-3" id="_sideNavBar" [ngClass]="{'hide':!showSideNav}">
-            <!--<span class="text-accent font-weight-bold my-3">Menu</span>-->
-            <div class="icon-block-group text-secondary border-border pt-3 pl-2"
-                *ngIf="hasDataServicePermission || hasDataLibraryPermission">
-                Data
-            </div>
-            <div *ngIf="hasDataServicePermission" #serviceRoute="routerLinkActive"
-                class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                routerLinkActive="text-accent bg-white active" [routerLink]="['sm']" id="_entities"
-                (mouseover)="hover.service = true" (mouseleave)="hover.service = false">
-                <div class="d-flex align-items-center">
-                    <odp-service-icon class="mx-2 " [color]="hover.service?'0082C9':'222'" size="18"
-                        [active]="serviceRoute.isActive"></odp-service-icon>
-                    <span class="text" [ngClass]="{'text-accent':hover.service}">Services</span>
-                </div>
-                <span *ngIf="serviceRoute.isActive" class="fa fa-angle-right mr-3"></span>
-            </div>
-            <div *ngIf="hasDataLibraryPermission" #libraryRoute="routerLinkActive"
-                class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                routerLinkActive="text-accent bg-white active" [routerLink]="['lib']" id="_lib"
-                (mouseover)="hover.library = true" (mouseleave)="hover.library = false">
-                <div class="d-flex align-items-center">
-                    <odp-library-icon class="mx-2 " [color]="hover.library?'0082C9':'222'" size="18"
-                        [active]="libraryRoute.isActive"></odp-library-icon>
-                    <span class="text" [ngClass]="{'text-accent':hover.library}">Library</span>
-                </div>
-                <span *ngIf="libraryRoute.isActive" class="fa fa-angle-right mr-3"></span>
-            </div>
-            <div *ngIf="hasFunctionsPermission" #functionRoute="routerLinkActive"
-                class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                routerLinkActive="text-accent bg-white active" [routerLink]="['faas']" id="function"
-                (mouseover)="hover.function = true" (mouseleave)="hover.function = false">
-                <div class="d-flex align-items-center">
-                    <odp-function-icon class="mx-2" [color]="hover.function?'0082C9':'222'" size="18"
-                        [active]="functionRoute.isActive"></odp-function-icon>
-                    <span class="text" [ngClass]="{'text-accent':hover.function}">Functions</span>
-                </div>
-                <span *ngIf="functionRoute.isActive" class="fa fa-angle-right mr-3"></span>
-            </div>
-            <ng-container>
-                <div class="icon-block-group text-secondary border-top border-border pt-3 pl-2"
-                    *ngIf="(hasPermission('PMDS') || hasPermission('PVDS')) || (hasPermission('PML') || hasPermission('PVL'))">
-                    Integration
-                </div>
-                <!-- <div *ngIf="hasPartnerPermission" #partnerRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['pm']" id="partnerManager"
+        <div *ngIf="hasFunctionsPermission" #functionRoute="routerLinkActive"
+          class="icon-block d-flex align-items-center my-3"
+          [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+          routerLinkActive="text-primary bg-white active" [routerLink]="['faas']" id="function">
+          <div class="d-flex align-items-center">
+            <span [ngClass]="{'nav-inactive':!functionRoute.isActive}" class="dsi dsi-function"></span>
+            <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                'fw-600 nav-active': functionRoute.isActive,
+                'nav-inactive': !functionRoute.isActive
+              }">Functions</span>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="
+      hasConnectorsPermission||
+      hasDataFormatPermission||
+      hasAgentsPermission
+    ">
+        <div class="icon-block-group text-secondary border-top border-border pt-3">
+          <span *ngIf="showSideNav" class="nav-active d-flex align-items-center">
+            <span>INTEGRATION</span>
+            <span class="text-uppercase ml-2 text-primary font-10">(beta)</span>
+          </span>
+          <div *ngIf="showSideNav" class="dsi padding" [ngClass]="{
+              'dsi-drop-down': openPanel['integration'],
+              'dsi-drop-up': !openPanel['integration']
+            }" (click)="togglePanel('integration')"></div>
+        </div>
+        <!-- <div *ngIf="hasPartnerPermission" #partnerRoute="routerLinkActive"
+                    class="icon-block d-flex align-items-center my-3" [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+                    routerLinkActive="text-primary bg-white active" [routerLink]="['pm']" id="partnerManager"
                     (mouseover)="hover.partner = true" (mouseleave)="hover.partner = false">
                     <div class="d-flex align-items-center">
-                        <odp-partner-icon class="mx-2 " [color]="hover.partner?'0082C9':'222'" size="18"
-                            [active]="partnerRoute.isActive"></odp-partner-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.partner}">Partners</span>
+                        <span [ngClass]="{'nav-inactive':}" class="dsi dsi-partner"></span>
+                        <span class="text" ["partnerRoute.isActive" class="fa fa-angle-right mr-3"></spanngClass]="{'text-accent':hover.partner}">Partners</span>
                     </div>
                     <span *ngIf="partnerRoute.isActive" class="fa fa-angle-right mr-3"></span>
                 </div> -->
-                <div #flowRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['flow']" id="flowManager"
-                    (mouseover)="hover.flow = true" (mouseleave)="hover.flow = false">
-                    <div class="d-flex align-items-center">
-                        <odp-partner-icon class="mx-2" [color]="hover.flow?'0082C9':'222'" size="18"
-                            [active]="flowRoute.isActive"></odp-partner-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.flow}">Flows</span>
-                    </div>
-                    <span *ngIf="flowRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
-                <div *ngIf="hasDataFormatPermission" #dataFormatRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['dfl']" id="dataFormat"
-                    (mouseover)="hover.dataFormat = true" (mouseleave)="hover.dataFormat = false">
-                    <div class="d-flex align-items-center">
-                        <odp-data-format-icon class="mx-2 " [color]="hover.dataFormat?'0082C9':'222'" size="18"
-                            [active]="dataFormatRoute.isActive"></odp-data-format-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.dataFormat}">Data Formats</span>
-                    </div>
-                    <span *ngIf="dataFormatRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
-                <!-- <div *ngIf="hasNanoServicePermission" #nanoServiceRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['nsl']" id="nanoService"
-                    (mouseover)="hover.nanoService = true" (mouseleave)="hover.nanoService = false">
-                    <div class="d-flex align-items-center">
-                        <odp-nano-service-icon class="mx-2 " [color]="hover.nanoService?'0082C9':'222'" size="18"
-                            [active]="nanoServiceRoute.isActive"></odp-nano-service-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.nanoService}">Nano Services</span>
-                    </div>
-                    <span *ngIf="nanoServiceRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div> -->
-                <div *ngIf="hasAgentsPermission" #agentRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['agent']" id="agent"
-                    (mouseover)="hover.agent = true" (mouseleave)="hover.agent = false">
-                    <div class="d-flex align-items-center">
-                        <odp-agent-icon class="mx-2 " [color]="hover.agent?'0082C9':'222'" size="18"
-                            [active]="agentRoute.isActive"></odp-agent-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.agent}">Agents</span>
-                    </div>
-                    <span *ngIf="agentRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
-            </ng-container>
-            <ng-container
-                *ngIf="hasGroupsPermission || hasUsersPermission || hasBotPermission || hasBookmarkPermission || hasInsightsPermission">
-                <div class="icon-block-group text-secondary border-top border-border pt-3 pl-2 mt-1">
-                    Management
-                </div>
-                <div *ngIf="isAppAdmin || isSuperAdmin" #appRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['app']" id="apps"
-                    (mouseover)="hover.app = true" (mouseleave)="hover.app = false">
-                    <div class="d-flex align-items-center">
-                        <odp-app-icon class="mx-2 " [color]="hover.app?'0082C9':'222'" size="19"
-                            [active]="appRoute.isActive"></odp-app-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.app}">App Panel </span>
-                    </div>
-                    <span *ngIf="appRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
-                <!--<div *ngIf="isAppAdmin || isSuperAdmin" #wfRoute="routerLinkActive"
-                     class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                     routerLinkActive="text-accent bg-white active" [routerLink]="['cp/workflow']" id="wfs"
-                     (mouseover)="hover.wfs = true" (mouseleave)="hover.wfs = false">
-                    <div class="d-flex align-items-center">
-                        <odp-service-icon class="mx-2 " [color]="hover.wfs?'0082C9':'222'" size="16"></odp-service-icon>
-                        <span class="text ml-1" [ngClass]="{'text-accent':hover.wfs}">Workitems</span>
-                    </div>
-                    <span *ngIf="wfRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>-->
-                <!-- <div *ngIf="hasBookmarkPermission" #bookmarkRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['cp/bookmarks']" id="bookmark"
-                    (mouseover)="hover.bookmark = true" (mouseleave)="hover.bookmark = false">
-                    <div class="d-flex align-items-center ml-1">
-                       
-                        <odp-bookmark-icon class="mx-2 " [color]="hover.bookmark?'0082C9':'222'" size="18"
-                            [active]="bookmarkRoute.isActive"></odp-bookmark-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.bookmark}">Bookmarks</span>
-                    </div>
-                    <span *ngIf="bookmarkRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div> -->
-                <div *ngIf="hasUsersPermission" #userRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['cp/user']" id="_usersMng"
-                    (mouseover)="hover.user = true" (mouseleave)="hover.user = false">
-                    <div class="d-flex align-items-center ml-1">
-                        <odp-user-icon class="mx-2 " [color]="hover.user?'0082C9':'222'" size="18"
-                            [active]="userRoute.isActive"></odp-user-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.user}">Users</span>
-                    </div>
-                    <span *ngIf="userRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
-                <div *ngIf="hasBotPermission && authType=='azure'" #botRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['bots']"
-                    (mouseover)="hover.bot = true" (mouseleave)="hover.bot = false">
-                    <div class="d-flex align-items-center ml-1">
-                        <odp-bot-icon class="mx-2 " [color]="hover.bot?'0082C9':'222'" size="18"
-                            [active]="botRoute.isActive"></odp-bot-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.bot}">Bots</span>
-                    </div>
-                    <span *ngIf="botRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
-                <div *ngIf="hasBotPermission && authType !='azure'" #botRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['local-bots']"
-                    (mouseover)="hover.bot = true" (mouseleave)="hover.bot = false">
-                    <div class="d-flex align-items-center ml-1">
-                        <odp-bot-icon class="mx-2 " [color]="hover.bot?'0082C9':'222'" size="18"
-                            [active]="botRoute.isActive"></odp-bot-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.bot}">Bots</span>
-                    </div>
-                    <span *ngIf="botRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
-                <div *ngIf="hasGroupsPermission" #groupRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['cp/gr']" id="_groups"
-                    (mouseover)="hover.group = true" (mouseleave)="hover.group = false">
-                    <div class="d-flex align-items-center ml-1">
-                        <odp-group-icon class="mx-2 " [color]="hover.group?'0082C9':'222'" size="20"
-                            [active]="groupRoute.isActive"></odp-group-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.group}">Groups</span>
-                    </div>
-                    <span *ngIf="groupRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
-                <div *ngIf="hasInsightsPermission" #insightRoute="routerLinkActive"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2"
-                    routerLinkActive="text-accent bg-white active" [routerLink]="['insight']" id="insights"
-                    (mouseover)="hover.insight = true" (mouseleave)="hover.insight = false">
-                    <div class="d-flex align-items-center ml-1">
-                        <odp-insight-icon class="mx-2 " [color]="hover.insight?'0082C9':'222'" size="18"
-                            [active]="insightRoute.isActive"></odp-insight-icon>
-                        <span class="text" [ngClass]="{'text-accent':hover.insight}">Insights</span>
-                    </div>
-                    <span *ngIf="insightRoute.isActive" class="fa fa-angle-right mr-3"></span>
-                </div>
-                <div *ngIf="hasDataServicePermission"
-                    class="icon-block hover d-flex align-items-center justify-content-between my-2" id="apis" (click)="openAPIsWindow()"
-                    (mouseover)="hover.api = true" (mouseleave)="hover.api = false">
-                    <div class="d-flex align-items-center ml-1">
-                        <!-- <odp-api-icon class="mx-2 " [color]="hover.api?'0082C9':'222'" size="18"
-                            [active]="apiRoute.isActive"></odp-api-icon> -->
-                        <span class="fa fa-external-link-alt mx-2" [style.color]="hover.api?'#0082C9':'#222'"></span>
-                        <span class="text" [ngClass]="{'text-accent':hover.api}">APIs</span>
-                    </div>
-                </div>
-            </ng-container>
-            <!-- <div class="icon-block hover d-flex align-items-center" id="spacer"></div> -->
+        <div *ngIf="openPanel['integration']">
+          <div *ngIf="hasConnectorsPermission" #connectorRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['con']" id="_con">
+            <div class="d-flex align-items-center">
+              <span [ngClass]="{'nav-inactive':!connectorRoute.isActive}" class="dsi dsi-connector"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                'fw-600 nav-active': connectorRoute.isActive,
+                'nav-inactive': !connectorRoute.isActive
+              }">Connectors</span>
+            </div>
+          </div>
+          <div #flowRoute="routerLinkActive" class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['flow']" id="flowManager">
+            <div class="d-flex align-items-center">
+              <span [ngClass]="{'nav-inactive':!flowRoute.isActive}" class="dsi dsi-flow"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                  'fw-600 nav-active': flowRoute.isActive,
+                  'nav-inactive': !flowRoute.isActive
+                }">Data Pipes</span>
+            </div>
+          </div>
+          <div *ngIf="hasDataFormatPermission" #dataFormatRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['dfl']" id="dataFormat">
+            <div class="d-flex align-items-center">
+              <span [ngClass]="{'nav-inactive':!dataFormatRoute.isActive}" class="dsi dsi-library"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                  'fw-600 nav-active': dataFormatRoute.isActive,
+                  'nav-inactive': !dataFormatRoute.isActive
+                }">Data Formats</span>
+            </div>
+          </div>
+          <div *ngIf="hasAgentsPermission" #agentRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['agent']" id="agent">
+            <div class="d-flex align-items-center">
+              <span [ngClass]="{'nav-inactive':!agentRoute.isActive}" class="dsi dsi-agent"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                  'fw-600 nav-active': agentRoute.isActive,
+                  'nav-inactive': !agentRoute.isActive
+                }">Agents</span>
+            </div>
+          </div>
         </div>
-        <div class="d-flex flex-column body w-100">
-            <router-outlet></router-outlet>
+      </ng-container>
+      <ng-container *ngIf="
+          hasGroupsPermission ||
+          hasUsersPermission ||
+          hasBotPermission ||
+          hasBookmarkPermission ||
+          hasInsightsPermission
+        ">
+        <div class="icon-block-group text-secondary border-top border-border pt-3">
+          <span *ngIf="showSideNav" class="nav-active">MANAGEMENT</span>
+          <div *ngIf="showSideNav" class="dsi padding" [ngClass]="{
+              'dsi-drop-down': openPanel['management'],
+              'dsi-drop-up': !openPanel['management']
+            }" (click)="togglePanel('management')"></div>
         </div>
+        <div *ngIf="openPanel['management']">
+          <div *ngIf="isAppAdmin || isSuperAdmin" #appRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['app']" id="apps">
+            <div class="d-flex align-items-center">
+              <span [ngClass]="{'nav-inactive':!appRoute.isActive}" class="dsi dsi-app-panel"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                  'fw-600 nav-active': appRoute.isActive,
+                  'nav-inactive': !appRoute.isActive
+                }">App Panel
+              </span>
+            </div>
+          </div>
+          <!--<div *ngIf="isAppAdmin || isSuperAdmin" #wfRoute="routerLinkActive"
+                   class="icon-block d-flex align-items-center my-3" [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+                   routerLinkActive="text-primary bg-white active" [routerLink]="['cp/workflow']" id="wfs"
+                   (mouseover)="hover.wfs = true" (mouseleave)="hover.wfs = false">
+                  <div class="d-flex a1" [ngClass]="{'text-accent':hover.wfs}">Workitems</spanlign-items-center">
+                      <span [ngClass]="{'nav-inactive':}" class="dsi dsi-data-service"></span>
+                      <span class="text ml-1" [ngClass]="{'text-accent':hover.wfs}">Workitems</span>
+                  </div>
+                  <span *ngIf="wfRoute.isActive" class="fa fa-angle-right mr-3"></span>
+              </div>-->
+          <!-- <div *ngIf="hasBookmarkPermission" #bookmarkRoute="routerLinkActive"
+                  class="icon-block d-flex align-items-center my-3" [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+                  routerLinkActive="text-primary bg-white active" [routerLink]="['cp/bookmarks']" id="bookmark"
+                  (mouseover)="hover.bookmark = true" (mouseleave)="hover.bookmark = false">
+                  <div class="d-flex a[ngClass]="{'text-accent':hover.bookmark}">Bookmarks</spanlign-items-center ml-1">
+                     <span [ngClass]="{'nav-inactive':}" class="dsi dsi-bookmark"></span>
+                      <span class="text" [ngClass]="{'text-accent':hover.bookmark}">Bookmarks</span>
+                  </div>
+                  <span *ngIf="bookmarkRoute.isActive" class="fa fa-angle-right mr-3"></span>
+              </div> -->
+          <div *ngIf="hasUsersPermission" #userRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['cp/user']" id="_usersMng">
+            <div class="d-flex align-items-center ml-1">
+              <span [ngClass]="{'nav-inactive':!userRoute.isActive}" class="dsi dsi-user"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                  'fw-600 nav-active': userRoute.isActive,
+                  'nav-inactive': !userRoute.isActive
+                }">Users</span>
+            </div>
+          </div>
+          <div *ngIf="hasBotPermission && authType == 'azure'" #botRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['bots']">
+            <div class="d-flex align-items-center ml-1">
+              <span [ngClass]="{'nav-inactive':!botRoute.isActive}" class="dsi dsi-bot"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                  'fw-600 nav-active': botRoute.isActive,
+                  'nav-inactive': !botRoute.isActive
+                }">Bots</span>
+            </div>
+          </div>
+          <div *ngIf="hasBotPermission && authType != 'azure'" #botRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['local-bots']">
+            <div class="d-flex align-items-center ml-1">
+              <span [ngClass]="{'nav-inactive':!botRoute.isActive}" class="dsi dsi-bot"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                  'fw-600 nav-active': botRoute.isActive,
+                  'nav-inactive': !botRoute.isActive
+                }">Bots</span>
+            </div>
+          </div>
+          <div *ngIf="hasGroupsPermission" #groupRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['cp/gr']" id="_groups">
+            <div class="d-flex align-items-center ml-1">
+              <span [ngClass]="{'nav-inactive':!groupRoute.isActive}" class="dsi dsi-group"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                  'fw-600 nav-active': groupRoute.isActive,
+                  'nav-inactive': !groupRoute.isActive
+                }">Groups</span>
+            </div>
+          </div>
+          <div *ngIf="hasInsightsPermission" #insightRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['insight']" id="insights">
+            <div class="d-flex align-items-center ml-1">
+              <span [ngClass]="{'nav-inactive':!insightRoute.isActive}" class="dsi dsi-insight"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                  'fw-600 nav-active': insightRoute.isActive,
+                  'nav-inactive': !insightRoute.isActive
+                }">Insights</span>
+            </div>
+          </div>
+          <div *ngIf="hasDataServicePermission" class="icon-block d-flex align-items-center my-3" id="apis"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            (click)="openAPIsWindow()">
+            <div class="d-flex align-items-center ml-1">
+              <span class="dsi dsi-api-doc"></span>
+              <span *ngIf="showSideNav" class="text items nav-inactive font-14">APIs</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
     </div>
+    <div class="w-100 overflow-auto">
+      <div class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white">
+
+        <div>
+          <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+        </div>
+        <div class="w-50 d-flex align-items-center justify-content-end">
+          <ng-container *ngIf="isSuperAdmin">
+            <!-- <div class="d-flex align-items-center mr-3">
+                        <button type="button" class="btn btn-link font-sm" (click)="downloadIEG()">
+                            <span [ngClass]="{'nav-inactive':}" class="dsi dsi-download"></span>
+                            <span class="ml-2"> --Edge Agent</span>
+                        </button>
+                    </div> -->
+            <div (click)="loadAdminPage()"
+              class="admin-settings d-flex flex-column justify-content-center align-items-center mr-3 hover"
+              ngbTooltip="Admin Panel" container="body" placement="bottom">
+              <div class="dsi dsi-agent font-22"></div>
+            </div>
+          </ng-container>
+          <div class="current-app d-flex align-items-center border dark-border rounded mr-3 hover ignore-outside "
+            (click)="toggleAppOptions()">
+            <div class="current-app-thumbnail d-flex align-items-center justify-content-center mx-2"
+              ngbTooltip="Switch App" container="body" placement="bottom"
+              [ngStyle]="{ 'background-color': selectedApp.bg }">
+              <img *ngIf="selectedApp.logo && selectedApp.logo.thumbnail" [src]="selectedApp.logo.thumbnail"
+                alt="Logo" />
+              <span class="font-12"
+                *ngIf="!selectedApp.logo || !selectedApp?.logo?.thumbnail">{{selectedApp.firstLetter}}</span>
+            </div>
+            <div class="current-app-name text-dark text-truncate" ngbTooltip="Current App" container="body"
+              placement="bottom">
+              {{ selectedApp._id }}
+            </div>
+            <div *ngIf="commonService.appList.length > 1" class="ml-auto mr-2">
+              <span class="fas fa-angle-down text-dark"></span>
+            </div>
+          </div>
+          <div
+            class="profile-icon position-relative d-flex align-items-center justify-content-center rounded-circle border dark-border hover"
+            (click)="showProfileOptions = !showProfileOptions">
+            <span class="dsi dsi-user sub-heading font-14"></span>
+            <span *ngIf="isAppAdmin" class="dsi dsi-admin text-warning font-10 position-absolute"
+              ngbTooltip="You are admin of this App" container="body" placement="left"></span>
+          </div>
+          <div class="profile position-absolute bg-white p-4 border" *ngIf="showProfileOptions" odpClickOutside
+            [ignore]="['.profile-icon', '.dsi-user']" (outside)="showProfileOptions = false">
+            <div class="profile-container position-relative d-flex align-items-center h-100 w-100 pb-4 border-bottom">
+              <div
+                class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border dark-border mr-4">
+                <span class="dsi dsi-user sub-heading"></span>
+              </div>
+              <div class="profile-data d-flex flex-column">
+                <div class="profile-data-name text-truncate font-20 fw-600">{{ name }}</div>
+                <div class="profile-data-more text-truncate font-14 fw-400 sub-heading" [ngbTooltip]="username">
+                  {{ username }}
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-options py-3">
+              <div *ngIf="authType && authType === 'local'" class="fw-500 py-2 hover d-flex align-items-center"
+                (click)="showProfileOptions = false; toggleChangePassword = true">
+                <span class="dsi dsi-settings sub-heading mr-2"></span>
+                <span>Change Password</span>
+              </div>
+              <div class="fw-500 py-2 hover d-flex align-items-center" (click)="logout()" id="logout">
+                <span class="dsi dsi-logout sub-heading mr-2"></span>
+                <span>Logout</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between font-12 fw-400 sub-heading">
+              <span class="last-login">Last Login:
+                {{ lastLogin | dateFormat: 'YYYY MMM DD, HH:mm:ss, z':'Etc/Zulu' }}
+              </span>
+              <span class="app-version">v{{ version }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column body w-100">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
 </div>
 
 <odp-app-switcher *ngIf="showAppOptions" [activeApp]="selectedApp" (activeAppChange)="onAppChange($event)"
-    (cancel)="showAppOptions=false"></odp-app-switcher>
+  (cancel)="showAppOptions = false"></odp-app-switcher>
 
 <odp-change-password *ngIf="toggleChangePassword" [(toggleModal)]="toggleChangePassword"></odp-change-password>
-
-<ng-template #downloadAgentModalTemplate>
-    <div class="modal-body p-4 d-flex flex-column align-items-center">
-        <p class="text-dark font-weight-bold text-center mt-3">Choose Architecture</p>
-        <select id="arch" class="custom-select agent-arch-select" [(ngModel)]="agentConfig.arch">
-            <option value="amd64">64-bit</option>
-            <option value="386">32-bit</option>
-        </select>
-        <p class="text-dark font-weight-bold text-center mt-3">Choose your platform</p>
-        <div class="d-flex my-3">
-            <div class="d-flex flex-column">
-                <div class="d-flex align-items-center justify-content-center">
-                    <div class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-                        (click)="downloadAgentModalTemplateRef.close('windows')">
-                        <span class="fab fa-windows fa-2x"></span>
-                        <span class="text mt-3">Windows</span>
-                    </div>
-                    <div *ngIf="agentConfig.arch!='386'"
-                        class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-                        (click)="downloadAgentModalTemplateRef.close('darwin')">
-                        <span class="fab fa-apple fa-2x"></span>
-                        <span class="text mt-3">Mac OS</span>
-                    </div>
-                    <div class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-                        (click)="downloadAgentModalTemplateRef.close('linux')">
-                        <span class="fab fa-linux fa-2x"></span>
-                        <span class="text mt-3">Linux</span>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex flex-column align-self-stretch align-items-center">
-                <span class="border-right h-100"></span>
-                <span class="text-secondary mx-2">OR</span>
-                <span class="border-right h-100"></span>
-            </div>
-            <div class="d-flex align-items-center justify-content-center">
-                <div class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-                    (click)="downloadAgentModalTemplateRef.close('k8s')">
-                    <span class="k8s-icon"></span>
-                    <span class="text mt-3">Kubernetes</span>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex align-items-center w-100 px-4 font-sm">
-            <span class="text-secondary ml-2">Password</span>
-            <div class="d-flex align-items-center justify-content-center mx-3">
-                <span *ngIf="!agentConfig.showPassword" class="fa fa-eye mr-2"
-                    (click)="agentConfig.showPassword=true;getAgentPassword()"></span>
-                <span *ngIf="agentConfig.showPassword" class="fa fa-eye-slash mr-2"
-                    (click)="agentConfig.showPassword=false"></span>
-                <span *ngIf="!agentConfig.showPassword" class="text-dark">******</span>
-                <span *ngIf="agentConfig.showPassword" class="text-dark d-flex align-items-center">
-                    <span *ngIf="!agentConfig.password" class="fa fa-spinner fa-pulse"></span>
-                    <span *ngIf="agentConfig.password">{{agentConfig.password}}</span>
-                    <span class="fa fa-copy ml-2 hover" (click)="copyPassword()"></span>
-                </span>
-            </div>
-            <div class="d-flex align-items-center justify-content-center">
-                <span *ngIf="agentConfig.copied" class="text-info">Password Copied!</span>&nbsp;
-            </div>
-        </div>
-        <div class="d-flex align-self-end">
-            <button type="button" class="btn btn-link" id="deletePartnerModalNo"
-                (click)="downloadAgentModalTemplateRef.close(false)">Close</button>
-        </div>
-    </div>
-</ng-template>

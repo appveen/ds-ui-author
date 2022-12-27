@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, TemplateRef, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ToastrService } from 'ngx-toastr';
@@ -24,10 +24,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     @ViewChild('agGrid') agGrid: AgGridAngular;
     @ViewChild('searchUserInput', { static: false }) searchUserInput: ElementRef;
     @ViewChild('deleteSelectedModal', { static: false }) deleteSelectedModal: TemplateRef<HTMLElement>;
-    @ViewChild('newUserModal', { static: false }) newUserModal: TemplateRef<HTMLElement>;
     deleteSelectedModalRef: NgbModalRef;
-    newUserModalRef: NgbModalRef;
-    userForm: FormGroup;
+    userForm: UntypedFormGroup;
     appList = [];
     showLazyLoader: boolean;
     showSpinner: boolean;
@@ -60,10 +58,10 @@ export class UserListComponent implements OnInit, OnDestroy {
     invalidUniqueUsername: boolean;
     getRowsDebounceSubject: Subject<any>;
     usersToDelete: any[];
-
+    showNewUserWindow: boolean;
     constructor(
         private commonService: CommonService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private ngbToolTipConfig: NgbTooltipConfig,
         private appService: AppService,
         private ts: ToastrService
@@ -121,9 +119,6 @@ export class UserListComponent implements OnInit, OnDestroy {
         Object.keys(this.subscriptions).forEach(e => {
             this.subscriptions[e].unsubscribe();
         });
-        if (this.newUserModalRef) {
-            this.newUserModalRef.close();
-        }
         if (this.deleteSelectedModalRef) {
             this.deleteSelectedModalRef.close();
         }
@@ -312,12 +307,12 @@ export class UserListComponent implements OnInit, OnDestroy {
             this.loadedCount = 0;
         }
         const filterModel = this.agGrid?.api?.getFilterModel();
-        if (filterModel && 'accessControl.apps._id' in filterModel) {
-            this.apiConfig.apps = JSON.parse(filterModel['accessControl.apps._id'].filter)['accessControl.apps._id'].$in.join(',');
-        } else {
-            delete this.apiConfig.apps;
-        }
-        const filterModelKeys = Object.keys(filterModel || {}).filter(k => k !== 'accessControl.apps._id');
+        // if (filterModel && 'accessControl.apps._id' in filterModel) {
+        //     this.apiConfig.apps = JSON.parse(filterModel['accessControl.apps._id'].filter)['accessControl.apps._id'].$in.join(',');
+        // } else {
+        //     delete this.apiConfig.apps;
+        // }
+        const filterModelKeys = Object.keys(filterModel || {});
         if (!!filterModelKeys.length) {
             this.apiConfig.filter = {
                 $and: filterModelKeys.map(key => {
@@ -528,26 +523,15 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     newUser() {
         this.showPassword = {};
+        this.userForm.reset({
+            auth: { authType: !!this.validAuthTypes?.length ? this.validAuthTypes[0].value : 'local' },
+            isSuperAdmin: false,
+            accessControl: { accessLevel: 'Selected', apps: [] }
+        });
         if (this.validAuthTypes?.length === 1) {
             this.userForm.get('auth.authType').disable();
         }
-        this.newUserModalRef = this.commonService.modal(this.newUserModal, { centered: true, size: 'lg', windowClass: 'new-user-modal' });
-        this.newUserModalRef.result.then(
-            close => {
-                this.userForm.reset({
-                    auth: { authType: !!this.validAuthTypes?.length ? this.validAuthTypes[0].value : 'local' },
-                    isSuperAdmin: false,
-                    accessControl: { accessLevel: 'Selected', apps: [] }
-                });
-            },
-            dismiss => {
-                this.userForm.reset({
-                    auth: { authType: !!this.validAuthTypes?.length ? this.validAuthTypes[0].value : 'local' },
-                    isSuperAdmin: false,
-                    accessControl: { accessLevel: 'Selected', apps: [] }
-                });
-            }
-        );
+        this.showNewUserWindow = true;
     }
 
     addUser() {
@@ -564,7 +548,7 @@ export class UserListComponent implements OnInit, OnDestroy {
                     this.selectedUser = userRes;
                     this.showUserDetails = true;
                     this.ts.success('User created successfully');
-                    this.newUserModalRef.close();
+                    this.showNewUserWindow = false;
                 },
                 err => {
                     this.showSpinner = false;

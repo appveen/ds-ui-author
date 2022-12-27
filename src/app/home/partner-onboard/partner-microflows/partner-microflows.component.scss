@@ -65,27 +65,6 @@
         min-height: 16px;
         max-height: 16px;
         font-size: 10px;
-        &.online {
-          background: $create;
-          color: $white;
-        }
-        &.offline {
-          background: $heading-highlight;
-          color: $white;
-        }
-        &.draft {
-          background: $accent;
-          color: $white;
-        }
-        &.error {
-          background: $delete;
-          color: $white;
-        }
-        &.pending {
-          background: $warning;
-          color: $black;
-          animation: pending 0.5s alternate infinite;
-        }
       }
       &.options-cell {
         overflow: hidden;
@@ -178,18 +157,9 @@
 }
 
 .delete-partner-modal-body {
-  .icon-wrapper {
-    background: rgba($delete, 0.2);
-  }
   .info {
     min-height: 222px;
     max-height: 222px;
-  }
-}
-
-.new-partner-modal-body {
-  .icon-wrapper {
-    background: rgba($create, 0.2);
   }
 }
 
@@ -249,10 +219,6 @@
       .check-circle {
         background: $accent;
         border-color: $accent;
-      }
-      .icon-wrapper {
-        background: $create;
-        color: $white;
       }
     }
   }

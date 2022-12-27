@@ -16,7 +16,7 @@
     <div *ngIf="canAddMore && !enableManual" class="add-field d-flex align-items-center ignore-outside px-2"
         [ngClass]="{'hover':edit.status}" (click)="level=fields.length;openKeysDropdown($event);">
         <div class="bg-light px-2 rounded">
-            <span class="fa fa-plus fa-xs text-accent"></span>
+            <span class="dsi dsi-plus fa-xs text-accent"></span>
         </div>
         <span class="ml-2">Add</span>
         <span class="fas fa-asterisk fa-xs text-danger error-icon ml-2" ngbTooltip="This is a required field"

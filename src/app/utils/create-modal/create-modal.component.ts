@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../services/common.service';
 
@@ -17,8 +17,8 @@ export class CreateModalComponent implements OnInit, OnDestroy {
   @Output() dataChange: EventEmitter<any>;
   @ViewChild('createModalTemplate', { static: false }) createModalTemplate: TemplateRef<HTMLElement>;
   createModalTemplateRef: NgbModalRef;
-  form: FormGroup;
-  constructor(private fb: FormBuilder,
+  form: UntypedFormGroup;
+  constructor(private fb: UntypedFormBuilder,
     private commonService: CommonService) {
     const self = this;
     self.charLimit = 40;

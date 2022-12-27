@@ -2,8 +2,21 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 .options {
-  min-height: 68px;
-  max-height: 68px;
+  min-height: 100px;
+  padding: 32px;
+}
+
+.bot-img {
+  background-position: left;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 150px;
+  height: 200px;
+}
+
+.content {
+  margin-left: 32px;
+  margin-right: 32px;
 }
 
 .status-card {
@@ -24,21 +37,24 @@
   .odp-bots {
     font-size: 32px;
   }
+
   .icon-card {
     width: 80px;
     height: 80px;
     opacity: 1;
     margin: 32px;
     transition: background-color 400ms ease-in, color 400ms ease-in;
-    
+
     &-enable {
       background: #76ce91 0% 0% no-repeat padding-box;
     }
+
     &-disable {
       background: #ececec 0% 0% no-repeat padding-box;
     }
   }
 }
+
 .title {
   font-size: 28px;
 }
@@ -53,9 +69,11 @@
       max-height: 40px;
       border-bottom: 4px solid transparent;
       transition: 0.25s;
+
       &:hover {
         border-color: $accent;
       }
+
       &.active {
         border-color: $accent;
         color: $accent;
@@ -64,6 +82,7 @@
     }
   }
 }
+
 .tab-wrapper {
   min-width: 520px;
 }
@@ -74,22 +93,27 @@
   max-height: 260px;
   min-height: 260px;
   overflow: auto;
+
   .team-overview {
     min-width: 135px;
     max-width: 135px;
     border-radius: 4px;
+
     .remove-group {
       top: 10px;
       left: 90%;
       display: none;
     }
+
     &:hover {
       background-color: $light;
+
       .remove-group {
         display: block;
       }
     }
   }
+
   .team {
     width: 88px;
     height: 88px;
@@ -102,13 +126,7 @@
   label {
     min-width: 100px;
   }
-  .icon-wrapper {
-    min-width: 32px;
-    max-width: 32px;
-    min-height: 32px;
-    max-height: 32px;
-    background: rgba($create, 0.2);
-  }
+
   #description {
     resize: none;
   }
@@ -130,6 +148,7 @@
     top: 6px;
     font-weight: bold;
   }
+
   input {
     padding-right: 50px;
   }
@@ -141,12 +160,15 @@
   min-height: 32px;
   max-height: 32px;
 }
+
 .team-card {
   border: 1px solid transparent;
   transition: 0.25s;
+
   .team-selected {
     background-color: rgba($black, 0.3);
   }
+
   .team-thumbnail {
     min-width: 100px;
     max-width: 100px;
@@ -156,45 +178,51 @@
     border: 4px solid $light;
     overflow: hidden;
     position: relative;
+
     &-caption {
       text-align: center;
       color: $white;
       padding-top: 15px;
       font-size: 1.2rem;
+
       .text {
         font-weight: 100;
         font-size: 1rem;
       }
     }
   }
+
   .app-name {
     max-width: 100px;
   }
 }
+
 .new-bot {
   width: 478px;
   height: fit-content;
-  background: #f7f7f7 0% 0% no-repeat padding-box;
   border-radius: 12px;
 }
+
 .new {
-  height: calc(100vh - 144px);
+  height: calc(100vh - 170px);
 }
+
 .prop-container {
-  max-height: calc(100vh - 322px);
+  max-height: 300px;
   overflow: auto;
 }
 
 .desc {
   word-break: break-all
 }
+
 .sup-top {
-  top:0px;
+  top: 0px;
 }
 
-.error-icon-attr{
-  top: 7px;
-    left: 85%;
+.error-icon-attr {
+  top: 10px;
+  right: 5px;
 }
 
 .dropdown-itm {
@@ -211,7 +239,8 @@
   grid-template-rows: 40px 1fr;
   row-gap: 20px;
 
-  .table-header, .table-body {
+  .table-header,
+  .table-body {
     display: grid;
     grid-template-columns: repeat(2, 1fr) 138px 192px 20px;
     padding: 0 20px;
@@ -232,36 +261,40 @@
       width: 100%;
       max-height: 40px;
       min-height: 40px;
-      
+
       .search-box {
         width: 170px !important;
+
         input {
           width: 170px !important;
           text-indent: 10px;
           padding: 0.25rem 0.75rem 0.25rem 0.12rem;
           border: none;
+
           &:active,
           &:focus {
             background-color: $white;
           }
         }
+
         .info,
         .fa-times-circle {
           right: 4px;
         }
+
         .text-center {
           text-align: center;
         }
-        
+
       }
-      
+
       .icon-div {
         min-width: 24px;
         min-height: 18px;
         max-width: 24px;
         max-height: 18px;
       }
-      
+
       .name-div {
         overflow: hidden;
         width: 123px;
@@ -276,7 +309,7 @@
   .details {
     width: 100%;
     overflow: hidden;
-    
+
     .details-container {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -287,4 +320,76 @@
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+
+.add-button {
+  padding: 15px 21px;
+  gap: 10px;
+  border-radius: 6px;
+  min-height: 48px;
+}
+
+.error-icon {
+
+  z-index: 1;
+}
+
+.list-hover {
+  &:hover {
+    background: rgba($orange, 0.04);
+  }
+}
+
+
+.bots {
+  overflow-y: auto;
+  min-height: 70vh;
+  max-height: 70vh;
+  overflow-x: hidden;
+
+}
+
+.nav-item {
+  width: 100px;
+}
+
+.tabs {
+  padding-bottom: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  color: $lightgrey;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    text-decoration-color: $orange;
+  }
+}
+
+.active {
+  text-decoration: underline;
+  text-underline-offset: 10px;
+  text-decoration-color: $orange;
+  text-decoration-thickness: 2px;
+  color: $headings;
+}
+
+.tab-header {
+  font-weight: 500;
+  font-size: 16px;
+  color: $headings;
+}
+
+.msg {
+  background: #FF6F00;
+  opacity: 0.04;
+  border-radius: 0px 0px 6px 6px
+}
+
+.closeicon {
+  position: absolute;
+  top: 25px;
+  right: 25px
 }

@@ -1,216 +1,193 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.header {
-  min-height: 50px;
-  max-height: 50px;
-}
-.options {
-  min-height: 50px;
-  max-height: 50px;
-}
+.data-service-page {
+  height: calc(100vh - 60px);
 
-.card-container {
-  height: calc(100vh - 152px);
-  overflow: auto;
-}
+  .card-container {
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+  }
 
-.card {
-  width: 230px;
-  float: left;
-  overflow: hidden;
-  height: 200px;
-  border-radius: 10px;
-  .card-title,
-  .draft-options{
-    span {
-      vertical-align: middle;
-    }
-    .status {
-      font-size: 32px;
-      line-height: 0;
-      vertical-align: middle;
-      &.active {
-        color: $green;
-      }
-      &.pending {
-        color: $orange;
-      }
-      &.maintenance {
-        color: $light;
-      }
-      &.stopped {
-        color: $red;
-      }
-      &.draft {
-        color: $accent;
-      }
-      .symbol {
-        margin-top: 11px;
-        display: inline-block;
-        height: 20px;
-        width: 20px;
-      }
-      .fa {
-        font-size: 12px;
-        margin: 0;
-        display: inline-block;
-        text-align: center;
-        line-height: 20px;
-      }
-    }
-    .name {
-      width: 130px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    .version {
-      font-size: 12px;
-    }
-    [class^="odp-"],
-    [class*=" odp-"] {
-      font-size: 32px;
-      line-height: 0;
-    }
-  }
-  .card-body {
-    span {
-      vertical-align: middle;
-    }
-    [class^="odp-"],
-    [class*=" odp-"] {
-      font-size: 14px;
-      line-height: 0;
-      margin-right: 5px;
-    }
-  }
-  &.add-card {
-    .circle {
-      width: 75px;
-      height: 75px;
-      border-radius: 100%;
-    }
-  }
-  .draft-options {
-    width: 230px;
-    height: 200px;
-    top: -200px;
-    z-index: 1050;
-    transition: 0.25s;
-    &.show {
-      top: 0;
-    }
-  }
-}
+  .list-group-item {
+    height: 56px;
+    overflow: hidden;
 
-.button-grid {
-  &.view-only {
-    bottom: 0 !important;
-    width: 100%;
-  }
-  &.some-manage {
-    bottom: -34px;
-  }
-  &.has-deploy {
-    bottom: -104px;
-    &.some-manage {
-      bottom: -68px;
-    }
-  }
-  position: absolute;
-  bottom: -68px;
-  border-top: 1px solid #ccc;
-  transition: 0.25s;
-  .toggler {
-    padding: 0px;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    display: inline-block;
-    margin: auto;
-    margin-top: -8px;
-    height: 14px;
-    width: 26px;
-    position: absolute;
-    left: 45%;
-    text-align: center;
-    background: #fff;
-    box-shadow: 0px 0px 4px rgba(#000, 0.16);
-    border-radius: 10px;
-    &:hover {
+    &:not(.header):hover {
+      background: $light;
       cursor: pointer;
-      box-shadow: none;
     }
-    .fa {
-      transition: 0.25s;
-      position: absolute;
-      margin-top: -2px;
-      left: 34%;
+
+    &.header {
+      min-height: 38px;
+      max-height: 38px;
+      color: #6C7584;
     }
-  }
-  .button {
-    .icon {
-      width: 20px;
-      display: inline-block;
+
+    .item-name {
+      min-width: 260px;
+      max-width: 260px;
     }
+
+    .item-record-count,
+    .item-attribute-count,
+    .item-reference-count,
+    .item-hook-count {
+      min-width: 110px;
+      max-width: 110px;
+    }
+
+    .item-status {
+      min-width: 120px;
+      max-width: 120px;
+
+      .text-warning {
+        animation: blink 0.5s alternate infinite;
+      }
+
+      .fa-circle {
+        font-size: 8px;
+      }
+    }
+
     &:hover {
-      text-shadow: 0px 0px 2px rgba(#000, 0.16);
+      .item-actions {
+        right: 0px;
+      }
     }
-  }
-  &.active {
-    bottom: 0;
-    .toggler {
-      .fa {
-        margin-top: 0px;
-        transition: 0.25s;
-        transform: rotate(180deg);
+
+    .item-actions {
+      min-width: 240px;
+      position: absolute;
+      right: -500px;
+      transition: 0.2s;
+
+      .actions {
+        .dsi {
+          min-width: 24px;
+          max-width: 24px;
+          display: inline-block;
+
+          &:not(:hover) {
+            color: $sub-headings;
+          }
+        }
+
+        .dsi,
+        .api-icon {
+          &:hover {
+            color: $dark;
+          }
+        }
       }
     }
   }
-  &:focus {
-    outline: none;
-  }
-  & > div:focus {
-    outline: none;
+
+  .scroll-pane {
+    height: 100%;
+    overflow: auto;
   }
 }
 
-.button-grid1 {
-  border-top: 1px solid #ccc;
-  transition: 0.25s;
-  .button {
-    .icon {
-      width: 20px;
-      display: inline-block;
-    }
-    &:hover {
-      text-shadow: 0px 0px 2px rgba(#000, 0.16);
-    }
+.new-service-window,
+.yaml-window {
+  height: 100vh;
+  width: 360px;
+  top: 0;
+  right: -360px;
+  z-index: 2;
+  transition: 0.2s;
+  overflow: auto;
+  padding-top: 40px !important;
+
+  &.show {
+    right: 0px !important;
   }
 }
 
-.new-service-modal {
-  label {
-    min-width: 100px;
-  }
-  .icon-wrapper {
-    min-width: 32px;
-    max-width: 32px;
-    min-height: 32px;
-    max-height: 32px;
-    background: rgba($create, 0.2);
-  }
-  #description {
-    resize: none;
+.yaml-window {
+  .form-text {
+    top: 6px;
+    right: 8px;
   }
 }
 
 .name-wrapper {
-  .fa-exclamation-circle {
-    top: 7px;
+  .dsi-danger-circle {
+    top: 8px;
     right: 5px;
   }
 }
+
 .sup-top {
-  top:0px;
+  top: 0px;
+}
+
+
+
+.overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba($color: #000000, $alpha: 0.6);
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.wizard-window {
+  position: fixed;
+  width: calc(100vw - 40%);
+  height: calc(100vh - 40%);
+  top: 20%;
+  left: 20%;
+  z-index: 1;
+}
+
+
+.more-options {
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+  min-width: 140px;
+
+  .list-group-item {
+    height: 36px;
+  }
+}
+
+.service-name {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.popover {
+  border: 1px solid #ECECEC;
+  display: grid;
+  width: 100%;
+  top: 390px;
+  left: 35px;
+  overflow-y: auto;
+  max-height: 200px;
+  min-height: 50px;
+}
+
+.popover-options {
+  padding: 15px;
+  cursor: pointer;
+  color: $headings;
+  font-size: 14px;
+
+  &:hover {
+    background: #F7F7F7;
+  }
+}
+
+.dsi-drop-down {
+  position: absolute;
+  top: 365px;
+  right: 35px;
+  font-weight: 800;
+  font-size: 16px;
 }

@@ -6,23 +6,22 @@ import { UserListComponent } from 'src/app/admin/user-list/user-list.component';
 import { AppManageComponent } from 'src/app/admin/app-manage/app-manage.component';
 import { AgentsComponent } from './agents/agents.component';
 
-const routes: Routes = [{
-    path: '', component: AdminComponent, children: [
-        { path: '', pathMatch: 'full', redirectTo: 'apps' },
-        { path: 'apps', component: AppListComponent },
-        { path: 'apps/:id', component: AppManageComponent },
-        { path: 'users', component: UserListComponent },
-        { path: 'agents', component: AgentsComponent },
-        { path: 'integration', component: AgentsComponent }
-    ]
-}];
-@NgModule({
-    imports: [
-        RouterModule.forChild(routes)
+const routes: Routes = [
+  {
+    path: '',
+    component: AdminComponent,
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'apps' },
+      { path: 'apps', component: AppListComponent },
+      { path: 'apps/:id', component: AppManageComponent },
+      { path: 'users', component: UserListComponent },
+      { path: 'agents', component: AgentsComponent },
+      { path: 'integration', component: AgentsComponent },
     ],
-    exports: [
-        RouterModule
-    ]
+  },
+];
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}

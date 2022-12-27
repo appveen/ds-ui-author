@@ -6,7 +6,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BotsComponent } from './bots.component';
 import { BotsManageComponent } from './bots-manage/bots-manage.component';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { TableCheckboxModule } from 'src/app/utils/table-checkbox/table-checkbox.module';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
@@ -33,7 +32,6 @@ const routes: Routes = [
     FormsModule,
     NgbModule,
     ClickOutsideModule,
-    IconsModule,
     TableCheckboxModule,
     AutoFocusModule,
     BreadcrumbModule,

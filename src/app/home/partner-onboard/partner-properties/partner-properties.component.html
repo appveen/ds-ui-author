@@ -9,7 +9,7 @@
       <!-- <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box> -->
       <button type="button" class="btn btn-sm btn-link" (click)="openPropertiesModal()"
         *ngIf="edit.status && edit.id && canCreateHeaders()">
-        <span class="fa fa-plus-circle mr-2"></span>
+        <span class="dsi dsi-plus-circle mr-2"></span>
         <span class="text">New Header</span>
       </button>
     </div>
@@ -34,7 +34,7 @@
               <td class="text-right">
                 <span class="text-secondary" *ngIf="edit.status && edit.id && canDeleteHeaders()">
                   <button type="button" class="btn btn-link" (click)="removeProperty(item.key)">
-                    <span class="fa fa-trash text-muted"></span>
+                    <span class="dsi dsi-trash text-muted"></span>
                   </button>
                 </span>
               </td>
@@ -46,7 +46,7 @@
                     <div class="text">No Headers has been created.</div>
                     <button type="button" class="btn btn-create mt-2" (click)="openPropertiesModal()"
                       *ngIf="edit.status && edit.id && canCreateHeaders()">
-                      <span class="fa fa-plus-circle mr-2"></span>
+                      <span class="dsi dsi-plus-circle mr-2"></span>
                       <span class="text">Create New</span>
                     </button>
                   </div>
@@ -99,7 +99,7 @@
             <td class="text-right" *ngIf="edit.status && edit.id && canUpdateHeaders()">
               <span class="text-secondary">
                 <button type="button" class="btn btn-link" (click)="removeIP(i)">
-                  <span class="fa fa-trash text-muted"></span>
+                  <span class="dsi dsi-trash text-muted"></span>
                 </button>
               </span>
             </td>
@@ -111,7 +111,7 @@
                   <div class="text">No IP Address Added.</div>
                   <button type="button" class="btn btn-create mt-2" (click)="addIP()"
                     *ngIf="edit.status && edit.id && canUpdateHeaders()">
-                    <span class="fa fa-plus-circle mr-2"></span>
+                    <span class="dsi dsi-plus-circle mr-2"></span>
                     <span class="text">Create New</span>
                   </button>
                 </div>
@@ -122,7 +122,7 @@
             <td colspan="2">
               <button type="button" class="btn btn-sm btn-link" (click)="addIP()"
                 *ngIf="edit.status && edit.id && enabledTrustedIP && canUpdateHeaders()">
-                <span class="fa fa-plus-circle mr-2"></span>
+                <span class="dsi dsi-plus-circle mr-2"></span>
                 <span class="text">New IP Address</span>
               </button>
             </td>
@@ -137,21 +137,16 @@
 <ng-template #keyValModalTemplate>
   <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center" [formGroup]="form">
     <div class="d-flex align-items-center justify-content-between mb-3 w-100">
-      <div class="d-flex align-items-center">
-        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-          <odp-partner-icon [size]="18" color="202a36" class="mt-1"></odp-partner-icon>
-        </span>
-        <span class="font-weight-bold mb-1" *ngIf="data && data.isEdit">Edit Key-Value</span>
-        <span class="font-weight-bold mb-1" *ngIf="!data || !data.isEdit">Add Key-Value</span>
-      </div>
+      <span class="font-20 fw-600" *ngIf="data && data.isEdit">Edit Key-Value</span>
+      <span class="font-20 fw-600" *ngIf="!data || !data.isEdit">Add Key-Value</span>
       <span class="fa fa-times text-muted hover" (click)="keyValModalTemplateRef.close(false)"></span>
     </div>
     <div class="info d-flex flex-column align-self-center justify-content-center w-100">
       <div class="form-group">
         <label for="key">Key</label>
         <div class="w-100 position-relative headers-key-wrapper">
-          <input #headerKey id="key" type="text" class="form-control" formControlName="key" 
-            odpAutoFocus (keyup.enter)="headerValue.focus()"
+          <input #headerKey id="key" type="text" class="form-control" formControlName="key" odpAutoFocus
+            (keyup.enter)="headerValue.focus()"
             [ngClass]="{'is-invalid':form.get('key').invalid && (form.get('key').dirty || form.get('key').touched)}">
           <ng-container *ngIf="form.get('key').invalid && (form.get('key').dirty || form.get('key').touched)">
             <span *ngIf="form.get('key')?.errors?.required"

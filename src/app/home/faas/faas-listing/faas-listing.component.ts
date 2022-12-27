@@ -1,124 +1,102 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, EventEmitter, } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { AgGridAngular, AgGridColumn } from 'ag-grid-angular';
-import { GridReadyEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
-import { switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
 import * as _ from 'lodash';
 
 import { GetOptions, CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
-import { FaasFilterComponent } from './faas-filter/faas-filter.component';
-import { FaasCellComponent } from './faas-cell/faas-cell.component';
-import { environment } from 'src/environments/environment';
+import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 
 @Component({
   selector: 'odp-faas-listing',
   templateUrl: './faas-listing.component.html',
-  styleUrls: ['./faas-listing.component.scss']
+  styleUrls: ['./faas-listing.component.scss'],
+  providers: [CommonFilterPipe]
 })
 export class FaasListingComponent implements OnInit, OnDestroy {
 
-  @ViewChild('agGrid') agGrid: AgGridAngular;
-  @ViewChild('newFaasModal', { static: false }) newFaasModal: TemplateRef<HTMLElement>;
-  form: FormGroup;
+  @ViewChild('alertModalTemplate', { static: false }) alertModalTemplate: TemplateRef<HTMLElement>;
+  form: UntypedFormGroup;
   apiConfig: GetOptions;
   subscriptions: any;
-  newFaasModalRef: NgbModalRef;
-  columnDefs: Array<AgGridColumn>;
-  dataSource: IDatasource;
-  sortModel: any;
-  filterModel: any;
   totalCount: number;
-  loadedCount: number;
-  noRowsTemplate: string;
+  showNewFaasWindow: boolean;
+  searchTerm: string;
+  faasList: Array<any>;
+  alertModal: {
+    statusChange?: boolean;
+    title: string;
+    message: string;
+    index: number;
+  };
+  openDeleteModal: EventEmitter<any>;
+  alertModalTemplateRef: NgbModalRef;
+  showLazyLoader: boolean;
+  easterEggEnabled: boolean;
+  copied: any;
+  showOptionsDropdown: any;
+  selectedItemEvent: any
+  selectedLibrary: any;
+  sortModel: any;
+  breadcrumbPaths: Array<Breadcrumb>;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder,
+    private commonFilter: CommonFilterPipe) {
     this.subscriptions = {};
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
-      api: [null]
+      api: [null],
+      code: [null]
     });
     this.apiConfig = {
       page: 1,
       count: 30
     };
-    this.noRowsTemplate = '<span>No records to display</span>';
+    this.faasList = [];
+    this.alertModal = {
+      statusChange: false,
+      title: '',
+      message: '',
+      index: -1,
+    };
+    this.openDeleteModal = new EventEmitter();
+    this.copied = {};
+    this.showOptionsDropdown = {};
+    this.showLazyLoader = true;
+    this.sortModel = {};
+    this.breadcrumbPaths = [{
+      active: true,
+      label: 'Functions'
+    }];
   }
   ngOnInit() {
-    this.configureColumns();
-    this.dataSource = {
-      getRows: (params: IGetRowsParams) => {
-        this.agGrid.api.showLoadingOverlay();
-        this.apiConfig.page = Math.ceil((params.endRow / 30));
-        if (this.apiConfig.page === 1) {
-          this.loadedCount = 0;
-        }
-        if (!this.apiConfig.filter) {
-          this.apiConfig.filter = {};
-        }
-        this.apiConfig.sort = this.appService.getSortFromModel(this.agGrid.api.getSortModel());
-        if (!!this.subscriptions['data_' + this.apiConfig.page]) {
-          this.subscriptions['data_' + this.apiConfig.page].unsubscribe();
-        }
-        this.subscriptions['data_' + this.apiConfig.page] = this.getFaasCount()
-          .pipe(
-            switchMap(count => {
-              this.totalCount = count;
-              if (this.totalCount > 0) {
-                return this.getFaas();
-              } else {
-                this.agGrid.api.hideOverlay();
-                this.agGrid.api.showNoRowsOverlay();
-                return of(null);
-              }
-            })
-          ).subscribe(
-            docs => {
-              if (!!docs) {
-                this.loadedCount += docs.length;
-                this.agGrid.api.hideOverlay();
-                if (this.loadedCount < this.totalCount) {
-                  params.successCallback(docs);
-                } else {
-                  this.totalCount = this.loadedCount;
-                  params.successCallback(docs, this.totalCount);
-                }
-              } else {
-                params.successCallback([], 0);
-              }
-            },
-            err => {
-              this.agGrid.api.hideOverlay();
-              console.error(err);
-              params.failCallback();
-            }
-          );
-      }
-    };
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.commonService.apiCalls.componentLoading = false;
+    this.getFaas();
+    this.getFaas();
     this.form.get('api').disable();
     this.form.get('name').valueChanges.subscribe(val => {
       this.form.get('api').patchValue(`/api/a/faas/${this.commonService.app._id}/${_.camelCase(val)}`);
     });
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
-      this.agGrid.api.purgeInfiniteCache();
+      this.getFaas();
     });
     this.subscriptions['faas.delete'] = this.commonService.faas.delete.subscribe(data => {
-      this.agGrid.api.purgeInfiniteCache();
+      this.getFaas();
     });
     this.subscriptions['faas.status'] = this.commonService.faas.status.subscribe(data => {
-      this.agGrid.api.purgeInfiniteCache();
+      this.getFaas();
     });
     this.subscriptions['faas.new'] = this.commonService.faas.new.subscribe(data => {
-      this.agGrid.api.purgeInfiniteCache();
+      this.getFaas();
     });
   }
 
@@ -126,157 +104,50 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     Object.keys(this.subscriptions).forEach(e => {
       this.subscriptions[e].unsubscribe();
     });
-    if (this.newFaasModalRef) {
-      this.newFaasModalRef.close();
-    }
-  }
-
-  configureColumns() {
-    const columns = [];
-    let col = new AgGridColumn();
-    col.headerName = 'Name';
-    col.field = 'name';
-    col.pinned = 'left';
-    col.lockPinned = true;
-    col.width = 180;
-    col.sort = 'asc';
-    columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'URL';
-    col.field = 'url';
-    columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'Description';
-    col.field = 'description';
-    columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'Status';
-    col.field = 'status';
-    col.width = 100;
-    columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'Last Invoked';
-    col.field = 'lastInvoked';
-    col.width = 180;
-    columns.push(col);
-    col = new AgGridColumn();
-    col.headerName = 'Options';
-    col.field = '_options';
-    col.pinned = 'right';
-    col.lockPinned = true;
-    columns.push(col);
-    columns.forEach((item: AgGridColumn) => {
-      item.suppressMovable = true;
-      item.resizable = true;
-      item.suppressMenu = true;
-      if (item.field !== '_options') {
-        item.sortable = true;
-        item.filter = 'agTextColumnFilter';
-        item.floatingFilterComponentFramework = FaasFilterComponent;
-      }
-      item.cellRendererFramework = FaasCellComponent;
-    });
-    this.columnDefs = columns;
   }
 
   newFaas() {
-    this.newFaasModalRef = this.commonService.modal(this.newFaasModal, { size: 'sm' });
-    this.newFaasModalRef.result.then(close => {
-      if (close && this.form.valid) {
-        this.triggerFaasCreate();
-      }
-    }, dismiss => {
-      this.form.reset();
-    });
+    this.form.reset({});
+    this.showNewFaasWindow = true;
   }
 
   triggerFaasCreate() {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
+    this.showLazyLoader = true;
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/faas`, payload).subscribe(res => {
+      this.showLazyLoader = false;
       this.form.reset();
       this.ts.success('Function has been created.');
       this.appService.edit = res._id;
       this.router.navigate(['/app/', this.commonService.app._id, 'faas', res._id]);
     }, err => {
+      this.showLazyLoader = false;
       this.form.reset();
       this.commonService.errorToast(err);
     });
   }
 
   getFaas() {
-    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, this.apiConfig);
-  }
-
-  getFaasCount() {
-    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`, { filter: this.apiConfig.filter });
-  }
-
-  gridReady(event: GridReadyEvent) {
-    this.sortModel = this.agGrid.api.getSortModel();
-    this.agGrid.api.sizeColumnsToFit();
-  }
-
-
-  filterModified(event) {
-    const filter = [];
-    const filterModel = this.agGrid.api.getFilterModel();
-    this.filterModel = filterModel;
-    if (filterModel) {
-      Object.keys(filterModel).forEach(key => {
-        try {
-          if (filterModel[key].filter) {
-            filter.push(JSON.parse(filterModel[key].filter));
-          }
-        } catch (e) {
-          console.error(e);
-        }
+    this.showLazyLoader = true;
+    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas/utils/count`).pipe(
+      switchMap((ev: any) => {
+        this.totalCount = ev;
+        return this.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, { count: ev });
+      })
+    ).subscribe(res => {
+      this.showLazyLoader = false;
+      this.faasList = [];
+      res.forEach(item => {
+        item.url = 'https://' + this.commonService.userDetails.fqdn + item.url;
+        this.faasList.push(item);
       });
-    }
-    if (filter.length > 0) {
-      this.apiConfig.filter = { $and: filter };
-    } else {
-      this.apiConfig.filter = null;
-    }
-    if (!environment.production) {
-      console.log('Filter Modified', filterModel);
-    }
-  }
-
-  sortChanged(event) {
-    const sortModel = this.agGrid.api.getSortModel();
-    this.sortModel = sortModel;
-    if (!environment.production) {
-      console.log('Sort Modified', sortModel);
-    }
-  }
-
-  clearFilter() {
-    this.filterModel = null;
-    this.apiConfig.filter = null;
-    this.agGrid.api.setFilterModel(null);
-  }
-
-  clearSort() {
-    this.sortModel = null;
-    this.agGrid.api.setSortModel([{ colId: 'name', sort: 'asc' }]);
-  }
+    }, err => {
+      this.showLazyLoader = false;
+      this.commonService.errorToast(err);
+    });
 
 
-  get hasFilter() {
-    if (this.filterModel) {
-      return Object.keys(this.filterModel).length > 0;
-    }
-    return false;
-  }
-
-  get hasSort() {
-    if (!this.sortModel
-      || this.sortModel.findIndex(e => e.colId === 'name') === -1
-      || this.sortModel.length !== 1) {
-      return true;
-    }
-    return false;
   }
 
   canManageFaas(id: string) {
@@ -287,15 +158,295 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     }
   }
 
-  canDeleteFaas(id: string) {
-    return this.hasPermission('PMF');
+  canDeployFunction(faas) {
+    if (!faas.draftVersion) {
+      return false;
+    }
+    if (this.commonService.userDetails.isSuperAdmin) {
+      return true;
+    } else if (
+      this.commonService.isAppAdmin &&
+      !this.commonService.userDetails.verifyDeploymentUser
+    ) {
+      return true;
+    } else if (
+      this.commonService.userDetails.verifyDeploymentUser &&
+      this.commonService.userDetails._id === faas._metadata.lastUpdatedBy
+    ) {
+      return false;
+    } else {
+      return this.commonService.hasPermission('PMFPD', 'FAAS');
+    }
+  }
+
+  canStartStopFunction(id: string) {
+    const temp = this.faasList.find((e) => e._id === id);
+    if (temp && temp.status !== 'Stopped' && temp.status !== 'Active') {
+      return false;
+    }
+    if (
+      this.commonService.isAppAdmin ||
+      this.commonService.userDetails.isSuperAdmin
+    ) {
+      return true;
+    } else {
+      return this.commonService.hasPermission('PMFPS', 'FAAS');
+    }
   }
 
   hasPermission(type: string, entity?: string) {
     return this.commonService.hasPermission(type, entity);
   }
+
   hasWritePermission(entity: string) {
     return this.commonService.hasPermission('PMF', entity);
   }
 
+  getStatusClass(srvc) {
+    if (srvc.status.toLowerCase() === 'active') {
+      return 'text-success';
+    }
+    if (srvc.status.toLowerCase() === 'stopped' || srvc.status.toLowerCase() === 'undeployed') {
+      return 'text-danger';
+    }
+    if (srvc.status.toLowerCase() === 'draft') {
+      return 'text-accent';
+    }
+    if (srvc.status.toLowerCase() === 'pending') {
+      return 'text-warning';
+    }
+    return 'text-secondary';
+  }
+
+  getStatusLabel(srvc) {
+    if (srvc.status.toLowerCase() === 'stopped' || srvc.status.toLowerCase() === 'undeployed') {
+      return 'Stopped';
+    }
+    return srvc.status;
+  }
+
+
+  deployFunction(index: number) {
+    this.alertModal.statusChange = true;
+    if (
+      this.faasList[index].status === 'Draft' ||
+      this.faasList[index].draftVersion
+    ) {
+      this.alertModal.title = 'Deploy ' + this.faasList[index].name + '?';
+      this.alertModal.message =
+        'Are you sure you want to Deploy this function? Once Deployed, "' +
+        this.faasList[index].name +
+        '" will be running the latest version.';
+    } else {
+      return;
+    }
+    this.alertModalTemplateRef = this.commonService.modal(
+      this.alertModalTemplate
+    );
+    this.alertModalTemplateRef.result.then(
+      (close) => {
+        if (close) {
+          const url =
+            `/${this.commonService.app._id}/faas/utils/` +
+            this.faasList[index]._id +
+            '/deploy';
+          this.subscriptions['updateservice'] = this.commonService
+            .put('partnerManager', url, { app: this.commonService.app._id })
+            .subscribe(
+              (d) => {
+                this.ts.info('Deploying function...');
+                this.faasList[index].status = 'Pending';
+              },
+              (err) => {
+                this.commonService.errorToast(err);
+              }
+            );
+        }
+      },
+      (dismiss) => { }
+    );
+  }
+
+  toggleFunctionStatus(index: number) {
+    this.alertModal.statusChange = true;
+
+    if (this.faasList[index].status === 'Active') {
+      this.alertModal.title = 'Stop ' + this.faasList[index].name + '?';
+      this.alertModal.message =
+        'Are you sure you want to stop this function? : ' + this.faasList[index].name;
+    } else {
+      this.alertModal.title = 'Start ' + this.faasList[index].name + '?';
+      this.alertModal.message =
+        'Are you sure you want to start this function? : ' + this.faasList[index].name;
+    }
+    this.alertModalTemplateRef = this.commonService.modal(
+      this.alertModalTemplate
+    );
+    this.alertModalTemplateRef.result.then(
+      (close) => {
+        if (close) {
+          let url =
+            `/${this.commonService.app._id}/faas/utils/` +
+            this.faasList[index]._id +
+            '/start';
+          if (this.faasList[index].status === 'Active') {
+            url =
+              `/${this.commonService.app._id}/faas/utils/` +
+              this.faasList[index]._id +
+              '/stop';
+          }
+          this.subscriptions['updateservice'] = this.commonService
+            .put('partnerManager', url, { app: this.commonService.app._id })
+            .subscribe(
+              (d) => {
+                if (this.faasList[index].status === 'Active') {
+                  this.ts.info('Stopping function...');
+                } else {
+                  this.ts.info('Starting function...');
+                }
+                this.faasList[index].status = 'Pending';
+              },
+              (err) => {
+                this.commonService.errorToast(err);
+              }
+            );
+        }
+      },
+      (dismiss) => { }
+    );
+  }
+
+  closeDeleteModal(data) {
+    if (data) {
+      const url =
+        `/${this.commonService.app._id}/faas/` +
+        this.faasList[data.index]._id;
+      this.showLazyLoader = true;
+      this.subscriptions['deleteservice'] = this.commonService
+        .delete('partnerManager', url)
+        .subscribe(
+          (d) => {
+            this.showLazyLoader = false;
+            this.ts.info(d.message ? d.message : 'Deleting function...');
+            this.faasList[data.index].status = 'Pending';
+          },
+          (err) => {
+            this.showLazyLoader = false;
+            this.commonService.errorToast(
+              err,
+              'Oops, something went wrong. Please try again later.'
+            );
+          }
+        );
+    }
+  }
+
+  editFunction(index: number) {
+    this.appService.editServiceId = this.faasList[index]._id;
+    this.router.navigate(['/app/', this.commonService.app._id, 'faas', this.appService.editServiceId,
+    ]);
+  }
+
+  viewFunction(index: number) {
+    this.router.navigate(['/app', this.commonService.app._id, 'faas', this.faasList[index]._id]);
+  }
+
+  deleteFunction(index: number) {
+    this.alertModal.statusChange = false;
+    this.alertModal.title = 'Delete Function?';
+    this.alertModal.message =
+      'Are you sure you want to delete this function? This action will delete : <span class="text-delete font-weight-bold">' + this.faasList[index].name + '</span>';
+    this.alertModal.index = index;
+    this.openDeleteModal.emit(this.alertModal);
+  }
+
+  cloneFunction(index: number) {
+    this.form.reset();
+    const temp = this.faasList[index];
+    this.form.get('name').patchValue(temp.name + ' Copy');
+    this.form.get('code').patchValue(temp.code);
+    this.showNewFaasWindow = true;
+  }
+
+  copyUrl(faas: any) {
+    this.copied[faas._id] = true;
+    this.appService.copyToClipboard(faas.url);
+    setTimeout(() => {
+      this.copied[faas._id] = false;
+    }, 2000);
+  }
+
+  applySort(field: string) {
+    if (!this.sortModel[field]) {
+      this.sortModel = {};
+      this.sortModel[field] = 1;
+    } else if (this.sortModel[field] == 1) {
+      this.sortModel[field] = -1;
+    } else {
+      delete this.sortModel[field];
+    }
+  }
+
+  showDropDown(event: any, i: number) {
+    this.selectedItemEvent = event;
+    Object.keys(this.showOptionsDropdown).forEach(key => {
+      this.showOptionsDropdown[key] = false;
+    })
+    this.selectedLibrary = this.faasList[i];
+    this.showOptionsDropdown[i] = true;
+  }
+
+  private compare(a: any, b: any) {
+    if (a > b) {
+      return 1;
+    } else if (a < b) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
+  get dropDownStyle() {
+    let top = (this.selectedItemEvent.clientY + 10);
+    if (this.selectedItemEvent.clientY > 430) {
+      top = this.selectedItemEvent.clientY - 106
+    }
+    return {
+      top: top + 'px',
+      right: '50px'
+    };
+  }
+
+  get records() {
+    let records = this.commonFilter.transform(this.faasList, 'name', this.searchTerm);
+    const field = Object.keys(this.sortModel)[0];
+    if (field) {
+      records = records.sort((a, b) => {
+        if (this.sortModel[field] == 1) {
+          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+            return this.compare((a[field]), (b[field]));
+          } else {
+            return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
+          }
+        } else if (this.sortModel[field] == -1) {
+          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+            return this.compare((b[field]), (a[field]));
+          } else {
+            return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
+          }
+        } else {
+          return 0;
+        }
+      });
+    } else {
+      records = records.sort((a, b) => {
+        return this.compare(b._metadata.lastUpdated, a._metadata.lastUpdated);
+      });
+    }
+    return records;
+  }
+
+  get app() {
+    return this.commonService.app._id;
+  }
 }

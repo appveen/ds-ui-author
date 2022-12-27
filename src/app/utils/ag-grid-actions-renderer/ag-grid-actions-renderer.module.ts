@@ -8,4 +8,4 @@ import { AgGridActionsRendererComponent } from './ag-grid-actions-renderer.compo
     imports: [CommonModule],
     exports: [AgGridActionsRendererComponent]
 })
-export class AgGridActionsRendererModule {}
+export class AgGridActionsRendererModule { }

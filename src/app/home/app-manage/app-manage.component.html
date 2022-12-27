@@ -1,382 +1,336 @@
-<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+<div class="bg-light w-100 h-100 vh-100">
+  <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
-        <div class="text-secondary mt-2">Processing...</div>
+      <div class="spinner-border text-dark" role="status">
+        <span class="sr-only">Processing...</span>
+      </div>
+      <div class="text-secondary mt-2">Processing...</div>
     </div>
-</div>
-<div class="container pt-4">
-    <div class="d-flex flex-column">
-        <odp-basic-info holderStyle="square" [(name)]="appData._id" [(description)]="appData.description"
-            [(logo)]="appData.logo.thumbnail" [edit]="{status:true}">
-            <!-- <button class="btn btn-link text-danger mr-3" (click)="deleteApp()">Delete App</button> -->
-            <button class="btn btn-dark" [ngClass]="{'text-white':changesDone}" [disabled]="!changesDone || isInvalid"
-                (click)="save()">
-                Save
-            </button>
-        </odp-basic-info>
-        <div class="d-flex flex-column p-3">
-            <div class="tabs d-flex w-100 border-bottom">
-                <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab==1}"
-                    (click)="activeTab = 1">
-                    <span class="text">Theme</span>
-                </div>
-                <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 2}"
-                    (click)="activeTab = 2">
-                    <span class="text">Identity</span>
-                </div>
-                <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 3}"
+  </div>
+  <div class="d-flex flex-column position-relative">
+    <div class="d-flex align-items-center options">
+      <div class="text-dark fw-500 font-20">
+        {{appData._id}}
+        <!-- <odp-basic-info holderStyle="square" [(name)]="appData._id" [(description)]="appData.description"
+          [edit]="{ status: true }">
+        </odp-basic-info> -->
+      </div>
+      <button class="btn btn-primary ml-auto d-flex align-items-center justify-content-center btn-min-width"
+        (click)="save()" [disabled]="!changesDone || isInvalid">
+        <!-- <span class="dsi dsi-plus mr-2"></span> -->
+        <span class="text-center">Save</span>
+      </button>
+    </div>
+  </div>
+
+
+  <div class="d-flex flex-column rounded rounded-lg border bg-white content">
+    <div class="tabs d-flex w-100 border-bottom">
+      <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{ active: activeTab == 1 }"
+        (click)="activeTab = 1">
+        <span class="text">Theme</span>
+      </div>
+      <!-- <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{ active: activeTab == 2 }"
+        (click)="activeTab = 2">
+        <span class="text">Identity</span>
+      </div> -->
+      <!-- <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 3}"
                     (click)="changeTab()">
                     <span class="text">Management</span>
-                </div>
-                <!-- <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 4}"
+                </div> -->
+      <!-- <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 4}"
                     (click)="activeTab = 4">
                     <span class="text">Properties</span>
                 </div> -->
-                <!-- <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 5}"
+      <!-- <div class="tab d-flex align-items-center px-3 hover" [ngClass]="{'active':activeTab == 5}"
                     (click)="activeTab = 5">
                     <span class="text">Trusted IP List</span>
                 </div> -->
+    </div>
+    <div class="tab-content w-100">
+      <ng-container *ngIf="activeTab == 1">
+        <div class="d-flex">
+          <div class="upload-section p-4">
+            <span class="fw-500 font-14 mb-2">Logo</span>
+            <div class="d-flex align-items-start mb-4">
+              <div class="d-flex flex-column">
+                <span class="d-flex mb-3">
+                  <span class="text-secondary">Upload your logo, to add your brand identity to
+                    app center
+                    (Recommended size: 216px x 72 px)</span>
+                  <span class="ml-auto text-danger hover" (click)="appData.logo.full = undefined"
+                    *ngIf="appData.logo.full">Remove</span>
+                </span>
+                <label class="drop-box-logo drop-box d-flex align-items-center justify-content-center rounded">
+                  <input type="file" name="logoFile" id="logoFile" class="d-none"
+                    (odpUploadImage)="imageUpload($event, 'logo')" imageWidth="216" />
+                  <img *ngIf="appData.logo.full" [src]="appData.logo.full" class="drop-box-logo-holder" />
+                  <i *ngIf="!appData.logo.full" class="dsi dsi-upload mr-1" style="color:#44A8F1"></i>
+                  <span *ngIf="!appData.logo.full" style="color:#44A8F1">Upload</span>
+                </label>
+              </div>
             </div>
-            <div class="tab-content w-100 pt-3">
-                <ng-container *ngIf="activeTab == 1">
-                    <div class="d-flex   mb-3">
-                        <div class="d-flex  flex-column">
-                            <span class="ml-3 font-weight-bold">Assets</span>
-                            <div class="d-flex align-items-start pt-2">
-                                <div class="d-flex flex-column">
-                                    <span class="d-flex">
-                                        <span class="text-secondary pl-3">Logo</span>
-                                        <span class="ml-auto text-danger  mr-3" (click)="appData.logo.full=undefined"
-                                            *ngIf="appData.logo.full">Remove</span>
-                                    </span>
-                                    <label
-                                        class="drop-box-logo drop-box d-flex align-items-center justify-content-center m-3"
-                                        ngbTooltip="Optimum size: 216px X 72px" placement="top">
-                                        <input type="file" name="logoFile" id="logoFile" class="d-none"
-                                            (odpUploadImage)="imageUpload($event,'logo')" imageWidth="216">
-                                        <img *ngIf="appData.logo.full" [src]="appData.logo.full"
-                                            class="drop-box-logo-holder">
-                                        <span *ngIf="!appData.logo.full" class="fa fa-image fa-3x text-muted"></span>
-                                    </label>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <span class="text-secondary pl-3">Thumbnail</span>
-                                    <label
-                                        class="drop-box-thumbnail drop-box d-flex align-items-center justify-content-center m-3"
-                                        ngbTooltip="Optimum size: 72px X 72px" placement="top"
-                                        (odpUploadImage)="imageUpload($event,'thumbnail')">
-                                        <input type="file" name="thumbnailFile" id="thumbnailFile" class="d-none">
-                                        <img *ngIf="appData.logo.thumbnail" [src]="appData.logo.thumbnail"
-                                            class="drop-box-thumbnail-holder" alt="logo">
-                                        <span *ngIf="!appData.logo.thumbnail"
-                                            class="fa fa-image fa-3x text-muted"></span>
-                                    </label>
-                                </div>
-                                <div class="border mt-3 ml-4 mr-5 pt-3 divBorder"></div>
-                            </div>
-                        </div>
+            <span class="fw-500 font-14 mb-2">Accent Color</span>
+            <div class="d-flex align-items-start mb-4">
+              <div class="d-flex flex-column">
+                <span class="text-secondary mb-4">
+                  Pick accent colour for the app center that complements your brand look.
+                </span>
+                <div class="mb-4">
+                  <odp-color-picker #colorpicker [(color)]="appData.appCenterStyle.primaryColor">
+                  </odp-color-picker>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex align-items-start">
+              <button type="button" class="btn btn-sm btn-outline-dark w-100" (click)="reset()">Reset</button>
+            </div>
+          </div>
+          <div class="preview-section">
+            <odp-app-center-preview [logo]="appData.logo.full" [color]="appData.appCenterStyle.primaryColor"
+              (textColor)="(appData.appCenterStyle.textColor)" [theme]="appData.appCenterStyle.theme"
+              [bannerColor]="appData.appCenterStyle.bannerColor"></odp-app-center-preview>
+          </div>
+        </div>
 
-                        <div class="d-flex  theme-settings ml-4">
-                            <div class="d-flex  flex-column">
-                                <span class="pb-2 font-weight-bold">Look & Feel</span>
-                                <span class="text-secondary">Interface Mode </span>
-                                <div class="d-flex mt-3">
-                                    <!-- <label for="light"
-                                        class="type-option d-flex flex-column rounded align-items-center justify-content-center p-1"
-                                        [ngClass]="{'active':appData.appCenterStyle.theme === 'Light'}">
-                                        <input #lightControl type="radio" id="light" class="d-none" name="type"
-                                            value="Light" [(ngModel)]="appData.appCenterStyle.theme">
-                                        <span
-                                            class="check-circle rounded-circle border d-flex align-items-center justify-content-center ml-auto"
-                                            [ngClass]="{'bg-accent':appData.appCenterStyle.theme === 'Light'}">
-                                            <span class="inner-check-circle rounded-circle bg-white"></span>
-                                        </span>
-                                        <div class="interface-circle bg-light rounded-circle text-white d-flex align-items-center justify-content-center font-xl mb-1"
-                                            [ngClass]="{'bg-yellow':appData.appCenterStyle.theme === 'Light'}">
-                                            <span class="fa fa-sun "></span>
-                                        </div>
-                                        <span class="text-dark"
-                                            [ngClass]="{'text-muted':appData.appCenterStyle.theme != 'Light'}">Light</span>
-
-                                    </label>
-                                    <label for="dark"
-                                        class="type-option d-flex flex-column rounded align-items-center justify-content-center p-1 ml-3"
-                                        [ngClass]="{'active':appData.appCenterStyle.theme === 'Dark'}">
-                                        <input #darkControl type="radio" id="dark" class="d-none" name="type"
-                                            value="Dark" [(ngModel)]="appData.appCenterStyle.theme">
-                                        <span
-                                            class="check-circle rounded-circle border d-flex align-items-center justify-content-center ml-auto"
-                                            [ngClass]="{'bg-accent':appData.appCenterStyle.theme == 'Dark'}">
-                                            <span class="inner-check-circle rounded-circle bg-white"></span>
-                                        </span>
-                                        <div class="interface-circle bg-light rounded-circle moon d-flex align-items-center justify-content-center font-xl mb-1"
-                                            [ngClass]="{'bg-dark':appData.appCenterStyle.theme === 'Dark'}">
-                                            <span class="fa fa-moon"></span>
-                                        </div>
-                                        <span class="text-dark"
-                                            [ngClass]="{'text-muted':appData.appCenterStyle.theme != 'Dark'}">Dark</span>
-
-                                    </label> -->
-                                    <div class="d-flex flex-column  pt-1">
-                                        <div class="d-flex align-items-center position-relative">
-                                            <span class="text-secondary label">Color </span>
-                                            <div class="selected-color hover" [ngStyle]="selectedColorStyle"
-                                                (click)="toggleColorPicker=!toggleColorPicker"></div>
-                                            <div class="position-absolute color-palette" *ngIf="toggleColorPicker"
-                                                odpClickOutside [ignore]="['.selected-color']"
-                                                (outside)="toggleColorPicker=!$event">
-                                                <odp-color-picker [(color)]="appData.appCenterStyle.primaryColor">
-                                                </odp-color-picker>
-                                            </div>
-                                            <input type="text " class="border-buttom color-editor ml-1"
-                                                [(ngModel)]="appData.appCenterStyle.primaryColor">
-                                            <span class="fa fa-marker"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+      </ng-container>
+      <ng-container *ngIf="activeTab == 2">
+        <div class="d-flex pt-3">
+          <div class="d-flex ml-4 mr-4 certificate">
+            <div class="d-flex pt-3 ml-2">
+              <div class="d-flex certificate-card">
+                <span class="odp-Dcert"></span>
+              </div>
+              <div class="d-flex p-3">
+                <div>
+                  <span class="cert-name">{{ identityDetails.app }}</span>
+                  <br />
+                  <span>
+                    <h6 class="text-secondary cert-des">
+                      This certificate is verified for SSL Server Certificate
+                    </h6>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!-- enable when ux is ready by shalini -->
+            <div class="d-flex ml-auto p-4">
+              <div ngbDropdown placement="bottom-right" class="d-inline-block text-secondary">
+                <span ngbDropdownToggle>Download</span>
+                <div ngbDropdownMenu>
+                  <button type="button" class="dropdown-item text-primary" (click)="download()">
+                    Download Key & .cert
+                  </button>
+                  <button type="button" class="dropdown-item text-primary" (click)="download('csr')">
+                    Download CSR
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex info-cards position-absolute ml-2">
+              <div class="info-card-items bg-white p-3">
+                <div>
+                  <span class="odp-global"></span>
+                  <span class="text-secondary card-name ml-2">Common Name</span>
+                </div>
+                <div>
+                  {{ identityDetails.name }}
+                </div>
+              </div>
+              <div class="info-card-items bg-white p-3 ml-2">
+                <div>
+                  <span class="odp-approver"></span>
+                  <span class="text-secondary card-name ml-2">Owner</span>
+                </div>
+                <div>
+                  {{ identityDetails.info?.issuer.O }}
+                </div>
+              </div>
+              <div class="info-card-items bg-white p-3 ml-2">
+                <div>
+                  <span class="odp-double-check"> </span>
+                  <span class="text-secondary card-name ml-2">Signed by</span>
+                </div>
+                <div>{{ signedType }}</div>
+              </div>
+              <div class="info-card-items bg-white p-3 ml-2">
+                <div>
+                  <span class="odp-clock"> </span>
+                  <span class="text-secondary card-name ml-2">Valid until</span>
+                </div>
+                <div>
+                  {{ identityDetails.info?.validTo | date }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="activeTab == 3">
+        <div class="d-flex">
+          <div class="bg-light overlay rounded d-flex flex-column">
+            <div class="ml-4 mt-3 text-secondary">Start/Stop</div>
+            <div class="d-flex w-100 mx-3 mt-1">
+              <div class="d-flex flex-column w-50">
+                <div class="manage-cards bg-white pb-2" [@cardAction]="
+                      confirmModalState['allservice'] ? 'expand' : 'collapse'
+                    " (click)="toggleCard('allservice')">
+                  <div class="container">
+                    <div class="row p-3 service-card" [@stopping]="cardActionDisabled">
+                      <span class="dsi dsi-data-service"></span>
+                      <span class="ml-2"> All Services </span>
                     </div>
-                    <odp-app-center-preview [logo]="appData.logo.full" [color]="appData.appCenterStyle.primaryColor"
-                        (textColor)="appData.appCenterStyle.textColor" [theme]="appData.appCenterStyle.theme"
-                        [bannerColor]="appData.appCenterStyle.bannerColor"></odp-app-center-preview>
-                </ng-container>
-                <ng-container *ngIf="activeTab == 2">
-                    <div class="d-flex pt-3">
-                        <div class="d-flex ml-5 certificate">
-
-                            <div class="d-flex pt-3 ml-2">
-                                <div class="d-flex certificate-card">
-                                    <span class="odp-Dcert"></span>
-                                </div>
-                                <div class="d-flex  p-3">
-                                    <div>
-                                        <span class="cert-name">{{identityDetails.app}}</span>
-                                        <br>
-                                        <span>
-                                            <h6 class="text-secondary cert-des">This certificate is verified for SSL
-                                                Server Certificate</h6>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- enable when ux is ready by shalini -->
-                            <div class="d-flex ml-auto p-4">
-                                <div ngbDropdown placement="bottom-right" class="d-inline-block text-secondary">
-                                    <span ngbDropdownToggle>Download</span>
-                                    <div ngbDropdownMenu>
-                                        <button type="button" class="dropdown-item text-primary"
-                                            (click)="download()">Download
-                                            Key & .cert</button>
-                                        <button type="button" class="dropdown-item text-primary"
-                                            (click)="download('csr')">Download
-                                            CSR</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex info-cards position-absolute ml-2">
-                                <div class="info-card-items  bg-white p-3">
-                                    <div>
-                                        <span class="odp-global"></span>
-                                        <span class="text-secondary card-name ml-2">Common Name</span>
-                                    </div>
-                                    <div>
-                                        {{identityDetails.name}}
-                                    </div>
-                                </div>
-                                <div class="info-card-items  bg-white p-3 ml-2">
-                                    <div>
-                                        <span class="odp-approver"></span>
-                                        <span class="text-secondary card-name ml-2">Owner</span>
-                                    </div>
-                                    <div>
-                                        {{identityDetails.info?.issuer.O}}
-                                    </div>
-                                </div>
-                                <div class="info-card-items  bg-white p-3 ml-2">
-                                    <div>
-                                        <span class="odp-double-check">
-                                        </span>
-                                        <span class="text-secondary card-name ml-2">Signed by</span>
-                                    </div>
-                                    <div>{{signedType}}
-                                    </div>
-                                </div>
-                                <div class="info-card-items  bg-white p-3 ml-2">
-                                    <div>
-                                        <span class="odp-clock">
-                                        </span>
-                                        <span class="text-secondary card-name ml-2">Valid until</span>
-                                    </div>
-                                    <div>
-                                        {{identityDetails.info?.validTo | date}} </div>
-                                </div>
-                            </div>
-
-                        </div>
+                    <div class="row ml-2">
+                      <span class="text-secondary">Total Services</span>
+                      <span class="text-secondary ml-auto pr-4">{{
+                        serviceStatus.Total ? serviceStatus.Total : 0
+                        }}</span>
                     </div>
-                </ng-container>
-                <ng-container *ngIf="activeTab == 3">
-                    <div class="d-flex">
-                        <div class="bg-light overlay rounded d-flex flex-column">
-                            <div class="ml-4 mt-3 text-secondary">
-                                Start/Stop
-                            </div>
-                            <div class="d-flex  w-100 mx-3 mt-1">
-                                <div class="d-flex flex-column w-50">
-                                    <div class=" manage-cards bg-white pb-2"
-                                        [@cardAction]="confirmModalState['allservice']?'expand':'collapse'"
-                                        (click)="toggleCard('allservice')">
-                                        <div class="container">
-                                            <div class="row p-3 service-card" [@stopping]="cardActionDisabled">
-                                                <span>
-                                                    <odp-service-icon active="true" size="16" class="mt-1">
-                                                    </odp-service-icon>
-                                                </span>
-                                                <span class="ml-2">
-                                                    All Services
-                                                </span>
-                                            </div>
-                                            <div class="row ml-2">
-                                                <span class="text-secondary">Total Services</span>
-                                                <span
-                                                    class="text-secondary ml-auto pr-4">{{serviceStatus.Total?serviceStatus.Total:0}}</span>
-                                            </div>
-                                            <div class="row ml-2 mt-3">
-                                                <span class="text-success">Running</span>
-                                                <span
-                                                    class="text-success ml-auto pr-4">{{serviceStatus.Active?serviceStatus.Active:0}}</span>
-                                            </div>
-                                            <div class="row ml-2 mt-3">
-                                                <span class="text-warning">Pending</span>
-                                                <span
-                                                    class="text-warning ml-auto pr-4">{{serviceStatus.Pending?serviceStatus.Pending:0}}</span>
-                                            </div>
-                                            <div class="row ml-2 mt-3">
-                                                <span class="text-accent">Draft</span>
-                                                <span
-                                                    class="text-accent ml-auto pr-4">{{serviceStatus.Draft?serviceStatus.Draft:0}}</span>
-                                            </div>
-                                            <div class="row ml-2 mt-3">
-                                                <span class="text-danger">Stopped</span>
-                                                <span
-                                                    class="text-danger ml-auto pr-4">{{serviceStatus.Undeployed?serviceStatus.Undeployed:0}}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class=" mt-2" [@stopping]="!serviceStatus.Undeployed?'disabled':'enable'">
-                                        <div class="container">
-                                            <div class="row service-status-card bg-white"
-                                                [@cardAction]="startServiceAttributes['startCard']">
-                                                <div class="d-flex justify-content-between p-2"
-                                                    (click)="toggleCard('startAll')">
-                                                    <div class="text-nowrap text-secondary">Start all
-                                                        Services</div>
-                                                    <div class="position-relative animate-wrap"
-                                                        [@cardAction]="startServiceAttributes['animateItems']">
-                                                        <div class="position-absolute play-icon"
-                                                            [@cardAction]="startServiceAttributes['playIcon']">
-                                                            <span class="fa fa-play"
-                                                                [ngClass]="{'text-secondary':startServiceAttributes['playLoader']==='loadingShow','text-success':startServiceAttributes['playLoader']==='loadingHide'}"></span>
-                                                        </div>
-                                                        <div class="position-absolute start-circle"
-                                                            [@cardAction]="startServiceAttributes['playCircle']">
-                                                        </div>
-                                                        <div class="circle-loader"
-                                                            [@cardAction]="startServiceAttributes['playLoader']">
-                                                        </div>
-                                                        <div class="fa fa-check text-info tick-action"
-                                                            [@cardAction]="startServiceAttributes['tickAction']">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container start-action ml-2"
-                                                    [@cardAction]="startServiceAttributes['startGroup']">
-                                                    <h6
-                                                        class="text-secondary text-nowrap position-relative align-text ml-2">
-                                                        This
-                                                        will start all services,
-                                                        Confirm?</h6>
-                                                    <button class="btn btn-success start-all-btn"
-                                                        (click)="startAllServices()">Start
-                                                        All</button>
-                                                </div>
-                                                <div class="container starting-action"
-                                                    [@cardAction]="startServiceAttributes['processing']"
-                                                    *ngIf="proccessing">
-                                                    <h6 class="text-secondary">Starting all services...</h6>
-                                                </div>
-                                                <div class="container success-action"
-                                                    [@cardAction]="startServiceAttributes['complete']">
-                                                    <strong> Start all Process</strong> Initiated
-                                                    <div class="mt-2 ml-2">
-                                                        <a class="text-info" [routerLink]="['../sm']">
-                                                            Go to Dataservice
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class=" mt-2" [@stopping]="!serviceStatus.Active?'disabled':'enable'">
-                                        <div class="container">
-                                            <div class="row service-status-card bg-white"
-                                                [@cardAction]="startServiceAttributes['stopCard']">
-                                                <div class="d-flex justify-content-between p-2"
-                                                    (click)="toggleStopCard('stopAll')">
-                                                    <div class="text-nowrap text-secondary">Stop all Services
-                                                    </div>
-                                                    <div class="position-relative animate-wrap"
-                                                        [@cardAction]="startServiceAttributes['stopanimateItems']">
-                                                        <div class="position-absolute play-icon"
-                                                            [@cardAction]="startServiceAttributes['stopIcon']">
-                                                            <span class="fa fa-stop"
-                                                                [ngClass]="{'text-danger':startServiceAttributes['stopLoader']==='loadingHide','text-secondary':startServiceAttributes['stopLoader']==='loadingShow'}"></span>
-                                                        </div>
-                                                        <div class="position-absolute start-circle"
-                                                            [@cardAction]="startServiceAttributes['stopCircle']">
-                                                        </div>
-                                                        <div class="stop-circle-loader"
-                                                            [@cardAction]="startServiceAttributes['stopLoader']">
-                                                        </div>
-                                                        <div class="fa fa-check text-info tick-action"
-                                                            [@cardAction]="startServiceAttributes['stopTickAction']">
+                    <div class="row ml-2 mt-3">
+                      <span class="text-success">Running</span>
+                      <span class="text-success ml-auto pr-4">{{
+                        serviceStatus.Active ? serviceStatus.Active : 0
+                        }}</span>
+                    </div>
+                    <div class="row ml-2 mt-3">
+                      <span class="text-warning">Pending</span>
+                      <span class="text-warning ml-auto pr-4">{{
+                        serviceStatus.Pending ? serviceStatus.Pending : 0
+                        }}</span>
+                    </div>
+                    <div class="row ml-2 mt-3">
+                      <span class="text-accent">Draft</span>
+                      <span class="text-accent ml-auto pr-4">{{
+                        serviceStatus.Draft ? serviceStatus.Draft : 0
+                        }}</span>
+                    </div>
+                    <div class="row ml-2 mt-3">
+                      <span class="text-danger">Stopped</span>
+                      <span class="text-danger ml-auto pr-4">{{
+                        serviceStatus.Undeployed
+                        ? serviceStatus.Undeployed
+                        : 0
+                        }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-2" [@stopping]="
+                      !serviceStatus.Undeployed ? 'disabled' : 'enable'
+                    ">
+                  <div class="container">
+                    <div class="row service-status-card bg-white" [@cardAction]="startServiceAttributes['startCard']">
+                      <div class="d-flex justify-content-between p-2" (click)="toggleCard('startAll')">
+                        <div class="text-nowrap text-secondary">
+                          Start all Services
+                        </div>
+                        <div class="position-relative animate-wrap" [@cardAction]="
+                              startServiceAttributes['animateItems']
+                            ">
+                          <div class="position-absolute play-icon" [@cardAction]="startServiceAttributes['playIcon']">
+                            <span class="fa fa-play" [ngClass]="{
+                                  'text-secondary':
+                                    startServiceAttributes['playLoader'] ===
+                                    'loadingShow',
+                                  'text-success':
+                                    startServiceAttributes['playLoader'] ===
+                                    'loadingHide'
+                                }"></span>
+                          </div>
+                          <div class="position-absolute start-circle" [@cardAction]="
+                                startServiceAttributes['playCircle']
+                              "></div>
+                          <div class="circle-loader" [@cardAction]="
+                                startServiceAttributes['playLoader']
+                              "></div>
+                          <div class="fa fa-check text-info tick-action" [@cardAction]="
+                                startServiceAttributes['tickAction']
+                              "></div>
+                        </div>
+                      </div>
+                      <div class="container start-action ml-2" [@cardAction]="startServiceAttributes['startGroup']">
+                        <h6 class="text-secondary text-nowrap position-relative align-text ml-2">
+                          This will start all services, Confirm?
+                        </h6>
+                        <button class="btn btn-success start-all-btn" (click)="startAllServices()">
+                          Start All
+                        </button>
+                      </div>
+                      <div class="container starting-action" [@cardAction]="startServiceAttributes['processing']"
+                        *ngIf="proccessing">
+                        <h6 class="text-secondary">
+                          Starting all services...
+                        </h6>
+                      </div>
+                      <div class="container success-action" [@cardAction]="startServiceAttributes['complete']">
+                        <strong> Start all Process</strong> Initiated
+                        <div class="mt-2 ml-2">
+                          <a class="text-info" [routerLink]="['../sm']">
+                            Go to Dataservice
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-2" [@stopping]="!serviceStatus.Active ? 'disabled' : 'enable'">
+                  <div class="container">
+                    <div class="row service-status-card bg-white" [@cardAction]="startServiceAttributes['stopCard']">
+                      <div class="d-flex justify-content-between p-2" (click)="toggleStopCard('stopAll')">
+                        <div class="text-nowrap text-secondary">
+                          Stop all Services
+                        </div>
+                        <div class="position-relative animate-wrap" [@cardAction]="
+                              startServiceAttributes['stopanimateItems']
+                            ">
+                          <div class="position-absolute play-icon" [@cardAction]="startServiceAttributes['stopIcon']">
+                            <span class="fa fa-stop" [ngClass]="{
+                                  'text-danger':
+                                    startServiceAttributes['stopLoader'] ===
+                                    'loadingHide',
+                                  'text-secondary':
+                                    startServiceAttributes['stopLoader'] ===
+                                    'loadingShow'
+                                }"></span>
+                          </div>
+                          <div class="position-absolute start-circle" [@cardAction]="
+                                startServiceAttributes['stopCircle']
+                              "></div>
+                          <div class="stop-circle-loader" [@cardAction]="
+                                startServiceAttributes['stopLoader']
+                              "></div>
+                          <div class="fa fa-check text-info tick-action" [@cardAction]="
+                                startServiceAttributes['stopTickAction']
+                              "></div>
+                        </div>
+                      </div>
+                      <div class="container start-action ml-2" [@cardAction]="startServiceAttributes['stopGroup']">
+                        <h6 class="text-secondary text-nowrap position-relative align-text ml-2">
+                          This will stop all services, Confirm?
+                        </h6>
+                        <button class="btn btn-danger start-all-btn" (click)="stopAllServices()">
+                          Stop All
+                        </button>
+                      </div>
+                      <div class="container starting-action" [@cardAction]="startServiceAttributes['processing']"
+                        *ngIf="proccessing">
+                        <h6 class="text-secondary">
+                          Stopping all services...
+                        </h6>
+                      </div>
+                      <div class="container success-action" [@cardAction]="startServiceAttributes['complete']">
+                        <strong> Stop all Process</strong> Initiated
+                        <div class="mt-2 ml-2">
+                          <a class="text-info" [routerLink]="['../sm']">
+                            Go to Dataservice
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container start-action ml-2"
-                                                    [@cardAction]="startServiceAttributes['stopGroup']">
-                                                    <h6
-                                                        class="text-secondary text-nowrap position-relative align-text ml-2">
-                                                        This
-                                                        will stop all services,
-                                                        Confirm?</h6>
-                                                    <button class="btn btn-danger start-all-btn"
-                                                        (click)="stopAllServices()">Stop
-                                                        All</button>
-                                                </div>
-                                                <div class="container starting-action"
-                                                    [@cardAction]="startServiceAttributes['processing']"
-                                                    *ngIf="proccessing">
-                                                    <h6 class="text-secondary">Stopping all services...</h6>
-                                                </div>
-                                                <div class="container success-action"
-                                                    [@cardAction]="startServiceAttributes['complete']">
-                                                    <strong> Stop all Process</strong> Initiated
-                                                    <div class="mt-2 ml-2">
-                                                        <a class="text-info" [routerLink]="['../sm']">
-                                                            Go to Dataservice
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- <div class="d-flex flex-column w-50">
+              <!-- <div class="d-flex flex-column w-50">
                                     <div class="row manage-cards bg-white pb-2"
                                         [@cardAction]="confirmModalStateFlow['allFlow']?'expand':'collapse'"
                                         (click)="toggleCardFlow('allFlow')">
@@ -527,106 +481,106 @@
                                         </div>
                                     </div>
                                 </div> -->
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column ml-2">
-                            <div class="bg-light rounded p-4 settings-overlay ">
-                                <div class="d-flex flex-column border rounded p-3 bg-white">
-                                    <p class="font-weight-bold">Data Service Configuration</p>
-                                    <div class="d-flex mt-3">
-                                        <div class="text-secondary option-label">
-                                            Keep a history of data when data is changed?
-                                        </div>
-                                        <div class="switch-container d-flex align-items-center justify-content-center">
-                                            <label class="switch accent mb-0 mr-2">
-                                                <input type="checkbox" [ngModelOptions]="{standalone: true}"
-                                                    [(ngModel)]="retainDataHistory"
-                                                    (ngModelChange)="onVersionChange($event)">
-                                                <span class="slider"></span>
-                                                <span class="toggler"></span>
-                                            </label>
-                                            <span class="text">{{ retainDataHistory ? 'Yes' : 'No'}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex mt-3" *ngIf="retainDataHistory">
-                                        <div class="text-secondary option-label">
-                                            Retain data by
-                                        </div>
-                                        <div class="d-flex flex-column">
-                                            <div class="btn-group btn-group-toggle" (change)="patchVersionValue(true)"
-                                                ngbRadioGroup [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="versionConfig.type">
-                                                <label ngbButtonLabel class="btn btn-outline-accent">
-                                                    <input ngbButton type="radio" value="count"> Versions
-                                                </label>
-                                                <label ngbButtonLabel class="btn btn-outline-accent">
-                                                    <input ngbButton type="radio" value="time"> Duration
-                                                </label>
-                                            </div>
-                                            <select *ngIf="appData.serviceVersionValidity.validityType == 'time'"
-                                                class="form-control my-2" [(ngModel)]="versionConfig.value"
-                                                [ngModelOptions]="{standalone: true}" (change)="patchVersionValue()">
-                                                <option value="">All</option>
-                                                <option value="custom">Custom</option>
-                                                <option value="1 months">1 Month</option>
-                                                <option value="3 months">3 Month</option>
-                                                <option value="6 months">6 Month</option>
-                                                <option value="1 years">1 Year</option>
-                                            </select>
-                                            <select *ngIf="appData.serviceVersionValidity.validityType == 'count'"
-                                                class="form-control my-2" (change)="patchVersionValue()"
-                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="versionConfig.value">
-                                                <option value="-1" selected>All</option>
-                                                <option value="custom">Custom</option>
-                                                <option value="10">Last 10</option>
-                                                <option value="25">Last 25</option>
-                                                <option value="50">Last 50</option>
-                                                <option value="100">Last 100</option>
-                                            </select>
-                                            <div *ngIf="versionConfig.isCustomValue"
-                                                class="custom-input-number position-relative">
-                                                <input type="number" class="form-control"
-                                                    [ngModelOptions]="{standalone: true}"
-                                                    [(ngModel)]="versionConfig.customValue" #vcCustomval="ngModel"
-                                                    (change)="patchVersionValue()" min="1">
-                                                <span
-                                                    class="fa fa-xs fa-circle text-danger position-absolute version-error-symbol"
-                                                    ngbTooltip="Custom value should not be less than '1'"
-                                                    placement="right" container="body"
-                                                    *ngIf="!validityValidator && vcCustomval.touched"></span>
-                                                <select
-                                                    class="embeded-select position-absolute text-accent bg-white border-0"
-                                                    *ngIf="appData.serviceVersionValidity.validityType == 'time'"
-                                                    [ngModelOptions]="{standalone: true}"
-                                                    [(ngModel)]="versionConfig.customValueSuffix"
-                                                    (change)="patchVersionValue()">
-                                                    <option value="minutes">Minutes</option>
-                                                    <option value="hour">Hour</option>
-                                                    <option value="days">Days</option>
-                                                    <option value="months">Months</option>
-                                                    <option value="years">Years</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex mt-3">
-                                        <div class="text-secondary option-label">
-                                            Disable Insights
-                                        </div>
-                                        <div class="switch-container d-flex align-items-center justify-content-center">
-                                            <label class="switch accent mb-0 mr-2">
-                                                <input type="checkbox" [(ngModel)]="appData.disableInsights"
-                                                    [ngModelOptions]="{standalone: true}">
-                                                <span class="slider"></span>
-                                                <span class="toggler"></span>
-                                            </label>
-                                            <span class="text">{{ appData?.disableInsights ? 'Yes' : 'No'}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-light rounded p-4 mt-2 ml-auto w-100">
-                                <!-- <div class="d-flex  w-100 flex-column border rounded p-3 bg-white mt-1">
+            </div>
+          </div>
+          <div class="d-flex flex-column ml-2">
+            <div class="bg-light rounded p-4 settings-overlay">
+              <div class="d-flex flex-column border rounded p-3 bg-white">
+                <p class="font-weight-bold">Data Service Configuration</p>
+                <div class="d-flex mt-3">
+                  <div class="text-secondary option-label">
+                    Keep a history of data when data is changed?
+                  </div>
+                  <div class="switch-container d-flex align-items-center justify-content-center">
+                    <label class="switch accent mb-0 mr-2">
+                      <input type="checkbox" [ngModelOptions]="{ standalone: true }" [(ngModel)]="retainDataHistory"
+                        (ngModelChange)="onVersionChange($event)" />
+                      <span class="slider"></span>
+                      <span class="toggler"></span>
+                    </label>
+                    <span class="text">{{
+                      retainDataHistory ? 'Yes' : 'No'
+                      }}</span>
+                  </div>
+                </div>
+                <div class="d-flex mt-3" *ngIf="retainDataHistory">
+                  <div class="text-secondary option-label">
+                    Retain data by
+                  </div>
+                  <div class="d-flex flex-column">
+                    <div class="btn-group btn-group-toggle" (change)="patchVersionValue(true)" ngbRadioGroup
+                      [ngModelOptions]="{ standalone: true }" [(ngModel)]="versionConfig.type">
+                      <label ngbButtonLabel class="btn btn-outline-accent">
+                        <input ngbButton type="radio" value="count" />
+                        Versions
+                      </label>
+                      <label ngbButtonLabel class="btn btn-outline-accent">
+                        <input ngbButton type="radio" value="time" /> Duration
+                      </label>
+                    </div>
+                    <select *ngIf="
+                          appData.serviceVersionValidity.validityType == 'time'
+                        " class="form-control my-2" [(ngModel)]="versionConfig.value"
+                      [ngModelOptions]="{ standalone: true }" (change)="patchVersionValue()">
+                      <option value="">All</option>
+                      <option value="custom">Custom</option>
+                      <option value="1 months">1 Month</option>
+                      <option value="3 months">3 Month</option>
+                      <option value="6 months">6 Month</option>
+                      <option value="1 years">1 Year</option>
+                    </select>
+                    <select *ngIf="
+                          appData.serviceVersionValidity.validityType == 'count'
+                        " class="form-control my-2" (change)="patchVersionValue()"
+                      [ngModelOptions]="{ standalone: true }" [(ngModel)]="versionConfig.value">
+                      <option value="-1" selected>All</option>
+                      <option value="custom">Custom</option>
+                      <option value="10">Last 10</option>
+                      <option value="25">Last 25</option>
+                      <option value="50">Last 50</option>
+                      <option value="100">Last 100</option>
+                    </select>
+                    <div *ngIf="versionConfig.isCustomValue" class="custom-input-number position-relative">
+                      <input type="number" class="form-control" [ngModelOptions]="{ standalone: true }"
+                        [(ngModel)]="versionConfig.customValue" #vcCustomval="ngModel" (change)="patchVersionValue()"
+                        min="1" />
+                      <span class="fa fa-xs fa-circle text-danger position-absolute version-error-symbol"
+                        ngbTooltip="Custom value should not be less than '1'" placement="right" container="body"
+                        *ngIf="!validityValidator && vcCustomval.touched"></span>
+                      <select class="embeded-select position-absolute text-accent bg-white border-0" *ngIf="
+                            appData.serviceVersionValidity.validityType ==
+                            'time'
+                          " [ngModelOptions]="{ standalone: true }" [(ngModel)]="versionConfig.customValueSuffix"
+                        (change)="patchVersionValue()">
+                        <option value="minutes">Minutes</option>
+                        <option value="hour">Hour</option>
+                        <option value="days">Days</option>
+                        <option value="months">Months</option>
+                        <option value="years">Years</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex mt-3">
+                  <div class="text-secondary option-label">
+                    Disable Insights
+                  </div>
+                  <div class="switch-container d-flex align-items-center justify-content-center">
+                    <label class="switch accent mb-0 mr-2">
+                      <input type="checkbox" [(ngModel)]="appData.disableInsights"
+                        [ngModelOptions]="{ standalone: true }" />
+                      <span class="slider"></span>
+                      <span class="toggler"></span>
+                    </label>
+                    <span class="text">{{
+                      appData?.disableInsights ? 'Yes' : 'No'
+                      }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-light rounded p-4 mt-2 ml-auto w-100">
+              <!-- <div class="d-flex  w-100 flex-column border rounded p-3 bg-white mt-1">
                                     <div class="d-flex ">
                                         <div class="text-secondary option-label">
                                             Enable Calendar
@@ -643,289 +597,287 @@
                                         </div>
                                     </div>
                                 </div> -->
-                                <div class="d-flex  w-100 flex-column border rounded p-3 bg-white mt-1">
-                                    <div class="d-flex align-items-center">
-                                        <div class="text-secondary option-label">
-                                            Timezone
-                                        </div>
-                                        <odp-timezone-picker [edit]="{status:true}"
-                                            [(ngModel)]="appData.defaultTimezone">
-                                        </odp-timezone-picker>
-                                        <!-- <select class="form-control" [(ngModel)]="appData.defaultTimezone">
+              <div class="d-flex w-100 flex-column border rounded p-3 bg-white mt-1">
+                <div class="d-flex align-items-center">
+                  <div class="text-secondary option-label">Timezone</div>
+                  <odp-timezone-picker [edit]="{ status: true }" [(ngModel)]="appData.defaultTimezone">
+                  </odp-timezone-picker>
+                  <!-- <select class="form-control" [(ngModel)]="appData.defaultTimezone">
                                             <option *ngFor="let tz of timezones" [value]="tz">{{tz}}</option>
                                         </select> -->
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="activeTab == 4">
+        <div class="d-flex flex-column">
+          <div class="sub-heading text-dark font-weight-bold mb-3 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <span class="fa fa-exchange-alt mr-2 text-accent"></span>
+              <span class="text">Properties</span>
+            </div>
+            <button type="button" class="btn btn-sm btn-link" (click)="openPropertiesModal()">
+              <span class="dsi dsi-plus-circle mr-2"></span>
+              <span class="text">New Property</span>
+            </button>
+          </div>
+          <div class="property-list">
+            <table class="table">
+              <thead>
+                <tr class="bg-secondary text-white">
+                  <th>Key</th>
+                  <th>Value</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of keyValueList; let i = index">
+                  <td (click)="openPropertiesModal(item)">
+                    <span class="text-secondary">{{ item.key }}</span>
+                  </td>
+                  <td (click)="openPropertiesModal(item)">
+                    <span class="text-secondary">{{ item.value }}</span>
+                  </td>
+                  <td class="text-right">
+                    <span class="text-secondary">
+                      <button type="button" class="btn btn-link" (click)="removeProperty(item.key)">
+                        <span class="dsi dsi-trash text-muted"></span>
+                      </button>
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngIf="keyValueList.length == 0">
+                  <td colspan="3">
+                    <div class="d-flex py-3 w-100">
+                      <div class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
+                        <div class="text">
+                          No Properties has been created.
                         </div>
-
+                        <button type="button" class="btn btn-create mt-2" (click)="openPropertiesModal()">
+                          <span class="dsi dsi-plus-circle mr-2"></span>
+                          <span class="text">Create New</span>
+                        </button>
+                      </div>
                     </div>
-                </ng-container>
-                <ng-container *ngIf="activeTab == 4">
-                    <div class="d-flex flex-column">
-                        <div
-                            class="sub-heading text-dark font-weight-bold mb-3 d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center">
-                                <span class="fa fa-exchange-alt mr-2 text-accent"></span>
-                                <span class="text">Properties</span>
-                            </div>
-                            <button type="button" class="btn btn-sm btn-link" (click)="openPropertiesModal()">
-                                <span class="fa fa-plus-circle mr-2"></span>
-                                <span class="text">New Property</span>
-                            </button>
-                        </div>
-                        <div class="property-list">
-                            <table class="table">
-                                <thead>
-                                    <tr class="bg-secondary text-white">
-                                        <th>Key</th>
-                                        <th>Value</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let item of keyValueList;let i = index">
-                                        <td (click)="openPropertiesModal(item)">
-                                            <span class="text-secondary">{{item.key}}</span>
-                                        </td>
-                                        <td (click)="openPropertiesModal(item)">
-                                            <span class="text-secondary">{{item.value}}</span>
-                                        </td>
-                                        <td class="text-right">
-                                            <span class="text-secondary">
-                                                <button type="button" class="btn btn-link"
-                                                    (click)="removeProperty(item.key)">
-                                                    <span class="fa fa-trash text-muted"></span>
-                                                </button>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr *ngIf="keyValueList.length==0">
-                                        <td colspan="3">
-                                            <div class="d-flex py-3 w-100">
-                                                <div
-                                                    class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
-                                                    <div class="text">No Properties has been created.</div>
-                                                    <button type="button" class="btn btn-create mt-2"
-                                                        (click)="openPropertiesModal()">
-                                                        <span class="fa fa-plus-circle mr-2"></span>
-                                                        <span class="text">Create New</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="activeTab == 5">
-                    <div class="d-flex flex-column ml-2 w-50">
-                        <div
-                            class="sub-heading text-dark font-weight-bold mb-3 d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center">
-                                <span class="fa fa-exchange-alt mr-2 text-accent"></span>
-                                <span class="text">Trusted IP List</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <!-- <span class="text-dark mx-2">Enable</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="activeTab == 5">
+        <div class="d-flex flex-column ml-2 w-50">
+          <div class="sub-heading text-dark font-weight-bold mb-3 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <span class="fa fa-exchange-alt mr-2 text-accent"></span>
+              <span class="text">Trusted IP List</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <!-- <span class="text-dark mx-2">Enable</span>
                             <odp-switch [(checked)]="enabledTrustedIP" [edit]="edit"></odp-switch> -->
-                                <odp-checkbox [(checked)]="enabledTrustedIP" [edit]="{status:true}">Enable
-                                </odp-checkbox>
-                            </div>
-                        </div>
-                        <div class="property-list">
-                            <p *ngIf="!enabledTrustedIP" class="text-secondary font-weight-bold">Please enable trusted
-                                IP to start adding
-                                IP Addresses</p>
-                            <table *ngIf="enabledTrustedIP" class="table">
-                                <thead>
-                                    <tr class="bg-secondary text-white">
-                                        <th>IP Address</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let ip of ipList;let i = index">
-                                        <td>
-                                            <div class="position-relative">
-                                                <input type="text" class="form-control" [ngModel]="ip"
-                                                    (change)="changeIP($event.target.value,i)">
-                                                <span *ngIf="ipInvalid(ip)"
-                                                    class="ip-error-icon fa fa-exclamation-circle text-danger position-absolute"
-                                                    ngbTooltip="Please enter a vaid IP Address"></span>
-                                                <span *ngIf="ipRequired(ip)"
-                                                    class="ip-error-icon fa fa-exclamation-circle text-danger position-absolute"
-                                                    ngbTooltip="IP Address is required"></span>
-                                            </div>
-                                            <!-- <ng-container *ngIf="!(edit.status && edit.id)">
+              <odp-checkbox [(checked)]="enabledTrustedIP" [edit]="{ status: true }">Enable
+              </odp-checkbox>
+            </div>
+          </div>
+          <div class="property-list">
+            <p *ngIf="!enabledTrustedIP" class="text-secondary font-weight-bold">
+              Please enable trusted IP to start adding IP Addresses
+            </p>
+            <table *ngIf="enabledTrustedIP" class="table">
+              <thead>
+                <tr class="bg-secondary text-white">
+                  <th>IP Address</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ip of ipList; let i = index">
+                  <td>
+                    <div class="position-relative">
+                      <input type="text" class="form-control" [ngModel]="ip"
+                        (change)="changeIP($event.target.value, i)" />
+                      <span *ngIf="ipInvalid(ip)"
+                        class="ip-error-icon fa fa-exclamation-circle text-danger position-absolute"
+                        ngbTooltip="Please enter a vaid IP Address"></span>
+                      <span *ngIf="ipRequired(ip)"
+                        class="ip-error-icon fa fa-exclamation-circle text-danger position-absolute"
+                        ngbTooltip="IP Address is required"></span>
+                    </div>
+                    <!-- <ng-container *ngIf="!(edit.status && edit.id)">
                                                 <span class="text-secondary">{{ip.value}}</span>
                                             </ng-container> -->
-                                        </td>
-                                        <td class="text-right">
-                                            <span class="text-secondary">
-                                                <button type="button" class="btn btn-link" (click)="removeIP(i)">
-                                                    <span class="fa fa-trash text-muted"></span>
-                                                </button>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr *ngIf="ipList.length==0">
-                                        <td colspan="3">
-                                            <div class="d-flex py-3 w-100">
-                                                <div
-                                                    class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
-                                                    <div class="text">No IP Address Added.</div>
-                                                    <button type="button" class="btn btn-create mt-2" (click)="addIP()"
-                                                        *ngIf="enabledTrustedIP">
-                                                        <span class="fa fa-plus-circle mr-2"></span>
-                                                        <span class="text">Create New</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr *ngIf="ipList.length!=0">
-                                        <td colspan="2">
-                                            <button type="button" class="btn btn-sm btn-link" (click)="addIP()"
-                                                *ngIf="enabledTrustedIP">
-                                                <span class="fa fa-plus-circle mr-2"></span>
-                                                <span class="text">New IP Address</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                  </td>
+                  <td class="text-right">
+                    <span class="text-secondary">
+                      <button type="button" class="btn btn-link" (click)="removeIP(i)">
+                        <span class="dsi dsi-trash text-muted"></span>
+                      </button>
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngIf="ipList.length == 0">
+                  <td colspan="3">
+                    <div class="d-flex py-3 w-100">
+                      <div class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
+                        <div class="text">No IP Address Added.</div>
+                        <button type="button" class="btn btn-create mt-2" (click)="addIP()" *ngIf="enabledTrustedIP">
+                          <span class="dsi dsi-plus-circle mr-2"></span>
+                          <span class="text">Create New</span>
+                        </button>
+                      </div>
                     </div>
-                </ng-container>
-            </div>
+                  </td>
+                </tr>
+                <tr *ngIf="ipList.length != 0">
+                  <td colspan="2">
+                    <button type="button" class="btn btn-sm btn-link" (click)="addIP()" *ngIf="enabledTrustedIP">
+                      <span class="dsi dsi-plus-circle mr-2"></span>
+                      <span class="text">New IP Address</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+      </ng-container>
     </div>
-</div>
 
+  </div>
+</div>
 <div class="popup-overlay" *ngIf="addUserModal" (click)="addUserModal = false"></div>
 <div class="popup-content p-3" *ngIf="addUserModal">
-    <div class="d-flex justify-content-between mb-5">
-        <strong>Search Users to Add to <span class="text-accent">{{appData._id + ' '}}</span>App</strong>
-        <button class="btn btn-min-width btn-dark" (click)="addSelectedUsers()">Add Users</button>
+  <div class="d-flex justify-content-between mb-5">
+    <strong>Search Users to Add to
+      <span class="text-accent">{{ appData._id + ' ' }}</span>App</strong>
+    <button class="btn btn-min-width btn-dark" (click)="addSelectedUsers()">
+      Add Users
+    </button>
+  </div>
+  <ng-container class="position-absolute">
+    <div class="d-flex mb-4 position-relative justify-content-center">
+      <odp-search-box (enteredText)="filterUserText = $event" (reset)="filterUserText = null"></odp-search-box>
     </div>
-    <ng-container class="position-absolute">
-        <div class="d-flex mb-4 position-relative justify-content-center">
-            <odp-search-box (enteredText)="filterUserText = $event" (reset)="filterUserText = null"></odp-search-box>
-        </div>
-    </ng-container>
-    <div class="d-flex flex-column w-100">
-        <div class="modal-user-list">
-            <table class="table table-hover table-hover" id="_userTable">
-                <thead class="thead-accent">
-                    <tr>
-                        <th scope="col" width="50px;">
-                            <div class="d-flex justify-content-center">
-                                <label class="checkbox-container pl-2">
-                                    <input type="checkbox" id="selectAllUsers" [(ngModel)]="allUsers"
-                                        (change)="selectAllUsrs()">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                        </th>
-                        <th scope="col" width="290px">Name</th>
-                        <th scope="col">User ID</th>
-                        <th scope="col">Email ID</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let usr of appUsers|filterUser:filterUserText;let usrIndex=index"
-                        [ngClass]="{'selectedRow': usr.checked}" (click)="toggleUserSelection(usr)">
-                        <td class="hover img-td position-relative" id="_userIndex">
-                            <figure class="d-flex align-items-center justify-content-center position-absolute v-middle">
-                                <div class="user-img-container" [ngClass]="{'usr-selected': usr.checked}">
-                                    <img *ngIf="usr.logo && usr.logo.thumbnail" [src]="usr.logo.thumbnail" alt="Logo">
-                                    <span *ngIf="!usr.logo || !usr.logo.thumbnail"
-                                        class="far fa-user fa-sm text-secondary"></span>
-                                </div>
-                                <figcaption class="position-absolute checkmark-pos" *ngIf="usr.checked">
-                                    <span class="fas fa-check fa-lg text-accent"></span>
-                                </figcaption>
-                            </figure>
-                        </td>
-                        <td class="hover td-content-height col-name text-truncate">
-                            <ng-container *ngIf="usr.basicDetails;else noName">
-                                <ng-container *ngIf="usr.basicDetails.name && usr.basicDetails.name.trim();else noName">
-                                    <span *ngIf="usr.basicDetails.name.length > 50" [ngbTooltip]="usr.basicDetails.name"
-                                        placement="top">{{usr.basicDetails.name}}</span>
-                                    <span *ngIf="usr.basicDetails.name.length <= 50">{{usr.basicDetails.name}}</span>
-                                </ng-container>
-                            </ng-container>
-                            <ng-template #noName>
-                                <span class="text-muted">N.A.</span>
-                            </ng-template>
-                        </td>
-                        <td class="text-secondary hover td-content-height">{{usr?.username}}</td>
-                        <td class="text-secondary d-flex hover td-content-height">
-                            {{usr?.basicDetails?.email}}
-                        </td>
-                    </tr>
-                    <tr *ngIf="!showLazyLoader && (appUsers|filterUser:filterUserText).length==0">
-                        <td colspan="8" class="text-center td-content-height">No users found</td>
-                    </tr>
-                    <tr *ngIf="showLazyLoader">
-                        <td colspan="8" class="text-center">
-                            <span class="fa fa-spinner fa-pulse fa-lg"></span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+  </ng-container>
+  <div class="d-flex flex-column w-100">
+    <div class="modal-user-list">
+      <table class="table table-hover table-hover" id="_userTable">
+        <thead class="thead-accent">
+          <tr>
+            <th scope="col" width="50px;">
+              <div class="d-flex justify-content-center">
+                <label class="checkbox-container pl-2">
+                  <input type="checkbox" id="selectAllUsers" [(ngModel)]="allUsers" (change)="selectAllUsrs()" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+            </th>
+            <th scope="col" width="290px">Name</th>
+            <th scope="col">User ID</th>
+            <th scope="col">Email ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="
+              let usr of appUsers | filterUser: filterUserText;
+              let usrIndex = index
+            " [ngClass]="{ selectedRow: usr.checked }" (click)="toggleUserSelection(usr)">
+            <td class="hover img-td position-relative" id="_userIndex">
+              <figure class="d-flex align-items-center justify-content-center position-absolute v-middle">
+                <div class="user-img-container" [ngClass]="{ 'usr-selected': usr.checked }">
+                  <img *ngIf="usr.logo && usr.logo.thumbnail" [src]="usr.logo.thumbnail" alt="Logo" />
+                  <span *ngIf="!usr.logo || !usr.logo.thumbnail" class="far fa-user fa-sm text-secondary"></span>
+                </div>
+                <figcaption class="position-absolute checkmark-pos" *ngIf="usr.checked">
+                  <span class="fas fa-check fa-lg text-accent"></span>
+                </figcaption>
+              </figure>
+            </td>
+            <td class="hover td-content-height col-name text-truncate">
+              <ng-container *ngIf="usr.basicDetails; else noName">
+                <ng-container *ngIf="
+                    usr.basicDetails.name && usr.basicDetails.name.trim();
+                    else noName
+                  ">
+                  <span *ngIf="usr.basicDetails.name.length > 50" [ngbTooltip]="usr.basicDetails.name"
+                    placement="top">{{ usr.basicDetails.name }}</span>
+                  <span *ngIf="usr.basicDetails.name.length <= 50">{{
+                    usr.basicDetails.name
+                    }}</span>
+                </ng-container>
+              </ng-container>
+              <ng-template #noName>
+                <span class="text-muted">N.A.</span>
+              </ng-template>
+            </td>
+            <td class="text-secondary hover td-content-height">
+              {{ usr?.username }}
+            </td>
+            <td class="text-secondary d-flex hover td-content-height">
+              {{ usr?.basicDetails?.email }}
+            </td>
+          </tr>
+          <tr *ngIf="
+              !showLazyLoader &&
+              (appUsers | filterUser: filterUserText).length == 0
+            ">
+            <td colspan="8" class="text-center td-content-height">
+              No users found
+            </td>
+          </tr>
+          <tr *ngIf="showLazyLoader">
+            <td colspan="8" class="text-center">
+              <span class="fa fa-spinner fa-pulse fa-lg"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 </div>
 
-
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-    <odp-app-icon [size]="18" color="DD5151" class="mt-1"></odp-app-icon>
-</odp-delete-modal>
-
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
 
 <ng-template #keyValModalTemplate>
-    <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center">
-        <div class="d-flex align-items-center justify-content-between mb-3 w-100">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-app-icon [size]="18" color="202a36" class="mt-1"></odp-app-icon>
-                </span>
-                <span class="font-weight-bold mb-1" *ngIf="data && data.isEdit">Edit Key-Value</span>
-                <span class="font-weight-bold mb-1" *ngIf="!data || !data.isEdit">Add Key-Value</span>
-            </div>
-            <span class="fa fa-times text-muted hover" (click)="keyValModalTemplateRef.close(false)"></span>
-        </div>
-        <div class="info d-flex flex-column align-self-center justify-content-center w-100">
-            <div class="form-group">
-                <label for="key">Key</label>
-                <div class="w-100 position-relative headers-key-wrapper">
-                    <input #headerKey="ngModel" id="key" type="text" class="form-control" [(ngModel)]="data.key"
-                        maxlength="24" pattern="[a-zA-Z0-9_-]+" required [disabled]="data.isEdit" odpAutoFocus
-                        (keyup.enter)="headerValue.focus()"
-                        [ngClass]="{'is-invalid':headerKey.invalid && (headerKey.dirty || headerKey.touched)}">
-                    <ng-container *ngIf="headerKey.invalid && (headerKey.dirty || headerKey.touched)">
-                        <span *ngIf="headerKey?.errors?.required"
-                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                            ngbTooltip="Key is required"></span>
-                        <span *ngIf="headerKey?.errors?.pattern"
-                            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-                            ngbTooltip="Key can be only alphanumeric and can only contain underscore(_) and dash(-)"></span>
-                    </ng-container>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="value">Value</label>
-                <input #headerValue id="value" type="text" class="form-control" [(ngModel)]="data.value"
-                    (keyup.enter)="headerSave.click()">
-            </div>
-            <div class="d-flex flex-column align-items-end w-100 mt-auto">
-                <button #headerSave type="button" class="btn btn-dark btn-min-width" id="keyValueModalYes"
-                    (click)="keyValModalTemplateRef.close(true)" [disabled]="headerKey.invalid">Save</button>
-            </div>
-        </div>
+  <div class="delete-modal-body modal-body p-4 d-flex flex-column align-items-center">
+    <div class="d-flex align-items-center justify-content-between mb-3 w-100">
+      <span class="font-20 fw-600 mb-1" *ngIf="data && data.isEdit">Edit Key-Value</span>
+      <span class="font-20 fw-600 mb-1" *ngIf="!data || !data.isEdit">Add Key-Value</span>
+      <span class="fa fa-times text-muted hover" (click)="keyValModalTemplateRef.close(false)"></span>
     </div>
+    <div class="info d-flex flex-column align-self-center justify-content-center w-100">
+      <div class="form-group">
+        <label for="key">Key</label>
+        <div class="w-100 position-relative headers-key-wrapper">
+          <input #headerKey="ngModel" id="key" type="text" class="form-control" [(ngModel)]="data.key" maxlength="24"
+            pattern="[a-zA-Z0-9_-]+" required [disabled]="data.isEdit" odpAutoFocus (keyup.enter)="headerValue.focus()"
+            [ngClass]="{
+              'is-invalid':
+                headerKey.invalid && (headerKey.dirty || headerKey.touched)
+            }" />
+          <ng-container *ngIf="headerKey.invalid && (headerKey.dirty || headerKey.touched)">
+            <span *ngIf="headerKey?.errors?.required" class="text-danger position-absolute fa fa-exclamation-circle"
+              container="body" ngbTooltip="Key is required"></span>
+            <span *ngIf="headerKey?.errors?.pattern" class="text-danger position-absolute fa fa-exclamation-circle"
+              container="body"
+              ngbTooltip="Key can be only alphanumeric and can only contain underscore(_) and dash(-)"></span>
+          </ng-container>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="value">Value</label>
+        <input #headerValue id="value" type="text" class="form-control" [(ngModel)]="data.value"
+          (keyup.enter)="headerSave.click()" />
+      </div>
+      <div class="d-flex flex-column align-items-end w-100 mt-auto">
+        <button #headerSave type="button" class="btn btn-dark btn-min-width" id="keyValueModalYes"
+          (click)="keyValModalTemplateRef.close(true)" [disabled]="headerKey.invalid">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
 </ng-template>

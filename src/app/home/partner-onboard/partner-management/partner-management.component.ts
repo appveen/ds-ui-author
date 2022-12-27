@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
@@ -99,7 +99,7 @@ import { Router } from '@angular/router';
 })
 export class PartnerManagementComponent implements OnInit {
 
-  @Input() partner: FormGroup;
+  @Input() partner: UntypedFormGroup;
   @Input() edit: any;
   startFlowAttributes: any = {};
   confirmModalState: any;

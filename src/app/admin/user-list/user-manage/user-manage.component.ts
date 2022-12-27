@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
@@ -47,12 +47,12 @@ export class UserManageComponent implements OnInit, OnDestroy {
     @Input() apps: any;
     activeTab: number;
     showSerchbox: boolean;
-    resetPasswordForm: FormGroup;
+    resetPasswordForm: UntypedFormGroup;
     resetPasswordModelRef: NgbModalRef;
     showSpinner: boolean;
     showPassword: any;
     constructor(private commonService: CommonService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private ts: ToastrService) {
         const self = this;
         this.backToList = new EventEmitter();

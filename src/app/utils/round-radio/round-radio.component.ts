@@ -23,8 +23,10 @@ export class RoundRadioComponent {
 
   toggle(val) {
     const self = this;
-    self.checked = val;
-    self.checkedChange.emit(val);
+    if (this.edit && this.edit.status) {
+      self.checked = val;
+      self.checkedChange.emit(val);
+    }
   }
 
   get style() {
@@ -40,10 +42,10 @@ export class RoundRadioComponent {
   get styleInner() {
     const self = this;
     return {
-      'min-width': self.size / 2 + 'px',
-      'max-width': self.size / 2 + 'px',
-      'min-height': self.size / 2 + 'px',
-      'max-height': self.size / 2 + 'px'
+      'min-width': self.size / 2.5 + 'px',
+      'max-width': self.size / 2.5 + 'px',
+      'min-height': self.size / 2.5 + 'px',
+      'max-height': self.size / 2.5 + 'px'
     };
   }
 

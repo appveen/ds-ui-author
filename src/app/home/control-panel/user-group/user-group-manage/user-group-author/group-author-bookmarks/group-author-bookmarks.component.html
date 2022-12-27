@@ -51,8 +51,8 @@
           [ngClass]="{'blocked':globalPermissionType === 'Hide','view':globalPermissionType === 'View','manage':globalPermissionType === 'Manage','hover':hasPermission('PMGABM')}">
           <div class="icon d-flex align-items-center justify-content-center">
             <span *ngIf="globalPermissionType === 'Hide'" class="fa fa-lock"></span>
-            <span *ngIf="globalPermissionType === 'View'" class="fa fa-eye"></span>
-            <span *ngIf="globalPermissionType === 'Manage'" class="fa fa-pen"></span>
+            <span *ngIf="globalPermissionType === 'View'" class="dsi dsi-view"></span>
+            <span *ngIf="globalPermissionType === 'Manage'" class="dsi dsi-edit"></span>
           </div>
           <div *ngIf="globalPermissionType === 'Hide'" class="text">Blocked</div>
           <div *ngIf="globalPermissionType === 'View'" class="text">View</div>
@@ -71,14 +71,14 @@
           <div class="rounded-dropdown-item d-flex align-items-center"
             (click)="togglePermission('PVBM');toggleDropdown['GLOBAL']=false">
             <div class="icon d-flex align-items-center justify-content-center view">
-              <span class="fa fa-eye"></span>
+              <span class="dsi dsi-view"></span>
             </div>
             <div class="text">View</div>
           </div>
           <div class="rounded-dropdown-item d-flex align-items-center"
             (click)="togglePermission('PMBM');toggleDropdown['GLOBAL']=false">
             <div class="icon d-flex align-items-center justify-content-center manage">
-              <span class="fa fa-pen"></span>
+              <span class="dsi dsi-edit"></span>
             </div>
             <div class="text">Manage</div>
           </div>

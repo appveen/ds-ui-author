@@ -1,20 +1,21 @@
 import { Component, Input, Output, EventEmitter, ViewChild, TemplateRef, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Form } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Form } from '@angular/forms';
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { sameName } from 'src/app/home/custom-validators/same-name-validator';
 import { emptyEnum } from 'src/app/home/custom-validators/empty-enum-validator';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../services/common.service';
+import { AppService } from '../../services/app.service';
 
 @Component({
   selector: 'odp-field-type-selector',
   templateUrl: './field-type-selector.component.html',
   styleUrls: ['./field-type-selector.component.scss']
 })
-export class FieldTypeSelectorComponent {
+export class FieldTypeSelectorComponent implements OnInit {
 
   @ViewChild('typeChangeModalTemplate', { static: false }) typeChangeModalTemplate: TemplateRef<HTMLElement>;
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() isLibrary: boolean;
   @Input() isDataFormat: boolean;
   @Input() formatType: string;
@@ -24,9 +25,12 @@ export class FieldTypeSelectorComponent {
   toggleDropdown: boolean;
   types: Array<any>;
   typeChangeModalTemplateRef: NgbModalRef;
+  // showSubType: boolean;
+  selectedType: any;
   constructor(private schemaService: SchemaBuilderService,
     private commonService: CommonService,
-    private fb: FormBuilder) {
+    private appService: AppService,
+    private fb: UntypedFormBuilder) {
     const self = this;
     self.toggleChange = new EventEmitter();
     self.types = self.schemaService.getSchemaTypes();
@@ -34,6 +38,12 @@ export class FieldTypeSelectorComponent {
     self.edit = {
       status: false
     };
+  }
+
+  ngOnInit(): void {
+    if (this.appService.connectorsList.length === 0) {
+      this.types = this.types.filter(ele => ele.value !== 'File')
+    }
   }
 
   getTooltipText(index: number) {
@@ -65,25 +75,36 @@ export class FieldTypeSelectorComponent {
     return true;
   }
 
-  switchType(type: any, event: Event) {
+  checkSubType(type: any) {
+    if (type.value === 'String' || type.value === 'Number' || type.value === 'Date' || type.value === 'Geojson') {
+      this.selectedType = type;
+    } else {
+      this.switchType(type, '');
+    }
+  }
+
+  switchType(type: any, detailedType: string) {
     const self = this;
     if (self.isEdit && self.editable && self.form.get('_newField') && !self.form.get('_newField').value) {
+      if (self.typeChangeModalTemplateRef) {
+        self.typeChangeModalTemplateRef.close(false);
+      }
       self.typeChangeModalTemplateRef = self.commonService.modal(self.typeChangeModalTemplate);
       self.typeChangeModalTemplateRef.result.then((close) => {
         if (close) {
           self.form.get('properties._typeChanged').patchValue(self.form.get('type').value);
-          self.changeType(type, event);
+          self.changeType(type, detailedType);
         }
       }, dismiss => { });
     } else if (self.editable) {
-      self.changeType(type, event);
+      self.changeType(type, detailedType);
     }
   }
 
-  changeType(type: any, event: Event) {
+  changeType(type: any, detailedType: string) {
     const self = this;
     if (type.value === 'String' || type.value === 'Number' || type.value === 'Date' || type.value === 'Geojson') {
-      event.stopPropagation();
+      // event.stopPropagation();
     } else {
       self.close();
     }
@@ -105,17 +126,17 @@ export class FieldTypeSelectorComponent {
 
         type: type.value
       });
-    for (const i in (self.form.get('properties') as FormGroup).controls) {
+    for (const i in (self.form.get('properties') as UntypedFormGroup).controls) {
       if (i === 'name') {
         continue;
       }
-      (self.form.get('properties') as FormGroup).removeControl(i);
+      (self.form.get('properties') as UntypedFormGroup).removeControl(i);
     }
     for (const i in tempProp.controls) {
       if (i === 'name') {
         continue;
       }
-      (self.form.get('properties') as FormGroup).addControl(i, tempProp.controls[i]);
+      (self.form.get('properties') as UntypedFormGroup).addControl(i, tempProp.controls[i]);
     }
 
     if (type.value === 'Object') {
@@ -136,11 +157,15 @@ export class FieldTypeSelectorComponent {
     if (type.value === 'Array' || type.value === 'Object') {
       self.form.get('definition').setValidators([sameName]);
     }
+    this.changeDetailedType(detailedType);
     self.schemaService.typechanged.emit(true);
   }
 
   changeDetailedType(value: string) {
     const self = this;
+    if (value == '') {
+      self.form.get('properties.password')?.patchValue(false);
+    }
     if (self.form.get('properties.email')) {
       self.form.get('properties.email').patchValue(false);
     }
@@ -160,18 +185,18 @@ export class FieldTypeSelectorComponent {
       self.form.get('properties.pattern').patchValue(null);
     }
     if (self.form.get('properties.enum')) {
-      (self.form.get('properties') as FormGroup).removeControl('enum');
-      (self.form.get('properties') as FormGroup).addControl('enum', self.fb.array([]));
+      (self.form.get('properties') as UntypedFormGroup).removeControl('enum');
+      (self.form.get('properties') as UntypedFormGroup).addControl('enum', self.fb.array([]));
     }
     if (self.form.get('properties.hasTokens')) {
-      (self.form.get('properties') as FormGroup).removeControl('hasTokens');
-      (self.form.get('properties') as FormGroup).addControl('hasTokens', self.fb.array([]));
+      (self.form.get('properties') as UntypedFormGroup).removeControl('hasTokens');
+      (self.form.get('properties') as UntypedFormGroup).addControl('hasTokens', self.fb.array([]));
     }
-    if(value == 'enum'){
+    if (value == 'enum') {
       self.form.get('properties.enum').setValidators([emptyEnum]);
     }
-    else if(self.form.get('properties.enum')){
-      
+    else if (self.form.get('properties.enum')) {
+
       self.form.get('properties.enum').clearValidators();
     }
 
@@ -234,8 +259,11 @@ export class FieldTypeSelectorComponent {
 
   get type() {
     const self = this;
-    if (self.form && self.form.get('type')) {
-      return self.form.get('type').value;
+    // if (self.form && self.form.get('type')) {
+    //   return self.form.get('type').value;
+    // }
+    if (self.selectedType && self.selectedType.value) {
+      return self.selectedType.value;
     }
     return 'String';
   }

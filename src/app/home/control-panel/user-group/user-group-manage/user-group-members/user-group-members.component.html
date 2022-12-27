@@ -1,131 +1,18 @@
-<div class="wrapper">
-  <div class="d-flex flex-column">
-    <div class="grid-container mx-3">
-      <div
-        class="
-          grid-header
-          d-flex
-          align-items-center
-          justify-content-between
-          pl-2
-        "
-      >
-        <div class="button-group" *ngIf="hasPermission('PMGMUD')">
-          <div
-            class="d-flex align-items-center"
-            (click)="!isSelectAllDisabled && checkAllUser(!isAllUserChecked)"
-          >
-            <odp-round-check
-              [edit]="{ status: !isSelectAllDisabled }"
-              class="mr-2 pl-1"
-              [checked]="isAllUserChecked"
-              (checkedChange)="!isSelectAllDisabled && checkAllUser($event)"
-            >
-            </odp-round-check>
-            <button
-              type="button"
-              class="btn btn-link text-accent px-0"
-              [class.text-secondary]="isSelectAllDisabled"
-              [disabled]="isSelectAllDisabled"
-            >
-              Select All
-            </button>
-          </div>
-          <button
-            *ngIf="selectedUsers.length > 0"
-            type="button"
-            class="btn btn-link text-delete"
-            (click)="removeUsers()"
-          >
-            <span class="fa fa-trash mr-2"></span>
-            <span class="text">Remove Users ({{ selectedUsers.length }})</span>
-          </button>
-        </div>
-        <button
-          *ngIf="hasPermission('PMGMUC')"
-          type="button"
-          class="btn btn-link p-0"
-          id="addNewMember"
-          (click)="showBrowseTab()"
-        >
-          <span class="fa fa-plus mr-2"></span>
-          <span class="text">Add User(s)</span>
-        </button>
+<div class="wrapper d-flex align-items-start">
+  <div class="d-flex flex-column sub-menu p-3">
+    <div class="d-flex flex-column text-muted font-14">
+      <div *ngIf="hasPermission('PVGCDS') || hasPermission('PMGCDS')" class="px-3 py-2 hover" (click)="activeSubTab=0"
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==0}">
+        <span class="">Users</span>
       </div>
-      <div
-        *ngIf="
-          hasPermission('PMGMUD') ||
-          hasPermission('PMGMUC') ||
-          hasPermission('PVGMUD') ||
-          hasPermission('PVGMUC') ||
-          hasPermission('PVGB') || 
-          hasPermission('PVGMU')
-        "
-      >
-        <ag-grid-angular
-          class="ag-theme-balham h-100 w-100"
-          [frameworkComponents]="frameworkComponents"
-          [gridOptions]="gridOptions"
-          [rowData]="userList | agGridFilter: filterModel"
-          (filterModified)="!filtering && onFilterChanged($event)"
-        >
-        </ag-grid-angular>
+      <div *ngIf="hasPermission('PVGCI') || hasPermission('PMGCI')" class="px-3 py-2 hover" (click)="activeSubTab=1"
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==1}">
+        <span class="">Bots</span>
       </div>
     </div>
+  </div>
+  <div class="w-100">
+    <odp-user-group-users *ngIf="activeSubTab===0" [users]="users"></odp-user-group-users>
+    <odp-user-group-bots *ngIf="activeSubTab===1" [users]="users"></odp-user-group-bots>
   </div>
 </div>
-
-<ng-template #searchUsersModal>
-  <div class="modal-body p-4">
-    <div class="d-flex align-items-center mb-4">
-      <span class="fa fa-user-circle mr-2 fa-lg text-muted"></span>
-      <span class="font-weight-bold font-lg">Add users to this group</span>
-    </div>
-    <div
-      class="
-        d-flex
-        flex-column
-        w-100
-        align-items-center
-        justify-content-between
-      "
-    >
-      <div class="user-list w-100">
-        <ag-grid-angular
-          *ngIf="allUsers?.length"
-          class="ag-theme-balham"
-          [frameworkComponents]="userAddFrameworkComponents"
-          [gridOptions]="userAddgridOptions"
-          [rowData]="allUsers | agGridFilter: userAddFilterModel"
-          (filterModified)="!userAddFiltering && onUserAddFilterChanged($event)"
-        >
-        </ag-grid-angular>
-        <div class="align-self-center text-center" *ngIf="!allUsers">
-          <span class="fa fa-spinner fa-pulse fa-3x"></span>
-          <div class="text-secondary mt-2">Processing...</div>
-        </div>
-        <div
-          class="align-self-center text-center"
-          *ngIf="!!allUsers && !allUsers.length"
-        >
-          <div class="text-secondary mt-2">No Users</div>
-        </div>
-      </div>
-    </div>
-    <div class="d-flex justify-content-end align-items-center w-100 mt-3">
-      <span class="text-secondary mr-3" *ngIf="selectedUsersList?.length">
-        {{ selectedUsersList.length }} Selected
-      </span>
-      <button type="button" class="btn btn-link mr-3" (click)="clearBrowse()">
-        Cancel
-      </button>
-      <button
-        type="button"
-        class="btn btn-dark btn-min-width"
-        (click)="addUsers()"
-      >
-        Done
-      </button>
-    </div>
-  </div>
-</ng-template>

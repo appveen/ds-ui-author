@@ -24,7 +24,6 @@ import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { CheckboxBtnModule } from 'src/app/utils/checkbox-btn/checkbox-btn.module';
 import { DatePickerModule } from 'src/app/utils/date-picker/datePicker.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { FocusNextModule } from 'src/app/utils/focus-next/focus-next.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
@@ -38,9 +37,17 @@ import { StateModelComponent } from './state-model/state-model.component';
 import { FilterNextStatePipe } from './filter-next-state.pipe';
 import { MakerCheckerComponent } from './maker-checker/maker-checker.component';
 import { DynamicConditionComponent } from './manage-permissions/dynamic-condition/dynamic-condition.component';
-import { RadioChipModule } from 'src/app/utils/radio-chip/radio-chip.module';
 import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-editor.module';
+import { CommonSettingsComponent } from './configuration/common-settings/common-settings.component';
+import { DataSettingsComponent } from './configuration/data-settings/data-settings.component';
+import { SearchSettingsComponent } from './configuration/search-settings/search-settings.component';
+import { ResetServiceComponent } from './reset-service/reset-service.component';
+import { StepFieldsComponent } from './wizards/step-fields/step-fields.component';
+import { StepActionsComponent } from './wizards/step-actions/step-actions.component';
+import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
+import { DataIngestionComponent } from './data-ingestion/data-ingestion.component';
+import { ConnectorSettingsComponent } from './configuration/connector-settings/connector-settings.component';
 
 @NgModule({
     imports: [
@@ -54,7 +61,6 @@ import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-edi
         AutoFocusModule,
         CheckboxBtnModule,
         DatePickerModule,
-        IconsModule,
         FieldTypeModule,
         FocusNextModule,
         SwitchModule,
@@ -68,7 +74,8 @@ import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-edi
         MatAutocompleteModule,
         MatChipsModule,
         RoundRadioModule,
-        MonotypeEditorModule
+        MonotypeEditorModule,
+        DeleteModalModule
     ],
     declarations: [
         SchemaStructurePipe,
@@ -85,7 +92,15 @@ import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-edi
         StateModelComponent,
         FilterNextStatePipe,
         MakerCheckerComponent,
-        DynamicConditionComponent
+        DynamicConditionComponent,
+        CommonSettingsComponent,
+        DataSettingsComponent,
+        SearchSettingsComponent,
+        ResetServiceComponent,
+        StepFieldsComponent,
+        StepActionsComponent,
+        DataIngestionComponent,
+        ConnectorSettingsComponent
     ],
     exports: [
         SchemaStructurePipe,
@@ -101,7 +116,14 @@ import { MonotypeEditorModule } from 'src/app/utils/monotype-editor/monotype-edi
         LogicalConditionComponent,
         StateModelComponent,
         MakerCheckerComponent,
-        DynamicConditionComponent
+        DynamicConditionComponent,
+        CommonSettingsComponent,
+        DataSettingsComponent,
+        SearchSettingsComponent,
+        ResetServiceComponent,
+        StepFieldsComponent,
+        StepActionsComponent,
+        DataIngestionComponent
     ],
     providers: [SchemaBuilderService]
 })

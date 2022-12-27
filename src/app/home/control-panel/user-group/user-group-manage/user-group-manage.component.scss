@@ -1,55 +1,6 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.description {
-  resize: none;
-}
 .wrapper {
-  max-height: calc(100vh - 102px);
-}
-.tabs-wrapper {
-  min-height: 40px;
-  max-height: 40px;
-}
-.tabs {
-  div {
-    transition: 0.25s;
-    border-bottom: 4px solid transparent;
-    max-height: 40px;
-    &.active,
-    &:hover {
-      border-bottom: 4px solid $accent;
-    }
-    &.active {
-      color: $accent !important;
-      font-weight: bold;
-    }
-    .fa {
-      opacity: 0;
-      transition: 0.5s;
-      font-size: 8px;
-      &.show {
-        opacity: 0.6;
-      }
-    }
-  }
-}
-.user-detail-wrapper {
-  min-height: 80px;
-  max-height: 80px;
-}
-.user-details {
-  &-icon {
-    width: 90px;
-    .photo {
-      min-height: 80px;
-      max-height: 80px;
-      min-width: 80px;
-      max-width: 80px;
-      background: $border-color;
-    }
-  }
-}
-.header {
-  font-size: 24px;
+  max-height: calc(100vh - 60px);
 }

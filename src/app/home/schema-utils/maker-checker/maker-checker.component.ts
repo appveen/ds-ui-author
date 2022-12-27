@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteModalConfig } from 'src/app/utils/interfaces/schemaBuilder';
 import { CommonService } from 'src/app/utils/services/common.service';
@@ -15,7 +15,7 @@ export class MakerCheckerComponent implements OnInit {
   @ViewChild('deleteModalTemplate') deleteModalTemplate: TemplateRef<HTMLElement>;
   deleteModalTemplateRef: NgbModalRef;
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   makerCheckerEnabled: boolean;
   deleteAllSteps: boolean;
@@ -24,7 +24,7 @@ export class MakerCheckerComponent implements OnInit {
 
   constructor(
     private commonService: CommonService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private appService: AppService) {
     const self = this;
     self.deleteModal = {
@@ -68,7 +68,7 @@ export class MakerCheckerComponent implements OnInit {
 
   get allMakerCheckers() {
     const self = this;
-    return (self.form.get(['workflowConfig', 'makerCheckers']) as FormArray)
+    return (self.form.get(['workflowConfig', 'makerCheckers']) as UntypedFormArray)
   }
 
   get makerCheckerCreated() {
@@ -113,11 +113,11 @@ export class MakerCheckerComponent implements OnInit {
     }, dismiss => { })
   }
 
-  get steps(): FormArray {
-    return this.makerCheckerData.get('steps') as FormArray;
+  get steps(): UntypedFormArray {
+    return this.makerCheckerData.get('steps') as UntypedFormArray;
   }
 
-  newStep(): FormGroup {
+  newStep(): UntypedFormGroup {
     const self = this;
     let grp = self.fb.group({
       id: 'C' + this.appService.rand(10),

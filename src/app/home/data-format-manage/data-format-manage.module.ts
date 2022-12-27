@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
@@ -17,6 +16,8 @@ import { StructureFieldPropertiesModule } from 'src/app/utils/structure-field-pr
 import { FilterTeamModule } from 'src/app/utils/pipes/filter-team.module';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { SortablejsModule } from 'ngx-sortablejs';
+import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
+import { SwitchModule } from 'src/app/utils/switch/switch.module';
 
 const routes: Routes = [
   {
@@ -31,7 +32,6 @@ const routes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     NgbModule,
-    IconsModule,
     ClickOutsideModule,
     BreadcrumbModule,
     SearchBoxModule,
@@ -42,7 +42,9 @@ const routes: Routes = [
     StructureFieldPropertiesModule,
     FilterTeamModule,
     CheckboxModule,
-    SortablejsModule
+    SortablejsModule,
+    RoundRadioModule,
+    SwitchModule
   ],
   declarations: [DataFormatManageComponent],
   exports: [RouterModule]

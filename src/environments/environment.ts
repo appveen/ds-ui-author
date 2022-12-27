@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  version: '2.4',
+  version: '2.6.0',
   url: {
     sec: '/api/a/sec',
     user: '/api/a/rbac',
@@ -13,6 +13,7 @@ export const environment = {
     api: '/api/c',
     log: '/api/a',
     b2b: '/api/a/route',
-    mon: '/api/a/mon'
+    mon: '/api/a/mon',
+    agent: 'b2b/bm'
   }
 };

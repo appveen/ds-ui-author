@@ -1,47 +1,66 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
   <div class="align-self-center text-center">
-    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="spinner-border text-dark" role="status">
+      <span class="sr-only">Processing...</span>
+    </div>
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
 <div class="d-flex flex-column justify-content-center row" *ngIf="serviceList.length > 0">
-  <div class="d-flex align-items-center p-3">
-    <span class="font-weight-bold">Data Services</span>
-  </div>
-  <div class='data-services-section d-flex border-top' *ngIf="!showLazyLoader">
-    <div class="select-ds d-flex flex-column border-right border-light mr-3">
-      <div class='ds-name py-2 px-4 hover' *ngFor="let srvc of serviceList; let srvcIndex = index"
-        (click)='selectDataService(srvc)' [ngClass]='{"text-accent alert-accent": selectedDS == srvc}'>
-        <span>
-          {{ srvc.name }}
+  <div class='data-services-section d-flex pt-3' *ngIf="!showLazyLoader">
+    <div class="select-ds d-flex flex-column text-muted">
+      <div class='ds-name py-2 px-3 hover' *ngFor="let srvc of serviceList; let srvcIndex = index"
+        (click)="selectDataService(srvc)" [ngClass]="{'text-dark': selectedDS == srvc}">
+        <span class="text-truncate d-block" style="max-width: 210px;" [ngbTooltip]="(srvc.name.length>20)? srvc.name:''" placement="bottom">
+          {{srvc.name}}
         </span>
       </div>
     </div>
-    <div class='ds-details py-3 w-100 pr-4'>
-      <div class='d-flex align-items-center justify-content-between p-2 bg-light text-dark rounded col-3'>
-        <strong>Admin Privileges</strong>
-        <div class='p-1'>
-          <odp-switch [edit]="{status:true}" [(checked)]="adminRole" (checkedChange)='toggleAdmin($event)'>
+    <div class="ds-details py-2 px-3 w-100">
+      <div class="admin-option d-flex align-items-center justify-content-between text-dark">
+        <span class="font-weight-bold">Admin Privileges</span>
+        <div class="p-1">
+          <odp-switch [edit]="{status:true}" [(checked)]="adminRole" (checkedChange)="toggleAdmin($event)">
           </odp-switch>
         </div>
       </div>
-      <div class='d-flex justify-content-between mt-4 py-2 px-3 bg-light rounded'>
-        <div class='font-weight-bold'>Roles ({{selectedDS.roles.length}})</div>
-        <div *ngIf="!adminRole" class="text-accent">{{totalActiveRoles}} roles enabled</div>
+      <div class="d-flex justify-content-between my-3 p-3 border-top border-bottom">
+        <div class="font-weight-bold">Roles ({{selectedDS.roles.length}})</div>
+        <div *ngIf="!adminRole" class="text">{{totalActiveRoles}} roles enabled</div>
       </div>
-      <div class="role-list-item-body bg-white font-normal b rounded mt-3">
+      <div class="role-list-item-body bg-white font-normal mt-3">
         <ng-container *ngFor="let role of selectedDS.roles; let roleIndex = index">
-          <div class="role-list-sub-item d-flex justify-content-between align-items-center px-4 b-bottom">
+          <div class="role-list-sub-item d-flex justify-content-between align-items-center px-4">
             <div class="name">
-              <span *ngIf="hasManage(role)" class="odp-manager text-primary mr-2"></span>
-              <span *ngIf="!hasManage(role)" class="odp-view text-success mr-2"></span>
+              <!-- <span *ngIf="hasManage(role)" class="odp-manager text-primary mr-2"></span>
+              <span *ngIf="!hasManage(role)" class="odp-view text-success mr-2"></span> -->
               <span class="text">{{ role.name }}</span>
             </div>
-            <span class="permissions d-flex align-items-center text-muted ">
-              <ng-container *ngIf="hasManage(role)">
+            <div class="permissions d-flex align-items-center text-muted ">
+              <div
+                class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2 border-dark text-dark">
+                <span class="dsi dsi-view fa-xs"></span>
+              </div>
+              <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
+                [ngClass]="{'border-dark text-dark':hasMethod(role,'POST')}">
+                <span class="dsi dsi-plus fa-xs"></span>
+              </div>
+              <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
+                [ngClass]="{'border-dark text-dark':hasMethod(role,'PUT')}">
+                <span class="dsi dsi-edit fa-xs"></span>
+              </div>
+              <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
+                [ngClass]="{'border-dark text-dark':hasMethod(role,'DELETE')}">
+                <span class="dsi dsi-trash fa-xs"></span>
+              </div>
+              <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
+                [ngClass]="{'border-dark text-dark':hasMethod(role,'RULE')}">
+                <span class="dsi dsi-filter-alt fa-xs"></span>
+              </div>
+              <!-- <ng-container *ngIf="hasManage(role)">
                 <span class="d-flex align-items-center justify-content-center icon odp-manager text-primary"></span>
                 <span class="d-flex align-items-center justify-content-center fa fa-angle-right text-muted"></span>
-                <span class="d-flex align-items-center justify-content-center icon fa fa-plus-circle text-accent"
+                <span class="d-flex align-items-center justify-content-center icon dsi dsi-plus-circle text-accent"
                   *ngIf="hasMethod(role,'POST')"></span>
                 <span class="d-flex align-items-center justify-content-center icon odp-edit text-primary"
                   *ngIf="hasMethod(role,'PUT')"></span>
@@ -55,9 +74,11 @@
               <ng-container *ngIf="!hasManage(role)">
                 <span class="d-flex align-items-center justify-content-center icon odp-view mr-1 text-accent"></span>
                 <span class="text text-accent">View Attributes</span>
-              </ng-container>
-            </span>
-            <span class="toggle font-sm">
+              </ng-container> -->
+            </div>
+            <odp-switch [edit]="{status:hasPermission('PMGCDS')}" [checked]="roleActive(role)"
+              [disabled]="adminRole? true : false" (checkedChange)="toggleRole($event,role,selectedDS)"></odp-switch>
+            <!-- <span class="toggle font-13">
               <label class="switch accent mb-0 mr-3 mt-1" [attr.for]="role.id" *ngIf="hasPermission('PMGCDS')">
                 <input type="checkbox" value="true" [attr.id]="role.id" (change)="toggleRole($event,role,selectedDS)"
                   [ngModel]="roleActive(role)" [attr.disabled]="adminRole? true : null">
@@ -68,12 +89,12 @@
                 <span *ngIf="roleActive(role)" [ngClass]="{'text-muted': adminRole}">Yes</span>
                 <span *ngIf="!roleActive(role)" [ngClass]="{'text-muted': adminRole}">No</span>
               </span>
-            </span>
+            </span> -->
           </div>
         </ng-container>
       </div>
       <ng-container *ngIf="!adminRole && makerCheckerData">
-        <div class='d-flex justify-content-between mt-4 py-2 px-3 bg-light rounded'>
+        <div class='d-flex justify-content-between mt-4 p-3 border-top border-bottom'>
           <div class="font-weight-bold ">
             Workflows
           </div>
@@ -92,7 +113,9 @@
               <div class="permissions d-flex align-items-center">
                 {{step.approvals}}
               </div>
-              <span class="toggle font-sm">
+              <odp-switch [edit]="{status:hasPermission('PMGCDS')}" [checked]="roleActive(step)"
+                [disabled]="adminRole? true : false" (checkedChange)="toggleRole($event,step,selectedDS)"></odp-switch>
+              <!-- <span class="toggle font-13">
                 <label class="switch accent mb-0 mr-3 mt-1" [attr.for]="step.id" *ngIf="hasPermission('PMGCDS')">
                   <input type="checkbox" value="true" [attr.id]="step.id" (change)="toggleRole($event,step,selectedDS)"
                     [ngModel]="roleActive(step)">
@@ -103,13 +126,11 @@
                   <ng-container *ngIf="roleActive(step)">Yes</ng-container>
                   <ng-container *ngIf="!roleActive(step)">No</ng-container>
                 </span>
-              </span>
+              </span> -->
             </div>
           </ng-container>
         </div>
       </ng-container>
-
-
     </div>
   </div>
 </div>

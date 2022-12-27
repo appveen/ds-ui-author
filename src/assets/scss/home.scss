@@ -3,31 +3,81 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 @font-face {
-  font-family: "Lato";
-  src: url("../fonts/default/Lato-Regular.woff") format("woff"),
-    /* Pretty Modern Browsers */ url("../fonts/default/Lato-Light.woff")
-      format("woff"),
-    /* Pretty Modern Browsers */ url("../fonts/default/Lato-Italic.woff")
-      format("woff"),
-    /* Pretty Modern Browsers */ url("../fonts/default/Lato-Bold.woff")
-      format("woff"),
-    /* Pretty Modern Browsers */ url("../fonts/default/Lato-Regular.ttf")
-      format("truetype"),
-    /* Safari, Android, iOS */ url("../fonts/default/Lato-Light.ttf")
-      format("truetype"),
-    /* Safari, Android, iOS */ url("../fonts/default/Lato-Italic.ttf")
-      format("truetype"),
-    /* Safari, Android, iOS */ url("../fonts/default/Lato-Bold.ttf")
-      format("truetype"),
-    /* Safari, Android, iOS */
-      url("../fonts/default/Lato-Regular.svg#svgFontName") format("svg"),
-    /* Legacy iOS */ url("../fonts/default/Lato-Light.svg#svgFontName")
-      format("svg"),
-    /* Legacy iOS */ url("../fonts/default/Lato-Italic.svg#svgFontName")
-      format("svg"),
-    /* Legacy iOS */ url("../fonts/default/Lato-Bold.svg#svgFontName")
-      format("svg"); /* Legacy iOS */
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
 }
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-Black.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-ExtraBold.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+
+// @font-face {
+//   font-family: "Inter";
+//   src: url("../fonts/inter/Inter-Regular.ttf") format("truetype"),
+//     url("../fonts/inter/Inter-Medium.ttf") format("truetype"),
+//     url("../fonts/inter/Inter-SemiBold.ttf") format("truetype"),
+//     url("../fonts/inter/Inter-Bold.ttf") format("truetype"),
+//     url("../fonts/inter/Inter-Black.ttf") format("truetype"),
+//     url("../fonts/inter/Inter-ExtraBold.ttf") format("truetype"),
+//     url("../fonts/inter/Inter-ExtraLight.ttf") format("truetype"),
+//     url("../fonts/inter/Inter-Light.ttf") format("truetype"),
+//     url("../fonts/inter/Inter-Thin.ttf") format("truetype");
+// }
 
 // Hiding spinner on input of number
 /* For Firefox */
@@ -40,14 +90,6 @@ input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
-}
-
-.hover:hover {
-  cursor: pointer;
-
-  & * {
-    cursor: pointer;
-  }
 }
 
 .angle-img {
@@ -91,18 +133,31 @@ input[type="number"]::-webkit-outer-spin-button {
   background-image: url("../img/logo_default.svg");
 }
 
-.login-img {
-  background: url("../img/flower.gif");
+.logo-mini {
+  // background-image: url("../img/data.stack_author_light_optimized.svg");
+  background-image: url("../img/logo-mini.svg");
 }
+
+.login-img {
+  background: url("../img/pana.svg");
+}
+
+.bot-img {
+  background: url("../img/bots.svg");
+}
+
 .azure-logo {
   background: url("../img/azure.png");
 }
+
 .nanoservices-config {
   background: url("../img/nanoservices_config.svg");
 }
+
 .hexagon {
   background: url("../img/hexagon.svg");
 }
+
 .mapper-warning {
   background: url("../img/warning-circle.svg");
 }
@@ -114,48 +169,67 @@ input[type="number"]::-webkit-outer-spin-button {
 .file-icon {
   background: url("../img/file.svg");
 }
+
 .upload-icon {
   background: url("../img/upload-icon.svg");
 }
+
 .ic-parse-settings {
   background: url("../img/ic-parse-settings.svg");
 }
+
 .il-filetype-csv {
   background: url("../img/il-filetype-csv.svg");
 }
+
 .il-filetype-xls {
   background: url("../img/il-filetype-xls.svg");
 }
+
 .ic-mapper {
   background: url("../img/ic-mapper.svg");
 }
+
 .ic-conflict {
   background: url("../img/ic-conflict.svg");
 }
+
 .ic-finish {
   background: url("../img/ic-finish.svg");
 }
+
 .ic-upload {
   background: url("../img/ic-upload.svg");
 }
+
 .ic-wand {
   background: url("../img/wand.svg");
 }
+
 .ic-upload-m {
   background: url("../img/ic-upload-m.svg");
 }
+
 .ic-name {
   background: url("../img/name.svg");
 }
+
 .bookmark {
   background: url("../img/bookmark.svg");
 }
+
 .bookmarkNew {
   background: url("../img/bookmarkNew.svg");
 }
+
 .bookmark-active {
   background: url("../img/bookmarkActive.svg");
 }
+
+.no-logs {
+  background-image: url("../img/no-logs.svg");
+}
+
 @keyframes rotate {
   to {
     transform: rotate(360deg);
@@ -171,6 +245,7 @@ input[type="number"]::-webkit-outer-spin-button {
   background-position: center;
   animation: rotate 1s steps(16, end) infinite;
 }
+
 .create-rule-icon {
   background-image: url("../img/Create-Rule-disabled.svg");
 
@@ -245,24 +320,6 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 
-.font-xl {
-  font-size: 18px;
-}
-
-.font-lg {
-  font-size: 16px;
-}
-
-.font-sm {
-  font-size: 13px;
-}
-.font-md {
-  font-size: 14px;
-}
-.font-xsm {
-  font-size: 11px;
-}
-
 .breadcrumb {
   max-height: 42px;
 }
@@ -277,20 +334,28 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .btn-min-width {
   display: flex;
-  min-width: 120px;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
   width: max-content;
 }
 
 .switch {
   &.primary {
-    input:checked ~ .slider {
+    input:checked~.slider {
       background: $primary !important;
     }
   }
 
   &.accent {
-    input:checked ~ .slider {
+    input:checked~.slider {
       background: $accent !important;
+    }
+  }
+
+  &.success {
+    input:checked~.slider {
+      background: $success !important;
     }
   }
 }
@@ -304,7 +369,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 
 .modal-content {
-  width: 400px !important;
+  width: 540px !important;
   border-radius: 20px;
   overflow: hidden;
 
@@ -358,8 +423,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .purge-model {
   .modal-content {
-    width: 320px !important;
-    height: 280px !important;
+    width: 360px !important;
+    height: 360px !important;
     margin-left: 90px !important;
   }
 }
@@ -367,12 +432,14 @@ input[type="number"]::-webkit-outer-spin-button {
 .preHook-modal {
   .modal-content {
     width: 600px !important;
+
     .label-width {
       width: 140px;
     }
 
     .value-width {
       width: 400px;
+
       .info-icon {
         right: 4px;
         top: 8px;
@@ -394,9 +461,10 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 
-.preHook-preview-modal{
+.preHook-preview-modal {
   .modal-content {
     width: 600px !important;
+
     .modal-body {
       min-height: 386px !important;
       max-height: 420px !important;
@@ -409,7 +477,8 @@ input[type="number"]::-webkit-outer-spin-button {
     .modal-footer {
       border: none !important;
     }
-    .pre{
+
+    .pre {
       min-height: 386px !important;
       max-height: 410px !important;
       overflow: auto;
@@ -435,6 +504,7 @@ input[type="number"]::-webkit-outer-spin-button {
   0% {
     transform: scale(0);
   }
+
   100% {
     transform: scale(1);
   }
@@ -444,12 +514,13 @@ input[type="number"]::-webkit-outer-spin-button {
   .modal-content {
     min-width: 650px !important;
     max-width: 650px !important;
-    min-height: 500px !important;
-    max-height: 500px !important;
+    min-height: 520px !important;
+    max-height: 520px !important;
+
     .modal-header {
       border: none !important;
-      min-width: 700px !important;
-      max-width: 700px !important;
+      min-width: 660px !important;
+      max-width: 660px !important;
 
       .label-width {
         width: 220px;
@@ -477,19 +548,24 @@ input[type="number"]::-webkit-outer-spin-button {
 .exp-modal {
   .modal-content {
     height: 500px !important;
+
     .label-width {
       width: 150px;
     }
+
     .value-width {
       width: 450px;
     }
+
     .modal-body {
       min-height: 435px !important;
       max-height: 435px !important;
     }
+
     .modal-header {
       background: $light;
     }
+
     .modal-footer {
       border: none !important;
     }
@@ -538,16 +614,17 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /* On mouse-over, add a grey background color */
 .checkbox-container {
+
   &:hover,
   &:focus {
-    input ~ .checkmark {
+    input~.checkmark {
       background-color: #eee;
     }
   }
 }
 
 /* When the checkbox is checked, add a blue background */
-.checkbox-container input:checked ~ .checkmark {
+.checkbox-container input:checked~.checkmark {
   background-color: $white;
 }
 
@@ -559,7 +636,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* Show the checkmark when checked */
-.checkbox-container input:checked ~ .checkmark:after {
+.checkbox-container input:checked~.checkmark:after {
   display: block;
 }
 
@@ -582,15 +659,18 @@ input[type="number"]::-webkit-outer-spin-button {
     width: 100%;
     display: inline-block;
   }
+
   &-radio-input {
     display: none;
   }
+
   &-radio-label {
     font-size: 0.8rem;
     cursor: pointer;
     position: relative;
     padding-left: 1.7rem;
   }
+
   &-radio-button {
     height: 20px;
     width: 20px;
@@ -600,6 +680,7 @@ input[type="number"]::-webkit-outer-spin-button {
     position: absolute;
     left: 0;
     top: 0;
+
     &::after {
       display: block;
       content: "";
@@ -614,32 +695,41 @@ input[type="number"]::-webkit-outer-spin-button {
       opacity: 0;
       transition: opacity 0.1s;
     }
+
     &.green {
       border: 2px solid $green;
+
       &::after {
         background-color: $green;
       }
     }
+
     &.yellow {
       border: 2px solid lighten($primary, 0.5);
+
       &::after {
         background-color: lighten($primary, 0.5);
       }
     }
+
     &.red {
       border: 2px solid $red;
+
       &::after {
         background-color: $red;
       }
     }
+
     &.blue {
       border: 2px solid $accent;
+
       &::after {
         background-color: $accent;
       }
     }
   }
-  &-radio-input:checked + &-radio-label &-radio-button::after {
+
+  &-radio-input:checked+&-radio-label &-radio-button::after {
     opacity: 1;
   }
 }
@@ -679,7 +769,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* When the radio button is checked, add a blue background */
-.radio-container input:checked ~ .radio-checkmark {
+.radio-container input:checked~.radio-checkmark {
   background-color: #2196f3;
 }
 
@@ -691,7 +781,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* Show the indicator (dot/circle) when checked */
-.radio-container input:checked ~ .radio-checkmark:after {
+.radio-container input:checked~.radio-checkmark:after {
   display: block;
 }
 
@@ -718,10 +808,9 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
     padding: 0;
     display: inline-block;
-    border: 1px solid #ccc;
-    width: 30px;
-    height: 12px;
-    border-radius: 6px;
+    width: 40px;
+    height: 24px;
+    border-radius: 12px;
     background: #ccc;
     transition: 0.25s;
   }
@@ -734,9 +823,8 @@ input[type="number"]::-webkit-outer-spin-button {
     height: 18px;
     border-radius: 9px;
     background: #fff;
-    border: 1px solid $border;
-    left: 0px;
-    top: 1px;
+    left: 3px;
+    top: 3px;
     transition: 0.25s;
     position: absolute;
   }
@@ -745,19 +833,19 @@ input[type="number"]::-webkit-outer-spin-button {
     display: none;
   }
 
-  input:checked ~ .toggler {
-    left: 12px;
+  input:checked~.toggler {
+    left: 20px;
   }
 
   .switch {
     &.accent {
-      input:checked ~ .toggler {
+      input:checked~.toggler {
         border: 1px solid $accent;
       }
     }
 
     &.primary {
-      input:checked ~ .toggler {
+      input:checked~.toggler {
         border: 1px solid $primary;
       }
     }

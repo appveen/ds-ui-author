@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import * as _ from 'lodash';
+
+import { CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
 
 @Component({
@@ -8,150 +9,84 @@ import { AppService } from 'src/app/utils/services/app.service';
   templateUrl: './group-author-functions.component.html',
   styleUrls: ['./group-author-functions.component.scss']
 })
-export class GroupAuthorFunctionsComponent implements OnInit, OnDestroy {
+export class GroupAuthorFunctionsComponent implements OnInit {
 
   @Input() roles: Array<any>;
   @Output() rolesChange: EventEmitter<Array<any>>;
-  toggleDropdown: any;
-  subscriptions: any;
-  searchTerm: string;
-  functionsList: Array<{ _id: string; name: string; hide?: boolean; selected?: boolean }>;
+  edit: any;
+  managePermissions: Array<string>;
+  viewPermissions: Array<string>;
 
   constructor(private commonService: CommonService,
     private appService: AppService) {
-    const self = this;
-    self.toggleDropdown = {};
-    self.subscriptions = {};
-    self.roles = [];
-    self.rolesChange = new EventEmitter();
-  }
-
-  static faasAttrCount(libDefinition): number {
-    // Parse lib definition and return attribute count
-    return libDefinition?.definition?.length || 0;
+    this.roles = [];
+    this.rolesChange = new EventEmitter();
+    this.edit = { status: true };
+    this.managePermissions = ['PMF', 'PMFPD', 'PMFPS'];
+    this.viewPermissions = ['PVF'];
   }
 
   ngOnInit() {
-    const self = this;
-    if (!self.roles) {
-      self.roles = [];
-    }
-    const temp = self.roles.filter(r => r.entity.indexOf('FAAS_') > -1)
-      .map(item => item.entity.split('_')[1])
-      .filter((e, i, a) => a.indexOf(e) === i);
-    self.getFunctionsList();
-  }
-
-  getFunctionsList() {
-    const self = this;
-    const options: GetOptions = {
-      select: 'name, definition',
-      count: -1,
-      filter: {
-        app: self.commonService.app._id,
-      }
-    };
-    self.commonService.get('partnerManager', `/${this.commonService.app._id}/faas`, options).subscribe(res => {
-      self.functionsList = res;
-      self.functionsList.forEach(_lib => {
-        _lib['attribute'] = GroupAuthorFunctionsComponent.faasAttrCount(_lib['definition']);
-      });
-    });
-  }
-
-  togglePermission(type: string, service?: any) {
-    const self = this;
-    const pvlIndex = self.roles.findIndex(r => r.id === 'PVF' && r.entity === 'FAAS' + (service ? ('_' + service._id) : ''));
-    const pmlIndex = self.roles.findIndex(r => r.id === 'PMF' && r.entity === 'FAAS' + (service ? ('_' + service._id) : ''));
-    const pnlIndex = self.roles.findIndex(r => r.id === 'PNF' && r.entity === 'FAAS' + (service ? ('_' + service._id) : ''));
-    if (type === 'PMF') {
-      if (pvlIndex > pnlIndex) {
-        self.removeRoleAtIndex(pvlIndex);
-        self.removeRoleAtIndex(pnlIndex);
-      } else {
-        self.removeRoleAtIndex(pnlIndex);
-        self.removeRoleAtIndex(pvlIndex);
-      }
-      self.roles.push(self.getPermissionObject('PMF'));
-    } else if (type === 'PVF') {
-      if (pnlIndex > pmlIndex) {
-        self.removeRoleAtIndex(pnlIndex);
-        self.removeRoleAtIndex(pmlIndex);
-      } else {
-        self.removeRoleAtIndex(pmlIndex);
-        self.removeRoleAtIndex(pnlIndex);
-      }
-      self.roles.push(self.getPermissionObject('PVF'));
-    } else {
-      if (pvlIndex > pmlIndex) {
-        self.removeRoleAtIndex(pvlIndex);
-        self.removeRoleAtIndex(pmlIndex);
-      } else {
-        self.removeRoleAtIndex(pmlIndex);
-        self.removeRoleAtIndex(pvlIndex);
-      }
-      self.roles.push(self.getPermissionObject('PNF'));
+    if (!this.roles) {
+      this.roles = [];
     }
   }
 
-  removeRoleAtIndex(index: number) {
-    const self = this;
-    if (index > -1) {
-      self.roles.splice(index, 1);
-    }
-  }
 
-  getSelectedPermission(service: any) {
-    const self = this;
-    if (self.roles.find(r => r.id === 'PMF' && r.entity === ('FAAS_' + service._id))) {
-      return 'Manage';
-    } else if (self.roles.find(r => r.id === 'PVF' && r.entity === ('FAAS_' + service._id))) {
-      return 'View';
-    } else {
-      return 'Hide';
-    }
-  }
-
-  getPermissionObject(type: string, service?: any) {
-    const self = this;
+  getPermissionObject(type: string) {
     return {
       id: type,
-      app: self.commonService.app._id,
-      entity: 'FAAS' + (service ? '_' + service._id : ''),
+      app: this.commonService.app._id,
+      entity: 'FAAS',
       type: 'author'
     };
   }
 
   hasPermission(type: string) {
-    const self = this;
-    return self.commonService.hasPermission(type);
-  }
-  ngOnDestroy() {
-    const self = this;
+    return this.commonService.hasPermission(type);
   }
 
-  get faasPermissionType() {
-    const self = this;
-    if (self.roles.find(r => r.id === 'PMF' && r.entity === 'FAAS')) {
-      return 'Manage';
-    } else if (self.roles.find(r => r.id === 'PVF' && r.entity === 'FAAS')) {
-      return 'View';
+  changeAllPermissions(val: string) {
+    if (val == 'manage') {
+      _.remove(this.roles, (item) => item.entity == 'FAAS')
+      this.managePermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item));
+      });
+    } else if (val == 'view') {
+      _.remove(this.roles, (item) => item.entity == 'FAAS')
+      this.viewPermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item));
+      });
+    } else if (val == 'blocked') {
+      _.remove(this.roles, (item) => item.entity == 'FAAS')
+    }
+  }
+
+  get globalPermission() {
+    const perms = this.roles.map(e => e.id);
+    if (_.intersection(this.managePermissions, perms).length === this.managePermissions.length) {
+      return 'manage';
+    } else if (_.intersection(this.viewPermissions, perms).length === this.viewPermissions.length) {
+      return 'view';
+    } else if (perms.length == 0) {
+      return 'blocked';
     } else {
-      return 'Hide';
+      return 'custom';
     }
   }
 
-  get showException() {
-    const self = this;
-    if (self.functionsList && self.functionsList.length > 0) {
-      return true;
+  get permissionType() {
+    if (this.roles.find(r => r.id === 'PMF' && r.entity === 'FAAS')) {
+      return 'manage';
+    } else if (this.roles.find(r => r.id === 'PVF' && r.entity === 'FAAS')) {
+      return 'view';
+    } else {
+      return 'blocked';
     }
-    return false;
   }
 
   get powerPermissionDeploy() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => (
+    const manageIndex = this.roles.findIndex(r => (
       r.id === 'PMFPD') && r.entity === 'FAAS');
     if (manageIndex > -1) {
       return 'manage';
@@ -160,8 +95,7 @@ export class GroupAuthorFunctionsComponent implements OnInit, OnDestroy {
   }
 
   get powerPermissionsStartStop() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => (
+    const manageIndex = this.roles.findIndex(r => (
       r.id === 'PMFPS') && r.entity === 'FAAS');
     if (manageIndex > -1) {
       return 'manage';
@@ -169,38 +103,19 @@ export class GroupAuthorFunctionsComponent implements OnInit, OnDestroy {
     return 'blocked';
   }
 
-  get checkAll() {
-    const self = this;
-    const temp = self.functionsList.filter(e => !e.hide);
-    if (temp.length === 0) {
-      return false;
-    }
-    return Math.min.apply(null, temp.map(e => e.selected));
-  }
-
-  set checkAll(val: any) {
-    const self = this;
-    self.functionsList.forEach(e => {
-      e.selected = val;
-    });
-  }
-
-
-  // Common setPermission for Power settings,Definition,Experience and Role
   set commonPermission(val: any) {
-    const self = this;
-    const blockedIndex = self.roles.findIndex(r => r.id === 'PNF' + val.type && r.entity === 'FAAS');
+    const blockedIndex = this.roles.findIndex(r => r.id === 'PNF' + val.type && r.entity === 'FAAS');
     if (blockedIndex > -1) {
-      self.roles.splice(blockedIndex, 1);
+      this.roles.splice(blockedIndex, 1);
     }
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMF' + val.type && r.entity === 'FAAS');
+    const manageIndex = this.roles.findIndex(r => r.id === 'PMF' + val.type && r.entity === 'FAAS');
     if (manageIndex > -1) {
-      self.roles.splice(manageIndex, 1);
+      this.roles.splice(manageIndex, 1);
     }
-    const viewIndex = self.roles.findIndex(r => r.id === 'PVF' + val.type && r.entity === 'FAAS');
+    const viewIndex = this.roles.findIndex(r => r.id === 'PVF' + val.type && r.entity === 'FAAS');
     if (viewIndex > -1) {
-      self.roles.splice(viewIndex, 1);
+      this.roles.splice(viewIndex, 1);
     }
-    self.roles.push(self.getPermissionObject(val.id));
+    this.roles.push(this.getPermissionObject(val.id));
   }
 }

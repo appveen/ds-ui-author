@@ -1,4 +1,4 @@
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Mapping } from '../mapper/mapper.model';
 
 export interface FlowData {
@@ -58,7 +58,7 @@ export interface EditConfig {
 export interface ActivateProperties {
     nodeList?: Array<NodeData>;
     index?: number;
-    partner?: FormGroup;
+    partner?: UntypedFormGroup;
     flowData?: any;
     type: string;
 }

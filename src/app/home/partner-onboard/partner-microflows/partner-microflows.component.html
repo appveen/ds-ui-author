@@ -8,7 +8,7 @@
         <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
         <button type="button" class="btn btn-sm btn-link" (click)="newMicroflow()"
             *ngIf="edit.status && edit.id && canCreateFlow()">
-            <span class="fa fa-plus-circle mr-2"></span>
+            <span class="dsi dsi-plus-circle mr-2"></span>
             <span class="text">New Integration Flows</span>
         </button>
     </div>
@@ -82,13 +82,13 @@
                             *ngIf="item.flowDetails">
                             <div class="d-flex align-items-center pl-2 mt-3">
                                 <div
-                                    class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-sm">
+                                    class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-13">
                                     {{item.inputType.toLowerCase()}}
                                 </div>
-                                <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-sm">
+                                <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-13">
                                     Partner Agent:
                                 </span>
-                                <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-sm">
+                                <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-13">
                                     Flow End Point:
                                 </span>
                             </div>
@@ -120,13 +120,13 @@
                             <ng-container *ngIf="item.outputType">
                                 <div class="d-flex align-items-center pl-2 mt-3">
                                     <div
-                                        class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-sm">
+                                        class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-13">
                                         {{item.outputType.toLowerCase()}}
                                     </div>
-                                    <span *ngIf="item.outputType === 'FILE'" class="text-secondary ml-2 font-sm">
+                                    <span *ngIf="item.outputType === 'FILE'" class="text-secondary ml-2 font-13">
                                         App Agent:
                                     </span>
-                                    <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-sm">
+                                    <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-13">
                                         External API:
                                     </span>
                                 </div>
@@ -223,7 +223,7 @@
                                 <div class="text">No Integration Flows has been created.</div>
                                 <button type="button" class="btn btn-create mt-2" (click)="newMicroflow()"
                                     *ngIf="edit.status && edit.id && canCreateFlow()">
-                                    <span class="fa fa-plus-circle mr-2"></span>
+                                    <span class="dsi dsi-plus-circle mr-2"></span>
                                     <span class="text">Create New</span>
                                 </button>
                             </div>
@@ -256,7 +256,7 @@
         <ng-container *ngIf="newIntegrationFlowStep==1">
             <div class="d-flex flex-column w-100">
                 <div class="d-flex flex-column w-100">
-                    <label for="name" class="font-sm text-secondary">
+                    <label for="name" class="font-13 text-secondary">
                         <span class="text">Name</span>
                         <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
                     </label>
@@ -267,7 +267,7 @@
                             class="fa fa-exclamation-circle text-danger position-absolute"
                             ngbTooltip="Name cannot be more then 20 charaters." container="body"></span>
                     </div>
-                    <label for="description" class="font-sm text-secondary mt-3">Description</label>
+                    <label for="description" class="font-13 text-secondary mt-3">Description</label>
                     <textarea #newFlowTextarea class="form-control" id="description" rows="5"
                         placeholder="No description" formControlName="description"
                         (keydown.enter)="$event.preventDefault()" (keyup.enter)="newIntegrationFlowStep=2"></textarea>
@@ -301,7 +301,7 @@
                             <div class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
                                 <div class="api-icon"></div>
                             </div>
-                            <span class="text mt-1 font-sm">API</span>
+                            <span class="text mt-1 font-13">API</span>
                             <input ngbButton #apiType type="radio" class="d-none" name="blockType" id="apiType"
                                 value="api">
                         </label>
@@ -315,7 +315,7 @@
                             <div class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
                                 <div class="file-icon"></div>
                             </div>
-                            <span class="text mt-1 font-sm">File</span>
+                            <span class="text mt-1 font-13">File</span>
                             <input ngbButton #fileType type="radio" class="d-none" name="blockType" id="fileType"
                                 value="file">
                         </label>
@@ -341,12 +341,7 @@
 <ng-template #alertModalTemplate>
     <div class="modal-body p-4 d-flex flex-column">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-partner-icon [size]="18" color="202a36" class="mt-1"></odp-partner-icon>
-                </span>
-                <span class="font-weight-bold">{{alertModalData.title}}</span>
-            </div>
+            <span class="font-20 fw-600">{{alertModalData.title}}</span>
             <span class="fa fa-times text-secondary hover" (click)="alertModalTemplateRef.close(false)"></span>
         </div>
         <div class="d-flex flex-column my-5 w-100">
@@ -359,6 +354,4 @@
     </div>
 </ng-template>
 
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-    <odp-partner-icon [size]="18" color="DD5151" class="mt-1"></odp-partner-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

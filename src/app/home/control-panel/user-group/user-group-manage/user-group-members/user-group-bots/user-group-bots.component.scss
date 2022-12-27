@@ -1,0 +1,21 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.wrapper {
+    min-height: calc(100vh - 260px);
+    max-height: calc(100vh - 260px);
+    overflow-y: auto;
+}
+
+
+.user-name {
+    width: 240px;
+}
+
+.user-username {
+    width: 360px;
+}
+
+.user-check {
+    width: 48px;
+}

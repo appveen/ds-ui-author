@@ -9,29 +9,52 @@ import * as uuid from 'uuid/v1';
 export class CheckboxComponent implements OnInit {
 
   @Input() id: string;
-  @Input() class: string;
+  @Input() type: string;
   @Input() disabled: boolean;
   @Input() edit: any;
+  @Input() size: number;
   @Input() checked: boolean;
   @Output() checkedChange: EventEmitter<boolean>;
   constructor() {
-    const self = this;
-    self.checkedChange = new EventEmitter();
-    self.edit = {
+    this.checkedChange = new EventEmitter();
+    this.edit = {
       status: false
     };
-    self.id = uuid();
+    this.id = uuid();
+    this.type = 'dark'
+    this.size = 18;
+    this.disabled = false;
   }
 
   ngOnInit() {
-    const self = this;
 
   }
+
 
   onChange(value) {
-    const self = this;
-    self.checked = value;
-    self.checkedChange.emit(value);
+    if (this.edit.status) {
+      this.checked = value;
+      this.checkedChange.emit(value);
+    }
   }
 
+  get checkBoxStyle() {
+    return {
+      'min-width': this.size + 'px',
+      'max-width': this.size + 'px',
+      'min-height': this.size + 'px',
+      'max-height': this.size + 'px'
+    };
+  }
+
+  get checkBoxClass() {
+    const classes = [];
+    if (this.edit.status && !this.disabled) {
+      classes.push('hover');
+    }
+    if (this.checked) {
+      classes.push(`bg-${this.type} border-${this.type}`);
+    }
+    return classes.join(' ');
+  }
 }

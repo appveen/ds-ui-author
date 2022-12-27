@@ -1,76 +1,199 @@
-<div class="d-flex flex-column w-100 h-100">
-  <odp-breadcrumb></odp-breadcrumb>
-  <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3 mb-3">
-    <div class="font-weight-bold font-lg">List of Function</div>
-    <button type="button" class="add-new btn-min-width btn btn-primary show" id="createDataFormat"
-      *ngIf="hasWritePermission('FAAS')" (click)="newFaas()">
-      <span class="fa fa-plus mr-2"></span>
-      <span class="text">New Function</span>
-    </button>
-  </div>
-  <div class="card-container d-flex flex-column w-100 px-3">
-    <ag-grid-angular #agGrid *ngIf="columnDefs" class="ag-theme-balham ag-grid-container custom-style"
-      [columnDefs]="columnDefs" floatingFilter="true" rowModelType="infinite" [rowHeight]="32"
-      (filterModified)="filterModified($event)" [datasource]="dataSource" cacheBlockSize="30"
-      (sortChanged)="sortChanged($event)" (gridReady)="gridReady($event)" [overlayNoRowsTemplate]="noRowsTemplate">
-    </ag-grid-angular>
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+  <div class="align-self-center text-center">
+    <div class="spinner-border text-dark" role="status">
+      <span class="sr-only">Processing...</span>
+    </div>
+    <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-
-
-<ng-template #newFaasModal>
-  <div class="new-faas-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="form">
-    <div class="d-flex flex-column w-100">
-      <div class="d-flex align-items-center justify-content-between mb-3">
-        <div class="d-flex align-items-center">
-          <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
-            <odp-function-icon size="16" color="1CAD49" class="mt-1"></odp-function-icon>
-          </span>
-          <span class="font-weight-bold mt-2">New Function</span>
+<div class="faas-page d-flex flex-column w-100 bg-light-gray page-padding">
+  <div class="d-flex justify-content-between align-items-center w-100 pt-2 pb-4">
+    <div class="font-22">
+      <span class="fw-600 mr-2">Functions</span>
+      <span></span>
+    </div>
+    <div class="d-flex align-items-center">
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+      <button id="createFunction" type="button" class="add-new btn btn-primary ml-3 d-flex align-items-center"
+        (click)="newFaas()" [disabled]="!hasWritePermission('FAAS')">
+        <span class="dsi dsi-plus mr-2"></span>
+        <span class="text">New</span>
+      </button>
+    </div>
+  </div>
+  <div class="card-container d-flex flex-column w-100 mb-3">
+    <div *ngIf="records.length==0" class="rounded-lg border bg-white p-4">
+      <p class="m-0">No functions Found, <button type="button" class="btn btn-link px-1 py-0" (click)="newFaas()">Click
+          Here</button> to create a new Function
+        <span *ngIf="searchTerm">:&nbsp;<span class="fw-500">{{searchTerm}}</span></span>
+      </p>
+    </div>
+    <div *ngIf="records.length>0" class="list-group mb-3">
+      <div
+        class="list-group-item header d-flex align-items-center justify-content-start py-0 bg-light text-uppercase font-11 fw-500">
+        <div (click)="applySort('name')" class="hover d-flex align-items-center item-name">
+          <span class="mr-2">Name</span>
+          <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
+          <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
         </div>
-        <span class="fa fa-times text-muted hover" (click)="newFaasModalRef.close(false)"></span>
+        <div class="d-flex align-items-center">
+          <div (click)="applySort('url')" class="hover d-flex align-items-center item-url">
+            <span class="mr-2">URL</span>
+            <span *ngIf="sortModel['url']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['url']==-1" class="dsi dsi-drop-up"></span>
+          </div>
+          <div (click)="applySort('status')" class="hover d-flex align-items-center item-status">
+            <span class="mr-2">Status</span>
+            <span *ngIf="sortModel['status']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['status']==-1" class="dsi dsi-drop-up"></span>
+          </div>
+          <div (click)="applySort('lastInvoked')" class="hover d-flex align-items-center item-last-invoked">
+            <span class="mr-2">Last Invoked</span>
+            <span *ngIf="sortModel['lastInvoked']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['lastInvoked']==-1" class="dsi dsi-drop-up"></span>
+          </div>
+        </div>
+        <div class="d-flex w-100 justify-content-end">
+          <div class="item-actions"></div>
+        </div>
       </div>
-      <div class="d-flex flex-column w-100">
-        <label for="name" class="font-sm text-secondary">
+      <div class="list-group-item d-flex align-items-center justify-content-start hover" (dblclick)="viewFunction(i)"
+        *ngFor="let item of records;let i=index">
+        <div class="item-name fw-500 d-flex align-items-center">
+          <span class="ml-2 pl-1 text-dark text-truncate" [ngbTooltip]="item.name" placement="right">{{item.name}}</span>
+          <span class="ml-2 version sub-heading font-11 text-uppercase">(v{{(item.version||1)}})</span>
+          <span *ngIf="item.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="sub-heading item-url pr-3 d-flex align-items-center">
+            <span *ngIf="copied[item._id]" class="text-accent mr-2">Copied!</span>
+            <span *ngIf="!copied[item._id]" class="dsi dsi-copy text-accent mr-2 hover" (click)="copyUrl(item)"></span>
+            <span class="text-truncate" [ngbTooltip]="item.url" container="body">{{item.url}}</span>
+          </div>
+          <div class="sub-heading item-status d-flex align-items-center">
+            <span class="fa fa-circle mr-2" [ngClass]="getStatusClass(item)"></span>
+            <span class="text font-12 fw-400">{{getStatusLabel(item)}}</span>
+          </div>
+          <div class="sub-heading item-last-invoked">
+            <span *ngIf="item.lastInvoked">{{item.lastInvoked | date:'medium'}}</span>
+            <span *ngIf="!item.lastInvoked" class="text-muted">-</span>
+          </div>
+        </div>
+        <div class="d-flex w-100 align-items-center justify-content-end">
+          <div class="item-actions d-flex align-items-center justify-content-end">
+            <!-- <div class="actions d-flex justify-content-end hover align-items-center">
+              <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintenance' ">
+                <span *ngIf="canDeployFunction(item)" id='deploy_{{i}}' class="dsi dsi-skip-forward text-primary mr-2"
+                  (click)="deployFunction(i)" [ngbTooltip]="'Deploy v'+(item.draftVersion || item.version)"
+                  container="body"></span>
+                <span class="dsi dsi-play hover mr-2" *ngIf="item.status == 'STOPPED' && canStartStopFunction(i)"
+                  (click)="toggleFunctionStatus(i)" [ngbTooltip]="'Start v'+(item.version || 1)"
+                  container="body"></span>
+                <span class="dsi dsi-stop hover mr-2" *ngIf="item.status == 'Active' && canStartStopFunction(i)"
+                  (click)="toggleFunctionStatus(i)" [ngbTooltip]="'Stop v'+(item.version || 1)" container="body"></span>
+                <span class="dsi dsi-edit hover mr-2" *ngIf="canManageFaas(item._id)" (click)="editFunction(i)"></span>
+                <span class="dsi dsi-view hover mr-2" *ngIf="canManageFaas(item._id)" (click)="viewFunction(i)"></span>
+              </ng-container>
+              <span class="dsi dsi-copy hover mr-2" *ngIf="canManageFaas(item._id)" (click)="cloneFunction(i)"></span>
+              <span class="dsi dsi-trash hover mr-2" *ngIf="canManageFaas(item._id)" (click)="deleteFunction(i)"></span>
+            </div> -->
+            <div class="actions d-flex justify-content-end hover align-items-center">
+              <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintenance' ">
+                <span *ngIf="canDeployFunction(item)" id='deploy_{{i}}' class="text-primary mr-3"
+                  (click)="deployFunction(i)">Deploy</span>
+                <span class="fw-600 font-13 hover mr-3" *ngIf="item.status == 'Undeployed' && canStartStopFunction(i)"
+                  (click)="toggleFunctionStatus(i)">Start</span>
+                <span class="fw-600 font-13 hover mr-3" *ngIf="item.status == 'Active' && canStartStopFunction(i)"
+                  (click)="toggleFunctionStatus(i)">Stop</span>
+                <span class="dsi dsi-more-vertical hover mr-3 ignore-outside" (click)="showDropDown($event,i)"></span>
+              </ng-container>
+              <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed border"
+                (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
+                (outside)="showOptionsDropdown[i]=false">
+                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFaas(item._id)"
+                  (click)="editFunction(i)">
+                  Edit
+                </div>
+                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFaas(item._id)"
+                  (click)="viewFunction(i)">
+                  View
+                </div>
+                <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFaas(item._id)"
+                  (click)="cloneFunction(i)">
+                  Clone
+                </div>
+                <div class="list-group-item list-group-item-action py-2 border-0 text-danger" *ngIf="canManageFaas(item._id)"
+                  (click)="deleteFunction(i)">
+                  Delete
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showNewFaasWindow" class="overlay position-fixed"></div>
+  <div class="new-faas-window p-4 position-fixed border-left bg-white d-flex flex-column"
+    [ngClass]="{'show': showNewFaasWindow}" [formGroup]="form">
+    <div class="d-flex align-items-center justify-content-between">
+      <h5 class="m-0 font-20 fw-600">New Function</h5>
+      <button type="button" class="close" (click)="showNewFaasWindow=false">
+        <span>&times;</span>
+      </button>
+    </div>
+    <div *ngIf="showNewFaasWindow" class="d-flex flex-column w-100 mt-4">
+      <div class="form-group">
+        <label for="name" class="">
           <span class="text">Name</span>
           <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
         </label>
         <div class="name-wrapper position-relative">
-          <input newFaasName type="text" class="form-control" id="name" placeholder="Untitled Function"
-            formControlName="name" (keyup.enter)="newFaasTextarea.focus()" odpAutoFocus
+          <input newFaasName autocomplete="off" type="text" class="form-control" id="name" placeholder="Untitled Function"
+            formControlName="name" odpAutoFocus
             [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
           <ng-container *ngIf="form.get('name').dirty">
             <span *ngIf="form.get('name').hasError('required')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute dsi dsi-danger-circle" container="body"
               ngbTooltip="Name is required"></span>
             <span *ngIf="form.get('name').hasError('maxlength')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute dsi dsi-danger-circle" container="body"
               ngbTooltip="Name should be within 30 characters"></span>
             <span *ngIf="form.get('name').hasError('pattern')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute dsi dsi-danger-circle" container="body"
               ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
           </ng-container>
         </div>
-        <label for="apiEndpoint" class="font-sm text-secondary mt-3">API Endpoint</label>
+      </div>
+      <div class="form-group">
+        <label for="apiEndpoint" class="">API Endpoint</label>
         <div class="name-wrapper position-relative">
           <input type="text" class="form-control" id="apiEndpoint" placeholder="/api/a/faas/" formControlName="api">
         </div>
-        <label for="description" class="font-sm text-secondary mt-3">Description</label>
-        <div class="name-wrapper position-relative">
-          <textarea #newFaasTextarea class="form-control" id="description" rows="5" placeholder="No description"
-            formControlName="description" (keydown.enter)="$event.preventDefault()"
-            (keyup.enter)="newFaasModalRef.close(true)"></textarea>
-          <ng-container *ngIf="form.get('description').dirty">
-            <span *ngIf="form.get('description').hasError('maxlength')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
-              ngbTooltip="Description should be within 240 characters"></span>
-          </ng-container>
-        </div>
       </div>
     </div>
-    <div class="d-flex align-self-end justify-content-end w-100 mt-3">
-      <button type="button" class="btn btn-min-width btn-create" id="newFaasModalYes" [disabled]="form.invalid"
-        (click)="newFaasModalRef.close(true)">Create</button>
+    <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
+      <button type="button" class="btn btn-primary w-100" id="newFaasModalYes" [disabled]="form.invalid"
+        (click)="triggerFaasCreate()">Create</button>
     </div>
   </div>
-</ng-template>
+
+
+
+  <ng-template #alertModalTemplate>
+    <div class="modal-body p-4">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <span class="font-20 fw-600">{{ alertModal.title }}</span>
+        <span class="fa fa-times text-secondary hover" (click)="alertModalTemplateRef.close(false)"></span>
+      </div>
+      <p class="text-secondary text-center my-5">{{ alertModal.message }}</p>
+      <div class="d-flex align-items-center justify-content-end">
+        <button type="button" class="btn btn-min-width btn-primary" (click)="alertModalTemplateRef.close(true)">
+          Yes
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

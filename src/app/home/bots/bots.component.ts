@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbModalRef, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
@@ -87,7 +87,7 @@ export class BotsComponent implements OnInit, OnDestroy {
     @ViewChild('deleteModal', { static: false }) deleteModal: TemplateRef<HTMLElement>;
     @ViewChild('newBotModal', { static: false }) newBotModal: TemplateRef<HTMLElement>;
     newBotModalRef: NgbModalRef;
-    userForm: FormGroup;
+    userForm: UntypedFormGroup;
     botList: Array<UserDetails> = [];
     apiConfig: GetOptions = {};
     subscriptions: any = {};
@@ -102,7 +102,7 @@ export class BotsComponent implements OnInit, OnDestroy {
     toggleImportBots: boolean;
     breadcrumbPaths: Array<Breadcrumb>;
     totalRecords: number;
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private commonService: CommonService,
         private ngbToolTipConfig: NgbTooltipConfig,
         private ts: ToastrService,
@@ -145,6 +145,7 @@ export class BotsComponent implements OnInit, OnDestroy {
             active: true,
             label: 'Bots'
         });
+        this.commonService.changeBreadcrumb(self.breadcrumbPaths)
         self.ngbToolTipConfig.container = 'body';
         self.initConfig();
         self.commonService.apiCalls.componentLoading = false;
@@ -420,11 +421,13 @@ export class BotsComponent implements OnInit, OnDestroy {
         const self = this;
         if (self.breadcrumbPaths.length === 2) {
             self.breadcrumbPaths.pop();
+
         }
         self.breadcrumbPaths.push({
             active: true,
             label: usr
         });
+        this.commonService.changeBreadcrumb(self.breadcrumbPaths)
     }
 
     removeBots(userIds: Array<string>) {
@@ -452,7 +455,7 @@ export class BotsComponent implements OnInit, OnDestroy {
 
     get groupList() {
         const self = this;
-        return self.userForm.get('teamData') ? (self.userForm.get('teamData') as FormArray).controls : [];
+        return self.userForm.get('teamData') ? (self.userForm.get('teamData') as UntypedFormArray).controls : [];
     }
 
     get authType() {

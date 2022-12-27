@@ -1,5 +1,5 @@
 <input #checkbox [attr.id]="id" class="d-none" [ngModel]="checked" (ngModelChange)="toggle($event)" [disabled]="!edit.status">
 <label [attr.for]="id" class="round-check-wrapper d-flex align-items-center justify-content-center m-0 hover" [ngClass]="{'checked':checked,'disabled':!edit.status}" (click)="toggle(!checked)" [ngStyle]="style">
   <span *ngIf="checked" class="fa fa-check text-white"></span>
-  <span *ngIf="!edit.status" class="fa fa-times text-border font-xs"></span>
+  <span *ngIf="!edit.status" class="fa fa-times text-border font-12"></span>
 </label>

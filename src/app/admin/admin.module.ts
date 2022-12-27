@@ -5,7 +5,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminComponent } from 'src/app/admin/admin.component';
 import { AdminRoutingModule } from 'src/app/admin/admin.routing';
 import { FilterPipeModule } from 'src/app/utils/pipes/filter.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { AppCenterPreviewModule } from 'src/app/utils/app-center-preview/app-center-preview.module';
 import { ColorPickerModule } from 'src/app/utils/color-picker/color-picker.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
@@ -40,59 +39,59 @@ import { AgGridModule } from 'ag-grid-angular';
 import { GridCheckboxModule } from '../utils/grid-checkbox/grid-checkbox.module';
 import { UserListCellRendererModule } from '../utils/user-list-cell-renderer/user-list-cell-renderer.module';
 import { TimezonePickerModule } from '../utils/timezone-picker/timezone-picker.module';
-import { AgGridSharedFloatingFilterModule } from "../utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.module";
+import { AgGridSharedFloatingFilterModule } from '../utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.module';
 import { DateFormatModule } from '../utils/date-format/date-format.module';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        NgbModule,
-        AdminRoutingModule,
-        FormsModule,
-        ReactiveFormsModule,
-        IconsModule,
-        AppCenterPreviewModule,
-        ColorPickerModule,
-        ClickOutsideModule,
-        FilterPipeModule,
-        AppSwitcherModule,
-        FilterUserModule,
-        SearchBoxModule,
-        FilterAppModule,
-        FilterTeamModule,
-        ChangePasswordModule,
-        ChangePasswordModule,
-        TimeoutTriggerModule,
-        AuthUsersModule,
-        AutoFocusModule,
-        DataGridModule,
-        DragAndDropModule,
-        RoundCheckModule,
-        DeleteModalModule,
-        LoadingPlaceholderModule,
-        FieldTypeModule,
-        SwitchModule,
-        BreadcrumbModule,
-        LoadingModule,
-        AgGridModule,
-        GridCheckboxModule,
-        UserListCellRendererModule,
-        TimezonePickerModule,
-        AgGridSharedFloatingFilterModule,
-        DateFormatModule
-    ],
-    exports: [],
-    declarations: [
-        AdminComponent,
-        AppListComponent,
-        AppManageComponent,
-        UserListComponent,
-        UserManageComponent,
-        UserInfoComponent,
-        UserAppsComponent,
-        UserGroupsComponent,
-        UserBulkUploadComponent,
-        AgentsComponent
-    ]
+  imports: [
+    CommonModule,
+    NgbModule,
+    AdminRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AppCenterPreviewModule,
+    ColorPickerModule,
+    ClickOutsideModule,
+    FilterPipeModule,
+    AppSwitcherModule,
+    FilterUserModule,
+    SearchBoxModule,
+    FilterAppModule,
+    FilterTeamModule,
+    ChangePasswordModule,
+    ChangePasswordModule,
+    TimeoutTriggerModule,
+    AuthUsersModule,
+    AutoFocusModule,
+    DataGridModule,
+    DragAndDropModule,
+    RoundCheckModule,
+    DeleteModalModule,
+    LoadingPlaceholderModule,
+    FieldTypeModule,
+    SwitchModule,
+    BreadcrumbModule,
+    LoadingModule,
+    AgGridModule,
+    GridCheckboxModule,
+    UserListCellRendererModule,
+    TimezonePickerModule,
+    AgGridSharedFloatingFilterModule,
+    DateFormatModule,
+    ClickOutsideModule,
+  ],
+  exports: [AppListComponent],
+  declarations: [
+    AdminComponent,
+    AppListComponent,
+    AppManageComponent,
+    UserListComponent,
+    UserManageComponent,
+    UserInfoComponent,
+    UserAppsComponent,
+    UserGroupsComponent,
+    UserBulkUploadComponent,
+    AgentsComponent,
+  ],
 })
 export class AdminModule {}

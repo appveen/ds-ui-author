@@ -1,8 +1,8 @@
 <div [formGroup]="form.get('properties')">
   <div class="d-flex flex-column w-100 my-2" *ngIf="form.get('properties.defaultTimezone')">
-    <div class="d-flex position-relative ">
-      <div class="label-width text-secondary">Default Timezone</div>
-      <div class="value-width">
+    <div class="position-relative">
+      <div class="text-secondary">Default Timezone</div>
+      <div>
         <odp-timezone-picker [edit]="edit" formControlName="defaultTimezone"></odp-timezone-picker>
         <!-- <select *ngIf="canEdit" class="form-control" formControlName="defaultTimezone">
           <option *ngFor="let tz of timezones" [value]="tz">{{tz}}</option>
@@ -16,9 +16,9 @@
       </div>
     </div>
   </div>
-<div class="d-flex w-100 mb-4" *ngIf="form.get('properties.supportedTimezones')">
-    <div class="label-width text-secondary">Supported Timezones</div>
-    <div class="value-width position-relative">
+  <div class="w-100 mb-4" *ngIf="form.get('properties.supportedTimezones')">
+    <div class=" text-secondary">Supported Timezones</div>
+    <div class=" position-relative">
       <ng-container *ngIf="edit.status">
         <!-- <select *ngIf="canEdit" class="form-control pr-5" (ngModelChange)="addToList('supportedTimezones')" type="text"
           formControlName="_listInput">
@@ -29,7 +29,7 @@
           (ngModelChange)="addToList('supportedTimezones')"></odp-timezone-picker>
         <!-- <button type="button" class="list-add-button btn btn-link hover position-absolute p-0"
           [disabled]="form.get('properties._listInput').value===''" (click)="addToList('supportedTimezones')">
-          <span class="fa fa-plus text-primary"></span>
+          <span class="dsi dsi-plus text-primary"></span>
         </button> -->
       </ng-container>
     </div>
@@ -64,15 +64,8 @@
 
 <ng-template #deleteModalTemplate>
   <div class="modal-body p-4">
-    <div class="d-flex align-items-center">
-      <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
-        <odp-service-icon *ngIf="!isDataFormat && !isLibrary" [size]="18" color="DD5151" class="mt-1">
-        </odp-service-icon>
-        <odp-data-format-icon *ngIf="isDataFormat" [size]="18" color="DD5151" class="mt-1">
-        </odp-data-format-icon>
-        <odp-library-icon *ngIf="isLibrary" [size]="18" color="DD5151" class="mt-1"></odp-library-icon>
-      </span>
-      <span class="font-weight-bold mb-1">{{deleteModal.title}}</span>
+    <div class="d-flex align-items-center justify-content-between">
+      <span class="font-20 fw-600">{{deleteModal.title}}</span>
       <span class="fa fa-times text-secondary hover ml-auto" (click)="deleteModalTemplateRef.close(false)"></span>
     </div>
     <p class="text-center my-5" [ngClass]="{'text-truncate': deleteModal.message.length > 65}">

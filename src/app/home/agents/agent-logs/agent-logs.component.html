@@ -3,22 +3,22 @@
     <div class="options d-flex justify-content-between align-items-center w-100 px-3">
         <div class="p-2 d-flex flex-column">
             <div class="d-flex align-items-center">
-                <span class="font-weight-bold font-lg text-nowrap mr-2">{{agentDetails?.name}}</span>
+                <span class="font-weight-bold font-16 text-nowrap mr-2">{{agentDetails?.name}}</span>
                 <span class="badge badge-sm mr-2"
                     [ngClass]="{'badge-success':agentDetails?.status=='RUNNING','badge-danger':agentDetails?.status!='RUNNING'}">
                     {{agentDetails?.status}}
                 </span>
-                <!-- <span class="font-sm text-nowrap mr-l text-muted"></span> -->
+                <!-- <span class="font-13 text-nowrap mr-l text-muted"></span> -->
             </div>
-            <span *ngIf="agentDetails.type=='APPAGENT'" class="text-muted font-sm">
+            <span *ngIf="agentDetails.type=='APPAGENT'" class="text-muted font-13">
                 App Agent | {{agentDetails?.ipAddress || 'N.A.'}} | {{agentDetails?.macAddress || 'N.A.'}}
             </span>
-            <span *ngIf="agentDetails.type!='APPAGENT'" class="text-muted font-sm">
+            <span *ngIf="agentDetails.type!='APPAGENT'" class="text-muted font-13">
                 Partner Agent | {{agentDetails?.ipAddress || 'N.A.'}} | {{agentDetails?.macAddress || 'N.A.'}}
             </span>
         </div>
         <div class="d-flex align-items-center">
-            <div class="quick-info px-2 badge badge-dark d-flex font-sm align-items-center mr-3">
+            <div class="quick-info px-2 badge badge-dark d-flex font-13 align-items-center mr-3">
                 <span class="text font-weight-bold mr-2">Password&nbsp;:</span>
                 <span *ngIf="!togglePassword" class="text">
                     <span class="fa fa-asterisk fa-xs mx-1"></span>
@@ -27,14 +27,14 @@
                     <span class="fa fa-asterisk fa-xs mx-1"></span>
                 </span>
                 <span *ngIf="togglePassword" class="text">{{agentDetails.decPassword}}</span>
-                <span class="fa ml-2 text hover" [ngClass]="{'fa-eye-slash':togglePassword,'fa-eye':!togglePassword}"
+                <span class="dsi ml-2 text hover" [ngClass]="{'dsi-hide':togglePassword,'dsi-view':!togglePassword}"
                     (click)="togglePassword=!togglePassword"></span>
             </div>
-            <div class="quick-info px-2 badge badge-dark d-flex font-sm align-items-center mr-3">
+            <div class="quick-info px-2 badge badge-dark d-flex font-13 align-items-center mr-3">
                 <span class="text mr-2">Heartbeat&nbsp;:</span>
                 <odp-agents-hb *ngIf="agentDetails?.agentID" [agent]="agentDetails"></odp-agents-hb>
             </div>
-            <div class="quick-info px-2 badge badge-dark d-flex font-sm align-items-center">
+            <div class="quick-info px-2 badge badge-dark d-flex font-13 align-items-center">
                 <span class="text mr-2">Streak&nbsp;:</span>
                 <odp-agents-streak *ngIf="agentDetails?.agentID" [agent]="agentDetails"></odp-agents-streak>
             </div>
@@ -62,12 +62,12 @@
                         </button>
                         <button type="button" ngbDropdownItem *ngIf="agentDetails?.type == 'PARTNERAGENT'"
                             (click)="downloadAgent($event, agentDetails?._id,'partneragent')">
-                            <!-- <span class="fa fa-download mr-2"></span> -->
+                            <!-- <span class="dsi dsi-download mr-2"></span> -->
                             <span class="text">Download</span>
                         </button>
                         <button type="button" ngbDropdownItem *ngIf="agentDetails?.type == 'APPAGENT'"
                             (click)="downloadAgent($event, agentDetails?._id,'appagent')">
-                            <!-- <span class="fa fa-download mr-2"></span> -->
+                            <!-- <span class="dsi dsi-download mr-2"></span> -->
                             <span class="text">Download</span>
                         </button>
                         <button type="button" ngbDropdownItem *ngIf="hasPermission('PMA')"
@@ -109,22 +109,17 @@
             <span class="text-accent font-weight-bold">{{totalCount}}</span>
         </div>
     </div>
-    <ag-grid-angular #agGrid *ngIf="columnDefs" class="ag-theme-balham ag-grid-container custom-style"
+    <!-- <ag-grid-angular #agGrid *ngIf="columnDefs" class="ag-theme-balham ag-grid-container custom-style"
         [columnDefs]="columnDefs" [floatingFilter]="true" rowModelType="infinite"
         (filterModified)="filterModified($event)" [datasource]="dataSource" cacheBlockSize="30"
         (sortChanged)="sortChanged($event)" (gridReady)="gridReady($event)">
-    </ag-grid-angular>
+    </ag-grid-angular> -->
 </div>
 
 <ng-template #alertModalTemplate>
     <div class="modal-body p-4 d-flex flex-column">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-agent-icon [size]="18" color="202a36" class="mt-1"></odp-agent-icon>
-                </span>
-                <span class="font-weight-bold">{{alertModalData.title}}</span>
-            </div>
+            <span class="font-20 fw-600">{{alertModalData.title}}</span>
             <span class="fa fa-times text-secondary hover" (click)="alertModalTemplateRef.close(false)"></span>
         </div>
         <div class="d-flex flex-column my-5 w-100">
@@ -174,21 +169,16 @@
 <ng-template #changePasswordModalTemplate>
     <div class="modal-body p-4 d-flex flex-column">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-agent-icon [size]="18" color="202a36" class="mt-1"></odp-agent-icon>
-                </span>
-                <span class="font-weight-bold">Change Password</span>
-            </div>
+            <span class="font-20 fw-600">Change Password</span>
             <span class="fa fa-times text-secondary hover" (click)="changePasswordModalTemplateRef.close(false)"></span>
         </div>
         <div class="d-flex flex-column py-3 w-100">
             <div class="form-group">
-                <label for="newPassword" class="text-secondary font-weight-bold font-sm">New Password</label>
+                <label for="newPassword" class="text-secondary font-weight-bold font-13">New Password</label>
                 <input type="password" id="newPassword" class="form-control" [(ngModel)]="agentPasswordModel.password">
             </div>
             <div class="form-group">
-                <label for="cnfPassword" class="text-secondary font-weight-bold font-sm">Confirm Password</label>
+                <label for="cnfPassword" class="text-secondary font-weight-bold font-13">Confirm Password</label>
                 <input type="password" id="cnfPassword" class="form-control" [(ngModel)]="agentPasswordModel.cpassword">
             </div>
             <p class="text-danger m-0">
@@ -208,12 +198,7 @@
 <ng-template #newAgentModalTemplate>
     <div class="modal-body p-4 d-flex flex-column align-items-center">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper create rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-agent-icon [size]="18" color="1CAD49" class="mt-1"></odp-agent-icon>
-                </span>
-                <span class="font-weight-bold">{{agentData.isEdit?'Edit':'Create new'}} App Agent</span>
-            </div>
+            <span class="font-20 fw-600">{{agentData.isEdit?'Edit':'Create new'}} App Agent</span>
             <button type="button" class="btn btn-link text-dark" (click)="newAgentModalTemplateRef.close(false)">
                 <span class="fa fa-times"></span>
             </button>

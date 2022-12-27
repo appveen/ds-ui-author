@@ -1,323 +1,94 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
-<div class="d-flex flex-column w-100 h-100" [formGroup]="form">
-    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
-    <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="edit">
-        <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link mr-3"
-            id="sbButtonCancel">
-            <span class="fa fa-close mr-2"></span>
-            <span class="text">Cancel</span>
-        </button>
-        <button *ngIf="edit.id && !edit.status && canEditDataFormat(edit.id)" (click)="edit.status=true;" type="button"
-            class="edit-button btn btn-min-width btn-primary" id="sbButtonEdit">
-            <span class="odp-edit mr-2"></span>
-            <span class="text">Edit</span>
-        </button>
-        <button *ngIf="edit.status" [disabled]="form.invalid" (click)="saveSchema();edit.status=false" type="button"
-            class="edit-button btn btn-min-width btn-dark" id="_saveSchema">
-            <span class="fa fa-save mr-2"></span>
-            <span class="text">Save</span>
-        </button>
-    </odp-basic-info>
-    <div class="d-flex flex-column w-100 px-3">
-        <div class="d-flex align-items-center tab-list border-bottom">
-            <div class="d-flex align-items-center tab-list-item px-3"
-                [ngClass]="{'border-accent text-accent':activeTab===0}" (click)="activeTab=0">Design</div>
-            <div class="d-flex align-items-center tab-list-item px-3"
-                [ngClass]="{'border-accent text-accent':activeTab===1}" (click)="activeTab=1">Integration Flows</div>
+<div class="d-flex flex-column page-padding w-100 h-100 bg-light-gray" [formGroup]="form">
+    <div class="pb-4 pt-2">
+        <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="edit">
+            <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-white border mr-3"
+                id="cancelSchema">
+                <span class="text">Cancel</span>
+            </button>
+            <button *ngIf="edit.id && !edit.status && canEditDataFormat(edit.id)" (click)="edit.status=true;"
+                type="button" class="edit-button btn btn-min-width btn-primary" id="editSchema">
+                <span class="text">Edit</span>
+            </button>
+            <button *ngIf="edit.status" [disabled]="form.invalid" (click)="saveSchema();edit.status=false" type="button"
+                class="edit-button btn btn-min-width btn-primary" id="saveSchema">
+                <span class="text">Save</span>
+            </button>
+        </odp-basic-info>
+    </div>
+    <div class="d-flex flex-column w-100 h-100 border-top border-left border-right rounded bg-white">
+        <div class="tabs d-flex align-items-center border-bottom text-uppercase fw-500 font-13 text-muted">
+            <div class="pl-4 pr-2 hover" [ngClass]="{'active':activeTab===0}" (click)="activeTab=0">
+                Design
+            </div>
+            <!-- <div class="pl-4 pr-2 hover" [ngClass]="{'text-accent':activeTab===1}" (click)="activeTab=1">
+                Integration Flows
+            </div> -->
         </div>
-        <div *ngIf="activeTab==0" class="d-flex flex-column w-100 border-right border-left">
+        <div *ngIf="activeTab==0" class="d-flex flex-column w-100">
             <div class="d-flex w-100 builder">
                 <div class="d-flex flex-column w-100 builder-body">
                     <div class="options d-flex justify-content-between align-items-center border-bottom px-3">
-                        <div class="d-flex align-items-center position-relative">
-                            <span class="text-secondary font-weight-bold mr-2">Type</span>
-                            <div class="d-flex flex-column position-relative" odpClickOutside
-                                (outside)="toggleFormatSelector=false">
-                                <button type="button" [ngClass]="{'border':edit.status,'border-0':!edit.status}"
-                                    class="format-select d-flex align-items-center justify-content-between bg-white rounded"
-                                    (click)="edit.status?toggleFormatSelector=!toggleFormatSelector:toggleFormatSelector=false">
-                                    <div class="d-flex align-items-center mr-2">
-                                        <odp-format-type-badge [data]="selectedFormat"></odp-format-type-badge>
-                                    </div>
-                                    <span *ngIf="edit.status" class="fa text-accent"
-                                        [ngClass]="{'fa-angle-up':toggleFormatSelector,'fa-angle-down':!toggleFormatSelector}"></span>
-                                </button>
-                                <div class="position-absolute format-select-list bg-white rounded border"
-                                    *ngIf="toggleFormatSelector">
-                                    <button type="button"
-                                        class="format-select-list-item d-flex align-items-center bg-white border-0"
-                                        *ngFor="let format of formatList"
-                                        (click)="selectFormat(format);toggleFormatSelector=false">
-                                        <odp-format-type-badge [data]="format"></odp-format-type-badge>
-                                    </button>
-                                </div>
-                            </div>
-                            <button *ngIf="showAdvanceBtn" type="button" class="btn btn-link"
-                                (click)="showAdvance=!showAdvance;$event.stopPropagation()">
-                                <span class="fa fa-cog mr-2"></span>
-                                <span class="text">Advance</span>
+                        <div>
+                            <button type="button" class="btn text-primary ignore-outside d-flex align-items-center"
+                                (click)="showAdvanceSettingsWindow=true">
+                                Configure -
+                                <odp-format-type-badge [data]="selectedFormat"></odp-format-type-badge>
                             </button>
-                            <div *ngIf="showAdvance"
-                                class="advance-options position-absolute d-flex flex-column border rounded bg-white p-3"
-                                odpClickOutside (outside)="showAdvance=false">
-                                <ng-container *ngIf="edit.status">
-                                    <div class="form-group" *ngIf="form.get('formatType').value && (form.get('formatType').value == 'DELIMITER' || 
-                                        form.get('formatType').value == 'CSV' 
-                                        ||form.get('formatType').value == 'FLATFILE')">
-                                        <label class="text-secondary">Line Separator</label>
-                                        <select class="form-control ml-1 extra-info" formControlName="lineSeparator">
-                                            <option value="\\r">CR</option>
-                                            <option value="\\n">LF</option>
-                                            <option value="\\r\\n">CR+LF</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group"
-                                        *ngIf="form.get('formatType').value && form.get('formatType').value == 'DELIMITER'">
-                                        <label class="text-secondary">Delimiter</label>
-                                        <input type="text" formControlName="character"
-                                            class="form-control ml-1 extra-info1">
-                                    </div>
-                                    <div class="form-group d-flex align-items-center"
-                                        *ngIf="form.get('formatType').value">
-                                        <label class="text-secondary mr-2 mb-0">
-                                            Strict Validation
-                                        </label>
-                                        <odp-checkbox [edit]="edit" [(checked)]="strictValidation"></odp-checkbox>
-                                    </div>
-                                </ng-container>
-                                <ng-container *ngIf="!edit.status">
-                                    <div class="form-group" *ngIf="form.get('formatType').value && (form.get('formatType').value == 'DELIMITER' || 
-                                    form.get('formatType').value == 'CSV' 
-                                    ||form.get('formatType').value == 'FLATFILE')">
-                                        <label class="text-secondary">Line Seperator</label>
-                                        <div class="p-2 extra-info" *ngIf="form.get('lineSeparator').value ==='\\\\r'">
-                                            CR</div>
-                                        <div class="p-2 extra-info" *ngIf="form.get('lineSeparator').value ==='\\\\n'">
-                                            LF</div>
-                                        <div class="p-2 extra-info"
-                                            *ngIf="form.get('lineSeparator').value ==='\\\\r\\\\n'">CR+LF</div>
-                                    </div>
-                                    <div class="form-group"
-                                        *ngIf="form.get('formatType').value && form.get('formatType').value == 'DELIMITER'">
-                                        <label class="text-secondary">Delimiter</label>
-                                        <div class="p-2 extra-info">{{form.get('character').value}}</div>
-                                    </div>
-                                    <div class="form-group d-flex align-items-center"
-                                        *ngIf="form.get('formatType').value">
-                                        <label class="text-secondary mr-2 mb-0">Strict Validation</label>
-                                        <odp-checkbox [edit]="edit" [(checked)]="strictValidation"></odp-checkbox>
-                                    </div>
-                                </ng-container>
-                            </div>
                         </div>
                         <div class="d-flex justify-content-end align-items-center" *ngIf="edit.status">
-                            <button type="button" class="btn btn-link pr-0" (click)="addField('after')"
+                            <button type="button" class="btn text-primary pr-0" (click)="addField('after')"
                                 id="sbInsertAttribute">
                                 Insert
                             </button>
                             <div ngbDropdown class="d-inline-block mr-3">
-                                <button type="button" class="btn btn-link px-1 pt-2" id="insertDropDown"
+                                <button type="button" class="btn text-primary px-1 pt-2" id="insertDropDown"
                                     ngbDropdownToggle></button>
                                 <div ngbDropdownMenu>
                                     <button type="button" class="dropdown-item" (click)="addField('before')">Insert
-                                        Before</button>
+                                        Before
+                                    </button>
                                     <button type="button" class="dropdown-item" (click)="addField('after')">Insert
-                                        After</button>
+                                        After
+                                    </button>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-link" (click)="clearSchema()" id="sbClearAll">
+                            <button type="button" class="btn text-primary" (click)="clearSchema()" id="sbClearAll">
                                 Delete All
                             </button>
                         </div>
                     </div>
                     <div class="schema-creator scroll position-relative" id="schema-creator">
-                        
                         <ng-container formArrayName="definition">
-                            <div [sortablejs]="definitions"
+                            <div class="p-3" [sortablejs]="definitions"
                                 [sortablejsOptions]="{sort: editable, filter: '.disabled', onMove: sortableOnMove }">
                                 <div *ngFor="let def of definitions;let i = index;let first = first;">
                                     <odp-structure-field [formGroupName]="i" [all]="form.get('definition')" [index]="i"
-                                        [first]="first" [edit]="edit" [isDataFormat]="true"
-                                        [formatType]="form.get('formatType').value"
+                                        [first]="first" [edit]="edit" [isDataFormat]="true" [formatType]="formatType"
                                         [isDataFormatUsed]="microflows.length>0"></odp-structure-field>
                                 </div>
                             </div>
                             <div class="add-attribute d-flex align-items-center text-muted" *ngIf="edit.status">
                                 <span class="d-flex align-items-center hover" (click)="addField()"
                                     id="schemaFieldObjectAddField">
-                                    <span class="fa fa-plus fa-xs mr-1"></span>
+                                    <span class="dsi dsi-plus fa-xs mr-1"></span>
                                     <span class="text">New Attribute</span>
                                 </span>
                             </div>
                         </ng-container>
                     </div>
                 </div>
-                <div class="properties-wrapper builder-body border-left">
-                    <odp-structure-field-properties [edit]="edit" [isDataFormat]="true"
-                        [formatType]="form.get('formatType').value"></odp-structure-field-properties>
+                <div class="properties-wrapper builder-body">
+                    <odp-structure-field-properties [edit]="edit" [isDataFormat]="true" [formatType]="formatType">
+                    </odp-structure-field-properties>
                 </div>
-            </div>
-        </div>
-        <div *ngIf="activeTab==1" class="d-flex flex-column w-100 border-right border-left">
-            <div class="d-flex flex-column w-100 p-3">
-                <div class="d-flex align-item-center justify-content-between">
-                    <div class="d-flex align-items-center">
-                        <span class="fa fa-exchange-alt mr-2 text-accent"></span>
-                        <span class="text font-weight-bold">Integration Flows</span>
-                    </div>
-                    <odp-search-box (reset)="flowSearchTerm=null" (enteredText)="flowSearchTerm=$event;">
-                    </odp-search-box>
-                    <span>&nbsp;</span>
-                </div>
-            </div>
-            <div class="microflow-list">
-                <table class="table">
-                    <thead>
-                        <tr class="bg-secondary text-white">
-                            <th>Name</th>
-                            <th>Version</th>
-                            <th>Type</th>
-                            <th>Direction</th>
-                            <th>Last Updated</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of microflows|filterTeam:flowSearchTerm;let i = index">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <span
-                                        class="status rounded d-flex align-items-center justify-content-center mr-2 {{getStatus(item.status)}}">{{getStatus(item.status)}}</span>
-                                    <span
-                                        [ngClass]="{'text-danger':item.runningVersion!=item.version,'text-secondary':item.runningVersion==item.version}">{{item.name}}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div *ngIf="item.runningVersion && item.runningVersion>0"
-                                        class="version rounded d-flex align-items-center justify-content-center mr-2">
-                                        v{{item.runningVersion}}</div>
-                                    <div *ngIf="item.nextFlow" class="new-version rounded d-flex align-items-center">
-                                        <div class="version-number d-flex align-items-center justify-content-center">
-                                            v{{(item.runningVersion || 0)+1}}</div>
-                                        <div class="version-text d-flex align-items-center justify-content-center">Saved
-                                        </div>
-                                    </div>
-                                    <div *ngIf="!item.runningVersion && !item.nextFlow"
-                                        class="new-version rounded d-flex align-items-center">
-                                        <div class="version-number d-flex align-items-center justify-content-center">
-                                            v{{item.runningVersion || 1}}</div>
-                                        <div class="version-text d-flex align-items-center justify-content-center">Saved
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="position-relative" odpClickOutside (outside)="item.flowDetails=false">
-                                <div class="flow-type d-flex align-items-center" [ngClass]="{'active':item.flowDetails}"
-                                    (click)="item.flowDetails=!item.flowDetails">
-                                    <div class="flow-in-out d-flex align-items-center pl-2">
-                                        <span class="text-success">{{item.inputType.toLowerCase()}}</span>
-                                        <span class="fa fa-caret-right text-secondary mx-2"></span>
-                                        <span class="text-dark"
-                                            *ngIf="item.outputType">{{item.outputType.toLowerCase()}}</span>
-                                        <span class="text-dark" *ngIf="!item.outputType">api</span>
-                                    </div>
-                                    <div class="flow-expand d-flex align-items-center justify-content-center">
-                                        <span class="fa fa-angle-down"></span>
-                                    </div>
-                                </div>
-                                <div class="flow-details d-flex flex-column align-items-start position-absolute bg-white pb-2"
-                                    *ngIf="item.flowDetails">
-                                    <div class="d-flex align-items-center pl-2 mt-3">
-                                        <div
-                                            class="flow-type-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white font-sm">
-                                            {{item.inputType.toLowerCase()}}
-                                        </div>
-                                        <span *ngIf="item.inputType === 'FILE'" class="text-secondary ml-2 font-sm">
-                                            Partner Agent:
-                                        </span>
-                                        <span *ngIf="item.inputType === 'API'" class="text-secondary ml-2 font-sm">
-                                            Flow End Point:
-                                        </span>
-                                    </div>
-                                    <div class="d-flex align-items-center mt-2 w-100">
-                                        <div class="input-group mx-2">
-                                            <input #inputNode *ngIf="item.inputType === 'FILE'" type="text"
-                                                class="form-control border-0" readonly="true"
-                                                [ngModel]="getInAgent(item)" [ngModelOptions]="{standalone: true}">
-                                            <input #inputNode *ngIf="item.inputType === 'API'" type="text"
-                                                class="form-control border-0" readonly="true"
-                                                [ngModel]="replacePort(item.gatewayFQDN,item.port)"
-                                                [ngModelOptions]="{standalone: true}">
-                                            <div class="input-group-append">
-                                                <button type="button" class="btn btn-light"
-                                                    (click)="copyToClipboard('input')">
-                                                    <span class="fa fa-copy"></span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <ng-container *ngIf="item.outputType">
-                                        <div class="d-flex align-items-center pl-2 mt-3">
-                                            <div
-                                                class="flow-type-icon bg-dark rounded d-flex align-items-center justify-content-center text-white font-sm">
-                                                {{item.outputType.toLowerCase()}}
-                                            </div>
-                                            <span *ngIf="item.outputType === 'FILE'"
-                                                class="text-secondary ml-2 font-sm">
-                                                App Agent:
-                                            </span>
-                                            <span *ngIf="item.outputType === 'API'" class="text-secondary ml-2 font-sm">
-                                                External API:
-                                            </span>
-                                        </div>
-                                        <div class="d-flex align-items-center mt-2 w-100">
-                                            <div class="input-group mx-2">
-                                                <input #outputNode *ngIf="item.outputType === 'FILE'" type="text"
-                                                    class="form-control border-0" readonly="true"
-                                                    [ngModel]="getOutAgent(item)" [ngModelOptions]="{standalone: true}">
-                                                <input #outputNode *ngIf="item.outputType === 'API'" type="text"
-                                                    class="form-control border-0" readonly="true"
-                                                    [ngModel]="getAPIEnpoint(item)"
-                                                    [ngModelOptions]="{standalone: true}">
-                                                <div class="input-group-append">
-                                                    <button type="button" class="btn btn-light"
-                                                        (click)="copyToClipboard('output')">
-                                                        <span class="fa fa-copy"></span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </ng-container>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="direction">
-                                    <span class="fa fa-rotate-45 mr-1"
-                                        [ngClass]="{'fa-arrow-circle-down text-create':item.direction=='Inbound','fa-arrow-circle-up text-accent':item.direction=='Outbound'}"></span>
-                                    <span class="text-secondary">{{item.direction}}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="text-secondary">{{item._metadata.lastUpdated | date:'medium'}}</span>
-                            </td>
-                        </tr>
-                        <tr *ngIf="microflows.length==0">
-                            <td colspan="9">
-                                <div class="d-flex py-3 w-100">
-                                    <div
-                                        class="no-microflow m-auto d-flex flex-column align-items-center justify-content-center">
-                                        <div class="text">No Integration Flows is using this Data Format</div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -327,12 +98,7 @@
 <ng-template #deleteModalEle>
     <div class="modal-body p-4">
         <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-data-format-icon [size]="18" color="202a36" class="mt-1"></odp-data-format-icon>
-                </span>
-                <span class="font-weight-bold mb-1">{{deleteModal.title}}</span>
-            </div>
+            <span class="font-20 fw-600 mb-1">{{deleteModal.title}}</span>
             <span class="fa fa-times text-secondary hover" (click)="deleteModalEleRef.close(false)"></span>
         </div>
         <p class="text-secondary text-center  my-5">{{deleteModal.message}}</p>
@@ -346,18 +112,97 @@
 <ng-template #pageChangeModalTemplate>
     <div class="modal-body p-4">
         <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-data-format-icon [size]="18" color="202a36" class="mt-1"></odp-data-format-icon>
-                </span>
-                <span class="font-weight-bold mb-1">Unsaved Changes</span>
-            </div>
-            <span class="fa fa-times text-secondary hover" (click)="pageChangeModalTemplateRef.close(false)"></span>
+            <span class="font-20 fw-600 mb-1">Unsaved Changes</span>
+            <span class="dsi dsi-close text-dark hover" (click)="pageChangeModalTemplateRef.close(false)"></span>
         </div>
         <p class="text-secondary text-center my-5">You have unsaved changes, are you sure you want to leave?</p>
         <div class="d-flex align-items-center justify-content-end">
-            <button type="button" class="btn btn-min-width btn-dark"
+            <button type="button" class="btn btn-min-width btn-outline-primary mx-3"
+                (click)="pageChangeModalTemplateRef.close(false)">No</button>
+            <button type="button" class="btn btn-min-width btn-primary"
                 (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
         </div>
     </div>
 </ng-template>
+
+
+<div [ngClass]="{'show':showAdvanceSettingsWindow}" odpClickOutside (outside)="showAdvanceSettingsWindow=false"
+    class="advance-settings-window position-fixed p-4 d-flex flex-column align-items-center bg-white border-left">
+    <div class="d-flex w-100 mb-4">
+        <span class="font-20 text-dark fw-500">Configuration</span>
+        <span class="dsi dsi-close mr-2 d-flex ml-auto align-items-center hover"
+            (click)="showAdvanceSettingsWindow=false"></span>
+    </div>
+    <div *ngIf="showAdvanceSettingsWindow" class="form-group">
+        <label class="font-14 text-dark">Type</label>
+        <div class="d-flex flex-wrap position-relative">
+            <div class="format-select-list-item d-flex align-items-center mr-3 mb-2" *ngFor="let format of formatList"
+                (click)="selectFormat(format);">
+                <odp-round-radio class="mr-2" [edit]="edit" [checked]="selectedFormat==format"></odp-round-radio>
+                <odp-format-type-badge [data]="format"></odp-format-type-badge>
+            </div>
+            <!-- <button type="button" [ngClass]="{'border':edit.status,'border-0':!edit.status}"
+                class="format-select d-flex align-items-center justify-content-between bg-white rounded"
+                (click)="edit.status?toggleFormatSelector=!toggleFormatSelector:toggleFormatSelector=false">
+                <div class="d-flex align-items-center mr-2">
+                    <odp-format-type-badge [data]="selectedFormat"></odp-format-type-badge>
+                </div>
+                <span *ngIf="edit.status" class="fa text-accent"
+                    [ngClass]="{'fa-angle-up':toggleFormatSelector,'fa-angle-down':!toggleFormatSelector}"></span>
+            </button>
+            <div class="position-absolute format-select-list bg-white rounded border" *ngIf="toggleFormatSelector">
+                <button type="button" class="format-select-list-item d-flex align-items-center bg-white border-0"
+                    *ngFor="let format of formatList" (click)="selectFormat(format);toggleFormatSelector=false">
+                    <odp-format-type-badge [data]="format"></odp-format-type-badge>
+                </button>
+            </div> -->
+        </div>
+    </div>
+    <div class="d-flex flex-column w-100">
+        <ng-container *ngIf="edit.status">
+            <div class="form-group" *ngIf="formatType && (formatType == 'DELIMITER' || 
+                    formatType == 'CSV' ||
+                    formatType == 'FLATFILE')">
+                <label class="font-14 text-dark">Line Separator</label>
+                <select *ngIf="form.get('lineSeparator')" class="form-control" formControlName="lineSeparator">
+                    <option value="\\r">CR</option>
+                    <option value="\\n">LF</option>
+                    <option value="\\r\\n">CR+LF</option>
+                </select>
+            </div>
+            <div class="form-group" *ngIf="formatType && formatType == 'DELIMITER'">
+                <label class="font-14 text-dark">Delimiter</label>
+                <input *ngIf="form.get('character')" type="text" class="form-control" formControlName="character">
+            </div>
+            <div class="form-group d-flex align-items-center" *ngIf="formatType">
+                <!-- <odp-checkbox [edit]="edit" [(checked)]="strictValidation"></odp-checkbox> -->
+
+                <label class="font-14 text-dark mr-2 mb-0">
+                    Strict Validation
+                </label>
+                <odp-switch [edit]="edit" [(checked)]="strictValidation"></odp-switch>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!edit.status">
+            <div class="form-group" *ngIf="formatType && (formatType == 'DELIMITER' || 
+                formatType == 'CSV' 
+                || formatType == 'FLATFILE')">
+                <label class="font-14 text-dark">Line Seperator</label>
+                <div class="p-2 extra-info" *ngIf="form.get('lineSeparator').value ==='\\\\r'">
+                    CR</div>
+                <div class="p-2 extra-info" *ngIf="form.get('lineSeparator').value ==='\\\\n'">
+                    LF</div>
+                <div class="p-2 extra-info" *ngIf="form.get('lineSeparator').value ==='\\\\r\\\\n'">CR+LF</div>
+            </div>
+            <div class="form-group" *ngIf="formatType && formatType == 'DELIMITER'">
+                <label class="font-14 text-dark">Delimiter</label>
+                <div class="p-2 extra-info">{{form.get('character').value}}</div>
+            </div>
+            <div class="form-group d-flex align-items-center" *ngIf="formatType">
+                <!-- <odp-checkbox [edit]="edit" [checked]="strictValidation"></odp-checkbox> -->
+                <label class="font-14 text-dark mr-2 mb-0">Strict Validation</label>
+                <odp-switch [edit]="edit" [checked]="strictValidation"></odp-switch>
+            </div>
+        </ng-container>
+    </div>
+</div>

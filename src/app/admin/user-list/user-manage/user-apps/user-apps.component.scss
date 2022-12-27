@@ -15,6 +15,17 @@
     }
 }
 
+.profileImage {
+    // width: 48px;
+    // border-radius: 50%;
+    // background: #512DA8;
+    font-size: 35px;
+    color: #fff;
+    text-align: center;
+    // margin: 20px 0;
+}
+
+
 .assigned-app {
     min-width: 80px;
     max-width: 80px;
@@ -34,10 +45,12 @@
 .assign-app-title {
     color: $primary;
 }
-.app-wrapper{
+
+.app-wrapper {
     min-width: 274px;
     max-width: 274px;
 }
+
 .app-card {
     border: 1px solid transparent;
     transition: 0.25s;
@@ -87,13 +100,16 @@
 
 .app-action {
     width: 77px;
+
     .admin-badge {
         width: 75px;
+
         .badge-A {
             width: 25px;
             height: 25px;
             border-radius: 50%;
         }
+
         .badge-text {
             width: 25px;
             height: 25px;
@@ -105,6 +121,7 @@
             color: $accent;
             transition: all .3s ease-in-out;
         }
+
         &:hover {
             .badge-text {
                 width: 74px;
@@ -127,5 +144,3 @@
         transition: background-color .3s ease-in;
     }
 }
-
-

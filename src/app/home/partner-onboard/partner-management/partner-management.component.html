@@ -1,6 +1,8 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
@@ -18,38 +20,35 @@
                             (click)="toggleCard('allflow')">
                             <div class="container">
                                 <div class="row p-3 service-card" [@stopping]="cardActionDisabled">
-                                    <span>
-                                        <odp-service-icon active="true" size="16" class="mt-1">
-                                        </odp-service-icon>
-                                    </span>
                                     <span class="ml-2">
                                         All Flows
                                     </span>
                                 </div>
                                 <div class="row ml-2">
                                     <span class="text-secondary">Total Flows</span>
-                                    <span class="text-secondary ml-auto pr-4">{{flowStatus.Total?flowStatus.Total:0}}</span>
+                                    <span
+                                        class="text-secondary ml-auto pr-4">{{flowStatus.Total?flowStatus.Total:0}}</span>
                                 </div>
                                 <div class="row ml-2 mt-3">
-                                        <span class="text-success">Running</span>
-                                        <span
-                                            class="text-success ml-auto pr-4">{{flowStatus.Active?flowStatus.Active:0}}</span>
-                                    </div>
-                                    <div class="row ml-2 mt-3">
-                                        <span class="text-warning">Pending</span>
-                                        <span
-                                            class="text-warning ml-auto pr-4">{{flowStatus.Pending?flowStatus.Pending:0}}</span>
-                                    </div>
-                                    <div class="row ml-2 mt-3">
-                                        <span class="text-accent">Draft</span>
-                                        <span
-                                            class="text-accent ml-auto pr-4">{{flowStatus.Draft?flowStatus.Draft:0}}</span>
-                                    </div>
-                                    <div class="row ml-2 mt-3">
-                                        <span class="text-danger">Stopped</span>
-                                        <span
-                                            class="text-danger ml-auto pr-4">{{flowStatus.Stopped?flowStatus.Stopped:0}}</span>
-                                    </div>
+                                    <span class="text-success">Running</span>
+                                    <span
+                                        class="text-success ml-auto pr-4">{{flowStatus.Active?flowStatus.Active:0}}</span>
+                                </div>
+                                <div class="row ml-2 mt-3">
+                                    <span class="text-warning">Pending</span>
+                                    <span
+                                        class="text-warning ml-auto pr-4">{{flowStatus.Pending?flowStatus.Pending:0}}</span>
+                                </div>
+                                <div class="row ml-2 mt-3">
+                                    <span class="text-accent">Draft</span>
+                                    <span
+                                        class="text-accent ml-auto pr-4">{{flowStatus.Draft?flowStatus.Draft:0}}</span>
+                                </div>
+                                <div class="row ml-2 mt-3">
+                                    <span class="text-danger">Stopped</span>
+                                    <span
+                                        class="text-danger ml-auto pr-4">{{flowStatus.Stopped?flowStatus.Stopped:0}}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-2" [@stopping]="flowStatus.Stopped?'enable':'disabled'">
@@ -82,7 +81,8 @@
                                             This
                                             will start all flows,
                                             Confirm?</h6>
-                                        <button class="btn btn-success start-all-btn" [disabled]="!flowStatus.Stopped" (click)="startAllFlows()">Start
+                                        <button class="btn btn-success start-all-btn" [disabled]="!flowStatus.Stopped"
+                                            (click)="startAllFlows()">Start
                                             All</button>
                                     </div>
                                     <div class="container starting-action"
@@ -132,7 +132,8 @@
                                             This
                                             will stop all flows,
                                             Confirm?</h6>
-                                        <button class="btn btn-danger start-all-btn" (click)="stopAllFlows()" [disabled]="!flowStatus.Active">Stop
+                                        <button class="btn btn-danger start-all-btn" (click)="stopAllFlows()"
+                                            [disabled]="!flowStatus.Active">Stop
                                             All</button>
                                     </div>
                                     <div class="container starting-action"

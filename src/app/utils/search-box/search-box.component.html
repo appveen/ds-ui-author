@@ -1,16 +1,27 @@
-<div class="search-box position-relative d-flex justify-content-center align-items-center"
+<div class="position-relative d-flex justify-content-center align-items-center"
   [ngClass]="{'ignore-outside': ignoreOutside}">
-  <input type="text" name="searchTerm" id="searchTerm" maxlength="40" #searchInput [ngModel]="searchTerm"
-    (ngModelChange)="onChange($event)" (keyup.enter)="onEnterKey($event)" (keyup.backspace)="onBackspaceKey($event)" (keydown.control.backspace)="onCtrlBackspace($event)"
-    (focus)="onFocus($event)" autocomplete="off" (blur)="onBlur($event)" class="form-control"
-    [ngClass]="{'ignore-outside': ignoreOutside}">
-  <div *ngIf="!searchInput.value" [@slide]="slideState" class="position-absolute text-muted"
-    [ngClass]="{'ignore-outside': ignoreOutside}" (click)="searchInput.focus()">
-    <span class="fas fa-search mr-2" [ngClass]="{'ignore-outside': ignoreOutside}" (click)="searchInput.focus()"></span>
-    <span [ngClass]="{'ignore-outside': ignoreOutside}" (click)="searchInput.focus()">Search</span>
+  <div *ngIf="openSearchBox" class="search-box position-relative d-flex justify-content-center align-items-center"
+    odpClickOutside (outside)="open || searchTerm ? '': openSearchBox=false">
+    <input type="text" name="searchTerm" id="searchTerm" maxlength="40" #searchInput [ngModel]="searchTerm"
+      (ngModelChange)="onChange($event)" (keyup.enter)="onEnterKey($event)" (keyup.backspace)="onBackspaceKey($event)"
+      (keydown.control.backspace)="onCtrlBackspace($event)" (focus)="onFocus($event)" autocomplete="off"
+      (blur)="onBlur($event)" class="form-control" [ngClass]="{'ignore-outside': ignoreOutside}" odpAutoFocus>
+    <div *ngIf="!searchInput.value" [@slide]="slideState" class="position-absolute text-muted"
+      [ngClass]="{'ignore-outside': ignoreOutside}" (click)="searchInput.focus()">
+      <span class="fas fa-search mr-2" [ngClass]="{'ignore-outside': ignoreOutside}"
+        (click)="searchInput.focus()"></span>
+      <span [ngClass]="{'ignore-outside': ignoreOutside}" (click)="searchInput.focus()">Search</span>
+    </div>
+    <span #infoTooltip="ngbTooltip" *ngIf="!searchInput.value"
+      class="info fa fa-info-circle text-muted position-absolute high-zIndex" [ngbTooltip]="info" container="body"
+      [placement]="toolTipDirection">&nbsp;</span>
+    <span *ngIf="searchInput.value"
+      class="fa fa-times-circle text-danger position-absolute hover high-zIndex ignore-outside"
+      (click)="clear();searchInput.focus()" ngbTooltip="Clear Search" container="body"
+      [placement]="toolTipDirection"></span>
   </div>
-  <span #infoTooltip="ngbTooltip" *ngIf="!searchInput.value" class="info fa fa-info-circle text-muted position-absolute high-zIndex"
-    [ngbTooltip]="info" container="body" [placement]="toolTipDirection">&nbsp;</span>
-  <span *ngIf="searchInput.value" class="fa fa-times-circle text-danger position-absolute hover high-zIndex" (click)="clear()"
-    ngbTooltip="Clear Search" container="body" [placement]="toolTipDirection"></span>
+  <button *ngIf="!openSearchBox" type="button" class="btn btn-white d-flex align-items-center border ignore-outside"
+    (click)="openSearchBox=true">
+    <span class="dsi dsi-search text-secondary ignore-outside"></span>
+  </button>
 </div>

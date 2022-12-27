@@ -1,5 +1,5 @@
 import { Component, OnDestroy, Input, TemplateRef, ViewChild, AfterViewInit, AfterContentChecked } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { CommonService } from '../services/common.service';
@@ -18,14 +18,15 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
   @Input() formatType: string;
   @Input() edit: any;
   @Input() type: string;
+  showProperties: boolean;
   @ViewChild('typeChangeModalTemplate', { static: false }) typeChangeModalTemplate: TemplateRef<any>;
   showDatePicker: boolean;
   showLazyLoader: boolean;
   sampleRegexValue: Array<any> = [];
-  formList: Array<FormGroup>;
+  formList: Array<UntypedFormGroup>;
   showDataTypes: any;
   _dateFrom: Date;
-  form: FormGroup;
+  form: UntypedFormGroup;
   showCommonFields: boolean;
   private subscriptions: any;
   public get dateFrom(): Date {
@@ -51,6 +52,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     self.showLazyLoader = false;
     self.showDataTypes = {};
     self.showCommonFields = true;
+    self.showProperties = false;
   }
 
   ngAfterViewInit(): void {
@@ -60,7 +62,10 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       self.formList = [];
       if (form) {
         self.form = form;
+        self.showProperties = true;
         self.collectForms();
+      } else {
+        this.showProperties = false;
       }
     });
     self.schemaService.typechanged.subscribe(() => {
@@ -107,10 +112,10 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       let subType = self.form.get(['definition', 0]);
       if (subType) {
         while (subType.get('type').value === 'Array') {
-          self.formList.push(subType as FormGroup);
+          self.formList.push(subType as UntypedFormGroup);
           subType = subType.get(['definition', 0]);
         }
-        self.formList.push(subType as FormGroup);
+        self.formList.push(subType as UntypedFormGroup);
       }
     }
     if (this.formatType === 'FLATFILE') {

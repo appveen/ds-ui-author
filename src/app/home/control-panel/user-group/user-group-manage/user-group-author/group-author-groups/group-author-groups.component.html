@@ -1,330 +1,228 @@
-<div class="d-flex flex-column groups-content w-100">
-  <div class="top-bar d-flex align-items-center justify-content-between bg-light pl-3">
-    <span class="font-weight-bold">Group Access Settings</span>
-    <!-- <span class="help d-flex align-items-center" (click)="showHelp()">
-      <span class="fa fa-info-circle mx-1"></span>
-      <span class="text">Help</span>
-    </span> -->
+<div class="d-flex flex-column groups-content w-100 p-4">
+  <div class="top-bar d-flex align-items-center justify-content-between">
+    <div class="w-100">
+      <h5 class="font-weight-bold font-20">Groups</h5>
+    </div>
+    <select name="permissions" id="permissions" class="all-permissions-selector custom-select"
+      [ngModel]="globalPermission" (ngModelChange)="changeAllPermissions($event)">
+      <option value="custom">Custom</option>
+      <option value="blocked">None</option>
+      <option value="view">View</option>
+      <option value="manage">Manage</option>
+    </select>
   </div>
-  <div class="text-accent p-3">Basic Settings</div>
-  <div class="basic-settings d-flex align-items-start w-100 p-3 border-bottom">
-    <div class="label">
-      <span class=" mr-1">
-        <span class="text font-weight-bold">Access Level</span>
-        <br>
-        <span class="text-muted font-13">
-          Permission to view or manage a group with basic details i.e., name and description.
-        </span>
-      </span>
-    </div>
-    <div class="value pl-4 d-flex flex-column">
-      <div class="level-one position-relative mb-3">
-        <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
-          (click)="dropdownToggle['basic']=hasPermission('PMGAG')?(!dropdownToggle['basic']):false"
-          [ngClass]="{'blocked':basicPermission === 'blocked','view':basicPermission === 'view','manage':basicPermission === 'manage','hover':hasPermission('PMGAG')}">
-          <div class="icon d-flex align-items-center justify-content-center">
-            <span *ngIf="basicPermission === 'blocked'" class="fa fa-lock"></span>
-            <span *ngIf="basicPermission === 'view'" class="fa fa-eye"></span>
-            <span *ngIf="basicPermission === 'manage'" class="fa fa-pen"></span>
-          </div>
-          <div *ngIf="basicPermission === 'blocked'" class="text">Blocked</div>
-          <div *ngIf="basicPermission === 'view'" class="text">View</div>
-          <div *ngIf="basicPermission === 'manage'" class="text">Manage</div>
-          <span *ngIf="hasPermission('PMGAG')" class="fa fa-angle-down fa-sm"></span>
-        </div>
-        <div *ngIf="dropdownToggle['basic']" class="rounded-dropdown" odpClickOutside
-          (outside)="dropdownToggle['basic']=false">
-          <div class="rounded-dropdown-item d-flex align-items-center"
-            (click)="dropdownToggle['basic']=false;basicPermission='PNGB'">
-            <div class="icon d-flex align-items-center justify-content-center blocked">
-              <span class="fa fa-lock"></span>
-            </div>
-            <div class="text">Blocked</div>
-          </div>
-          <div class="rounded-dropdown-item d-flex align-items-center"
-            (click)="dropdownToggle['basic']=false;basicPermission='PVGB'">
-            <div class="icon d-flex align-items-center justify-content-center view">
-              <span class="fa fa-eye"></span>
-            </div>
-            <div class="text">View</div>
-          </div>
-          <div class="rounded-dropdown-item d-flex align-items-center"
-            (click)="dropdownToggle['basic']=false;basicPermission=['PMGBC','PMGBU','PMGBD']">
-            <div class="icon d-flex align-items-center justify-content-center manage">
-              <span class="fa fa-pen"></span>
-            </div>
-            <div class="text">Manage</div>
-          </div>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex justify-content-between border-bottom py-3">
+      <div>
+        <div class="p-3 text-dark">
+          <div class="font-weight-bold">Access Level</div>
+          <span class="text-muted font-13">
+            Permission to manage basic details of a group.
+          </span>
         </div>
       </div>
-      <div *ngIf="basicPermission==='manage'" class="level-two position-relative d-flex align-items-center mb-3">
-        <div class="round-checkbox d-flex align-items-center justify-content-between mr-3"
-          [ngClass]="{'checked':createPermission,'disabled':!hasPermission('PMGAG')}" (click)="togglePermissionLevel('BC')">
-          <div class="text">Create</div>
-          <div class="round-check d-flex align-items-center justify-content-center">
-            <span class="fa fa-check"></span>
-          </div>
+      <div class="d-flex align-items-center">
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupDataServicesBlocked" name="groupDataServices" size="20"
+            [checked]="basicPermission=='blocked'" (checkedChange)="basicPermission='PNGB'">
+          </odp-round-radio>
+          <span class="text-dark ml-2">Blocked</span>
         </div>
-        <div class="round-checkbox d-flex align-items-center justify-content-between mr-3"
-          [ngClass]="{'checked':editPermission,'disabled':!hasPermission('PMGAG')}" (click)="togglePermissionLevel('BU')">
-          <div class="text">Edit</div>
-          <div class="round-check d-flex align-items-center justify-content-center">
-            <span class="fa fa-check"></span>
-          </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupDataServicesView" name="groupDataServices" size="20"
+            [checked]="basicPermission=='view'" (checkedChange)="basicPermission='PVGB'">
+          </odp-round-radio>
+          <span class="text-dark ml-2">View</span>
         </div>
-        <div class="round-checkbox d-flex align-items-center justify-content-between mr-3"
-          [ngClass]="{'checked':deletePermission,'disabled':!hasPermission('PMGAG')}" (click)="togglePermissionLevel('BD')">
-          <div class="text">Delete</div>
-          <div class="round-check d-flex align-items-center justify-content-center">
-            <span class="fa fa-check"></span>
-          </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupDataServicesView" name="groupDataServices" size="20"
+            [checked]="basicPermission=='manage'" (checkedChange)="basicPermission=['PMGBC', 'PMGBU', 'PMGBD']">
+          </odp-round-radio>
+          <span class="text-dark ml-2">Manage</span>
         </div>
       </div>
     </div>
-    <div class="d-flex flex-column align-items-center justify-content-between permission-div">
-      <!-- <div class="permission-card add d-flex flex-column justify-content-center align-items-center rounded hover"
-        (click)="toggleDropdown['GLOBAL'] = hasPermission('PMG')?(!toggleDropdown['GLOBAL']):false" odpClickOutside
-        (outside)="toggleDropdown['GLOBAL']=false">
-        <div class="permission-icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
-          <div class="permission-icon rounded-circle d-flex align-items-center justify-content-center bg-white border"
-            [ngClass]="{'border-success':globalPermissionType === 'View','border-primary':globalPermissionType === 'Manage','border-border':globalPermissionType === 'Hide'}">
-            <span *ngIf="globalPermissionType === 'Manage'" class="odp-manager text-primary"></span>
-            <span *ngIf="globalPermissionType === 'View'" class="odp-view text-success"></span>
-            <span *ngIf="globalPermissionType === 'Hide'" class="fa fa-ban text-muted"></span>
-          </div>
+    <div class="d-flex justify-content-between border-bottom py-3">
+      <div>
+        <div class="p-3 text-dark">
+          <div class="font-weight-bold">Users Tab</div>
+          <span class="text-muted font-13">
+            Permission to manage users in group.
+          </span>
         </div>
-        <div class="permission-selector text-center mt-2 text-secondary position-relative">
-          <div class="permission-selected text bg-white hover">{{globalPermissionType}}</div>
-          <div class="permission-selector-dropdown bg-white d-flex flex-column rounded position-absolute" *ngIf="toggleDropdown['GLOBAL']">
-            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover" (click)="togglePermission('PNA');toggleDropdown['GLOBAL']=false">
-              <div class="icon d-flex align-items-center justify-content-center">
-                <span class="fa fa-ban text-muted"></span>
-              </div>
-              <span class="text-secondary font-weight-bold">Hide</span>
-            </div>
-            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover" (click)="togglePermission('PVA');toggleDropdown['GLOBAL']=false">
-              <span class="icon d-flex align-items-center justify-content-center">
-                <span class="odp-view text-success"></span>
-              </span>
-              <span class="text-secondary font-weight-bold">View</span>
-            </div>
-            <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover" (click)="togglePermission('PMA');toggleDropdown['GLOBAL']=false">
-              <span class="icon d-flex align-items-center justify-content-center">
-                <span class="odp-manager text-primary"></span>
-              </span>
-              <span class="text-secondary font-weight-bold">Manage</span>
-            </div>
-          </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupUsersBlocked" name="groupUsers" size="20" [checked]="membersPermission=='blocked'"
+            (checkedChange)="membersPermission='PNGMU'"></odp-round-radio>
+          <span class="text-dark ml-2">Blocked</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupUsersView" name="groupUsers" size="20" [checked]="membersPermission=='view'"
+            (checkedChange)="membersPermission='PVGMU'"></odp-round-radio>
+          <span class="text-dark ml-2">View</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupUsersManage" name="groupUsers" size="20" [checked]="membersPermission=='manage'"
+            (checkedChange)="membersPermission=['PMGMUC','PMGMUD']"></odp-round-radio>
+          <span class="text-dark ml-2">Manage</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between border-bottom py-3">
+      <div>
+        <div class="p-3 text-dark">
+          <div class="font-weight-bold">Bots Tab</div>
+          <span class="text-muted font-13">
+            Permission to manage bots in group.
+          </span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupBotsBlocked" name="groupBots" size="20" [checked]="botsPermission=='blocked'"
+            (checkedChange)="botsPermission='PNGMB'"></odp-round-radio>
+          <span class="text-dark ml-2">Blocked</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupBotsView" name="groupBots" size="20" [checked]="botsPermission=='view'"
+            (checkedChange)="botsPermission='PVGMB'"></odp-round-radio>
+          <span class="text-dark ml-2">View</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupBotsManage" name="groupBots" size="20" [checked]="botsPermission=='manage'"
+            (checkedChange)="botsPermission=['PMGMBC','PMGMBD']"></odp-round-radio>
+          <span class="text-dark ml-2">Manage</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="d-flex flex-column justify-content-between border-bottom py-3">
+      <div>
+        <div class="p-3 text-dark">
+          <div class="font-weight-bold">Author Tab</div>
+          <span class="text-muted font-13">
+            Permission to manage author roles in group.
+          </span>
+        </div>
+      </div>
+      <!-- <div class="d-flex align-items-center">
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupAuthorBlocked" name="groupAuthor" size="20" [checked]="botsPermission=='blocked'"
+            (checkedChange)="botsPermission='PNGMB'"></odp-round-radio>
+          <span class="text-dark ml-2">Blocked</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupAuthorView" name="groupAuthor" size="20" [checked]="botsPermission=='view'"
+            (checkedChange)="botsPermission='PVGMB'"></odp-round-radio>
+          <span class="text-dark ml-2">View</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupAuthorManage" name="groupAuthor" size="20" [checked]="botsPermission=='manage'"
+            (checkedChange)="botsPermission=['PMGMBC','PMGMBD']"></odp-round-radio>
+          <span class="text-dark ml-2">Manage</span>
         </div>
       </div> -->
-    </div>
-  </div>
-  <div class="p-3 d-flex align-items-center w-100">
-    <span class="sub-heading text-accent">Members Tab</span>
-  </div>
-  <div class="roles-settings d-flex align-items-start w-100 p-3 border-bottom">
-    <div class="label">
-      <span class="mr-1">
-        <span class="text font-weight-bold ">Access Level</span>
-        <br>
-        <span class="text-muted font-13">Permission to view, add or remove members in a group.</span>
-      </span>
-    </div>
-    <div class="value pl-4 d-flex flex-column">
-      <div class="level-one position-relative mb-3">
-        <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
-          (click)="dropdownToggle['members']=hasPermission('PMGAG')?(!dropdownToggle['members']):false"
-          [ngClass]="{'blocked':membersPermission === 'blocked','view':membersPermission === 'view','manage':membersPermission === 'manage','hover':hasPermission('PMGAG')}">
-          <div class="icon d-flex align-items-center justify-content-center">
-            <span *ngIf="membersPermission === 'blocked'" class="fa fa-lock"></span>
-            <span *ngIf="membersPermission === 'view'" class="fa fa-eye"></span>
-            <span *ngIf="membersPermission === 'manage'" class="fa fa-pen"></span>
-          </div>
-          <div *ngIf="membersPermission === 'blocked'" class="text">Blocked</div>
-          <div *ngIf="membersPermission === 'view'" class="text">View</div>
-          <div *ngIf="membersPermission === 'manage'" class="text">Manage</div>
-          <span *ngIf="hasPermission('PMGAG')" class="fa fa-angle-down fa-sm"></span>
-        </div>
-        <div *ngIf="dropdownToggle['members']" class="rounded-dropdown" odpClickOutside
-          (outside)="dropdownToggle['members']=false">
-          <div class="rounded-dropdown-item d-flex align-items-center"
-            (click)="dropdownToggle['members']=false;membersPermission='PNGMU'">
-            <div class="icon d-flex align-items-center justify-content-center blocked">
-              <span class="fa fa-lock"></span>
-            </div>
-            <div class="text">Blocked</div>
-          </div>
-          <div class="rounded-dropdown-item d-flex align-items-center"
-            (click)="dropdownToggle['members']=false;membersPermission='PVGMU'">
-            <div class="icon d-flex align-items-center justify-content-center view">
-              <span class="fa fa-eye"></span>
-            </div>
-            <div class="text">View</div>
-          </div>
-          <div class="rounded-dropdown-item d-flex align-items-center"
-            (click)="dropdownToggle['members']=false;membersPermission=['PMGMUC','PMGMUD']">
-            <div class="icon d-flex align-items-center justify-content-center manage">
-              <span class="fa fa-pen"></span>
-            </div>
-            <div class="text">Manage</div>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="membersPermission==='manage'" class="level-two position-relative d-flex align-items-center mb-3">
-        <div class="round-checkbox d-flex align-items-center justify-content-between mr-3"
-          [ngClass]="{'checked':membersCreatePermission,'disabled':!hasPermission('PMGAG')}" (click)="togglePermissionLevel('MUC')">
-          <div class="text">Create</div>
-          <div class="round-check d-flex align-items-center justify-content-center">
-            <span class="fa fa-check"></span>
-          </div>
-        </div>
-        <div class="round-checkbox d-flex align-items-center justify-content-between mr-3"
-          [ngClass]="{'checked':membersDeletePermission,'disabled':!hasPermission('PMGAG')}" (click)="togglePermissionLevel('MUD')">
-          <div class="text">Delete</div>
-          <div class="round-check d-flex align-items-center justify-content-center">
-            <span class="fa fa-check"></span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <ng-container *ngIf="authType==='azure'">
-    <div class="p-3 d-flex align-items-center w-100">
-      <span class="sub-heading text-accent">Bots Tab</span>
-    </div>
-    <div class="roles-settings d-flex align-items-start w-100 p-3">
-      <div class="label">
-        <span class="font-weight-bold mr-1">
-          <span class="text">Access Level</span>
-          <br>
-          <span class="text-muted font-13">Permission to view, add or remove bots in a group.</span>
-        </span>
-      </div>
-      <div class="value pl-4 d-flex flex-column">
-        <div class="level-one position-relative mb-3">
-          <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
-            (click)="dropdownToggle['bots']=hasPermission('PMGAG')?(!dropdownToggle['bots']):false"
-            [ngClass]="{'blocked':botsPermission === 'blocked','view':botsPermission === 'view','manage':botsPermission === 'manage','hover':hasPermission('PMGAG')}">
-            <div class="icon d-flex align-items-center justify-content-center">
-              <span *ngIf="botsPermission === 'blocked'" class="fa fa-lock"></span>
-              <span *ngIf="botsPermission === 'view'" class="fa fa-eye"></span>
-              <span *ngIf="botsPermission === 'manage'" class="fa fa-pen"></span>
-            </div>
-            <div *ngIf="botsPermission === 'blocked'" class="text">Blocked</div>
-            <div *ngIf="botsPermission === 'view'" class="text">View</div>
-            <div *ngIf="botsPermission === 'manage'" class="text">Manage</div>
-            <span *ngIf="hasPermission('PMGAG')" class="fa fa-angle-down fa-sm"></span>
-          </div>
-          <div *ngIf="dropdownToggle['bots']" class="rounded-dropdown" odpClickOutside
-            (outside)="dropdownToggle['bots']=false">
-            <div class="rounded-dropdown-item d-flex align-items-center"
-              (click)="dropdownToggle['bots']=false;botsPermission='PNGMB'">
-              <div class="icon d-flex align-items-center justify-content-center blocked">
-                <span class="fa fa-lock"></span>
+      <div class="offset-2">
+        <ng-container *ngFor="let item of authorModulesList">
+          <div class="d-flex justify-content-between mt-4">
+            <div>
+              <div class="p-3 text-dark">
+                <div class="font-weight-bold">{{item.label}}</div>
+                <span class="text-muted font-13">
+                  Permission to view, assign or unassign roles in Author tab
+                </span>
               </div>
-              <div class="text">Blocked</div>
             </div>
-            <div class="rounded-dropdown-item d-flex align-items-center"
-              (click)="dropdownToggle['bots']=false;botsPermission='PVGMB'">
-              <div class="icon d-flex align-items-center justify-content-center view">
-                <span class="fa fa-eye"></span>
+            <div class="d-flex align-items-center">
+              <div class="permission-btn-block d-flex align-items-center justify-content-end">
+                <odp-round-radio [edit]="edit" id="groupAuthorBlocked" name="groupAuthor" size="20"
+                  [checked]="getModulePermissionLevel(item.segment,item.entity)=='blocked'"
+                  (checkedChange)="changeModulePermissionLevel('N',item.segment,item.entity)"></odp-round-radio>
+                <span class="text-dark ml-2">Blocked</span>
               </div>
-              <div class="text">View</div>
-            </div>
-            <div class="rounded-dropdown-item d-flex align-items-center"
-              (click)="dropdownToggle['bots']=false;botsPermission=['PMGMBC','PMGMBD']">
-              <div class="icon d-flex align-items-center justify-content-center manage">
-                <span class="fa fa-pen"></span>
+              <div class="permission-btn-block d-flex align-items-center justify-content-end">
+                <odp-round-radio [edit]="edit" id="groupAuthorView" name="groupAuthor" size="20"
+                  [checked]="getModulePermissionLevel(item.segment,item.entity)=='view'"
+                  (checkedChange)="changeModulePermissionLevel('V',item.segment,item.entity)"></odp-round-radio>
+                <span class="text-dark ml-2">View</span>
               </div>
-              <div class="text">Manage</div>
+              <div class="permission-btn-block d-flex align-items-center justify-content-end">
+                <odp-round-radio [edit]="edit" id="groupAuthorManage" name="groupAuthor" size="20"
+                  [checked]="getModulePermissionLevel(item.segment,item.entity)=='manage'"
+                  (checkedChange)="changeModulePermissionLevel('M',item.segment,item.entity)"></odp-round-radio>
+                <span class="text-dark ml-2">Manage</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div *ngIf="botsPermission==='manage'" class="level-two position-relative d-flex align-items-center mb-3">
-          <div class="round-checkbox d-flex align-items-center justify-content-between mr-3"
-            [ngClass]="{'checked':botsCreatePermission,'disabled':!hasPermission('PMGAG')}" (click)="togglePermissionLevel('MBC')">
-            <div class="text">Create</div>
-            <div class="round-check d-flex align-items-center justify-content-center">
-              <span class="fa fa-check"></span>
-            </div>
-          </div>
-          <div class="round-checkbox d-flex align-items-center justify-content-between mr-3"
-            [ngClass]="{'checked':botsDeletePermission,'disabled':!hasPermission('PMGAG')}" (click)="togglePermissionLevel('MBD')">
-            <div class="text">Delete</div>
-            <div class="round-check d-flex align-items-center justify-content-center">
-              <span class="fa fa-check"></span>
-            </div>
-          </div>
-        </div>
+        </ng-container>
       </div>
     </div>
-  </ng-container>
-  <div class="p-3 d-flex align-items-center w-100">
-    <span class="sub-heading text-accent">Author Tab</span>
-    <div class="horizontal-labels d-flex align-items-center">
-      <span class="text mr-3 normal-heading">Blocked</span>
-      <span class="text mr-3 normal-heading">View</span>
-      <span class="text mr-3 normal-heading">Manage</span>
-    </div>
-  </div>
-  <div class="roles-settings d-flex align-items-start w-100 p-3 border-bottom">
-    <div class="label">
-      <span class=" mr-1">
-        <span class=" font-weight-bold text">Modules</span>
-        <br>
-        <span class=" text-muted font-13">Permission to view, assign or unassign roles in Author tab.</span>
-      </span>
-    </div>
-    <div class="value pl-4 d-flex flex-column">
-      <div class="roles-row d-flex align-items-center w-100 mb-3" *ngFor="let item of authorModulesList">
-        <div class="normal-heading">{{item.label}}</div>
-        <div class="big-checkbox d-flex align-items-center justify-content-center mr-3 blocked"
-          [ngClass]="{'checked':getModulePermissionLevel(item.segment,item.entity)=='blocked','locked':!hasPermission('PMGAG')}"
-          (click)="changeModulePermissionLevel('N',item.segment,item.entity)">
-          <span class="fa fa-check"></span>
-        </div>
-        <div class="big-checkbox d-flex align-items-center justify-content-center mr-3 view"
-          [ngClass]="{'checked':getModulePermissionLevel(item.segment,item.entity)=='view' || getModulePermissionLevel(item.segment,item.entity)=='manage','locked':!hasPermission('PMGAG')}"
-          (click)="changeModulePermissionLevel('V',item.segment,item.entity)">
-          <span class="fa fa-check"></span>
-        </div>
-        <div class="big-checkbox d-flex align-items-center justify-content-center mr-3 manage"
-          [ngClass]="{'checked':getModulePermissionLevel(item.segment,item.entity)=='manage','locked':!hasPermission('PMGAG')}"
-          (click)="changeModulePermissionLevel('M',item.segment,item.entity)">
-          <span class="fa fa-check"></span>
+
+
+
+
+
+    <div class="d-flex flex-column justify-content-between border-bottom py-3">
+      <div>
+        <div class="p-3 text-dark">
+          <div class="font-weight-bold">Appcenter Tab</div>
+          <span class="text-muted font-13">
+            Permission to manage appcenter roles in group.
+          </span>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="p-3 d-flex align-items-center w-100">
-    <span class="sub-heading text-accent">Appcenter Tab</span>
-  </div>
-  <div class="roles-settings d-flex align-items-start w-100 p-3 border-bottom">
-    <div class="label">
-      <span class=" mr-1">
-        <span class="text">Modules</span>
-        <br>
-        <span class="font-weight-bold text-muted font-13">Permission to view, assign or unassign roles in App Center tab.</span>
-      </span>
-    </div>
-    <div class="value pl-4 d-flex flex-column">
-      <div class="roles-row d-flex align-items-center w-100 mb-3" *ngFor="let item of appcenterModulesList">
-        <div class="normal-heading">{{item.label}}</div>
-        <div class="big-checkbox d-flex align-items-center justify-content-center mr-3 blocked"
-          [ngClass]="{'checked':getModulePermissionLevel(item.segment,item.entity)=='blocked','locked':!hasPermission('PMGAG')}"
-          (click)="changeModulePermissionLevel('N',item.segment,item.entity)">
-          <span class="fa fa-check"></span>
+      <!-- <div class="d-flex align-items-center">
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupAppcenterBlocked" name="groupAppcenter" size="20"
+            [checked]="botsPermission=='blocked'" (checkedChange)="botsPermission='PNGMB'"></odp-round-radio>
+          <span class="text-dark ml-2">Blocked</span>
         </div>
-        <div class="big-checkbox d-flex align-items-center justify-content-center mr-3 view"
-          [ngClass]="{'checked':getModulePermissionLevel(item.segment,item.entity)=='view' || getModulePermissionLevel(item.segment,item.entity)=='manage','locked':!hasPermission('PMGAG')}"
-          (click)="changeModulePermissionLevel('V',item.segment,item.entity)">
-          <span class="fa fa-check"></span>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupAppcenterView" name="groupAppcenter" size="20" [checked]="botsPermission=='view'"
+            (checkedChange)="botsPermission='PVGMB'"></odp-round-radio>
+          <span class="text-dark ml-2">View</span>
         </div>
-        <div class="big-checkbox d-flex align-items-center justify-content-center mr-3 manage"
-          [ngClass]="{'checked':getModulePermissionLevel(item.segment,item.entity)=='manage','locked':!hasPermission('PMGAG')}"
-          (click)="changeModulePermissionLevel('M',item.segment,item.entity)">
-          <span class="fa fa-check"></span>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="groupAppcenterManage" name="groupAppcenter" size="20"
+            [checked]="botsPermission=='manage'" (checkedChange)="botsPermission=['PMGMBC','PMGMBD']"></odp-round-radio>
+          <span class="text-dark ml-2">Manage</span>
         </div>
+      </div> -->
+      <div class="offset-2">
+        <ng-container *ngFor="let item of appcenterModulesList">
+          <div class="d-flex justify-content-between mt-4">
+            <div>
+              <div class="p-3 text-dark">
+                <div class="font-weight-bold">{{item.label}}</div>
+                <span class="text-muted font-13">
+                  Permission to view, assign or unassign roles in Author tab
+                </span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="permission-btn-block d-flex align-items-center justify-content-end">
+                <odp-round-radio [edit]="edit" id="groupAuthorBlocked" name="groupAuthor" size="20"
+                  [checked]="getModulePermissionLevel(item.segment,item.entity)=='blocked'"
+                  (checkedChange)="changeModulePermissionLevel('N',item.segment,item.entity)"></odp-round-radio>
+                <span class="text-dark ml-2">Blocked</span>
+              </div>
+              <div class="permission-btn-block d-flex align-items-center justify-content-end">
+                <odp-round-radio [edit]="edit" id="groupAuthorView" name="groupAuthor" size="20"
+                  [checked]="getModulePermissionLevel(item.segment,item.entity)=='view'"
+                  (checkedChange)="changeModulePermissionLevel('V',item.segment,item.entity)"></odp-round-radio>
+                <span class="text-dark ml-2">View</span>
+              </div>
+              <div class="permission-btn-block d-flex align-items-center justify-content-end">
+                <odp-round-radio [edit]="edit" id="groupAuthorManage" name="groupAuthor" size="20"
+                  [checked]="getModulePermissionLevel(item.segment,item.entity)=='manage'"
+                  (checkedChange)="changeModulePermissionLevel('M',item.segment,item.entity)"></odp-round-radio>
+                <span class="text-dark ml-2">Manage</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

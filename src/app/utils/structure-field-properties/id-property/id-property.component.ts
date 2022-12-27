@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'odp-id-property',
@@ -7,7 +7,7 @@ import { FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./id-property.component.scss']
 })
 export class IdPropertyComponent implements OnInit {
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   @Input() isLibrary: boolean;
   @Input() isDataFormat: boolean;

@@ -1,6 +1,6 @@
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
-export function positiveNumber(control: FormControl) {
+export function positiveNumber(control: UntypedFormControl) {
     const input = control.value;
     if (input) {
         if (!control.value.toString().match(/^[1-9][0-9]*$/)) {

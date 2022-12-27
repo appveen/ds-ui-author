@@ -1,3 +1,12 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
 :host {
     display: inline-block;
+}
+
+.hover {
+    &:hover {
+        color: $headings  !important;
+    }
 }

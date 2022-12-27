@@ -1,0 +1,177 @@
+<div class="d-flex align-items-stretch">
+    <div class="attributes w-50"
+        [ngClass]="{'d-flex align-items-center justify-content-center':!selectedStepActions || selectedStepActions.length==0}">
+        <div *ngIf="!selectedStepActions || selectedStepActions.length==0"
+            class="d-flex flex-column align-items-center">
+            <div class="font-20 fw-600 mb-2 text-dark">Add Actions</div>
+            <div class="font-14 fw-400 mb-3 sub-heading">No Actions are created for this step.</div>
+            <button type="button" class="btn btn-primary btn-min-width d-flex align-items-center justify-content-center"
+                (click)="openNewActionWindow()">
+                <span class="dsi dsi-plus mr-2"></span>
+                <span class="text">Add New</span>
+            </button>
+        </div>
+        <ng-container *ngIf="selectedStepActions && selectedStepActions.length>0">
+            <div *ngFor="let field of selectedStepActions;let actionIndex = index">
+                <div class="attribute-item px-3 border-bottom d-flex align-items-center justify-content-start position-relative"
+                    *ngIf="field">
+                    <div class="d-flex align-items-center p-1 mr-3">
+                        <span *ngIf="edit.status" class="dsi dsi-minus-circle hover"
+                            (click)="removeHookFromStep(field)"></span>
+                    </div>
+                    <div class="attribute-name text-truncate mr-3" [ngbTooltip]="field.name">
+                        {{ field.name }}
+                    </div>
+                    <div class="attribute-url sub-heading text-truncate" [ngbTooltip]="field.url">
+                        {{ field.url }}
+                    </div>
+                    <!-- <div *ngIf="edit.status" class="attribute-actions d-flex align-items-center px-3">
+                        <span class="dsi dsi-edit hover mr-2" (click)="openNewActionWindow(field)"></span>
+                        <span class="dsi dsi-trash hover" (click)="openNewActionWindow(field)"></span>
+                    </div> -->
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="attributes added w-50 border-left">
+        <div *ngIf="!allActions || allActions.length==0" class="p-3">
+            <span class="text-secondary">No Action Added.</span>
+        </div>
+        <ng-container *ngIf="allActions && allActions.length>0">
+            <div *ngFor="let field of allActions;let actionIndex = index">
+                <div class="attribute-item px-3 border-bottom d-flex align-items-center justify-content-start position-relative"
+                    *ngIf="field">
+                    <div class="d-flex align-items-center p-1 mr-3">
+                        <span *ngIf="edit.status && !isHookAdded(field)" class="dsi dsi-plus-circle hover"
+                            (click)="addHookToStep(field)"></span>
+                        <span *ngIf="edit.status && isHookAdded(field)" class="dsi dsi-check"></span>
+                    </div>
+                    <div class="attribute-name text-truncate mr-3" [ngbTooltip]="field.name">
+                        {{ field.name }}
+                    </div>
+                    <div class="attribute-url sub-heading text-truncate" [ngbTooltip]="field.url">
+                        {{ field.url }}
+                    </div>
+                    <div *ngIf="edit.status" class="attribute-actions d-flex align-items-center px-3">
+                        <span class="dsi dsi-edit hover mr-2" (click)="openNewActionWindow(field)"></span>
+                        <span class="dsi dsi-trash hover" (click)="openDeleteActionWindow(field)"></span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<div *ngIf="showNewActionWindow" (click)="showNewActionWindow=false" class="overlay position-fixed"></div>
+<div [ngClass]="{'show':showNewActionWindow}"
+    class="new-action-window page-pagging position-fixed bg-white border-left p-4">
+    <div class="d-flex align-items-center justify-content-between">
+        <span class="font-20 fw-500">Add Action</span>
+        <span class="dsi dsi-close text-dark hover font-18" (click)="showNewActionWindow=false"></span>
+    </div>
+    <div class="d-flex flex-column mt-4" [formGroup]="actionHookForm">
+        <div class="form-group">
+            <label class="font-14 fw-400">Name</label>
+            <div class="position-relative">
+                <input class="form-control" type="text" placeholder="Enter hook name (max 40 characters)"
+                    formControlName="name" maxlength="40" [ngClass]="{'is-invalid': hookNameErr}"
+                    [value]="actionHookForm.get('name').value" (blur)="uniqHookName()" odpAutoFocus>
+                <span class="dsi dsi-danger-circle text-danger position-absolute error-icon" *ngIf="hookNameErr"
+                    [ngbTooltip]="validationError" triggers="manual" #t1="ngbTooltip" triggers="hover"
+                    container="body"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="font-14 fw-400">URL</label>
+            <div class="position-relative">
+                <textarea class="form-control " type="text" rows="5" maxlength="2080"
+                    placeholder="http://<hostname>:<port>/<path>" formControlName="url"
+                    [value]="actionHookForm.get('url').value" [ngClass]="{'is-invalid': hookUrlErr }"></textarea>
+                <span class="dsi dsi-danger-circle text-danger position-absolute error-icon" *ngIf="hookUrlErr"
+                    [ngbTooltip]="validationError" triggers="manual" #t2="ngbTooltip" triggers="hover"
+                    container="body"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="font-14 fw-400"></label>
+            <div class="position-relative d-flex align-items-center">
+                <button class="btn btn-link px-0"
+                    [ngClass]="{'text-accent': !verifyUrl.loading && !verifyUrl.status,'text-muted': verifyUrl.loading}"
+                    type="button" (click)="activeUrl(actionHookForm.get('url').value)">
+                    {{ verifyUrl.loading ? 'Connecting...' : 'Test Connection'}}
+                </button>
+                <span class="text-success ml-3" *ngIf="verifyUrl.status">Success</span>
+                <span class="text-danger ml-3" *ngIf="triggeredHookValidation">Failed</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="font-14 fw-400">Failure message</label>
+            <div class="position-relative">
+                <input class="form-control " type="text" placeholder="Message to display when the hook fails"
+                    formControlName="errorMessage">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="font-14 fw-400">Label</label>
+            <div class="position-relative">
+                <input class="form-control " type="text" placeholder="label for hook" formControlName="label">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="font-14 fw-400">Style</label>
+            <div class="position-relative d-flex align-items-center">
+                <div class="form-radio-group mr-3" *ngFor="let aType of actionTypes">
+                    <input type="radio" [id]="aType.name" class="form-radio-input" [value]="aType.value" name="type"
+                        formControlName="type">
+                    <label [for]="aType.name" class="form-radio-label">
+                        <span class="form-radio-button"
+                            [ngClass]="{'green': aType.name === 'Type 1', 'yellow': aType.name === 'Type 2', 'red': aType.name === 'Type 3'}"></span>
+                        {{aType.name}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex w-100 justify-content-end align-items-center mt-auto">
+        <button type="button" class="btn btn-primary w-100" (click)="triggerHookSave()" id="createActionYes"
+            [disabled]="actionHookForm.invalid">
+            Create Action
+        </button>
+    </div>
+</div>
+
+<ng-template #validationError let-param="param">
+    <div class="d-flex flex-column">
+        <ng-container *ngIf="param == 'hook-name'">
+            <div *ngIf="(actionHookForm.get('name').dirty || actionHookForm.get('name').touched) && actionHookForm.get('name').hasError('required')"
+                class="d-flex justify-content-start">
+                <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+                A unique hook name is required
+            </div>
+            <div *ngIf="actionHookForm.get('name').hasError('maxlength')" class="d-flex justify-content-start">
+                <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+                Field name should be less than 40 characters
+            </div>
+            <div *ngIf="actionHookForm.get('name').hasError('duplicateName')" class="d-flex justify-content-start">
+                <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+                Duplicate attribute name
+            </div>
+        </ng-container>
+        <ng-container *ngIf="param == 'hook-url'">
+            <div *ngIf="actionHookForm.get('url').dirty && actionHookForm.get('url').hasError('pattern')"
+                class="d-flex justify-content-start">
+                <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+                URL should be of format either http://&lt;hostname&gt;:&lt;port&gt;/&lt;path or
+                https://&lt;hostname&gt;:&lt;port&gt;/&lt;path&gt;
+            </div>
+            <div *ngIf="( actionHookForm.get('url').dirty || actionHookForm.get('url').touched ) && actionHookForm.get('url').hasError('required')"
+                class="d-flex justify-content-start">
+                <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+                Required field
+            </div>
+        </ng-container>
+    </div>
+</ng-template>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+</odp-delete-modal>

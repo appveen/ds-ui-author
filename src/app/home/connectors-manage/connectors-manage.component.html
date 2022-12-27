@@ -1,0 +1,234 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="d-flex flex-column w-100 h-100 position-relative bg-light-gray">
+    <div class="wrapper">
+        <div class="w-100 position-relative px-4 py-5">
+            <odp-basic-info hideLogo="true" [(name)]="connector.name" [(description)]="connector.description"
+                [hideLogo]="true" [edit]="edit">
+                <div class="d-flex align-items-end align-self-start">
+                    <button *ngIf="hasPermission('PMCONBD') && edit.status" type="button"
+                        class="btn btn-white border mr-3" (click)="deleteConnector()">
+                        <span class="dsi dsi-trash"></span>
+                    </button>
+                    <button class="btn btn-outline-primary btn-min-width mr-3" (click)="testConnection()">
+                        <span>Test</span>
+                    </button>
+                    <button class="btn btn-white border btn-min-width mr-3" routerLink="../">
+                        <span>Cancel</span>
+                    </button>
+                    <ng-container *ngIf="hasPermissionStartsWith('PMCON')">
+                        <button *ngIf="!edit.status" class="btn btn-primary btn-min-width" (click)="edit.status=true"
+                            [disabled]="connector.name === 'Default DB Connector' || connector.name === 'Default File Connector'">
+                            <span>Edit</span>
+                        </button>
+                        <button *ngIf="edit.status" class="btn btn-primary btn-min-width" (click)="saveConnector()">
+                            <span>Save</span>
+                        </button>
+                    </ng-container>
+                </div>
+            </odp-basic-info>
+        </div>
+        <div class="d-flex flex-column px-4 pb-4">
+            <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-4">
+                <div class="form-group">
+                    <label class="text-secondary font-12 fw-500" for="type">Select Connector Type</label>
+                    <select id="type" class="form-control" [(ngModel)]="connector.type" [disabled]="true"
+                        (ngModelChange)="onTypeChange($event)">
+                        <option value="">--select--</option>
+                        <option *ngFor="let item of availableConnectors" [value]="item.type">{{item.label}}</option>
+                        <!-- <option value="MONGODB">MongoDB</option>
+                            <option value="MYSQL">MySQL</option>
+                            <option value="PG">Postgres SQL</option>
+                            <option value="SFTP">SFTP</option>
+                            <option value="KAFKA">Apache Kafka</option>
+                            <option value="AZBLOB">Azure Blob</option> -->
+                    </select>
+                </div>
+                <ng-container *ngFor="let item of availableConnectors">
+                    <ng-container *ngIf="item.type==connector.type">
+                        <ng-container *ngFor="let field of item.fields">
+                            <div *ngIf="parseCondition(field.condition)" class="form-group">
+                                <label class="text-secondary font-12 fw-500"
+                                    [attr.for]="field.key">{{field.label}}</label>
+                                <input
+                                    *ngIf="field.htmlInputType=='text' || field.htmlInputType=='password' || field.htmlInputType=='number'"
+                                    [id]="field.key" [type]="field.htmlInputType" class="form-control"
+                                    [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
+                                    [disabled]="!edit.status" [odpPasswordField]="field.htmlInputType=='password'"
+                                    [edit]="edit" [required]="field.required">
+                                <textarea *ngIf="field.htmlInputType=='textarea'" [id]="field.key" class="form-control"
+                                    [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
+                                    [disabled]="!edit.status" [required]="field.required"></textarea>
+                                <select *ngIf="field.htmlInputType=='select'" [id]="field.key" class="form-control"
+                                    [ngModel]="getValue(field.key)" (ngModelChange)="setValue(field.key,$event)"
+                                    [disabled]="!edit.status" [required]="field.required">
+                                    <option *ngFor="let sel of field.options" [value]="sel.value">{{sel.label}}</option>
+                                </select>
+                                <div *ngIf="field.htmlInputType=='password'" class="form-text text-muted font-11">This
+                                    value will be stored encrypted</div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <!-- <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-4">
+                <div class="form-group">
+                    <label class="text-secondary font-12 fw-500" for="type">Select Connector Type</label>
+                    <select id="type" class="form-control" [(ngModel)]="connector.type" [disabled]="!edit.status"
+                        (ngModelChange)="onTypeChange($event)">
+                        <option value="">--select--</option>
+                        <option value="MONGODB">MongoDB</option>
+                        <option value="MYSQL">MySQL</option>
+                        <option value="PG">Postgres SQL</option>
+                        <option value="SFTP">SFTP</option>
+                        <option value="KAFKA">Apache Kafka</option>
+                        <option value="AZBLOB">Azure Blob</option>
+                    </select>
+                </div>
+                <ng-container *ngIf="connector.type=='MONGODB'">
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="connectionString">MongoDB Connection
+                            URL</label>
+                        <input id="connectionString" type="text" class="form-control"
+                            [(ngModel)]="connector.values.connectionString" [disabled]="!edit.status">
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="connector.type=='MYSQL' || connector.type=='PG'">
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="host">Database Host</label>
+                        <input id="host" type="text" class="form-control" [(ngModel)]="connector.values.host"
+                            [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="port">Database Port</label>
+                        <input id="port" type="number" class="form-control" [(ngModel)]="connector.values.port"
+                            [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="user">Database User</label>
+                        <input id="user" type="text" class="form-control" [(ngModel)]="connector.values.user"
+                            [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="password">Database password</label>
+                        <input id="password" type="password" class="form-control"
+                            [(ngModel)]="connector.values.password" [disabled]="!edit.status">
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="connector.type=='SFTP'">
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="host">SFTP Host</label>
+                        <input id="host" type="text" class="form-control" [(ngModel)]="connector.values.host"
+                            [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="port">SFTP Port</label>
+                        <input id="port" type="number" class="form-control" [(ngModel)]="connector.values.port"
+                            [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="username">SFTP Username</label>
+                        <input id="username" type="text" class="form-control" [(ngModel)]="connector.values.username"
+                            [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="sftpAuthType">SFTP Auth Type</label>
+                        <select id="sftpAuthType" class="form-control" [(ngModel)]="connector.values.sftpAuthType"
+                            [disabled]="!edit.status">
+                            <option value="none">None</option>
+                            <option value="password">Password</option>
+                            <option value="publickey">Public Key</option>
+                        </select>
+                    </div>
+                    <div *ngIf="connector.values.sftpAuthType=='publickey'" class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="keyFile">SFTP Public Key</label>
+                        <textarea id="keyFile" type="text" class="form-control" [(ngModel)]="connector.values.publicKey"
+                            [disabled]="!edit.status"></textarea>
+                    </div>
+                    <div *ngIf="connector.values.sftpAuthType!='none'" class="form-group">
+                        <label *ngIf="connector.values.sftpAuthType=='publickey'" class="text-secondary font-12 fw-500"
+                            for="password">SFTP Key Passphrase</label>
+                        <label *ngIf="connector.values.sftpAuthType=='password'" class="text-secondary font-12 fw-500"
+                            for="password">Password</label>
+                        <input id="password" type="password" class="form-control"
+                            [(ngModel)]="connector.values.password" [disabled]="!edit.status">
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="connector.type=='KAFKA'">
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="connectionString">Bootstrap Servers</label>
+                        <textarea id="connectionString" type="text" class="form-control"
+                            [(ngModel)]="connector.values.servers" [disabled]="!edit.status"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="username">Username</label>
+                        <input id="username" type="text" class="form-control" [(ngModel)]="connector.values.username"
+                            [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="password">Password</label>
+                        <input id="password" type="password" class="form-control"
+                            [(ngModel)]="connector.values.password" [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="protocol">Security Protocol</label>
+                        <input id="protocol" type="text" class="form-control" [(ngModel)]="connector.values.protocol"
+                            [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="mechanisms">Mechanisms</label>
+                        <input id="mechanisms" type="text" class="form-control"
+                            [(ngModel)]="connector.values.mechanisms" [disabled]="!edit.status">
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="connector.type=='AZBLOB'">
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="connectionString">Azure Connection
+                            URL</label>
+                        <input id="connectionString" type="text" class="form-control"
+                            [(ngModel)]="connector.values.connectionString" [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="container">Azure Container Name</label>
+                        <input id="container" type="text" class="form-control"
+                            [(ngModel)]="connector.values.container" [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="sharedKey">Azure Shared Key</label>
+                        <input id="sharedKey" type="password" class="form-control"
+                            [(ngModel)]="connector.values.sharedKey" [disabled]="!edit.status">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-secondary font-12 fw-500" for="timeout">Link Validity</label>
+                        <input id="timeout" type="number" class="form-control" [(ngModel)]="connector.values.timeout"
+                            [disabled]="!edit.status">
+                        <small class="form-text">Enter Value in Seconds</small>
+                    </div>
+                </ng-container>
+            </div> -->
+        </div>
+    </div>
+
+    <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
+
+    <ng-template #pageChangeModalTemplate>
+        <div class="modal-body p-4">
+            <div class="circle bg-dark">
+                <span class="fa fa-exclamation-triangle text-white"></span>
+            </div>
+            <p class="text-dark font-weight-bold text-center">Unsaved changes</p>
+            <p class="text-secondary text-center">You have unsaved changes, are you sure you want to leave?</p>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="button" class="btn btn-min-width btn-outline-primary mx-3"
+                    (click)="pageChangeModalTemplateRef.close(false)">No</button>
+                <button type="button" class="btn btn-min-width btn-primary mx-3"
+                    (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+            </div>
+        </div>
+    </ng-template>

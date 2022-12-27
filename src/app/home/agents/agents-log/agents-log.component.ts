@@ -1,15 +1,18 @@
-import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AgGridAngular, AgGridColumn } from 'ag-grid-angular';
-import { IDatasource, IGetRowsParams } from 'ag-grid-community';
+// import { AgGridAngular, AgGridColumn } from 'ag-grid-angular';
+// import { IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { ToastrService } from 'ngx-toastr';
 
-import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
-import { AppService } from 'src/app/utils/services/app.service';
-import { environment } from 'src/environments/environment';
-import { DataGridColumn } from 'src/app/utils/data-grid/data-grid.directive';
+import * as moment from 'moment';
 import { APIConfig } from 'src/app/utils/interfaces/apiConfig';
+import { AppService } from 'src/app/utils/services/app.service';
+import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
+import { environment } from 'src/environments/environment';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Breadcrumb } from '../../../utils/interfaces/breadcrumb';
+import * as _ from 'lodash'
 
 @Component({
   selector: 'odp-agents-log',
@@ -18,12 +21,14 @@ import { APIConfig } from 'src/app/utils/interfaces/apiConfig';
 })
 export class AgentsLogComponent implements OnInit {
 
-  @ViewChild('agGrid') agGrid: AgGridAngular;
-  @ViewChild('newAgentModalTemplate', { static: false }) newAgentModalTemplate: TemplateRef<HTMLElement>;
+  // @ViewChild('agGrid') agGrid: AgGridAngular;
   @ViewChild('viewPasswordModalTemplate', { static: false }) viewPasswordModalTemplate: TemplateRef<HTMLElement>;
   @ViewChild('alertModalTemplate', { static: false }) alertModalTemplate: TemplateRef<HTMLElement>;
-  @ViewChild('downloadAgentModalTemplate', { static: false }) downloadAgentModalTemplate: TemplateRef<HTMLElement>;
+  @ViewChild('downloadAgentModal') downloadAgentModal: HTMLElement;
+  downloadAgentModalRef: NgbModalRef;
   @ViewChild('changePasswordModalTemplate', { static: false }) changePasswordModalTemplate: TemplateRef<HTMLElement>;
+  @ViewChild('agentDetailsModal') agentDetailsModal: HTMLElement;
+  agentDetailsModalRef: NgbModalRef;
   agentId: string;
   subscriptions: any;
   apiConfig: APIConfig;
@@ -34,21 +39,35 @@ export class AgentsLogComponent implements OnInit {
   agentPasswordModel: any;
   agentData: any;
   agentType: string;
-  newAgentModalTemplateRef: NgbModalRef;
   viewPasswordModalTemplateRef: NgbModalRef;
   alertModalTemplateRef: NgbModalRef;
-  downloadAgentModalTemplateRef: NgbModalRef;
   changePasswordModalTemplateRef: NgbModalRef;
 
-  columnDefs: AgGridColumn[];
-  dataSource: IDatasource;
+  // columnDefs: AgGridColumn[];
+  // dataSource: IDatasource;
   totalCount: number;
   loadedCount: number;
   filterModel: any;
   sortModel: any;
+  showLazyLoader: boolean = false;
+  agentDetails: any;
+  showSettingsDropdown: boolean = false;
+  showPasswordSide: boolean = false;
+  showPassword: boolean = false;
+  resetPasswordForm: UntypedFormGroup;
+  showEditAgentWindow: boolean = false;
+  alertModal: {
+    statusChange?: boolean;
+    title: string;
+    message: string;
+  };
+  openDeleteModal: EventEmitter<any> = new EventEmitter();
+  breadcrumbPaths: Array<Breadcrumb>;
+  completeLogs: Array<any> = [];
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
+    private fb: UntypedFormBuilder,
     private ts: ToastrService) {
     const self = this;
     self.totalCount = 0;
@@ -65,6 +84,17 @@ export class AgentsLogComponent implements OnInit {
     self.agentLogObject = [];
     self.agentConfig = {};
     self.subscriptions = [];
+    self.sortModel = {};
+    this.resetPasswordForm = this.fb.group({
+      password: [null],
+      cpassword: [null, [Validators.required]],
+    });
+    this.alertModal = {
+      statusChange: false,
+      title: '',
+      message: '',
+    };
+    self.breadcrumbPaths = [];
   }
 
   ngOnInit() {
@@ -74,96 +104,59 @@ export class AgentsLogComponent implements OnInit {
     self.agentConfig.os = 'windows';
     self.route.params.subscribe(params => {
       if (params.id) {
-        self.columnDefs = null;
+        // self.columnDefs = null;
         self.agentId = params.id;
-        self.configureColumns();
+
+        // self.configureColumns();
       }
     });
-    self.dataSource = {
-      getRows: async (params: IGetRowsParams) => {
-        self.agGrid.api.showLoadingOverlay();
-        self.apiConfig.page = Math.ceil((params.endRow / 30));
-        self.totalCount = await self.getLogsCount();
-        if (self.totalCount > 0) {
-          if (self.subscriptions['getLogs_' + self.apiConfig.page]) {
-            self.subscriptions['getLogs_' + self.apiConfig.page].unsubscribe();
-          }
-          self.subscriptions['getLogs_' + self.apiConfig.page] = self.getLogs().subscribe((docs: Array<any>) => {
-            self.loadedCount += docs.length;
-            if (self.loadedCount < self.totalCount) {
-              params.successCallback(docs);
-            } else {
-              self.totalCount = self.loadedCount;
-              params.successCallback([], self.totalCount);
-            }
-          }, err => {
-            console.error(err);
-            params.failCallback();
-          });
-        } else {
-          self.agGrid.api.hideOverlay();
-          self.agGrid.api.showNoRowsOverlay();
-        }
-      }
-    };
+    self.breadcrumbPaths.push({
+      active: false,
+      label: 'Agents',
+      url: '/app/' + self.commonService.app._id + '/agent'
+    });
+    this.getAgentDetails();
+
   }
 
-  configureColumns() {
-    const self = this;
-    self.columnDefs = [];
-    const col1 = new AgGridColumn();
-    col1.headerName = '#';
-    col1.field = '_checkbox';
-    col1.checkboxSelection = true;
-    col1.pinned = 'left';
-    col1.lockPosition = true;
-    col1.width = 50;
-    self.columnDefs.push(col1);
-    const col2 = new AgGridColumn();
-    col2.headerName = 'Time Stamp';
-    col2.field = 'timeStamp';
-    self.columnDefs.push(col2);
-    const col3 = new AgGridColumn();
-    col3.headerName = 'Level';
-    col3.field = 'logLevel';
-    self.columnDefs.push(col3);
-    const col4 = new AgGridColumn();
-    col4.headerName = 'Message';
-    col4.field = 'content';
-    col4.minWidth = 400;
-    col4.flex = true;
-    self.columnDefs.push(col4);
-  }
-
-  getLogsCount() {
-    const self = this;
-    return self.commonService.get('mon', `/${self.commonService.app._id}/agent/logs/count`, { filter: self.apiConfig.filter }).toPromise();
-  }
+  // getLogsCount() {
+  //   const self = this;
+  //   return self.commonService.get('mon', `/${self.commonService.app._id}/agent/logs/count`, { filter: self.apiConfig.filter }).toPromise();
+  // }
 
   getLogs() {
     const self = this;
-    return self.commonService.get('mon', `/${self.commonService.app._id}/agent/logs/`, self.apiConfig);
+    this.showLazyLoader = true;
+    self.commonService.get('partnerManager', `/${self.commonService.app._id}/agent/utils/${this.agentDetails.agentId}/logs`, {}).subscribe(res => {
+      this.agentLogObject = res.agentLogs;
+      this.completeLogs = res.agentLogs;
+      this.showLazyLoader = false;
+    });
   }
 
-
-  filterModified(event) {
-    const self = this;
-
-  }
-
-  sortChanged(event) {
-    const self = this;
+  filterLevel(event) {
+    console.log(event.target.value)
+    if (event.target.value !== 'ALL') {
+      this.agentLogObject = this.completeLogs.filter(ele => ele.logLevel === event.target.value)
+    }
+    else {
+      this.agentLogObject = _.cloneDeep(this.completeLogs)
+    }
   }
 
   getAgentDetails() {
     const self = this;
-    self.apiConfig.filter['agentID'] = self.agentId;
+    self.apiConfig.filter['_id'] = self.agentId;
     self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, self.apiConfig).subscribe(res => {
       if (res.length > 0) {
-        self.agentLogObject = res;
-        self.getHeartbeats();
-        self.getInteractions();
-        self.fetchPassword();
+        self.agentDetails = res[0];
+        self.breadcrumbPaths.push({
+          active: true,
+          label: this.agentDetails.name
+        });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
+        self.getAgentPassword(self.agentDetails._id)
+        this.getLogs();
       }
     });
   }
@@ -237,107 +230,73 @@ export class AgentsLogComponent implements OnInit {
       self.agentLogObject[0].streak = [];
     });
   }
-  fetchPassword() {
-    const self = this;
-    if (!self.agentLogObject.decPassword) {
-      self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/${self.agentLogObject[0]._id}/password`).subscribe(res => {
-        self.agentLogObject[0].decPassword = res.password;
-      }, err => {
-        self.commonService.errorToast(err);
-      });
-    }
-  }
-  downloadAppAgent(event: Event, agentId: string) {
-    event.preventDefault();
-    event.stopPropagation();
-    const self = this;
-    self.downloadAgentModalTemplateRef = self.commonService.modal(self.downloadAgentModalTemplate, {
-      centered: true,
-      windowClass: 'download-agent-modal'
-    });
-    self.downloadAgentModalTemplateRef.result.then(close => {
-      if (close) {
-        self.triggerAgentDownload(close, 'appagent', agentId);
+
+  // fetchPassword() {
+  //   const self = this;
+  //   if (!self.agentLogObject.decPassword) {
+  //     self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/${self.agentLogObject[0]._id}/password`).subscribe(res => {
+  //       self.agentLogObject[0].decPassword = res.password;
+  //     }, err => {
+  //       self.commonService.errorToast(err);
+  //     });
+  //   }
+  // }
+  // downloadAppAgent(event: Event, agentId: string) {
+  //   event.preventDefault();
+  //   event.stopPropagation();
+  //   const self = this;
+  //   self.downloadAgentModalTemplateRef = self.commonService.modal(self.downloadAgentModalTemplate, {
+  //     centered: true,
+  //     windowClass: 'download-agent-modal'
+  //   });
+  //   self.downloadAgentModalTemplateRef.result.then(close => {
+  //     if (close) {
+  //       self.triggerAgentDownload(close, 'appagent', agentId);
+  //     }
+  //   }, dismiss => { });
+  // }
+
+  openDownloadAgentWindow(agent: any) {
+    this.downloadAgentModalRef = this.commonService.modal(this.downloadAgentModal, { size: 'lg' });
+    this.downloadAgentModalRef.result.then(close => {
+      if (close && typeof close == 'string') {
+        const os = close.split('-')[0];
+        const arch = close.split('-')[1];
+        const url = environment.url.partnerManager + `/${this.commonService.app._id}/agent/utils/${agent._id}/download/exec?os=${os}&arch=${arch}`;
+        window.open(url, '_blank');
       }
     }, dismiss => { });
   }
 
-  downloadPartnerAgent(event: Event, agentId: string) {
-    event.preventDefault();
-    event.stopPropagation();
-    const self = this;
-    self.downloadAgentModalTemplateRef = self.commonService.modal(self.downloadAgentModalTemplate, {
-      centered: true,
-      windowClass: 'download-agent-modal'
-    });
-    self.downloadAgentModalTemplateRef.result.then(close => {
-      if (close) {
-        self.triggerAgentDownload(close, 'partneragent', agentId);
-      }
-    }, dismiss => { });
-  }
-  editAgent(agent: any) {
-    const self = this;
-
-    self.agentData = agent;
-    self.agentData.isEdit = true;
-    self.newAgentModalTemplateRef = self.commonService.modal(self.newAgentModalTemplate);
-    self.newAgentModalTemplateRef.result.then(close => {
-      if (close) {
-        if (!self.agentData.name) {
-          return;
-        }
-        delete self.agentData.isEdit;
-        self.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/` + agent._id, self.agentData).subscribe(res => {
-          if (res) {
-            self.ts.success('Agent Saved Sucessfully');
-          }
-
-        }, err => {
-          self.commonService.errorToast(err);
-        });
-      }
-    }, dismiss => { });
-  }
-  openChangePasswordModel(agent: any) {
-    const self = this;
-    self.agentPasswordModel.agent = agent;
-    self.changePasswordModalTemplateRef = self.commonService.modal(self.changePasswordModalTemplate);
-    self.changePasswordModalTemplateRef.result.then(close => {
-      self.agentPasswordModel = {};
-    }, dismiss => {
-      self.agentPasswordModel = {};
-    });
-  }
-
-  changePassword() {
-    const self = this;
-    self.agentPasswordModel.message = null;
-    if (!self.agentPasswordModel || !self.agentPasswordModel.agent) {
-      if (self.changePasswordModalTemplateRef) {
-        self.changePasswordModalTemplateRef.close(false);
-      }
-      return;
+  canEditAgent() {
+    if (
+      this.commonService.isAppAdmin ||
+      this.commonService.userDetails.isSuperAdmin
+    ) {
+      return true;
+    } else {
+      const list2 = this.commonService.getEntityPermissions('AGENT');
+      return Boolean(
+        list2.find((e: any) => e.id.startsWith('PMA'))
+      );
     }
-    if (self.agentPasswordModel.password !== self.agentPasswordModel.cpassword) {
-      self.agentPasswordModel.message = 'Passwords do not match';
-      return;
-    }
-    self.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/utils/${self.agentPasswordModel.agent._id}/password`, {
-      password: self.agentPasswordModel.password
-    }).subscribe(res => {
-      self.ts.success(res.message);
-      self.agentPasswordModel.agent.decPassword = self.agentPasswordModel.password;
-      if (self.changePasswordModalTemplateRef) {
-        self.changePasswordModalTemplateRef.close(false);
+  }
+
+
+  editAgent() {
+    const self = this;
+    self.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/` + self.agentDetails._id, self.agentDetails).subscribe(res => {
+      if (res) {
+        self.ts.success('Agent Saved Sucessfully');
+        this.showEditAgentWindow = false;
       }
+
     }, err => {
-      if (self.changePasswordModalTemplateRef) {
-        self.changePasswordModalTemplateRef.close(false);
-      }
       self.commonService.errorToast(err);
+      this.showEditAgentWindow = false;
     });
   }
+
 
 
   hasPermission(type: string) {
@@ -371,21 +330,6 @@ export class AgentsLogComponent implements OnInit {
         });
       }
     }, dismiss => { });
-  }
-  showPassword() {
-    const self = this;
-    self.viewPasswordModalTemplateRef = self.commonService.modal(self.viewPasswordModalTemplate);
-    self.viewPasswordModalTemplateRef.result.then(close => {
-    }, dismiss => {
-    });
-  }
-  copyPassword(text: string) {
-    const self = this;
-    self.appService.copyToClipboard(text);
-    self.passwordCopied = true;
-    setTimeout(() => {
-      self.passwordCopied = false;
-    }, 3000);
   }
 
   triggerAgentDownload(os: string, type: string, agentId?: string) {
@@ -428,6 +372,158 @@ export class AgentsLogComponent implements OnInit {
       agentId: self.agentId,
       app: self.commonService.app._id
     };
-    self.agGrid.api.purgeInfiniteCache();
+    // self.agGrid.api.purgeInfiniteCache();
   }
+
+  convertDate(dateString) {
+    const date = new Date(dateString);
+    return moment(date).format('DD-MMM\'YY, hh:mm:ss A')
+  }
+
+
+  applySort(field: string) {
+    if (!this.sortModel[field]) {
+      this.sortModel = {};
+      this.sortModel[field] = 1;
+    } else if (this.sortModel[field] == 1) {
+      this.sortModel[field] = -1;
+    } else {
+      delete this.sortModel[field];
+    }
+  }
+
+  test() {
+    this.showPasswordSide = true;
+  }
+
+  copyPassword(password) {
+    const self = this;
+    self.appService.copyToClipboard(password);
+    self.ts.success('Password copied successfully');
+  }
+
+
+  getAgentPassword(id) {
+    this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/${id}/password`
+    ).subscribe(res => {
+      this.agentDetails['thePassword'] = res?.password || ''
+    }, err => {
+      this.commonService.errorToast(err);
+    });
+  }
+
+  resetPassword() {
+    this.resetPasswordForm.get('password').markAsDirty();
+    this.resetPasswordForm.get('cpassword').markAsDirty();
+    const payload = {
+      password: this.resetPasswordForm.get('password').value
+    }
+    if (this.resetPasswordForm.invalid) {
+      return;
+    } else {
+      this.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/utils/${this.agentDetails._id}/password`, payload)
+        .subscribe(() => {
+          this.resetPasswordForm.reset()
+          this.ts.success('Password changed successfully');
+          this.showPassword = false
+          this.showPasswordSide = false
+        }, err => {
+          this.resetPasswordForm.reset()
+          this.showPassword = false
+          this.showPasswordSide = false
+          this.commonService.errorToast(err, 'Unable to process request');
+        });
+    }
+  }
+
+  triggerAgentEdit() {
+    if (!this.agentData.name) {
+      return;
+    }
+    delete this.agentData.isEdit;
+    this.showEditAgentWindow = false;
+    this.showLazyLoader = true;
+    this.commonService.post('partnerManager', `/${this.commonService.app._id}/agent`, this.agentData).subscribe(res => {
+      this.showLazyLoader = false;
+      // this.getAgentList();
+    }, err => {
+      this.showLazyLoader = false;
+      this.commonService.errorToast(err);
+    });
+  }
+
+
+  deleteAgent() {
+    this.alertModal.statusChange = false;
+    this.alertModal.title = 'Delete Agent';
+    this.alertModal.message = 'Are you sure you want to delete <span class="text-delete font-weight-bold">'
+      + this.agentDetails.name + '</span> Agent?';
+    this.openDeleteModal.emit(this.alertModal);
+  }
+
+  openAgentDetailsWindow(agent: any) {
+    this.agentData = agent;
+    this.getAgentPassword(agent._id)
+    this.agentDetailsModalRef = this.commonService.modal(this.agentDetailsModal, { size: 'md' });
+    this.agentDetailsModalRef.result.then(close => { }, dismiss => { });
+  }
+
+
+
+  closeDeleteModal(data) {
+    const self = this;
+    if (data) {
+      // const url = '/admin/app/' + data._id;
+      // self.showLazyLoader = true;
+      //   self.subscriptions['deleteApp'] = self.commonService
+      //     .delete('user', url)
+      //     .subscribe(
+      //       (d) => {
+      //         self.ts.success('App deleted successfully');
+      //         self.appOptions[data.appIndex] = false;
+      //         self.getApps();
+      //       },
+      //       (err) => {
+      //         self.showLazyLoader = false;
+      //         self.commonService.errorToast(
+      //           err,
+      //           'Unable to delete, please try again later'
+      //         );
+      //       }
+      //     );
+      // }
+    }
+  }
+
+
+  get matchPwd() {
+    const self = this;
+    return (
+      self.resetPasswordForm.get('password').value !==
+      self.resetPasswordForm.get('cpassword').value
+    );
+  }
+
+  get pwdError() {
+    const self = this;
+    return (
+      (self.resetPasswordForm.get('password').dirty &&
+        self.resetPasswordForm.get('password').hasError('required')) ||
+      (self.resetPasswordForm.get('password').dirty &&
+        self.resetPasswordForm.get('password').hasError('minlength')) ||
+      (self.resetPasswordForm.get('password').dirty &&
+        self.resetPasswordForm.get('password').hasError('pattern'))
+    );
+  }
+
+  get cPwdError() {
+    const self = this;
+    return (
+      (self.resetPasswordForm.get('cpassword').dirty &&
+        self.resetPasswordForm.get('cpassword').hasError('required')) ||
+      (self.resetPasswordForm.get('cpassword').dirty && self.matchPwd)
+    );
+  }
+
+
 }

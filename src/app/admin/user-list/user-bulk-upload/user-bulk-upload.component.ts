@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { HttpEventType } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -39,7 +39,7 @@ export class UserBulkUploadComponent implements OnInit {
   timer;
   showLazyLoader: boolean;
   tableLoader: boolean;
-  fileMappingFrom: FormGroup;
+  fileMappingFrom: UntypedFormGroup;
   parseObj;
   uploadObj;
   ripple;
@@ -52,7 +52,7 @@ export class UserBulkUploadComponent implements OnInit {
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
   ) {
     const self = this;
     self.apiConfig = {
@@ -178,7 +178,7 @@ export class UserBulkUploadComponent implements OnInit {
     self.fileSettings.fileName = self.fileData.fileName;
     self.fileSettings.fileId = self.fileData.fileId;
     const path = `/${this.commonService.app._id}/user/bulkCreate/utils/` + self.fileData.fileId + '/sheetSelect';
-    self.subscriptions['file-settings'] = self.commonService.put('user', path, self.fileSettings)
+    self.subscriptions['connector-settings'] = self.commonService.put('user', path, self.fileSettings)
       .subscribe(res => {
         self.parseObj.showParseTag = false;
         self.uploadObj.showUploadTag = false;
@@ -222,7 +222,7 @@ export class UserBulkUploadComponent implements OnInit {
     const self = this;
     self.showLazyLoader = true;
     const path = `/${this.commonService.app._id}/user/bulkCreate/utils/` + self.fileMappingData.fileId + '/validate';
-    self.subscriptions['file-settings'] = self.commonService.put('user', path, data)
+    self.subscriptions['connector-settings'] = self.commonService.put('user', path, data)
       .subscribe(res => {
         self.showLazyLoader = false;
         self.errorLog = res;
@@ -345,7 +345,7 @@ export class UserBulkUploadComponent implements OnInit {
     const path = `/${this.commonService.app._id}/user/bulkCreate/utils/` + self.fileMappingData.fileId;
     self.fileSettings['conflictSerialNo'] = self.resolveArray;
     self.fileSettings['fileId'] = self.fileMappingData.fileId;
-    self.subscriptions['file-settings'] = self.commonService.post('user', path, self.fileSettings)
+    self.subscriptions['connector-settings'] = self.commonService.post('user', path, self.fileSettings)
       .subscribe(res => {
         self.finalLog = res;
         self.activeStep++;

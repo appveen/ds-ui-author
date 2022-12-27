@@ -14,7 +14,7 @@ import {
     EventEmitter,
     Output
 } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
 import { NgbTooltip, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as uuid from 'uuid/v1';
 
@@ -35,7 +35,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
     @Input() stateModelAttr: any;
     @Input() isLibrary: boolean;
     @Input() isDataFormat: boolean;
-    @Input() all: FormArray;
+    @Input() all: UntypedFormArray;
     @Input() index: number;
     @Input() first: boolean;
     @Input() edit: any;
@@ -47,7 +47,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
     @ViewChild('inputField', { static: false }) inputField: ElementRef;
     @ViewChild('nameChangeModal', { static: false }) nameChangeModal: TemplateRef<HTMLElement>;
     @ViewChild('flowDeployAlertModal', { static: false }) flowDeployAlertModal: TemplateRef<HTMLElement>;
-    form: FormGroup;
+    form: UntypedFormGroup;
     searchingRelation: boolean;
     active: boolean;
     collapse: boolean;
@@ -64,7 +64,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
     private editDiffer: KeyValueDiffer<string, any>;
     app: any;
     service: any;
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private schemaService: SchemaBuilderService,
         private commonService: CommonService,
         private appService: AppService,
@@ -88,14 +88,14 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         self.editDiffer = self.keyValDiff.find(self.edit).create();
         self.nameChange.title = 'Change attribute name?';
         self.nameChange.message = 'Data under old attribute name wont be accessible. Are you sure you want to continue?';
-        self.form = self.all.at(self.index) as FormGroup;
+        self.form = self.all.at(self.index) as UntypedFormGroup;
         if (self.form.get('key').value === '_id') {
             const tempUuid = uuid();
             self.schemaService.idFieldId = tempUuid;
-            self.form.addControl('_fieldId', new FormControl(tempUuid));
-            self.form.addControl('_placeholder', new FormControl('Untitled Identifier'));
-            self.form.addControl('key', new FormControl('_id'));
-            self.form.addControl('type', new FormControl('id'));
+            self.form.addControl('_fieldId', new UntypedFormControl(tempUuid));
+            self.form.addControl('_placeholder', new UntypedFormControl('Untitled Identifier'));
+            self.form.addControl('key', new UntypedFormControl('_id'));
+            self.form.addControl('type', new UntypedFormControl('id'));
             self.form.addControl('properties', self.fb.group({
                 name: [self.oldName ? self.oldName : 'ID', [Validators.required]],
                 _type: ['id', [Validators.required]]
@@ -156,7 +156,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         setTimeout(() => {
             if (self.first) {
                 self.schemaService.selectedFieldId = self.fieldId;
-                self.schemaService.activeField.emit(self.fieldId);
+                // self.schemaService.activeField.emit(self.fieldId);
             }
         }, 200);
     }
@@ -182,7 +182,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 if (self.active && r.key === 'status' && r.currentValue === true) {
                     setTimeout(() => {
                         self.schemaService.selectedFieldId = self.fieldId;
-                        self.schemaService.activeField.emit(self.fieldId);
+                        // self.schemaService.activeField.emit(self.fieldId);
                     }, 200);
                 }
             });
@@ -231,7 +231,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             self.inputField.nativeElement.focus();
         }
         const temp = self.schemaService.getDefinitionStructure(val);
-        (self.all as FormArray).insert(self.index + 1, temp);
+        (self.all as UntypedFormArray).insert(self.index + 1, temp);
         setTimeout(() => {
             self.schemaService.selectedFieldId = temp.value._fieldId;
             self.schemaService.activeField.emit(temp.value._fieldId);
@@ -244,7 +244,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         val.key = null;
         val.properties.name = null;
         const temp = self.schemaService.getDefinitionStructure(val);
-        (self.all as FormArray).insert(self.index + 1, temp);
+        (self.all as UntypedFormArray).insert(self.index + 1, temp);
         self.schemaService.selectedFieldId = temp.value._fieldId;
         self.schemaService.activeField.emit(temp.value._fieldId);
     }
@@ -267,6 +267,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         const self = this;
         if (self.isNewField) {
             let index = val.toLowerCase().split(' ').indexOf('amount');
+            if (index < 0) {
+                index = val.toLowerCase().split('_').indexOf('amount')
+            }
             if (!self.autoLink['number'] && index > -1) {
                 self.selectType({ value: 'Number', label: 'Number' });
                 self.form.get('properties._detailedType').patchValue('currency');
@@ -277,6 +280,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 }, 3000);
             }
             index = val.toLowerCase().split(' ').indexOf('date');
+            if (index < 0) {
+                index = val.toLowerCase().split('_').indexOf('date')
+            }
             if (!self.autoLink['date'] && index > -1) {
                 self.selectType({ value: 'Date', label: 'Date' });
                 self.autoLink['date'] = true;
@@ -389,17 +395,17 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 name: self.form.get('properties.name').value,
                 type: type.value
             });
-        for (const i in (self.form.get('properties') as FormGroup).controls) {
+        for (const i in (self.form.get('properties') as UntypedFormGroup).controls) {
             if (i === 'name') {
                 continue;
             }
-            (self.form.get('properties') as FormGroup).removeControl(i);
+            (self.form.get('properties') as UntypedFormGroup).removeControl(i);
         }
         for (const i in tempProp.controls) {
             if (i === 'name') {
                 continue;
             }
-            (self.form.get('properties') as FormGroup).addControl(i, tempProp.controls[i]);
+            (self.form.get('properties') as UntypedFormGroup).addControl(i, tempProp.controls[i]);
         }
         if (type.value === 'Object') {
             const temp = self.schemaService.getDefinitionStructure({ _newField: true });
@@ -409,9 +415,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             const temp = self.schemaService.getDefinitionStructure({ key: '_self', _newField: true });
             self.form.addControl('definition', self.fb.array([temp]));
         }
-        if (type.value === 'Array' || type.value === 'Object') {
-            self.form.get('definition').setValidators([sameName]);
-        }
+        // if (type.value === 'Array' || type.value === 'Object') {
+        self.form.get('definition')?.setValidators([sameName]);
+        // }
     }
 
     remove() {
@@ -450,7 +456,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         } else {
             self.schemaService.selectedFieldId = self.all.at(self.index - 1).get('_fieldId').value;
         }
-        self.schemaService.activeField.emit(self.schemaService.selectedFieldId);
+        // self.schemaService.activeField.emit(self.schemaService.selectedFieldId);
         if (self.all.at(self.index).get('key').value == self.stateModelAttr?.value && self.all.at(self.index).get(['properties', '_detailedType']).value == 'enum') {
             self.deleteStateModel.emit(true);
         }
@@ -465,6 +471,8 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
 
     pasteOnField(e) {
         const self = this;
+        // self.schemaService.selectedFieldId = null;
+        self.schemaService.activeProperty.emit(null);
         if (!self.all.get([self.index, '_id'])) {
             let val = e.clipboardData.getData('text/plain');
             try {
@@ -531,8 +539,10 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         fields.forEach((field, i) => {
             const temp = fields[i];
             const tempDef = self.schemaService.getDefinitionStructure(temp);
-            (tempDef.get('properties.name') as FormGroup).patchValue(temp.properties.name);
+            (tempDef.get('properties.name') as UntypedFormGroup).patchValue(temp.properties.name);
             self.all.push(tempDef);
+            tempDef.markAsTouched()
+            tempDef.markAsDirty()
         });
         self.all.removeAt(self.index);
         self.schemaService.activeProperty.emit(null);
@@ -558,9 +568,20 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         const self = this;
         field.patchValue(!field.value);
     }
+    view() {
+        this.schemaService.activeProperty.emit(this.form);
+    }
+
+    checkSubType() {
+        if (this.form.get(['definition', 0])?.value) {
+            const subValue = this.form.get(['definition', 0]).value;
+            return subValue?.properties?.password
+        }
+        return false
+    }
     get style() {
         const self = this;
-        const margin = self.level * 44;
+        const margin = self.level * 16;
         return {
             marginLeft: margin + 'px'
         };
@@ -576,14 +597,15 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
 
     get hasError() {
         const self = this;
-        return self.form.get('properties.name').touched
-            && self.form.get('properties.name').dirty
-            && (self.form.get('key').hasError('required')
-                || self.form.get('properties.name').hasError('length')
-                || self.form.hasError('sameName'))
-            || (self.form.get('properties.relatedTo')
-                && self.form.get('properties.relatedTo').hasError('required'))
-            || this.invalidFieldName;
+        // const result = self.form.get('properties.name').touched
+        //     && self.form.get('properties.name').dirty
+        //     && (self.form.get('key').hasError('required')
+        //         || self.form.get('properties.name').hasError('length')
+        //         || self.form.hasError('sameName'))
+        //     || (self.form.get('properties.relatedTo')
+        //         && self.form.get('properties.relatedTo').hasError('required'))
+        //     || this.invalidFieldName;
+        return self.form.invalid
     }
 
     get idField() {
@@ -594,7 +616,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
     get objectFields() {
         const self = this;
         if (self.form.get('type') && self.form.get('type').value === 'Object') {
-            return (self.form.get('definition') as FormArray);
+            return (self.form.get('definition') as UntypedFormArray);
         }
         return null;
     }
@@ -602,7 +624,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
     get arrayFields() {
         const self = this;
         if (self.form.get('type') && self.form.get('type').value === 'Array' && self.form.get(['definition', 0, 'definition'])) {
-            return (self.form.get(['definition', 0, 'definition']) as FormArray);
+            return (self.form.get(['definition', 0, 'definition']) as UntypedFormArray);
         }
         return null;
     }

@@ -1,340 +1,410 @@
-<div class="d-flex flex-column w-100 h-100">
-    <odp-breadcrumb></odp-breadcrumb>
-    <div class="options d-flex justify-content-between align-items-center w-100 px-3 mb-3">
-        <div class="font-weight-bold font-lg p-2 text-nowrap">{{agentLogObject[0]?.name}}
-            {{agentLogObject[0]?.status}}<span class="text-muted ml-2">{{agentLogObject[0]?.type==='APPAGENT'?'(App
-                Agent)':'(Partner)'}}</span></div>
-        <div class="d-flex align-items-center justify-content-end px-2 w-100 ml-auto">
-            <button type="button" class="btn btn-link p-0 mr-3" *ngIf="agentLogObject[0]?.status === 'RUNNING'"
-                (click)="toggleAgentStatus(agentLogObject[0],'stop')">Stop</button>
-            <button type="button" class="btn btn-link p-0 mr-3" (click)="toggleAgentStatus(agentLogObject[0],'disable')"
-                *ngIf="(agentLogObject[0]?.status === 'RUNNING' || agentLogObject[0]?.status === 'STOPPED')">Disable</button>
-
-            <button *ngIf="agentLogObject[0]?.status === 'DISABLED'" type="button" class="btn btn-link p-0 mr-3"
-                (click)="toggleAgentStatus(agentLogObject[0],'enable')">Enable</button>
-            <!-- <button *ngIf="agentLogObject[0]?.type == 'APPAGENT'" type="button" class="btn btn-link p-0 mr-3"
-                (click)="deleteAgent(agentLogObject[0])">Delete</button> -->
-            <button *ngIf="agentLogObject[0]?.type == 'PARTNERAGENT'" type="button" class="btn btn-link p-0 mr-3"
-                (click)="downloadPartnerAgent($event, agentLogObject[0]?._id)">Download</button>
-            <button *ngIf="agentLogObject[0]?.type == 'APPAGENT'" type="button" class="btn btn-link p-0 mr-3"
-                (click)="downloadAppAgent($event, agentLogObject[0]?._id)">Download</button>
-            <button *ngIf="hasPermission('PMA')" type="button" class="btn btn-link p-0 mr-3"
-                (click)="openChangePasswordModel(agentLogObject[0])">Change Password</button>
-            <button *ngIf="hasPermission('PMA')" type="button" class="btn btn-link p-0"
-                (click)="editAgent(agentLogObject[0])">
-                <span class="fa fa-cog"></span>
-            </button>
+<!-- <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
         </div>
-        <div class="ml-auto font-normal text-primary hover text-nowrap" [routerLink]="['../../../../agent']">
-            Close & Exit
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div> -->
+<div class="d-flex flex-column w-100 h-100 position-relative bg-light-gray">
+    <div class="wrapper">
+        <div class="w-100 position-relative px-4 pt-5 d-flex" *ngIf="agentDetails">
+            <span class="dsi dsi-arrow-left text-secondary mr-3 hover" style="font-size:24px"
+                [routerLink]="['../../agent']"></span>
+            <odp-basic-info hideLogo=" true" [(name)]="agentDetails.name" [hideLogo]="true" [edit]="{status:false}">
+                <div class="d-flex align-items-end align-self-start">
+                    <!-- <button *ngIf="hasPermission('PMCONBD') && edit.status" type="button"
+                        class="btn btn-white border mr-3" (click)="deleteConnector()">
+                        <span class="dsi dsi-trash"></span>
+                    </button>
+                    <button class="btn btn-white border btn-min-width mr-3" routerLink="../">
+                        <span>Cancel</span>
+                    </button>
+                    <ng-container *ngIf="hasPermissionStartsWith('PMCON')">
+                        <button *ngIf="!edit.status" class="btn btn-primary btn-min-width" (click)="edit.status=true">
+                            <span>Edit</span>
+                        </button>
+                        <button *ngIf="edit.status" class="btn btn-primary btn-min-width" (click)="saveConnector()">
+                            <span>Save</span>
+                        </button>
+                    </ng-container> -->
+                </div>
+            </odp-basic-info>
+            <div class="d-flex ml-auto" odpClickOutside (outside)="showSettingsDropdown=false">
+                <button class="btn d-flex settings-btn align-items-center border bg-white"
+                    (click)="showSettingsDropdown = !showSettingsDropdown">
+                    <span class="dsi dsi-settings mr-2"></span>
+                    <span>Settings</span>
+                    <span class="dsi dsi-drop-down ml-auto"></span>
+                </button>
+                <div class="item-actions d-flex align-items-center justify-content-end">
+                    <div *ngIf="showSettingsDropdown"
+                        class="more-options bg-white rounded list-group position-fixed border">
+                        <div id="agent-details" class="list-group-item list-group-item-action py-2 border-0"
+                            (click)="openAgentDetailsWindow(agentDetails);">
+                            Agent Details
+                        </div>
+                        <div id="agent-dowload" class="list-group-item list-group-item-action py-2 border-0"
+                            (click)="openDownloadAgentWindow(agentDetails);">
+                            Download
+                        </div>
+                        <div id="agent-change-password" class="list-group-item list-group-item-action py-2 border-0"
+                            (click)="test()">
+                            Change Password
+                        </div>
+                        <div id=" agent-edit" class="list-group-item list-group-item-action py-2 border-0"
+                            *ngIf="canEditAgent()" (click)="showEditAgentWindow = true">
+                            Edit
+                        </div>
+                        <div id=" agent-clone" class="list-group-item list-group-item-action py-2 border-0">
+                            Clone
+                        </div>
+                        <div id="agent-delete" class="list-group-item list-group-item-action py-2 border-0 text-danger"
+                            *ngIf="canEditAgent()" (click)="deleteAgent();">
+                            Delete
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column px-4 pb-3" *ngIf="agentDetails">
+            <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-4">
+                <div class="d-flex">
+                    <div class="d-flex flex-column mr-5">
+                        <label class="font-12 text-secondary">Type</label>
+                        <span class="fw-500 text-dark">{{agentDetails.type}}</span>
+                    </div>
+                    <!-- <div class="d-flex flex-column mr-5">
+                        <label class="font-12 text-secondary">Streak</label>
+                        <span class="fw-500 text-dark">{{agentDetails.type}}</span>
+                    </div> -->
+                    <div class="d-flex flex-column mr-5">
+                        <label class="font-12 text-secondary">Status</label>
+                        <span class="fw-500 status font-11" [ngClass]="{
+                            'text-success': agentDetails.status === 'RUNNING',
+                            'text-warning': agentDetails.status === 'PENDING',
+                            'text-danger': agentDetails.status === 'STOPPED'
+                          }">{{agentDetails.status}}</span>
+                    </div>
+                    <div class="d-flex flex-column mr-5">
+                        <label class="font-12 text-secondary">Last Invoked</label>
+                        <span class="fw-500 text-dark">{{convertDate(agentDetails._metadata.lastUpdated )}}</span>
+                    </div>
+                    <div class="d-flex flex-column mr-5">
+                        <label class="font-12 text-secondary">Pending Files</label>
+                        <span class="fw-500 text-dark">{{agentDetails.type}}</span>
+                    </div>
+                    <div class="d-flex flex-column mr-5">
+                        <label class="font-12 text-secondary">Version</label>
+                        <span class="fw-500 text-dark">{{agentDetails.__v}} </span>
+                    </div>
+                    <div class="d-flex flex-column mr-5">
+                        <label class="font-12 text-secondary">IP Address</label>
+                        <span class="fw-500 text-dark">{{agentLogObject[0]?.ipAddress}}</span>
+                    </div>
+                    <div class="d-flex flex-column mr-5">
+                        <label class="font-12 text-secondary">Mac Address</label>
+                        <span class="fw-500 text-dark">{{agentLogObject[0]?.macAddress}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column px-4 pb-4 bg-white">
+            <div class="grid-container position-relative mt-3" *ngIf="completeLogs.length > 0">
+                <div class="list-group">
+                    <div
+                        class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500 d-flex align-items-center">
+                        <div class="d-flex align-items-center justify-content-start h-100">
+                            <div (click)="applySort('Timestamp')" class="item-timestamp">
+                                <span class="mr-2">Timestamp</span>
+                                <span *ngIf="sortModel['timestamp']==1" class="dsi dsi-drop-down"></span>
+                                <span *ngIf="sortModel['timestamp']==-1" class="dsi dsi-drop-up"></span>
+                            </div>
+                            <div (click)="applySort('level')" class="item-level">
+                                <span class="mr-2">Level</span>
+                                <span *ngIf="sortModel['level']==1" class="dsi dsi-drop-down"></span>
+                                <span *ngIf="sortModel['level']==-1" class="dsi dsi-drop-up"></span>
+                            </div>
+                            <div (click)="applySort('message')" class="item-message">
+                                <span class="mr-2">Message</span>
+                                <span *ngIf="sortModel['message']==1" class="dsi dsi-drop-down"></span>
+                                <span *ngIf="sortModel['message']==-1" class="dsi dsi-drop-up"></span>
+                            </div>
+                            <!-- <div class="item-actions">&nbsp;</div> -->
+                        </div>
+                    </div>
+                    <div class="list-group-item header py-0 font-11 fw-500 d-flex align-items-center">
+                        <div class="d-flex align-items-center justify-content-start h-100">
+                            <div class="item-timestamp">
+                            </div>
+                            <div class="item-level">
+                                <select class="form-control font-11" style="width: 60%; height: 30px"
+                                    (change)="filterLevel($event)">
+                                    <option class="font-11" value="ALL">ALL</option>
+                                    <option class="font-11" value="TRACE">TRACE</option>
+                                    <option class="font-11" value="DEBUG">DEBUG</option>
+                                    <option class="font-11" value="INFO">INFO</option>
+                                    <option class="font-11" value="ERROR">ERROR</option>
+                                </select>
+                            </div>
+                            <!-- <div class="item-actions">&nbsp;</div> -->
+                        </div>
+                    </div>
+                    <ng-container *ngFor="let agent of agentLogObject;let i=index">
+                        <div class="list-group-item">
+                            <div class="d-flex align-items-center justify-content-start h-100">
+                                <div class="item-timestamp text-truncate fw-500">{{agent?.timestamp &&
+                                    convertDate(agent.timestamp )}}</div>
+                                <div class="item-level ">
+                                    <span class="font-11 fw-500 status" [ngClass]="{
+                                    'text-success': agent.logLevel === 'TRACE',
+                                    'text-warning': agent.logLevel === 'DEBUG',
+                                    'text-danger': agent.logLevel === 'ERROR',
+                                    'text-info': agent.logLevel === 'INFO'
+                                  }">{{agent.logLevel}}</span>
+                                </div>
+                                <div class="item-message text-secondary">{{agent.message}}</div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+                <div class="align-self-center text-center">
+                    <div class="spinner-border text-dark" role="status">
+                        <span class="sr-only">Processing...</span>
+                    </div>
+                    <div class="text-secondary mt-2">Processing...</div>
+                </div>
+            </div>
+            <div class="d-flex flex-column" *ngIf="agentLogObject.length === 0">
+                <span class="no-logs">
+                </span>
+                <div class="d-flex flex-column mx-auto">
+                    <span class="font-20 fw-600">No Logs Generated</span>
+                    <span>Activate agent to generate logs</span>
+                </div>
+            </div>
         </div>
     </div>
-    <ag-grid-angular #agGrid *ngIf="columnDefs" class="ag-theme-balham ag-grid-container" [columnDefs]="columnDefs"
-        [floatingFilter]="true" rowModelType="infinite" (filterModified)="filterModified($event)"
-        [datasource]="dataSource" cacheBlockSize="30" (sortChanged)="sortChanged($event)">
-    </ag-grid-angular>
-    <!-- <div class="d-flex flex-column w-100 px-3 background-table">
-        <div>
-            <div class="d-flex p-3" style="justify-content: space-evenly">
-                <span class="d-flex"><span class="font-13 text-secondary">Password</span><span class="font-13  ml-2">
-                        <span class="d-flex align-items-center">
-                            <span class="fa fa-eye text-accent mr-2 hover" (click)="showPassword()"></span>
-                            <span class="text-secondary mt-1">
-                                **********
-                            </span>
-                        </span></span></span>
-                <span><span class="font-13 text-secondary">Agent Id</span><span
-                        class="font-13  ml-2">{{agentId}}</span></span>
-                <span><span class="font-13 text-secondary">IP</span><span
-                        class="font-13  ml-2">{{agentLogObject[0]?.ipAddress?agentLogObject[0]?.ipAddress:'N.A'}}</span></span>
-                <span><span class="font-13 text-secondary">MAC</span><span
-                        class="font-13 ml-2">{{agentLogObject[0]?.macAddress?agentLogObject[0]?.macAddress:'N.A'}}</span></span>
-                <span><span class="font-13 text-secondary">Status</span><span
-                        class="font-13 ml-2">{{agentLogObject[0]?.status?agentLogObject[0]?.status:'N.A'}}</span></span>
-                <span class="d-flex"><span class="font-13 text-secondary">Heart Beat</span><span class="font-13  ml-2">
-                        <div *ngIf="agentLogObject[0]?.heartbeat >-1" class="d-flex align-items-center">
-                            <div
-                                class="strength-tower d-flex flex-column mr-2 {{getStrength(agentLogObject[0]?.streak)}}">
-                                <div class="strength-high"></div>
-                                <div class="strength-medium"></div>
-                                <div class="strength-low"></div>
-                            </div>
-                            <span class="text-secondary">
-                                {{agentLogObject[0]?.heartbeat}}s
-                            </span>
-                        </div>
-                        <span *ngIf="agentLogObject[0]?.heartbeat == -1" class="text-muted">
-                            N.A.
-                        </span>
 
-                    </span>
-                </span>
-                <span><span class="font-13 text-secondary">Streak</span><span class="font-13 text-dark ml-2">
-                        <ng-container *ngIf="agentLogObject[0]?.interactions?.length>0">
-                            <span class="streak mr-1" *ngFor="let item of agentLogObject[0]?.interactions"
-                                [ngClass]="{'bg-delete':item=='E','bg-create':item=='S','bg-primary':item=='P','bg-border':item=='N'}"></span>
-                        </ng-container>
-                        <span *ngIf="agentLogObject[0]?.interactions?.length==0" class="text-muted">
-                            N.A.
-                        </span>
-                    </span></span>
-            </div>
-        </div>
-        <div class="d-flex  bg-white filter-container" *ngIf="showAgentFilter">
-            <odp-agent-filter></odp-agent-filter>
-        </div>
-        <div class="card-container bg-white ">
-            <div class="data-grid-options d-flex align-items-center justify-content-between px-2">
-                <div class="d-flex align-items-center">
-                </div>
-                <div class="d-flex align-items-center">
-                    <span class="page-info">
-                        {{startNo}}-{{endNo}} of {{totalRecords}}
-                    </span>
-                    <button type="button" class="btn btn-link ml-2" [disabled]="disablePrev" (click)="prevPage()">
-                        <span class="fa fa-angle-left"></span>
-                    </button>
-                    <button type="button" class="btn btn-link ml-2" [disabled]="disableNext" (click)="nextPage()">
-                        <span class="fa fa-angle-right"></span>
-                    </button>
-                </div>
-            </div>
-            <div class="data-grid border" odpDataGrid [columns]="tableColumns"
-                (sortModelChange)="sortModelChange($event)">
-                <div class="data-grid-header">
-                    <div class="data-grid-row">
-                        <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort no-grip"
-                            id="_checkbox">
-                            <span class="fa fa-search text-accent open-search"></span>
-                        </div>
-                        <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="timeStamp">
-                            Time</div>
-                        <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="logLevel">
-                            Level</div>
-                        <div class="data-grid-cell d-flex align-items-center head-cell no-move no-sort" id="contents">
-                            Message</div>
-                    </div>
-                    <div class="data-grid-row grid-filters">
-                        <div class="data-grid-cell d-flex align-items-center no-move no-grip" (click)="clearFilter()">
-                            <span class="fa fa-times text-danger close-search"></span>
-                        </div>
-                        <div class="data-grid-cell d-flex align-items-center no-move no-grip">
-                            <input type="date" class="border rounded bg-white w-100" [ngModel]="value"
-                                (ngModelChange)="onChange($event,'timeStamp')">
-                        </div>
-                        <div class="data-grid-cell d-flex align-items-center no-move no-grip">
-                            <select class="border rounded bg-white w-100" [ngModel]="value"
-                                (ngModelChange)="onChange($event,'logLevel')">
-                                <option value="all">--All--</option>
-                                <option value="debug">Debug</option>
-                                <option value="info">Info</option>
-                                <option value="error">Error</option>
-                            </select>
-                        </div>
-                        <div class="data-grid-cell d-flex align-items-center no-move no-grip">
-                            <input type="text" class="border bg-white rounded w-100" [ngModel]="value"
-                                (ngModelChange)="onChange($event,'content')">
-                        </div>
-                    </div>
-                </div>
-                <div class="data-grid-body">
-                    <div class="data-grid-row" *ngFor="let agent of ledgerList;let i=index">
-                        <div class="data-grid-cell d-flex align-items-center">
-                            <span>{{(i + (currentPage-1)*pageSize) + 1}}</span>
-                        </div>
-                        <div class="data-grid-cell d-flex align-items-center">
-                            <span>{{agent.timeStamp | date:'dd-MMM-yyyy hh:mm:ss a'}}</span>
-                        </div>
-                        <div class="data-grid-cell d-flex align-items-center">
-                            <span
-                                [ngClass]="{'text-secondary':agent.logLevel==='Debug','text-accent':agent.logLevel==='Info','text-danger':agent.logLevel==='Error'}">{{agent.logLevel}}</span>
-                        </div>
-                        <div class="data-grid-cell d-flex align-items-center" [odpTruncated]="agent.content">
-                            <span>{{agent.content}}</span>
-                        </div>
-                    </div>
-                    <div class="data-grid-row justify-content-center full-row"
-                        *ngIf="!showLazyLoader && ledgerList.length === 0">
-                        <div class="data-grid-cell d-flex align-items-center w-100 justify-content-center">
-                            <div class="no-users font-normal text-secondary">No Logs Found</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-</div>
-<ng-template #viewPasswordModalTemplate>
-    <div class="modal-body p-4 d-flex flex-column align-items-center">
-        <div class="d-flex align-items-center align-self-start">
-            <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                <odp-agent-icon [size]="18" color="202a36" class="mt-1"></odp-agent-icon>
-            </span>
-            <span class="font-weight-bold">Agent Details</span>
+    <!-- <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal> -->
 
+    <ng-template #pageChangeModalTemplate>
+        <div class="modal-body p-4">
+            <div class="circle bg-dark">
+                <span class="fa fa-exclamation-triangle text-white"></span>
+            </div>
+            <p class="text-dark font-weight-bold text-center">Unsaved changes</p>
+            <p class="text-secondary text-center">You have unsaved changes, are you sure you want to leave?</p>
+            <!-- <div class="d-flex align-items-center justify-content-end">
+                <button type="button" class="btn btn-min-width btn-outline-primary mx-3"
+                    (click)="pageChangeModalTemplateRef.close(false)">No</button>
+                <button type="button" class="btn btn-min-width btn-primary mx-3"
+                    (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+            </div> -->
         </div>
-        <div class="d-flex flex-column w-100">
-            <div class="text-secondary font-sm mt-3">Agent Password</div>
-            <div class="text-dark mt-1">
-                <!-- <span  class="fa fa-spinner fa-pulse"></span> -->
-                <span class="text">{{agentLogObject[0]?.decPassword}}</span>
-                <button type="button" class="btn btn-link text-secondary ml-2"
-                    (click)="copyPassword(agentLogObject[0]?.decPassword)">
-                    <span class="fa fa-copy"></span>
+    </ng-template>
+
+
+    <div *ngIf="showPasswordSide" class="overlay position-fixed"></div>
+    <div [ngClass]="{'show':showPasswordSide}"
+        class="new-data-format-window position-fixed p-4 d-flex flex-column bg-white border-left">
+        <div class="d-flex flex-column h-100" *ngIf="showPasswordSide">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="d-flex align-items-center">
+                    <h5 class="fw-600 font-20">Reset Password</h5>
+                </div>
+                <span class="dsi dsi-close hover closeicon" id="closeicon"
+                    (click)="showEditAgentWindow = false; showPasswordSide = false"></span>
+            </div>
+            <form class="d-flex flex-column h-100" [formGroup]="resetPasswordForm" odpFocusNext>
+                <div class="form-group position-relative">
+                    <label for="password">
+                        New Password
+                        <sup class="text-danger">*</sup>
+                    </label>
+                    <div class="input-wrapper position-relative">
+                        <input class="form-control password" [type]="showPassword['new'] ? 'text' : 'password'"
+                            placeholder="Password" formControlName="password"
+                            [ngClass]="{ 'is-invalid': pwdError, 'pr-4': pwdError }" autocomplete="new-password"
+                            odpAutoFocus />
+                        <span id="showPass" class="dsi eye-icon position-absolute hover" [ngClass]="{
+                  'dsi-view': !showPassword['new'],
+                  'dsi-hide': showPassword['new']
+                }" (click)="showPassword['new'] = !showPassword['new']"></span>
+                        <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute" *ngIf="
+                resetPasswordForm.get('password').dirty &&
+                resetPasswordForm.get('password')?.hasError('required')
+              " ngbTooltip="This is a required field"></span>
+                        <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute" *ngIf="
+                resetPasswordForm.get('password').dirty &&
+                resetPasswordForm.get('password')?.hasError('minlength')
+              " ngbTooltip="Password should be minimum 8 chars long"></span>
+                    </div>
+                </div>
+                <div class="form-group position-relative">
+                    <label for="cPassword">
+                        Re-enter New Password
+                        <sup class="text-danger">*</sup>
+                    </label>
+                    <div class="input-wrapper position-relative d-flex">
+                        <input id="cPassword" class="form-control password"
+                            [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"
+                            formControlName="cpassword" [ngClass]="{ 'is-invalid': cPwdError, 'pr-4': cPwdError  }" />
+                        <span class="dsi eye-icon position-absolute hover" [ngClass]="{
+                  'dsi-view': !showPassword['confirm'],
+                  'dsi-hide': showPassword['confirm']
+                }" (click)="showPassword['confirm'] = !showPassword['confirm']" id="showPassword"></span>
+                        <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute" *ngIf="
+                resetPasswordForm.get('cpassword').dirty &&
+                resetPasswordForm.get('cpassword')?.hasError('required')
+              " ngbTooltip="This is a required field"></span>
+                        <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
+                            *ngIf="resetPasswordForm.get('cpassword').dirty && matchPwd"
+                            [ngbTooltip]="'Passwords don\'t match'"></span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-auto">
+                    <button type="button" class="btn btn-primary add-button" id="resetpassowrd"
+                        (click)="resetPassword()">
+                        Confirm
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <ng-template #downloadAgentModal>
+        <div class="modal-body">
+            <div class="d-flex align-items-center justify-content-between mb-5">
+                <div class="d-flex flex-column">
+                    <span class="font-20 fw-600">Download Agent Shipping</span>
+                    <span class="font-14 fw-400 text-secondary">Please choose the operating platform for the
+                        Agent</span>
+                </div>
+                <span class="hover dsi dsi-close" (click)="downloadAgentModalRef.close(false)"></span>
+            </div>
+            <div class="mt-5 d-flex flex-wrap mx-4">
+                <button type="button"
+                    class="download-option btn btn-white border d-flex align-items-center px-3 mx-1 mb-3 hover"
+                    (click)="downloadAgentModalRef.close('windows-amd64')">
+                    <span class="fab fa-windows mr-2"></span>
+                    <span class="text-dark fw-600 font-14">Windows - 64 Bit</span>
+                </button>
+                <button type="button"
+                    class="download-option btn btn-white border d-flex align-items-center px-3 mx-1 mb-3 hover"
+                    (click)="downloadAgentModalRef.close('linux-amd64')">
+                    <span class="fab fa-linux mr-2"></span>
+                    <span class="text-dark fw-600 font-14">Linux - 64 Bit</span>
+                </button>
+                <button type="button"
+                    class="download-option btn btn-white border d-flex align-items-center px-3 mx-1 mb-3 hover"
+                    (click)="downloadAgentModalRef.close('darwin-amd64')">
+                    <span class="fab fa-apple mr-2"></span>
+                    <span class="text-dark fw-600 font-14">Mac OS - 64 Bit</span>
+                </button>
+                <button type="button"
+                    class="download-option btn btn-white border d-flex align-items-center px-3 mx-1 mb-3 hover"
+                    (click)="downloadAgentModalRef.close('windows-386')">
+                    <span class="fab fa-windows mr-2"></span>
+                    <span class="text-dark fw-600 font-14">Windows - 32 Bit</span>
+                </button>
+                <button type="button"
+                    class="download-option btn btn-white border d-flex align-items-center px-3 mx-1 mb-3 hover"
+                    (click)="downloadAgentModalRef.close('linux-386')">
+                    <span class="fab fa-linux mr-2"></span>
+                    <span class="text-dark fw-600 font-14">Linux - 32 Bit</span>
                 </button>
             </div>
-            <div>
-                <span *ngIf="passwordCopied" class="text-info font-sm">Password Copied!</span>
-                &nbsp;
-            </div>
-
         </div>
-        <div class="d-flex align-self-end">
-            <button type="button" class="btn btn-dark btn-min-width" id="viewPasswordModalClose"
-                (click)="viewPasswordModalTemplateRef.close(true)">Close</button>
-        </div>
-    </div>
-</ng-template>
+    </ng-template>
 
-<ng-template #alertModalTemplate>
-    <div class="modal-body p-4 d-flex flex-column">
+    <div *ngIf="showEditAgentWindow" class="overlay position-fixed"></div>
+    <div [ngClass]="{'show':showEditAgentWindow}"
+        class="new-data-format-window position-fixed p-4 d-flex flex-column align-items-center bg-white border-left">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-agent-icon [size]="18" color="202a36" class="mt-1"></odp-agent-icon>
-                </span>
-                <span class="font-weight-bold">{{alertModalData.title}}</span>
-            </div>
-            <span class="fa fa-times text-secondary hover" (click)="alertModalTemplateRef.close(false)"></span>
-        </div>
-        <div class="d-flex flex-column my-5 w-100">
-            <div class="text-dark text-center mt-1" [innerHTML]="alertModalData.message"></div>
-        </div>
-        <div class="d-flex align-self-end">
-            <button type="button" class="btn btn-dark btn-min-width" id="viewPasswordModalClose"
-                (click)="alertModalTemplateRef.close(true)">Yes</button>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #downloadAgentModalTemplate>
-    <div class="modal-body p-4 d-flex flex-column align-items-center">
-        <div class="d-flex flex-column my-3">
-            <p class="text-dark font-weight-bold text-center mt-3">Choose your Architecture</p>
-            <select id="arch" class="custom-select agent-arch-select align-self-center" [(ngModel)]="agentConfig.arch">
-                <option value="amd64">64-bit</option>
-                <option value="386">32-bit</option>
-            </select>
-            <p class="text-dark font-weight-bold text-center mt-3">Choose your platform</p>
-            <div class="d-flex align-items-center justify-content-center">
-                <div class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-                    (click)="downloadAgentModalTemplateRef.close('windows')">
-                    <span class="fab fa-windows fa-2x"></span>
-                    <span class="text mt-3">Windows</span>
-                </div>
-                <div class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-                    (click)="downloadAgentModalTemplateRef.close('darwin')">
-                    <span class="fab fa-apple fa-2x"></span>
-                    <span class="text mt-3">Mac OS</span>
-                </div>
-                <div class="d-flex flex-column align-items-center justify-content-center platform rounded border m-3 hover border-primary"
-                    (click)="downloadAgentModalTemplateRef.close('linux')">
-                    <span class="fab fa-linux fa-2x"></span>
-                    <span class="text mt-3">Linux</span>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex align-self-end">
-            <button type="button" class="btn btn-link" id="deletePartnerModalNo"
-                (click)="downloadAgentModalTemplateRef.close(false)">Close</button>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #changePasswordModalTemplate>
-    <div class="modal-body p-4 d-flex flex-column">
-        <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-agent-icon [size]="18" color="202a36" class="mt-1"></odp-agent-icon>
-                </span>
-                <span class="font-weight-bold">Change Password</span>
-            </div>
-            <span class="fa fa-times text-secondary hover" (click)="changePasswordModalTemplateRef.close(false)"></span>
-        </div>
-        <div class="d-flex flex-column my-5 w-100">
-            <div class="form-group">
-                <label for="newPassword">New Password</label>
-                <input type="password" class="form-control" [(ngModel)]="agentPasswordModel.password">
-            </div>
-            <div class="form-group">
-                <label for="newPassword">Confirm Password</label>
-                <input type="password" class="form-control" [(ngModel)]="agentPasswordModel.cpassword">
-            </div>
-            <p class="text-danger">
-                <span class="text">{{agentPasswordModel.message}}</span>
-                &nbsp;
-            </p>
-        </div>
-        <div class="d-flex align-self-end">
-            <button type="button" class="btn btn-dark btn-min-width" id="viewPasswordModalClose"
-                (click)="changePassword()">Submit</button>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #newAgentModalTemplate>
-    <div class="modal-body p-4 d-flex flex-column align-items-center">
-        <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper create rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-agent-icon [size]="18" color="1CAD49" class="mt-1"></odp-agent-icon>
-                </span>
-                <span class="font-weight-bold">{{agentData.isEdit?'Edit':'Create new'}} App Agent</span>
-            </div>
-            <button type="button" class="btn btn-link text-dark" (click)="newAgentModalTemplateRef.close(false)">
-                <span class="fa fa-times"></span>
+            <span class="font-20 fw-600">Edit App Agent</span>
+            <button type="button" class="btn btn-link text-dark"
+                (click)="showEditAgentWindow = false; showPasswordSide = false">
+                <span class="dsi dsi-close"></span>
             </button>
         </div>
-        <div class="d-flex flex-column my-5">
-            <p class="text-secondary text-center mt-3">Enter Agent name</p>
-            <div class="d-flex align-items-center justify-content-center position-relative agent-name-wrapper">
-                <input #agentName="ngModel" type="text" class="form-control" [(ngModel)]="agentData.name"
+        <div class="form-group mt-4 w-100">
+            <label class="font-14 text-dark">Agent name</label>
+            <div *ngIf="showEditAgentWindow" class="position-relative agent-name-wrapper">
+                <input #agentName="ngModel" type="text" class="form-control" [(ngModel)]="agentDetails.name"
                     [ngClass]="{'is-invalid':agentName.invalid && (agentName.dirty || agentName.touched)}"
                     maxlength="24" required [pattern]="'[a-z0-9A-Z\\s_-]+'" odpAutoFocus
-                    (keyup.enter)="newAgentModalTemplateRef.close(true)" [disabled]="agentData.isEdit">
+                    (keyup.enter)="triggerAgentEdit()" [disabled]="agentDetails.isEdit">
                 <ng-container *ngIf="agentName.invalid && (agentName.dirty || agentName.touched)">
                     <span *ngIf="agentName?.errors?.required"
-                        class="fa fa-exclamation-circle text-danger position-absolute" ngbTooltip="Name is required"
+                        class="dsi dsi-danger-circle text-danger position-absolute" ngbTooltip="Name is required"
                         container="body"></span>
                     <span *ngIf="agentName?.errors?.maxlength"
-                        class="fa fa-exclamation-circle text-danger position-absolute"
+                        class="dsi dsi-danger-circle text-danger position-absolute"
                         ngbTooltip="Name should be within 24 characters" container="body"></span>
-                    <span *ngIf="agentName?.errors?.pattern"
-                        class="fa fa-exclamation-circle text-danger position-absolute"
+                    <span *ngIf="agentName?.errors?.pattern" class="dsi dsi-danger-circle text-danger position-absolute"
                         ngbTooltip="Name should be alphanumeric characters with spaces, dashes and underscores"
                         container="body"></span>
                 </ng-container>
             </div>
-            <div class="d-flex flex-column position-relative agent-config-wrapper mt-3">
-                <div class="d-flex align-items-center">
-                    <label class="text-secondary" for="encryptFile">Encrypt file</label>
-                    <odp-switch [(checked)]="agentData.encryptFile" [edit]="{status:true}"></odp-switch>
-                </div>
-                <div class="d-flex align-items-center">
-                    <label class="text-secondary" for="encryptFile">Retain file on success</label>
-                    <odp-switch [(checked)]="agentData.retainFileOnSuccess" [edit]="{status:true}"></odp-switch>
-                </div>
-                <div class="d-flex align-items-center">
-                    <label class="text-secondary" for="encryptFile">Retain file on error</label>
-                    <odp-switch [(checked)]="agentData.retainFileOnError" [edit]="{status:true}"></odp-switch>
-                </div>
+        </div>
+        <div class="form-group position-relative agent-config-wrapper w-100">
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <label class="font-14 text-dark mr-2">Encrypt file</label>
+                <odp-switch [checked]="agentDetails?.encryptFile" [edit]="{status:true}"></odp-switch>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <label class="font-14 text-dark mr-2">Retain file on success</label>
+                <odp-switch [checked]="agentDetails?.retainFileOnSuccess" [edit]="{status:true}"></odp-switch>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <label class="font-14 text-dark mr-2">Retain file on error</label>
+                <odp-switch [checked]="agentDetails?.retainFileOnError" [edit]="{status:true}"></odp-switch>
             </div>
         </div>
-        <div class="d-flex align-self-end">
-            <button type="button" class="btn btn-create" id="newAgentModalCreate"
-                [disabled]="agentName.invalid && (agentName.dirty || agentName.touched)"
-                (click)="newAgentModalTemplateRef.close(true)">{{agentData.isEdit ? 'Save' : 'Create'}}</button>
+        <div class="d-flex w-100 mt-auto">
+            <button *ngIf="showEditAgentWindow" type="button" class="btn btn-primary w-100" id="newAgentModalCreate"
+                [disabled]="!agentDetails.name" (click)="triggerAgentEdit()">Save</button>
         </div>
     </div>
-</ng-template>
+
+    <ng-template #agentDetailsModal>
+        <div class="modal-body">
+            <div class="d-flex align-items-center justify-content-between mb-4 mx-4 mt-2">
+                <div class="d-flex flex-column">
+                    <span class="font-20 fw-600">Agent Details</span>
+                </div>
+                <span class="hover dsi dsi-close" (click)="agentDetailsModalRef.close(false)"></span>
+            </div>
+            <div class="d-flex mx-4 flex-column">
+                <div class="d-flex flex-column mb-3">
+                    <label class="fw-500 text-dark ">Agent Name</label>
+                    <span class="fw-400 text-secondary">{{agentDetails.name}}</span>
+                </div>
+                <div class="d-flex flex-column mb-3">
+                    <label class="fw-500 text-dark">Agent ID</label>
+                    <span class="fw-400 text-secondary">{{agentDetails._id}}</span>
+                </div>
+                <div class="d-flex flex-column mb-3">
+                    <label class="fw-500 text-dark">Agent Password</label>
+                    <div class="d-flex">
+                        <span class="fw-400 text-secondary" *ngIf="agentDetails.thePassword">{{agentDetails.thePassword
+                            ||
+                            ''}}</span>
+                        <span class="hover dsi dsi-copy text-secondary ml-2" *ngIf="agentDetails.thePassword"
+                            (click)="copyPassword(agentDetails.thePassword)"></span>
+                    </div>
+                    <span class="fw-400 text-secondary" *ngIf="!agentDetails.thePassword">
+                        <span class="spinner-border text-secondary"></span>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </ng-template>
+
+    <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

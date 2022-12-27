@@ -3,19 +3,24 @@
 
 .key-row {
   height: 40px;
+
   &:hover {
     .options {
       display: flex !important;
     }
+
     background: #ececec 0% 0% no-repeat padding-box;
   }
 }
+
 .options-cell {
   overflow: hidden;
 }
+
 table {
   width: calc(100vw - 735px);
 }
+
 .options {
   max-width: 350px;
   min-height: 38px;
@@ -32,6 +37,7 @@ table {
   overflow: hidden;
   display: inline-block;
 }
+
 .toolTip-msg {
   min-width: 207px;
   max-width: 228px;
@@ -56,9 +62,11 @@ table {
   border-left: solid 10px transparent;
   border-right: solid 10px transparent;
 }
+
 .date-width {
   width: 110px;
 }
+
 .label-width {
   width: 120px;
 }
@@ -77,6 +85,7 @@ table {
     top: 6px;
     font-weight: bold;
   }
+
   input {
     padding-right: 50px;
   }
@@ -85,4 +94,40 @@ table {
 .grid-container {
   height: calc(100vh - 322px);
   display: grid;
+}
+
+.table {
+  height: 400px;
+  max-height: 400px;
+  overflow-x: hidden
+}
+
+
+.list-group-item {
+  &.header {
+    font-weight: 400;
+    height: 40px;
+  }
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.group-actions {
+  min-width: 100px;
+
+  .btn {
+    &:hover {
+      color: $secondary  !important;
+    }
+  }
+}
+
+.scroll-pane {
+  height: 100%;
+  overflow: auto;
 }

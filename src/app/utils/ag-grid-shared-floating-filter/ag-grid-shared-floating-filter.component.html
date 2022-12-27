@@ -65,11 +65,11 @@
           </div>
           <div class="dropdown-divider"></div>
           <div class="dropdown-buttons">
-              <button class="btn btn-sm btn-link font-sm" [disabled]="!fromDate && !toDate"
+              <button class="btn btn-sm btn-link font-13" [disabled]="!fromDate && !toDate"
                   (click)="dateFilterSet = false; dateFilterType = 'equals'; toDate = null; fromDate = null; dateDropdown.close(); onChange()">
                   Clear
               </button>
-              <button class="btn btn-sm btn-dark font-sm"
+              <button class="btn btn-sm btn-dark font-13"
                   [disabled]="!fromDate || (dateFilterType === 'inRange' && (!toDate || toDateRef?.nativeElement?.validity?.rangeUnderflow))"
                   (click)="dateFilterSet = true; dateDropdown.close(); onChange()">
                   Apply
@@ -84,7 +84,7 @@
     ngbDropdownToggle
     [disabled]="showLoading"
   >
-    <div class="font-sm text-accent" *ngIf="!showLoading && (!!checkedCount || otherItemChecked)">
+    <div class="font-13 text-accent" *ngIf="!showLoading && (!!checkedCount || otherItemChecked)">
         <ng-container *ngIf="otherItemChecked">
             {{ (checkedCount + 1) + ((checkedCount + 1) === 1 ? ' item ' : ' items ') + 'selected' }}
         </ng-container>
@@ -92,10 +92,10 @@
             {{ checkedCount + (checkedCount === 1 ? ' item ' : ' items ') + 'selected' }}
         </ng-container>
     </div>
-    <em class="font-sm text-muted" *ngIf="!showLoading && !checkedCount && !otherItemChecked">
+    <em class="font-13 text-muted" *ngIf="!showLoading && !checkedCount && !otherItemChecked">
         0 items selected
     </em>
-    <em class="font-sm text-muted" *ngIf="showLoading">
+    <em class="font-13 text-muted" *ngIf="showLoading">
         Loading...
     </em>
   </button>
@@ -116,10 +116,10 @@
     </div>
     <div class="dropdown-divider"></div>
     <div class="dropdown-buttons">
-      <button class="btn btn-sm btn-link font-sm" (click)="toggleChecks(checkedCount === listItems.length)">
+      <button class="btn btn-sm btn-link font-13" (click)="toggleChecks(checkedCount === listItems.length)">
         {{ checkedCount === listItems.length ? 'Clear' : 'Select All' }}
       </button>
-      <button class="btn btn-sm btn-dark font-sm" (click)="listDropdown.close(); onChange()">
+      <button class="btn btn-sm btn-dark font-13" (click)="listDropdown.close(); onChange()">
         Apply
       </button>
     </div>

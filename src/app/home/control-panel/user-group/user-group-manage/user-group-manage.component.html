@@ -1,103 +1,100 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
   <div class="align-self-center text-center">
-    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="spinner-border text-dark" role="status">
+      <span class="sr-only">Processing...</span>
+    </div>
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="d-flex flex-column w-100 h-100 position-relative">
-  <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
+<div class="d-flex flex-column w-100 h-100 position-relative bg-light-gray">
   <div class="wrapper">
-    <div class="d-flex flex-column">
-      <div class="d-flex flex-column w-100 h-100">
-        <div class="w-100 user-detail-wrapper position-relative">
-          <odp-basic-info hideLogo="true" [(name)]="group.name" [(description)]="group.description" [hideLogo]="true"
-            [edit]="{status:editBasicDetails}">
-            <div class="d-flex align-items-end align-self-start">
-              <button class="btn btn-link" routerLink="../../gr">
-                <span class="fa fa-angle-left mr-2"></span>
-                <span class="text">Back</span>
-              </button>
-              <button *ngIf="hasPermission('PMGBD')" type="button" class="btn btn-link text-danger"
-                (click)="deleteGroup()">
-                <span class="fa fa-trash mr-2"></span>
-                <span class="text">Delete Group</span>
-              </button>
-            </div>
-          </odp-basic-info>
+    <div class="w-100 position-relative px-4 py-5">
+      <odp-basic-info hideLogo="true" [(name)]="group.name" [(description)]="group.description" [hideLogo]="true"
+        [edit]="{status:editBasicDetails}">
+        <div class="d-flex align-items-end align-self-start">
+          <button *ngIf="hasPermission('PMGBD')" type="button" class="btn btn-white border mr-3"
+            (click)="deleteGroup()">
+            <span class="dsi dsi-trash"></span>
+          </button>
+          <button class="btn btn-white border btn-min-width mr-3" routerLink="../../gr">
+            <span>Cancel</span>
+          </button>
+          <button *ngIf="hasPermissionStartsWith('PMG')" class="btn btn-primary btn-min-width" (click)="saveGroup()" [disabled]="group.name==''">
+            <span>Save</span>
+          </button>
         </div>
-        <div class="tabs-wrapper d-flex justify-content-between border border-border mx-3">
-          <div class="tabs d-flex align-items-center">
-            <div *ngIf="showAuthorTab" class="text-dark px-3 py-2 hover" (click)="activeTab=0"
-              [ngClass]="{'active':activeTab==0}">
+      </odp-basic-info>
+    </div>
+    <div class="d-flex flex-column px-4 pb-4">
+      <div class="d-flex flex-column w-100 h-100 bg-white rounded border">
+        <div class="tabs-wrapper d-flex justify-content-between border-bottom text-uppercase text-muted font-13">
+          <div class="tabs d-flex align-items-center p-3">
+            <div *ngIf="showAuthorTab" class="px-3 hover" (click)="activeTab=0"
+              [ngClass]="{'text-accent font-weight-bold':activeTab==0}">
               <span>Author Roles </span>
             </div>
-            <div *ngIf="showAppcenterTab" class="text-dark px-3 py-2 hover" (click)="activeTab=1"
-              [ngClass]="{'active':activeTab==1}">
+            <div *ngIf="showAppcenterTab" class="px-3 hover" (click)="activeTab=1"
+              [ngClass]="{'text-accent font-weight-bold':activeTab==1}">
               <span>App Center Roles </span>
             </div>
-            <div *ngIf="showMembersTab" class="text-dark px-3 py-2 hover" (click)="activeTab=2"
-              [ngClass]="{'active':activeTab==2}">
+            <div *ngIf="showMembersTab" class="px-3 hover" (click)="activeTab=2"
+              [ngClass]="{'text-accent font-weight-bold':activeTab==2}">
               <span>Members </span>
             </div>
-            <div *ngIf="showBotsTab" class="text-dark px-3 py-2 hover" (click)="activeTab=3"
-              [ngClass]="{'active':activeTab==3}">
+            <!-- <div *ngIf="showBotsTab" class="px-3 hover" (click)="activeTab=3" [ngClass]="{'text-accent':activeTab==3}">
               <span>Bots </span>
-            </div>
+            </div> -->
           </div>
           <div class="d-flex align-items-center justify-content-end">
             <span *ngIf="changesMadeinAuthorTab && !changesMadeinAppcenterTab && !changesMadeinUsersTab"
-              class="text-secondary mr-3">Changes made in Author Tab</span>
+              class="text-secondary mr-3"><span class="text-capitalize">Changes made in:</span> Author Roles</span>
             <span *ngIf="changesMadeinAppcenterTab && !changesMadeinAuthorTab && !changesMadeinUsersTab"
-              class="text-secondary mr-3">Changes made in App Center Tab</span>
+              class="text-secondary mr-3"><span class="text-capitalize">Changes made in:</span> App Center Roles</span>
             <span *ngIf="changesMadeinUsersTab && !changesMadeinAuthorTab && !changesMadeinAppcenterTab"
-              class="text-secondary mr-3">Changes made in Members Tab</span>
+              class="text-secondary mr-3"><span class="text-capitalize">Changes made in:</span> Members</span>
             <span *ngIf="changesMadeinAuthorTab && changesMadeinAppcenterTab && !changesMadeinUsersTab"
               class="text-secondary mr-3">
-              Changes made in multiple tabs: Author, App Center
+              <span class="text-capitalize">Changes made in multiple tabs:</span> Author, App Center
             </span>
             <span *ngIf="changesMadeinAppcenterTab && changesMadeinUsersTab && !changesMadeinAuthorTab"
               class="text-secondary mr-3">
-              Changes made in multiple tabs: App Center, Members
+              <span class="text-capitalize">Changes made in multiple tabs:</span> App Center, Members
             </span>
             <span *ngIf="changesMadeinAuthorTab && changesMadeinUsersTab && !changesMadeinAppcenterTab"
               class="text-secondary mr-3">
-              Changes made in multiple tabs: Author, Members
+              <span class="text-capitalize">Changes made in multiple tabs:</span> Author, Members
             </span>
             <span *ngIf="changesMadeinAuthorTab && changesMadeinUsersTab && changesMadeinAppcenterTab"
               class="text-secondary mr-3">
-              Changes made in multiple tabs: Author, App Center, Members
+              <span class="text-capitalize">Changes made in multiple tabs:</span> Author, App Center, Members
             </span>
-            <button *ngIf="hasPermissionStartsWith('PMG')" type="button" class="btn btn-dark btn-min-width mr-3"
-              (click)="saveGroup()">Save</button>
           </div>
         </div>
-        <div *ngIf="showAuthorTab || showAppcenterTab || showMembersTab || showBotsTab"
-          class="mx-3 border-left border-right border-border">
+        <div *ngIf="showAuthorTab || showAppcenterTab || showMembersTab || showBotsTab">
           <odp-user-group-author *ngIf="activeTab===0 && showAuthorTab" [(roles)]="group.roles"></odp-user-group-author>
           <odp-user-group-appcenter *ngIf="activeTab===1 && showAppcenterTab" [roles]="group.roles">
           </odp-user-group-appcenter>
           <odp-user-group-members *ngIf="activeTab===2 && showMembersTab" [users]="allUsers"></odp-user-group-members>
-          <odp-user-group-bots *ngIf="activeTab===3 && showBotsTab" [users]="allUsers"></odp-user-group-bots>
+          <!-- <odp-user-group-bots *ngIf="activeTab===3 && showBotsTab" [users]="allUsers"></odp-user-group-bots> -->
         </div>
       </div>
     </div>
   </div>
 
-  <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-    <odp-group-icon [size]="18" color="DD5151" class="mt-1"></odp-group-icon>
-  </odp-delete-modal>
+  <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
 
   <ng-template #pageChangeModalTemplate>
     <div class="modal-body p-4">
       <div class="circle bg-dark">
         <span class="fa fa-exclamation-triangle text-white"></span>
       </div>
-      <p class="text-dark font-weight-bold text-center">Unsaved change</p>
+      <p class="text-dark font-weight-bold text-center">Unsaved changes</p>
       <p class="text-secondary text-center">You have unsaved changes, are you sure you want to leave?</p>
-    </div>
-    <div class="modal-footer p-3 bg-light">
-      <button type="button" class="btn btn-min-width btn-link w-50 mx-3" (click)="pageChangeModalTemplateRef.close(false)">No</button>
-      <button type="button" class="btn btn-min-width btn-primary w-50 mx-3"
-        (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+      <div class="d-flex align-items-center justify-content-end">
+        <button type="button" class="btn btn-min-width btn-outline-primary mx-3"
+          (click)="pageChangeModalTemplateRef.close(false)">No</button>
+        <button type="button" class="btn btn-min-width btn-primary mx-3"
+          (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+      </div>
     </div>
   </ng-template>

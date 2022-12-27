@@ -4,7 +4,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChangePasswordComponent } from './change-password.component';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
-import { IconsModule } from '../icons/icons.module';
 
 @NgModule({
   imports: [
@@ -12,7 +11,6 @@ import { IconsModule } from '../icons/icons.module';
     NgbModule,
     ReactiveFormsModule,
     AutoFocusModule,
-    IconsModule
   ],
   declarations: [ChangePasswordComponent],
   exports: [ChangePasswordComponent]

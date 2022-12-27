@@ -2,19 +2,21 @@
 
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
-@import "~ag-grid-community/src/styles/ag-grid.scss";
-@import "~ag-grid-community/src/styles/ag-theme-balham/sass/ag-theme-balham-mixin";
-
+@import "ag-grid-community/src/styles/ag-grid.scss";
+@import "ag-grid-community/src/styles/ag-theme-balham/sass/ag-theme-balham-mixin";
 
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@import '~@angular/material/theming';
+@import "@angular/material/theming";
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
 @include mat-core();
+
+
+@import "./assets/data-stack-icons/style.scss";
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -30,12 +32,17 @@ $odp-ui-author-warn: mat-palette($mat-red);
 $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
         accent: $odp-ui-author-accent,
         warn: $odp-ui-author-warn,
-      )));
+      ),
+    ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($odp-ui-author-theme);
+
+body {
+  letter-spacing: 0.01em;
+}
 
 .add-blur {
   -webkit-filter: blur(6px);
@@ -95,28 +102,29 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   }
 }
 
-.font-xl {
-  font-size: 18px;
+.mt-40 {
+  margin-top: 40px;
 }
 
-.font-lg {
-  font-size: 16px;
+@for $i from 7 through 26 {
+  .font-#{$i} {
+    font-size: #{$i}px;
+  }
 }
 
-.font-normal {
-  font-size: 14px;
-}
+$weights: 200,
+  300,
+  400,
+  500,
+  600,
+  700,
+  800,
+  900;
 
-.font-sm {
-  font-size: 12px;
-}
-
-.font-13 {
-  font-size: 13px;
-}
-
-.font-xs {
-  font-size: 10px;
+@each $size in $weights {
+  .fw-#{$size} {
+    font-weight: $size;
+  }
 }
 
 .k8s-icon {
@@ -151,31 +159,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   background: url("/assets/img/pick-date.svg") center no-repeat;
   width: 64px;
   height: 64px;
-}
-
-.icon-wrapper {
-  min-width: 32px;
-  max-width: 32px;
-  min-height: 32px;
-  max-height: 32px;
-  border-radius: 50%;
-
-  &.create {
-    background: rgba($create, 0.2);
-  }
-
-  &.delete {
-    background: rgba($delete, 0.2);
-  }
-
-  &.modify {
-    background: rgba($dark, 0.2);
-  }
-
-  &.modify-red {
-    background: rgba(248, 220, 220, 1);
-    color: $red;
-  }
 }
 
 .popup {
@@ -349,15 +332,15 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   }
 }
 
-.btn:not(.btn-link) {
-  min-height: 30px;
-  max-height: 30px;
+// .btn:not(.btn-link) {
+//   min-height: 32px;
+//   max-height: 32px;
 
-  &.btn-sm {
-    min-height: 24px;
-    max-height: 24px;
-  }
-}
+//   &.btn-sm {
+//     min-height: 24px;
+//     max-height: 24px;
+//   }
+// }
 
 .audit-object-log {
   .min-height {
@@ -366,8 +349,8 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 }
 
 .error-icon {
-  top: 7px;
-  left: 92%;
+  top: 11px;
+  right: 10px;
 }
 
 .agent-arch-select {
@@ -375,10 +358,16 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   max-width: 120px;
 }
 
-.app-version {
-  bottom: 6px;
-  right: 8px;
-  font-size: 10px;
+.page-padding {
+  padding: 32px !important;
+}
+
+.nav-inactive {
+  color: #7A7A7A;
+}
+
+.nav-active {
+  color: #181818;
 }
 
 // // Custom scrollbar
@@ -523,15 +512,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
       background: darken($accent, 10);
     }
   }
-
-  &.blocked {
-    border-color: $delete;
-    background: $delete;
-
-    &:hover {
-      background: darken($delete, 10);
-    }
-  }
 }
 
 .rounded-dropdown {
@@ -566,10 +546,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
       &.view {
         color: $success;
-      }
-
-      &.blocked {
-        color: $delete;
       }
     }
 
@@ -667,144 +643,13 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.24);
 }
 
-/*---- DATA GRID START ----*/
-.data-grid-options {
-  min-height: 40px;
-  max-height: 40px;
-  background: #ececec;
-  border-top: 1px solid $border-color;
-  border-left: 1px solid $border-color;
-  border-right: 1px solid $border-color;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-
-  .page-info {
-    color: $heading-highlight;
-  }
-}
-
-.data-grid {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  font-family: "Lato";
-
-  .data-grid-cell {
-    min-width: 200px;
-    max-width: 200px;
-    min-height: 40px;
-    max-height: 40px;
-    padding: 0 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 13px;
-  }
-
-  .data-grid-header {
-    display: flex;
-    flex-direction: column;
-    max-height: 62px;
-    overflow: hidden;
-    background: #ececec;
-    border-bottom: 1px solid #ddd;
-
-    .grid-filters {
-      .data-grid-cell {
-        background: #efefef;
-        padding-top: 0px;
-        min-height: 32px;
-        max-height: 32px;
-      }
-    }
-
-    .head-cell {
-      background: #ececec;
-      min-height: 32px;
-      max-height: 32px;
-    }
-  }
-
-  .data-grid-header,
-  .data-grid-body {
-    .data-grid-row {
-      display: flex;
-      align-items: center;
-
-      .data-grid-cell.head-cell {
-        color: #747e8d;
-        border-bottom: 0px;
-
-        .utility-icons {
-          transition: 0.25s;
-          opacity: 0;
-        }
-
-        &:hover {
-          .utility-icons {
-            opacity: 1;
-
-            .resize-col {
-              cursor: col-resize;
-            }
-
-            .move-col {
-              cursor: move;
-            }
-          }
-        }
-      }
-
-      .data-grid-cell:not(.head-cell):not(.no-padding) {
-        padding-top: 4px;
-      }
-
-      &.full-row {
-        .data-grid-cell {
-          min-width: unset;
-          max-width: unset;
-        }
-      }
-    }
-  }
-
-  .data-grid-body {
-    overflow: auto;
-
-    .data-grid-row {
-      &:first-child {
-        .data-grid-cell {
-          border-top: 0px;
-        }
-      }
-
-      &:not(.selected):hover {
-        background: #f2f2f2;
-
-        .data-grid-cell {
-          background: #f2f2f2;
-        }
-      }
-
-      .data-grid-cell {
-        border-bottom: 1px solid $border-color;
-      }
-    }
-  }
-}
-
-/*---- DATA GRID END ----*/
-
-// .high-zIndex {
-//   //z-index: 1071;
-// }
 
 .label-color {
   color: $heading-highlight;
 }
 
 .focus-accent:focus {
-  border-color: $accent  !important;
+  border-color: $accent !important;
   box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
 }
 
@@ -823,7 +668,7 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
   .form-control:not(.is-invalid):focus,
   .custom-select:not(.is-invalid):focus {
-    border-color: $accent  !important;
+    border-color: $accent !important;
     box-shadow: 0 0 0 0.2rem rgba($accent, 0.25) !important;
   }
 
@@ -878,59 +723,6 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   }
 }
 
-.custom-control-input {
-  &:not(:disabled):active~.custom-control-label {
-    &.accent {
-      &::before {
-        color: $accent;
-        background-color: $accent;
-        border-color: $accent;
-      }
-    }
-  }
-
-  &:checked {
-    &:disabled~.custom-control-label {
-      &.accent {
-        &::before {
-          background-color: rgba($accent, 0.5);
-        }
-      }
-    }
-  }
-
-  &~.custom-control-label {
-    &.accent {
-      &::before {
-        border-radius: 2px;
-      }
-    }
-  }
-
-  &:checked~.custom-control-label {
-    &.accent {
-      &::before {
-        background-color: $accent;
-        border-color: $accent;
-      }
-
-      &::before,
-      &::after {
-        border-radius: 2px;
-      }
-    }
-  }
-
-  &:focus~.custom-control-label {
-    &.accent {
-      &::before {
-        box-shadow: 0 0 0 0.2rem rgba($accent, 0.25);
-        border-color: $accent;
-      }
-    }
-  }
-}
-
 .no-select {
   -webkit-touch-callout: none;
   /* iOS Safari */
@@ -949,23 +741,44 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
 
 /*---- AG-GRID START ----*/
 .ag-theme-balham {
+  @include ag-theme-balham((balham-active-color: $primary));
+  font-family: "Inter";
+  font-size: 14px;
 
-  @include ag-theme-balham((balham-active-color: $primary ));
-  font-family: "Lato";
-  font-size: 13px;
 
   .ag-root {
     border: 0;
   }
 
+  .ag-root-wrapper {
+    border: 1px solid #ECECEC;
+    border-radius: 8px;
+  }
+
+
   .ag-header {
     background: #fff;
+    font-size: 11px;
+    color: $lightgrey;
+
+    .ag-header-container {
+      background-color: #FBFBFB;
+    }
+
 
     .ag-header-row:last-child {
       .ag-header-cell {
         border-top: 0;
       }
     }
+  }
+
+  .ag-row {
+    padding: 10px;
+  }
+
+  .ag-layout-normal {
+    overflow-x: hidden
   }
 
   .ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right) {
@@ -975,11 +788,29 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
   .ag-floating-filter-button {
     display: none;
   }
+
+  .ag-checkbox {
+    padding-bottom: 15px !important;
+  }
+
+  .ag-row-selected {
+    background-color: #fff;
+  }
+
+  .ag-ltr .ag-header-select-all {
+    padding-top: 15px;
+  }
+
+  .ag-checkbox-input-wrapper.ag-checked::after {
+    color: white !important;
+    background: $headings !important;
+    border-radius: 4px;
+  }
 }
 
 .custom-style {
   .ag-header {
-    background: $data-grid-header  !important;
+    background: $data-grid-header !important;
   }
 }
 
@@ -1000,3 +831,181 @@ $odp-ui-author-theme: mat-light-theme((color: (primary: $odp-ui-author-primary,
     opacity: 0.4;
   }
 }
+
+
+.input-text {
+  width: 320px;
+}
+
+.hover {
+  &:hover {
+    cursor: pointer;
+
+    &.underline {
+      text-decoration: underline;
+    }
+  }
+}
+
+.heading {
+  color: $headings
+}
+
+.sub-heading {
+  color: $sub-headings
+}
+
+.fa-search {
+  color: $lightgrey;
+}
+
+.slide-overlay {
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: rgba($color: #000000, $alpha: 0.6);
+}
+
+.slide-window {
+  height: 100vh;
+  width: 360px;
+  top: 0;
+  right: 0px;
+  z-index: 2;
+  transition: 0.2s;
+  overflow: auto;
+  padding-top: 40px !important;
+
+  &.show {
+    right: 0px !important;
+  }
+}
+
+.selected {
+  background: rgba($orange, 0.04);
+}
+
+.selectedTab {
+  border-radius: 0px 8px 8px 0px;
+  width: 3px;
+}
+
+.icon-primary {
+  color: $orange
+}
+
+.btn-delete {
+  background: $red;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.node-options-item,
+.node-block {
+  .dsi-api-reciever {
+    color: #6C7584;
+  }
+
+  .dsi-invoke-api {
+    color: #00CCCB;
+  }
+
+  .dsi-clock {
+    color: #2FC48F;
+  }
+
+  .dsi-data-service {
+    color: #A94CFF;
+  }
+
+  .dsi-function {
+    color: #FFBB1A;
+  }
+
+  .dsi-connector,
+  .dsi-file {
+    color: #009BFF;
+  }
+
+  .dsi-logs {
+    color: #FF7D4C;
+  }
+
+  .dsi-mapping {
+    color: #FF4C82;
+  }
+
+  .dsi-expand {
+    color: #FF4C82;
+  }
+
+  .dsi-response {
+    color: #2FC48F;
+  }
+}
+
+
+
+@mixin altBox($n) {
+  $n: $n +1;
+
+  .field-wrapper {
+    @if $n % 2==0 {
+      background: $light;
+    }
+
+    @else {
+      background: $white;
+    }
+
+    @if ($n < 9) {
+      @include altBox($n);
+    }
+  }
+
+  .field-block {
+    @if $n % 2==0 {
+      background: $white;
+    }
+
+    @else {
+      background: $light;
+    }
+
+    @if ($n < 9) {
+      @include altBox($n);
+    }
+  }
+}
+
+.text-delete {
+  color: $danger
+}
+
+.dynamic-variable-addon {
+  text-indent: 20px;
+}
+
+.node-data-selector {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@include altBox(1);

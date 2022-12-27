@@ -29,7 +29,7 @@ const isMapperFunction = (x: any): x is MapperFunction => {
   styleUrls: ['./ag-grid-shared-floating-filter.component.scss']
 })
 export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgFrameworkComponent<IFloatingFilterParams>, OnDestroy {
-  @ViewChild('toDateRef', { static: false}) toDateRef: ElementRef;
+  @ViewChild('toDateRef', { static: false }) toDateRef: ElementRef;
   params: IFloatingFilterParams;
   type: FilterType;
   listItems: Array<FilterListItem>;
@@ -71,7 +71,7 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
         .pipe(debounceTime(600), distinctUntilChanged())
         .subscribe(event => this.onChange(event));
     }
-    if(['date', 'date-time'].includes(this.type)) {
+    if (['date', 'date-time'].includes(this.type)) {
       this.timezone = colDef.refData?.timezone || 'Zulu';
     }
     const filterModel = this.params.api.getFilterModel();
@@ -96,10 +96,10 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
             const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             const filterValue = filterModel[this.field].filter[this.field];
             let formatString = 'YYYY-MM-DD';
-            if(this.type === 'date-time') {
+            if (this.type === 'date-time') {
               formatString += 'THH:mm';
             }
-            if(!!filterValue?.$lt) {
+            if (!!filterValue?.$lt) {
               this.fromDate = this.appService.getMomentInTimezone(new Date(filterValue.$lt), localTimezone).format(formatString);
               this.toDate = null;
               this.dateFilterType = 'lessThan';
@@ -129,7 +129,7 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
     }
   }
 
-  prepareList(clear?:boolean) {
+  prepareList(clear?: boolean) {
     const colDef = this.params.column.getColDef();
     if (
       this.type === 'list_of_values' &&
@@ -178,14 +178,14 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
   }
 
   onParentModelChanged(parentModel: any, filterChangedEvent?: FilterChangedEvent): void {
-    // if (!parentModel || Object.keys(parentModel).length === 0) {
-    //   this.otherItemInput = null;
-    //   this.prepareList(true);
-    //   this.fromDate = null;
-    //   this.toDate = null;
-    //   this.dateFilterSet = false;
-    //   this.dateFilterType = 'equals';
-    // }
+    if (!parentModel || Object.keys(parentModel).length === 0) {
+      this.otherItemInput = null;
+      this.prepareList(true);
+      this.fromDate = null;
+      this.toDate = null;
+      this.dateFilterSet = false;
+      this.dateFilterType = 'equals';
+    }
   }
 
   debounceInput(event) {
@@ -236,9 +236,9 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
     const obj = {};
     let fromDate, toDate;
     if (!!this.fromDate && (this.dateFilterType !== 'inRange' || !!this.toDate)) {
-      switch(this.dateFilterType) {
+      switch (this.dateFilterType) {
         case 'equals': {
-          if(this.type === 'date') {
+          if (this.type === 'date') {
             fromDate = this.appService.getMomentInTimezone(new Date(this.fromDate), this.timezone || 'Zulu', 'time:start');
             toDate = this.appService.getMomentInTimezone(new Date(this.fromDate), this.timezone || 'Zulu', 'time:end');
           } else {
@@ -248,9 +248,9 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
           obj['$gte'] = fromDate.toISOString();
           obj['$lte'] = toDate.toISOString();
         };
-        break;
+          break;
         case 'inRange': {
-          if(this.type === 'date') {
+          if (this.type === 'date') {
             fromDate = this.appService.getMomentInTimezone(new Date(this.fromDate), this.timezone || 'Zulu', 'time:start');
             toDate = this.appService.getMomentInTimezone(new Date(this.toDate), this.timezone || 'Zulu', 'time:end');
           } else {
@@ -260,25 +260,25 @@ export class AgGridSharedFloatingFilterComponent implements IFloatingFilter, AgF
           obj['$gte'] = fromDate.toISOString();
           obj['$lte'] = toDate.toISOString();
         };
-        break;
+          break;
         case 'lessThan': {
-          if(this.type === 'date') {
+          if (this.type === 'date') {
             fromDate = this.appService.getMomentInTimezone(new Date(this.fromDate), this.timezone || 'Zulu', 'time:start');
           } else {
             fromDate = this.appService.getMomentInTimezone(new Date(this.fromDate + ':00'), this.timezone || 'Zulu', 'ms:start');
           }
           obj['$lt'] = fromDate.toISOString();
         };
-        break;
+          break;
         case 'greaterThan': {
-          if(this.type === 'date') {
+          if (this.type === 'date') {
             toDate = this.appService.getMomentInTimezone(new Date(this.fromDate), this.timezone || 'Zulu', 'time:end');
           } else {
             toDate = this.appService.getMomentInTimezone(new Date(this.fromDate + ':59'), this.timezone || 'Zulu', 'ms:end');
           }
           obj['$gt'] = toDate.toISOString();
         };
-        break;
+          break;
       }
     }
     return obj;
