@@ -469,20 +469,20 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         self.deleteStateModel.emit($event);
     }
 
-    pasteOnField(e) {
-        const self = this;
-        // self.schemaService.selectedFieldId = null;
-        self.schemaService.activeProperty.emit(null);
-        if (!self.all.get([self.index, '_id'])) {
-            let val = e.clipboardData.getData('text/plain');
-            try {
-                val = JSON.parse(val);
-                self.createSchema(val);
-            } catch (err) {
-                self._createField(val);
-            }
-        }
-    }
+    // pasteOnField(e) {
+    //     const self = this;
+    //     // self.schemaService.selectedFieldId = null;
+    //     self.schemaService.activeProperty.emit(null);
+    //     if (!self.all.get([self.index, '_id'])) {
+    //         let val = e.clipboardData.getData('text/plain');
+    //         try {
+    //             val = JSON.parse(val);
+    //             self.createSchema(val);
+    //         } catch (err) {
+    //             self._createField(val);
+    //         }
+    //     }
+    // }
 
     _createField(val) {
         const self = this;

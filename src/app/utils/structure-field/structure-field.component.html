@@ -16,7 +16,7 @@
                             [ngbTooltip]="tipContent" #tooltip="ngbTooltip" triggers="manual"
                             (blur)="checkType(inputField.value);searchService();" (focus)="activateProperty()"
                             (keyup.enter)="addField()" (shift.delete)="deleteField($event)" type="text"
-                            class="field mr-2" formControlName="name" (paste)="pasteOnField($event)"
+                            class="field mr-2" formControlName="name"
                             [attr.placeholder]="placeholder" [attr.id]="fieldId"
                             [ngClass]="{'form-control-plaintext':!active,'form-control':active, 'is-invalid pl-2': hasError}"
                             odpKeyStrokes (shift.enter)="addField(true)">
