@@ -1,0 +1,22 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+ul li {
+    min-width: 140px;
+    max-width: 140px;
+
+    ul {
+        display: none;
+        position: absolute;
+        left: 140px;
+        top: 0;
+    }
+
+    &:hover {
+        background: $light;
+
+        ul {
+            display: block;
+        }
+    }
+}

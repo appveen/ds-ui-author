@@ -43,6 +43,10 @@ import { RouteGuard } from '../../utils/guards/route.guard';
 import { NodeDataSelectorComponent } from './node-properties/node-data-selector/node-data-selector.component';
 import { AddHeadersComponent } from './node-properties/add-headers/add-headers.component';
 import { MssqlConnectorComponent } from './node-properties/connector-properties/mssql-connector/mssql-connector.component';
+import { SourceFieldsComponent } from './node-properties/node-mapping/source-fields/source-fields.component';
+import { TargetFieldsComponent } from './node-properties/node-mapping/target-fields/target-fields.component';
+import { SourceSelectorComponent } from './node-properties/node-mapping/source-selector/source-selector.component';
+import { FormulaEditorComponent } from './node-properties/node-mapping/formula-editor/formula-editor.component';
 
 const routes: Routes = [
   {
@@ -75,7 +79,11 @@ const routes: Routes = [
     MongodbConnectorComponent,
     NodeDataSelectorComponent,
     AddHeadersComponent,
-    MssqlConnectorComponent
+    MssqlConnectorComponent,
+    SourceFieldsComponent,
+    TargetFieldsComponent,
+    SourceSelectorComponent,
+    FormulaEditorComponent
   ],
   imports: [
     CommonModule,

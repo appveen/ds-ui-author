@@ -26,6 +26,7 @@
     .field-block {
         position: relative;
         overflow: hidden;
+        min-height: 46px;
 
         .input-wrapper {
             overflow: hidden;
@@ -38,11 +39,28 @@
             z-index: 1;
         }
 
+        .add-source {
+            visibility: hidden;
+            min-width: 120px
+        }
+
         &:hover {
             .delete-btn {
                 right: 0px;
             }
+
+            .add-source {
+                visibility: visible;
+            }
         }
+    }
+
+    .source-tag {
+        min-width: 107px;
+        max-width: 107px;
+        min-height: 28px;
+        max-height: 28px;
+        border-radius: 16px;
     }
 
     .formula-builder {

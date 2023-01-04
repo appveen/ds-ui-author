@@ -1,0 +1,37 @@
+<div class="field-block d-flex flex-column justify-content-center p-2 mx-2 mt-2 border rounded hover">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center justify-content-start">
+            <span class="dsi dsi-more-vertical-6 mr-2"></span>
+            <div class="input-wrapper w-100 d-flex align-items-center position-relative mr-3 text-truncate">
+                <span class="font-14 fw-400 text-dark">{{definition?.name}}</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <ng-container *ngFor="let item of definition.source;let i=index">
+                    <div
+                        class="source-tag d-flex align-items-center justify-content-between bg-white px-2 py-1 font-12 fw-400 border">
+                        <span class="text-dark text-truncate">{{item.name}}</span>
+                        <span class="dsi dsi-close ml-2 hover" (click)="removeSource(definition,i)"></span>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="add-source d-flex align-items-center justify-content-start hover font-12 fw-400 ml-2 ignore-outside"
+                (click)="openDropDown($event)">
+                <span class="dsi dsi-plus-circle-fill mr-2 text-primary ignore-outside"></span>
+                <span class="text-dark ignore-outside">Add Source</span>
+            </div>
+            <odp-source-selector *ngIf="showAddSource" class="position-absolute" [sources]="sources" odpClickOutside
+                (outside)="showAddSource=false;clickedCoordinates=null" [ngStyle]="dropDownStyle" (selected)="sourceSelected($event)">
+            </odp-source-selector>
+            <!-- <div *ngIf="showAddSource" class="d-flex align-items-center justify-content-start font-12 fw-400 ml-2">
+                <input type="text" class="border rounded bg-white">
+            </div> -->
+        </div>
+        <span class="mr-3 text-success font-12 hover underline" (click)="showFormulaEditor=true"><i>fn()</i></span>
+    </div>
+    <ng-container *ngFor="let item of definition.definition">
+        <odp-target-fields [definition]="item" [sources]="sources" [clearMapping]="clearMapping" [fuzzyMapping]="fuzzyMapping"></odp-target-fields>
+    </ng-container>
+</div>
+<div *ngIf="showFormulaEditor" class="formula-builder position-fixed border rounded">
+    <odp-formula-editor [definition]="definition" [(toggle)]="showFormulaEditor"></odp-formula-editor>
+</div>

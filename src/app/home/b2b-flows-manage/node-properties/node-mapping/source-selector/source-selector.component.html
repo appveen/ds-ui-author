@@ -1,0 +1,17 @@
+<div class="source-selector">
+    <ng-container *ngTemplateOutlet="listItems; context: {def:sources}"></ng-container>
+</div>
+
+<ng-template #listItems let-def="def">
+    <ul class="p-0 m-0 bg-white rounded border">
+        <li class="d-block" *ngFor="let item of def">
+            <div class="d-flex pl-3 pr-1 py-2 align-items-center justify-content-between" (click)="selectItem(item)">
+                <span>{{item.name || item.dataPath}}</span>
+                <span *ngIf="item.definition" class="dsi dsi-drop-up fa-rotate-90"></span>
+            </div>
+            <ng-container *ngIf="item.definition">
+                <ng-container *ngTemplateOutlet="listItems; context: {def:item.definition}"></ng-container>
+            </ng-container>
+        </li>
+    </ul>
+</ng-template>

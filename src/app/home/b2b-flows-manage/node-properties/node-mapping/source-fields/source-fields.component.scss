@@ -1,0 +1,9 @@
+.field-block {
+    position: relative;
+    overflow: hidden;
+    min-height: 46px;
+
+    .input-wrapper {
+        max-width: 120px;
+    }
+}

@@ -1,0 +1,19 @@
+<div class="formula-builder h-100 w-100 bg-white">
+    <div class="sub-header d-flex align-items-start justify-content-between px-3 pt-3">
+        <div class="d-flex align-items-center font-20 fw-600">
+            <span class="text-dark mr-2">Formula for:</span>
+            <span class="text-primary">{{definition.dataPath}}</span>
+        </div>
+        <button type="button" class="btn btn-link text-dark" (click)="close(false)">
+            <span class="dsi dsi-close fw-500"></span>
+        </button>
+    </div>
+    <div *ngIf="definition.source && definition.source.length>0" class="d-flex flex-column px-3 text-secondary mb-3">
+        <span *ngFor="let item of definition.source;let sourceIndex=index" class="font-13 fw-400">Use
+            <i>{{item.dataPath}}</i> as <span class="fw-500">input{{sourceIndex+1}}</span>
+        </span>
+    </div>
+    <div class="px-3">
+        <textarea class="code-editor form-control" [(ngModel)]="definition.formula">{{baseCode}}</textarea>
+    </div>
+</div>

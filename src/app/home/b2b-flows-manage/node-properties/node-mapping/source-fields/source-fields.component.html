@@ -1,0 +1,11 @@
+<div class="field-block d-flex flex-column justify-content-center p-2 mx-2 mt-2 border rounded flex-fill">
+    <div class="d-flex align-items-center w-100">
+        <div class="input-wrapper w-100 d-flex align-items-center position-relative mr-3 text-truncate">
+            <span class="dsi dsi-more-vertical-6 mr-2"></span>
+            <span class="font-14 fw-400 text-dark">{{definition?.name}}</span>
+        </div>
+    </div>
+    <ng-container *ngFor="let item of definition.definition">
+        <odp-source-fields [definition]="item"></odp-source-fields>
+    </ng-container>
+</div>
