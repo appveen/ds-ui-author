@@ -27,7 +27,7 @@
                             [disabled]="connector.name === 'Default DB Connector' || connector.name === 'Default File Connector'">
                             <span>Edit</span>
                         </button>
-                        <button *ngIf="edit.status" class="btn btn-primary btn-min-width" (click)="saveConnector()">
+                        <button *ngIf="edit.status" [disabled]="!connector.name" class="btn btn-primary btn-min-width" (click)="saveConnector()">
                             <span>Save</span>
                         </button>
                     </ng-container>

@@ -114,13 +114,13 @@
           [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
         <ng-container *ngIf="form.get('name').dirty">
           <span *ngIf="form.get('name').hasError('required')"
-            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+            class="text-danger position-absolute  dsi dsi-danger-circle" container="body"
             ngbTooltip="Name is required"></span>
           <span *ngIf="form.get('name').hasError('maxlength')"
-            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+            class="text-danger position-absolute  dsi dsi-danger-circle" container="body"
             ngbTooltip="Name should be within 40 characters"></span>
           <span *ngIf="form.get('name').hasError('pattern')"
-            class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+            class="text-danger position-absolute  dsi dsi-danger-circle" container="body"
             ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
         </ng-container>
       </div>
