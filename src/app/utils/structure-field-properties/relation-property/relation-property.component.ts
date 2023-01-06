@@ -391,7 +391,6 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
 
   onSelectSearchField(selectedSearchField) {
     const self = this;
-    self.addToList('relatedViewFields', selectedSearchField);
     const service = self.services.find(e => e._id === self.properties.get('relatedTo').value);
     self.getDocuments(service);
   }
