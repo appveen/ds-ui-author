@@ -20,7 +20,7 @@ export class StepFieldsComponent implements OnInit {
   }
 
   checkStateModel(field:any){
-    if(field.value.properties.name==this.schemaService.stateModel.value){
+    if(field.value.properties.name==this.schemaService.stateModel?.value){
       return false;
     }
     else{
