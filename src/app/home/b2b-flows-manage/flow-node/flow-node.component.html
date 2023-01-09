@@ -57,7 +57,7 @@
             <div class="node-name w-100 text-center text-truncate text-muted font-12" *ngIf="node.name">
                 <span class="">{{node.name}}</span>
             </div>
-            <span class="delete-icon dsi dsi-trash text-danger position-absolute hover"
+            <span *ngIf="b2bflowsmanage.edit.status" class="delete-icon dsi dsi-trash text-danger position-absolute hover"
                 (click)="$event.stopPropagation();deleteNode()"></span>
         </div>
         <ng-container *ngFor="let item of node.onSuccess;let f=first">

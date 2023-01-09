@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
-import * as uuid from 'uuid/v1';
 
 import { GetOptions, CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -44,6 +43,8 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   breadcrumbPaths: Array<Breadcrumb>;
   openDeleteModal: EventEmitter<any>;
   searchTerm: string;
+  isClone: boolean = false;
+  cloneData: any;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -155,13 +156,37 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     });
   }
 
+  triggerFlowClone() {
+    if (this.form.invalid) {
+      return;
+    }
+    this.showLazyLoader = true;
+    this.showNewFlowWindow = false;
+    const payload = _.cloneDeep(this.form.value);
+    payload['nodes'] = this.cloneData.nodes || [];
+    payload.app = this.commonService.app._id;
+    this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
+      this.showLazyLoader = false;
+      this.isClone = false;
+      this.form.reset({ type: 'API' });
+      this.ts.success('Flow has been created.');
+      this.appService.edit = res._id;
+      this.router.navigate(['/app/', this.commonService.app._id, 'flow', res._id]);
+    }, err => {
+      this.showLazyLoader = false;
+      this.form.reset({ type: 'API' });
+      this.isClone = false;
+      this.commonService.errorToast(err);
+    });
+  }
+
   getFlows() {
     this.showLazyLoader = true;
     this.flowList = [];
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/count`).pipe(switchMap((count: any) => {
       return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, {
         count: count,
-        select: 'name inputNode status lastInvoked _metadata'
+        select: 'name inputNode status lastInvoked _metadata nodes'
       });
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
@@ -392,10 +417,14 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   }
 
   cloneFlow(index: number) {
+    this.cloneData = null;
     this.form.reset();
+    this.isClone = true;
     const temp = this.flowList[index];
     this.form.get('name').patchValue(temp.name + ' Copy');
     this.form.get('type').patchValue(temp.inputNode.type);
+    this.form.get('inputNode').patchValue(temp.inputNode);
+    this.cloneData = temp;
     this.showNewFlowWindow = true;
   }
 

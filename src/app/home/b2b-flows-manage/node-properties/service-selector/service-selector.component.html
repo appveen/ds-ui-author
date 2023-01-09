@@ -17,13 +17,14 @@
             <div class="d-flex align-items-center">
                 <odp-round-radio [edit]="edit" [checked]="item._selected">
                 </odp-round-radio>
-                <span class="ml-3">{{item.name}}</span>
+                <span [ngbTooltip]="item.name" class="ml-3 text-truncate" style="max-width: 200px;">{{item.name}}</span>
             </div>
             <span>{{item.attributeCount}}</span>
         </div>
         <div *ngIf="!serviceList || serviceList.length == 0"
             class="list-group-item d-flex align-items-center justify-content-between text-secondary">
-            No Data Service found for the term: <span class="fw-500 text-dark">{{searchTerm}}</span>
+            {{searchTerm && serviceList ? 'No Data Service found for the term:' : 'No data service found'}} <span
+                class="fw-500 text-dark">{{searchTerm}}</span>
         </div>
     </div>
     <div class="d-flex align-items-center justify-content-end">

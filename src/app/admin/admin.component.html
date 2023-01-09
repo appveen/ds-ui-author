@@ -1,5 +1,5 @@
 <div class="d-flex flex-column w-100 h-100">
-  <div class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white border-bottom border-dark">
+  <div class="header d-flex align-items-center justify-content-between w-100 p-3 bg-white border border-border">
     <div class="left d-flex align-items-center" [ngClass]="{ 'add-blur': addBlur }">
       <div class="logo"></div>
     </div>
@@ -115,23 +115,22 @@
       </div> -->
     </div>
   </div>
-  <div class="sub-header d-flex align-items-center justify-content-center bg-dark">
-    <div #adminActive="routerLinkActive" class="d-flex align-items-center px-3 item hover" routerLinkActive="active"
-      routerLink="apps">
-      <span class="dsi dsi-app-panel mr-2"></span>
-      <span class="text">Apps</span>
-    </div>
-    <div class="d-flex align-items-center px-3 item hover" routerLinkActive="active" routerLink="users"
+  <div class="d-flex align-items-center px-4 fw-600 font-22 py-3">
+    Super Admin
+  </div>
+    <div class="d-flex align-items-center px-4 fw-400 item hover">
+      <span #adminActive="routerLinkActive" routerLinkActive="active" routerLink="apps" class="text">
+        Applications</span>
+    <span class="d-flex align-items-center px-4 fw-400 item hover"
       *ngIf="isSuperAdmin">
-      <span class="dsi dsi-user mr-2"></span>
-      <span class="text">Users</span>
+      <span routerLinkActive="active" routerLink="users" class="text">Users</span>
+    </span>
     </div>
     <!-- <div #agentActive="routerLinkActive" class="d-flex align-items-center px-3 item hover" routerLinkActive="active"
       routerLink="integration">
       <span class="odp-flows"></span>
       <span class="text mt-1 ml-2">Integration</span>
     </div> -->
-  </div>
   <div class="d-flex w-100 h-100">
     <div class="d-flex flex-column body w-100">
       <router-outlet></router-outlet>

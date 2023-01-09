@@ -25,154 +25,154 @@
   }
 }
 
-// .app-list {
-//   padding-left: 20vw;
-//   padding-right: 20vw;
+.container {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+// .apps-container {
+//   min-height: 310px;
+//   max-height: calc(100vh - 180px);
 // }
 
-.apps-container {
-  min-height: 310px;
-  max-height: calc(100vh - 180px);
-}
+// .icon-circle {
+//   background: #D1EFDA;
+//   min-width: 32px;
+//   max-width: 32px;
+//   min-height: 32px;
+//   max-height: 32px;
+//   border-radius: 15px;
+// }
 
-.icon-circle {
-  background: #D1EFDA;
-  min-width: 32px;
-  max-width: 32px;
-  min-height: 32px;
-  max-height: 32px;
-  border-radius: 15px;
-}
+// .app-form {
+//   min-width: 272px;
+//   max-width: 272px;
+// }
 
-.app-form {
-  min-width: 272px;
-  max-width: 272px;
-}
+// .app-form-description {
+//   @extend .app-form;
+//   min-height: 100px;
+//   max-height: 100px;
+// }
 
-.app-form-description {
-  @extend .app-form;
-  min-height: 100px;
-  max-height: 100px;
-}
+// .app-card {
+//   border: 1px solid transparent;
+//   transition: 0.25s;
+//   min-width: 90px;
+//   max-width: 90px;
+//   min-height: 90px;
+//   max-height: 90px;
 
-.app-card {
-  border: 1px solid transparent;
-  transition: 0.25s;
-  min-width: 90px;
-  max-width: 90px;
-  min-height: 90px;
-  max-height: 90px;
+//   .delete-option {
+//     position: absolute;
+//     z-index: -1;
+//     transition: 0.5s;
+//     transition-delay: 0.5s;
+//     width: 24px;
+//     height: 24px;
+//     border-bottom-right-radius: 12px;
+//     border-top-right-radius: 12px;
+//     right: 24px;
+//     top: 20px;
+//   }
 
-  .delete-option {
-    position: absolute;
-    z-index: -1;
-    transition: 0.5s;
-    transition-delay: 0.5s;
-    width: 24px;
-    height: 24px;
-    border-bottom-right-radius: 12px;
-    border-top-right-radius: 12px;
-    right: 24px;
-    top: 20px;
-  }
+//   &:hover {
+//     .delete-option {
+//       right: 0;
+//       align-self: flex-end;
+//       z-index: 0;
+//       right: -3px;
+//     }
+//   }
 
-  &:hover {
-    .delete-option {
-      right: 0;
-      align-self: flex-end;
-      z-index: 0;
-      right: -3px;
-    }
-  }
+//   .app-options {
+//     top: 22px;
+//     right: -50px;
+//     z-index: 1;
+//     border: 1px solid #ECECEC;
+//     box-shadow: 0 1px 6px rgba($color: #000000, $alpha: 0.14);
+//   }
 
-  .app-options {
-    top: 22px;
-    right: -50px;
-    z-index: 1;
-    border: 1px solid #ECECEC;
-    box-shadow: 0 1px 6px rgba($color: #000000, $alpha: 0.14);
-  }
+//   .app-status:hover {
+//     .symbol {
+//       transform: translate(10px);
 
-  .app-status:hover {
-    .symbol {
-      transform: translate(10px);
+//       .fa-angle-right {
+//         display: none;
+//       }
 
-      .fa-angle-right {
-        display: none;
-      }
+//       .text {
+//         opacity: 1;
+//       }
+//     }
 
-      .text {
-        opacity: 1;
-      }
-    }
+//     .action {
+//       opacity: 1;
+//     }
+//   }
 
-    .action {
-      opacity: 1;
-    }
-  }
+//   .app-settings {
+//     min-width: 20px;
+//     max-width: 20px;
+//     min-height: 20px;
+//     max-height: 20px;
+//     transform: translate(-10px, 10px);
+//     z-index: -1;
+//     animation: rollHide 0.3s ease-out;
+//   }
 
-  .app-settings {
-    min-width: 20px;
-    max-width: 20px;
-    min-height: 20px;
-    max-height: 20px;
-    transform: translate(-10px, 10px);
-    z-index: -1;
-    animation: rollHide 0.3s ease-out;
-  }
+//   .app-thumbnail {
+//     min-width: 48px;
+//     max-width: 48px;
+//     min-height: 48px;
+//     max-height: 48px;
+//     border-radius: 8px;
+//     overflow: hidden;
+//     outline: none;
+//     transition: 0.2s;
 
-  .app-thumbnail {
-    min-width: 48px;
-    max-width: 48px;
-    min-height: 48px;
-    max-height: 48px;
-    border-radius: 8px;
-    overflow: hidden;
-    outline: none;
-    transition: 0.2s;
+//     img {
+//       min-width: 48px;
+//       max-width: 48px;
+//       min-height: 48px;
+//       max-height: 48px;
+//     }
 
-    img {
-      min-width: 48px;
-      max-width: 48px;
-      min-height: 48px;
-      max-height: 48px;
-    }
+//     &:hover {
+//       box-shadow: 0px 0px 8px rgb(0 0 0 / 40%);
+//     }
+//   }
 
-    &:hover {
-      box-shadow: 0px 0px 8px rgb(0 0 0 / 40%);
-    }
-  }
+//   .app-status {
+//     min-height: 24px;
+//     max-height: 24px;
+//     min-width: 120px;
+//     border-radius: 12px;
+//     margin: 0px -10px;
 
-  .app-status {
-    min-height: 24px;
-    max-height: 24px;
-    min-width: 120px;
-    border-radius: 12px;
-    margin: 0px -10px;
+//     .symbol {
+//       transition: 0.25s;
+//       transform: translate(45px);
 
-    .symbol {
-      transition: 0.25s;
-      transform: translate(45px);
+//       .text {
+//         transition: 0.25s;
+//         opacity: 0;
+//       }
+//     }
 
-      .text {
-        transition: 0.25s;
-        opacity: 0;
-      }
-    }
+//     .action {
+//       transition: 0.25s;
+//       opacity: 0;
+//     }
+//   }
 
-    .action {
-      transition: 0.25s;
-      opacity: 0;
-    }
-  }
+//   .app-name {
+//     min-width: 70px;
+//     max-width: 70px;
+//     word-break: break-all;
+//   }
 
-  .app-name {
-    min-width: 70px;
-    max-width: 70px;
-    word-break: break-all;
-  }
-
-}
+// }
 
 .name-wrapper {
   .dsi-danger-circle {
@@ -181,16 +181,16 @@
   }
 }
 
-.profileImage {
-  width: 48px;
-  border-radius: 50%;
-  // background: #512DA8;
-  font-size: 35px;
-  color: #fff;
-  text-align: center;
-  line-height: 150px;
-  margin: 20px 0;
-}
+// .profileImage {
+//   width: 48px;
+//   border-radius: 50%;
+//   // background: #512DA8;
+//   font-size: 35px;
+//   color: #fff;
+//   text-align: center;
+//   line-height: 150px;
+//   margin: 20px 0;
+// }
 
 
 .new-app-window {
@@ -215,4 +215,115 @@
     z-index: 1;
     background: rgba($color: #000000, $alpha: 0.6);
   }
+}
+
+
+  .card-container {
+    height: calc(100vh - 203px);
+    overflow-y: auto;
+  }
+
+  .list-group-item {
+    height: 56px;
+    overflow: hidden;
+
+    &:not(.header):hover {
+      background: $light;
+      cursor: pointer;
+    }
+
+    &.header {
+      min-height: 38px;
+      max-height: 38px;
+      color: #6C7584;
+    }
+
+    .item-name {
+      min-width: 260px;
+      max-width: 260px;
+    }
+
+    .item-owner,
+    .item-plan,
+    .item-validity {
+      min-width: 130px;
+      max-width: 130px;
+    }
+
+    &:hover {
+      .item-actions {
+        right: 0px;
+      }
+    }
+
+    .item-actions {
+      min-width: 240px;
+      position: absolute;
+      right: -500px;
+      transition: 0.2s;
+
+      .actions {
+        .dsi {
+          min-width: 24px;
+          max-width: 24px;
+          display: inline-block;
+
+          &:not(:hover) {
+            color: $sub-headings;
+          }
+        }
+
+        .dsi,
+        .api-icon {
+          &:hover {
+            color: $dark;
+          }
+        }
+      }
+    }
+  }
+
+  .scroll-pane {
+    height: 100%;
+    overflow: auto;
+  }
+
+.sup-top {
+  top: 0px;
+}
+
+.overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba($color: #000000, $alpha: 0.6);
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.wizard-window {
+  position: fixed;
+  width: calc(100vw - 40%);
+  height: calc(100vh - 40%);
+  top: 20%;
+  left: 20%;
+  z-index: 1;
+}
+
+.more-options {
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+  min-width: 140px;
+
+  .list-group-item {
+    height: 36px;
+  }
+}
+
+.app-name {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

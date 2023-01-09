@@ -59,6 +59,11 @@ export class GlobalSchemasComponent implements
     showLazyLoader: boolean;
     breadcrumbPaths: Array<Breadcrumb>;
     deleteModal: any;
+
+    sortableOnMove = (event: any) => {
+        return !event.related.classList.contains('disabled');
+    }
+
     @HostListener('window:beforeunload', ['$event'])
     public beforeunloadHandler($event) {
         if (this.form.dirty) {
@@ -450,6 +455,14 @@ export class GlobalSchemasComponent implements
         } else {
             return false;
         }
+    }
+
+    get editable() {
+        const self = this;
+        if (self.edit && self.edit.status) {
+            return true;
+        }
+        return false;
     }
 
     private _getClass(type) {

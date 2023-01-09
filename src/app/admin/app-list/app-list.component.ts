@@ -28,6 +28,7 @@ import { FilterPipe } from 'src/app/utils/pipes/filter.pipe';
 import { AppService } from 'src/app/utils/services/app.service';
 import { UserDetails } from '../../definitions/userDetails';
 import * as _ from 'lodash';
+import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 
 @Component({
   selector: 'odp-app-list',
@@ -64,7 +65,7 @@ import * as _ from 'lodash';
       ]),
     ]),
   ],
-  providers: [FilterPipe],
+  providers: [FilterPipe, CommonFilterPipe],
 })
 export class AppListComponent implements OnInit, OnDestroy {
 
@@ -93,12 +94,17 @@ export class AppListComponent implements OnInit, OnDestroy {
   userDetails: UserDetails;
   isSuperadmin: boolean;
   showNewAppWindow: boolean;
+  showOptionsDropdown: any;
+  selectedItemEvent: any;
+  selectedService: any;
+  sortModel: any;
   constructor(
     private commonService: CommonService,
     private appService: AppService,
     private router: Router,
     private fb: FormBuilder,
     private ts: ToastrService,
+    private commonPipe:CommonFilterPipe,
     private appFilter: FilterPipe
   ) {
     const self = this;
@@ -130,6 +136,9 @@ export class AppListComponent implements OnInit, OnDestroy {
       }),
     });
     this.timezones = this.appService.getTimezones();
+    this.sortModel={};
+    this.selectedService = {};
+    this.showOptionsDropdown = {};
   }
 
   ngOnInit() {
@@ -215,6 +224,7 @@ export class AppListComponent implements OnInit, OnDestroy {
   newApp() {
     const self = this;
     self.form.reset({
+      _id: this.searchTerm,
       type: 'Management',
       serviceVersionValidity: {
         validityType: 'count',
@@ -328,5 +338,75 @@ export class AppListComponent implements OnInit, OnDestroy {
       '#E6EE9C',
     ];
     return _.sample(colorArray);
+  }
+
+  private compare(a: any, b: any) {
+    if (a > b) {
+      return 1;
+    } else if (a < b) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
+  applySort(field: string) {
+    if (!this.sortModel[field]) {
+      this.sortModel = {};
+      this.sortModel[field] = 1;
+    } else if (this.sortModel[field] == 1) {
+      this.sortModel[field] = -1;
+    } else {
+      delete this.sortModel[field];
+    }
+  }
+
+  get records() {
+    let records = this.commonPipe.transform(this.appList, '_id', this.searchTerm);
+    const field = Object.keys(this.sortModel)[0];
+    if (field) {
+      records = records.sort((a, b) => {
+        if (this.sortModel[field] == 1) {
+          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+            return this.compare((a[field]), (b[field]));
+          } else {
+            return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
+          }
+        } else if (this.sortModel[field] == -1) {
+          if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+            return this.compare((b[field]), (a[field]));
+          } else {
+            return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
+          }
+        } else {
+          return 0;
+        }
+      });
+    } else {
+      records = records.sort((a, b) => {
+        return this.compare(b._metadata?.lastUpdated, a._metadata?.lastUpdated);
+      });
+    }
+    return records;
+  }
+
+  showDropDown(event: any, id: string) {
+    this.selectedItemEvent = event;
+    Object.keys(this.showOptionsDropdown).forEach(key => {
+      this.showOptionsDropdown[key] = false;
+    })
+    this.selectedService = this.appList.find(e => e._id == id);
+    this.showOptionsDropdown[id] = true;
+  }
+
+  get dropDownStyle() {
+    let top = (this.selectedItemEvent.clientY + 10);
+    if (this.selectedItemEvent.clientY > 430) {
+      top = this.selectedItemEvent.clientY - 106
+    }
+    return {
+      top: top + 'px',
+      right: '50px'
+    };
   }
 }

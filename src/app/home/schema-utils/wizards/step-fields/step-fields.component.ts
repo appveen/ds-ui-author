@@ -19,6 +19,15 @@ export class StepFieldsComponent implements OnInit {
 
   }
 
+  checkStateModel(field:any){
+    if(field.value.properties.name==this.schemaService.stateModel?.value){
+      return false;
+    }
+    else{
+      return true;
+    }
+  }
+
   addToStep(field, index) {
     (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'fields']) as FormArray).push(field);
     (this.form.get('wizard.usedFields') as FormArray).push(field);

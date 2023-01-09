@@ -386,6 +386,7 @@ export class SchemaBuilderComponent implements
     get stateModelIfEnabled() {
         const self = this;
         if (self.form.get(['stateModel', 'enabled']).value) {
+            this.schemaService.stateModel=self.form.get(['stateModel', 'attribute'])
             return self.form.get(['stateModel', 'attribute'])
         }
         else {
