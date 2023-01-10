@@ -19,6 +19,11 @@ export class NodeMappingComponent implements OnInit {
   customTargetFields: Array<any>;
   selectedTargetField: any;
   showFormulaBuilder: boolean;
+  showAddSource: boolean;
+
+  fuzzyMapping: EventEmitter<any>;
+  clearMapping: EventEmitter<any>;
+
   constructor(private appService: AppService) {
     this.nodeList = [];
     this.close = new EventEmitter();
@@ -27,6 +32,8 @@ export class NodeMappingComponent implements OnInit {
     this.edit = {
       status: true
     };
+    this.fuzzyMapping = new EventEmitter();
+    this.clearMapping = new EventEmitter();
   }
 
   ngOnInit(): void {
@@ -156,35 +163,6 @@ export class NodeMappingComponent implements OnInit {
     }
   }
 
-  isSourceSelected(item: any) {
-    if (!this.selectedTargetField) {
-      return false;
-    }
-    // const target = this.currNode.mappings.find(e => e.dataPath == this.selectedTargetField.dataPath);
-    if (this.selectedTargetField && this.selectedTargetField.source && this.selectedTargetField.source.find(e => e.dataPath == item.dataPath)) {
-      return true;
-    }
-    return false;
-  }
-
-  toggleSource(flag: boolean, item: any) {
-    if (this.selectedTargetField && !this.selectedTargetField.source) {
-      this.selectedTargetField.source = [];
-    }
-    if (this.selectedTargetField && this.selectedTargetField.source) {
-      const index = this.selectedTargetField.source.findIndex(e => e.dataPath == item.dataPath);
-      if (flag && index == -1) {
-        this.selectedTargetField.source.push(item);
-      }
-      if (!flag && index > -1) {
-        this.selectedTargetField.source.splice(index, 1);
-      }
-    }
-    if (!this.selectedTargetField.formula) {
-      this.selectedTargetField.formula = this.baseCode;
-    }
-  }
-
   done() {
     let mappings = this.customTargetFields.map(item => {
       const temp: any = this.convertToMapping(item);
@@ -215,10 +193,12 @@ export class NodeMappingComponent implements OnInit {
     return temp;
   }
 
-  get baseCode() {
-    return 'return ' + (this.selectedTargetField.source || []).map((src, i) => {
-      return 'input' + (i + 1);
-    }).join(' + ') + ';';
+  doFuzzyMapping() {
+    this.fuzzyMapping.emit(true);
+  }
+
+  doClearMapping(){
+    this.clearMapping.emit(true);
   }
 
   get sourceFields() {

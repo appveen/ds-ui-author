@@ -981,11 +981,11 @@ $weights: 200,
 
   .field-block {
     @if $n % 2==0 {
-      background: $white;
+      background: #f9f9f9;
     }
 
     @else {
-      background: $light;
+      background: $white;
     }
 
     @if ($n < 9) {
