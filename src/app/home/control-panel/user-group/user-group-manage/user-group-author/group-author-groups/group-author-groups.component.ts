@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import * as _ from 'lodash';
+
 import { CommonService } from 'src/app/utils/services/common.service';
 
 @Component({
@@ -15,12 +17,21 @@ export class GroupAuthorGroupsComponent implements OnInit {
   };
   authorModulesList: Array<RoleModule>;
   appcenterModulesList: Array<RoleModule>;
+  edit: any;
+  managePermissions: Array<string>;
+  viewPermissions: Array<string>;
   constructor(private commonService: CommonService) {
-    const self = this;
-    self.rolesChange = new EventEmitter();
-    self.roles = [];
-    self.dropdownToggle = {};
-    self.authorModulesList = [
+    this.rolesChange = new EventEmitter();
+    this.roles = [];
+    this.dropdownToggle = {};
+    this.managePermissions = ['PMGBC', 'PMGBU', 'PMGBD', 'PMGBD', 'PMGMBC', 'PMGMBD', 'PMGMUC', 'PMGMUD', 'PMGADS', 'PMGAL', 'PMGACON', 'PMGADF', 'PMGAF', 'PMGAA', 'PMGABM', 'PMGAU', 'PMGAB', 'PMGAG', 'PMGAIS', 'PMGCDS', 'PMGCI', 'PMGCBM'];
+    this.viewPermissions = ['PVGB', 'PVGMB', 'PVGMU', 'PVGADS', 'PVGAL', 'PVGACON', 'PVGADF', 'PVGAF', 'PVGAA', 'PVGABM', 'PVGAU', 'PVGAB', 'PVGAG', 'PVGAIS', 'PVGCDS', 'PVGCI', 'PVGCBM'];
+    this.authorModulesList = [
+      {
+        label: 'Connectors',
+        segment: 'GACON',
+        entity: 'GROUP'
+      },
       {
         label: 'Data Service',
         segment: 'GADS',
@@ -32,18 +43,13 @@ export class GroupAuthorGroupsComponent implements OnInit {
         entity: 'GROUP'
       },
       {
-        label: 'Partners',
-        segment: 'GAP',
-        entity: 'GROUP'
-      },
-      {
         label: 'Data Formats',
         segment: 'GADF',
         entity: 'GROUP'
       },
       {
-        label: 'Nano Service',
-        segment: 'GANS',
+        label: 'Functions',
+        segment: 'GAF',
         entity: 'GROUP'
       },
       {
@@ -51,11 +57,11 @@ export class GroupAuthorGroupsComponent implements OnInit {
         segment: 'GAA',
         entity: 'GROUP'
       },
-      {
-        label: 'Bookmarks',
-        segment: 'GABM',
-        entity: 'GROUP'
-      },
+      // {
+      //   label: 'Bookmarks',
+      //   segment: 'GABM',
+      //   entity: 'GROUP'
+      // },
       {
         label: 'Users',
         segment: 'GAU',
@@ -77,33 +83,32 @@ export class GroupAuthorGroupsComponent implements OnInit {
         entity: 'GROUP'
       }
     ];
-    self.appcenterModulesList = [
+    this.appcenterModulesList = [
       {
         label: 'Data Service',
         segment: 'GCDS',
         entity: 'GROUP'
       },
-      {
-        label: 'Interactions',
-        segment: 'GCI',
-        entity: 'GROUP'
-      },
-      {
-        label: 'Bookmarks',
-        segment: 'GCBM',
-        entity: 'GROUP'
-      },
+      // {
+      //   label: 'Interactions',
+      //   segment: 'GCI',
+      //   entity: 'GROUP'
+      // },
+      // {
+      //   label: 'Bookmarks',
+      //   segment: 'GCBM',
+      //   entity: 'GROUP'
+      // },
     ];
+    this.edit = { status: true };
   }
 
   ngOnInit() {
-    const self = this;
   }
 
   getModulePermissionLevel(segment: string, entity: string) {
-    const self = this;
-    const viewIndex = self.roles.findIndex(r => r.id === 'PV' + segment && r.entity === entity);
-    const manageIndex = self.roles.findIndex(r => r.id === 'PM' + segment && r.entity === entity);
+    const viewIndex = this.roles.findIndex(r => r.id === 'PV' + segment && r.entity === entity);
+    const manageIndex = this.roles.findIndex(r => r.id === 'PM' + segment && r.entity === entity);
     if (manageIndex > -1) {
       return 'manage';
     }
@@ -114,106 +119,124 @@ export class GroupAuthorGroupsComponent implements OnInit {
   }
 
   changeModulePermissionLevel(level: string, segment: string, entity: string) {
-    const self = this;
-    if (!self.hasPermission('PMGAG')) {
+    if (!this.hasPermission('PMGAG')) {
       return;
     }
-    const blockedIndex = self.roles.findIndex(r => r.id === 'PN' + segment && r.entity === entity);
+    const blockedIndex = this.roles.findIndex(r => r.id === 'PN' + segment && r.entity === entity);
     if (blockedIndex > -1) {
-      self.roles.splice(blockedIndex, 1);
+      this.roles.splice(blockedIndex, 1);
     }
-    const viewIndex = self.roles.findIndex(r => r.id === 'PV' + segment && r.entity === entity);
+    const viewIndex = this.roles.findIndex(r => r.id === 'PV' + segment && r.entity === entity);
     if (viewIndex > -1) {
-      self.roles.splice(viewIndex, 1);
+      this.roles.splice(viewIndex, 1);
     }
-    const manageIndex = self.roles.findIndex(r => r.id === 'PM' + segment && r.entity === entity);
+    const manageIndex = this.roles.findIndex(r => r.id === 'PM' + segment && r.entity === entity);
     if (manageIndex > -1) {
-      self.roles.splice(manageIndex, 1);
+      this.roles.splice(manageIndex, 1);
     }
-    if ((level === 'V' || level === 'M') && self.basicPermission === 'blocked') {
-      self.basicPermission = 'PVGB';
+    if ((level === 'V' || level === 'M') && this.basicPermission === 'blocked') {
+      this.basicPermission = 'PVGB';
     }
-    self.roles.push(self.getPermissionObject('P' + level + segment, entity));
+    this.roles.push(this.getPermissionObject('P' + level + segment, entity));
   }
 
   togglePermissionLevel(segment: string) {
-    const self = this;
-    if (!self.hasPermission('PMGAG')) {
+    if (!this.hasPermission('PMGAG')) {
       return;
     }
-    const blockedIndex = self.roles.findIndex(r => r.id === 'PMG' + segment && r.entity === 'GROUP');
+    const blockedIndex = this.roles.findIndex(r => r.id === 'PMG' + segment && r.entity === 'GROUP');
     if (blockedIndex > -1) {
-      self.roles.splice(blockedIndex, 1);
+      this.roles.splice(blockedIndex, 1);
     } else {
-      self.roles.push(self.getPermissionObject('PMG' + segment, 'GROUP'));
+      this.roles.push(this.getPermissionObject('PMG' + segment, 'GROUP'));
     }
   }
 
   getPermissionObject(id: string, entity: any) {
-    const self = this;
     return {
       id: id,
-      app: self.commonService.app._id,
+      app: this.commonService.app._id,
       entity: entity,
       type: 'author'
     };
   }
 
-  showHelp() {
-    const self = this;
-
+  hasPermission(type: string) {
+    return this.commonService.hasPermission(type);
   }
 
-  hasPermission(type: string) {
-    const self = this;
-    return self.commonService.hasPermission(type);
+  changeAllPermissions(val: string) {
+    if (val == 'manage') {
+      _.remove(this.roles, (item) => item.entity == 'GROUP');
+      this.managePermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item, 'GROUP'));
+      });
+    } else if (val == 'view') {
+      _.remove(this.roles, (item) => item.entity == 'GROUP');
+      this.viewPermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item, 'GROUP'));
+      });
+    } else if (val == 'blocked') {
+      _.remove(this.roles, (item) => item.entity == 'GROUP');
+    }
+  }
+
+  get globalPermission() {
+    const perms = this.roles.map(e => e.id);
+    if (_.intersection(this.managePermissions, perms).length === this.managePermissions.length) {
+      return 'manage';
+    } else if (_.intersection(this.viewPermissions, perms).length === this.viewPermissions.length) {
+      return 'view';
+    } else if (perms.length == 0) {
+      return 'blocked';
+    } else {
+      return 'custom';
+    }
   }
 
   set basicPermission(val: any) {
-    const self = this;
-    const blockedIndex = self.roles.findIndex(r => r.id === 'PNGB' && r.entity === 'GROUP');
+    const blockedIndex = this.roles.findIndex(r => r.id === 'PNGB' && r.entity === 'GROUP');
     if (blockedIndex > -1) {
-      self.roles.splice(blockedIndex, 1);
+      this.roles.splice(blockedIndex, 1);
     }
-    const viewIndex = self.roles.findIndex(r => r.id === 'PVGB' && r.entity === 'GROUP');
+    const viewIndex = this.roles.findIndex(r => r.id === 'PVGB' && r.entity === 'GROUP');
     if (viewIndex > -1) {
-      self.roles.splice(viewIndex, 1);
+      this.roles.splice(viewIndex, 1);
     }
-    const createIndex = self.roles.findIndex(r => r.id === 'PMGBC' && r.entity === 'GROUP');
+    const createIndex = this.roles.findIndex(r => r.id === 'PMGBC' && r.entity === 'GROUP');
     if (createIndex > -1) {
-      self.roles.splice(createIndex, 1);
+      this.roles.splice(createIndex, 1);
     }
-    const editIndex = self.roles.findIndex(r => r.id === 'PMGBU' && r.entity === 'GROUP');
+    const editIndex = this.roles.findIndex(r => r.id === 'PMGBU' && r.entity === 'GROUP');
     if (editIndex > -1) {
-      self.roles.splice(editIndex, 1);
+      this.roles.splice(editIndex, 1);
     }
-    const deleteIndex = self.roles.findIndex(r => r.id === 'PMGBD' && r.entity === 'GROUP');
+    const deleteIndex = this.roles.findIndex(r => r.id === 'PMGBD' && r.entity === 'GROUP');
     if (deleteIndex > -1) {
-      self.roles.splice(deleteIndex, 1);
+      this.roles.splice(deleteIndex, 1);
     }
     if (Array.isArray(val)) {
       val.forEach(item => {
-        self.roles.push(self.getPermissionObject(item, 'GROUP'));
+        this.roles.push(this.getPermissionObject(item, 'GROUP'));
       });
     } else {
-      self.roles.push(self.getPermissionObject(val, 'GROUP'));
+      this.roles.push(this.getPermissionObject(val, 'GROUP'));
       if (val === 'PNGB') {
-        self.membersPermission = 'PNGMU';
-        self.botsPermission = 'PNGMB';
-        self.authorModulesList.forEach(item => {
-          self.changeModulePermissionLevel('N', item.segment, item.entity);
+        this.membersPermission = 'PNGMU';
+        this.botsPermission = 'PNGMB';
+        this.authorModulesList.forEach(item => {
+          this.changeModulePermissionLevel('N', item.segment, item.entity);
         });
-        self.appcenterModulesList.forEach(item => {
-          self.changeModulePermissionLevel('N', item.segment, item.entity);
+        this.appcenterModulesList.forEach(item => {
+          this.changeModulePermissionLevel('N', item.segment, item.entity);
         });
       }
     }
   }
 
   get basicPermission() {
-    const self = this;
-    const viewIndex = self.roles.findIndex(r => r.id === 'PVGB' && r.entity === 'GROUP');
-    const manageIndex = self.roles.findIndex(r => (r.id === 'PMGBC' || r.id === 'PMGBU' || r.id === 'PMGBD') && r.entity === 'GROUP');
+    const viewIndex = this.roles.findIndex(r => r.id === 'PVGB' && r.entity === 'GROUP');
+    const manageIndex = this.roles.findIndex(r => (r.id === 'PMGBC' || r.id === 'PMGBU' || r.id === 'PMGBD') && r.entity === 'GROUP');
     if (manageIndex > -1) {
       return 'manage';
     }
@@ -224,42 +247,40 @@ export class GroupAuthorGroupsComponent implements OnInit {
   }
 
   set membersPermission(val: any) {
-    const self = this;
-    const blockedIndex = self.roles.findIndex(r => r.id === 'PNGMU' && r.entity === 'GROUP');
+    const blockedIndex = this.roles.findIndex(r => r.id === 'PNGMU' && r.entity === 'GROUP');
     if (blockedIndex > -1) {
-      self.roles.splice(blockedIndex, 1);
+      this.roles.splice(blockedIndex, 1);
     }
-    const viewIndex = self.roles.findIndex(r => r.id === 'PVGMU' && r.entity === 'GROUP');
+    const viewIndex = this.roles.findIndex(r => r.id === 'PVGMU' && r.entity === 'GROUP');
     if (viewIndex > -1) {
-      self.roles.splice(viewIndex, 1);
+      this.roles.splice(viewIndex, 1);
     }
-    const createIndex = self.roles.findIndex(r => r.id === 'PMGMUC' && r.entity === 'GROUP');
+    const createIndex = this.roles.findIndex(r => r.id === 'PMGMUC' && r.entity === 'GROUP');
     if (createIndex > -1) {
-      self.roles.splice(createIndex, 1);
+      this.roles.splice(createIndex, 1);
     }
-    const deleteIndex = self.roles.findIndex(r => r.id === 'PMGMUD' && r.entity === 'GROUP');
+    const deleteIndex = this.roles.findIndex(r => r.id === 'PMGMUD' && r.entity === 'GROUP');
     if (deleteIndex > -1) {
-      self.roles.splice(deleteIndex, 1);
+      this.roles.splice(deleteIndex, 1);
     }
     if (Array.isArray(val)) {
       val.forEach(item => {
-        if ((item.substr(0, 2) === 'PM' || item.substr(0, 2) === 'PV') && self.basicPermission === 'blocked') {
-          self.basicPermission = 'PVGB';
+        if ((item.substr(0, 2) === 'PM' || item.substr(0, 2) === 'PV') && this.basicPermission === 'blocked') {
+          this.basicPermission = 'PVGB';
         }
-        self.roles.push(self.getPermissionObject(item, 'GROUP'));
+        this.roles.push(this.getPermissionObject(item, 'GROUP'));
       });
     } else {
-      if ((val.substr(0, 2) === 'PM' || val.substr(0, 2) === 'PV') && self.basicPermission === 'blocked') {
-        self.basicPermission = 'PVGB';
+      if ((val.substr(0, 2) === 'PM' || val.substr(0, 2) === 'PV') && this.basicPermission === 'blocked') {
+        this.basicPermission = 'PVGB';
       }
-      self.roles.push(self.getPermissionObject(val, 'GROUP'));
+      this.roles.push(this.getPermissionObject(val, 'GROUP'));
     }
   }
 
   get membersPermission() {
-    const self = this;
-    const viewIndex = self.roles.findIndex(r => r.id === 'PVGMU' && r.entity === 'GROUP');
-    const manageIndex = self.roles.findIndex(r => (r.id === 'PMGMUC' || r.id === 'PMGMUD') && r.entity === 'GROUP');
+    const viewIndex = this.roles.findIndex(r => r.id === 'PVGMU' && r.entity === 'GROUP');
+    const manageIndex = this.roles.findIndex(r => (r.id === 'PMGMUC' || r.id === 'PMGMUD') && r.entity === 'GROUP');
     if (manageIndex > -1) {
       return 'manage';
     }
@@ -269,61 +290,41 @@ export class GroupAuthorGroupsComponent implements OnInit {
     return 'blocked';
   }
 
-  get membersCreatePermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMGMUC' && r.entity === 'GROUP');
-    if (manageIndex > -1) {
-      return true;
-    }
-    return false;
-  }
-
-  get membersDeletePermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMGMUD' && r.entity === 'GROUP');
-    if (manageIndex > -1) {
-      return true;
-    }
-    return false;
-  }
-
   set botsPermission(val: any) {
-    const self = this;
-    const blockedIndex = self.roles.findIndex(r => r.id === 'PNGMB' && r.entity === 'GROUP');
+    const blockedIndex = this.roles.findIndex(r => r.id === 'PNGMB' && r.entity === 'GROUP');
     if (blockedIndex > -1) {
-      self.roles.splice(blockedIndex, 1);
+      this.roles.splice(blockedIndex, 1);
     }
-    const viewIndex = self.roles.findIndex(r => r.id === 'PVGMB' && r.entity === 'GROUP');
+    const viewIndex = this.roles.findIndex(r => r.id === 'PVGMB' && r.entity === 'GROUP');
     if (viewIndex > -1) {
-      self.roles.splice(viewIndex, 1);
+      this.roles.splice(viewIndex, 1);
     }
-    const createIndex = self.roles.findIndex(r => r.id === 'PMGMBC' && r.entity === 'GROUP');
+    const createIndex = this.roles.findIndex(r => r.id === 'PMGMBC' && r.entity === 'GROUP');
     if (createIndex > -1) {
-      self.roles.splice(createIndex, 1);
+      this.roles.splice(createIndex, 1);
     }
-    const deleteIndex = self.roles.findIndex(r => r.id === 'PMGMBD' && r.entity === 'GROUP');
+    const deleteIndex = this.roles.findIndex(r => r.id === 'PMGMBD' && r.entity === 'GROUP');
     if (deleteIndex > -1) {
-      self.roles.splice(deleteIndex, 1);
+      this.roles.splice(deleteIndex, 1);
     }
     if (Array.isArray(val)) {
       val.forEach(item => {
-        if ((item.substr(0, 2) === 'PM' || item.substr(0, 2) === 'PV') && self.basicPermission === 'blocked') {
-          self.basicPermission = 'PVGB';
+        if ((item.substr(0, 2) === 'PM' || item.substr(0, 2) === 'PV') && this.basicPermission === 'blocked') {
+          this.basicPermission = 'PVGB';
         }
-        self.roles.push(self.getPermissionObject(item, 'GROUP'));
+        this.roles.push(this.getPermissionObject(item, 'GROUP'));
       });
     } else {
-      if ((val.substr(0, 2) === 'PM' || val.substr(0, 2) === 'PV') && self.basicPermission === 'blocked') {
-        self.basicPermission = 'PVGB';
+      if ((val.substr(0, 2) === 'PM' || val.substr(0, 2) === 'PV') && this.basicPermission === 'blocked') {
+        this.basicPermission = 'PVGB';
       }
-      self.roles.push(self.getPermissionObject(val, 'GROUP'));
+      this.roles.push(this.getPermissionObject(val, 'GROUP'));
     }
   }
 
   get botsPermission() {
-    const self = this;
-    const viewIndex = self.roles.findIndex(r => r.id === 'PVGMB' && r.entity === 'GROUP');
-    const manageIndex = self.roles.findIndex(r => (r.id === 'PMGMBC' || r.id === 'PMGMBD') && r.entity === 'GROUP');
+    const viewIndex = this.roles.findIndex(r => r.id === 'PVGMB' && r.entity === 'GROUP');
+    const manageIndex = this.roles.findIndex(r => (r.id === 'PMGMBC' || r.id === 'PMGMBD') && r.entity === 'GROUP');
     if (manageIndex > -1) {
       return 'manage';
     }
@@ -331,59 +332,6 @@ export class GroupAuthorGroupsComponent implements OnInit {
       return 'view';
     }
     return 'blocked';
-  }
-
-  get botsCreatePermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMGMBC' && r.entity === 'GROUP');
-    if (manageIndex > -1) {
-      return true;
-    }
-    return false;
-  }
-
-  get botsDeletePermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMGMBD' && r.entity === 'GROUP');
-    if (manageIndex > -1) {
-      return true;
-    }
-    return false;
-  }
-
-  get createPermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMGBC' && r.entity === 'GROUP');
-    if (manageIndex > -1) {
-      return true;
-    }
-    return false;
-  }
-
-  get editPermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMGBU' && r.entity === 'GROUP');
-    if (manageIndex > -1) {
-      return true;
-    }
-    return false;
-  }
-
-  get deletePermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMGBD' && r.entity === 'GROUP');
-    if (manageIndex > -1) {
-      return true;
-    }
-    return false;
-  }
-
-  get authType() {
-    const self = this;
-    if (self.commonService.userDetails.auth && self.commonService.userDetails.auth.authType) {
-      return self.commonService.userDetails.auth.authType;
-    }
-    return 'local';
   }
 }
 

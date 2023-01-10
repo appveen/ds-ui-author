@@ -1,0 +1,63 @@
+<div class="selector-options d-flex flex-column">
+    <div class="d-flex align-items-center justify-content-start w-100 mb-2" (click)="onTypeChange('generic')">
+        <odp-round-radio [edit]="edit" [checked]="selectedType == 'generic'" (checkedChange)="onTypeChange('generic')">
+        </odp-round-radio>
+        <span class="text ml-3">Generic</span>
+    </div>
+    <div class="d-flex flex-column w-100 mb-2">
+        <div class="d-flex align-items-center justify-content-start w-100" (click)="onTypeChange('dataFormat')">
+            <odp-round-radio [edit]="edit" [checked]="selectedType == 'dataFormat'"
+                (checkedChange)="onTypeChange('dataFormat')">
+            </odp-round-radio>
+            <span class="text ml-3">Data Schema</span>
+            <span *ngIf="format && selectedType=='dataFormat'" class="text-primary ml-3 hover font-11" (click)="changeDataFormat()">(change)</span>
+        </div>
+        <span *ngIf="format && selectedType=='dataFormat'"
+            class="text-primary selected-format-name">({{format.name}})</span>
+    </div>
+    <div class="d-flex flex-column w-100 mb-2">
+        <div class="d-flex align-items-center justify-content-start w-100" (click)="onTypeChange('customFormat')">
+            <odp-round-radio [edit]="edit" [checked]="selectedType == 'customFormat'"
+                (checkedChange)="onTypeChange('customFormat')">
+            </odp-round-radio>
+            <span class="text ml-3">Custom</span>
+            <span *ngIf="format && selectedType=='customFormat'" class="text-primary ml-3 hover font-11" (click)="changeCustomFormat()">(change)</span>
+        </div>
+        <span *ngIf="format && selectedType=='customFormat'"
+            class="text-primary selected-format-name">({{format.name}})</span>
+    </div>
+    <div *ngIf="(selectedType == 'customFormat' || selectedType == 'dataFormat') && format"
+        class="d-flex flex-column w-100 mb-2">
+        <div class="d-flex align-items-center justify-content-start w-100">
+            <span class="text mr-3">Strict Validation</span>
+            <odp-checkbox [edit]="edit" [(checked)]="format.strictValidation">
+            </odp-checkbox>
+        </div>
+    </div>
+</div>
+
+<div [ngClass]="{'show':showWindow,'more-width':selectedType=='customFormat'}"
+    class="data-structure-window p-4 position-fixed bg-white border-left">
+    <ng-container *ngIf="showWindow">
+        <ng-container *ngIf="selectedType=='dataFormat'">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <span class="font-22 fw-600">Select Data Format</span>
+                <button type="button" class="btn btn-link" (click)="closeWindow()">
+                    <span class="dsi dsi-close text-dark"></span>
+                </button>
+            </div>
+            <odp-data-format-selector [edit]="edit" [(format)]="format" (formatChange)="onFormatChange($event)">
+            </odp-data-format-selector>
+        </ng-container>
+        <ng-container *ngIf="selectedType=='customFormat'">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <span class="font-22 fw-600">Create Custom Format</span>
+                <button type="button" class="btn btn-link" (click)="closeWindow()">
+                    <span class="dsi dsi-close text-dark"></span>
+                </button>
+            </div>
+            <odp-custom-format-selector [edit]="edit" [(format)]="format" (formatChange)="onFormatChange($event)">
+            </odp-custom-format-selector>
+        </ng-container>
+    </ng-container>
+</div>

@@ -1,0 +1,202 @@
+<div class="d-flex align-items-start w-100">
+    <div class="sidenav p-4">
+        <button *ngIf="edit.status" type="button" class="btn btn-link d-flex align-items-center mb-3 px-0"
+            (click)="toggleNewEndpintWindow=!toggleNewEndpintWindow">
+            <span class="dsi dsi-plus mr-2"></span>
+            <span class="font-14 fw-500">Add New</span>
+        </button>
+        <div class="list-wrapper">
+            <div *ngFor="let item of ingestionPoints;let i=index"
+                class="list-item p-2 d-flex flex-column hover position-relative" (click)="selectedEndpoint=item">
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="text" [ngClass]="{'text-dark fw-500':selectedEndpoint == item,
+                        'text-grey fw-400':selectedEndpoint != item}">{{item.name}}</span>
+                </div>
+                <span class="text-grey fw-400 font-12 mt-2">/utils/ingestion{{item.api}}</span>
+                <div class="options d-flex align-items-center position-absolute h-100 bg-white pl-2">
+                    <span class="dsi dsi-edit text-grey hover" (click)="editIngestionPoint(item)"></span>
+                    <span class="dsi dsi-trash text-grey hover ml-2" (click)="removeIngestionPoint(i)"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content p-4 flex-fill">
+        <div *ngIf="!ingestionPoints || ingestionPoints.length==0" class="p-5">
+            <p>There are no Ingestion Point created.
+                <span *ngIf="edit.status">Create one by clicking on
+                    <span class="text-accent hover" (click)="toggleNewEndpintWindow=!toggleNewEndpintWindow">
+                        Add New
+                    </span> button
+                </span>
+            </p>
+        </div>
+        <div *ngIf="ingestionPoints && ingestionPoints.length>0 && !selectedEndpoint" class="p-5">
+            <p>Select an Endpoint to manage it's data mappings</p>
+        </div>
+        <div *ngIf="selectedEndpoint" class="mapping-wrapper">
+            <ng-container *ngFor="let def of definition">
+                <ng-container *ngTemplateOutlet="field; context: {def:def}"></ng-container>
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<ng-template #field let-def="def">
+    <div class="d-flex flex-column p-2 border rounded mb-2">
+        <div class="field-block d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <span class="dsi dsi-more-vertical-6 mr-3"></span>
+                <span class="field-name text">{{def.properties.name}}</span>
+                <odp-field-type [field]="def" label="true"></odp-field-type>
+            </div>
+            <div *ngIf="def.type != 'Object'" class="options d-flex align-items-center">
+                <button type="button" class="btn btn-link p-0 mr-3 btn-min-width"
+                    (click)="toggleFormulaWindow=!toggleFormulaWindow;selectedField=def">
+                    Formula
+                </button>
+                <button type="button" class="btn btn-link p-0 mr-3 btn-min-width"
+                    (click)="toggleIncomingFieldsWindow=!toggleIncomingFieldsWindow;selectedField=def">
+                    <span class="mr-1">Incoming Fields</span>
+                    <span *ngIf="def.source && def.source.length>0">({{def.source.length}})</span>
+                </button>
+            </div>
+        </div>
+        <div *ngIf="def.type == 'Object'" class="p-2 ">
+            <ng-container *ngFor="let innerDef of def.definition">
+                <ng-container *ngTemplateOutlet="field; context: {def:innerDef}"></ng-container>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+
+
+<div [ngClass]="{show:toggleNewEndpintWindow}"
+    class="add-endpoint-window p-4 border-left position-fixed bg-white d-flex flex-column">
+    <ng-container *ngIf="toggleNewEndpintWindow">
+        <div class="d-flex align-items-center justify-content-between">
+            <span class="fw-500 font-20">New Ingestion</span>
+            <span class="dsi dsi-close text-dark hover" (click)="closeWindow()"></span>
+        </div>
+        <div class="mt-5" [formGroup]="ingestionForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input id="name" type="text" class="form-control" formControlName="name" odpAutoFocus>
+            </div>
+            <div class="form-group">
+                <label for="name">API Path</label>
+                <input id="name" type="text" class="form-control" [value]="formApi" readonly>
+            </div>
+            <div class="form-group">
+                <label for="contentType">Content Type</label>
+                <select id="contentType" class="form-control" formControlName="contentType">
+                    <option value="application/json" selected>application/json</option>
+                    <option value="application/xml">application/xml</option>
+                    <option value="multipart/form-data">multipart/form-data</option>
+                </select>
+            </div>
+        </div>
+        <div class="mt-auto">
+            <button type="button" class="btn btn-primary w-100" (click)="createIngestionPoint()"
+                [disabled]="ingestionForm.invalid">Create</button>
+        </div>
+    </ng-container>
+</div>
+
+
+
+<div [ngClass]="{show:toggleIncomingFieldsWindow}"
+    class="incoming-field-window p-4 border-left position-fixed bg-white d-flex flex-column">
+    <ng-container *ngIf="toggleIncomingFieldsWindow">
+        <div class="d-flex align-items-center justify-content-between">
+            <span class="fw-500 font-20">Add Incoming Fields</span>
+            <span class="dsi dsi-close text-dark hover"
+                (click)="toggleIncomingFieldsWindow=false;selectedField=null"></span>
+        </div>
+        <div class="mt-5">
+            <div class="custom-table border rounded">
+                <div
+                    class="custom-table-header d-flex align-items-center bg-light border-bottom p-2 fw-500 text-secondary">
+                    <div class="data-name mr-3">Data Path</div>
+                    <div class="data-type mr-3">Data Type</div>
+                    <div class="data-format mr-3">Date Format</div>
+                </div>
+                <div *ngIf="!selectedField.source||selectedField.source.length==0"
+                    class="d-flex align-items-center p-2">
+                    <p class="m-0 p-2">No fields added</p>
+                </div>
+                <div *ngFor="let src of selectedField.source;let i=index;let l=last"
+                    class="d-flex align-items-center p-2" [ngClass]="{'border-bottom':!l}">
+                    <div class="data-name mr-3">
+                        <input type="text" class="form-control" [(ngModel)]="src.dataPath" odpAutoFocus>
+                    </div>
+                    <div class="data-type mr-3">
+                        <select class="form-control" [(ngModel)]="src.type" (ngModelChange)="src.dateFormat=null">
+                            <option value="String" selected>Text</option>
+                            <option value="Number">Number</option>
+                            <option value="Boolean">True/False</option>
+                            <option value="Date">Date</option>
+                        </select>
+                    </div>
+                    <div class="data-format mr-3">
+                        <input type="text" class="form-control" [(ngModel)]="src.dateFormat"
+                            [disabled]="src.type!='Date'" placeholder="eg. yyyy-MM-dd">
+                    </div>
+                    <span class="dsi dsi-minus-circle text-danger hover ml-3" (click)="removeIncomingField(i)"></span>
+                </div>
+            </div>
+            <button type="button" class="btn btn-link" (click)="addIncomingField()">Add Fields</button>
+        </div>
+        <div class="mt-auto">
+            <button type="button" class="btn btn-primary w-100" (click)="saveIncomingField()">Save</button>
+        </div>
+    </ng-container>
+</div>
+
+
+<div [ngClass]="{show:toggleFormulaWindow}"
+    class="incoming-field-window p-4 border-left position-fixed bg-white d-flex flex-column">
+    <ng-container *ngIf="toggleFormulaWindow">
+        <div class="d-flex align-items-center justify-content-between">
+            <span class="fw-500 font-20">Set Formula</span>
+            <span class="dsi dsi-close text-dark hover" (click)="toggleFormulaWindow=false;selectedField=null"></span>
+        </div>
+        <div class="mt-5">
+            <div class="custom-table border rounded">
+                <div
+                    class="custom-table-header d-flex align-items-center bg-light border-bottom p-2 fw-500 text-secondary">
+                    <div class="data-name mr-3">Data Path</div>
+                    <div class="data-type mr-3">Data Type</div>
+                    <div class="data-format mr-3">Date Format</div>
+                </div>
+                <div *ngIf="!selectedField.source||selectedField.source.length==0"
+                    class="d-flex align-items-center p-2">
+                    <p class="m-0 p-2">No fields added</p>
+                </div>
+                <div *ngFor="let src of selectedField.source;let i=index;let l=last"
+                    class="d-flex align-items-center p-2" [ngClass]="{'border-bottom':!l}">
+                    <div class="data-name mr-3">
+                        <input type="text" class="form-control" [(ngModel)]="src.dataPath">
+                    </div>
+                    <div class="data-type mr-3">
+                        <select class="form-control" [(ngModel)]="src.type" (ngModelChange)="src.dateFormat=null">
+                            <option value="String" selected>Text</option>
+                            <option value="Number">Number</option>
+                            <option value="Boolean">True/False</option>
+                            <option value="Date">Date</option>
+                        </select>
+                    </div>
+                    <div class="data-format mr-3">
+                        <input type="text" class="form-control" [(ngModel)]="src.dateFormat"
+                            [disabled]="src.type!='Date'" placeholder="eg. yyyy-MM-dd">
+                    </div>
+                    <span class="dsi dsi-minus-circle text-danger hover ml-3" (click)="removeIncomingField(i)"></span>
+                </div>
+            </div>
+            <button type="button" class="btn btn-link" (click)="addIncomingField()">Add Fields</button>
+        </div>
+        <div class="mt-auto">
+            <button type="button" class="btn btn-primary w-100"
+                (click)="toggleFormulaWindow=false;selectedField=null">Save</button>
+        </div>
+    </ng-container>
+</div>

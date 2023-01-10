@@ -1,427 +1,125 @@
 <div class="d-flex flex-column w-100 h-100 builder-body">
-    <div class="d-flex w-100 p-3">
-        <div class="d-flex flex-column hooks-dashboard">
+    <div class="d-flex w-100">
+        <div class="d-flex flex-column hooks-dashboard p-4">
             <div class="mb-3"><strong>Data Hooks</strong></div>
             <div class="d-flex flex-column pl-2">
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('preHook')"
-                        [ngClass]="{'text-accent': hooks.preHook, 'text-bold': hooks.preHook}">
-                        Pre hooks
-                    </span>
-                    <span class="text-muted w-25 d-flex justify-content-end">
-                        {{ preHook.length }}
-                    </span>
+                <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                    <span class="hover" (click)="selectHook('preHook')"
+                        [ngClass]="{'text-dark fw-600': hooks.hookType=='preHook'}">Pre hooks</span>
+                    <span class="">{{ preHook.length }}</span>
                 </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('postHook')"
-                        [ngClass]="{'text-accent': hooks.postHook, 'text-bold': hooks.postHook}" id="postHooks">Post
-                        hooks</span>
-                    <span class="text-muted w-25 d-flex justify-content-end">
-                        {{ webHooks.length }}
-                    </span>
+                <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                    <span class="hover" (click)="selectHook('postHook')"
+                        [ngClass]="{'text-dark fw-600': hooks.hookType=='postHook'}" id="postHooks">Post hooks</span>
+                    <span class="">{{ postHooks.length }}</span>
                 </div>
             </div>
-            <div class="mb-3" *ngIf="!isSchemaFree"><strong>Review Hooks</strong></div>
-            <div class="d-flex flex-column pl-2" *ngIf="!isSchemaFree">
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('submitHook')"
-                        [ngClass]="{'text-accent': hooks.submitHook, 'text-bold': hooks.submitHook}">Submit</span>
-                    <span class="text-muted d-flex w-25 justify-content-end">
-                        {{ submitHooks.length }}
-                    </span>
-                </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('approveHook')"
-                        [ngClass]="{'text-accent': hooks.approveHook, 'text-bold': hooks.approveHook}">Approve</span>
-                    <span class="text-muted d-flex w-25 justify-content-end">
-                        {{ approveHooks.length }}
-                    </span>
-                </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('rejectHook')"
-                        [ngClass]="{'text-accent': hooks.rejectHook, 'text-bold': hooks.rejectHook}">Reject</span>
-                    <span class="text-muted d-flex w-25 justify-content-end">
-                        {{ rejectHooks.length }}
-                    </span>
-                </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('sendForReviewHook')"
-                        [ngClass]="{'text-accent': hooks.sendForReviewHook, 'text-bold': hooks.sendForReviewHook}">
-                        Rework
-                    </span>
-                    <span class="text-muted d-flex w-25 justify-content-end">
-                        {{ sendForReviewHooks.length }}
-                    </span>
-                </div>
-                <div class="d-flex mb-3 w-100" *ngIf="canView()">
-                    <span class="hover w-50" (click)="selectHook('discardHook')"
-                        [ngClass]="{'text-accent': hooks.discardHook, 'text-bold': hooks.discardHook}">Discard</span>
-                    <span class="text-muted d-flex w-25 justify-content-end">
-                        {{ discardHooks.length }}
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.preHook">
-            <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Pre hooks</strong>
-                <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="previewHook()">
-                        Preview pre hook
-                    </button>
-                    <button class=" btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()" (click)="newHook()"
-                        id="addPrehook">+
-                        Add pre hook
-                    </button>
-                </div>
-            </div>
-            <div class="text-secondary preHook-desc mb-4">Use a pre hook to externalize actions on data before it gets
-                saved.
-                Pre hooks are invoked when data is created and edited, to enrich and/or validate data.
-            </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Pre hook Name</p>
-                    <p class="hook-header-url ml-2">Pre hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
-                </div>
-                <div class="hook-table__body d-flex pt-2 px-4" *ngIf="preHook.length === 0">
-                    <span class="text-muted">No pre hooks </span>
-                </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="preHook.length > 0">
-                    <div [sortablejs]="preHook" [sortablejsOptions]="{ disabled: !edit.status }">
-                        <div *ngFor="let hook of preHook; let hookIndex = index"
-                            class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                            <span class="fa fa-bars text-muted hover mt-1"></span>
-                            <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                                {{ hook.name }}</p>
-                            <div class="ml-2 d-flex justify-content-start">
-                                <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
-                                    ngbTooltip="{{hook.url}}">
-                                    {{ hook.url }}
-                                </p>
-                            </div>
-                            <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                                <p class="text-accent hook-url hover text-truncate" placement="top"
-                                    ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                    {{ hook.url }}</p>
-                            </div>
-                            <div *ngIf="edit.status">
-                                <button type="button" class="btn btn-link"
-                                    (click)="removeHook(hookIndex)">Delete</button>
-                                <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
-                            </div>
-                        </div>
+            <ng-container *ngIf="!isSchemaFree">
+                <div class="mb-3"><strong>Review Hooks</strong></div>
+                <div class="d-flex flex-column pl-2">
+                    <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                        <span class="hover" (click)="selectHook('submitHook')"
+                            [ngClass]="{'text-dark fw-600': hooks.hookType=='submitHook'}">Submit</span>
+                        <span class="">{{ submitHooks.length }}</span>
+                    </div>
+                    <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                        <span class="hover" (click)="selectHook('approveHook')"
+                            [ngClass]="{'text-dark fw-600': hooks.hookType=='approveHook'}">Approve</span>
+                        <span class="">{{ approveHooks.length }}</span>
+                    </div>
+                    <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                        <span class="hover" (click)="selectHook('rejectHook')"
+                            [ngClass]="{'text-dark fw-600': hooks.hookType=='rejectHook'}">Reject</span>
+                        <span class="">{{ rejectHooks.length }}</span>
+                    </div>
+                    <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                        <span class="hover" (click)="selectHook('reviewHook')"
+                            [ngClass]="{'text-dark fw-600': hooks.hookType=='reviewHook'}">Rework</span>
+                        <span class="">{{ reviewHooks.length }}</span>
+                    </div>
+                    <div class="p-2 mb-3 w-100 d-flex justify-content-between" *ngIf="canView()">
+                        <span class="hover" (click)="selectHook('discardHook')"
+                            [ngClass]="{'text-dark fw-600': hooks.hookType=='discardHook'}">Discard</span>
+                        <span class="">{{ discardHooks.length }}</span>
                     </div>
                 </div>
-            </div>
+            </ng-container>
         </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.postHook">
+        <div class="d-flex flex-column hooks-content p-4 flex-fill">
             <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Post hooks</strong>
+                <span class="fw-600 font-20">{{hooks.hookTitle}}</span>
                 <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
+                    <button class=" btn btn-link text-secondary p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
                         (click)="previewHook()">
-                        Preview post hook
+                        Preview {{hooks.hookshortName}} hook
                     </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="newHook()">+ Add
-                        Post hook
+                    <button class=" btn btn-link text-secondary p-0" type="button" *ngIf="edit.status && canEdit()" (click)="newHook()"
+                        id="addPrehook">+
+                        Add {{hooks.hookshortName}} hook
                     </button>
                 </div>
             </div>
-            <div class="text-secondary preHook-desc mb-4">Use a post hook to perform an action when data is successfully
+            <div *ngIf="hooks.hookType=='preHook'" class="text-secondary preHook-desc mb-4">Use a pre hook to
+                externalize actions on data before it gets
+                saved. Pre hooks are invoked when data is created and edited, to enrich and/or validate data.
+            </div>
+            <div *ngIf="hooks.hookType=='postHook'" class="text-secondary preHook-desc mb-4">Use a post hook to perform
+                an action when data is successfully
                 updated. Post hooks are triggerred for all create, update and delete actions on data.
             </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Post hook Name</p>
-                    <p class="hook-header-url">Post hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
-                </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="webHooks.length === 0">
-                    <span class="text-muted">No post hooks </span>
-                </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="webHooks.length > 0">
-                    <div *ngFor="let hook of webHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
-                        <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
-                                ngbTooltip="{{hook.url}}">
-                                {{ hook.url }}
-                            </p>
-                        </div>
-                        <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
-                                ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
-                        </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
-                        </div>
-                    </div>
-                </div>
+            <div *ngIf="hooks.hookType=='submitHook'" class="text-secondary preHook-desc mb-4">Use a submit hook to
+                perform an action when data is
+                successfully updated. Submit hooks are triggered for all create, update and delete actions on data.
             </div>
-        </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.approveHook">
-            <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Approve hooks</strong>
-                <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="previewHook()">
-                        Preview approve hook
-                    </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="newHook()">+ Add
-                        Approve
-                        hook
-                    </button>
-                </div>
+            <div *ngIf="hooks.hookType=='approveHook'" class="text-secondary preHook-desc mb-4">Use a approve hook to
+                perform an action when data is
+                successfully updated. Approve hooks are triggerred for all create, update and delete actions on data.
             </div>
-            <div class="text-secondary preHook-desc mb-4">Use a approve hook to perform an action when data is
-                successfully
-                updated. Approve hooks are triggerred for all create, update and delete actions on data.
+            <div *ngIf="hooks.hookType=='rejectHook'" class="text-secondary preHook-desc mb-4">Use a reject hook to
+                perform an action when data is
+                successfully updated. Reject hooks are triggered for all create, update and delete actions on data.
             </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Approve hook Name</p>
-                    <p class="hook-header-url">Approve hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
-                </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="approveHooks.length === 0">
-                    <span class="text-muted">No approve hooks </span>
-                </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="approveHooks.length > 0">
-                    <div *ngFor="let hook of approveHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
-                        <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
-                                ngbTooltip="{{hook.url}}">
-                                {{ hook.url }}
-                            </p>
-                        </div>
-                        <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
-                                ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
-                        </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
-                        </div>
-                    </div>
-                </div>
+            <div *ngIf="hooks.hookType=='reviewHook'" class="text-secondary preHook-desc mb-4">Use a rework hook to
+                perform an action when data is
+                successfully updated. Rework hooks are triggered for all create, update and delete actions on data.
             </div>
-        </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.rejectHook">
-            <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Reject hooks</strong>
-                <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="previewHook()">
-                        Preview reject hook
-                    </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="newHook()">+ Add
-                        Reject
-                        hook
-                    </button>
-                </div>
+            <div *ngIf="hooks.hookType=='discardHook'" class="text-secondary preHook-desc mb-4">Use a discard hook to
+                perform an action when data is
+                successfully updated. Discard hooks are triggerred for all create, update and delete actions on data.
             </div>
-            <div class="text-secondary preHook-desc mb-4">Use a reject hook to perform an action when data is
-                successfully
-                updated. Reject hooks are triggered for all create, update and delete actions on data.
-            </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Reject hook Name</p>
-                    <p class="hook-header-url">Reject hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
+            <div class="hook-table border rounded">
+                <div class="hook-table__header border-bottom d-flex align-items-center px-4 position-relative">
+                    <span class="hook-header-name">Name</span>
+                    <span class="hook-header-url flex-fill ml-2">URL</span>
+                    <span *ngIf="edit.status">Action</span>
                 </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="rejectHooks.length === 0">
-                    <span class="text-muted">No reject hooks </span>
+                <div class="hook-table__body d-flex py-2 px-4" *ngIf="hookList.length === 0">
+                    <span class="text-muted">No {{hooks.hookshortName}} hooks </span>
                 </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="rejectHooks.length > 0">
-                    <div *ngFor="let hook of rejectHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
-                        <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
-                                ngbTooltip="{{hook.url}}">
-                                {{ hook.url }}
-                            </p>
-                        </div>
-                        <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
-                                ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
-                        </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.sendForReviewHook">
-            <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Rework hooks</strong>
-                <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="previewHook()">
-                        Preview Rework hook
-                    </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="newHook()">+ Add
-                        Rework
-                        hook
-                    </button>
-                </div>
-            </div>
-            <div class="text-secondary preHook-desc mb-4">Use a rework hook to perform an action when data is
-                successfully
-                updated. Rework hooks are triggered for all create, update and delete actions on data.
-            </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Rework hook Name</p>
-                    <p class="hook-header-url">Rework hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
-                </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="sendForReviewHooks.length === 0">
-                    <span class="text-muted">No Rework hooks </span>
-                </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="sendForReviewHooks.length > 0">
-                    <div *ngFor="let hook of sendForReviewHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
-                        <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
-                                ngbTooltip="{{hook.url}}">
-                                {{ hook.url }}
-                            </p>
-                        </div>
-                        <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
-                                ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
-                        </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.discardHook">
-            <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Discard hooks</strong>
-                <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="previewHook()">
-                        Preview discard hook
-                    </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="newHook()">+ Add
-                        Discard
-                        hook
-                    </button>
-                </div>
-            </div>
-            <div class="text-secondary preHook-desc mb-4">Use a discard hook to perform an action when data is
-                successfully
-                updated. Discard hooks are triggerred for all create, update and delete actions on data.
-            </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Discard hook Name</p>
-                    <p class="hook-header-url">Discard hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
-                </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="discardHooks.length === 0">
-                    <span class="text-muted">No discard hooks </span>
-                </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="discardHooks.length > 0">
-                    <div *ngFor="let hook of discardHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
-                        <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
-                                ngbTooltip="{{hook.url}}">
-                                {{ hook.url }}
-                            </p>
-                        </div>
-                        <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
-                                ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
-                        </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex flex-column hooks-content w-100" *ngIf="hooks.submitHook">
-            <div class="mb-2 d-flex align-items-center">
-                <strong class="mr-auto">Submit hooks</strong>
-                <div class="ml-auto">
-                    <button class=" btn btn-link p-0 mr-3" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="previewHook()">
-                        Preview submit hook
-                    </button>
-                    <button class="ml-auto btn btn-link p-0" type="button" *ngIf="edit.status && canEdit()"
-                        (click)="newHook()">+ Add
-                        Submit
-                        hook
-                    </button>
-                </div>
-            </div>
-            <div class="text-secondary preHook-desc mb-4">Use a submit hook to perform an action when data is
-                successfully
-                updated. Submit hooks are triggered for all create, update and delete actions on data.
-            </div>
-            <div class="hook-table">
-                <div class="hook-table__header d-flex pt-2 px-4">
-                    <p class="hook-header-name">Submit hook Name</p>
-                    <p class="hook-header-url">Submit hook URL</p>
-                    <p *ngIf="edit.status">Action</p>
-                </div>
-                <div class="hHook-table__body d-flex pt-2 px-4" *ngIf="submitHooks.length === 0">
-                    <span class="text-muted">No submit hooks </span>
-                </div>
-                <div class="hHook-table__body d-flex flex-column pt-2" *ngIf="submitHooks.length > 0">
-                    <div *ngFor="let hook of submitHooks; let hookIndex = index"
-                        class="d-flex pt-2 px-4 border-bottom w-100 hHook-table__row">
-                        <p class="hook-name text-truncate ml-2" placement="top" ngbTooltip="{{hook.name}}">
-                            {{ hook.name }}</p>
-                        <div class="ml-2 d-flex justify-content-start">
-                            <p class="text-accent hook-url text-truncate" *ngIf="!edit.status" placement="top"
-                                ngbTooltip="{{hook.url}}">
-                                {{ hook.url }}
-                            </p>
-                        </div>
-                        <div class="ml-2 d-flex justify-content-start" id="preHookUrlEdit">
-                            <p class="text-accent hook-url hover text-truncate" placement="top"
-                                ngbTooltip="{{hook.url}}" *ngIf="edit.status" (click)="newHook(hookIndex)">
-                                {{ hook.url }}</p>
-                        </div>
-                        <div *ngIf="edit.status">
-                            <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
-                            <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button>
+                <div class="hHook-table__body d-flex flex-column" *ngIf="hookList.length > 0">
+                    <div [sortablejs]="hookList" [sortablejsOptions]="{ disabled: !edit.status }">
+                        <div *ngFor="let hook of hookList; let hookIndex = index"
+                            class="d-flex p-2 border-bottom w-100 hHook-table__row d-flex align-items-center position-relative">
+                            <span class="fa fa-bars text-muted hover"></span>
+                            <span class="hook-name text-truncate ml-2" ngbTooltip="{{hook.name}}">
+                                {{ hook.name }}</span>
+                            <div class="ml-2 d-flex justify-content-start">
+                                <span class="text-accent hook-url flex-fill text-truncate" *ngIf="!edit.status"
+                                    ngbTooltip="{{hook.url}}">
+                                    {{ hook.url }}
+                                </span>
+                            </div>
+                            <div class="ml-2 d-flex justify-content-start" id="hookListUrlEdit">
+                                <span class="text-accent hook-url flex-fill hover text-truncate" ngbTooltip="{{hook.url}}"
+                                    *ngIf="edit.status" (click)="newHook(hookIndex)">
+                                    {{ hook.url }}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-end ml-auto" *ngIf="edit.status">
+                                <!-- <button type="button" class="btn btn-link" (click)="removeHook(hookIndex)">Delete</button>
+                                <button type="button" class="btn btn-link" (click)="newHook(hookIndex)">Edit</button> -->
+                                <span class="dsi dsi-trash text-secondary mr-3" (click)="removeHook(hookIndex)"></span>
+                                <span class="dsi dsi-edit text-secondary mr-3" (click)="newHook(hookIndex)"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -430,181 +128,142 @@
     </div>
 </div>
 <ng-template #deleteModalTemplate>
-    <div class="modal-body p-4">
-        <div class="circle bg-dark">
-            <span class="fa fa-trash text-white"></span>
-        </div>
-        <p class="text-dark font-weight-bold text-center" [ngClass]="{'text-truncate': deleteModal.title.length > 65}">
-            {{deleteModal.title}}</p>
-        <p class="text-secondary text-center" [ngClass]="{'text-truncate': deleteModal.message.length > 65}">
-            {{deleteModal.message}}</p>
-    </div>
-    <div class="modal-footer p-3 bg-light">
-        <button type="button" class="btn btn-min-width btn-link w-50 mx-3" (click)="deleteModalTemplateRef.close(false)"
-            id="sbDeleteModalNo">No</button>
-        <button type="button" class="btn btn-min-width btn-primary w-50 mx-3"
-            (click)="deleteModalTemplateRef.close(true)" id="sbDeleteModalYes">Yes</button>
-    </div>
-</ng-template>
-
-<ng-template #hookModalTemplate>
-    <div class="preHook-modal">
-        <div class="modal-header bg-white">
-            <div *ngIf="!previewHookFormat" class="d-flex justify-content-between align-items-center w-100">
-                <div class="d-flex align-items-center">
-                    <span class="odp-flows mr-2"></span>
-                    <span class="font-weight-bold">
-                        {{ (editIndex == -1 ? 'Add ': 'Edit ') + hooks.hookTitle}}</span>
-                </div>
-            </div>
-        </div>
-        <div class="modal-body p-4">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="active" (activeIdChange)="onTabChange($event)" class="nav-tabs">
-                <li [ngbNavItem]="1">
-                    <a ngbNavLink>External</a>
-                    <ng-template ngbNavContent>
-                        <div class="d-flex flex-column mt-4" [formGroup]="hookForm">
-                            <div class="d-flex w-100 mb-4">
-                                <div class="label-width mt-1 text-secondary">Name
-                                    <sup class="text-danger font-lg " ngbTooltip="Mandatory field">*</sup>
-                                </div>
-                                <div class="value-width position-relative">
-                                    <input *ngIf="edit.status" class="form-control" type="text"
-                                        placeholder="Enter a name for the hook" [ngClass]="{'is-invalid': hookErr}"
-                                        formControlName="name" [value]="hookForm.get('name').value"
-                                        (keyup)="uniqueHook()" id="prehookName">
-                                    <span
-                                        class="fas fa-question-circle text-danger position-absolute field-error-symbol"
-                                        *ngIf="hookForm.get('name').dirty && hookForm.get('name') && hookForm.hasError('duplicateName')"
-                                        ngbTooltip="{{ 'This ' + hooks.hookshortName + 'hook name has already been used'}}"
-                                        placement="right"></span>
-                                </div>
-                            </div>
-                            <div class="d-flex w-100 mb-4">
-                                <div class="label-width mt-1 text-secondary">Endpoint
-                                    <sup class="text-danger font-lg " ngbTooltip="Mandatory field">*</sup>
-                                </div>
-                                <div class="value-width position-relative">
-                                    <textarea *ngIf=" edit.status" class="form-control " type="text" rows="5"
-                                        maxlength="2080" placeholder="http://<hostname>:<port>/<path>"
-                                        [ngClass]="{'is-invalid': hookUrlErr}" formControlName="url"
-                                        [value]="hookForm.get('url').value" (keyup)="uniqueHook()"
-                                        id="prehookEndpoint"></textarea>
-                                    <span
-                                        class="fas fa-question-circle  text-danger position-absolute field-error-symbol"
-                                        *ngIf="hookForm.get('url').dirty  && hookForm.get('url') && hookForm.get('url').hasError('pattern')"
-                                        ngbTooltip="{{ 'please enter a valid ' + hooks.hookshortName + ' hook'}}"
-                                        placement="right"></span>
-                                </div>
-                            </div>
-                            <div class="d-flex w-100 mb-4">
-                                <div class="label-width mt-1 text-secondary"></div>
-                                <div class="value-width d-flex">
-                                    <button class="btn" *ngIf="!verifyUrl.status"
-                                        [ngClass]="{'btn-primary': !verifyUrl.loading && !verifyUrl.status,'btn-default': verifyUrl.loading}"
-                                        type="button" (click)="activeUrl(hookForm.get('url').value)">{{
-                                        verifyUrl.loading ? 'Connecting...' :
-                                        'Test Connection'}}</button>
-                                    <button class="btn" *ngIf="verifyUrl.status"
-                                        [ngClass]="{'btn-default': verifyUrl.loading, 'btn-primary': !verifyUrl.loading && verifyUrl.status}"
-                                        (click)="activeUrl(hookForm.get('url').value)">{{ verifyUrl.loading ?
-                                        'Connecting...' : 'Test Connection'}}</button>
-                                    <span class="text-success ml-2 p-1" *ngIf="verifyUrl.status">Success</span>
-                                    <span class="text-danger ml-2 p-1" *ngIf="triggeredHookValidation">Failed</span>
-                                </div>
-                            </div>
-                            <div class="d-flex w-00 mb-4">
-                                <div class="label-width mt-1 text-secondary">Failure message</div>
-                                <div class="value-width position-relative">
-                                    <input *ngIf="edit.status" class="form-control" type="text"
-                                        placeholder="Message to display when the hook fails"
-                                        formControlName="failMessage">
-                                    <div class="fas fa-info-circle text-secondary position-absolute info-icon"
-                                        ngbTooltip="{{'This message will be displayed only if the added' +'    '+hooks.hookshortName + 'hooks'+'   '+'is down'}}"
-                                        placement="top">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="2">
-                    <a ngbNavLink>Function</a>
-                    <ng-template ngbNavContent>
-                        <div class="d-flex flex-column mt-4" [formGroup]="hookForm">
-                            <div class="d-flex w-100 mb-4">
-                                <div class="label-width mt-1 text-secondary">Name
-                                    <sup class="text-danger font-lg " ngbTooltip="Mandatory field">*</sup>
-                                </div>
-                                <div class="value-width position-relative">
-                                    <input *ngIf="edit.status" class="form-control" type="text"
-                                        placeholder="Enter a name for the hook" [ngbTypeahead]="searchFunction"
-                                        [resultFormatter]="formatter" [inputFormatter]="formatter"
-                                        (selectItem)="selectFunction($event)" formControlName="_func">
-                                </div>
-                            </div>
-                            <div class="d-flex w-100 mb-4">
-                                <div class="label-width mt-1 text-secondary">Endpoint
-                                    <sup class="text-danger font-lg " ngbTooltip="Mandatory field">*</sup>
-                                </div>
-                                <div class="value-width position-relative">
-                                    <input type="text" class="form-control" formControlName="url">
-                                </div>
-                            </div>
-                            <div class="d-flex w-00 mb-4">
-                                <div class="label-width mt-1 text-secondary">Failure message</div>
-                                <div class="value-width position-relative">
-                                    <input *ngIf="edit.status" class="form-control" type="text"
-                                        placeholder="Message to display when the hook fails"
-                                        formControlName="failMessage">
-                                    <div class="fas fa-info-circle text-secondary position-absolute info-icon"
-                                        ngbTooltip="{{'This message will be displayed only if the added' +'    '+hooks.hookshortName + 'hooks'+'   '+'is down'}}"
-                                        placement="top">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-            </ul>
-            <div [ngbNavOutlet]="nav"></div>
-        </div>
-        <div class="modal-footer p-3 d-flex w-100 mt-auto justify-content-end align-items-end">
-            <div class="w-50 d-flex">
-                <button type="button" class="btn btn-link ml-auto" (click)="hookModalTemplateRef.close(false)"
-                    id="sbDeleteModalNo">Cancel</button>
-                <button type="button" class="btn btn-success btn-min-width ml-auto"
-                    (click)="hookModalTemplateRef.close(true)" id="sbDeleteModalYes" [disabled]="hookForm.invalid">
-                    {{ (editIndex == -1 ? 'Add': 'Save') }}
-                </button>
-            </div>
+    <div class="modal-body p-4 d-flex flex-column">
+        <span class="font-20 fw-600">{{deleteModal.title}}</span>
+        <span class="text-secondary text-center py-5">{{deleteModal.message}}</span>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-outline-dark mr-3"
+                (click)="deleteModalTemplateRef.close(false)" id="sbDeleteModalNo">No</button>
+            <button type="button" class="btn btn-min-width btn-danger" (click)="deleteModalTemplateRef.close(true)"
+                id="sbDeleteModalYes">Yes</button>
         </div>
     </div>
 </ng-template>
 
+<div *ngIf="showHookWindow || showPreviewWindow" class="overlay position-fixed"></div>
 
-<ng-template #hookPreviewTemplate>
-    <div class="preHook-preview-modal">
-        <div class="modal-header bg-white">
-            <div class="d-flex justify-content-between align-items-center w-100">
-                <div class="d-flex align-items-center">
-                    <strong class="mr-2">Preview of {{hooks.hookTitle}}</strong>
+<div [ngClass]="{'show':showHookWindow}" class="hook-window p-4 position-absolute bg-white">
+    <div *ngIf="!previewHookFormat" class="d-flex justify-content-between align-items-center w-100">
+        <span class="fw-500 font-20">{{ (hooks.hookIndex == -1 ? 'Add ': 'Edit ') + hooks.hookTitle}}</span>
+        <span class="dsi dsi-close hover" (click)="cancelHookSave()"></span>
+    </div>
+    <div class="my-5">
+
+        <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mr-3" (click)="onTabChange(1)">
+                <odp-round-radio [checked]="active==1" (checkedChange)="onTabChange(1)"></odp-round-radio>
+                <span class="ml-2">External</span>
+            </div>
+            <div class="d-flex align-items-center" (click)="onTabChange(2)">
+                <odp-round-radio [checked]="active==2" (checkedChange)="onTabChange(2)"></odp-round-radio>
+                <span class="ml-2">Function</span>
+            </div>
+        </div>
+
+        <div *ngIf="active==1" class="d-flex flex-column mt-4" [formGroup]="hookForm">
+            <div class="form-group">
+                <label for="hookName">Name
+                    <sup class="text-danger font-16" ngbTooltip="Mandatory field">*</sup>
+                </label>
+                <div class="position-relative">
+                    <input *ngIf="edit.status" class="form-control" type="text" placeholder="Enter a name for the hook"
+                        [ngClass]="{'is-invalid': hookErr}" formControlName="name" [value]="hookForm.get('name').value"
+                        (keyup)="uniqueHook()" id="hookName">
+                    <span class="dsi dsi-danger-circle text-danger position-absolute field-error-symbol"
+                        *ngIf="hookForm.get('name').dirty && hookForm.get('name') && hookForm.hasError('duplicateName')"
+                        ngbTooltip="{{ 'This ' + hooks.hookshortName + 'hook name has already been used'}}"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="hookEndpoint">Endpoint
+                    <sup class="text-danger font-16" ngbTooltip="Mandatory field">*</sup>
+                </label>
+                <div class="value-width position-relative">
+                    <textarea *ngIf=" edit.status" class="form-control" type="text" rows="5" maxlength="2080"
+                        placeholder="http://<hostname>:<port>/<path>" [ngClass]="{'is-invalid': hookUrlErr}"
+                        formControlName="url" [value]="hookForm.get('url').value" (keyup)="uniqueHook()"
+                        id="hookEndpoint"></textarea>
+                    <span class="dsi dsi-danger-circle  text-danger position-absolute field-error-symbol"
+                        *ngIf="hookForm.get('url').dirty  && hookForm.get('url') && hookForm.get('url').hasError('pattern')"
+                        ngbTooltip="{{ 'please enter a valid ' + hooks.hookshortName + ' hook'}}"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="d-flex position-relative">
+                    <button class="btn btn-link" *ngIf="!verifyUrl.status"
+                        [ngClass]="{'text-accent': !verifyUrl.loading && !verifyUrl.status,'text-muted': verifyUrl.loading}"
+                        type="button" (click)="activeUrl(hookForm.get('url').value)">{{
+                        verifyUrl.loading ? 'Connecting...' :
+                        'Test Connection'}}</button>
+                    <button class="btn btn-link" *ngIf="verifyUrl.status"
+                        [ngClass]="{'text-muted': verifyUrl.loading, 'text-accent': !verifyUrl.loading && verifyUrl.status}"
+                        (click)="activeUrl(hookForm.get('url').value)">{{ verifyUrl.loading ?
+                        'Connecting...' : 'Test Connection'}}</button>
+                    <span class="text-success ml-2 p-1" *ngIf="verifyUrl.status">Success</span>
+                    <span class="text-danger ml-2 p-1" *ngIf="triggeredHookValidation">Failed</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="hookFaliureMessage">Failure message</label>
+                <div class="position-relative">
+                    <input *ngIf="edit.status" class="form-control" type="text" id="hookFaliureMessage"
+                        placeholder="Message to display when the hook fails" formControlName="failMessage">
+                    <div class="dsi dsi-info-circle text-secondary position-absolute info-icon"
+                        ngbTooltip="{{'This message will be displayed only if the added' +'    '+hooks.hookshortName + 'hooks'+'   '+'is down'}}">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="modal-body p-4" id="hookFormat">
-            <pre [innerHTML]="htmlContent" class="pre"></pre>
-        </div>
-        <div class="modal-footer p-3 d-flex w-100 mt-auto justify-content-end align-items-end">
-            <div class="w-50 d-flex">
-                <button class="btn btn-link" type="button" (click)="copyFormat();tooltip.open()">Copy</button>
-                <div id="tooltip" placement="top" ngbTooltip="Copied" #tooltip="ngbTooltip" triggers="manual">
+        <div *ngIf="active==2" class="d-flex flex-column mt-4" [formGroup]="hookForm">
+            <div class="form-group">
+                <label class="">Name
+                    <sup class="text-danger font-16 " ngbTooltip="Mandatory field">*</sup>
+                </label>
+                <div class="position-relative">
+                    <input *ngIf="edit.status" class="form-control" type="text" placeholder="Enter a name for the hook"
+                        [ngbTypeahead]="searchFunction" [resultFormatter]="formatter" [inputFormatter]="formatter"
+                        (selectItem)="selectFunction($event)" formControlName="_func">
                 </div>
             </div>
-            <div class="w-50 d-flex">
-                <button type="button" class="btn btn-link ml-auto" (click)="hookPreviewTemplateRef.close(false)"
-                    id="sbDeleteModalNo">Close</button>
+            <div class="form-group">
+                <label class="">Endpoint
+                    <sup class="text-danger font-16 " ngbTooltip="Mandatory field">*</sup>
+                </label>
+                <div class="position-relative">
+                    <input type="text" class="form-control" formControlName="url">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="">Failure message</label>
+                <div class="position-relative">
+                    <input *ngIf="edit.status" class="form-control" type="text"
+                        placeholder="Message to display when the hook fails" formControlName="failMessage">
+                    <div class="dsi dsi-info-circle text-secondary position-absolute info-icon"
+                        ngbTooltip="{{'This message will be displayed only if the added' +'    '+hooks.hookshortName + 'hooks'+'   '+'is down'}}">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</ng-template>
+    <div class="d-flex w-100 justify-content-end align-items-center">
+        <button type="button" class="btn btn-primary w-100" (click)="triggerHookSave()" id="sbDeleteModalYes"
+            [disabled]="hookForm.invalid">
+            {{ (hooks.hookIndex == -1 ? 'Add': 'Save') }}
+        </button>
+    </div>
+</div>
+
+
+<div [ngClass]="{'show':showPreviewWindow}" class="preview-hook-window p-4 position-absolute bg-white">
+    <div class="d-flex justify-content-between align-items-center w-100">
+        <span class="font-20 fw-600">Preview of {{hooks.hookTitle}}</span>
+        <span class="dsi dsi-close hover" (click)="showPreviewWindow=false"></span>
+    </div>
+    <div class="my-5" id="hookFormat">
+        <pre [innerHTML]="htmlContent" class="pre border rounded bg-light p-3"></pre>
+    </div>
+    <div class="d-flexjustify-content-end align-items-center">
+        <button class="btn btn-primary w-100" type="button" (click)="copyFormat();tooltip.open()">Copy</button>
+        <div id="tooltip" ngbTooltip="Copied" #tooltip="ngbTooltip" triggers="manual"></div>
+    </div>
+</div>

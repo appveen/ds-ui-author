@@ -5,7 +5,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StructureFieldComponent } from './structure-field.component';
 import { AutoFocusModule } from '../directives/auto-focus/auto-focus.module';
 import { DeleteModalModule } from '../delete-modal/delete-modal.module';
-import { IconsModule } from '../icons/icons.module';
 import { FieldTypeModule } from '../field-type/field-type.module';
 import { KeyStrokesModule } from '../key-strokes/key-strokes.module';
 import { SortablejsModule } from 'ngx-sortablejs';
@@ -17,7 +16,6 @@ import { SortablejsModule } from 'ngx-sortablejs';
     NgbModule,
     AutoFocusModule,
     DeleteModalModule,
-    IconsModule,
     FieldTypeModule,
     KeyStrokesModule,
     SortablejsModule

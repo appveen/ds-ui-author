@@ -1,40 +1,24 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.meme {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -20%);
-  img {
-    width: 40%;
-  }
-
-  h4 {
-    color: #a3a3a3;
-    font-size: 24px;
-    line-height: 54px;
-  }
-}
 
 .state-model-desc {
   max-width: 500px;
   min-width: 500px;
-  max-height: 34px;
   min-height: 34px;
 }
 
 .create-state-model {
   #select-state-model {
     width: 30%;
-    input {
-      border-top-right-radius: 0 !important;
-      border-bottom-right-radius: 0 !important;
-    }
+
     ngb-typeahead-window {
       width: 100%;
+
       button {
         justify-content: space-between;
         display: flex;
+
         &:hover,
         &.active {
           .border-circle {
@@ -54,25 +38,6 @@
     border-radius: 100%;
     margin-top: 1px;
   }
-
-  #configureStateModel {
-    background: #525252;
-    border-radius: 0px 2px 2px 0px;
-    color: #f9f9f9;
-    border: none;
-    font-size: 12px;
-    outline: none;
-  }
-
-  #stateModelInfo {
-    margin-top: 8px;
-    span {
-      background: #dedede;
-      border-radius: 2px;
-      padding: 1.1px 3.1px;
-      font-size: 10px;
-    }
-  }
 }
 
 #add-state {
@@ -82,23 +47,11 @@
 
 .new-state-section {
   min-height: 300px;
-}
 
-#new-state-input {
-  border-right: none !important;
-  border-top-right-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-}
-
-#delete-state-model {
-  font-size: 12px;
-  text-decoration: underline;
-  cursor: pointer;
-  color: red;
-}
-
-.state-model-label {
-  font-size: 0.77rem;
+  .dsi {
+    top: 10px;
+    right: 6px;
+  }
 }
 
 .mat-standard-chip {
@@ -134,7 +87,6 @@
   }
 
   .state-name {
-    font-family: "Lato", sans-serif !important;
     max-width: 130px;
     white-space: nowrap;
     overflow: hidden;
@@ -151,14 +103,14 @@
     margin-bottom: 15px;
   }
 
-  input[type="checkbox"] + span {
+  input[type="checkbox"]+span {
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
     line-height: 21px;
   }
 
-  input[type="checkbox"] ~ span.fa {
+  input[type="checkbox"]~span.fa {
     color: #8c8c8c;
     font-size: 15px;
   }
@@ -172,7 +124,6 @@
 .mat-form-field {
   background-color: transparent !important;
   padding: 0 !important;
-  font-family: "Lato", sans-serif !important;
 
   &:hover {
     .mat-form-field-wrapper {
@@ -186,6 +137,7 @@
 
   .mat-form-field-wrapper {
     padding-bottom: 1rem !important;
+
     .mat-form-field-underline {
       .mat-form-field-ripple {
         background-color: #bababa !important;
@@ -204,6 +156,14 @@
   font-size: 16px;
 }
 
-.schema-free-message{
+.schema-free-message {
   min-height: 55vh;
+}
+
+
+.dropdown-item.active,
+.dropdown-item:active {
+  color: $accent;
+  text-decoration: none;
+  background-color: $white;
 }

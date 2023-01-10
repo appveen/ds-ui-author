@@ -1,11 +1,11 @@
 <div [formGroup]="form.get('properties')">
 
+  <!-- DEFAULT VALUE -->
   <div class="d-flex w-100  flex-column mb-4" *ngIf="form.get('properties.default') && !form.get('properties.longText')?.value &&
-    !form.get('properties.richText')?.value && !form.get('properties.password')?.value && !isLibrary && !isDataFormat">
-    <div class="d-flex">
-      <div class="label-width text-secondary">Default Value
-      </div>
-      <div class="value-width position-relative">
+    !form.get('properties.richText')?.value && !isLibrary && !isDataFormat">
+    <div>
+      <div class="font-14 fw-300 text-dark mb-2">Default Value</div>
+      <div class=" position-relative">
         <ng-container *ngIf="canEdit">
           <input *ngIf="isPlainString(form.get('properties'))" class="form-control" type="text"
             formControlName="default" [ngClass]="{'is-invalid':form.get('properties.default').errors}" id="_default"
@@ -15,7 +15,7 @@
             [ngClass]="{'is-invalid':form.get('properties.default').hasError('DefaultEmail')}" formControlName="default"
             id="_default" placeholder="Default Value email"
             (blur)="validateEmail('DefaultEmail',form.get('properties.default').value,form.get('properties'))">
-          <div class="value-width" *ngIf=" form.get('properties._detailedType').value === 'enum'">
+          <div *ngIf="form.get('properties.enum')?.length > 0">
             <select class="form-control" formControlName="default" (change)="changeDefault($event)"
               [attr.disabled]="checkStateModel() ? '' : null">
               <option [value]=null selected>Select Value</option>
@@ -29,31 +29,129 @@
         </ng-container>
       </div>
     </div>
-    <div class="d-flex">
-      <div class="label-width"></div>
-      <div class="value-width ml-2">
-        <span class="text-danger" *ngIf="form.get('properties.default').hasError('minlength')"><span
-            class="fa fa-times mr-1"></span>{{form.get('properties.name').value}}
-          should have min. length {{form.get('properties.minlength').value}}
-        </span>
-        <span class="text-danger" *ngIf="form.get('properties.default').hasError('maxlength')"><span
-            class="fa fa-times mr-1"></span>
-          {{form.get('properties.name').value}} should have max. length {{form.get('properties.maxlength').value}}
-        </span>
-        <span class="text-danger" *ngIf="form.get('properties.default').hasError('pattern')"><span
-            class="fa fa-times mr-1"></span>
-          Invalid regex pattern</span>
-        <span class="text-danger" *ngIf="form.get('properties.default').hasError('DefaultEmail')"><span
-            class="fa fa-times mr-1"></span>
-          {{form.get('properties.name').value}} should be a valid email</span>
+
+
+    <div>
+      <div></div>
+      <div class="ml-2">
+        <div class="text-danger mt-1" *ngIf="form.get('properties.default').hasError('minlength')">
+          <span class="dsi dsi-danger-circle mr-2"></span>
+          <span>{{form.get('properties.name').value}} should have min. length
+            {{form.get('properties.minlength').value}}</span>
+        </div>
+        <div class="text-danger mt-1" *ngIf="form.get('properties.default').hasError('maxlength')">
+          <span class="dsi dsi-danger-circle mr-2"></span>
+          <span>{{form.get('properties.name').value}} should have max. length
+            {{form.get('properties.maxlength').value}}</span>
+        </div>
+        <div class="text-danger mt-1" *ngIf="form.get('properties.default').hasError('pattern')">
+          <span class="dsi dsi-danger-circle mr-2"></span>
+          <span>Invalid regex pattern</span>
+        </div>
+        <div class="text-danger mt-1" *ngIf="form.get('properties.default').hasError('DefaultEmail')">
+          <span class="dsi dsi-danger-circle mr-2"></span>
+          <span>{{form.get('properties.name').value}} should be a valid email</span>
+        </div>
       </div>
     </div>
   </div>
-  <div class="d-flex flex-column w-100 my-2" *ngIf="form.get('properties.pattern') && (form.get('properties._detailedType').value ==='' ||
-          form.get('properties._detailedType').value === 'password')">
-    <div class="d-flex position-relative ">
-      <div class="label-width text-secondary">Pattern</div>
-      <div class="value-width">
+
+  <!-- PATTERN -->
+
+  <!-- VALUES -->
+  <div class="w-100 mb-4 mt-4"
+    *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
+    <div class="font-14 fw-300 text-dark mb-2">Values</div>
+    <div class=" position-relative">
+      <ng-container *ngIf="edit.status">
+        <input class="form-control pr-4"
+          [ngClass]="{'invalid-enum' : form.get('properties.enum').hasError('emptyEnum') }"
+          (paste)="pasteOnList($event,'enum','string')" (keyup.enter)="listEnterKey($event,'enum')" type="text"
+          formControlName="_listInput">
+        <button type="button" class="list-add-button btn btn-link hover position-absolute p-0 mt-n1"
+          [disabled]="form.get('properties._listInput').value===''" (click)="addToList('enum')">
+          <span class="text-primary">+ Add</span>
+        </button>
+      </ng-container>
+      <div *ngIf="form.get('properties.enum').hasError('emptyEnum')">
+        <span class="text-danger">
+          Values cannot be empty
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-column w-100 mb-4 overflow-auto" style="max-height: 30vh;"
+    *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
+    <div class="" formArrayName="enum" [sortablejs]="enumList"
+      [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
+      <ng-container *ngFor="let en of enumList; let i=index;">
+        <div class="d-flex p-2" [class.disabled]="!edit || !edit.status">
+          <span class="icon" *ngIf="!!edit && !!edit.status">
+            <span class="fa fa-bars text-muted hover"></span>
+          </span>
+          <div class="ml-3">
+            <span *ngIf="editStateListOfValues !== i" (click)="editStateListOfValues = i" class="text-truncate"
+              placement="top" [ngbTooltip]="en.value">{{en.value}}</span>
+            <input *ngIf="editStateListOfValues === i" type="text" [formControl]="en" class="field form-control"
+              [id]="en.value" (keyup.enter)="editStateListOfValues = null" odpAutoFocus>
+          </div>
+          <span *ngIf="edit.status" class="enum-icons-section ml-auto">
+            <span class="dsi dsi-trash" (click)="removeFromList('enum',i)" placement="top"
+              [ngbTooltip]="'Remove'"></span>
+          </span>
+        </div>
+
+      </ng-container>
+    </div>
+    <button type="button" class="btn btn-white my-1 w-100" *ngIf="enumList.length>2 && edit.status"
+      (click)="clearList('enum')">
+      Clear All
+    </button>
+  </div>
+
+  <div class="w-100 mb-2 mt-3" *ngIf="form.get('properties.hasTokens') && (form.get('properties.longText').value
+                  || form.get('properties.richText').value)">
+    <div class="font-14 text-dark mb-2">Tokens</div>
+    <div class=" position-relative" *ngIf="canEdit; else show_list">
+      <input class="form-control" *ngIf="form.get('properties._type').value == 'String'"
+        (paste)="pasteOnList($event,'hasTokens','string')" type="text" formControlName="_listInput"
+        (keyup.enter)="listEnterKey($event,'hasTokens')">
+      <button type="button" class="list-add-button btn btn-link hover position-absolute p-0"
+        [disabled]="form.get('properties._listInput').value==''" (click)="addToList('hasTokens')">
+        <span class="dsi dsi-plus text-accent"></span>
+      </button>
+    </div>
+    <ng-template #show_list>
+      <ol>
+        <li *ngFor="let en of hasTokensList; let i=index;">{{en.value}}</li>
+      </ol>
+    </ng-template>
+  </div>
+  <div class="d-flex flex-column w-100 mb-4" *ngIf="form.get('properties.hasTokens') && (form.get('properties.longText').value
+                   || form.get('properties.richText').value) && canEdit">
+    <div class="enum-list-item p-2 d-flex justify-content-between align-items-center"
+      *ngFor="let en of hasTokensList; let i=index;">
+      <span>{{en.value}}</span>
+      <span class="hover float-right text-danger" (click)="removeFromList('hasTokens',i)">
+        <span class="dsi dsi-trash"></span>
+      </span>
+    </div>
+    <button type="button" class="btn btn-min-width btn-primary my-1 w-100" *ngIf="hasTokensList.length>2 && canEdit"
+      (click)="clearList('hasTokens')">Clear
+      All
+    </button>
+  </div>
+
+  <div class="mt-4 font-16 fw-400">
+    Validations
+  </div>
+
+  <div class="d-flex flex-column w-100 mt-3" *ngIf="form.get('properties.pattern') && (form.get('properties._detailedType').value ==='' ||
+  form.get('properties._detailedType').value === 'password')">
+    <div class="position-relative ">
+      <div class="font-14 fw-300 text-dark mb-2">Pattern</div>
+      <div>
         <input *ngIf="canEdit" class="form-control" type="text" formControlName="pattern" id="_pattern"
           placeholder="Regular Expression"
           [ngClass]="{'is-invalid':form.get('properties.pattern').hasError('patternValidator')}"
@@ -67,146 +165,64 @@
     </div>
 
     <!-- <div class="d-flex w-100 my-2"
-      *ngIf="sampleRegexValue.length || form.get('properties.pattern').hasError('patternValidator') ">
-      <div class="label-width"></div>
-      <div class="value-width bg-light py-2 pattern font-sm mr-3 text-center">
-        <ng-container *ngIf="!form.get('properties.pattern').hasError('patternValidator') && sampleRegexValue.length">
-          <span class="text-secondary">Sample :</span>
-          <span class="text-accent">{{sampleRegexValue}}</span>
-        </ng-container>
-        <span class="text-danger" *ngIf="form.get('properties.pattern').hasError('patternValidator')">
-          <span class="fa fa-times mr-1"></span>
-          <span class="text">Invalid regex pattern</span>
-        </span>
-      </div>
-    </div> -->
-  </div>
-  <div class="d-flex w-100 mb-4"
-    *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
-    <div class="label-width text-secondary">Values</div>
-    <div class="value-width position-relative">
-      <ng-container *ngIf="edit.status">
-        <input class="form-control pr-4"
-          [ngClass]="{'invalid-enum' : form.get('properties.enum').hasError('emptyEnum') }"
-          (paste)="pasteOnList($event,'enum','string')" (keyup.enter)="listEnterKey($event,'enum')" type="text"
-          formControlName="_listInput">
-        <button type="button" class="list-add-button btn btn-link hover position-absolute p-0"
-          [disabled]="form.get('properties._listInput').value===''" (click)="addToList('enum')">
-          <span class="fa fa-plus text-primary"></span>
-        </button>
-      </ng-container>
-      <div *ngIf="form.get('properties.enum').hasError('emptyEnum')">
-        <span class="text-danger">
-          Values cannot be empty
-        </span>
-      </div>
-    </div>
-  </div>
-  <div class="d-flex flex-column w-100 mb-4"
-    *ngIf="form.get('properties.enum') && form.get('properties._detailedType').value === 'enum'">
-    <div class="border-left" formArrayName="enum" [sortablejs]="enumList"
-      [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
-      <ng-container *ngFor="let en of enumList; let i=index;">
-        <div class="enum-list-item mx-2 px-2 py-1" [class.disabled]="!edit || !edit.status">
-          <span class="icon" *ngIf="!!edit && !!edit.status">
-            <span class="fa fa-bars text-muted hover"></span>
-          </span>
-          <div class="enum-mid-section">
-            <span *ngIf="editStateListOfValues !== i" (click)="editStateListOfValues = i" class="text-truncate"
-              placement="top" [ngbTooltip]="en.value">{{en.value}}</span>
-            <input *ngIf="editStateListOfValues === i" type="text" [formControl]="en" class="field form-control"
-              [id]="en.value" (keyup.enter)="editStateListOfValues = null" odpAutoFocus>
-          </div>
-          <span *ngIf="edit.status" class="enum-icons-section text-primary">
-            <span class="fa fa-times" (click)="removeFromList('enum',i)" placement="top" [ngbTooltip]="'Remove'"></span>
-          </span>
-        </div>
-
-      </ng-container>
-    </div>
-    <button type="button" class="btn btn-primary my-1 w-100" *ngIf="enumList.length>2 && edit.status"
-      (click)="clearList('enum')">Clear
-      All
-    </button>
+*ngIf="sampleRegexValue.length || form.get('properties.pattern').hasError('patternValidator') ">
+<div ></div>
+<div class=" bg-light py-2 pattern font-13 mr-3 text-center">
+<ng-container *ngIf="!form.get('properties.pattern').hasError('patternValidator') && sampleRegexValue.length">
+  <span class="text-secondary">Sample :</span>
+  <span class="text-accent">{{sampleRegexValue}}</span>
+</ng-container>
+<span class="text-danger" *ngIf="form.get('properties.pattern').hasError('patternValidator')">
+  <span class="dsi dsi-close mr-1"></span>
+  <span class="text">Invalid regex pattern</span>
+</span>
+</div>
+</div> -->
   </div>
 
-  <div class="d-flex w-100 mb-4" *ngIf="form.get('properties.hasTokens') && (form.get('properties.longText').value
-                  || form.get('properties.richText').value)">
-    <div class="label-width text-secondary">Tokens</div>
-    <div class="value-width position-relative" *ngIf="canEdit; else show_list">
-      <input class="form-control" *ngIf="form.get('properties._type').value == 'String'"
-        (paste)="pasteOnList($event,'hasTokens','string')" type="text" formControlName="_listInput"
-        (keyup.enter)="listEnterKey($event,'hasTokens')">
-      <button type="button" class="list-add-button btn btn-link hover position-absolute p-0"
-        [disabled]="form.get('properties._listInput').value==''" (click)="addToList('hasTokens')">
-        <span class="fa fa-plus text-primary"></span>
-      </button>
-    </div>
-    <ng-template #show_list>
-      <ol>
-        <li *ngFor="let en of hasTokensList; let i=index;">{{en.value}}</li>
-      </ol>
-    </ng-template>
-  </div>
-  <div class="d-flex flex-column w-100 mb-4" *ngIf="form.get('properties.hasTokens') && (form.get('properties.longText').value
-                   || form.get('properties.richText').value) && canEdit">
-    <div class="list-group-item" *ngFor="let en of hasTokensList; let i=index;">
-      <span>{{en.value}}</span>
-      <span class="hover float-right text-primary" (click)="removeFromList('hasTokens',i)">
-        <span class="fa fa-times"></span>
-      </span>
-    </div>
-    <button type="button" class="btn btn-min-width btn-primary my-1 w-100" *ngIf="hasTokensList.length>2 && canEdit"
-      (click)="clearList('hasTokens')">Clear
-      All
-    </button>
-  </div>
+  <!-- MIN and MAX LENGTH -->
   <ng-container *ngIf="formatType!='FLATFILE'">
-    <div class="d-flex flex-column w-100 mb-4"
-      *ngIf="form.get('properties.minlength') && form.get('properties._detailedType').value==''">
-      <div class="d-flex flex-row mb-4">
-        <div class="label-width text-secondary">Length</div>
-        <div class="value-width text-accent">Min and max lengths of the value</div>
-      </div>
-      <div class="border-left d-flex flex-column">
-        <div class="ml-2 pl-2 mb-3 mt-2 d-flex flex-column position-relative">
-          <div class="d-flex">
-            <div class="sub-level-width text-secondary">Min.</div>
-            <input *ngIf="canEdit" class="value-width form-control short" placeholder="Minimum length"
+    <div class="d-flex flex-column w-100 mt-3">
+      <div class="row no-gutters">
+        <div class="col-6">
+          <ng-container *ngIf="form.get('properties.minlength')">
+            <div class="font-14 fw-300 text-dark mb-2">Min Length</div>
+            <input *ngIf="canEdit" class=" form-control short" placeholder="Minimum length"
               [ngClass]="{'is-invalid':form.get('properties.minlength').dirty && form.hasError('minMaxLength')}"
               type="text" min="0" #minlengthEle formControlName="minlength" id="_minLength"
               (blur)="reCalibrateTextDefaultValue('minlength', form.get('properties.minlength').value, form.get('properties'))">
             <span
               *ngIf="!canEdit && form.get('properties.minlength') && form.get('properties.minlength').value">{{form.get('properties.minlength').value}}</span>
             <span class="text-muted" *ngIf="!canEdit && !form.get('properties.minlength').value">-</span>
-          </div>
-          <div class="d-flex ml-2">
-            <div class="sub-level-width"></div>
-            <span class="value-width text-danger"
-              *ngIf="form.get('properties.minlength').dirty && form.get('properties').hasError('minMaxLength')"><span
-                class="fa fa-times mr-1"></span>Min
-              Length value cannot be greater then Max Length value</span>
-          </div>
+          </ng-container>
         </div>
-        <div class="d-flex w-10 ml-2 pl-2 d-flex flex-column position-relative"
-          *ngIf="form.get('properties.maxlength') && form.get('properties._detailedType').value==''">
-          <div class="d-flex">
-            <div class="sub-level-width text-secondary">Max.</div>
-            <input *ngIf="canEdit" class="value-width form-control short mb-2" placeholder="Maximum length"
+        <div class="col-6">
+          <ng-container *ngIf="form.get('properties.maxlength')">
+            <div class="font-14 fw-300 text-dark mb-2">Max Length</div>
+            <input *ngIf="canEdit" class=" form-control short mb-2" placeholder="Maximum length"
               [ngClass]="{'is-invalid':form.get('properties.maxlength').dirty && form.hasError('minMaxLength')}"
               type="text" min="0" #maxlengthEle formControlName="maxlength" id="_maxLength"
               (blur)="reCalibrateTextDefaultValue('maxlength', form.get('properties.maxlength').value, form.get('properties'))">
             <span
               *ngIf="!canEdit && form.get('properties.maxlength') && form.get('properties.maxlength').value">{{form.get('properties.maxlength').value}}</span>
             <span class="text-muted" *ngIf="!canEdit && !form.get('properties.maxlength').value">-</span>
+          </ng-container>
+
+        </div>
+        <div class="col-12">
+          <div class="font-12 text-secondary mb-2"
+            *ngIf="form.get('properties.minlength') && form.get('properties.maxlength') && form.get('properties._detailedType').value==''">
+            Min and max length of the attribute</div>
+          <div class="font-12 text-danger mt-1 d-flex align-items-center"
+            *ngIf="form.get('properties.minlength').dirty && form.get('properties').hasError('minMaxLength')">
+            <span class="dsi dsi-danger-circle mr-2"></span>
+            <span>Min length value cannot be greater than max length value</span>
           </div>
-          <div class="d-flex ml-2">
-            <div class="sub-level-width"></div>
-            <span class="value-width text-danger"
-              *ngIf="form.get('properties.maxlength').dirty && form.get('properties').hasError('minMaxLength')"><span
-                class="fa fa-times mr-1"></span>Max
-              Length value cannot be lesser then Min Length value</span>
-          </div>
+        </div>
+        <div class="font-12 text-danger mt-1 d-flex align-items-center"
+          *ngIf="form.get('properties.maxlength').dirty && form.get('properties').hasError('minMaxLength')">
+          <span class="dsi dsi-danger-circle mr-2"></span>
+          <span>Max length value cannot be lesser than min length value</span>
         </div>
       </div>
     </div>
@@ -215,16 +231,9 @@
 
 <ng-template #deleteModalTemplate>
   <div class="modal-body p-4">
-    <div class="d-flex align-items-center">
-      <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
-        <odp-service-icon *ngIf="!isDataFormat && !isLibrary" [size]="18" color="DD5151" class="mt-1">
-        </odp-service-icon>
-        <odp-data-format-icon *ngIf="isDataFormat" [size]="18" color="DD5151" class="mt-1">
-        </odp-data-format-icon>
-        <odp-library-icon *ngIf="isLibrary" [size]="18" color="DD5151" class="mt-1"></odp-library-icon>
-      </span>
-      <span class="font-weight-bold mb-1">{{deleteModal.title}}</span>
-      <span class="fa fa-times text-secondary hover ml-auto" (click)="deleteModalTemplateRef.close(false)"></span>
+    <div class="d-flex align-items-center justify-content-between">
+      <span class="font-20 fw-600">{{deleteModal.title}}</span>
+      <span class="dsi dsi-close text-secondary hover ml-auto" (click)="deleteModalTemplateRef.close(false)"></span>
     </div>
     <p class="text-center my-5" [ngClass]="{'text-truncate': deleteModal.message.length > 65}">
       {{deleteModal.message}}

@@ -38,6 +38,6 @@ cd $WORKSPACE
 
 # ng build --prod
 
-docker build -t data.stack:ui-author.$TAG .
+docker build -t data.stack.ui-author:$TAG .
 
 echo $TAG > $WORKSPACE/../LATEST_AUTHOR

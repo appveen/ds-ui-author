@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import * as _ from 'lodash';
+
 import { CommonService } from 'src/app/utils/services/common.service';
 
 @Component({
@@ -9,19 +11,18 @@ import { CommonService } from 'src/app/utils/services/common.service';
 export class GroupAuthorInsightsComponent implements OnInit {
   @Input() roles: Array<any>;
   @Output() rolesChange: EventEmitter<Array<any>>;
-  dropdownToggle: {
-    [key: string]: boolean;
-  };
-  toggleDropdown: any;
-  subscriptions: any;
+  edit: any;
+  managePermissions: Array<string>;
+  viewPermissions: Array<string>;
+
   constructor(
     private commonService: CommonService
   ) {
-    this.toggleDropdown = {};
-    this.subscriptions = {};
     this.roles = [];
     this.rolesChange = new EventEmitter();
-    this.dropdownToggle = {};
+    this.edit = { status: true };
+    this.managePermissions = [];
+    this.viewPermissions = ['PVISU', 'PVISG', 'PVISDS'];
   }
 
   ngOnInit(): void {
@@ -31,6 +32,46 @@ export class GroupAuthorInsightsComponent implements OnInit {
   hasPermission(type: string) {
     const self = this;
     return this.commonService.hasPermission(type);
+  }
+
+  getPermissionObject(id: string) {
+    const self = this;
+    if (id === null || id.length === 0) {
+      return {};
+    }
+    return {
+      id,
+      app: self.commonService.app._id,
+      entity: 'INS',
+      type: 'author'
+    };
+  }
+
+  changeAllPermissions(val: string) {
+    if (val == 'manage') {
+      _.remove(this.roles, (item) => item.entity == 'INS')
+      this.managePermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item));
+      });
+    } else if (val == 'view') {
+      _.remove(this.roles, (item) => item.entity == 'INS')
+      this.viewPermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item));
+      });
+    } else if (val == 'blocked') {
+      _.remove(this.roles, (item) => item.entity == 'INS')
+    }
+  }
+
+  get globalPermission() {
+    const perms = this.roles.map(e => e.id);
+    if (_.intersection(this.viewPermissions, perms).length === this.viewPermissions.length) {
+      return 'view';
+    } else if (perms.length == 0) {
+      return 'blocked';
+    } else {
+      return 'custom';
+    }
   }
 
   get userTabPermission() {
@@ -125,23 +166,5 @@ export class GroupAuthorInsightsComponent implements OnInit {
     }
 
   }
-
-
-
-  getPermissionObject(id: string) {
-    const self = this;
-    if (id === null || id.length === 0) {
-      return {};
-    }
-    return {
-      id,
-      app: self.commonService.app._id,
-      entity: 'INS',
-      type: 'author'
-    };
-  }
-
-
-
 
 }

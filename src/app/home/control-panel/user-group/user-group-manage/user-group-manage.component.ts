@@ -66,6 +66,7 @@ export class UserGroupManageComponent implements OnInit, OnDestroy, CanComponent
       label: 'Groups',
       url: '/app/' + self.commonService.app._id + '/cp/gr'
     });
+    this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     self.route.params.subscribe(param => {
       if (param.id) {
         self.getGroup(param.id);
@@ -123,6 +124,7 @@ export class UserGroupManageComponent implements OnInit, OnDestroy, CanComponent
         active: true,
         label: self.group.name
       });
+      this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     }, err => {
       self.activeTab = 0;
       self.showLazyLoader = false;

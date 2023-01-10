@@ -7,8 +7,8 @@
 }
 
 .options {
-  min-height: 50px;
-  max-height: 50px;
+  min-height: 100px;
+  padding: 32px;
 }
 
 .fill-empty-space {
@@ -29,13 +29,13 @@
     justify-content: space-between;
     align-items: center;
     height: 30px;
-    
+
     .button-group {
       display: grid;
       grid-template-columns: auto auto;
       column-gap: 20px;
     }
-  
+
     .count-text {
       color: #747e8d;
     }
@@ -65,7 +65,7 @@
   }
 }
 
-.user-option-class > span {
+.user-option-class>span {
   padding-top: 3px;
 }
 
@@ -82,15 +82,19 @@
   border-radius: 4px;
   max-height: 19vh;
   z-index: 20;
+
   ul {
     list-style: none;
+
     li:not(:last-child) {
       border-bottom: $border-width solid $border-color;
     }
+
     li:hover {
       background-color: $light;
     }
   }
+
   &-newHeight {
     max-height: 46vh;
   }
@@ -101,6 +105,7 @@
     transform: rotate(0deg);
     transition: 0.25s;
   }
+
   &.open {
     .fa-angle-down {
       transform: rotate(180deg);
@@ -141,12 +146,12 @@
   }
 
   // On mouse-over, add a grey background color
-  &:hover input ~ .team-selected {
+  &:hover input~.team-selected {
     background-color: $gray-400;
   }
 
   // When the checkbox is checked, add a blue background
-  input:checked ~ .team-selected {
+  input:checked~.team-selected {
     background-color: $accent;
   }
 
@@ -158,7 +163,7 @@
   }
 
   // Show the checkmark when checked
-  input:checked ~ .team-selected:after {
+  input:checked~.team-selected:after {
     display: block;
   }
 
@@ -175,26 +180,26 @@
     transform: rotate(45deg);
   }
 }
+
 .label-width {
   min-width: 200px;
 }
 
 .eye-icon {
-  padding: 6px;
-  border-radius: 0.25rem;
+  padding: 12px;
   right: -1px;
-  border-bottom: 1px solid #ccc !important;
-  border-right: 1px solid #ccc !important;
-  border-top: 1px solid #ccc !important;
+  top: 0;
 }
+
 .password-input {
   width: 90%;
   border-radius: 0.25em 0em 0em 0.25em;
 }
 
 .error-icon-password {
-  right: 13%;
-  top: 7px;
+  right: 32px;
+  top: 12px;
+  z-index: 1;
 }
 
 .create {
@@ -203,4 +208,241 @@
     height: 18px;
     margin-top: -2px !important;
   }
+}
+
+
+
+.overlay {
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: rgba($color: #000000, $alpha: 0.6);
+}
+
+.new-user-window {
+  height: 100vh;
+  width: 360px;
+  top: 0;
+  right: -360px;
+  z-index: 2;
+  transition: 0.2s;
+  overflow: auto;
+  padding-top: 40px !important;
+
+  &.show {
+    right: 0px !important;
+  }
+}
+
+.groups-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.azure-logo {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  background-position: center;
+  background-size: cover;
+
+  &:hover {
+    background: $light;
+  }
+}
+
+.users {
+  overflow-y: auto;
+  max-height: 70vh;
+  min-height: 70vh;
+  overflow-x: hidden;
+}
+
+.list {
+  margin-left: 32px;
+  margin-right: 32px;
+}
+
+
+.userList {
+  padding: 20px;
+  display: block;
+
+  [type=checkbox] {
+    opacity: 0.5;
+    border: 1px solid $lightgrey;
+    border-radius: 4px
+  }
+
+  .name {
+    font-size: 14px;
+    font-weight: 500;
+    color: $headings;
+    flex: 1;
+  }
+
+  .email {
+    margin-left: 32px;
+    margin-top: 10px;
+  }
+
+  &:hover {
+    background: rgba($orange, 0.04);
+  }
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+
+  .name {
+    font-size: 20px;
+    font-weight: 600;
+    color: $headings;
+    flex: 1;
+    margin-bottom: 18px;
+  }
+
+  .time {
+    margin-top: 12px;
+    font-size: 12px;
+  }
+}
+
+.nav-item {
+  width: 100px;
+}
+
+.tabs {
+  padding-bottom: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  color: $lightgrey;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    text-decoration-color: $orange;
+    text-decoration-thickness: 2px;
+
+  }
+}
+
+.active {
+  text-decoration: underline;
+  text-underline-offset: 10px;
+  text-decoration-color: $orange;
+  text-decoration-thickness: 2px;
+  color: $headings;
+}
+
+.tab-header {
+  font-weight: 500;
+  font-size: 16px;
+  color: $headings;
+}
+
+.input-text {
+  width: 310px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+
+.text {
+  font-size: 12px;
+}
+
+.fa-plus-circle {
+  color: $primary;
+  margin-right: 5px;
+}
+
+.add-attribute {
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.no-attribute {
+  display: grid;
+  margin: 0 auto;
+  margin-top: 100px
+}
+
+.no-attr-label {
+  font-weight: 700;
+  font-size: 14px;
+  margin: auto auto 8px auto;
+  color: $headings;
+}
+
+.no-attr-sub {
+  font-weight: 400;
+  font-size: 12px;
+  margin: auto auto 8px auto;
+  color: $sub-headings;
+}
+
+
+.icons {
+  color: #6C7584;
+  cursor: pointer
+}
+
+::ng-deep .ag-theme-balham {
+  font-family: "Inter";
+  font-size: 14px;
+
+  .ag-root-wrapper {
+    border: 1px solid #ECECEC;
+    border-radius: 8px;
+  }
+
+  .ag-row {
+    padding: 10px;
+  }
+
+  .ag-layout-normal {
+    overflow-x: hidden
+  }
+
+}
+
+
+.list-group-item {
+  &.header {
+    font-weight: 400;
+    height: 40px;
+  }
+}
+
+.d-flex-1 {
+  flex: 1
+}
+
+
+.group-actions {
+  min-width: 100px;
+
+  .btn {
+    &:hover {
+      color: $secondary !important;
+    }
+  }
+}
+
+.closeicon {
+  position: absolute;
+  top: 25px;
+  right: 25px
+}
+
+.scroll-pane {
+  height: 100%;
+  overflow: auto;
 }

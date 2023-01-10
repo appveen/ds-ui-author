@@ -26,11 +26,20 @@ export class GlobalSchemaStructurePipe implements PipeTransform {
                     temp[i] = properties[i];
                 } else if (i === 'richText' && properties['_detailedType'] === 'rich') {
                     temp[i] = properties[i];
+                } else if (i === 'password' && properties['_detailedType'] === 'rich') {
+                    temp[i] = properties[i];
                 } else if (i === 'longText' && properties['_detailedType'] === 'long') {
+                    temp[i] = properties[i];
+                } else if (i === 'password' && properties['_detailedType'] === 'long') {
                     temp[i] = properties[i];
                 } else if (i === 'natural' && properties['_detailedType'] === 'natural') {
                     temp[i] = properties[i];
-                } else if (i === 'max'
+                } else if (i === 'password' && properties['_type'] === 'File') {
+                    temp[i] = properties[i];
+                } else if (!properties['richText'] && !properties['longText'] && !properties['email'] && properties['_detailedType'] != 'enum' && properties['_type'] == 'String' && i == 'password') {
+                    temp[i] = properties[i];
+                }
+                else if (i === 'max'
                     || i === 'min'
                     || i === 'maxlength'
                     || i === 'minlength'
@@ -78,17 +87,21 @@ export class GlobalSchemaStructurePipe implements PipeTransform {
     }
 
 
-    transform(value: any): any {
+    transform(value: any, isDataFormat?: boolean): any {
         const temp = {};
         temp['name'] = value.name;
         temp['description'] = value.description;
         temp['character'] = value.character;
         temp['type'] = value.dataFormatType;
-        const def = {};
-        def['definition'] = this.buildDefinition(value.definition);
-        def['type'] = value.type;
-        temp['definition'] = [def];
         temp['description'] = value.description;
+        if (isDataFormat) {
+            temp['definition'] = this.buildDefinition(value.definition);
+        } else {
+            const def = {};
+            def['definition'] = this.buildDefinition(value.definition);
+            def['type'] = value.type;
+            temp['definition'] = [def];
+        }
         return temp;
     }
 

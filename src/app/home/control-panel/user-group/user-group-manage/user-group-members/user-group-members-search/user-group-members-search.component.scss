@@ -1,0 +1,44 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.delete-modal-body {
+    min-height: 500px;
+}
+
+.user-name {
+    width: 140px;
+}
+
+.user-username {
+    width: 275px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-check {
+    width: 48px;
+}
+
+.user-remove {
+    width: 100px;
+
+    .btn {
+        &:not(:hover) {
+            color: $text-muted;
+        }
+
+        &:hover {
+            color: $dark;
+        }
+    }
+}
+
+.scrollable {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.model-container {
+    min-height: 400px;
+}

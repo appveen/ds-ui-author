@@ -3,11 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AgGridModule } from 'ag-grid-angular';
 
 import { FaasListingComponent } from './faas-listing/faas-listing.component';
 import { FaasManageComponent } from './faas-manage/faas-manage.component';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
@@ -15,10 +13,10 @@ import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.modul
 import { FormatTypeBadgeModule } from 'src/app/utils/format-type-badge/format-type-badge.module';
 import { BasicInfoModule } from 'src/app/utils/basic-info/basic-info.module';
 import { CodeEditorModule } from 'src/app/utils/code-editor/code-editor.module';
-import { FaasCellComponent } from './faas-listing/faas-cell/faas-cell.component';
-import { FaasFilterComponent } from './faas-listing/faas-filter/faas-filter.component';
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
+import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
+import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
 
 
 const routes: Routes = [
@@ -27,14 +25,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [FaasListingComponent, FaasManageComponent, FaasCellComponent, FaasFilterComponent],
+  declarations: [FaasListingComponent, FaasManageComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,
     FormsModule,
     NgbModule,
-    IconsModule,
     ClickOutsideModule,
     BreadcrumbModule,
     SearchBoxModule,
@@ -43,12 +40,10 @@ const routes: Routes = [
     BasicInfoModule,
     BreadcrumbModule,
     CodeEditorModule,
-    AgGridModule.withComponents([
-      FaasCellComponent,
-      FaasFilterComponent
-    ]),
     DateFormatModule,
-    OnChangeModule
+    OnChangeModule,
+    AutoFocusModule,
+    CommonFilterModule
   ],
   exports: [RouterModule]
 })

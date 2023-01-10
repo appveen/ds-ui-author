@@ -1,248 +1,580 @@
-<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+<div class="bg-light-gray w-100 h-100">
+  <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
-        <div class="text-secondary mt-2">Processing...</div>
+      <div class="spinner-border text-dark" role="status">
+        <span class="sr-only">Processing...</span>
+      </div>
+      <div class="text-secondary mt-2">Processing...</div>
     </div>
-</div>
-<div class="d-flex flex-column position-relative">
-    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
-    <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3">
-        <div class="font-weight-bold font-lg">List of Users</div>
-        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn-min-width btn btn-primary"
-            (click)="newUser()">
-            <span class="fa fa-plus-circle mr-2"></span>
-            <span class="text">Add User</span>
+  </div>
+  <div class="d-flex flex-column position-relative" style="height: 100vh">
+    <!-- <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb> -->
+    <div class="options d-flex">
+      <div class="fw-600 font-22">Users</div>
+      <div class="d-flex align-items-center ml-auto">
+        <ng-container *ngIf="hasPermission('PMUBD')">
+          <button *ngIf="checkedUsers.length > 0" type="button" class="btn btn-white border text-danger mr-3"
+            (click)="removeUsers()" id="removeusers" [ngbTooltip]="'Delete '+checkedUsers.length+' Users'">
+            <span class="dsi dsi-trash"></span>
+            <!-- <span class="text">Remove Users ({{ checkedUsers.length }})</span> -->
+          </button>
+        </ng-container>
+        <div class="mr-3">
+          <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')" [selectOnEnter]="true"
+            (enteredPressed)="enterToSelect($event)"></odp-search-box>
+        </div>
+        <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-white border mr-3"
+          routerLink="bulk-import" ngbTooltip="Bulk Import" id="bulkimport">
+          <span class="dsi dsi-upload"></span>
         </button>
+        <button *ngIf="hasPermission('PMUBC')" type="button" id="newUser"
+          class="add-new btn btn-primary d-flex align-items-center" (click)="newUser()">
+          <span class="dsi dsi-plus mr-2"></span>
+          <span>New</span>
+        </button>
+      </div>
     </div>
-    <div class="user-list w-100 px-3">
-        <div class="grid-header my-2">
-            <div class="button-group">
-                <ng-container *ngIf="hasPermission('PMUBD')">
-                    <div class="d-flex align-items-center"
-                        (click)="!isSelectAllDisabled && checkAllUser(!isAllUserChecked)">
-                        <odp-round-check [edit]="{status:!isSelectAllDisabled}" class="mx-2 pl-1"
-                            [checked]="isAllUserChecked" (checkedChange)="!isSelectAllDisabled && checkAllUser($event)">
-                        </odp-round-check>
-                        <button type="button" class="btn btn-link text-accent px-0"
-                            [class.text-secondary]="isSelectAllDisabled" [disabled]="isSelectAllDisabled">
-                            Select All
-                        </button>
+
+    <div class="bg-white list" style="max-height: 70vh; min-height: 70vh" *ngIf="!isLoading">
+      <div class="d-flex justify-content-center align-items-center h-100 font-22 fw-600 heading"
+        *ngIf="userList.length === 0">
+        No users found
+      </div>
+      <div class="row" style="max-height: inherit" *ngIf="userList.length > 0">
+        <div class="col-3 border-right users pr-0">
+          <div *ngFor="let user of userList; let usrIndex = index" class="d-flex" [id]="'user' + usrIndex"
+            (click)="showDetails(user)">
+            <div class="selectedTab" [ngStyle]="{
+                background: user._id === details?._id ? '#ff6f00' : 'none'
+              }"></div>
+            <div class="userList" style="flex-grow: 1" [ngClass]="{ selected: user._id === details?._id }">
+              <div class="d-flex hover">
+                <input type="checkbox" value="false" [attr.id]="'checkbox' + usrIndex" class="mr-3"
+                  style="margin-top: 5px" (change)="clickCheckbox($event, user)" />
+                <span class="name text-truncate" style="max-width: 200px" [ngbTooltip]="user.basicDetails?.name"> {{
+                  user.basicDetails?.name }}</span>
+                <span class="time text-muted font-11 float-right"> {{ formatLastLogin(user.lastLogin) }}</span>
+              </div>
+              <span class="email text-secondary font-12">{{ user.username }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-9 users" style="padding: 24px">
+          <div class="details">
+            <span class="name">{{ details?.basicDetails?.name }}</span>
+            <div class=" d-flex font-12 text-secondary mb-2">
+              <span class="dsi dsi-mail font-14 align-self-center-2 mr-2"></span>
+              <span>{{ details?.username }}</span>
+            </div>
+            <div class="d-flex mr-auto font-12 text-secondary" *ngIf="details?.lastLogin">
+              <span class="dsi dsi-clock font-14 align-self-center mr-2"></span>
+              <span ngbTooltip="Last login" placement="right">{{
+                formatLastLogin(details?.lastLogin, true)
+                }}</span>
+            </div>
+
+          </div>
+          <odp-user-manage [toggleUserMng]="showUsrManage" [bredcrumbSub]="bredcrumbSubject" (toggleUserMngChange)="
+              showUsrManage = $event; breadcrumbPaths.pop()
+            " [user]="details" (removeUser)="removeSelectedUsers($event)" (changePassword)="togglePasswordChange()">
+          </odp-user-manage>
+          <div style="display: grid">
+            <div style="margin-top: 45px">
+              <ul class="nav">
+                <li class="nav-item" (click)="switchTab('Groups')" id="switchgroup">
+                  <div class="tabs" [ngClass]="{
+                      active: currentTab === 'Groups'
+                    }">
+                    Groups
+                  </div>
+                </li>
+                <li class="nav-item" (click)="switchTab('Attributes')" id="switchattribute">
+                  <div class="tabs" [ngClass]="{
+                      active: currentTab === 'Attributes'
+                    }">
+                    Attributes
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div style="margin-top: 30px; display: grid">
+              <label class="tab-header">{{ currentTab }}</label>
+              <div *ngIf="currentTab === 'Attributes'" class="d-flex">
+                <label style="color: #6c7584; font-weight: 400">All attributes in which the user has been added</label>
+                <div class="add-attribute hover d-flex" (click)="showAttributeSide()" id="showAttributeSide"
+                  *ngIf="hasPermission('PMUBU') && currentTab === 'Attributes' && isAttrPresent(details)">
+                  <i class="dsi dsi-plus-circle font-20 icon-primary mr-2"></i>
+                  <label class="fw-500 font-normal heading">Add Attribute</label>
+                </div>
+              </div>
+              <div *ngIf="currentTab === 'Groups'" class="d-flex">
+                <label style="color: #6c7584; font-weight: 400">All groups in which the user has been added
+                </label>
+                <div class="add-attribute hover d-flex" (click)="openGroupModal()" id="openModal"
+                  *ngIf="hasPermission('PMUBU') && currentTab === 'Groups' && userGroups.length > 0">
+                  <i class="dsi dsi-plus-circle font-20 mr-2 icon-primary"></i>
+                  <label class="fw-500 font-normal heading ">Assign to Groups</label>
+                </div>
+              </div>
+              <div *ngIf="!showLazyLoader && userGroups.length > 0 && currentTab==='Groups'" class="mt-4"
+                style="height: 48vh">
+                <div class="scroll-pane">
+                  <div class="list-group mb-3">
+                    <div class="list-group-item header py-0 bg-light text-muted text-uppercase font-11">
+                      <div class="d-flex align-items-center justify-content-between h-100">
+                        <div class="group-name d-flex-1">Name</div>
+                        <div class="group-author-flag d-flex-1">Author</div>
+                        <div class="group-appcenter-flag d-flex-1">Appcenter</div>
+                        <div class="group-actions"></div>
+                      </div>
                     </div>
-                    <button *ngIf="selectedUsers.length>0" type="button" class="btn btn-link text-delete"
-                        (click)="removeUsers()">
-                        <span class="fa fa-trash mr-2"></span>
-                        <span class="text">Remove Users ({{selectedUsers.length}})</span>
-                    </button>
-                </ng-container>
+                    <div class="list-group-item" *ngFor="let group of userGroups">
+                      <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex-1">{{group.name}}</div>
+                        <div class="group-author-flag font-12 d-flex align-items-center d-flex-1">
+                          <ng-container *ngIf="group.hasAuthorRoles">
+                            <span class="fa fa-circle fa-xs text-success mr-2"></span>
+                            <span class="text-dark">Active</span>
+                          </ng-container>
+                          <ng-container *ngIf="!group.hasAuthorRoles">
+                            <span class="fa fa-circle fa-xs text-muted mr-2"></span>
+                            <span class="text-muted">Inactive</span>
+                          </ng-container>
+                        </div>
+                        <div class="group-appcenter-flag font-12 d-flex align-items-center d-flex-1">
+                          <ng-container *ngIf="group.hasAppcenterRoles">
+                            <span class="fa fa-circle fa-xs text-success mr-2"></span>
+                            <span class="text-dark">Active</span>
+                          </ng-container>
+                          <ng-container *ngIf="!group.hasAppcenterRoles">
+                            <span class="fa fa-circle fa-xs text-muted mr-2"></span>
+                            <span class="text-muted">Inactive</span>
+                          </ng-container>
+                        </div>
+                        <div class="group-actions" *ngIf="hasPermission('PMUBU')">
+                          <button type="button" class="btn btn-link text-muted p-1" (click)="deleteGroup(group)"
+                            ngbTooltip="Delete">
+                            <span class="dsi dsi-trash"></span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="!showLazyLoader && details['attributesData']?.length > 0 && currentTab==='Attributes'"
+                class="mt-4" style="height: 48vh">
+                <div class="scroll-pane">
+                  <div class="list-group mb-3">
+                    <div class="list-group-item header py-0 bg-light text-muted text-uppercase font-11">
+                      <div class="d-flex align-items-center justify-content-between h-100">
+                        <div class="d-flex-1">LABEL</div>
+                        <div class="d-flex-1">TYPE</div>
+                        <div class="d-flex-1">VALUE</div>
+                        <div class="group-actions"></div>
+                      </div>
+                    </div>
+                    <div class="list-group-item" *ngFor="let attr of details['attributesData']">
+                      <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex-1">{{attr.label}}</div>
+                        <div class="d-flex-1">{{attr.type}}</div>
+                        <div class="d-flex-1">{{attr.value}}</div>
+
+                        <div class="group-actions" *ngIf="hasPermission('PMUBU')">
+                          <button type="button" class="btn btn-link text-muted p-1" (click)="editAttribute(attr)"
+                            ngbTooltip="Edit">
+                            <span class="dsi dsi-edit"></span>
+                          </button>
+                          <button type="button" class="btn btn-link text-muted p-1"
+                            (click)="deleteAttributeConfirmation(attr)" ngbTooltip="Delete">
+                            <span class="dsi dsi-trash"></span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="no-attribute" *ngIf="!showLazyLoader && currentTab==='Attributes' && !isAttrPresent(details)">
+                <label class=" no-attr-label">No attributes are configured</label>
+                <label class="no-attr-sub">
+                  The user is not assigned to any attribute</label>
+                <button type="button" style="width: auto; margin: auto" class="btn btn-primary add-button"
+                  id="showAttributeSide" (click)="showAttributeSide()" *ngIf="hasPermission('PMUBU')">
+                  Add Attributes
+                </button>
+              </div>
+              <div class="no-attribute" *ngIf="currentTab === 'Groups' && userGroups.length === 0">
+                <label class="no-attr-label">Not assigned to any groups</label>
+                <label class="no-attr-sub">
+                  The user is not assigned to any groups</label>
+                <button type="button" class="btn btn-primary add-button mx-auto" id="addToGroup"
+                  (click)="openGroupModal()" *ngIf="hasPermission('PMUBU')">
+                  Assign to groups
+                </button>
+              </div>
             </div>
-            <div class="count-text mr-3">Showing {{ loadedCount }} of {{ totalCount }}</div>
+          </div>
         </div>
-        <div class="grid-container">
-            <ag-grid-angular #agGrid *ngIf="dataSource" class="card-container ag-theme-balham ag-grid-container"
-                [gridOptions]="gridOptions" [datasource]="dataSource" [frameworkComponents]="frameworkComponents"
-                rowModelType="infinite" [rowHeight]="32" cacheBlockSize="30">
-            </ag-grid-angular>
-        </div>
+      </div>
     </div>
 
-    <div class="d-flex position-absolute user-manage" *ngIf="showUsrManage">
-        <odp-user-manage [toggleUserMng]="showUsrManage" [bredcrumbSub]="bredcrumbSubject"
-            (toggleUserMngChange)="showUsrManage = $event; breadcrumbPaths.pop();" [user]="selectedUser"
-            (removeUser)="removeSelectedUsers($event)">
-        </odp-user-manage>
-    </div>
-</div>
-
-<ng-template #removeSelectedModal>
-    <div class="modal-body p-4">
+    <ng-template #removeSelectedModal>
+      <div class="modal-body p-4">
         <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center align-self-start mb-3">
-                <span class="icon-wrapper delete rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-user-icon [size]="18" color="DD5151"></odp-user-icon>
-                </span>
-                <span class="font-weight-bold">Remove user(s) from {{ selectedApp }}</span>
-            </div>
-            <span class="fa fa-times text-muted hover ignore-click mb-3"
-                (click)="removeSelectedModalRef.close(false)"></span>
+          <div class="d-flex align-items-center align-self-start mb-3">
+            <span class="font-weight-bold">Remove user(s) from {{ selectedApp }}</span>
+          </div>
+          <span class="dsi dsi-close text-muted hover ignore-click mb-3" id="removeSelectedModalRef"
+            (click)="removeSelectedModalRef.close(false)"></span>
         </div>
-        <ul class="font-weight-bold ml-4">
-            <ng-container *ngIf="!!userToRemove">
-                <li> {{ userToRemove }} </li>
-            </ng-container>
-            <ng-container *ngIf="!userToRemove">
-                <li *ngFor="let usr of selectedUsers">{{usr.username}}</li>
-            </ng-container>
+        <ul class="ml-4">
+          <ng-container *ngIf="!!userToRemove">
+            <li>{{ userToRemove }}</li>
+          </ng-container>
+          <ng-container *ngIf="!userToRemove">
+            <li *ngFor="let usr of checkedUsers">{{ usr.username }}</li>
+          </ng-container>
         </ul>
         <div class="d-flex align-items-center justify-content-end mt-4">
-            <button type="button" class="btn btn-min-width btn-delete"
-                (click)="removeSelectedModalRef.close(true)">Remove</button>
+          <button type="button" id="removemodal" class="btn btn-min-width btn-delete"
+            (click)="removeSelectedModalRef.close(true)">
+            Remove
+          </button>
         </div>
-    </div>
-</ng-template>
+      </div>
+    </ng-template>
 
-<ng-template #newUserModal>
-    <div class="modal-body px-4 py-3">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper create rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-user-icon [size]="18" color="1CAD49" class="mt-1"></odp-user-icon>
-                </span>
-                <span class="font-weight-bold">Add User</span>
-            </div>
-            <span class="fa fa-times text-secondary hover" (click)="newUserModalRef.close(false)"></span>
+    <div *ngIf="showNewUserWindow || showPasswordSide || showAddAttribute" class="overlay position-fixed"></div>
+
+    <div [ngClass]="{
+        show: showNewUserWindow || showPasswordSide || showAddAttribute
+      }" class="new-user-window position-fixed bg-white border-left p-4 d-flex flex-column">
+      <!-- <span class="dsi dsi-close hover close" id="closeicon"
+        (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span> -->
+      <div class="d-flex flex-column h-100" *ngIf="showPasswordSide && !showNewUserWindow">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="d-flex align-items-center">
+            <h5 class="fw-600 font-20">Reset Password</h5>
+          </div>
+          <span class="dsi dsi-close hover closeicon" id="closeicon"
+            (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
-        <form class="d-flex flex-column p-4" [formGroup]="userForm" (ngSubmit)="!userInLocal ? addUser() : importUser()"
-            odpFocusNext (trigger)="!userInLocal ? addUser() : importUser()">
-            <div formGroupName="userData">
-                <div class="d-flex align-items-center w-100 mb-3" formGroupName="auth"
-                    *ngIf="validAuthTypes?.length > 1">
-                    <div class="label-width text-secondary">Authentication Method</div>
-                    <div class="value-width position-relative w-100">
-                        <select class="form-control" formControlName="authType">
-                            <option *ngFor="let item of validAuthTypes" [value]="item.value">{{item.label}}</option>
-                        </select>
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                            *ngIf="invalidAuthType" ngbTooltip="This is a required field" placement="right"></span>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center w-100 mb-3">
-                    <div class="label-width text-secondary">
-                        Username
-                        <sup class="text-danger">*</sup>
-                    </div>
-                    <div class="value-width position-relative w-100">
-                        <input class="form-control" type="text" placeholder="Enter Username" formControlName="username"
-                            odpAutoFocus (blur)="checkForDuplicate()"
-                            [ngClass]="{'is-invalid': invalidUsername || invalidUsernamePattern}">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                            *ngIf="invalidUsername" ngbTooltip="This is a required field" placement="right"></span>
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                            *ngIf="invalidUsernamePattern" ngbTooltip="Username must be of email format"
-                            placement="right"></span>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center w-100 mb-3">
-                    <div class="label-width text-secondary">
-                        Name
-                        <sup class="text-danger">*</sup>
-                    </div>
-                    <div class="value-width position-relative w-100" formGroupName="basicDetails">
-                        <input class="form-control pr-4" type="text" placeholder="Enter Name" formControlName="name"
-                            [ngClass]="{'is-invalid': invalidName}" autocomplete="autocomplete_off_hack">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                            *ngIf="invalidName" ngbTooltip="This is a required field" placement="right"></span>
-                        <span *ngIf="userForm.get('userData.basicDetails.name').hasError('pattern')"
-                            class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
-                            ngbTooltip="Name can contain alphanumeric and  _ ,- , @ , # and . characters only"></span>
-                    </div>
-                </div>
-                <ng-container *ngIf="!userInLocal && userForm.get('userData.auth.authType').value==='local'">
-                    <div class="d-flex align-items-center w-100 mb-3 position-relative">
-                        <div class="label-width text-secondary">
-                            Password
-                            <sup class="text-danger">*</sup>
-                        </div>
-                        <div class="value-width position-relative w-100">
-                            <input class="form-control password-input"
-                                [type]="showPassword['new'] ? 'text' : 'password'" placeholder="Password"
-                                formControlName="password"
-                                [ngClass]="{'is-invalid': invalidPassword || invalidPasswordLength || invalidPasswordPattern }"
-                                autocomplete="new-password">
-                            <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
-                                *ngIf="invalidPassword" ngbTooltip="This is a required field" placement="right"></span>
-                            <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
-                                *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"
-                                placement="right"></span>
-                            <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
-                                *ngIf="invalidPasswordPattern" ngbTooltip="Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)"
-                                placement="right"></span>
-                        </div>
-                        <span class="fas eye-icon position-absolute hover"
-                            [ngClass]="{'fa-eye': !showPassword['new'],'fa-eye-slash': showPassword['new'] }"
-                            (click)="showPassword['new']= !showPassword['new']"></span>
-                    </div>
-                    <div class="d-flex align-items-center w-100 mb-3 position-relative">
-                        <div class="label-width text-secondary">
-                            Confirm Password
-                            <sup class="text-danger">*</sup>
-                        </div>
-                        <div class="value-width position-relative w-100">
-                            <input class="form-control password-input"
-                                [type]="showPassword['confirm'] ? 'text' : 'password'" placeholder="Confirm Password"
-                                formControlName="cpassword"
-                                [ngClass]="{'is-invalid': invalidCPassword || invalidPasswordMatch}">
-                            <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
-                                *ngIf="invalidCPassword" ngbTooltip="This is a required field" placement="right"></span>
-                            <span class="fas fa-question-circle text-danger error-icon-password  position-absolute"
-                                *ngIf="invalidPasswordMatch" ngbTooltip="Passwords do not match"
-                                placement="right"></span>
-                        </div>
-                        <span class="fas eye-icon position-absolute hover"
-                            [ngClass]="{'fa-eye': !showPassword['confirm'],'fa-eye-slash': showPassword['confirm'] }"
-                            (click)="showPassword['confirm']= !showPassword['confirm']"></span>
-                    </div>
-                </ng-container>
-                <div class="d-flex align-items-center w-100 mb-3">
-                    <div class="label-width text-secondary">Phone</div>
-                    <div class="value-width position-relative w-100" formGroupName="basicDetails">
-                        <input class="form-control" type="text" placeholder="Enter Phone Number"
-                            formControlName="phone">
-                    </div>
-                </div>
-                <div class="d-flex align-items-center w-100 mb-3">
-                    <div class="label-width text-secondary">Alternate Email</div>
-                    <div class="value-width position-relative w-100" formGroupName="basicDetails">
-                        <input class="form-control" type="text" placeholder="Enter Alternate Email"
-                            formControlName="alternateEmail">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                            *ngIf="invalidEmailPattern" ngbTooltip="Invalid Alternate Email" placement="right"></span>
-                    </div>
-                </div>
+        <form class="d-flex flex-column h-100" [formGroup]="resetPasswordForm" odpFocusNext>
+          <div class="form-group position-relative">
+            <label for="password">
+              New Password
+              <sup class="text-danger">*</sup>
+            </label>
+            <div class="input-wrapper position-relative">
+              <input class="form-control" [type]="showPassword['new'] ? 'text' : 'password'" placeholder="Password"
+                formControlName="password" [ngClass]="{ 'is-invalid': pwdError, 'pr-4': pwdError }"
+                autocomplete="new-password" odpAutoFocus />
+              <span id="showPass" class="dsi eye-icon position-absolute hover" [ngClass]="{
+                  'dsi-view': !showPassword['new'],
+                  'dsi-hide': showPassword['new']
+                }" (click)="showPassword['new'] = !showPassword['new']"></span>
+              <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute" *ngIf="
+                resetPasswordForm.get('password').dirty &&
+                resetPasswordForm.get('password')?.hasError('required')
+              " ngbTooltip="This is a required field"></span>
+              <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute" *ngIf="
+                resetPasswordForm.get('password').dirty &&
+                resetPasswordForm.get('password')?.hasError('minlength')
+              " ngbTooltip="Password should be minimum 8 chars long"></span>
             </div>
-            <div *ngIf="hasPermission('PMUG') && teamsArray.length>0">
-                <div class="d-flex align-items-center w-100">
-                    <div class="label-width text-secondary">Groups</div>
-                    <div class="value-width position-relative w-100">
-                        <div class="d-flex flex-column position-relative">
-                            <div class="d-flex align-items-center hover user-option-class form-control ignore-outside"
-                                [ngClass]="{'open':displayTeamList}" (click)="displayTeamList = !displayTeamList"
-                                odpClickOutside (outside)="displayTeamList = false;" [ignore]="['.ignore-outside']">
-                                <span class="pr-2 w-100 ignore-outside">
-                                    {{ selectedTeamSize > 0 ? selectedTeamSize + ' team(s) selected'
-                                    : '--Select--'}}
-                                </span>
-                                <span class="fas fa-angle-down text-accent ignore-outside"></span>
-                            </div>
-                            <div *ngIf="displayTeamList"
-                                class="teamList border mt-2 position-absolute w-100 ignore-outside"
-                                [ngClass]="{'teamList-newHeight':!userInLocal}">
-                                <ul class="p-0 mb-0 ignore-outside" formArrayName="teamData">
-                                    <li *ngFor="let team of teamsArray; index as teamIndex"
-                                        class="p-2 hover ignore-outside">
-                                        <label class="ignore-outside team-checkbox hover font-normal">
-                                            {{teamList[teamIndex].name}}
-                                            <input type="checkbox" class="mr-2 ignore-outside"
-                                                [formControlName]="teamIndex" (change)="checkTeamSize()">
-                                            <span class="team-selected ignore-outside"></span>
-                                        </label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
-                            *ngIf="invalidTeamSize" ngbTooltip="User should be part of at-least one team"
-                            placement="right"></span>
-                    </div>
-                </div>
+          </div>
+          <div class="form-group position-relative">
+            <label for="cPassword">
+              Re-enter New Password
+              <sup class="text-danger">*</sup>
+            </label>
+            <div class="input-wrapper position-relative">
+              <input id="cPassword" class="form-control" [type]="showPassword['confirm'] ? 'text' : 'password'"
+                placeholder="Confirm Password" formControlName="cpassword"
+                [ngClass]="{ 'is-invalid': cPwdError, 'pr-4': cPwdError  }" />
+              <span class="dsi eye-icon position-absolute hover" [ngClass]="{
+                  'dsi-view': !showPassword['confirm'],
+                  'dsi-hide': showPassword['confirm']
+                }" (click)="showPassword['confirm'] = !showPassword['confirm']" id="showPassword"></span>
+              <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute" *ngIf="
+                resetPasswordForm.get('cpassword').dirty &&
+                resetPasswordForm.get('cpassword')?.hasError('required')
+              " ngbTooltip="This is a required field"></span>
+              <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
+                *ngIf="resetPasswordForm.get('cpassword').dirty && matchPwd"
+                [ngbTooltip]="'Passwords don\'t match'"></span>
             </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mt-auto">
+            <button type="button" class="btn btn-primary add-button" id="resetpassowrd" (click)="resetPassword()">
+              Confirm
+            </button>
+          </div>
         </form>
-        <div class="d-flex align-items-center justify-content-end">
-            <button type="button" class="btn btn-link text-dark" id="cancelNewUserYes"
-                (click)="newUserModalRef.close(false)">Cancel</button>
-            <button *ngIf="!userInLocal && hasPermission('PMUBC')" type="button" class="btn btn-create btn-min-width"
-                id="createNewUserYes" (click)="addUser()" [disabled]="userForm.get('userData').invalid">Add</button>
-            <button *ngIf="userInLocal && hasPermission('PMUBC')" type="button" class="btn btn-dark btn-min-width"
-                id="importUser" (click)="importUser()">Import</button>
+      </div>
+      <div class="d-flex flex-column" *ngIf="!showPasswordSide && showNewUserWindow">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="d-flex align-items-center">
+            <h5 class="fw-600 font-20">Create User</h5>
+          </div>
+          <span class="dsi dsi-close hover closeicon" id="closeicon"
+            (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
         </div>
+        <form class="d-flex flex-column" [formGroup]="userForm" odpFocusNext>
+          <div *ngIf="userForm.get('userData')" formGroupName="userData">
+            <div class="form-group" formGroupName="auth" *ngIf="validAuthTypes?.length > 1">
+              <label for="authType">Authentication Method</label>
+              <div class="position-relative">
+                <select id="authType" class="form-control" formControlName="authType"
+                  (ngModelChange)="onAuthTypeChange($event)" odpAutoFocus>
+                  <option *ngFor="let item of validAuthTypes" [value]="item.value">
+                    {{ item.label }}
+                  </option>
+                </select>
+                <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="invalidAuthType"
+                  ngbTooltip="This is a required field"></span>
+              </div>
+            </div>
+            <ng-container *ngIf="showAzureLoginButton">
+              <button type="button" class="mb-3 ng-star-inserted border bg-white d-flex align-items-center p-2"
+                (click)="triggerAzureToken()" id="getAzuretoken">
+                <span class="azure-logo mr-2"></span>
+                <span>Login to Azure</span>
+              </button>
+            </ng-container>
+            <ng-container *ngIf="!showAzureLoginButton">
+              <div class="form-group">
+                <label for="username">
+                  Username
+                  <sup class="text-danger">*</sup>
+                </label>
+                <div class="position-relative">
+                  <input id="username" class="form-control" type="text" placeholder="Enter Username"
+                    formControlName="username" odpAutoFocus (blur)="checkForDuplicate()" [ngClass]="{
+                    'is-invalid pr-4': invalidUsername || invalidUsernamePattern
+                  }" />
+                  <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="invalidUsername"
+                    ngbTooltip="This is a required field"></span>
+                  <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
+                    *ngIf="invalidUsernamePattern" ngbTooltip="Username must be of email format"></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="name">
+                  Name
+                  <sup class="text-danger">*</sup>
+                </label>
+                <div class="w-100 position-relative" formGroupName="basicDetails">
+                  <input id="name" class="form-control pr-4" type="text" placeholder="Enter Name" formControlName="name"
+                    [ngClass]="{ 'is-invalid pr-4': invalidName }" autocomplete="autocomplete_off_hack" />
+                  <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="invalidName"
+                    ngbTooltip="This is a required field"></span>
+                  <span *ngIf="
+                      userForm
+                        .get('userData.basicDetails?.name')
+                        ?.hasError('pattern')
+                    " class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
+                    ngbTooltip="Name can contain alphanumeric and  _ ,- , @ , # and . characters only"></span>
+                </div>
+              </div>
+              <ng-container *ngIf="
+                  !userInLocal &&
+                  !userInAzureAD &&
+                  userForm.get('userData.auth.authType').value === 'local'
+                ">
+                <div class="form-group">
+                  <label for="password">
+                    Password
+                    <sup class="text-danger">*</sup>
+                  </label>
+                  <div class="position-relative">
+                    <input class="form-control" [type]="showPassword['new'] ? 'text' : 'password'"
+                      placeholder="Password" formControlName="password" [ngClass]="{
+                        'is-invalid pr-4':
+                          invalidPassword ||
+                          invalidPasswordLength ||
+                          invalidPasswordPattern
+                      }" autocomplete="new-password" />
+                    <span class="dsi eye-icon position-absolute hover" [ngClass]="{
+                        'dsi-view': !showPassword['new'],
+                        'dsi-hide': showPassword['new']
+                      }" (click)="showPassword['new'] = !showPassword['new']"></span>
+                    <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
+                      *ngIf="invalidPassword" ngbTooltip="This is a required field"></span>
+                    <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
+                      *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"></span>
+                    <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
+                      *ngIf="invalidPasswordPattern"
+                      ngbTooltip="Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)"></span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="cPassword">
+                    Confirm Password
+                    <sup class="text-danger">*</sup>
+                  </label>
+                  <div class="position-relative">
+                    <input id="cPassword" class="form-control" [type]="showPassword['confirm'] ? 'text' : 'password'"
+                      placeholder="Confirm Password" formControlName="cpassword" [ngClass]="{
+                        'is-invalid pr-4': invalidCPassword || invalidPasswordMatch
+                      }" />
+                    <span class="dsi eye-icon position-absolute hover" [ngClass]="{
+                        'dsi-view': !showPassword['confirm'],
+                        'dsi-hide': showPassword['confirm']
+                      }" (click)="
+                        showPassword['confirm'] = !showPassword['confirm']
+                      "></span>
+                    <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
+                      *ngIf="invalidCPassword" ngbTooltip="This is a required field"></span>
+                    <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
+                      *ngIf="invalidPasswordMatch" ngbTooltip="Passwords do not match"></span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <div class="w-100" formGroupName="basicDetails">
+                    <input id="phone" class="form-control" type="text" placeholder="Enter Phone Number"
+                      formControlName="phone" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="email">Alternate Email</label>
+                  <div class="w-100 position-relative" formGroupName="basicDetails">
+                    <input id="email" class="form-control" type="text" placeholder="Enter Alternate Email"
+                      formControlName="alternateEmail" />
+                    <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
+                      *ngIf="invalidEmailPattern" ngbTooltip="Invalid Alternate Email"></span>
+                  </div>
+                </div>
+              </ng-container>
+              <div *ngIf="hasPermission('PMUG') && groupList.length > 0">
+                <div class="form-group">
+                  <label for="groups">Groups</label><br />
+                  <div class="groups-list border rounded bg-white">
+                    <ul class="list-group list-group-flush">
+                      <li *ngFor="let group of groupList; index as groupIndex" class="list-group-item py-2">
+                        <div class="d-flex align-items-center justify-content-between m-0">
+                          <odp-checkbox [id]="groupList[groupIndex]._id" [edit]="{ status: canEdit }" (checkedChange)="
+                              toggleGroup($event, groupList[groupIndex]._id)"
+                            [checked]="isGroupSelected(groupList[groupIndex]._id)">
+                          </odp-checkbox>
+                          <span>{{ groupList[groupIndex].name }}</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </form>
+        <div class="d-flex align-items-center justify-content-between mt-auto">
+          <button *ngIf="
+              selectedAuthType == 'local' &&
+              !userInLocal &&
+              !userInAzureAD &&
+              hasPermission('PMUBC')
+            " type="button" class="btn btn-primary add-button w-100" id="createNewUserYes" (click)="addUser()"
+            [disabled]="userForm.get('userData').invalid">
+            Add
+          </button>
+          <button *ngIf="userInLocal && hasPermission('PMUBC')" type="button" class="btn btn-primary add-button w-100"
+            id="importUser" (click)="importUser()">
+            Import
+          </button>
+          <button *ngIf="userInAzureAD && hasPermission('PMUBC')" type="button" class="btn btn-primary add-button w-100"
+            disableImportid="importUser" (click)="importUserFromAzure()" [disabled]="disableImport">
+            Import
+          </button>
+        </div>
+      </div>
+
+      <div class="h-100" *ngIf="showAddAttribute && !showNewUserWindow && !showPasswordSide">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="d-flex align-items-center">
+            <h5 class="fw-600 font-20">
+              {{ editMode ? 'Edit Attribute' : 'Add Attribute' }}
+            </h5>
+          </div>
+          <span class="dsi dsi-close hover closeicon" id="closeicon"
+            (click)="showNewUserWindow ? closeWindow(true) : closeWindow()"></span>
+        </div>
+        <form class="d-flex flex-column" [formGroup]="attributesForm" odpFocusNext>
+          <div class="form-group position-relative">
+            <label for="label">
+              Label
+              <sup class="text-danger">*</sup>
+            </label>
+            <div class="position-relative">
+              <input id="label" class="form-control pr-4" type="text" placeholder="Label name" formControlName="label"
+                autocomplete="autocomplete_off_hack" odpAutoFocus />
+              <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
+                  attributesForm.get('type').touched &&
+                  attributesForm.get('label')?.hasError('required')
+                " ngbTooltip="This is a required field"></span>
+            </div>
+          </div>
+          <div class="form-group position-relative">
+            <label for="key">
+              Key
+              <sup class="text-danger">*</sup>
+            </label>
+            <div class="position-relative">
+              <input id="key" class="form-control bg-white text-muted pr-4" type="text" placeholder="Key"
+                formControlName="key" />
+              <small class="form-text pl-2 text-muted">Use this key to access value</small>
+            </div>
+          </div>
+          <div class="form-group position-relative">
+            <label for="type">
+              Type
+              <sup class="text-danger">*</sup>
+            </label>
+            <div class="position-relative">
+              <select id="type" class="form-control" formControlName="type"
+                (ngModelChange)="onAttributeFormTypeChange($event)">
+                <option *ngFor="let item of types" [value]="item.value">
+                  {{ item.label }}
+                </option>
+              </select>
+              <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
+                  attributesForm.get('type').touched &&
+                  attributesForm.get('type')?.hasError('required')
+                " ngbTooltip="This is a required field"></span>
+            </div>
+          </div>
+          <div class="form-group position-relative">
+            <label for="label">
+              Value
+              <sup class="text-danger">*</sup>
+            </label>
+            <div class="position-relative">
+              <input id="value" class="form-control pr-4" type="text" placeholder="Value" formControlName="value"
+                autocomplete="autocomplete_off_hack" *ngIf="attributesForm.get('type').value === 'String'" />
+              <input id="value" class="form-control pr-4" type="number" placeholder="Value" formControlName="value"
+                autocomplete="autocomplete_off_hack" *ngIf="attributesForm.get('type').value === 'Number'" />
+              <odp-switch [edit]="{ status: true }" [checked]="attributesForm.get('value').value"
+                (checkedChange)="setUserAttributeValue($event)" *ngIf="attributesForm.get('type').value === 'Boolean'">
+              </odp-switch>
+
+              <input id="value" class="form-control pr-4" type="date" placeholder="Value" formControlName="value"
+                autocomplete="autocomplete_off_hack" *ngIf="attributesForm.get('type').value === 'Date'" />
+              <span class="dsi dsi-danger-circle text-danger error-icon position-absolute" *ngIf="
+                  attributesForm.get('value').dirty &&
+                  attributesForm.get('value')?.hasError('required')
+                " ngbTooltip="This is a required field"></span>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary add-button mt-auto w-100" id="addAttributes"
+            (click)="addAttribute()">
+            {{ editMode ? 'Save' : 'Add' }}
+          </button>
+        </form>
+      </div>
     </div>
-</ng-template>
+  </div>
+  <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
+    <span class="font-20 text-success"></span>
+  </odp-delete-modal>
+</div>

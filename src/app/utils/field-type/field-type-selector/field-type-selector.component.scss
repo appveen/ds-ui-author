@@ -2,23 +2,40 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 .type-dropdown {
-  top: 2rem;
+  top: 36px;
   z-index: 2;
   box-shadow: 0 0 15px $gray-400;
 }
 
+.type-div-item {
+  &:hover {
+    background: $light;
+  }
+
+  &.disbaled {
+    opacity: 0.4;
+    color: $secondary;
+  }
+}
+
 .type-div {
-  max-width: 250px;
+  width: 300px;
   border-top: 0 !important;
+
   .type-width {
-    width: 40px;
-    height: 40px;
+    width: 24px;
+    height: 24px;
     font-size: 1.125rem;
     display: inline-block;
     text-decoration: none;
   }
-  .type-width:hover {
-    background: $light;
-    border-radius: 4px;
+
+  .type-width,
+  .background-hover {
+    &:hover {
+      background: $light;
+      border-radius: 4px;
+    }
   }
+
 }

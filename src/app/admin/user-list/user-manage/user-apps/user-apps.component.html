@@ -1,6 +1,8 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
@@ -64,12 +66,17 @@
         <div *ngFor="let userApp of userApps; let idx = index;" class="position-relative app-wrapper">
             <div (click)="appOptions[idx] = true"
                 class="hover d-flex justify-content-center align-items-center mr-3 mb-3 ignore-outside">
-                <div class="assigned-app mr-3 d-flex justify-content-center align-items-center border ignore-outside">
+                <div class="assigned-app mr-3 d-flex justify-content-center align-items-center border ignore-outside"
+                    [ngStyle]="{ 'background-color': userApp.logo ? null : userApp.bg }">
                     <img *ngIf="userApp.logo && userApp.logo.thumbnail" [src]="userApp.logo.thumbnail" alt="Logo"
                         class="ignore-outside">
-                    <odp-app-icon *ngIf="!userApp.logo || !userApp.logo.thumbnail" color="aaa ignore-outside">
-                    </odp-app-icon>
+                    <!-- <odp-app-icon *ngIf="!userApp.logo || !userApp.logo.thumbnail" color="aaa ignore-outside">
+                    </odp-app-icon> -->
+                    <div *ngIf="!userApp.logo" class="profileImage">
+                        {{ userApp.firstLetter }}
+                    </div>
                 </div>
+
                 <div class="mr-5 d-flex flex-column app-action ignore-outside">
                     <div class="ignore-outside">
                         <strong class="ignore-outside">{{userApp._id}}</strong>
@@ -102,20 +109,20 @@
     </div>
 </div>
 <ng-template #assignAppModal>
-    <div class="assignApp-modal ignore-outside">
-        <div class="modal-header ignore-outside p-4">
-            <div class="text-dark d-flex ignore-outside">
+    <div class="assignApp-modal ignore-outside px-2">
+        <div class="modal-header ignore-outside">
+            <div class="text-dark d-flex ignore-outside px-3 pt-3 w-100">
                 <label for="addApp" class="label-width ignore-outside">
-                    <strong class="ignore-outside">Add App</strong>
+                    <span class="ignore-outside font-20 fw-600">Add App</span>
                 </label>
-                <div class="position-relative ignore-outside">
+                <div class="position-relative ignore-outside ml-auto">
                     <odp-search-box (enteredText)="appSearch($event)" (reset)="resetApp()" [ignoreOutside]="true">
                     </odp-search-box>
                 </div>
             </div>
         </div>
-        <div class="modal-body p-4 ignore-outside">
-            <div class="d-flex flex-wrap mt-4 ignore-outside">
+        <div class="modal-body ignore-outside">
+            <div class="d-flex flex-wrap ignore-outside">
                 <div class="app-card d-flex flex-column my-3 mx-4 ignore-outside"
                     *ngFor="let app of appList| filterApp: filterAppStr; index as appIndex;">
                     <div class="app-thumbnail d-flex align-items-center justify-content-center hover ignore-outside"
@@ -138,14 +145,14 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer p-3 d-flex w-100 bg-white mt-auto justify-content-between align-items-end">
-            <div class="d-flex">
+        <div class="d-flex w-100 bg-white mt-3">
+            <div class="d-flex align-items-center">
                 <div class="text-secondary mr-2">Apps Added:</div>
                 <div class="font-weight-bold text-accent" *ngIf="selectedApps.length > 0">{{ markedApp }}</div>
-                <div class="font-weight-bold text-accent" *ngIf="selectedApps.length > 3">
-                    &nbsp;+&nbsp;{{ selectedApps.length - 3}}</div>
+                <div class="font-weight-bold text-accent" *ngIf="selectedApps.length > 2">
+                    &nbsp;+&nbsp;{{ selectedApps.length - 2}}</div>
             </div>
-            <div>
+            <div class="ml-auto d-flex align-items-center">
                 <button type="button" class="btn btn-link ml-auto mb-1 ignore-outside"
                     (click)="assignAppModalRef.close(false)" id="appAddModalNo">Cancel
                 </button>
@@ -160,12 +167,7 @@
 <ng-template #deleteModalTemplate>
     <div class="modal-body p-4">
         <div class="d-flex justify-content-between">
-            <div class="d-flex align-items-center align-self-start mb-3">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-user-icon [size]="18" color="202A36" class="mt-1"></odp-user-icon>
-                </span>
-                <span class="font-weight-bold">{{deleteModal.title}}</span>
-            </div>
+            <span class="font-20 fw-600">{{deleteModal.title}}</span>
             <span class="fa fa-times" (click)="deleteModalTemplateRef.close(false)"></span>
         </div>
         <p class="text-secondary text-center py-4">{{deleteModal.message}}</p>
@@ -179,12 +181,7 @@
 <ng-template #superAdminTemplate>
     <div class="modal-body p-4">
         <div class="d-flex justify-content-between">
-            <div class="d-flex align-items-center align-self-start mb-3">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-user-icon [size]="18" color="202A36" class="mt-1"></odp-user-icon>
-                </span>
-                <span class="font-weight-bold">{{prvlgChng.title}}</span>
-            </div>
+            <span class="font-20 fw-600">{{prvlgChng.title}}</span>
             <span class="fa fa-times" (click)="superAdminTemplateRef.close(false)"></span>
         </div>
         <p class="text-secondary text-center py-4">{{prvlgChng.message}}</p>

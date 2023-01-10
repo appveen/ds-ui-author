@@ -19,30 +19,20 @@ import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operato
 export class IntegrationComponent implements OnInit, OnDestroy {
 
     @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
-    @ViewChild('hookModalTemplate', { static: false }) hookModalTemplate: TemplateRef<HTMLElement>;
-    @ViewChild('hookPreviewTemplate', { static: false }) hookPreviewTemplate: TemplateRef<HTMLElement>;
     @ViewChild('tooltip', { static: false }) tooltip: NgbTooltip;
     @Input() form: FormGroup;
     @Input() edit: any;
-    hookModalTemplateRef: NgbModalRef;
-    hookPreviewTemplateRef: NgbModalRef;
     deleteModalTemplateRef: NgbModalRef;
     deleteModal: DeleteModalConfig;
     hookForm: FormGroup;
     previewHookFormat: boolean;
     hooks: {
-        preHook?: boolean,
-        postHook?: boolean,
-        approveHook?: boolean,
-        rejectHook?: boolean,
-        sendForReviewHook?: boolean,
-        discardHook?: boolean,
-        submitHook?: boolean,
         hookTitle?: string,
         hookshortName?: string,
         hookType?: string
+        hookIndex?: number
+        hookPath?: string;
     };
-    editIndex = -1;
     triggeredHookValidation: boolean;
     verifyUrl: {
         status: boolean;
@@ -52,6 +42,8 @@ export class IntegrationComponent implements OnInit, OnDestroy {
     active: number;
     searching: boolean;
     name: string;
+    showPreviewWindow: boolean;
+    showHookWindow: boolean;
     constructor(
         private commonService: CommonService,
         private fb: FormBuilder,
@@ -72,18 +64,13 @@ export class IntegrationComponent implements OnInit, OnDestroy {
             type: ['external', [Validators.required]],
             _func: []
         });
-        this.hooks = {};
-        this.hooks.preHook = true;
-        this.hooks.postHook = false;
         this.previewHookFormat = false;
-        this.hooks.approveHook = false;
-        this.hooks.rejectHook = false;
-        this.hooks.sendForReviewHook = false;
-        this.hooks.discardHook = false;
-        this.hooks.submitHook = false;
+        this.hooks = {};
         this.hooks.hookTitle = 'Pre hook';
         this.hooks.hookshortName = 'pre';
-        this.hooks.hookType = 'preHooks';
+        this.hooks.hookType = 'preHook';
+        this.hooks.hookPath = 'preHooks';
+        this.hooks.hookIndex = -1;
         this.verifyUrl = {
             status: false,
             loading: false
@@ -107,12 +94,13 @@ export class IntegrationComponent implements OnInit, OnDestroy {
     }
 
     onTabChange(event) {
-        this.hookForm.reset({ type: event === 1 ? 'external' : 'function' });
-        if (event === 2) {
+        this.hookForm.reset({ type: event == 1 ? 'external' : 'function' });
+        if (event == 2) {
             this.hookForm.get('url').disable();
         } else {
             this.hookForm.get('url').enable();
         }
+        this.active = event;
     }
 
     formatter = (result: any) => result.name;
@@ -141,41 +129,35 @@ export class IntegrationComponent implements OnInit, OnDestroy {
     }
 
     selectHook(hookName) {
-        Object.keys(this.hooks).forEach(e => {
-            if (e === hookName) {
-                this.hooks[e] = true;
-            } else {
-                this.hooks[e] = false;
-            }
-        });
-        if (this.hooks.preHook) {
+        this.hooks.hookType = hookName;
+        if (this.hooks.hookType == 'preHook') {
             this.hooks.hookTitle = 'Pre hook';
             this.hooks.hookshortName = 'pre';
-            this.hooks.hookType = 'preHooks';
-        } else if (this.hooks.postHook) {
+            this.hooks.hookPath = 'preHooks';
+        } else if (this.hooks.hookType == 'postHook') {
             this.hooks.hookTitle = 'Post hook';
             this.hooks.hookshortName = 'post';
-            this.hooks.hookType = 'webHooks';
-        } else if (this.hooks.approveHook) {
-            this.hooks.hookTitle = 'Approve hook';
-            this.hooks.hookshortName = 'approve';
-            this.hooks.hookType = 'approve';
-        } else if (this.hooks.rejectHook) {
-            this.hooks.hookTitle = 'Reject hook';
-            this.hooks.hookshortName = 'reject';
-            this.hooks.hookType = 'reject';
-        } else if (this.hooks.sendForReviewHook) {
-            this.hooks.hookTitle = 'Rework hook';
-            this.hooks.hookshortName = 'rework';
-            this.hooks.hookType = 'rework';
-        } else if (this.hooks.discardHook) {
-            this.hooks.hookTitle = 'Discard hook';
-            this.hooks.hookshortName = 'discard';
-            this.hooks.hookType = 'discard';
-        } else if (this.hooks.submitHook) {
+            this.hooks.hookPath = 'webHooks';
+        } else if (this.hooks.hookType == 'submitHook') {
             this.hooks.hookTitle = 'Submit hook';
             this.hooks.hookshortName = 'submit';
-            this.hooks.hookType = 'submit';
+            this.hooks.hookPath = 'workflowHooks.postHooks.submit';
+        } else if (this.hooks.hookType == 'approveHook') {
+            this.hooks.hookTitle = 'Approve hook';
+            this.hooks.hookshortName = 'approve';
+            this.hooks.hookPath = 'workflowHooks.postHooks.approve';
+        } else if (this.hooks.hookType == 'rejectHook') {
+            this.hooks.hookTitle = 'Reject hook';
+            this.hooks.hookshortName = 'reject';
+            this.hooks.hookPath = 'workflowHooks.postHooks.reject';
+        } else if (this.hooks.hookType == 'reviewHook') {
+            this.hooks.hookTitle = 'Rework hook';
+            this.hooks.hookshortName = 'rework';
+            this.hooks.hookPath = 'workflowHooks.postHooks.rework';
+        } else if (this.hooks.hookType == 'discardHook') {
+            this.hooks.hookTitle = 'Discard hook';
+            this.hooks.hookshortName = 'discard';
+            this.hooks.hookPath = 'workflowHooks.postHooks.discard';
         }
         this.previewHookFormat = false;
     }
@@ -188,67 +170,55 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         return this.hookForm.get('url').dirty && this.hookForm.get('url') && this.hookForm.get('url').hasError('pattern');
     }
 
-    newHook(index?) {
+    newHook(index?: number) {
         if (index > -1) {
-            this.editIndex = index;
+            this.hooks.hookIndex = index;
+            this.hookForm.patchValue(this.hookList[index]);
+        } else {
+            this.hooks.hookIndex = -1;
         }
         this.verifyUrl.status = false;
         this.verifyUrl.loading = false;
         this.previewHookFormat = false;
         this.triggeredHookValidation = false;
-        if (this.hooks.preHook && index !== undefined) {
-            this.hooks.postHook = false;
-            this.hookForm.patchValue(this.form.get('preHooks').value[index]);
-        } else if (this.hooks.postHook && index !== undefined) {
-            this.hooks.preHook = false;
-            this.hookForm.patchValue(this.form.get('webHooks').value[index]);
-        } else if (this.hooks.approveHook && index !== undefined) {
-            this.hooks.preHook = false;
-            this.hookForm.patchValue(this.form.get('workflowHooks.postHooks.approve').value[index]);
-        } else if (this.hooks.rejectHook && index !== undefined) {
-            this.hooks.preHook = false;
-            this.hooks.hookType = 'reject';
-            this.hookForm.patchValue(this.form.get('workflowHooks.postHooks.reject').value[index]);
-        } else if (this.hooks.sendForReviewHook && index !== undefined) {
-            this.hooks.preHook = false;
-            this.hookForm.patchValue(this.form.get('workflowHooks.postHooks.rework').value[index]);
-        } else if (this.hooks.discardHook && index !== undefined) {
-            this.hooks.preHook = false;
-            this.hookForm.patchValue(this.form.get('workflowHooks.postHooks.discard').value[index]);
-        } else if (this.hooks.submitHook && index !== undefined) {
-            this.hooks.preHook = false;
-            this.hookForm.patchValue(this.form.get('workflowHooks.postHooks.submit').value[index]);
-        }
+        this.showHookWindow = true;
+    }
 
-        this.hookModalTemplateRef = this.commonService.modal(this.hookModalTemplate, { windowClass: 'preHook-modal' });
-        this.hookModalTemplateRef.result.then((close) => {
-            if (close && this.hookForm.valid) {
-                let hookpath;
-                if (this.hooks.preHook || this.hooks.postHook) {
-                    hookpath = this.hooks.hookType;
-                } else {
-                    hookpath = 'workflowHooks.' + 'postHooks.' + this.hooks.hookType;
-                }
-                if (index || index === 0) {
-                    (this.form.get(hookpath).value).splice(index, 1);
-                }
-                this.addHook();
-
-            } else {
-                this.hookForm.reset({ type: 'external' });
-                this.active = 1;
+    triggerHookSave() {
+        if (this.hookForm.valid) {
+            this.verifyUrl.status = false;
+            let hooks;
+            this.form.get(this.hooks.hookPath).markAsTouched();
+            this.form.get(this.hooks.hookPath).markAsDirty();
+            hooks = this.form.get(this.hooks.hookPath).value;
+            if (!hooks) {
+                hooks = [];
             }
-            this.editIndex = -1;
-        }, dismiss => {
-            this.hookForm.reset({ type: 'external' });
-            this.active = 1;
-            this.editIndex = -1;
-        });
+            const temp = this.hookForm.getRawValue();
+            delete temp._func;
+            if (this.hooks.hookIndex > -1) {
+                hooks.splice(this.hooks.hookIndex, 1, temp);
+            } else {
+                hooks.push(temp);
+            }
+            this.form.get(this.hooks.hookPath).patchValue(hooks);
+            this.form.get(this.hooks.hookPath).markAsTouched();
+            this.form.get(this.hooks.hookPath).markAsDirty();
+            this.form.get(this.hooks.hookPath).updateValueAndValidity();
+            this.hooks.hookIndex = -1;
+        }
+        this.cancelHookSave();
+    }
+
+    cancelHookSave() {
+        this.hookForm.reset({ type: 'external' });
+        this.active = 1;
+        this.showHookWindow = false;
     }
 
     previewHook() {
         this.prettyPrint();
-        this.hookPreviewTemplateRef = this.commonService.modal(this.hookPreviewTemplate, { windowClass: 'preHook-preview-modal' });
+        this.showPreviewWindow = true;
     }
 
     changesDone() {
@@ -273,88 +243,42 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         return errorInPreHooks || errorInPostHooks || errorInWfHooks;
     }
 
-    addHook() {
-        this.verifyUrl.status = false;
-        let hooks;
-        let hookpath;
-        if (this.hooks.preHook || this.hooks.postHook) {
-            hookpath = this.hooks.hookType;
-        } else {
-            hookpath = 'workflowHooks.postHooks.' + this.hooks.hookType;
-            this.form.get('workflowHooks.postHooks').markAsTouched();
-            this.form.get('workflowHooks.postHooks').markAsDirty();
-        }
-        hooks = this.form.get(hookpath).value;
-        if (!hooks) {
-            hooks = [];
-        }
-        const temp = this.hookForm.getRawValue();
-        delete temp._func;
-        hooks.push(temp);
-        this.form.get(hookpath).patchValue(hooks);
-        this.form.get(hookpath).markAsTouched();
-        this.form.get(hookpath).markAsDirty();
-        this.form.get(hookpath).updateValueAndValidity();
-        this.editIndex = -1;
-        this.hookForm.reset({ type: 'external' });
-        this.active = 1;
-    }
-
 
     uniqueHook() {
-        if (this.hooks.preHook || this.hooks.postHook) {
-            let hookpath;
-            let duplicateHookName;
-            if (this.hooks.preHook || this.hooks.postHook) {
-                hookpath = this.hooks.hookType;
-            } else {
-                hookpath = 'workflowHooks.' + 'postHooks.' + this.hooks.hookType;
-            }
-            if (this.editIndex > -1) {
-                const tempValue = this.appService.cloneObject(this.form.get(hookpath).value);
-                tempValue.splice(this.editIndex, 1);
-                duplicateHookName = tempValue.find(e => e.name === this.hookForm.get('name').value);
-            } else {
-                duplicateHookName = this.form.get(hookpath).value.find(e => e.name === this.hookForm.get('name').value);
-            }
-            if (duplicateHookName) {
-                this.hookForm.setErrors({
-                    duplicateName: true
-                });
-            } else if (!duplicateHookName) {
-                this.hookForm.setErrors(null);
-            }
+        let duplicateHookName;
+        if (this.hooks.hookIndex > -1) {
+            const tempValue = this.appService.cloneObject(this.form.get(this.hooks.hookPath).value);
+            tempValue.splice(this.hooks.hookIndex, 1);
+            duplicateHookName = tempValue.find(e => e.name === this.hookForm.get('name').value);
+        } else {
+            duplicateHookName = this.form.get(this.hooks.hookPath).value.find(e => e.name === this.hookForm.get('name').value);
+        }
+        if (duplicateHookName) {
+            this.hookForm.setErrors({
+                duplicateName: true
+            });
+        } else if (!duplicateHookName) {
+            this.hookForm.setErrors(null);
         }
     }
 
-    removeHook(index) {
+    removeHook(index: number) {
         let hooks;
-        let hookpath;
-        if (this.hooks.preHook || this.hooks.postHook) {
-            hookpath = this.hooks.hookType;
-        } else {
-            hookpath = 'workflowHooks.' + 'postHooks.' + this.hooks.hookType;
-        }
-        hooks = this.form.get(hookpath).value;
+        hooks = this.form.get(this.hooks.hookPath).value;
         if (!hooks) {
             hooks = [];
         }
-        const temp = (this.form.get(hookpath).value);
+        const temp = (this.form.get(this.hooks.hookPath).value);
         this.deleteModal.title = 'Delete ' + temp[index].name;
         this.deleteModal.message = 'Are you sure you want to delete ' + temp[index].name + '?';
         this.deleteModal.showButtons = true;
         this.deleteModalTemplateRef = this.commonService.modal(this.deleteModalTemplate);
         this.deleteModalTemplateRef.result.then(close => {
             if (close) {
-                if (this.hooks.postHook || this.hooks.preHook) {
-                    (this.form.get(this.hooks.hookType).value).splice(index, 1);
-                    this.form.get(this.hooks.hookType).markAsTouched();
-                    this.form.get(this.hooks.hookType).markAsDirty();
-                } else {
-                    (this.form.get(['workflowHooks', 'postHooks', this.hooks.hookType]).value).splice(index, 1);
-                    this.form.get(['workflowHooks', 'postHooks', this.hooks.hookType]).markAsTouched();
-                    this.form.get(['workflowHooks', 'postHooks', this.hooks.hookType]).markAsDirty();
-                }
+                temp.splice(index, 1);
+                this.form.get(this.hooks.hookPath).patchValue(temp);
+                this.form.get(this.hooks.hookPath).markAsTouched();
+                this.form.get(this.hooks.hookPath).markAsDirty();
                 this.form.markAsDirty();
             }
         }, dismiss => { });
@@ -383,7 +307,7 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         const jsonStructure = {
             operation: 'POST'
         };
-        if (this.hooks.postHook) {
+        if (this.hooks.hookType == 'postHook') {
             jsonStructure['data'] = {};
             jsonStructure['data']['old'] = new SchemaValuePipe().transform(this.form.getRawValue().definition);
             jsonStructure['data']['new'] = new SchemaValuePipe().transform(this.form.getRawValue().definition);
@@ -410,13 +334,6 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         if (this.deleteModalTemplateRef) {
             this.deleteModalTemplateRef.close();
         }
-        if (this.hookModalTemplateRef) {
-            this.hookModalTemplateRef.close();
-        }
-        if (this.hookPreviewTemplateRef) {
-            this.hookPreviewTemplateRef.close();
-        }
-
     }
 
     hasPermission(type: string, entity?: string) {
@@ -453,7 +370,27 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         return this.edit._id;
     }
 
-    get webHooks() {
+    get hookList() {
+        if (this.hooks.hookType == 'preHook') {
+            return this.preHook;
+        } else if (this.hooks.hookType == 'postHook') {
+            return this.postHooks;
+        } else if (this.hooks.hookType == 'submitHook') {
+            return this.submitHooks;
+        } else if (this.hooks.hookType == 'approveHook') {
+            return this.approveHooks;
+        } else if (this.hooks.hookType == 'rejectHook') {
+            return this.rejectHooks;
+        } else if (this.hooks.hookType == 'reviewHook') {
+            return this.reviewHooks;
+        } else if (this.hooks.hookType == 'discardHook') {
+            return this.discardHooks;
+        } else {
+            return [];
+        }
+    }
+
+    get postHooks() {
         if (this.form.get('webHooks')) {
             return (this.form.get('webHooks').value) || [];
         }
@@ -481,7 +418,7 @@ export class IntegrationComponent implements OnInit, OnDestroy {
         return [];
     }
 
-    get sendForReviewHooks() {
+    get reviewHooks() {
         if (this.form.get('workflowHooks.postHooks.rework')) {
             return (this.form.get('workflowHooks.postHooks.rework').value);
         }

@@ -1,31 +1,26 @@
-<div class="wrapper">
-  <div class="d-flex w-100">
-    <!-- <div class="d-flex flex-column sub-menu  py-3 bg-light">
-      <div class="d-flex flex-column">
-        <div *ngIf="hasPermission('PVGCDS') || hasPermission('PMGCDS')" class="d-flex py-2 w-100 pl-3 hover justify-content-between" (click)="activeSubTab=0"
-          [ngClass]="{'bg-border': activeSubTab==0}">
-          <span class="">Data Services</span>
-          <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==0"></span>
-        </div>
-        <div *ngIf="hasPermission('PVGCI') || hasPermission('PMGCI')" class="d-flex py-2 w-100 pl-3 hover justify-content-between" (click)="activeSubTab=1"
-          [ngClass]="{'bg-border': activeSubTab==1}">
-          <span class="">Interaction Flows</span>
-          <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==1"></span>
-        </div>
-        <div *ngIf="hasPermission('PVGCBM') || hasPermission('PMGCBM')" class="d-flex py-2 w-100 pl-3 hover justify-content-between" (click)="activeSubTab=2"
-          [ngClass]="{'bg-border': activeSubTab==2}">
-          <span class="">Bookmarks</span>
-          <span class="odp-angle-right font-sm px-2 pt-1" *ngIf=" activeSubTab==2"></span>
-        </div>
+<div class="wrapper d-flex align-items-start">
+  <div class="d-flex flex-column sub-menu p-3">
+    <div class="d-flex flex-column text-muted font-14">
+      <div *ngIf="hasPermission('PVGCDS') || hasPermission('PMGCDS')" class="px-3 py-2 hover" (click)="activeSubTab=0"
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==0}">
+        <span class="">Data Services</span>
       </div>
-    </div> -->
-    <div class="px-3 w-100">
-      <odp-user-group-appcenter-services *ngIf="activeSubTab==0" [(roles)]="roles" class="w-100">
-      </odp-user-group-appcenter-services>
-      <odp-user-group-appcenter-flows *ngIf="activeSubTab==1" [roles]="roles" class="w-100">
-      </odp-user-group-appcenter-flows>
-      <odp-user-group-appcenter-bokmark *ngIf="activeSubTab==2" [(roles)]="roles" class="w-100">
-      </odp-user-group-appcenter-bokmark>
+      <!-- <div *ngIf="hasPermission('PVGCI') || hasPermission('PMGCI')" class="px-3 py-2 hover" (click)="activeSubTab=1"
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==1}">
+        <span class="">Interactions</span>
+      </div>
+      <div *ngIf="hasPermission('PVGCBM') || hasPermission('PMGCBM')" class="px-3 py-2 hover" (click)="activeSubTab=2"
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==2}">
+        <span class="">Bookmarks</span>
+      </div> -->
     </div>
+  </div>
+  <div class="px-3 w-100">
+    <odp-user-group-appcenter-services *ngIf="activeSubTab==0" [(roles)]="roles" class="w-100">
+    </odp-user-group-appcenter-services>
+    <odp-user-group-appcenter-flows *ngIf="activeSubTab==1" [roles]="roles" class="w-100">
+    </odp-user-group-appcenter-flows>
+    <odp-user-group-appcenter-bokmark *ngIf="activeSubTab==2" [(roles)]="roles" class="w-100">
+    </odp-user-group-appcenter-bokmark>
   </div>
 </div>

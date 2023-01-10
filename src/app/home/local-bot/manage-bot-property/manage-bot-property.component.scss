@@ -2,44 +2,81 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 .key-row {
+  height: 40px;
+}
+
+.options-cell {
+  overflow: hidden;
+  min-width: 30px;
+
+  .options {
+    max-width: 350px;
+    min-height: 38px;
+    max-height: 38px;
+    box-shadow: -1px 0px 3px rgba(0, 0, 0, 0.15);
+    z-index: 3;
+    right: -330px;
+    top: 0;
+    transition: 0.25s;
+
+    &.show {
+      right: 0;
+    }
+  }
+}
+
+table {
+  width: calc(100vw - 720px);
+}
+
+.error-icon-attr {
+  top: 33px;
+  right: 7px;
+}
+
+.grid-container {
+  height: 48vh;
+  display: grid;
+}
+
+.dropdown-itm {
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background: $light;
+  }
+}
+
+.table {
+  height: 400px;
+  max-height: 400px;
+  overflow-x: hidden
+}
+
+.list-group-item {
+  &.header {
+    font-weight: 400;
     height: 40px;
   }
-  .options-cell {
-    overflow: hidden;
-    min-width: 30px;
-    .options {
-        max-width: 350px;
-        min-height: 38px;
-        max-height: 38px;
-        box-shadow: -1px 0px 3px rgba(0, 0, 0, 0.15);
-        z-index: 3;
-        right: -330px;
-        top: 0;
-        transition: 0.25s;
-        &.show {
-            right: 0;
-          }
-    }
-  }
-  table{
-    width: calc(100vw - 720px);
-  }
+}
 
-  .error-icon-attr {
-    top: 33px;
-    right: 7px;
-  }
+.d-flex-1 {
+  flex: 1
+}
 
-  .grid-container {
-    height: calc(100vh - 322px);
-    display: grid;
-  }
 
-  .dropdown-itm {
-    cursor: pointer;
-    user-select: none;
-  
+.group-actions {
+  min-width: 100px;
+
+  .btn {
     &:hover {
-      background: $light;
+      color: $secondary  !important;
     }
   }
+}
+
+.scroll-pane {
+  height: 100%;
+  overflow: auto;
+}

@@ -20,6 +20,7 @@ export class SchemaBuilderService {
     selectedFieldId: string;
     typechanged: EventEmitter<any>;
     idFieldId: string;
+    stateModel:any;
     constructor(
         private fb: FormBuilder,
         private commonService: CommonService) {
@@ -34,7 +35,7 @@ export class SchemaBuilderService {
 
     getPropertiesStructure(value?: any): FormGroup {
         const self = this;
-        const temp = self.fb.group({
+        const temp: FormGroup = self.fb.group({
             _type: [value.type],
             label: [value.properties && value.properties.label ? value.properties.label : null, [maxLenValidator(40)]],
             readonly: [value.properties && value.properties.readonly ? value.properties.readonly : false],
@@ -247,6 +248,8 @@ export class SchemaBuilderService {
         if (value.type === 'File') {
             temp.addControl('fileType', new FormControl(value.properties
                 && value.properties.fileType ? value.properties.fileType : 'All'));
+            temp.addControl('password', new FormControl(value.properties
+                && value.properties.password ? value.properties.password : false));
             // temp.removeControl('required');
         }
 
@@ -266,7 +269,7 @@ export class SchemaBuilderService {
     getDefinitionStructure(value?: any, _isGrpParentArray?: boolean): FormGroup {
         const key = value && value.key ? value.key : '';
         const type = value && value.type ? value.type : 'String';
-        const tempForm = this.fb.group({
+        const tempForm: FormGroup = this.fb.group({
             _fieldId: [uuid()],
             _placeholder: ['Untitled Attribute'],
             type: [type, [Validators.required]],
@@ -281,23 +284,23 @@ export class SchemaBuilderService {
         tempForm.addControl('properties', this.getPropertiesStructure(options));
         if (value && value.properties && value.properties.relatedTo) {
             tempForm.get('type').patchValue('Relation');
-        }
-        if (value && value.properties && value.properties.schema) {
+        } else if (value && value.properties && value.properties.schema) {
             value.type = 'Global';
             tempForm.get('type').patchValue('Global');
             delete value.definition;
-        }
-        if (value && value.properties && value.properties.relatedTo) {
+        } else if (value && value.properties && value.properties.relatedTo) {
             value.type = 'Relation';
             tempForm.get('type').patchValue('Relation');
             delete value.definition;
-        }
-        if (value && value.properties && value.properties.password) {
+        } else if (value && value.properties && value.properties.fileType) {
+            value.type = 'File';
+            tempForm.get('type').patchValue('File');
+            delete value.definition;
+        } else if (value && value.properties && value.properties.password) {
             value.type = 'String';
             tempForm.get('type').patchValue('String');
             delete value.definition;
-        }
-        if (value && value.type && value.type === 'User') {
+        } else if (value && value.type && value.type === 'User') {
             tempForm.get('type').patchValue('User');
             delete value.definition;
         }
@@ -313,7 +316,7 @@ export class SchemaBuilderService {
                 if (value.properties && (value.properties._isParrentArray || value.properties._isGrpParentArray)) {
                     value.definition[i].properties._isGrpParentArray = true;
                 }
-                const tempDef = this.getDefinitionStructure(value.definition[i]);
+                const tempDef: any = this.getDefinitionStructure(value.definition[i]);
                 if (value.definition[i].properties && value.definition[i].properties.name) {
                     tempDef.get('properties.name').patchValue(value.definition[i].properties.name);
                 } else {
@@ -376,7 +379,14 @@ export class SchemaBuilderService {
                     if (i.toLowerCase().split(' ').indexOf('date') > -1) {
                         temp.type = 'Date';
                     }
+                    if (i.toLowerCase().split('_').indexOf('date') > -1) {
+                        temp.type = 'Date';
+                    }
                     if (i.toLowerCase().split(' ').indexOf('amount') > -1) {
+                        temp.type = 'Number';
+                        temp.properties.currency = 'INR';
+                    }
+                    if (i.toLowerCase().split('_').indexOf('amount') > -1) {
                         temp.type = 'Number';
                         temp.properties.currency = 'INR';
                     }
@@ -435,18 +445,18 @@ export class SchemaBuilderService {
 
     getSchemaTypes(): Array<FieldType> {
         return [
-            { class: 'odp-id', value: 'id', label: 'Identifier' },
-            { class: 'odp-abc', value: 'String', label: 'Text' },
-            { class: 'odp-123', value: 'Number', label: 'Number' },
-            { class: 'odp-boolean', value: 'Boolean', label: 'True/False' },
-            { class: 'odp-calendar', value: 'Date', label: 'Date' },
-            { class: 'odp-group', value: 'Object', label: 'Group' },
-            { class: 'odp-array', value: 'Array', label: 'Collection' },
-            { class: 'odp-location', value: 'Geojson', label: 'Location' },
-            { class: 'odp-attach', value: 'File', label: 'File' },
-            { class: 'odp-references', value: 'Relation', label: 'Relation' },
-            { class: 'odp-library', value: 'Global', label: 'Library' },
-            { class: 'far fa-user-circle', value: 'User', label: 'User' }
+            { class: 'dsi-id', value: 'id', label: 'Identifier', bgColor: '#C9D5E8' },
+            { class: 'dsi-text', value: 'String', label: 'Text', bgColor: '#E7CBD4' },
+            { class: 'dsi-number', value: 'Number', label: 'Number', bgColor: '#E7CBE6' },
+            { class: 'dsi-boolean', value: 'Boolean', label: 'True/False', bgColor: '#CBE7CE' },
+            { class: 'dsi-date', value: 'Date', label: 'Date', bgColor: '#FFE6D8' },
+            { class: 'dsi-object', value: 'Object', label: 'Group', bgColor: '#D7D4EF' },
+            { class: 'dsi-array', value: 'Array', label: 'Collection', bgColor: '#D3E4FF' },
+            { class: 'dsi-location', value: 'Geojson', label: 'Location', bgColor: '#CAF0F3' },
+            { class: 'dsi-attach', value: 'File', label: 'File', bgColor: '#D7F5D1' },
+            { class: 'dsi-relation', value: 'Relation', label: 'Relation', bgColor: '#F0F1CC' },
+            { class: 'dsi-library', value: 'Global', label: 'Library', bgColor: '#F7DEC2' },
+            { class: 'dsi-user', value: 'User', label: 'User', bgColor: '#F1D3D3' }
         ];
     }
     countAttr(def) {

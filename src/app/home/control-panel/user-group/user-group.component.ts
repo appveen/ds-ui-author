@@ -13,155 +13,146 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
     styleUrls: ['./user-group.component.scss']
 })
 export class UserGroupComponent implements OnInit, OnDestroy {
-    @ViewChild('newGroupModal', { static: false }) newGroupModal: TemplateRef<HTMLElement>;
     apiConfig: GetOptions;
     subscriptions: any;
     showLazyLoader: boolean;
     groupList: Array<Group>;
     searchTerm: string;
-    newGroupModalRef: NgbModalRef;
     newGroup: Group;
-    breadcrumbPaths: Array<Breadcrumb>;
     filterGroupText = '';
     totalRecords: number;
     form: FormGroup;
+    showNewGroupWindow: boolean;
+    breadcrumbPaths: Array<Breadcrumb>;
 
     constructor(private commonService: CommonService,
         private router: Router,
         private fb: FormBuilder) {
-        const self = this;
-        self.subscriptions = {};
-        self.groupList = [];
-        self.newGroup = {};
-        self.breadcrumbPaths = [];
-        self.form = self.fb.group({
+        this.subscriptions = {};
+        this.breadcrumbPaths = [];
+        this.groupList = [];
+        this.newGroup = {};
+        this.form = this.fb.group({
             name: ["", [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
             description: ["", [Validators.maxLength(240), Validators.pattern(/\w+/)]]
         });
     }
 
     ngOnInit() {
-        const self = this;
-        self.breadcrumbPaths.push({
+        this.resetSearch();
+        this.breadcrumbPaths.push({
             active: true,
-            label: 'Groups'
+            label: 'Groups',
         });
-        self.resetSearch();
-
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     }
 
     ngOnDestroy() {
-        const self = this;
-        if (self.newGroupModalRef) {
-            self.newGroupModalRef.close();
-        }
     }
 
     getGroupCount() {
-        const self = this;
-        self.showLazyLoader = true;
-        if(self.subscriptions['getGroupCount']){
-            self.subscriptions['getGroupCount'].unsubscribe();
+        this.showLazyLoader = true;
+        if (this.subscriptions['getGroupCount']) {
+            this.subscriptions['getGroupCount'].unsubscribe();
         }
-        self.subscriptions['getGroupCount'] = self.commonService
-            .get('user', `/${self.commonService.app._id}/group/count`, self.apiConfig)
+        this.subscriptions['getGroupCount'] = this.commonService
+            .get('user', `/${this.commonService.app._id}/group/count`, this.apiConfig)
             .subscribe(res => {
-                self.totalRecords = res;
+                this.totalRecords = res;
             }, err => {
-                self.showLazyLoader = false;
-                self.commonService.errorToast(err, 'Unable to fetch groups, please try again later');
+                this.showLazyLoader = false;
+                this.commonService.errorToast(err, 'Unable to fetch groups, please try again later');
             });
     }
 
     getGroupList() {
-        const self = this;
-        self.showLazyLoader = true;
-        if(self.subscriptions['getGroupList']){
-            self.subscriptions['getGroupList'].unsubscribe();
+        this.showLazyLoader = true;
+        if (this.subscriptions['getGroupList']) {
+            this.subscriptions['getGroupList'].unsubscribe();
         }
-        self.subscriptions['getGroupList'] = self.commonService
-            .get('user', `/${self.commonService.app._id}/group`, self.apiConfig)
+        this.subscriptions['getGroupList'] = this.commonService
+            .get('user', `/${this.commonService.app._id}/group`, this.apiConfig)
             .subscribe(res => {
-                self.showLazyLoader = false;
+                this.showLazyLoader = false;
                 res.forEach(item => {
-                    self.groupList.push(item);
-                    const index = self.groupList.findIndex(e => e.name === '#');
+                    const usersLen = item.users.filter(e => e.indexOf('@') > -1);
+                    item.membersCount = usersLen.length;
+                    item.botsCount = Math.abs(usersLen.length - item.users.length);
+
+                    const authorPermissions = item.roles.filter(e => e.id.match(/^[A-Z]{2,}$/));
+                    item.hasAuthorRoles = authorPermissions.length > 0;
+                    item.hasAppcenterRoles = authorPermissions.length != item.roles.length;
+
+                    this.groupList.push(item);
+                    const index = this.groupList.findIndex(e => e.name === '#');
                     if (index >= 0) {
-                        self.groupList.splice(index, 1);
+                        this.groupList.splice(index, 1);
                     }
                 });
             }, err => {
-                self.showLazyLoader = false;
-                self.commonService.errorToast(err, 'Unable to fetch groups, please try again later');
+                this.showLazyLoader = false;
+                this.commonService.errorToast(err, 'Unable to fetch groups, please try again later');
             });
     }
 
     searchGroup(value) {
-        const self = this;
-        self.apiConfig.page = 1;
+        this.apiConfig.page = 1;
         if (!value || !value.trim()) {
             return;
         }
-       
-        if (!self.apiConfig.filter) {
-            self.apiConfig.filter = {};
+
+        if (!this.apiConfig.filter) {
+            this.apiConfig.filter = {};
         }
-        self.apiConfig.filter.name = '/' + value.trim() + '/';
-        self.groupList = [];
-        self.getGroupList();
-        self.getGroupCount();
+        this.apiConfig.filter.name = '/' + value.trim() + '/';
+        this.groupList = [];
+        this.getGroupList();
+        this.getGroupCount();
     }
 
     resetSearch() {
-        const self = this;
-        self.apiConfig = {
+        this.apiConfig = {
             page: 1,
-            count: 30,
+            count: -1,
             filter: {},
-            select: 'name users',
+            select: 'name users roles.id',
             noApp: true
         };
-        self.groupList = [];
-        self.getGroupList();
-        self.getGroupCount();
+        this.groupList = [];
+        this.getGroupList();
+        this.getGroupCount();
     }
 
     loadMore(event: any) {
-        const self = this;
         if (event.target.scrollTop + event.target.offsetHeight === event.target.scrollHeight
-            && self.totalRecords - 1 !== self.groupList.length) {
-            self.apiConfig.page = self.apiConfig.page + 1;
-            self.showLazyLoader = true;
-            self.getGroupList();
+            && this.totalRecords - 1 !== this.groupList.length) {
+            this.apiConfig.page = this.apiConfig.page + 1;
+            this.showLazyLoader = true;
+            this.getGroupList();
         }
     }
     addNewGroup() {
-        const self = this;
-        self.newGroupModalRef = self.commonService.modal(self.newGroupModal);
-        self.newGroupModalRef.result.then(close => {
-            if (close && self.form.valid) {
-                self.createGroup();
-            }
-        }, dismiss => { });
+        this.showNewGroupWindow = true;
+        this.form.reset({ name: this.searchTerm });
     }
     createGroup() {
-        const self = this;
-        const payload = self.form.value;
-        payload.app = self.commonService.app._id;
-        self.showLazyLoader = true;
-        self.subscriptions['createGroup'] = self.commonService.post('user', `/${this.commonService.app._id}/group/`, payload).subscribe(res => {
-            self.newGroup = {};
-            self.showLazyLoader = false;
-            self.newGroupModalRef.close();
-            self.router.navigate(['/app', self.commonService.app._id, 'cp', 'gm', res._id]);
-        }, err => {
-            self.showLazyLoader = false;
-            self.commonService.errorToast(err);
-        });
+        if (this.form.valid) {
+            const payload = this.form.value;
+            payload.app = this.commonService.app._id;
+            this.showLazyLoader = true;
+            this.subscriptions['createGroup'] = this.commonService.post('user', `/${this.commonService.app._id}/group/`, payload).subscribe(res => {
+                this.newGroup = {};
+                this.showLazyLoader = false;
+                this.showNewGroupWindow = false;
+                this.router.navigate(['/app', this.commonService.app._id, 'cp', 'gm', res._id]);
+            }, err => {
+                this.showLazyLoader = false;
+                this.commonService.errorToast(err);
+            });
+        }
     }
 
     hasPermission(type: string) {
-        const self = this;
-        return self.commonService.hasPermission(type);
+        return this.commonService.hasPermission(type);
     }
 }

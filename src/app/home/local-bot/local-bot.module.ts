@@ -8,7 +8,6 @@ import { AgGridModule } from 'ag-grid-angular';
 import { LocalBotComponent } from './local-bot.component';
 import { BotGuard } from 'src/app/utils/guards/bot.guard';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
@@ -22,6 +21,7 @@ import { AgGridSharedFloatingFilterModule } from 'src/app/utils/ag-grid-shared-f
 import { LocalBotCellRendererComponent } from './local-bot-cell-renderer/local-bot-cell-renderer.component';
 import { AgGridFilterModule } from 'src/app/utils/ag-grid-filter/ag-grid-filter.module';
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const routes: Routes = [{ path: '', component: LocalBotComponent, canActivate: [BotGuard] }];
 @NgModule({
@@ -30,7 +30,7 @@ const routes: Routes = [{ path: '', component: LocalBotComponent, canActivate: [
     ManageBotKeyComponent,
     ManageBotPropertyComponent,
     ManageBotGroupComponent,
-    LocalBotCellRendererComponent
+    LocalBotCellRendererComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -38,7 +38,6 @@ const routes: Routes = [{ path: '', component: LocalBotComponent, canActivate: [
     ReactiveFormsModule,
     FormsModule,
     SearchBoxModule,
-    IconsModule,
     FieldTypeModule,
     SwitchModule,
     DeleteModalModule,
@@ -49,7 +48,8 @@ const routes: Routes = [{ path: '', component: LocalBotComponent, canActivate: [
     AgGridModule,
     AgGridSharedFloatingFilterModule,
     AgGridFilterModule,
-    DateFormatModule
-  ]
+    DateFormatModule,
+    MatDialogModule
+  ],
 })
-export class LocalBotModule {}
+export class LocalBotModule { }

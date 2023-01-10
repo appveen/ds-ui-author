@@ -23,7 +23,7 @@ export class LocalBotCellRendererComponent implements AgRendererComponent {
     this.data = this.params.data;
     this.namespace = this.params.colDef?.refData?.namespace;
 
-    if (this.namespace === 'keys' && this.field === 'keyValue' && this.data.isLatest) {
+    if (this.field === 'keyValue' && this.data.isLatest) {
       setTimeout(() => {
         if (!!this.tooltip) {
           this.tooltip.open();

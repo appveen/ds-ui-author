@@ -156,7 +156,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         setTimeout(() => {
             if (self.first) {
                 self.schemaService.selectedFieldId = self.fieldId;
-                self.schemaService.activeField.emit(self.fieldId);
+                // self.schemaService.activeField.emit(self.fieldId);
             }
         }, 200);
     }
@@ -182,7 +182,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 if (self.active && r.key === 'status' && r.currentValue === true) {
                     setTimeout(() => {
                         self.schemaService.selectedFieldId = self.fieldId;
-                        self.schemaService.activeField.emit(self.fieldId);
+                        // self.schemaService.activeField.emit(self.fieldId);
                     }, 200);
                 }
             });
@@ -267,6 +267,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         const self = this;
         if (self.isNewField) {
             let index = val.toLowerCase().split(' ').indexOf('amount');
+            if (index < 0) {
+                index = val.toLowerCase().split('_').indexOf('amount')
+            }
             if (!self.autoLink['number'] && index > -1) {
                 self.selectType({ value: 'Number', label: 'Number' });
                 self.form.get('properties._detailedType').patchValue('currency');
@@ -277,6 +280,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
                 }, 3000);
             }
             index = val.toLowerCase().split(' ').indexOf('date');
+            if (index < 0) {
+                index = val.toLowerCase().split('_').indexOf('date')
+            }
             if (!self.autoLink['date'] && index > -1) {
                 self.selectType({ value: 'Date', label: 'Date' });
                 self.autoLink['date'] = true;
@@ -409,9 +415,9 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             const temp = self.schemaService.getDefinitionStructure({ key: '_self', _newField: true });
             self.form.addControl('definition', self.fb.array([temp]));
         }
-        if (type.value === 'Array' || type.value === 'Object') {
-            self.form.get('definition').setValidators([sameName]);
-        }
+        // if (type.value === 'Array' || type.value === 'Object') {
+        self.form.get('definition')?.setValidators([sameName]);
+        // }
     }
 
     remove() {
@@ -450,7 +456,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         } else {
             self.schemaService.selectedFieldId = self.all.at(self.index - 1).get('_fieldId').value;
         }
-        self.schemaService.activeField.emit(self.schemaService.selectedFieldId);
+        // self.schemaService.activeField.emit(self.schemaService.selectedFieldId);
         if (self.all.at(self.index).get('key').value == self.stateModelAttr?.value && self.all.at(self.index).get(['properties', '_detailedType']).value == 'enum') {
             self.deleteStateModel.emit(true);
         }
@@ -465,6 +471,8 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
 
     pasteOnField(e) {
         const self = this;
+        // self.schemaService.selectedFieldId = null;
+        // self.schemaService.activeProperty.emit(null);
         if (!self.all.get([self.index, '_id'])) {
             let val = e.clipboardData.getData('text/plain');
             try {
@@ -498,10 +506,12 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             }).map(e => e.trim());
         }
         const json = {};
-        def.forEach(element => {
-            self.getJSON(element, json);
-        });
-        self.createSchema(json);
+        if(def.length>1){
+            def.forEach(element => {
+                self.getJSON(element, json);
+            });
+            self.createSchema(json);
+        }
     }
 
     getJSON(field, value) {
@@ -533,6 +543,8 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             const tempDef = self.schemaService.getDefinitionStructure(temp);
             (tempDef.get('properties.name') as FormGroup).patchValue(temp.properties.name);
             self.all.push(tempDef);
+            tempDef.markAsTouched()
+            tempDef.markAsDirty()
         });
         self.all.removeAt(self.index);
         self.schemaService.activeProperty.emit(null);
@@ -558,9 +570,20 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
         const self = this;
         field.patchValue(!field.value);
     }
+    view() {
+        this.schemaService.activeProperty.emit(this.form);
+    }
+
+    checkSubType() {
+        if (this.form.get(['definition', 0])?.value) {
+            const subValue = this.form.get(['definition', 0]).value;
+            return subValue?.properties?.password
+        }
+        return false
+    }
     get style() {
         const self = this;
-        const margin = self.level * 44;
+        const margin = self.level * 16;
         return {
             marginLeft: margin + 'px'
         };
@@ -576,14 +599,15 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
 
     get hasError() {
         const self = this;
-        return self.form.get('properties.name').touched
-            && self.form.get('properties.name').dirty
-            && (self.form.get('key').hasError('required')
-                || self.form.get('properties.name').hasError('length')
-                || self.form.hasError('sameName'))
-            || (self.form.get('properties.relatedTo')
-                && self.form.get('properties.relatedTo').hasError('required'))
-            || this.invalidFieldName;
+        // const result = self.form.get('properties.name').touched
+        //     && self.form.get('properties.name').dirty
+        //     && (self.form.get('key').hasError('required')
+        //         || self.form.get('properties.name').hasError('length')
+        //         || self.form.hasError('sameName'))
+        //     || (self.form.get('properties.relatedTo')
+        //         && self.form.get('properties.relatedTo').hasError('required'))
+        //     || this.invalidFieldName;
+        return self.form.invalid
     }
 
     get idField() {

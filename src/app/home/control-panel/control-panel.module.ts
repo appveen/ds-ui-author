@@ -11,7 +11,6 @@ import { UserManageComponent } from './user/user-manage/user-manage.component';
 import { SchemaUtilsModule } from '../schema-utils/schema-utils.module';
 import { SelectedAccessComponent } from './selected-access/selectedAccess.component';
 import { TimeoutTriggerModule } from 'src/app/utils/directives/timeout-trigger/timeout-trigger.module';
-import { IconsModule } from 'src/app/utils/icons/icons.module';
 import { UserGroupManageComponent } from './user-group/user-group-manage/user-group-manage.component';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { ClickOutsideModule } from '../../utils/directives/click-outside/click-outside.module';
@@ -33,7 +32,7 @@ import { RoundCheckModule } from 'src/app/utils/round-check/round-check.module';
 import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.module';
 import { LoadingPlaceholderModule } from 'src/app/utils/loading-placeholder/loading-placeholder.module';
 import { FocusNextModule } from 'src/app/utils/focus-next/focus-next.module';
-import { UserGroupBotsComponent } from './user-group/user-group-manage/user-group-bots/user-group-bots.component';
+import { UserGroupBotsComponent } from './user-group/user-group-manage/user-group-members/user-group-bots/user-group-bots.component';
 import { BookmarksComponent } from './bookmarks/bookmarks.component';
 import { ManageBookmarksComponent } from './bookmarks/manage-bookmarks/manage-bookmarks.component';
 import { FilterFlowPipeModule } from 'src/app/utils/pipes/filter-flow.module';
@@ -64,78 +63,102 @@ import { AttributesCellRendererComponent } from './attributes-cell-renderer/attr
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 import { AgGridFilterModule } from 'src/app/utils/ag-grid-filter/ag-grid-filter.module';
 import { RadioChipModule } from 'src/app/utils/radio-chip/radio-chip.module';
+import { BulkImportComponent } from './user/bulk-import/bulk-import.component';
+import { BulkImportStatusComponent } from './user/bulk-import-status/bulk-import-status.component';
+import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
+import { UserGridActionRendererComponent } from './user/user-grid-action.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { UserToGroupModalComponent } from './user/user-to-group-modal/user-to-group-modal.component';
+import { UserGridAppsRendererComponent } from './user/user-grid-apps.component ';
+import { FilterPipeModule } from '../../utils/pipes/filter.module';
+import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
+import { UserGroupUsersComponent } from './user-group/user-group-manage/user-group-members/user-group-users/user-group-users.component';
+import { UserGroupMembersSearchComponent } from './user-group/user-group-manage/user-group-members/user-group-members-search/user-group-members-search.component';
+import { GroupAuthorConnectorsComponent } from './user-group/user-group-manage/user-group-author/group-author-connectors/group-author-connectors.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        ControlPanelRoutingModule,
-        NgbModule,
-        LoadingModule,
-        SchemaUtilsModule,
-        ClickOutsideModule,
-        TimeoutTriggerModule,
-        IconsModule,
-        SearchBoxModule,
-        FilterUserModule,
-        FilterTeamModule,
-        FilterAppModule,
-        DataGridModule,
-        BreadcrumbModule,
-        AuthUsersModule,
-        TableCheckboxModule,
-        AutoFocusModule,
-        CommonFilterModule,
-        BasicInfoModule,
-        RoundCheckModule,
-        DeleteModalModule,
-        LoadingPlaceholderModule,
-        FocusNextModule,
-        FilterFlowPipeModule,
-        FieldTypeModule,
-        SwitchModule,
-        AgGridModule,
-        GridCheckboxModule,
-        UserListCellRendererModule,
-        AgGridSharedFloatingFilterModule,
-        AgGridActionsRendererModule,
-        DateFormatModule,
-        AgGridFilterModule,
-        RadioChipModule
-    ],
-    declarations: [
-        ControlPanelComponent,
-        AppComponent,
-        UserComponent,
-        UserManageComponent,
-        SelectedAccessComponent,
-        UserGroupComponent,
-        UserGroupManageComponent,
-        UserGroupComponent,
-        UserGroupAuthorComponent,
-        UserGroupAppcenterComponent,
-        UserGroupMembersComponent,
-        UserGroupBotsComponent,
-        BookmarksComponent,
-        ManageBookmarksComponent,
-        UserGroupAppcenterServicesComponent,
-        UserGroupAppcenterBokmarkComponent,
-        UserGroupAppcenterFlowsComponent,
-        WorkitemsComponent,
-        GroupAuthorBotsComponent,
-        GroupAuthorGroupsComponent,
-        GroupAuthorUsersComponent,
-        GroupAuthorDataServicesComponent,
-        GroupAuthorDataFormatsComponent,
-        GroupAuthorAgentsComponent,
-        GroupAuthorLibraryComponent,
-        GroupAuthorFunctionsComponent,
-        GroupAuthorPartnersComponent,
-        GroupAuthorNanoServicesComponent,
-        GroupAuthorBookmarksComponent,
-        GroupAuthorInsightsComponent,
-        AttributesCellRendererComponent
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ControlPanelRoutingModule,
+    NgbModule,
+    LoadingModule,
+    SchemaUtilsModule,
+    ClickOutsideModule,
+    TimeoutTriggerModule,
+    SearchBoxModule,
+    FilterUserModule,
+    FilterTeamModule,
+    FilterAppModule,
+    DataGridModule,
+    BreadcrumbModule,
+    AuthUsersModule,
+    TableCheckboxModule,
+    AutoFocusModule,
+    CommonFilterModule,
+    BasicInfoModule,
+    RoundCheckModule,
+    DeleteModalModule,
+    LoadingPlaceholderModule,
+    FocusNextModule,
+    FilterFlowPipeModule,
+    FieldTypeModule,
+    SwitchModule,
+    AgGridModule,
+    GridCheckboxModule,
+    UserListCellRendererModule,
+    AgGridSharedFloatingFilterModule,
+    AgGridActionsRendererModule,
+    DateFormatModule,
+    AgGridFilterModule,
+    RadioChipModule,
+    CheckboxModule,
+    MatDialogModule,
+    FilterPipeModule,
+    RoundRadioModule
+  ],
+  declarations: [
+    ControlPanelComponent,
+    AppComponent,
+    UserComponent,
+    UserManageComponent,
+    SelectedAccessComponent,
+    UserGroupComponent,
+    UserGroupManageComponent,
+    UserGroupComponent,
+    UserGroupAuthorComponent,
+    UserGroupAppcenterComponent,
+    UserGroupMembersComponent,
+    UserGroupBotsComponent,
+    BookmarksComponent,
+    ManageBookmarksComponent,
+    UserGroupAppcenterServicesComponent,
+    UserGroupAppcenterBokmarkComponent,
+    UserGroupAppcenterFlowsComponent,
+    WorkitemsComponent,
+    GroupAuthorBotsComponent,
+    GroupAuthorGroupsComponent,
+    GroupAuthorUsersComponent,
+    GroupAuthorDataServicesComponent,
+    GroupAuthorDataFormatsComponent,
+    GroupAuthorAgentsComponent,
+    GroupAuthorLibraryComponent,
+    GroupAuthorFunctionsComponent,
+    GroupAuthorPartnersComponent,
+    GroupAuthorNanoServicesComponent,
+    GroupAuthorBookmarksComponent,
+    GroupAuthorInsightsComponent,
+    AttributesCellRendererComponent,
+    BulkImportComponent,
+    BulkImportStatusComponent,
+    UserGridActionRendererComponent,
+    UserToGroupModalComponent,
+    UserGridAppsRendererComponent,
+    UserGroupUsersComponent,
+    UserGroupMembersSearchComponent,
+    GroupAuthorConnectorsComponent
+  ],
+  exports: [UserGridAppsRendererComponent, UserToGroupModalComponent]
 })
-export class ControlPanelModule {}
+export class ControlPanelModule { }

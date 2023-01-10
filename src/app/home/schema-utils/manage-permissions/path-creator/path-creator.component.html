@@ -1,4 +1,8 @@
 <div class="d-flex align-items-center position-relative">
+    <input *ngIf="noInitalDefinition" type="text" class="form-control custom-value" [class.is-invalid]="searchFailed"
+        odpAutoFocus [ngbTypeahead]="searchDataService" placeholder="Search for a Data Service" [inputFormatter]="formatter"
+        [resultFormatter]="formatter">
+    <small *ngIf="searching" class="form-text text-muted">searching...</small>
     <div class="d-flex align-items-center px-2" *ngFor="let def of fields;let i=index;let f=first;let l=last">
         <div class="data-key-path d-flex align-items-center ignore-outside" [ngClass]="{'hover':edit.status}"
             [ngbTooltip]="edit.status ? 'Change' : ''" (click)="changeField($event,def,i)">
@@ -12,11 +16,11 @@
     <div *ngIf="canAddMore && !enableManual" class="add-field d-flex align-items-center ignore-outside px-2"
         [ngClass]="{'hover':edit.status}" (click)="level=fields.length;openKeysDropdown($event);">
         <div class="bg-light px-2 rounded">
-            <span class="fa fa-plus fa-xs text-accent"></span>
+            <span class="dsi dsi-plus fa-xs text-accent"></span>
         </div>
         <span class="ml-2">Add</span>
-        <span class="fas fa-asterisk fa-xs text-danger error-icon ml-2"
-         ngbTooltip="This is a required field" placement="right"></span>
+        <span class="fas fa-asterisk fa-xs text-danger error-icon ml-2" ngbTooltip="This is a required field"
+            placement="right"></span>
     </div>
     <div *ngIf="canAddMore && enableManual" class="add-field d-flex align-items-center ignore-outside hover pl-2">
         <input type="text" class="form-control custom-value" odpAutoFocus (keyup.enter)="setField($event)"

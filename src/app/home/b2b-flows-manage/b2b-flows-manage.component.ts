@@ -1,19 +1,22 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { switchMap } from 'rxjs/operators';
-import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
+import { delay, tap } from 'rxjs/operators';
+import * as _ from 'lodash';
 
+import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService } from 'src/app/utils/services/common.service';
+import { environment } from 'src/environments/environment';
+import { B2bFlowService } from './b2b-flow.service';
 
 @Component({
   selector: 'odp-b2b-flows-manage',
   templateUrl: './b2b-flows-manage.component.html',
   styleUrls: ['./b2b-flows-manage.component.scss']
 })
-export class B2bFlowsManageComponent implements OnInit {
+export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   @ViewChild('pageChangeModalTemplate', { static: false }) pageChangeModalTemplate: TemplateRef<HTMLElement>;
   @ViewChild('keyValModalTemplate', { static: false }) keyValModalTemplate: TemplateRef<HTMLElement>;
@@ -33,28 +36,73 @@ export class B2bFlowsManageComponent implements OnInit {
   showConsole: boolean;
   loadingLogs: boolean;
   logs: Array<any>;
+  showNewNodeDropdown: boolean;
+  newNodeDropdownPos: any;
+  selectedNode: any;
+  showNodeProperties: boolean;
+  openDeleteModal: EventEmitter<any>;
+  nodeList: Array<any>;
+  changesDone: boolean = false;
+  saved: boolean = false
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
     private router: Router,
     private ele: ElementRef,
-    private ts: ToastrService) {
+    private ts: ToastrService,
+    private flowService: B2bFlowService) {
     this.subscriptions = {};
     this.edit = {
       status: false,
       id: null,
       editClicked: false
     };
-    this.breadcrumbPaths = [];
+    this.breadcrumbPaths = [{
+      active: false,
+      label: 'Data Pipes',
+      url: '/app/' + this.commonService.app._id + '/flow'
+    }];
     this.apiCalls = {};
     this.flowData = {};
     this.selectedEditorTheme = 'vs-light';
     this.selectedFontSize = 14;
     this.ele.nativeElement.classList.add('h-100');
     this.logs = [];
+    this.openDeleteModal = new EventEmitter();
+    this.nodeList = [];
   }
 
   ngOnInit(): void {
+    this.flowService.showAddNodeDropdown.pipe(
+      tap(() => {
+        this.resetSelection();
+      }),
+      delay(5)
+    ).subscribe((data: any) => {
+      this.selectedNode = data;
+      this.newNodeDropdownPos = data.position;
+      this.showNewNodeDropdown = true;
+    });
+    this.flowService.selectedNode.pipe(
+      tap(() => {
+        this.resetSelection();
+      }),
+      delay(5)
+    ).subscribe((data: any) => {
+      this.selectedNode = data;
+      if (data) {
+        this.showNodeProperties = true;
+      } else {
+        this.showNodeProperties = false;
+      }
+    });
+    this.flowService.deleteNode.subscribe((data: any) => {
+      this.openDeleteModal.emit({
+        title: 'Delete Node?',
+        message: 'Are you sure you want to delete this node?, You will have to re-configure flow.',
+        data
+      })
+    });
     this.route.params.subscribe(params => {
       if (params && params.id) {
         this.edit.id = params.id;
@@ -68,6 +116,7 @@ export class B2bFlowsManageComponent implements OnInit {
         this.edit.status = true;
       }
     });
+    this.saved = false
   }
 
   ngOnDestroy() {
@@ -81,6 +130,13 @@ export class B2bFlowsManageComponent implements OnInit {
     }
   }
 
+  resetSelection() {
+    this.showNewNodeDropdown = false;
+    this.showNodeProperties = false;
+    this.selectedNode = null;
+    this.newNodeDropdownPos = null;
+  }
+
   getFlow(id: string, draft?: boolean) {
     this.apiCalls.getFlow = true;
     let path = `/${this.commonService.app._id}/flow/${id}`;
@@ -89,17 +145,48 @@ export class B2bFlowsManageComponent implements OnInit {
     }
     this.showCodeEditor = false;
     this.subscriptions['getFlow'] = this.commonService.get('partnerManager', path).subscribe(res => {
+      this.breadcrumbPaths.push({
+        active: true,
+        label: res.name + ' (Edit)'
+      });
+      this.commonService.changeBreadcrumb(this.breadcrumbPaths);
       this.apiCalls.getFlow = false;
       this.showCodeEditor = true;
+      if (res.inputNode.dataStructure && res.inputNode.dataStructure.outgoing) {
+        this.patchDataStructure(res.inputNode.dataStructure.outgoing, res.dataStructures);
+      }
+      res.nodes.forEach(item => {
+        if (item.dataStructure && item.dataStructure.outgoing) {
+          this.patchDataStructure(item.dataStructure.outgoing, res.dataStructures);
+        }
+        if (item.type == 'DATASERVICE') {
+          this.patchDataStructure(item.options.dataService, res.dataStructures);
+        }
+      });
       this.flowData = this.appService.cloneObject(res);
       delete this.flowData.__v;
       delete this.flowData._metadata;
       this.oldData = this.appService.cloneObject(this.flowData);
-      this.appService.updateCodeEditorState.emit(this.edit);
+      // this.appService.updateCodeEditorState.emit(this.edit);
+      this.nodeList = [];
+      if (this.flowData.inputNode) {
+        this.nodeList.push(this.flowData.inputNode);
+      }
+      if (this.flowData.nodes) {
+        this.flowData.nodes.forEach(item => {
+          this.nodeList.push(item);
+        });
+      }
     }, err => {
       this.apiCalls.getFlow = false;
       this.commonService.errorToast(err);
     });
+  }
+
+  patchDataStructure(format: any, dataStructure: any) {
+    if (format && dataStructure && dataStructure[format._id]) {
+      _.assign(format, dataStructure[format._id]);
+    }
   }
 
   discardDraft() {
@@ -123,66 +210,95 @@ export class B2bFlowsManageComponent implements OnInit {
     }
   }
 
-  saveDummyCode(deploy?: boolean) {
+  getPayload() {
+    const dataStructures = {};
     this.flowData.app = this.commonService.app._id;
+    const tempNodeList = JSON.parse(JSON.stringify(this.nodeList));
+    tempNodeList.forEach(item => {
+      if (item.dataStructure && item.dataStructure.outgoing && item.dataStructure.outgoing._id) {
+        dataStructures[item.dataStructure.outgoing._id] = JSON.parse(JSON.stringify(item.dataStructure.outgoing));
+        item.dataStructure.outgoing = {
+          _id: item.dataStructure.outgoing._id,
+          name: item.dataStructure.outgoing.name
+        };
+      }
+      if (item.type === 'DATASERVICE' && item.options && item.options.dataService && item.options.dataService._id) {
+        dataStructures[item.options.dataService._id] = JSON.parse(JSON.stringify(item.options.dataService));
+        item.options.dataService = {
+          _id: item.options.dataService._id,
+          name: item.options.dataService.name
+        };
+      }
+      if (item.type === 'FAAS' && item.options && item.options.faas && item.options.faas._id) {
+        item.options.faas = {
+          _id: item.options.faas._id,
+          name: item.options.faas.name
+        };
+      }
+    });
+    this.flowData.inputNode = tempNodeList[0];
+    tempNodeList.splice(0, 1);
+    this.flowData.nodes = tempNodeList;
+    this.flowData.dataStructures = dataStructures;
+    if (!environment.production) {
+      console.log(this.flowData);
+    }
+    return this.flowData;
+  }
+
+  saveDummyCode(deploy?: boolean) {
+    const payload = this.getPayload();
     let request;
     this.apiCalls.save = true;
-
+    this.saved = true
     if (deploy) {
       this.flowData.status = 'RUNNING';
     }
-
     if (this.edit.id) {
-      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, this.flowData);
+      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, payload);
     } else {
-      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, this.flowData);
+      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload);
     }
-
-    this.subscriptions['save'] = request.subscribe(res => {
+    this.subscriptions['save'] = request.subscribe((res: any) => {
       this.apiCalls.save = false;
       this.edit.status = false;
       if (deploy) {
         this.apiCalls.deploy = false;
-        this.ts.success('Saved ' + this.flowData.name + ' and deployment process has started.');
+        this.ts.success('Saved ' + payload.name + ' and deployment process has started.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
       } else {
-        this.ts.success('Saved ' + this.flowData.name + '.');
+        this.ts.success('Saved ' + payload.name + '.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
       }
-    }, err => {
+    }, (err: any) => {
       this.apiCalls.save = false;
       this.commonService.errorToast(err);
     });
-
-
   }
 
   save(deploy?: boolean) {
-    this.flowData.app = this.commonService.app._id;
+    const payload = this.getPayload();
     let request;
     this.apiCalls.save = true;
-
-
+    this.saved = true
     if (this.edit.id) {
-      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, this.flowData);
+      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, payload);
     } else {
-      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, this.flowData);
+      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload);
     }
-
     this.subscriptions['save'] = request.subscribe(res => {
       this.apiCalls.save = false;
       this.edit.status = false;
       if (deploy) {
         this.deploy();
       } else {
-        this.ts.success('Saved ' + this.flowData.name + '.');
+        this.ts.success('Saved ' + payload.name + '.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
       }
     }, err => {
       this.apiCalls.save = false;
       this.commonService.errorToast(err);
     });
-
   }
 
   deploy() {
@@ -224,32 +340,38 @@ export class B2bFlowsManageComponent implements OnInit {
     });
   }
 
-  toggleConsole() {
-    if (this.showConsole) {
-      this.loadingLogs = true;
-      this.commonService.get('mon', `/${this.commonService.app._id}/${this.edit.id}/console/logs/count`, { noApp: true }).pipe(
-        switchMap(e => {
-          let page = 1;
-          let count = e;
-          if (e >= 150) {
-            count = 100;
-            page = Math.ceil(e / 100);
-          }
-          return this.commonService.get('mon', `/${this.commonService.app._id}/${this.edit.id}/console/logs`, {
-            page,
-            count,
-            noApp: true,
-            sort: 'startTime'
-          })
-        })
-      ).subscribe(res => {
-        this.loadingLogs = false;
-        this.logs = res;
-      }, err => {
-        this.loadingLogs = false;
-        this.commonService.errorToast(err);
+  closeDeleteNodeModal(val: any) {
+    if (val & val.data && val.data.nodeIndex > 0) {
+      if (val.data.nodeIndex < this.flowData.nodes.length) {
+        let prev
+        if (val.data.nodeIndex > 1) {
+          prev = this.flowData.nodes[val.data.nodeIndex - 2];
+        } else {
+          prev = this.flowData.inputNode;
+        }
+        const curr = this.flowData.nodes[val.data.nodeIndex - 1];
+        const next = this.flowData.nodes[val.data.nodeIndex];
+        const pt = prev.onSuccess.find(e => e._id == curr._id);
+        pt._id = next._id;
+      }
+      this.flowData.nodes.splice(val.data.nodeIndex - 1, 1);
+    }
+    console.log(val);
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    const self = this;
+    if (this.changesDone && !this.saved) {
+      return new Promise((resolve, reject) => {
+        self.pageChangeModalTemplateRef = this.commonService.modal(this.pageChangeModalTemplate);
+        self.pageChangeModalTemplateRef.result.then(close => {
+          resolve(close);
+        }, dismiss => {
+          resolve(false);
+        });
       });
     }
+    return true;
   }
 
   get apiCallsPending() {
@@ -282,18 +404,4 @@ export class B2bFlowsManageComponent implements OnInit {
     return this.commonService.hasPermission('PMF')
   }
 
-  get code() {
-    const temp: any = {};
-    temp.inputStage = JSON.parse(JSON.stringify(this.flowData.inputStage));
-    temp.stages = JSON.parse(JSON.stringify(this.flowData.stages || []));
-    temp.dataStructures = JSON.parse(JSON.stringify(this.flowData.dataStructures || []));
-    return JSON.stringify(temp, null, 4);
-  }
-
-  set code(data: string) {
-    const temp = JSON.parse(data);
-    this.flowData.inputStage = temp.inputStage;
-    this.flowData.stages = temp.stages || [];
-    this.flowData.dataStructures = temp.dataStructures || {};
-  }
 }

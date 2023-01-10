@@ -1,0 +1,56 @@
+@import 'src/assets/scss/bootstrap/_functions.scss';
+@import 'src/assets/scss/bootstrap/_variables.scss';
+
+.import-wrapper {
+    height: 100vh;
+}
+
+.overlay {
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: rgba($color: #000000, $alpha: 0.6);
+}
+
+.upload-window {
+    height: 100vh;
+    width: 360px;
+    top: 0;
+    right: -360px;
+    z-index: 2;
+    transition: 0.2s;
+
+    &.show {
+        right: 0px !important;
+    }
+}
+
+.azure-logo {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    background-position: center;
+    background-size: cover;
+
+    &:hover {
+        background: $light;
+    }
+}
+
+.id {
+    width: 180px;
+}
+
+.timestamp {
+    width: 160px;
+}
+
+.status {
+    width: 90px;
+}
+
+.message {
+    width: 500px;
+}

@@ -1,31 +1,38 @@
 <div class="d-flex flex-column hooks-content w-100">
-	<div class="top-bar d-flex align-items-center bg-light pl-3">
-		<span class="fa fa-shield-alt mr-2"></span>
-		<span class="font-weight-bold">Nano Services Access Settings</span>
-	</div>
-	
-	<div class="d-flex flex-row">
-		<div class="sideBar d-flex flex-column mr-4">
-			<div class="font-weight-bold py-3">Main</div>
-			<div class="d-flex flex-column border-bottom">
-				<div (click)="selectedException=null"
-				     [ngClass]="{'bg-accent text-white':!selectedException}"
-				     class="expCard d-flex align-items-center hover text-muted-dark px-2">
-					<span class="odp-global fa-sm mr-2"></span>
-					<span class="text">Global Settings</span>
-				</div>
-			</div>
-			<div class="exception">
-				<div class="d-flex justify-content-between">
-					<div class="font-weight-bold py-3">Exceptions</div>
-					<button class="btn btn-link" type="button" (click)="openExceptionModal()" *ngIf="hasPermission('PMGANS')">
-						<span class="fa fa-plus mr-2"></span>
-						<span>Add New</span>
-					</button>
-				</div>
-				<div class="d-flex flex-column">
-					<ng-container *ngFor="let exp of exceptionList">
-						<!--<div class="service-name">
+  <div class="top-bar d-flex align-items-center bg-light pl-3">
+    <span class="fa fa-shield-alt mr-2"></span>
+    <span class="font-weight-bold">Nano Services Access Settings</span>
+  </div>
+
+  <div class="d-flex flex-row">
+    <div class="sideBar d-flex flex-column mr-4">
+      <div class="font-weight-bold py-3">Main</div>
+      <div class="d-flex flex-column border-bottom">
+        <div
+          (click)="selectedException = null"
+          [ngClass]="{ 'bg-accent text-white': !selectedException }"
+          class="expCard d-flex align-items-center hover text-muted-dark px-2"
+        >
+          <span class="odp-global fa-sm mr-2"></span>
+          <span class="text">Global Settings</span>
+        </div>
+      </div>
+      <div class="exception">
+        <div class="d-flex justify-content-between">
+          <div class="font-weight-bold py-3">Exceptions</div>
+          <button
+            class="btn btn-link"
+            type="button"
+            (click)="openExceptionModal()"
+            *ngIf="hasPermission('PMGANS')"
+          >
+            <span class="dsi dsi-plus mr-2"></span>
+            <span>Add</span>
+          </button>
+        </div>
+        <div class="d-flex flex-column">
+          <ng-container *ngFor="let exp of exceptionList">
+            <!--<div class="service-name">
 							<div class="d-flex align-items-start">
 								<span class="odp-entities fa-sm mr-2"></span>
 								<span *ngIf="srvc.name" class="text-secondary font-weight-bold">{{srvc.name}}</span>
@@ -37,18 +44,25 @@
 								<span class="text">Remove</span>
 							</button>
 						</div>-->
-						<div class="expCard d-flex align-items-center text-muted-dark px-2 hover-class"
-						     [ngClass]="{'bg-accent text-white':selectedException && selectedException._id === exp._id}"
-						     (click)="selectedException=exp">
-		                    <span class="odp-exception fa-sm mr-2">
-				                <span class="path1"> </span>
-				                <span class="path2"> </span>
-			                </span>
-							<span class="text">{{exp?.name}}</span>
-							<span class="fa fa-times ml-auto edit-pen mr-3 text-dark"
-							      (click)="removeException(exp)"></span>
-						</div>
-						<!--<div class="d-flex flex-column align-items-center permission-div">
+            <div
+              class="expCard d-flex align-items-center text-muted-dark px-2 hover-class"
+              [ngClass]="{
+                'bg-accent text-white':
+                  selectedException && selectedException._id === exp._id
+              }"
+              (click)="selectedException = exp"
+            >
+              <span class="odp-exception fa-sm mr-2">
+                <span class="path1"> </span>
+                <span class="path2"> </span>
+              </span>
+              <span class="text">{{ exp?.name }}</span>
+              <span
+                class="fa fa-times ml-auto edit-pen mr-3 text-dark"
+                (click)="removeException(exp)"
+              ></span>
+            </div>
+            <!--<div class="d-flex flex-column align-items-center permission-div">
 							<span class="normal-heading mb-3">Permission</span>
 							 <div class="permission-card add d-flex flex-column justify-content-center align-items-center rounded hover"
 							  (click)="toggleDropdown[srvc._id] = hasPermission('PMGANS')?(!toggleDropdown[srvc._id]):false" odpClickOutside
@@ -88,7 +102,7 @@
 								  </div>
 								  <div class="permission-selector-dropdown-item d-flex align-items-center px-2 hover border-top"
 									(click)="removeException(srvc);toggleDropdown[srvc._id]=false">
-									<span class="text-danger font-sm">Remove Exception</span>
+									<span class="text-danger font-13">Remove Exception</span>
 								  </div>
 								</div>
 							  </div>
@@ -99,8 +113,8 @@
 								     class="rounded-dropdown-toggle d-flex align-items-center ignore-outside">
 									<div class="icon d-flex align-items-center justify-content-center">
 										<span *ngIf="getSelectedPermission(srvc) === 'Hide'" class="fa fa-lock"></span>
-										<span *ngIf="getSelectedPermission(srvc) === 'View'" class="fa fa-eye"></span>
-										<span *ngIf="getSelectedPermission(srvc) === 'Manage'" class="fa fa-pen"></span>
+										<span *ngIf="getSelectedPermission(srvc) === 'View'" class="dsi dsi-view"></span>
+										<span *ngIf="getSelectedPermission(srvc) === 'Manage'" class="dsi dsi-edit"></span>
 									</div>
 									<div *ngIf="getSelectedPermission(srvc) === 'Hide'" class="text">Blocked</div>
 									<div *ngIf="getSelectedPermission(srvc) === 'View'" class="text">View</div>
@@ -120,143 +134,254 @@
 									<div (click)="togglePermission('PVNS',srvc);toggleDropdown[srvc._id]=false"
 									     class="rounded-dropdown-item d-flex align-items-center">
 										<div class="icon d-flex align-items-center justify-content-center view">
-											<span class="fa fa-eye"></span>
+											<span class="dsi dsi-view"></span>
 										</div>
 										<div class="text">View</div>
 									</div>
 									<div (click)="togglePermission('PMNS',srvc);toggleDropdown[srvc._id]=false"
 									     class="rounded-dropdown-item d-flex align-items-center">
 										<div class="icon d-flex align-items-center justify-content-center manage">
-											<span class="fa fa-pen"></span>
+											<span class="dsi dsi-edit"></span>
 										</div>
 										<div class="text">Manage</div>
 									</div>
 								</div>
 							</div>
 						</div>-->
-					</ng-container>
-				</div>
-			</div>
-		</div>
-		<div class="d-flex flex-column w-100">
-			<div [ngClass]="{'text-accent':!selectedException,'text-delete':selectedException}" class="p-3">Basic
-				Settings
-			</div>
-			<div class="basic-settings d-flex align-items-start w-100 p-3 border-bottom">
-				<div class="label">
-		          <span class="mr-1">
-			          <span class="text font-weight-bold">Access Level</span>
-			          <br>
-			          <span class="text-muted font-13">
-				          Permission to view or manage a nano service with basic details i.e., name and description.
-			          </span>
-		          </span>
-				</div>
-				<div class="value pl-4 d-flex flex-column">
-					<div class="level-one position-relative mb-3">
-						<div (click)="toggleDropdown['GLOBAL']=hasPermission('PMGANS')?(!toggleDropdown['GLOBAL']):false"
-						     [ngClass]="{'blocked':basicPermission === 'blocked','view':basicPermission === 'view','manage':basicPermission === 'manage','hover':hasPermission('PMGANS')}"
-						     class="rounded-dropdown-toggle d-flex align-items-center ignore-outside">
-							<div class="icon d-flex align-items-center justify-content-center">
-								<span *ngIf="basicPermission === 'blocked'" class="fa fa-lock"></span>
-								<span *ngIf="basicPermission === 'view'" class="fa fa-eye"></span>
-								<span *ngIf="basicPermission === 'manage'" class="fa fa-pen"></span>
-							</div>
-							<div *ngIf="basicPermission === 'blocked'" class="text">Blocked</div>
-							<div *ngIf="basicPermission === 'view'" class="text">View</div>
-							<div *ngIf="basicPermission === 'manage'" class="text">Manage</div>
-							<span *ngIf="hasPermission('PMGANS')" class="fa fa-angle-down fa-sm"></span>
-						</div>
-						<div (outside)="toggleDropdown['GLOBAL']=false" *ngIf="toggleDropdown['GLOBAL']"
-						     class="rounded-dropdown"
-						     odpClickOutside>
-							<div (click)="toggleDropdown['GLOBAL']=false;basicPermission='PNNSB'"
-							     class="rounded-dropdown-item d-flex align-items-center">
-								<div class="icon d-flex align-items-center justify-content-center blocked">
-									<span class="fa fa-lock"></span>
-								</div>
-								<div class="text">Blocked</div>
-							</div>
-							<div (click)="toggleDropdown['GLOBAL']=false;basicPermission='PVNSB'"
-							     class="rounded-dropdown-item d-flex align-items-center">
-								<div class="icon d-flex align-items-center justify-content-center view">
-									<span class="fa fa-eye"></span>
-								</div>
-								<div class="text">View</div>
-							</div>
-							<div (click)="toggleDropdown['GLOBAL']=false;basicPermission=['PMNSBC','PMNSBU','PMNSBD']"
-							     class="rounded-dropdown-item d-flex align-items-center">
-								<div class="icon d-flex align-items-center justify-content-center manage">
-									<span class="fa fa-pen"></span>
-								</div>
-								<div class="text">Manage</div>
-							</div>
-						</div>
-					</div>
-					<div *ngIf="basicPermission==='manage'"
-					     class="level-two position-relative d-flex align-items-center mb-3">
-						<div (click)="togglePermissionLevel('BC')"
-						     [ngClass]="{'checked':createPermission,'disabled':!hasPermission('PM')}"
-						     class="round-checkbox d-flex align-items-center justify-content-between mr-3">
-							<div class="text  font-weight-bold">Create</div>
-							<div class="round-check d-flex align-items-center justify-content-center">
-								<span class="fa fa-check"></span>
-							</div>
-						</div>
-						<div (click)="togglePermissionLevel('BU')"
-						     [ngClass]="{'checked':editPermission,'disabled':!hasPermission('PMGANS')}"
-						     class="round-checkbox d-flex align-items-center justify-content-between mr-3">
-							<div class="text  font-weight-bold">Edit</div>
-							<div class="round-check d-flex align-items-center justify-content-center">
-								<span class="fa fa-check"></span>
-							</div>
-						</div>
-						<div (click)="togglePermissionLevel('BD')"
-						     [ngClass]="{'checked':deletePermission,'disabled':!hasPermission('PMGANS')}"
-						     class="round-checkbox d-flex align-items-center justify-content-between mr-3">
-							<div class="text  font-weight-bold">Delete</div>
-							<div class="round-check d-flex align-items-center justify-content-center">
-								<span class="fa fa-check"></span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<div class="p-3 d-flex align-items-center w-100">
-				<span [ngClass]="{'text-accent':!selectedException,'text-delete':selectedException}"
-				      class="sub-heading">Design Tab</span>
-				<div class="horizontal-labels d-flex align-items-center">
-					<span class="text mr-3 normal-heading">Blocked</span>
-					<span class="text ml-2 normal-heading">View</span>
-					<span class="text ml-4 normal-heading">Manage</span>
-				</div>
-			</div>
-			<div class="roles-settings d-flex align-items-start w-100 p-3 ">
-				<div class="value d-flex flex-column">
-					<div *ngFor="let item of designList" class="roles-row d-flex align-items-center w-100 mb-3">
-						<div class="normal-heading">{{item.label}}</div>
-						<div (click)="changeDPermissionLevel('N',item.segment,item.entity)"
-						     [ngClass]="{'checked':getDPermissionLevel(item.segment,item.entity)=='blocked','locked':!hasPermission('PMGANS')}"
-						     class="big-checkbox d-flex align-items-center justify-content-center mr-3 blocked">
-							<span class="fa fa-check"></span>
-						</div>
-						<div (click)="changeDPermissionLevel('V',item.segment,item.entity)"
-						     [ngClass]="{'checked':getDPermissionLevel(item.segment,item.entity)=='view' || getDPermissionLevel(item.segment,item.entity)=='manage','locked':!hasPermission('PMGANS')}"
-						     class="big-checkbox d-flex align-items-center justify-content-center mr-3 view">
-							<span class="fa fa-check"></span>
-						</div>
-						<div (click)="changeDPermissionLevel('M',item.segment,item.entity)"
-						     [ngClass]="{'checked':getDPermissionLevel(item.segment,item.entity)=='manage','locked':!hasPermission('PMGANS')}"
-						     class="big-checkbox d-flex align-items-center justify-content-center mr-3 manage">
-							<span class="fa fa-check"></span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!--<div class="d-flex align-items-start w-100 py-3 border-bottom">
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column w-100">
+      <div
+        [ngClass]="{
+          'text-accent': !selectedException,
+          'text-delete': selectedException
+        }"
+        class="p-3"
+      >
+        Basic Settings
+      </div>
+      <div
+        class="basic-settings d-flex align-items-start w-100 p-3 border-bottom"
+      >
+        <div class="label">
+          <span class="mr-1">
+            <span class="text font-weight-bold">Access Level</span>
+            <br />
+            <span class="text-muted font-13">
+              Permission to view or manage a nano service with basic details
+              i.e., name and description.
+            </span>
+          </span>
+        </div>
+        <div class="value pl-4 d-flex flex-column">
+          <div class="level-one position-relative mb-3">
+            <div
+              (click)="
+                toggleDropdown['GLOBAL'] = hasPermission('PMGANS')
+                  ? !toggleDropdown['GLOBAL']
+                  : false
+              "
+              [ngClass]="{
+                blocked: basicPermission === 'blocked',
+                view: basicPermission === 'view',
+                manage: basicPermission === 'manage',
+                hover: hasPermission('PMGANS')
+              }"
+              class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
+            >
+              <div
+                class="icon d-flex align-items-center justify-content-center"
+              >
+                <span
+                  *ngIf="basicPermission === 'blocked'"
+                  class="fa fa-lock"
+                ></span>
+                <span
+                  *ngIf="basicPermission === 'view'"
+                  class="dsi dsi-view"
+                ></span>
+                <span
+                  *ngIf="basicPermission === 'manage'"
+                  class="dsi dsi-edit"
+                ></span>
+              </div>
+              <div *ngIf="basicPermission === 'blocked'" class="text">
+                Blocked
+              </div>
+              <div *ngIf="basicPermission === 'view'" class="text">View</div>
+              <div *ngIf="basicPermission === 'manage'" class="text">
+                Manage
+              </div>
+              <span
+                *ngIf="hasPermission('PMGANS')"
+                class="fa fa-angle-down fa-sm"
+              ></span>
+            </div>
+            <div
+              (outside)="toggleDropdown['GLOBAL'] = false"
+              *ngIf="toggleDropdown['GLOBAL']"
+              class="rounded-dropdown"
+              odpClickOutside
+            >
+              <div
+                (click)="
+                  toggleDropdown['GLOBAL'] = false; basicPermission = 'PNNSB'
+                "
+                class="rounded-dropdown-item d-flex align-items-center"
+              >
+                <div
+                  class="icon d-flex align-items-center justify-content-center blocked"
+                >
+                  <span class="fa fa-lock"></span>
+                </div>
+                <div class="text">Blocked</div>
+              </div>
+              <div
+                (click)="
+                  toggleDropdown['GLOBAL'] = false; basicPermission = 'PVNSB'
+                "
+                class="rounded-dropdown-item d-flex align-items-center"
+              >
+                <div
+                  class="icon d-flex align-items-center justify-content-center view"
+                >
+                  <span class="dsi dsi-view"></span>
+                </div>
+                <div class="text">View</div>
+              </div>
+              <div
+                (click)="
+                  toggleDropdown['GLOBAL'] = false;
+                  basicPermission = ['PMNSBC', 'PMNSBU', 'PMNSBD']
+                "
+                class="rounded-dropdown-item d-flex align-items-center"
+              >
+                <div
+                  class="icon d-flex align-items-center justify-content-center manage"
+                >
+                  <span class="dsi dsi-edit"></span>
+                </div>
+                <div class="text">Manage</div>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="basicPermission === 'manage'"
+            class="level-two position-relative d-flex align-items-center mb-3"
+          >
+            <div
+              (click)="togglePermissionLevel('BC')"
+              [ngClass]="{
+                checked: createPermission,
+                disabled: !hasPermission('PM')
+              }"
+              class="round-checkbox d-flex align-items-center justify-content-between mr-3"
+            >
+              <div class="text font-weight-bold">Create</div>
+              <div
+                class="round-check d-flex align-items-center justify-content-center"
+              >
+                <span class="fa fa-check"></span>
+              </div>
+            </div>
+            <div
+              (click)="togglePermissionLevel('BU')"
+              [ngClass]="{
+                checked: editPermission,
+                disabled: !hasPermission('PMGANS')
+              }"
+              class="round-checkbox d-flex align-items-center justify-content-between mr-3"
+            >
+              <div class="text font-weight-bold">Edit</div>
+              <div
+                class="round-check d-flex align-items-center justify-content-center"
+              >
+                <span class="fa fa-check"></span>
+              </div>
+            </div>
+            <div
+              (click)="togglePermissionLevel('BD')"
+              [ngClass]="{
+                checked: deletePermission,
+                disabled: !hasPermission('PMGANS')
+              }"
+              class="round-checkbox d-flex align-items-center justify-content-between mr-3"
+            >
+              <div class="text font-weight-bold">Delete</div>
+              <div
+                class="round-check d-flex align-items-center justify-content-center"
+              >
+                <span class="fa fa-check"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 d-flex align-items-center w-100">
+        <span
+          [ngClass]="{
+            'text-accent': !selectedException,
+            'text-delete': selectedException
+          }"
+          class="sub-heading"
+          >Design Tab</span
+        >
+        <div class="horizontal-labels d-flex align-items-center">
+          <span class="text mr-3 normal-heading">Blocked</span>
+          <span class="text ml-2 normal-heading">View</span>
+          <span class="text ml-4 normal-heading">Manage</span>
+        </div>
+      </div>
+      <div class="roles-settings d-flex align-items-start w-100 p-3">
+        <div class="value d-flex flex-column">
+          <div
+            *ngFor="let item of designList"
+            class="roles-row d-flex align-items-center w-100 mb-3"
+          >
+            <div class="normal-heading">{{ item.label }}</div>
+            <div
+              (click)="changeDPermissionLevel('N', item.segment, item.entity)"
+              [ngClass]="{
+                checked:
+                  getDPermissionLevel(item.segment, item.entity) == 'blocked',
+                locked: !hasPermission('PMGANS')
+              }"
+              class="big-checkbox d-flex align-items-center justify-content-center mr-3 blocked"
+            >
+              <span class="fa fa-check"></span>
+            </div>
+            <div
+              (click)="changeDPermissionLevel('V', item.segment, item.entity)"
+              [ngClass]="{
+                checked:
+                  getDPermissionLevel(item.segment, item.entity) == 'view' ||
+                  getDPermissionLevel(item.segment, item.entity) == 'manage',
+                locked: !hasPermission('PMGANS')
+              }"
+              class="big-checkbox d-flex align-items-center justify-content-center mr-3 view"
+            >
+              <span class="fa fa-check"></span>
+            </div>
+            <div
+              (click)="changeDPermissionLevel('M', item.segment, item.entity)"
+              [ngClass]="{
+                checked:
+                  getDPermissionLevel(item.segment, item.entity) == 'manage',
+                locked: !hasPermission('PMGANS')
+              }"
+              class="big-checkbox d-flex align-items-center justify-content-center mr-3 manage"
+            >
+              <span class="fa fa-check"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--<div class="d-flex align-items-start w-100 py-3 border-bottom">
 	  <div class="service-name">
 		<span class="fa fa-globe mr-2"></span>
 		<span class="font-weight-bold mr-1">Global</span>
@@ -305,8 +430,8 @@
 			[ngClass]="{'blocked':globalPermissionType === 'Hide','view':globalPermissionType === 'View','manage':globalPermissionType === 'Manage','hover':hasPermission('PMGANS')}">
 			<div class="icon d-flex align-items-center justify-content-center">
 			  <span *ngIf="globalPermissionType === 'Hide'" class="fa fa-lock"></span>
-			  <span *ngIf="globalPermissionType === 'View'" class="fa fa-eye"></span>
-			  <span *ngIf="globalPermissionType === 'Manage'" class="fa fa-pen"></span>
+			  <span *ngIf="globalPermissionType === 'View'" class="dsi dsi-view"></span>
+			  <span *ngIf="globalPermissionType === 'Manage'" class="dsi dsi-edit"></span>
 			</div>
 			<div *ngIf="globalPermissionType === 'Hide'" class="text">Blocked</div>
 			<div *ngIf="globalPermissionType === 'View'" class="text">View</div>
@@ -325,14 +450,14 @@
 			<div class="rounded-dropdown-item d-flex align-items-center"
 			  (click)="togglePermission('PVNS');toggleDropdown['GLOBAL']=false">
 			  <div class="icon d-flex align-items-center justify-content-center view">
-				<span class="fa fa-eye"></span>
+				<span class="dsi dsi-view"></span>
 			  </div>
 			  <div class="text">View</div>
 			</div>
 			<div class="rounded-dropdown-item d-flex align-items-center"
 			  (click)="togglePermission('PMNS');toggleDropdown['GLOBAL']=false">
 			  <div class="icon d-flex align-items-center justify-content-center manage">
-				<span class="fa fa-pen"></span>
+				<span class="dsi dsi-edit"></span>
 			  </div>
 			  <div class="text">Manage</div>
 			</div>
@@ -341,43 +466,3 @@
 	  </div>
 	</div>-->
 </div>
-
-<ng-template #exceptionListModal>
-	<div class="modal-body p-4">
-		<div class="d-flex align-items-center font-weight-bold">
-			<odp-library-icon active="true" class="mr-2" size="16"></odp-library-icon>
-			<div class="text">Select Nano Service to add as exception</div>
-		</div>
-		<div class="d-flex align-items-center justify-content-center my-4">
-			<odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=''"></odp-search-box>
-		</div>
-		<div class="service-list">
-			<table class="table table-hover">
-				<thead class="bg-accent text-white">
-				<tr>
-					<th>
-						<odp-table-checkbox [(checked)]="checkAll"></odp-table-checkbox>
-					</th>
-					<th class="align-middle">Name</th>
-					<th class="align-middle">Url</th>
-				</tr>
-				</thead>
-				<tbody>
-				<ng-container *ngFor="let srvc of nanoServiceList|commonFilter:'name':searchTerm">
-					<tr *ngIf="!srvc.hide">
-						<td>
-							<odp-table-checkbox [(checked)]="srvc.selected"></odp-table-checkbox>
-						</td>
-						<td>{{srvc.name}}</td>
-						<td>{{srvc.url}}</td>
-					</tr>
-				</ng-container>
-				</tbody>
-			</table>
-		</div>
-		<div class="d-flex align-items-center justify-content-end">
-			<button (click)="exceptionListModalRef.close(false)" class="btn btn-link mr-3" type="button">Cancel</button>
-			<button (click)="exceptionListModalRef.close(true)" class="btn btn-primary btn-min-width" type="button">Select</button>
-		</div>
-	</div>
-</ng-template>

@@ -14,93 +14,110 @@ export class FieldTypeComponent {
   @Input() basic: boolean;
   private types: Array<any>;
   constructor(private schemaService: SchemaBuilderService) {
-    const self = this;
-    self.types = self.schemaService.getSchemaTypes();
+    this.types = this.schemaService.getSchemaTypes();
   }
 
   makeStructure() {
-    const self = this;
-    if (!self.field.type && !self.field.properties) {
+    if (!this.field.type && !this.field.properties) {
       const tempField: any = {
-        properties: self.field
+        properties: this.field
       };
-      tempField.type = self.field._type;
-      self.field = tempField;
+      tempField.type = this.field._type;
+      this.field = tempField;
     }
   }
 
   getClass(field?: any) {
-    const self = this;
-    self.makeStructure();
+    this.makeStructure();
     if (!field) {
-      field = self.field;
+      field = this.field;
     }
-    const temp = self.types.find(e => e.value === field.type);
+    const temp = this.types.find(e => e.value === field.type);
     if (temp) {
       return temp.class;
     } else {
-      return 'odp-abc';
+      return 'dsi-text';
+    }
+  }
+
+  getStyle(field?: any) {
+    this.makeStructure();
+    if (!field) {
+      field = this.field;
+    }
+    const temp = this.types.find(e => e.value === field.type);
+    if (temp) {
+      return temp.bgColor;
+    } else {
+      return '#E7CBD4';
     }
   }
 
   getLabel(field?: any) {
-    const self = this;
+    let label = '';
     if (!field) {
-      field = self.field;
+      field = this.field;
     }
-    self.makeStructure();
-    const temp = self.types.find(e => e.value === field.type);
-    if (self.basic) {
-      return temp ? temp.label : 'Text';
+    this.makeStructure();
+    const temp = this.types.find(e => e.value === field.type);
+    if (this.basic) {
+      label = temp ? temp.label : 'Text';
     }
     if (field.type === 'String') {
       if (field.properties.email) {
-        return 'Email';
+        label = 'Email';
+      } else if (field.properties.longText) {
+        label = 'Long Text';
+      } else if (field.properties.richText) {
+        label = 'Rich Text';
+      } else if (field.properties._detailedType && field.properties._detailedType === 'enum') {
+        label = 'List of values';
+      } else {
+        label = 'Text';
       }
-      if (field.properties.password) {
-        return 'Secure Text';
-      }
-      if (field.properties.longText) {
-        return 'Long Text';
-      }
-      if (field.properties.richText) {
-        return 'Rich Text';
-      }
-      if (field.properties._detailedType && field.properties._detailedType === 'enum') {
-        return 'List of values';
-      }
-      return 'Text';
     } else if (field.type === 'Number') {
       if (field.properties._detailedType && field.properties._detailedType === 'enum') {
-        return 'List of values';
+        label = 'List of values';
+      } else if (field.properties._detailedType && field.properties._detailedType === 'currency') {
+        label = 'Currency';
+      } else {
+        label = 'Number';
       }
-      if (field.properties._detailedType && field.properties._detailedType === 'currency') {
-        return 'Currency';
-      }
-      return 'Number';
     } else if (field.type === 'Date') {
       if (field.properties.dateType && field.properties.dateType === 'date') {
-        return 'Date';
+        label = 'Date';
+      } else if (field.properties.dateType && field.properties.dateType === 'datetime-local') {
+        label = 'Date & Time';
       }
-      if (field.properties.dateType && field.properties.dateType === 'datetime-local') {
-        return 'Date & Time';
-      }
+    } else {
+      label = temp ? temp.label : 'Text';
     }
-    return temp ? temp.label : 'Text';
+    // if (field.properties.password) {
+    //   label += '  [secure]';
+    // }
+    if (!label) {
+      label = 'Text';
+    }
+    return label;
   }
 
   get collectionType() {
-    const self = this;
-    if (self.field.type === 'Array' && self.field.definition && self.field.definition.length > 0) {
-      return self.getLabel(self.field.definition[0]);
+    if (this.field.type === 'Array' && this.field.definition && this.field.definition.length > 0) {
+      return this.getLabel(this.field.definition[0]);
     }
     return null;
   }
 
   get collectionClass() {
-    const self = this;
-    if (self.field.type === 'Array' && self.field.definition && self.field.definition.length > 0) {
-      return self.getClass(self.field.definition[0]);
+    if (this.field.type === 'Array' && this.field.definition && this.field.definition.length > 0) {
+      return this.getClass(this.field.definition[0]);
+    }
+    return null;
+  }
+
+  get collectionStyle() {
+    if (this.field.type === 'Array' && this.field.definition && this.field.definition.length > 0) {
+      return this.getStyle(this.field.definition[0]);
     }
     return null;
   }

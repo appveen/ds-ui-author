@@ -1,7 +1,7 @@
 <div class="relation-properties-wrapper" [formGroup]="properties">
-  <div class="d-flex w-100 mb-4">
-    <div class="label-width text-secondary">Relates To</div>
-    <div class="value-width">
+  <div class="w-100 mb-4">
+    <div class="text-secondary">Relates To</div>
+    <div>
       <ng-container *ngIf="edit.status">
         <input *ngIf="services && services.length!=0 && services.length>10" class="form-control" type="text"
           [ngbTypeahead]="searchService" [inputFormatter]="serviceFormatter" #relation="ngbTypeahead" id="relatedTo"
@@ -16,26 +16,29 @@
       <span *ngIf="!edit.status && !relatedToName" class="text-muted">Not Defined</span>
     </div>
   </div>
-  <div class="sub-heading text-secondary bg-light mb-3 p-2">Advanced
-    Properties</div>
-  <div class="d-flex w-100 mb-4">
-    <div class="label-width text-secondary">Search On Field</div>
-    <div class="value-width">
-      <select *ngIf="edit.status" class="form-control" #selectedViewField formControlName="relatedSearchField" id="searchOnField"
-        (change)="onSelectSearchField(attributeList[selectedViewField.selectedIndex])">
-        <option *ngFor="let attr of attributeList" [value]="attr?.properties?.dataPath" onchange="">{{attr?.properties?.name}}</option>
+  <div class="mt-4 font-16 fw-400 mb-3">
+    Advanced Properties
+  </div>
+  <div class="w-100 mb-4">
+    <div class="text-secondary">Search On Field</div>
+    <div>
+      <select *ngIf="edit.status" class="form-control" #selectedViewField formControlName="relatedSearchField"
+        id="searchOnField" (change)="onSelectSearchField(attributeList[selectedViewField.selectedIndex])">
+        <option *ngFor="let attr of attributeList" [value]="attr?.properties?.dataPath" onchange="">
+          {{attr?.properties?.name}}</option>
       </select>
       <span *ngIf="!edit.status && relatedSearchField">{{getViewLabel}}</span>
       <span *ngIf="!edit.status && !relatedSearchField" class="text-muted">Not Defined</span>
     </div>
   </div>
-  <div class="d-flex w-100 mb-4">
-    <div class="label-width text-secondary">View Fields</div>
-    <div class="value-width">
+  <div class="w-100 mb-4">
+    <div class="text-secondary">View Fields</div>
+    <div>
       <select *ngIf="edit.status" class="form-control" #selectedField formControlName="_listInput"
         (change)="addToList('relatedViewFields',attributeList[selectedField.selectedIndex-1])">
         <option [value]="null">---select---</option>
-        <option *ngFor="let attr of attributeList" [value]="attr?.properties?.dataKeyPath">{{attr?.properties?.name}}</option>
+        <option *ngFor="let attr of attributeList" [value]="attr?.properties?.dataKeyPath">{{attr?.properties?.name}}
+        </option>
       </select>
     </div>
   </div>
@@ -50,7 +53,7 @@
     <button type="button" class="btn btn-dark my-1 w-100" *ngIf="relatedViewFields.length>2 && edit.status"
       (click)="clearViewFields()">Clear All</button>
   </div>
-  <div class="d-flex w-100 mb-4">
+  <div class="d-flex w-100 mb-4 flex-column">
     <div class="label-width text-secondary">Default Value</div>
     <div class="value-width d-flex align-items-center">
       <ng-container *ngIf="edit.status">
@@ -58,9 +61,9 @@
           #defaultEle="ngbTypeahead" id="defaultEle" formControlName="_default" (selectItem)="selectDocument($event)"
           [resultFormatter]="documentFormatter" [disabled]="properties.get('default').disabled"
           *ngIf="documents && ( documents.length> 10 || isSerachFieldSecureTxt)">
-        <select *ngIf="documents && documents.length!=0 && documents.length<=10 && !isSerachFieldSecureTxt" id="relatedTo" class="form-control"
-          (change)="changeDefault($event)" [ngModel]="properties.get('default').value"
-          [ngModelOptions]="{standalone: true}">
+        <select *ngIf="documents && documents.length!=0 && documents.length<=10 && !isSerachFieldSecureTxt"
+          id="relatedTo" class="form-control" (change)="changeDefault($event)"
+          [ngModel]="properties.get('default').value" [ngModelOptions]="{standalone: true}">
           <option [value]="null">---select---</option>
           <option *ngFor="let item of documents" [value]="item._id">
             {{documentFormatter(item)}}</option>
@@ -71,14 +74,12 @@
       <span *ngIf="!edit.status && !default" class="text-muted">Not Defined</span>
     </div>
   </div>
-  <div class="d-flex w-100 mb-4" *ngIf="!required">
-    <div class="label-width text-secondary">Allow deletion of related records</div>
-    <div class="value-width">
+  <div class="w-100 mb-4" *ngIf="!required">
+    <div class="text-secondary">Allow deletion of related records</div>
+    <div>
       <odp-switch [edit]="edit" [(checked)]="allowDeletion"></odp-switch>
     </div>
   </div>
 </div>
 
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-  <odp-service-icon [size]="18" color="DD5151" class="mt-1"></odp-service-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

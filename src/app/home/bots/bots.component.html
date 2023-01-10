@@ -1,13 +1,15 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+          </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
 <div class="d-flex flex-column position-relative">
     <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
     <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3">
-        <div class="font-weight-bold font-lg">List of Bots</div>
+        <div class="font-weight-bold font-16">List of Bots</div>
         <odp-search-box (enteredText)="search($event)" (reset)="clearSearch()"></odp-search-box>
         <div class="d-flex align-items-center">
             <div class="d-flex align-items-center mr-3">
@@ -20,7 +22,7 @@
             </div>
             <ng-container *ngIf="selected==0 && hasPermission('PMB')">
                 <button class="add-new btn-min-width btn btn-primary" (click)="newBot()">
-                    <span class="fa fa-plus mr-2"></span>
+                    <span class="dsi dsi-plus mr-2"></span>
                     <span class="text">New Bot</span>
                 </button>
             </ng-container>
@@ -188,12 +190,7 @@
 <ng-template #newBotModal>
     <div class="modal-body px-4 py-3">
         <div class="d-flex align-items-center justify-content-between mb-3">
-            <div class="d-flex align-items-center ">
-                <span class="icon-wrapper create rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-bot-icon [size]="18" color="1CAD49"></odp-bot-icon>
-                </span>
-                <span class="font-weight-bold">Create new Bot</span>
-            </div>
+            <span class="font-20 fw-600">Create new Bot</span>
             <span class="fa fa-times text-muted hover" (click)="newBotModalRef.close()"></span>
         </div>
         <div class="d-flex align-items-center ml-2">
@@ -209,7 +206,7 @@
                     <div class="value-width position-relative w-100">
                         <input class="form-control" type="text" placeholder="Enter Client ID" formControlName="username"
                             odpAutoFocus (blur)="checkForDuplicate()" [ngClass]="{'is-invalid': invalidBotname}">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidBotname" ngbTooltip="This is a required field" placement="right"></span>
                         <span *ngIf="userForm.get('userData.username').hasError('pattern')"
                             class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
@@ -221,7 +218,7 @@
                     <div class="value-width position-relative w-100" formGroupName="basicDetails">
                         <input #botNameControl class="form-control pr-4" type="text" placeholder="Enter Name"
                             formControlName="name" [ngClass]="{'is-invalid': invalidName}">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidName" ngbTooltip="This is a required field" placement="right"></span>
                         <span *ngIf="userForm.get('userData.basicDetails.name').hasError('pattern')"
                             class="text-danger position-absolute fa fa-exclamation-circle error-icon" container="body"
@@ -237,9 +234,9 @@
                         <input #botPasswordControl class="form-control" type="password" placeholder="Client Secret"
                             formControlName="password"
                             [ngClass]="{'is-invalid': invalidPassword || invalidPasswordLength}">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidPassword" ngbTooltip="This is a required field" placement="right"></span>
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidPasswordLength" ngbTooltip="Password should be minimum 8 chars long"
                             placement="right"></span>
                     </div>
@@ -256,12 +253,12 @@
                     <div class="value-width position-relative w-100" formGroupName="basicDetails">
                         <input class="form-control" type="text" placeholder="Enter Email Address"
                             formControlName="email" [ngClass]="{'is-invalid': invalidEmail}">
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidEmail" ngbTooltip="Enter a valid email" placement="right"></span>
                     </div>
                 </div> -->
             </div>
-            <div *ngIf="hasPermission('PMG') && teamsArray.length>0">
+            <div *ngIf="hasPermission('PMG') && groupList.length>0">
                 <div class="d-flex w-100">
                     <div class="label-width text-secondary">Teams</div>
                     <div class="value-width position-relative w-100">
@@ -279,7 +276,7 @@
                                 class="teamList border mt-2 position-absolute w-100 ignore-outside"
                                 [ngClass]="{'teamList-newHeight':!userExist}">
                                 <ul class="p-0 mb-0 ignore-outside" formArrayName="teamData">
-                                    <li *ngFor="let team of teamsArray; index as teamIndex"
+                                    <li *ngFor="let team of groupList; index as teamIndex"
                                         class="p-2 hover ignore-outside">
                                         <label class="ignore-outside team-checkbox hover font-normal">
                                             {{teamList[teamIndex].name}}
@@ -291,7 +288,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <span class="fas fa-question-circle text-danger error-icon position-absolute"
+                        <span class="dsi dsi-danger-circle text-danger error-icon position-absolute"
                             *ngIf="invalidTeamSize" ngbTooltip="Bot should be part of at-least one team"
                             placement="right"></span>
                     </div>

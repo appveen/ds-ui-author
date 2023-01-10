@@ -1,52 +1,41 @@
-<div class="d-flex flex-column hooks-content w-100">
-  <div class="top-bar d-flex align-items-center justify-content-between bg-light pl-3">
-    <span class="font-weight-bold">Library Access Settings</span>
+<div class="d-flex flex-column groups-content w-100 p-4">
+  <div class="top-bar d-flex align-items-center justify-content-between">
+    <div class="w-100">
+      <h5 class="font-weight-bold font-20">Library</h5>
+    </div>
+    <!-- <select name="permissions" id="permissions" class="all-permissions-selector custom-select"
+      [ngModel]="globalPermission" (ngModelChange)="changeAllPermissions($event)">
+      <option value="custom">Custom</option>
+      <option value="blocked">None</option>
+      <option value="view">View</option>
+      <option value="manage">Manage</option>
+    </select> -->
   </div>
-  <div class="d-flex align-items-start w-100 py-3 border-bottom">
-    <!-- <div class="service-name">
-      <span class="fa fa-globe mr-2"></span>
-      <span class="font-weight-bold mr-1">Global</span>
-      <span class="text-accent">(All Libraries)</span>
-    </div> -->
-    <div class="d-flex flex-column align-items-center permission-div">
-      <span class="normal-heading mb-3">Permission</span>
-      <div class="position-relative">
-        <div class="rounded-dropdown-toggle d-flex align-items-center ignore-outside"
-          (click)="toggleDropdown['GLOBAL']=hasPermission('PMGAL')?(!toggleDropdown['GLOBAL']):false"
-          [ngClass]="{'blocked':globalPermissionType === 'Hide','view':globalPermissionType === 'View','manage':globalPermissionType === 'Manage','hover':hasPermission('PMGAL')}">
-          <div class="icon d-flex align-items-center justify-content-center">
-            <span *ngIf="globalPermissionType === 'Hide'" class="fa fa-lock"></span>
-            <span *ngIf="globalPermissionType === 'View'" class="fa fa-eye"></span>
-            <span *ngIf="globalPermissionType === 'Manage'" class="fa fa-pen"></span>
-          </div>
-          <div *ngIf="globalPermissionType === 'Hide'" class="text">Blocked</div>
-          <div *ngIf="globalPermissionType === 'View'" class="text">View</div>
-          <div *ngIf="globalPermissionType === 'Manage'" class="text">Manage</div>
-          <span *ngIf="hasPermission('PMGAL')" class="fa fa-angle-down fa-sm"></span>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex justify-content-between border-bottom mt-4">
+      <div>
+        <div class="p-3 text-dark">
+          <div class="font-weight-bold">Access Level</div>
+          <span class="text-muted font-13">
+            Permission to manage Library.
+          </span>
         </div>
-        <div *ngIf="toggleDropdown['GLOBAL']" class="rounded-dropdown" odpClickOutside
-          (outside)="toggleDropdown['GLOBAL']=false">
-          <div class="rounded-dropdown-item d-flex align-items-center"
-            (click)="togglePermission('PNL');toggleDropdown['GLOBAL']=false">
-            <div class="icon d-flex align-items-center justify-content-center blocked">
-              <span class="fa fa-lock"></span>
-            </div>
-            <div class="text">Blocked</div>
-          </div>
-          <div class="rounded-dropdown-item d-flex align-items-center"
-            (click)="togglePermission('PVL');toggleDropdown['GLOBAL']=false">
-            <div class="icon d-flex align-items-center justify-content-center view">
-              <span class="fa fa-eye"></span>
-            </div>
-            <div class="text">View</div>
-          </div>
-          <div class="rounded-dropdown-item d-flex align-items-center"
-            (click)="togglePermission('PML');toggleDropdown['GLOBAL']=false">
-            <div class="icon d-flex align-items-center justify-content-center manage">
-              <span class="fa fa-pen"></span>
-            </div>
-            <div class="text">Manage</div>
-          </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="libraryBlocked" name="library" size="20" [checked]="permissionType=='blocked'"
+            (checkedChange)="permissionType='PNL'"></odp-round-radio>
+          <span class="text-dark ml-2">Blocked</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="libraryView" name="library" size="20" [checked]="permissionType=='view'"
+            (checkedChange)="permissionType='PVL'"></odp-round-radio>
+          <span class="text-dark ml-2">View</span>
+        </div>
+        <div class="permission-btn-block d-flex align-items-center justify-content-end">
+          <odp-round-radio [edit]="edit" id="libraryManage" name="library" size="20" [checked]="permissionType=='manage'"
+            (checkedChange)="permissionType='PML'"></odp-round-radio>
+          <span class="text-dark ml-2">Manage</span>
         </div>
       </div>
     </div>

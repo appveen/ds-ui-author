@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import * as _ from 'lodash';
+
 import { CommonService } from 'src/app/utils/services/common.service';
 
 @Component({
@@ -13,50 +15,65 @@ export class GroupAuthorBotsComponent implements OnInit {
   dropdownToggle: {
     [key: string]: boolean;
   };
+  edit: any;
+  managePermissions: Array<string>;
+  viewPermissions: Array<string>;
   constructor(private commonService: CommonService) {
-    const self = this;
-    self.rolesChange = new EventEmitter();
-    self.dropdownToggle = {};
+    this.rolesChange = new EventEmitter();
+    this.dropdownToggle = {};
+    this.edit = { status: true };
+    this.managePermissions = ['PMBBC', 'PMBBU', 'PMBBD', 'PMBA', 'PMBG'];
+    this.viewPermissions = ['PVBB'];
   }
 
   ngOnInit() {
-    const self = this;
-  }
-
-  togglePermissionLevel(segment: string) {
-    const self = this;
-    const blockedIndex = self.roles.findIndex(r => r.id === 'PMBB' + segment && r.entity === 'USER');
-    if (blockedIndex > -1) {
-      self.roles.splice(blockedIndex, 1);
-    } else {
-      self.roles.push(self.getPermissionObject('PMBB' + segment, 'USER'));
-    }
   }
 
   getPermissionObject(id: string, entity: any) {
-    const self = this;
     return {
       id: id,
-      app: self.commonService.app._id,
+      app: this.commonService.app._id,
       entity: entity,
       type: 'author'
     };
   }
 
-  showHelp() {
-    const self = this;
-
+  hasPermission(type: string) {
+    return this.commonService.hasPermission(type);
   }
 
-  hasPermission(type: string) {
-    const self = this;
-    return self.commonService.hasPermission(type);
+  changeAllPermissions(val: string) {
+    if (val == 'manage') {
+      _.remove(this.roles, (item) => item.id.startsWith('PMB') || item.id.startsWith('PVB'));
+      this.managePermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item, 'USER'));
+      });
+    } else if (val == 'view') {
+      _.remove(this.roles, (item) => item.id.startsWith('PMB') || item.id.startsWith('PVB'));
+      this.viewPermissions.forEach(item => {
+        this.roles.push(this.getPermissionObject(item, 'USER'));
+      });
+    } else if (val == 'blocked') {
+      _.remove(this.roles, (item) => item.id.startsWith('PMB') || item.id.startsWith('PVB'));
+    }
+  }
+
+  get globalPermission() {
+    const perms = this.roles.map(e => e.id);
+    if (_.intersection(this.managePermissions, perms).length === this.managePermissions.length) {
+      return 'manage';
+    } else if (_.intersection(this.viewPermissions, perms).length === this.viewPermissions.length) {
+      return 'view';
+    } else if (perms.length == 0) {
+      return 'blocked';
+    } else {
+      return 'custom';
+    }
   }
 
   get basicPermission() {
-    const self = this;
-    const viewIndex = self.roles.findIndex(r => r.id === 'PVBB' && r.entity === 'USER');
-    const manageIndex = self.roles.findIndex(r => (r.id === 'PMBBC' || r.id === 'PMBBU' || r.id === 'PMBBD') && r.entity === 'USER');
+    const viewIndex = this.roles.findIndex(r => r.id === 'PVBB' && r.entity === 'USER');
+    const manageIndex = this.roles.findIndex(r => (r.id === 'PMBBC' || r.id === 'PMBBU' || r.id === 'PMBBD') && r.entity === 'USER');
     if (manageIndex > -1) {
       return 'manage';
     }
@@ -67,43 +84,41 @@ export class GroupAuthorBotsComponent implements OnInit {
   }
 
   set basicPermission(val: any) {
-    const self = this;
-    const blockedIndex = self.roles.findIndex(r => r.id === 'PNBB' && r.entity === 'USER');
+    const blockedIndex = this.roles.findIndex(r => r.id === 'PNBB' && r.entity === 'USER');
     if (blockedIndex > -1) {
-      self.roles.splice(blockedIndex, 1);
+      this.roles.splice(blockedIndex, 1);
     }
-    const viewIndex = self.roles.findIndex(r => r.id === 'PVBB' && r.entity === 'USER');
+    const viewIndex = this.roles.findIndex(r => r.id === 'PVBB' && r.entity === 'USER');
     if (viewIndex > -1) {
-      self.roles.splice(viewIndex, 1);
+      this.roles.splice(viewIndex, 1);
     }
-    const createIndex = self.roles.findIndex(r => r.id === 'PMBBC' && r.entity === 'USER');
+    const createIndex = this.roles.findIndex(r => r.id === 'PMBBC' && r.entity === 'USER');
     if (createIndex > -1) {
-      self.roles.splice(createIndex, 1);
+      this.roles.splice(createIndex, 1);
     }
-    const editIndex = self.roles.findIndex(r => r.id === 'PMBBU' && r.entity === 'USER');
+    const editIndex = this.roles.findIndex(r => r.id === 'PMBBU' && r.entity === 'USER');
     if (editIndex > -1) {
-      self.roles.splice(editIndex, 1);
+      this.roles.splice(editIndex, 1);
     }
-    const deleteIndex = self.roles.findIndex(r => r.id === 'PMBBD' && r.entity === 'USER');
+    const deleteIndex = this.roles.findIndex(r => r.id === 'PMBBD' && r.entity === 'USER');
     if (deleteIndex > -1) {
-      self.roles.splice(deleteIndex, 1);
+      this.roles.splice(deleteIndex, 1);
     }
     if (Array.isArray(val)) {
       val.forEach(item => {
-        self.roles.push(self.getPermissionObject(item, 'USER'));
+        this.roles.push(this.getPermissionObject(item, 'USER'));
       });
     } else {
       if (val === 'PNBB') {
-        self.sessionPermission = 'PNBA';
-        self.groupPermission = 'PNBG';
+        this.sessionPermission = 'PNBA';
+        this.groupPermission = 'PNBG';
       }
-      self.roles.push(self.getPermissionObject(val, 'USER'));
+      this.roles.push(this.getPermissionObject(val, 'USER'));
     }
   }
 
   get sessionPermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMBA');
+    const manageIndex = this.roles.findIndex(r => r.id === 'PMBA');
     if (manageIndex > -1) {
       return 'manage';
     }
@@ -111,30 +126,28 @@ export class GroupAuthorBotsComponent implements OnInit {
   }
 
   set sessionPermission(val: any) {
-    const self = this;
-    const blockedIndex = self.roles.findIndex(r => r.id === 'PNBA' && r.entity === 'USER');
+    const blockedIndex = this.roles.findIndex(r => r.id === 'PNBA' && r.entity === 'USER');
     if (blockedIndex > -1) {
-      self.roles.splice(blockedIndex, 1);
+      this.roles.splice(blockedIndex, 1);
     }
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMBA' && r.entity === 'USER');
+    const manageIndex = this.roles.findIndex(r => r.id === 'PMBA' && r.entity === 'USER');
     if (manageIndex > -1) {
-      self.roles.splice(manageIndex, 1);
+      this.roles.splice(manageIndex, 1);
     }
     if (Array.isArray(val)) {
       val.forEach(item => {
-        self.roles.push(self.getPermissionObject(item, 'USER'));
+        this.roles.push(this.getPermissionObject(item, 'USER'));
       });
     } else {
-      if (val === 'PMBA' && self.basicPermission === 'blocked') {
-        self.basicPermission = 'PVBB';
+      if (val === 'PMBA' && this.basicPermission === 'blocked') {
+        this.basicPermission = 'PVBB';
       }
-      self.roles.push(self.getPermissionObject(val, 'USER'));
+      this.roles.push(this.getPermissionObject(val, 'USER'));
     }
   }
 
   get groupPermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMBG');
+    const manageIndex = this.roles.findIndex(r => r.id === 'PMBG');
     if (manageIndex > -1) {
       return 'manage';
     }
@@ -142,51 +155,23 @@ export class GroupAuthorBotsComponent implements OnInit {
   }
 
   set groupPermission(val: any) {
-    const self = this;
-    const blockedIndex = self.roles.findIndex(r => r.id === 'PNBG' && r.entity === 'USER');
+    const blockedIndex = this.roles.findIndex(r => r.id === 'PNBG' && r.entity === 'USER');
     if (blockedIndex > -1) {
-      self.roles.splice(blockedIndex, 1);
+      this.roles.splice(blockedIndex, 1);
     }
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMBG' && r.entity === 'USER');
+    const manageIndex = this.roles.findIndex(r => r.id === 'PMBG' && r.entity === 'USER');
     if (manageIndex > -1) {
-      self.roles.splice(manageIndex, 1);
+      this.roles.splice(manageIndex, 1);
     }
     if (Array.isArray(val)) {
       val.forEach(item => {
-        self.roles.push(self.getPermissionObject(item, 'USER'));
+        this.roles.push(this.getPermissionObject(item, 'USER'));
       });
     } else {
-      if (val === 'PMBG' && self.basicPermission === 'blocked') {
-        self.basicPermission = 'PVBB';
+      if (val === 'PMBG' && this.basicPermission === 'blocked') {
+        this.basicPermission = 'PVBB';
       }
-      self.roles.push(self.getPermissionObject(val, 'USER'));
+      this.roles.push(this.getPermissionObject(val, 'USER'));
     }
-  }
-
-  get createPermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMBBC' && r.entity === 'USER');
-    if (manageIndex > -1) {
-      return true;
-    }
-    return false;
-  }
-
-  get editPermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMBBU' && r.entity === 'USER');
-    if (manageIndex > -1) {
-      return true;
-    }
-    return false;
-  }
-
-  get deletePermission() {
-    const self = this;
-    const manageIndex = self.roles.findIndex(r => r.id === 'PMBBD' && r.entity === 'USER');
-    if (manageIndex > -1) {
-      return true;
-    }
-    return false;
   }
 }

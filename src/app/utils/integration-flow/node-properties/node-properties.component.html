@@ -9,7 +9,7 @@
                             {{node.name}}
                         </span>
                         <span *ngIf="!node.name" class="text-muted mr-2">Untitled Node</span>
-                        <span *ngIf="edit.status" class="fa fa-pen fa-xs text-muted"
+                        <span *ngIf="edit.status" class="dsi dsi-edit fa-xs text-muted"
                             (click)="editNodeName=true;$event.stopPropagation()"></span>
                     </ng-container>
                     <ng-container *ngIf="editNodeName">

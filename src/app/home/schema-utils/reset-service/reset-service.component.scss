@@ -1,0 +1,11 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+
+.reset-wrapper {
+    min-height: calc(100vh - 274px);
+}
+
+.w-500 {
+    width: 500px;
+}

@@ -82,6 +82,34 @@ export class TextPropertyComponent implements OnDestroy {
     }
   }
 
+
+  collectionSecureText() {
+    const self = this;
+    let props = self.form.get('properties');
+
+    if (self.form.get('key')?.value == '_self' && self.form.get('type')?.value == 'String') {
+      if (props.get('richText').value || (props.get('longText').value)) {
+        return true;
+      }
+    }
+  }
+
+  showSecureText() {
+    const self = this;
+    let props = self.form.get('properties');
+    if (self.collectionSecureText()) {
+      return true
+    }
+    if (self.form.get('type').value == 'String') {
+      if (!props.get('richText').value && !(props.get('longText').value) && !(props.get('email').value) && !(props.get('_detailedType') && props.get('_detailedType').value === 'enum')) {
+        return true;
+      }
+    }
+    else {
+      return false;
+    }
+  }
+
   generateSampleRegex(value) {
     const self = this;
     self.sampleRegexValue = [];
@@ -278,7 +306,7 @@ export class TextPropertyComponent implements OnDestroy {
   isPlainString(prop) {
     if ((prop.get('email').value ||
       prop.get('longText').value ||
-      prop.get('richText').value || prop.get('password').value
+      prop.get('richText').value
       || prop.get('_detailedType').value === 'enum')) {
       return false;
     } else {

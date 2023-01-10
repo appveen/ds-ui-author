@@ -1,82 +1,63 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
 
-<div class="grid-container">
-    <ag-grid-angular #agGrid class="ag-theme-balham" [gridOptions]="gridOptions" [rowData]="userAttributeList | agGridFilter:filterModel"
-        [frameworkComponents]="frameworkComponents" (filterModified)="!filtering && onFilterChanged($event)">
-    </ag-grid-angular>
+
+
+<div class="d-flex mb-4">
+    <div>
+        <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect(null)" [selectOnEnter]="true"
+            [open]="true">
+        </odp-search-box>
+    </div>
+    <div class="d-flex ml-auto mr-2">
+        <div class="add-attribute hover d-flex" (click)="add()">
+            <i class="dsi dsi-plus-circle font-20 icon-primary mr-2"></i>
+            <label class="fw-500 font-normal heading">Add Property</label>
+
+        </div>
+    </div>
 </div>
 
-<ng-template #editAttributeModal>
-    <div class="modal-body p-4 ignore-outside">
-        <div class="d-flex justify-content-between">
-            <div class="font-lg mb-3">
-                <strong class="">Edit Attribute</strong>
+
+<div class="grid-container">
+    <div class="scroll-pane">
+        <div class="list-group mb-3">
+            <div class="list-group-item header py-0 bg-light text-muted text-uppercase font-11">
+                <div class="d-flex align-items-center justify-content-between h-100">
+                    <div class="d-flex-1">LABEL</div>
+                    <div class="d-flex-1">TYPE</div>
+                    <div class="d-flex-1">VALUE</div>
+                    <div class="group-actions"></div>
+                </div>
             </div>
-        </div>
-        <ng-container [formGroup]="editAttributeForm">
-            <div class="form-group position-relative">
-                <label for="key">Label<sup class="text-danger">*</sup></label>
-                <input id="key" type="text" class="form-control" formControlName="label">
-                <ng-container *ngIf="!editAttributeForm.get('label').pristine">
-                    <span *ngIf="editAttributeForm.get('label').hasError('required')"
-                        class="text-danger position-absolute fa fa-exclamation-circle error-icon-attr" container="body"
-                        ngbTooltip="This is a required field"></span>
-                    <span *ngIf="editAttributeForm.get('label').hasError('maxlength')"
-                        class="text-danger position-absolute fa fa-exclamation-circle error-icon-attr" container="body"
-                        ngbTooltip="Name should be within 30 characters"></span>
-                </ng-container>
-            </div>
-            <div class="form-group">
-                <label for="key">Key</label>
-                <input id="key" type="text" class="form-control" formControlName="key">
-                <small class="form-text"></small>
-            </div>
-            <div class="form-group input-wrapper position-relative">
-                <label for="type">Type</label>
-                <div id="type" ngbDropdown #listDropdown="ngbDropdown" class="w-100" container="body">
-                    <button class="btn bg-white border rounded w-100 d-flex justify-content-between align-items-center" ngbDropdownToggle>
-                        <odp-field-type [label]="true" [field]="{type:editAttributeForm.get('type').value,properties:{}}">
-                        </odp-field-type>
-                    </button>
-                    <div ngbDropdownMenu>
-                        <div class="dropdown-itm px-2 py-1" *ngFor="let type of types" (click)="editAttributeForm.get('type').setValue(type.value);editAttributeForm.get('value').setValue(null);listDropdown.close();">
-                            <odp-field-type [label]="true" [field]="{type:type.value,properties:{}}">
-                            </odp-field-type>
-                        </div>
+            <div class="list-group-item" *ngFor="let attr of data">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex-1">{{attr.label}}</div>
+                    <div class="d-flex-1">{{attr.type}}</div>
+                    <div class="d-flex-1">{{attr.value}}</div>
+
+                    <div class="group-actions">
+                        <button type="button" class="btn btn-link text-muted p-1" (click)="openEditAttributeModal(attr)"
+                            ngbTooltip="Edit" *ngIf="hasPermission('PMBU')">
+                            <span class="dsi dsi-edit"></span>
+                        </button>
+                        <button type="button" class="btn btn-link text-muted p-1" (click)="deleteAdditionInfo(attr.key)"
+                            ngbTooltip="Delete" *ngIf="hasPermission('PMBU')">
+                            <span class="dsi dsi-trash"></span>
+                        </button>
                     </div>
                 </div>
             </div>
-            <div class="form-group position-relative">
-                <label for="value">Value</label>
-                <input *ngIf="editAttributeForm.get('type').value === 'String'" id="value" type="text" class="form-control"
-                    formControlName="value">
-                <input *ngIf="editAttributeForm.get('type').value === 'Number'" id="value" type="number" class="form-control"
-                    formControlName="value">
-                <input *ngIf="editAttributeForm.get('type').value === 'Date'" id="value" type="date" class="form-control"
-                    formControlName="value">
-                <odp-switch *ngIf="editAttributeForm.get('type').value === 'Boolean'" [edit]="{status:true}"
-                    [checked]="editAttributeForm.get('value').value" (checkedChange)="editAttributeForm.get('value').setValue($event)">
-                </odp-switch>
-                <span class="fas fa-question-circle text-danger error-icon-attr position-absolute"
-                    *ngIf="editAttributeForm.get('type').value !== 'Boolean' && getValError(editAttributeForm)"
-                    ngbTooltip="This is a required field" container="body" placement="top">
-                </span>
-            </div>
-        </ng-container>
-        <div class="d-flex align-items-center justify-content-end mt-4">
-            <button type="button" class="btn btn-min-width btn-dark ignore-click mr-3"
-                (click)="editAttributeModalRef.close(false)">Cancel</button>
-            <button type="button" class="btn btn-min-width btn-success ignore-click" [disabled]="editAttributeForm.invalid"
-                (click)="editAttributeModalRef.close(true)">Save</button>
         </div>
     </div>
-</ng-template>
+</div>
 
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-    <odp-user-icon [size]="18" color="202A36" class="mt-1"></odp-user-icon>
-</odp-delete-modal>
+
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

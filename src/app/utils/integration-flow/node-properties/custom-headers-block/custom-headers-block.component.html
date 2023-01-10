@@ -1,27 +1,63 @@
 <ng-container *ngIf="!hideBlock && showHeaders">
-    <div class="form-group">
-        <label for="headers">Custom Headers<br>
-            <small class="text-muted">(Manipulating Headers will reset the mappinng)</small>
-        </label>
-        <div class="d-flex align-items-center mb-2" *ngFor="let item of node.meta.customHeadersList;let i=index">
-            <div class="headers-label-width d-flex align-items-center">
-                <odp-round-check class="mr-2" [id]="item.key" [edit]="edit" [(checked)]="item.checked"
-                    (checkedChange)="headerToggle()">
-                </odp-round-check>
-                <span *ngIf="!item.new" class="text text-truncate" [ngbTooltip]="item.key">{{item.key}}</span>
-                <input *ngIf="item.new" type="text" class="form-control mr-2"
-                    (ngModelChange)="headerKeyChange(item,$event)" [ngModel]="item.key" [disabled]="!edit.status">
-            </div>
-            <div class="value w-100 d-flex align-items-center">
-                <input type="text" class="form-control mr-2" [(ngModel)]="item.value" [disabled]="!edit.status">
-                <span *ngIf="edit.status" class="remove-header">
-                    <span *ngIf="item.new" class="fa fa-times text-danger" (click)="removeHeader(i)"></span>
-                </span>
-            </div>
-        </div>
-        <button *ngIf="edit.status" type="button" class="btn btn-link text-accent" (click)="addNewHeader()">
-            <span class="fa fa-plus mr-2"></span>
-            <span class="text">Add New</span>
-        </button>
+  <div class="form-group">
+    <label for="headers"
+      >Custom Headers<br />
+      <small class="text-muted"
+        >(Manipulating Headers will reset the mappinng)</small
+      >
+    </label>
+    <div
+      class="d-flex align-items-center mb-2"
+      *ngFor="let item of node.meta.customHeadersList; let i = index"
+    >
+      <div class="headers-label-width d-flex align-items-center">
+        <odp-round-check
+          class="mr-2"
+          [id]="item.key"
+          [edit]="edit"
+          [(checked)]="item.checked"
+          (checkedChange)="headerToggle()"
+        >
+        </odp-round-check>
+        <span
+          *ngIf="!item.new"
+          class="text text-truncate"
+          [ngbTooltip]="item.key"
+          >{{ item.key }}</span
+        >
+        <input
+          *ngIf="item.new"
+          type="text"
+          class="form-control mr-2"
+          (ngModelChange)="headerKeyChange(item, $event)"
+          [ngModel]="item.key"
+          [disabled]="!edit.status"
+        />
+      </div>
+      <div class="value w-100 d-flex align-items-center">
+        <input
+          type="text"
+          class="form-control mr-2"
+          [(ngModel)]="item.value"
+          [disabled]="!edit.status"
+        />
+        <span *ngIf="edit.status" class="remove-header">
+          <span
+            *ngIf="item.new"
+            class="fa fa-times text-danger"
+            (click)="removeHeader(i)"
+          ></span>
+        </span>
+      </div>
     </div>
+    <button
+      *ngIf="edit.status"
+      type="button"
+      class="btn btn-link text-accent"
+      (click)="addNewHeader()"
+    >
+      <span class="dsi dsi-plus mr-2"></span>
+      <span class="text">Add</span>
+    </button>
+  </div>
 </ng-container>

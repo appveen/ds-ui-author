@@ -1,5 +1,8 @@
 import { Component, OnInit, AfterContentChecked, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Observable, of, OperatorFunction } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import { AppService } from 'src/app/utils/services/app.service';
+import { CommonService } from 'src/app/utils/services/common.service';
 
 @Component({
   selector: 'odp-path-creator',
@@ -23,27 +26,33 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
   clientX: number;
   searchTerm: string;
   level: number;
-  constructor(private appService: AppService) {
-    const self = this;
-    self.pathChange = new EventEmitter();
-    self.isInvalid = new EventEmitter();
-    self.field = new EventEmitter();
-    self.fields = [];
-    self.level = 0;
+  noInitalDefinition: boolean;
+  serviceList: Array<any>;
+  searching: boolean;
+  searchFailed: boolean;
+  constructor(private appService: AppService,
+    private commonService: CommonService) {
+    this.pathChange = new EventEmitter();
+    this.isInvalid = new EventEmitter();
+    this.field = new EventEmitter();
+    this.fields = [];
+    this.level = 0;
   }
 
   ngOnInit() {
-    const self = this;
-    if (self.path && self.path.trim()) {
-      const segments = self.path.split('.');
-      let definition = self.definition;
+    if (!this.definition) {
+      this.noInitalDefinition = true;
+    }
+    if (this.path && this.path.trim()) {
+      const segments = this.path.split('.');
+      let definition = this.definition;
       let stopPath = false;
       segments.forEach(key => {
         if (definition) {
           let tempDef = definition.find(d => d.key === key || d.key === key + '.value');
           if (!!tempDef) {
-            tempDef = self.appService.cloneObject(tempDef);
-            self.fields.push(tempDef);
+            tempDef = this.appService.cloneObject(tempDef);
+            this.fields.push(tempDef);
             if (tempDef.type === 'User'
               || tempDef.type === 'Geojson'
               || tempDef.type === 'Relation'
@@ -61,8 +70,6 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
             } else {
               definition = tempDef.definition || [];
             }
-          } else {
-
           }
         }
       });
@@ -70,22 +77,38 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
   }
 
   ngAfterContentChecked() {
-    const self = this;
-    if (self.canAddMore) {
-      self.isInvalid.emit(true);
+    if (this.canAddMore) {
+      this.isInvalid.emit(true);
     } else {
-      self.field.emit(self.fields[self.fields.length - 1]);
-      self.isInvalid.emit(false);
+      this.field.emit(this.fields[this.fields.length - 1]);
+      this.isInvalid.emit(false);
     }
   }
 
+  formatter = (data: any) => data.name;
+
+  searchDataService: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      tap(() => this.searching = true),
+      switchMap(term =>
+        this.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, { filter: { name: '/' + term + '/', status: "Active" } }).pipe(
+          tap(() => this.searchFailed = false),
+          catchError(() => {
+            this.searchFailed = true;
+            return of([]);
+          }))
+      ),
+      tap(() => this.searching = false)
+    )
+
   selectField(field: any) {
-    const self = this;
-    self.fields.splice(self.level, self.fields.length - self.level);
-    self.fields.push(field);
-    self.showkeys = false;
-    self.searchTerm = null;
-    self.makePath();
+    this.fields.splice(this.level, this.fields.length - this.level);
+    this.fields.push(field);
+    this.showkeys = false;
+    this.searchTerm = null;
+    this.makePath();
     setTimeout(() => {
       const ele = document.querySelector<HTMLElement>('.rule-wrapper');
       ele.scrollLeft = ele.scrollWidth;
@@ -93,17 +116,15 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
   }
 
   removeField(index: number) {
-    const self = this;
-    self.fields.splice(index, self.fields.length - index);
-    self.showkeys = false;
-    self.makePath();
+    this.fields.splice(index, this.fields.length - index);
+    this.showkeys = false;
+    this.makePath();
   }
 
   setField(event: KeyboardEvent) {
-    const self = this;
     const target: HTMLInputElement = event.target as HTMLInputElement;
     if (target.value && target.value.trim()) {
-      self.fields.push({
+      this.fields.push({
         _manual: true,
         type: 'String',
         key: target.value,
@@ -111,7 +132,7 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
           name: target.value
         }
       });
-      self.makePath();
+      this.makePath();
       setTimeout(() => {
         const ele = document.querySelector<HTMLElement>('.rule-wrapper');
         ele.scrollLeft = ele.scrollWidth;
@@ -120,29 +141,26 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
   }
 
   changeField(event: any, def: any, index: number) {
-    const self = this;
     if (def._manual) {
-      self.fields.splice(index, 1);
+      this.fields.splice(index, 1);
     } else {
-      self.level = index;
-      self.openKeysDropdown(event);
+      this.level = index;
+      this.openKeysDropdown(event);
     }
   }
 
   openKeysDropdown(event: any) {
-    const self = this;
-    if (!self.edit.status) {
+    if (!this.edit.status) {
       return;
     }
-    self.showkeys = true;
-    self.clientX = event.layerX;
+    this.showkeys = true;
+    this.clientX = event.layerX;
 
   }
 
   makePath() {
-    const self = this;
     const keys = [];
-    self.fields.forEach(field => {
+    this.fields.forEach(field => {
       if (field.type === 'User') {
         keys.push(field.key + '._id');
       } else if (field.type === 'Relation') {
@@ -158,15 +176,14 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
       }
     });
     const path = keys.join('.');
-    self.pathChange.emit(path);
+    this.pathChange.emit(path);
   }
 
   get enableManual() {
-    const self = this;
-    if (self.fields.length === 0) {
+    if (this.fields.length === 0) {
       return false;
     }
-    const field = self.fields[self.fields.length - 1];
+    const field = this.fields[this.fields.length - 1];
     if (field) {
       if (field.type === 'Object' && (!field.definition || !field.definition.length)) {
         return true;
@@ -179,11 +196,13 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
   }
 
   get canAddMore() {
-    const self = this;
-    if (self.fields.length === 0) {
+    if (!this.definition) {
+      return false;
+    }
+    if (this.fields.length === 0) {
       return true;
     }
-    const field = self.fields[self.fields.length - 1];
+    const field = this.fields[this.fields.length - 1];
     if (field) {
       if (!field.type
         || field.type === 'String'
@@ -194,8 +213,7 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
         || field.type === 'Geojson'
         || field.type === 'Relation'
         || field.type === 'User'
-        || field.type === 'id')
-      {
+        || field.type === 'id') {
         return false;
       } else if (field.type === 'Array') {
         if (field.definition.find(d => d.key === '_self')?.type === 'Object') {
@@ -212,20 +230,18 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
   }
 
   get dropdownPos() {
-    const self = this;
-    if (self.fields.length === 0) {
+    if (this.fields.length === 0) {
       return {};
     }
     return {
-      left: self.clientX + 'px'
+      left: this.clientX + 'px'
     };
   }
 
   get definitionList() {
-    const self = this;
     const temp = [];
-    if (self.level && self.level > 0) {
-      let field = self.fields[self.level - 1].definition;
+    if (this.level && this.level > 0) {
+      let field = this.fields[this.level - 1].definition;
       if (field) {
         if (field.find(d => d.key === '_self')?.definition) {
           field = field.find(d => d.key === '_self').definition;
@@ -236,8 +252,8 @@ export class PathCreatorComponent implements OnInit, AfterContentChecked {
       }
       return temp;
     } else {
-      if (self.definition) {
-        self.definition.forEach(obj => {
+      if (this.definition) {
+        this.definition.forEach(obj => {
           temp.push(obj);
         });
       }

@@ -5,6 +5,7 @@
   .name-label {
     min-width: 50px;
   }
+
   input {
     min-width: 400px;
   }
@@ -13,38 +14,48 @@
 .tabs {
   div {
     transition: 0.25s;
-    border-bottom: 4px solid transparent;
-    min-height: 40px;
+    min-height: 56px;
+    line-height: 56px;
+    font-weight: 500;
+    color: $sub-headings;
+
     &.active,
     &:hover {
-      border-bottom: 4px solid $accent;
+      color: $link-color !important;
     }
+
     &.active {
-      color: $accent !important;
-      font-weight: bold;
+      color: $link-color !important;
+      font-weight: 700;
     }
+
     .fa {
       opacity: 0;
       transition: 0.5s;
       font-size: 8px;
+
       &.show {
         opacity: 0.6;
       }
     }
   }
 }
+
 .properties-wrapper {
   min-width: 430px;
   max-width: 430px;
 }
+
 .builder {
+  max-height: calc(100vh - 274px);
+
   .options {
     min-height: 40px;
     max-height: 40px;
   }
 
   #experience-side-nav {
-    width: 175px;
+    min-width: 250px;
     // border-right: 1px solid #DBDBDB;
 
     .side-nav-tab {
@@ -53,36 +64,43 @@
   }
 }
 
-.add-attribute {
-  min-height: 36px;
-  max-height: 36px;
-  margin-left: 32px;
-}
-
-.scroll {
-  overflow-y: auto;
-  overflow-x: hidden;
-  min-height:  calc(100vh - 330px);
-  max-height: calc(100vh - 330px);
-}
+// .scroll {
+//   overflow-y: auto;
+//   overflow-x: hidden;
+//   min-height: calc(100vh - 330px);
+//   max-height: calc(100vh - 330px);
+// }
 
 .scrollStateModel {
   overflow-y: auto;
   overflow-x: hidden;
-  min-height: calc(100vh - 224px);
-  max-height: calc(100vh - 224px);
+  min-height: calc(100vh - 242px);
+  max-height: calc(100vh - 242px);
 }
 
 .builder-body {
-  min-height: 100%;
-  max-height: calc(100vh - 224px);
-  &.schema-creator {
+  min-height: calc(100vh - 242px);
+  max-height: calc(100vh - 242px);
+
+  .builder {
     min-height: calc(100vh - 244px);
     max-height: calc(100vh - 244px);
-    padding-bottom: 10px !important;
+    overflow-y: auto;
+
+    &.full {
+      min-height: calc(100vh - 242px) !important;
+      max-height: calc(100vh - 242px) !important;
+    }
   }
 
-  .schema-free{
+  // .schema-creator {
+  //   min-height: calc(100vh - 334px);
+  //   max-height: calc(100vh - 334px);
+  //   padding-bottom: 10px !important;
+  //   overflow-y: auto;
+  // }
+
+  .schema-free {
     min-height: 58vh;
   }
 
@@ -92,12 +110,14 @@
     opacity: 0;
     transition: 0.25s;
   }
+
   .copy-text {
     right: 26px;
     top: 10px;
     opacity: 0;
     transition: 0.25s;
   }
+
   &:hover {
     .copy-symbol {
       opacity: 1;
@@ -114,6 +134,7 @@
       border-radius: 15px;
       font-size: 12px;
     }
+
     .text {
       font-size: 14px;
     }
@@ -125,4 +146,10 @@
   right: 7px;
   opacity: 0.7;
   transition: 0.5s;
+}
+
+.add-attribute {
+  background: #FFF9F5;
+  border-radius: 6px;
+  height: 55px;
 }

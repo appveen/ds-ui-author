@@ -59,6 +59,11 @@ export class GlobalSchemasComponent implements
     showLazyLoader: boolean;
     breadcrumbPaths: Array<Breadcrumb>;
     deleteModal: any;
+
+    sortableOnMove = (event: any) => {
+        return !event.related.classList.contains('disabled');
+    }
+
     @HostListener('window:beforeunload', ['$event'])
     public beforeunloadHandler($event) {
         if (this.form.dirty) {
@@ -102,6 +107,7 @@ export class GlobalSchemasComponent implements
             label: 'Libraries',
             url: '/app/' + self.commonService.app._id + '/lib'
         });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         self.commonService.activeComponent = this;
         self.ngbToolTipConfig.container = 'body';
         self.app = self.commonService.app._id;
@@ -122,6 +128,7 @@ export class GlobalSchemasComponent implements
                     active: true,
                     label: 'New Library'
                 });
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                 self.edit.status = true;
             }
         });
@@ -328,7 +335,7 @@ export class GlobalSchemasComponent implements
             .subscribe(res => {
                 self.showLazyLoader = false;
                 let temp: any;
-                if (res.definition) {
+                if (res.definition && res.definition[0]) {
                     temp = {
                         name: res.name,
                         type: res.definition[0].type,
@@ -341,7 +348,7 @@ export class GlobalSchemasComponent implements
                         description: res.description
                     };
                 }
-                if (res.definition && res.definition[0].definition) {
+                if (res.definition && res.definition[0] && res.definition[0].definition) {
                     temp.definition = self.schemaService.generateStructure(res.definition[0].definition);
                 } else {
                     temp.definition = [];
@@ -389,6 +396,7 @@ export class GlobalSchemasComponent implements
                         });
                     }
                 }
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
             }, err => {
                 self.showLazyLoader = true;
                 self.commonService.errorToast(err);
@@ -447,6 +455,14 @@ export class GlobalSchemasComponent implements
         } else {
             return false;
         }
+    }
+
+    get editable() {
+        const self = this;
+        if (self.edit && self.edit.status) {
+            return true;
+        }
+        return false;
     }
 
     private _getClass(type) {

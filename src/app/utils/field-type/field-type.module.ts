@@ -6,7 +6,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FieldTypeComponent } from './field-type.component';
 import { FieldTypeSelectorComponent } from './field-type-selector/field-type-selector.component';
 import { ClickOutsideModule } from '../directives/click-outside/click-outside.module';
-import { IconsModule } from '../icons/icons.module';
 
 @NgModule({
   imports: [
@@ -14,7 +13,6 @@ import { IconsModule } from '../icons/icons.module';
     FormsModule,
     ClickOutsideModule,
     NgbModule,
-    IconsModule
   ],
   declarations: [FieldTypeComponent, FieldTypeSelectorComponent],
   exports: [FieldTypeComponent, FieldTypeSelectorComponent]

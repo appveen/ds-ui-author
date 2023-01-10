@@ -1,0 +1,87 @@
+<ng-template #searchModal>
+    <div class="delete-modal-body modal-body p-4">
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="font-weight-bold">Search and Select {{data.type=='bot'? 'Bots' : 'Users'}}</h5>
+            <button type="button" class="close" (click)="searchModalRef.close(false)">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="d-flex align-items-center justify-content-start my-3">
+            <odp-search-box (enteredText)="onSearch($event)" open="true" (reset)="onSearchReset()"></odp-search-box>
+        </div>
+        <div class="model-container d-flex w-100 align-items-stretch justify-content-between mb-4">
+            <ng-container *ngIf="showLoader">
+                <div class="d-flex justify-content-center align-items-center w-100">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!showLoader">
+                <div class="d-flex scrollable border rounded" style="flex-basis: 48%">
+                    <div class="list-group list-group-flush w-100">
+                        <div class="list-group-item d-flex align-items-center bg-light-gray text-secondary">
+                            <div class="user-check">
+                                <odp-checkbox [edit]="{status:true}" [(checked)]="selectAll"></odp-checkbox>
+                            </div>
+                            <div class="user-name text-uppercase">Name</div>
+                            <!-- <div class="user-username text-uppercase">Username</div> -->
+                        </div>
+                        <ng-container *ngIf="userList && userList.length>0">
+                            <div class="list-group-item d-flex align-items-center " *ngFor="let user of userList">
+                                <div class=" user-check">
+                                    <odp-checkbox [edit]="{status:true}" [checked]="isUserSelected(user)"
+                                        (checkedChange)="toggleUser($event,user)"></odp-checkbox>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <div class="user-name">{{user?.basicDetails?.name}}</div>
+                                    <div class="user-username font-13 text-secondary mt-1" [ngbTooltip]="user?._id">
+                                        {{user?._id}}</div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div *ngIf="!userList || userList.length==0" class="list-group-item d-flex align-items-center">
+                            <p class="m-0">No Users Found</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex scrollable border rounded" style="flex-basis: 48%">
+                    <div class="list-group list-group-flush w-100">
+                        <div class="list-group-item d-flex align-items-center bg-light-gray text-secondary">
+                            <div class="user-name text-uppercase">Name</div>
+                            <div class="user-username text-uppercase">Username</div>
+                            <div class="user-remove"></div>
+                        </div>
+                        <ng-container *ngIf="selectedUsers && selectedUsers.length>0">
+                            <div class="list-group-item d-flex align-items-center"
+                                *ngFor="let user of selectedUsers;let i=index">
+                                <div class="d-flex flex-column">
+                                    <div class="user-name">{{user?.basicDetails?.name}}</div>
+                                    <div class="user-username font-13 text-secondary mt-1" [ngbTooltip]="user?._id">
+                                        {{user?._id}}</div>
+                                </div>
+
+                                <div class="user-remove clearfix">
+                                    <button type="button" class="btn btn-link py-0 float-right"
+                                        (click)="removeSelectedUser(i)">
+                                        <span class="dsi dsi-trash"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div *ngIf="!selectedUsers || selectedUsers.length==0"
+                            class="list-group-item d-flex align-items-center">
+                            <p class="m-0">No Users Selected</p>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <div class="d-flex justify-content-end align-items-center w-100">
+            <button type="button" class="btn btn-outline-primary btn-min-width mr-3"
+                (click)="searchModalRef.close(false)">Cancel</button>
+            <button type="button" class="btn btn-primary btn-min-width" (click)="searchModalRef.close(true)"
+                [disabled]="selectedUsers.length==0">Add</button>
+        </div>
+    </div>
+</ng-template>

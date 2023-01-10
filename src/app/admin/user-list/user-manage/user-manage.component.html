@@ -1,6 +1,8 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showSpinner">
   <div class="align-self-center text-center">
-    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="spinner-border text-dark" role="status">
+      <span class="sr-only">Processing...</span>
+    </div>
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
@@ -76,12 +78,7 @@
 <ng-template #resetPasswordModel>
   <div class="modal-body p-4">
     <div class="d-flex align-items-center justify-content-between mb-3">
-      <div class="d-flex align-items-center align-self-start">
-        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-          <odp-user-icon [size]="18" color="202A36" class="mt-1"></odp-user-icon>
-        </span>
-        <span class="font-weight-bold">Reset Password</span>
-      </div>
+      <span class="font-20 fw-600">Reset Password</span>
       <span class="fa fa-times hover" (click)="resetPasswordModelRef.close(false)"></span>
     </div>
     <form class="mt-2 ml-4" [formGroup]="resetPasswordForm" (keyup.enter)="resetPassword()">
@@ -89,15 +86,15 @@
         <label class="text-secondary modal-label" for="new-pwd">New Password</label>
         <input id="new-pwd" class="form-control password-input" [type]="showPassword['new'] ? 'text' : 'password'"
           formControlName="password" [ngClass]="{'is-invalid': invalidPassword}" odpAutoFocus>
-        <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="invalidPassword"
+        <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute" *ngIf="invalidPassword"
           ngbTooltip="This is a required field" placement="right"></span>
-        <span class="fas eye-icon position-absolute hover"
-          [ngClass]="{'fa-eye': !showPassword['new'],'fa-eye-slash': showPassword['new'] }"
+        <span class="dsi eye-icon position-absolute hover"
+          [ngClass]="{'dsi-view': !showPassword['new'],'dsi-hide': showPassword['new'] }"
           (click)="showPassword['new']= !showPassword['new']"></span>
-        <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+        <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
           *ngIf="resetPasswordForm.get('password').dirty && resetPasswordForm.get('password').hasError('minlength')"
           [ngbTooltip]="'Password should be minimum 8 chars long'" ccontainer="body" placement="right"></span>
-        <span class="fas fa-question-circle text-danger error-icon-password position-absolute"
+        <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute"
           *ngIf="resetPasswordForm.get('password').dirty && resetPasswordForm.get('password').hasError('pattern')"
           [ngbTooltip]="'Password must have one of following - Uppercase(A - Z), Lowercase(a - z), Special characters (!@#$%^&*?~) and Numbers (0 - 9)'"
           ccontainer="body" placement="right"></span>
@@ -106,12 +103,12 @@
         <label class="text-secondary modal-label" for="c-pwd">Confirm Password</label>
         <input [type]="showPassword['confirm'] ? 'text' : 'password'" id="c-pwd" class="form-control password-input"
           formControlName="cpassword" [ngClass]="{'is-invalid': invalidCPassword || invalidMatch}">
-        <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="invalidCPassword"
+        <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute" *ngIf="invalidCPassword"
           ngbTooltip="This is a required field" placement="right"></span>
-        <span class="fas fa-question-circle text-danger error-icon-password position-absolute" *ngIf="invalidMatch"
+        <span class="dsi dsi-danger-circle text-danger error-icon-password position-absolute" *ngIf="invalidMatch"
           ngbTooltip="Passwords do not match" placement="right"></span>
-        <span class="fas eye-icon position-absolute hover"
-          [ngClass]="{'fa-eye': !showPassword['confirm'],'fa-eye-slash': showPassword['confirm'] }"
+        <span class="dsi eye-icon position-absolute hover"
+          [ngClass]="{'dsi-view': !showPassword['confirm'],'dsi-hide': showPassword['confirm'] }"
           (click)="showPassword['confirm']= !showPassword['confirm']"></span>
       </div>
     </form>

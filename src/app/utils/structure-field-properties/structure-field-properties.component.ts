@@ -18,6 +18,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
   @Input() formatType: string;
   @Input() edit: any;
   @Input() type: string;
+  showProperties: boolean;
   @ViewChild('typeChangeModalTemplate', { static: false }) typeChangeModalTemplate: TemplateRef<any>;
   showDatePicker: boolean;
   showLazyLoader: boolean;
@@ -51,6 +52,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     self.showLazyLoader = false;
     self.showDataTypes = {};
     self.showCommonFields = true;
+    self.showProperties = false;
   }
 
   ngAfterViewInit(): void {
@@ -60,7 +62,10 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       self.formList = [];
       if (form) {
         self.form = form;
+        self.showProperties = true;
         self.collectForms();
+      } else {
+        this.showProperties = false;
       }
     });
     self.schemaService.typechanged.subscribe(() => {
@@ -96,6 +101,8 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     }
     return false;
   }
+
+
 
   collectForms() {
     const self = this;
@@ -247,6 +254,24 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
           self.commonService.errorToast(err, 'Unable to fetch unique status');
         });
     }
+  }
+
+  showSecureText(formItem) {
+    let props = formItem.get('properties');
+    if (formItem.get('type').value == 'String') {
+      if (props.get('richText').value || (props.get('longText').value)) {
+        return true;
+      }
+    }
+    return false;
+
+  }
+
+  showSecureFile(formItem) {
+    if (formItem.get('type').value == 'File') {
+      return true;
+    }
+    return false;
   }
 
   clearValue() {

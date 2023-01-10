@@ -5,21 +5,20 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+
 import { CanComponentDeactivate } from 'src/app/utils/guards/route.guard';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
-import { SchemaAttributesPipe } from '../schema-utils/schema-attributes.pipe';
 import { SchemaBuilderService } from '../schema-utils/schema-builder.service';
 import { GlobalSchemaStructurePipe } from '../schema-utils/global-schema-structure.pipe';
 import { sameName } from '../custom-validators/same-name-validator';
-import { OrderByPipe } from 'src/app/utils/pipes/order-by/order-by.pipe';
 
 @Component({
     selector: 'odp-data-format-manage',
     templateUrl: './data-format-manage.component.html',
     styleUrls: ['./data-format-manage.component.scss'],
-    providers: [GlobalSchemaStructurePipe, SchemaAttributesPipe, OrderByPipe]
+    providers: [GlobalSchemaStructurePipe]
 })
 export class DataFormatManageComponent implements
     OnInit, AfterViewInit, AfterContentChecked, CanComponentDeactivate, OnDestroy {
@@ -58,6 +57,7 @@ export class DataFormatManageComponent implements
     microflows: Array<any>;
     deleteModal: any;
     showAdvance: boolean;
+    showAdvanceSettingsWindow: boolean;
     sortableOnMove = (event: any) => {
         return !event.related.classList.contains('disabled');
     }
@@ -67,13 +67,11 @@ export class DataFormatManageComponent implements
         private fb: FormBuilder,
         private commonService: CommonService,
         private appService: AppService,
-        private schemaAttributesPipe: SchemaAttributesPipe,
         private schemaService: SchemaBuilderService,
         private ts: ToastrService,
         private globalSchemaStructurePipe: GlobalSchemaStructurePipe,
         private cdr: ChangeDetectorRef,
-        private ngbToolTipConfig: NgbTooltipConfig,
-        private orderBy: OrderByPipe) {
+        private ngbToolTipConfig: NgbTooltipConfig) {
         const self = this;
         self.edit = {
             status: false,
@@ -107,6 +105,7 @@ export class DataFormatManageComponent implements
             label: 'Data Formats',
             url: '/app/' + self.commonService.app._id + '/dfl'
         });
+        this.commonService.changeBreadcrumb(this.breadcrumbPaths)
         self.commonService.activeComponent = this;
         self.ngbToolTipConfig.container = 'body';
         self.app = self.commonService.app._id;
@@ -114,8 +113,8 @@ export class DataFormatManageComponent implements
         self.route.params.subscribe(params => {
             if (params.id) {
                 self.edit.id = params.id;
-                if (self.appService.editServiceId) {
-                    self.appService.editServiceId = null;
+                if (self.appService.editLibraryId) {
+                    self.appService.editLibraryId = null;
                     self.edit.status = true;
                 } else {
                     self.edit.view = true;
@@ -127,6 +126,7 @@ export class DataFormatManageComponent implements
                     active: true,
                     label: 'New Data Format'
                 });
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
                 self.edit.status = true;
                 if (self.appService.clone) {
                     self.fillDetails(self.appService.clone);
@@ -138,6 +138,9 @@ export class DataFormatManageComponent implements
                 self.removeGroups();
                 self.form.get('character').patchValue(',');
             }
+        });
+        self.form.get('lineSeparator').valueChanges.subscribe(val => {
+            console.log(val);
         });
         self.selectType({ class: 'odp-group', value: 'Object', label: 'Group' });
         self.subscriptions['activeproperty'] = self.schemaService.activeProperty.subscribe(val => {
@@ -202,18 +205,16 @@ export class DataFormatManageComponent implements
             .subscribe(res => {
                 self.showLazyLoader = false;
                 let temp;
-                if (res.definition) {
+                if (res.definition && res.definition.length > 0) {
                     temp = {
                         name: res.name,
-                        type: res.definition.type,
                         description: res.description,
                         strictValidation: res.strictValidation,
                         excelType: res.excelType
                     };
-                    delete res.definition.type;
                     self.form.patchValue(temp);
                     self.form.get('type').patchValue('Object');
-                    temp.definition = self.schemaService.generateStructure(res.definition[0].definition);
+                    temp.definition = self.schemaService.generateStructure(res.definition);
                     (self.form.get('definition') as FormArray).controls.splice(0);
                     temp.definition.forEach((element, i) => {
                         const tempDef = self.schemaService.getDefinitionStructure(temp.definition[i]);
@@ -262,11 +263,11 @@ export class DataFormatManageComponent implements
                     self.form.get('name').patchValue(name + ' Copy');
                     self.form.get('description').patchValue(null);
                 }
-                self.getMicroflows();
                 self.breadcrumbPaths.push({
                     active: true,
                     label: self.form.controls.name.value + (self.edit ? ' (Edit)' : '')
                 });
+                this.commonService.changeBreadcrumb(this.breadcrumbPaths)
             }, err => {
                 self.showLazyLoader = true;
                 self.commonService.errorToast(err);
@@ -339,8 +340,8 @@ export class DataFormatManageComponent implements
         const self = this;
         let response;
         const value = self.form.getRawValue();
-        const payload = self.globalSchemaStructurePipe.transform(value);
-        self.appService.addKeyForDataStructure(payload.definition[0].definition, 'normal');
+        const payload = self.globalSchemaStructurePipe.transform(value, true);
+        self.appService.addKeyForDataStructure(payload.definition, 'normal');
         self.commonService.commonSpinner = true;
         payload.app = self.commonService.app._id;
         payload.formatType = self.form.value.formatType;
@@ -382,7 +383,7 @@ export class DataFormatManageComponent implements
         }
     }
 
-    selectType(type) {
+    selectType(type: any) {
         const self = this;
         self.selectedType = type.label;
         self.selectedTypeClass = self._getClass(type.value);
@@ -403,14 +404,17 @@ export class DataFormatManageComponent implements
     }
 
     selectFormat(format: any) {
+        if (!this.edit.status) {
+            return;
+        }
         this.formatList.forEach(e => {
             e.selected = false;
         });
         format.selected = true;
         this.form.get('formatType').patchValue(format.formatType);
-        this.form.get('formatType').markAsDirty();
+        // this.form.get('formatType').markAsDirty();
         if (format.formatType === 'EXCEL') {
-            this.form.get('excelType').setValue(format.excelType);
+            this.form.get('excelType').patchValue(format.excelType);
         }
         this.appService.formatTypeChange.emit(format.formatType);
     }
@@ -436,6 +440,7 @@ export class DataFormatManageComponent implements
             $event.returnValue = 'Are you sure?';
         }
     }
+
     canEditDataFormat(id: string) {
         const self = this;
         if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
@@ -459,36 +464,6 @@ export class DataFormatManageComponent implements
         return retValue;
     }
 
-    getMicroflows() {
-        const self = this;
-        const options: GetOptions = {
-            filter: {
-                dataFormat: self.edit.id
-            }
-        };
-        self.microflows = [];
-        self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, options).subscribe(res => {
-            if (res && res.length > 0) {
-                res.forEach(item => {
-                    const inAgent = item.blocks.find(e => e.meta.blockType === 'INPUT');
-                    if (inAgent) {
-                        self.getAgentName(inAgent.meta.source, inAgent.meta);
-                    }
-                    const outAgent = item.blocks.find(e => e.meta.blockType === 'OUTPUT');
-                    if (outAgent) {
-                        self.getAgentName(outAgent.meta.target, outAgent.meta);
-                    }
-                    self.setOutputType(item);
-                    self.microflows.push(item);
-                });
-                self.microflows = self.orderBy.transform(self.microflows, 'name');
-            }
-
-        }, err => {
-
-        });
-    }
-
     getStatus(status: string) {
         if (status === 'Draft') {
             return 'draft';
@@ -505,48 +480,6 @@ export class DataFormatManageComponent implements
         return 'offline';
     }
 
-    getAPIEnpoint(item: any) {
-        const temp = item.blocks[item.blocks.length - 1];
-        if (temp) {
-            return temp.meta.connectionDetails.url;
-        }
-        return null;
-    }
-
-    getInAgent(item: any) {
-        const self = this;
-        const temp = item.blocks.find(e => e.meta.blockType === 'INPUT');
-        if (temp) {
-            return temp.meta.agentName;
-        }
-        return null;
-    }
-
-    getOutAgent(item: any) {
-        const self = this;
-        const temp = item.blocks.find(e => e.meta.blockType === 'OUTPUT');
-        if (temp) {
-            return temp.meta.agentName;
-        }
-        return null;
-    }
-
-    getAgentName(id: string, data: any) {
-        const self = this;
-        self.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, {
-            select: 'name',
-            filter: {
-                agentID: id
-            }
-        }).subscribe(res => {
-            if (res && res.length > 0) {
-                data.agentName = res[0].name;
-            }
-        }, err => {
-
-        });
-    }
-
     copyToClipboard(type: string) {
         const self = this;
         if (type === 'input') {
@@ -557,13 +490,6 @@ export class DataFormatManageComponent implements
             }
         }
         document.execCommand('copy');
-    }
-
-    setOutputType(item: any) {
-        const self = this;
-        if (item.blocks && item.blocks.length > 1 && !item.outputType) {
-            item.outputType = 'API';
-        }
     }
 
     replacePort(url: string, port: number) {
@@ -661,6 +587,12 @@ export class DataFormatManageComponent implements
         const self = this;
         return self.form.get('strictValidation').value;
     }
+
+    get formatType() {
+        const self = this;
+        return self.form.get('formatType').value;
+    }
+
     get editable() {
         const self = this;
         if (self.edit && self.edit.status) {

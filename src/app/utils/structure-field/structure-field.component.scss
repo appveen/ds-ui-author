@@ -1,38 +1,85 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
+
+
 .field-wrapper {
-  min-height: 36px;
-  max-height: 36px;
-  border-left: 5px solid transparent;
-  &.active {
-    border-left-color: $dark;
+  min-height: 52px;
+  border-radius: 6px;
+  // max-height: 52px;
+  margin-bottom: 6px;
+  // background: $light;
+  font-size: 14px;
+
+  .field-row {
+    max-height: 52px;
   }
+
+  // .field-wrapper {
+  //   background: $white;
+
+  //   .field-wrapper {
+  //     background: $light;
+  //   }
+  // }
+
+  // &.active {
+  //   border-left-color: $dark;
+  // }
+
+  .properties {
+    width: 20px;
+    height: 20px;
+
+    &.required {
+      background: $required;
+    }
+
+    &.create-only {
+      background: $create-only;
+    }
+
+    &.unique {
+      background: $unique;
+    }
+
+    &.password {
+      background: $dark;
+    }
+  }
+
   .icon {
     min-width: 14px;
     max-width: 14px;
     min-height: 14px;
     max-height: 14px;
   }
+
   .field {
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 180px;
+    max-width: 180px;
     min-height: 28px;
     max-height: 28px;
   }
+
   .word-elipsis {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
   }
+
   .error-icon {
-    top: 7px;
-    left: 90%;
+    top: 5px !important;
+    right: 10px !important;
   }
+
   .searching-relation {
-    right: 4px;
-    top: 7px;
+    right: 10px;
+    top: 6px;
+    height: 16px;
+    width: 16px;
   }
+
   .type-icon-holder {
     min-width: 28px;
     max-width: 28px;
@@ -40,36 +87,39 @@
     max-height: 22px;
     font-size: 16px;
   }
-  .field-options {
-    .readonly {
-      min-width: 18px;
-      max-width: 18px;
-      min-height: 18px;
-      max-height: 18px;
-      color: $border;
-      font-size: 10px;
-      opacity: 0;
-      transition: 0.25s;
-      &.active {
-        opacity: 1;
-        background: #000;
-        color: #fff;
-      }
-    }
-  }
-  &:hover {
-    .field-options {
-      .readonly {
-        opacity: 1;
-      }
-    }
-  }
-}
 
-.add-attribute {
-  min-height: 36px;
-  max-height: 36px;
-  margin-left: 65px;
+  .field-row {
+    .field-options {
+      opacity: 0;
+
+      .readonly {
+        min-width: 18px;
+        max-width: 18px;
+        min-height: 18px;
+        max-height: 18px;
+        color: $dark;
+        font-size: 10px;
+        // opacity: 0;
+        transition: 0.25s;
+        border: 1px solid $dark;
+
+        &.active {
+          opacity: 1;
+          background: #000;
+          color: #fff;
+        }
+      }
+    }
+
+    &:hover {
+      .field-options {
+        opacity: 1;
+        // .readonly {
+        //   opacity: 1;
+        // }
+      }
+    }
+  }
 }
 
 .collapse-field {
@@ -78,13 +128,25 @@
   line-height: 28px;
 }
 
-.field-wrapper:hover {
-  background-color: #ececec;
+.advanced-badge {
+  background: $white;
+  border-radius: 16px;
+  padding: 2px 12px;
+  border: 1px solid $border-color;
+  font-size: 11px;
+  color: $sub-headings;
 }
 
-.state-model {
-  background: #c4c4c4;
-  border-radius: 4px;
-  padding: 2px 5px;
-  margin-left: 12px;
+
+
+.field-name-holder,
+.field-type-holder {
+  min-width: 280px;
+  max-width: 280px;
+}
+
+
+.field-flag-holder {
+  min-width: 120px;
+  overflow: hidden;
 }

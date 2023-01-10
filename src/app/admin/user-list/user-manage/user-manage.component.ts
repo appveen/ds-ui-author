@@ -149,8 +149,8 @@ export class UserManageComponent implements OnInit, OnDestroy {
     }
 
     get authType() {
-        if (this.commonService.userDetails.auth && this.commonService.userDetails.auth.authType) {
-            return this.commonService.userDetails.auth.authType;
+        if (this.user.auth && this.user.auth.authType) {
+            return this.user.auth.authType;
         } else {
             return null;
         }

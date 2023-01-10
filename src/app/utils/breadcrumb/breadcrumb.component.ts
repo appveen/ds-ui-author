@@ -104,6 +104,8 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
       return 'Nano Services';
     } else if (seg === 'group') {
       return 'Groups';
+    } else if (seg === 'user') {
+      return 'Users';
     } else {
       return seg;
     }
@@ -132,6 +134,8 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
       return `/app/${self.commonService.app._id}/dfm`;
     } else if (seg === 'group') {
       return `/app/${self.commonService.app._id}/cp/group`;
+    } else if (seg === 'user') {
+      return `/app/${self.commonService.app._id}/cp/user`;
     } else if (seg === 'manage') {
       return `/app/${self.commonService.app._id}/cp/manage`;
     } else {

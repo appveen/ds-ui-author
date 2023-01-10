@@ -1,75 +1,97 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="apiCallsPending">
     <div class="align-self-center text-center">
-        <span class="fa fa-spinner fa-pulse fa-3x"></span>
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
-<div class="d-flex flex-column w-100 h-100">
-    <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
-    <odp-basic-info hideLogo="true" [(name)]="flowData.name" [(description)]="flowData.description" [edit]="edit">
-        <div class="d-flex justify-content-end align-items-center">
-            <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-link"
-                id="cancelNanoServiceBtn">
-                <span class="fa fa-close mr-2"></span>
-                <span class="text">Cancel</span>
-            </button>
-            <button *ngIf="edit.id && !edit.status && hasManagePermission" (click)="enableEditing()" type="button"
-                class="edit-button btn btn-min-width btn-primary ml-3" id="editNanoServiceBtn">
-                <span class="odp-edit mr-2"></span>
-                <span *ngIf="!flowData?.draftVersion" class="text">Edit</span>
-                <span *ngIf="flowData?.draftVersion" class="text">Edit Draft</span>
-            </button>
-            <div class="btn-group mr-3" *ngIf="edit.status">
-                <button class="btn btn-primary btn-min-width" (click)="saveDummyCode();" type="button">Save</button>
-                <div *ngIf="flowData?.draftVersion || flowData.status=='Draft'" ngbDropdown class="btn-group">
-                    <button class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle type="button"></button>
-                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                        <button *ngIf="flowData?.draftVersion || flowData.status=='Draft'" ngbDropdownItem
-                            (click)="discardDraft()" type="button">Discard
-                            Draft</button>
+<div class="flow-manage-page d-flex flex-column w-100 bg-light-gray page-padding">
+    <div class="mb-3">
+        <odp-basic-info hideLogo="true" [(name)]="flowData.name" [(description)]="flowData.description" [edit]="edit">
+            <div class="d-flex justify-content-end align-items-center">
+                <button (click)="cancel()" type="button"
+                    class="edit-button btn btn-min-width btn-white border d-flex align-items-center justify-content-center"
+                    id="cancelNanoServiceBtn">
+                    <span class="text">Cancel</span>
+                </button>
+                <button *ngIf="edit.id && !edit.status && hasManagePermission" (click)="enableEditing()" type="button"
+                    class="edit-button btn btn-min-width btn-primary ml-3 d-flex align-items-center justify-content-center"
+                    id="editNanoServiceBtn">
+                    <span *ngIf="!flowData?.draftVersion" class="text">Edit</span>
+                    <span *ngIf="flowData?.draftVersion" class="text">Edit Draft</span>
+                </button>
+                <div class="btn-group mx-3" *ngIf="edit.status">
+                    <button
+                        class="btn btn-outline-primary btn-min-width d-flex align-items-center justify-content-center"
+                        (click)="saveDummyCode();" type="button">Save</button>
+                    <div *ngIf="flowData?.draftVersion || flowData.status=='Draft'" ngbDropdown class="btn-group">
+                        <button class="btn btn-outline-primary dropdown-toggle-split" ngbDropdownToggle
+                            type="button"></button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <button *ngIf="flowData?.draftVersion || flowData.status=='Draft'" ngbDropdownItem
+                                (click)="discardDraft()" type="button">
+                                Discard Draft
+                            </button>
+                        </div>
                     </div>
                 </div>
+                <button *ngIf="edit.status && hasDeployPermission"
+                    class="btn btn-primary btn-min-width d-flex align-items-center justify-content-center"
+                    [disabled]="!isValidSchema" (click)="save(true);edit.status=false" type="button">
+                    Save &amp; Deploy
+                </button>
             </div>
-            <button *ngIf="edit.status && hasDeployPermission" class="btn btn-dark btn-min-width"
-                [disabled]="!isValidSchema" (click)="save(true);edit.status=false" type="button">Save &amp;
-                Deploy</button>
-        </div>
-    </odp-basic-info>
-    <div class="border-top border-bottom px-3 py-2 d-flex align-items-center justify-content-between bg-light">
-        <div class="url-info d-flex align-items-center">
-            <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
-            <span class="url text-accent">{{flowData?.inputStage?.options?.path || 'N.A.'}}</span>
-        </div>
-        <div class="editor-theme-selection d-flex align-items-center col-4">
-            <!-- <button type="button" class="btn btn-dark rounded-0 mr-3 d-flex align-items-center"
-                (click)="showConsole=!showConsole;toggleConsole()">
-                <span class="fa fa-terminal mr-2"></span>
-                <span class="text">Console</span>
-            </button> -->
-            <span class="label text-dark font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span>
-            <select class="custom-select mr-3" name="fontSize" id="fontSize" [(ngModel)]="selectedFontSize">
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="16">16</option>
-                <option value="18">18</option>
-                <option value="20">20</option>
-            </select>
-            <span class="label text-dark font-weight-bold mr-2">Theme&nbsp;:</span>
-            <select class="custom-select" name="theme" id="theme" [(ngModel)]="selectedEditorTheme">
-                <option value="vs-dark">Dark</option>
-                <option value="vs-light">Light</option>
-            </select>
-        </div>
+        </odp-basic-info>
     </div>
-    <div class="d-flex align-items-stretch h-100 w-100">
-        <div [ngClass]="{'show':showConsole}" class="console position-absolute bg-dark text-white p-3">
-            <p *ngIf="logs.length==0">No Logs</p>
-            <pre *ngFor="let log of logs"
-                class="text-white"><span style="color:{{log.level.colour}}">[{{log.startTime}}] [{{log.level.levelStr}}] </span> {{log.data.join(' ')}}</pre>
+    <div class="border rounded bg-white">
+        <div class="url-info d-flex align-items-center p-3 border-bottom">
+            <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
+            <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
         </div>
-        <div class="editor-wrapper h-100">
-            <odp-code-editor *ngIf="showCodeEditor" class="code-editor" [edit]="edit" [theme]="selectedEditorTheme"
-                [fontSize]="selectedFontSize" [(code)]="code"></odp-code-editor>
+        <div class="flow-designer p-4">
+            <div class="flow-designer-canvas" *ngIf="flowData?.inputNode" odp-flow-node [currNode]="flowData.inputNode" [(nodeList)]="nodeList"
+                (nodeListChange)="changesDone = true">
+            </div>
+            <div [ngClass]="{'show':showNodeProperties}" class="node-properties border-left position-fixed bg-white">
+                <odp-node-properties *ngIf="showNodeProperties" [nodeList]="nodeList" [currNode]="selectedNode.currNode"
+                    [prevNode]="selectedNode.prevNode" (close)="showNodeProperties=false"
+                    (changesDone)="changesDone = true">
+                </odp-node-properties>
+            </div>
         </div>
     </div>
 </div>
+
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteNodeModal($event)"></odp-delete-modal>
+
+<!-- <ng-template #deleteModalTemplate>
+    <div class="modal-body p-4">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <span class="font-20 fw-600">{{deleteModal.title}}</span>
+            <span class="fa fa-times text-secondary hover" (click)="deleteModalTemplateRef.close(false)"></span>
+        </div>
+        <p class="text-secondary text-center my-5">{{deleteModal.message}}</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-danger" (click)="deleteModalTemplateRef.close(true)"
+                id="sbDeleteModalYes">Yes</button>
+        </div>
+    </div>
+</ng-template> -->
+
+<ng-template #pageChangeModalTemplate>
+    <div class="modal-body p-4">
+        <div class="circle bg-dark">
+            <span class="fa fa-exclamation-triangle text-white"></span>
+        </div>
+        <p class="text-dark font-weight-bold text-center">Unsaved changes</p>
+        <p class="text-secondary text-center">You have unsaved changes, are you sure you want to leave?</p>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-outline-primary mx-3"
+                (click)="pageChangeModalTemplateRef.close(false)">No</button>
+            <button type="button" class="btn btn-min-width btn-primary mx-3"
+                (click)="pageChangeModalTemplateRef.close(true)">Yes</button>
+        </div>
+    </div>
+</ng-template>

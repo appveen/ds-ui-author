@@ -1,466 +1,384 @@
 <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
   <div class="align-self-center text-center">
-    <span class="fa fa-spinner fa-pulse fa-3x"></span>
+    <div class="spinner-border text-dark" role="status">
+      <span class="sr-only">Processing...</span>
+    </div>
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="d-flex flex-column">
-  <odp-breadcrumb [paths]="breadcrumbPaths"></odp-breadcrumb>
-  <div class="options d-flex justify-content-between align-items-center w-100 border-bottom px-3">
-    <div class="font-weight-bold font-lg">List of Data Services</div>
-    <odp-search-box (enteredText)="search($event)" (reset)="resetSearch();getServices();"></odp-search-box>
+<div class="data-service-page d-flex flex-column bg-light-gray page-padding">
+  <div class="options d-flex justify-content-between align-items-center w-100 pt-2 pb-4">
+    <div class="fw-600 font-22 d-flex align-items-center">
+      <span>Data Services</span>
+      <span *ngIf="searchTerm" ngbTooltip="Filter Applied" class="dsi dsi-filter-alt text-secondary ml-2"></span>
+    </div>
     <div class="d-flex align-items-center">
-      <!-- <button class="add-new btn-min-width btn btn-dark mr-3" (click)="transactionDoc()">
-        <span class="fa fa-link mr-2"></span>
-        <span class="text">Transaction Doc</span>
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+      <button type="button" id="data-management" class="btn btn-white d-flex align-items-center border ml-3"
+        [routerLink]="['settings']" *ngIf="isAppAdmin || isSuperAdmin">
+        <span class="dsi dsi-settings text-secondary"></span>
+      </button>
+      <!-- <button *ngIf="isExperimental" type="button" class="btn btn-white d-flex align-items-center border ml-3"
+        (click)="toggleImportWizard=true">
+        <span class="dsi dsi-upload text-secondary"></span>
       </button> -->
-      <button class="add-new btn-min-width btn btn-primary" (click)="newService()" *ngIf="hasCreatePermission('SM')">
-        <span class="fa fa-plus mr-2"></span>
-        <span class="text">New Data Service</span>
+      <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3 d-flex align-items-center"
+        (click)="newService()" *ngIf="hasCreatePermission('SM') && hasPermission('PMCON','CON')">
+        <span class="dsi dsi-plus mr-2"></span>
+        <span class="text">New</span>
       </button>
     </div>
   </div>
-  <div class="d-flex flex-column w-100 pl-3">
-    <div class="card-container pt-3" (scroll)="loadMore($event)">
-      <div class="card m-2 add-card hover" (click)="newService()" id="createEntity"
-        *ngIf="hasCreatePermission('SM') && (!serviceList || serviceList.length == 0) && !showLazyLoader">
-        <div class="card-body bg-light d-flex w-100 h-100">
-          <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
-            <div class="align-self-center text-center bg-primary p-3 circle">
-              <span class="fa fa-plus fa-lg mt-3 text-white"></span>
-            </div>
-            <div class="align-self-center text-dark mt-4 font-weight-bold">New Data Service</div>
-          </div>
-        </div>
+  <div class="d-flex flex-column w-100  position-relative">
+    <div class="card-container">
+      <div *ngIf="hasCreatePermission('SM') && (!records || records.length == 0) && !showLazyLoader"
+        class="bg-white rounded-lg border p-4">
+        <p class="m-0">No Records Found, <button type="button" class="btn btn-link px-1 py-0"
+            (click)="newService()">Click Here</button> to create a new Data Service
+          <span *ngIf="searchTerm">:&nbsp;<span class="fw-500">{{searchTerm}}</span></span>
+        </p>
       </div>
-      <ng-container *ngFor="let service of serviceList;let i=index">
-        <div class="card m-2 position-relative" id="serviceManagerCard" *ngIf="hasPermissionForService(service._id)">
-          <div class="card-header bg-white border-0 p-2">
-            <div class="card-title m-0 d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <span class="status high-zIndex" [ngClass]="{
-                  'pending':serviceList[i].status=='Pending',
-                  'maintenance':serviceList[i].status=='Maintenance',
-                  'active':serviceList[i].status=='Active',
-                  'stopped':serviceList[i].status=='Stopped',
-                  'draft':serviceList[i].status=='Draft'}" [ngbTooltip]="getTooltipText(serviceList[i].status)"
-                  container="body" placement="top">
-                  <span *ngIf="serviceList[i].status!='Pending'" class="symbol fa fa-circle"></span>
-                  <span *ngIf="serviceList[i].status=='Pending'" class="fa fa-pulse fa-spinner mr-2"></span>
-                </span>
-                <span class="name d-inline-block font-weight-bold" id="serviceManagerCardTitle"
-                  [attr.title]="service.name">{{service.name}}</span>
-              </div>
-              <div class="d-flex align-items-center">
-                <small *ngIf="serviceList[i].draftVersion" class="fa fa-exclamation-triangle text-primary high-zIndex"
-                  ngbTooltip="Draft Version Available" container="body">
-                </small>
-                <span class="version text-muted float-right ml-1">v{{service.version}}</span>
-              </div>
+      <div *ngIf="records.length > 0" class="list-group">
+        <div
+          class="list-group-item d-flex align-items-center justify-content-start header py-0 bg-light text-uppercase font-11 fw-500">
+          <div (click)="applySort('name')" class="hover d-flex align-items-center item-name d-flex align-items-center">
+            <!-- <odp-checkbox [edit]="{status:true}"></odp-checkbox> -->
+            <span class="mr-2">Name</span>
+            <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
+          </div>
+          <div class="d-flex align-items-center justify-content-center">
+            <div (click)="applySort('_records')" class="hover d-flex align-items-center item-record-count">
+              <span class="mr-2">Records</span>
+              <span *ngIf="sortModel['_records']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_records']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('_attributes')" class="hover d-flex align-items-center item-attribute-count">
+              <span class="mr-2">Attributes</span>
+              <span *ngIf="sortModel['_attributes']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_attributes']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('_references')" class="hover d-flex align-items-center item-reference-count">
+              <span class="mr-2">References</span>
+              <span *ngIf="sortModel['_references']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_references']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('_webHooks')" class="hover d-flex align-items-center item-hook-count">
+              <span class="mr-2">Hooks</span>
+              <span *ngIf="sortModel['_webHooks']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['_webHooks']==-1" class="dsi dsi-drop-up"></span>
+            </div>
+            <div (click)="applySort('status')" class="hover d-flex align-items-center item-status">
+              <span class="mr-2">Status</span>
+              <span *ngIf="sortModel['status']==1" class="dsi dsi-drop-down"></span>
+              <span *ngIf="sortModel['status']==-1" class="dsi dsi-drop-up"></span>
             </div>
           </div>
-          <div class="card-body pt-2">
-            <div class="row my-2">
-              <div class="col">
-                <div>
-                  <span class="odp-attribute text-muted"></span>
-                  <span class="count font-weight-bold" id="_attributeValue">{{service._attributes}}</span>
-                </div>
-                <div>
-                  <small class="text-muted">Attributes</small>
-                </div>
-              </div>
-              <div class="col">
-                <div>
-                  <span class="odp-references text-muted"></span>
-                  <span class="count font-weight-bold" id="_refrenceType">{{service._references}}</span>
-                </div>
-                <div>
-                  <small class="text-muted">References</small>
-                </div>
-              </div>
-            </div>
-            <div class="row my-2">
-              <div class="col">
-                <div>
-                  <span class="odp-webhooks text-muted"></span>
-                  <span class="count font-weight-bold">{{service._webHooks}}</span>
-                </div>
-                <div>
-                  <small class="text-muted">Integrations</small>
-                </div>
-              </div>
-              <div class="col">
-                <div class="d-flex align-items-center">
-                  <span class="odp-records text-muted"></span>
-                  <odp-loading-placeholder *ngIf="service._records==undefined" width="32" height="16">
-                  </odp-loading-placeholder>
-                  <span *ngIf="service._records!=undefined" class="count font-weight-bold"
-                    id="_recordsCount">{{service._records}}</span>
-                </div>
-                <div>
-                  <small class="text-muted">Records</small>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer p-0" *ngIf="serviceList[i].status!='Pending' && serviceList[i].status!='Maintenance'">
-            <div #buttonGrid class="button-grid bg-light clearfix w-100" [ngClass]="{'active':showCardMenu[i]}"
-              [ngStyle]="autoAdjust(buttonGrid)">
-              <div class="toggler" (click)="showCardMenu[i]=!showCardMenu[i]">
-                <span class="fa fa-angle-up"></span>
-              </div>
-              <div class="button float-left w-50 pl-4 py-2 text-secondary hover"
-                [routerLink]="['/app',app,'sb',service._id]" id="_viewEntity">
-                <span class="fa fa-eye icon mr-2"></span>
-                <span class="text">View</span>
-              </div>
-              <div *ngIf="canEditService(service._id) && serviceList[i].type!='internal'"
-                class="button float-left w-50 pl-4 py-2 text-secondary hover ignore-outside" (click)="editService(i)"
-                id="_editEntity">
-                <span class="odp-edit icon mr-2"></span>
-                <span class="text">Edit</span>
-              </div>
-              <div
-                *ngIf="canEditService(service._id) && serviceList[i].type==='internal' && serviceList[i].status!='Stopped'"
-                class="button float-left w-50 pl-4 py-2 text-secondary hover ignore-outside" (click)="editService(i)"
-                id="_editEntity">
-                <span class="odp-edit icon mr-2"></span>
-                <span class="text">Edit</span>
-              </div>
-              <div *ngIf="canEditService(service._id) && easterEggEnabled"
-                class="button float-left w-50 pl-4 py-2 text-secondary hover ignore-outside" (click)="repairService(i)"
-                id="_repairEntity">
-                <span class="fa fa-toolbox icon text-primary mr-2"></span>
-                <span class="text">Repair</span>
-              </div>
-              <div *ngIf="canEditService(service._id) && easterEggEnabled"
-                class="button float-left w-50 pl-4 py-2 text-secondary hover ignore-outside" (click)="getYamls(i)"
-                id="_repairEntity">
-                <span class="fa fa-toolbox icon text-primary mr-2"></span>
-                <span class="text">Yamls</span>
-              </div>
-              <div *ngIf="canCloneService(service._id)" class="button float-left w-50 pl-4 py-2 text-secondary hover"
-                (click)="cloneService(i)" id="_cloneEntity">
-                <span class="fa fa-copy icon mr-2"></span>
-                <span class="text">Clone</span>
-              </div>
-              <div *ngIf="canDeleteService(service._id) && serviceList[i].type!='internal'"
-                class="button float-left w-50 pl-4 py-2 text-secondary hover"
-                (click)="deleteService(i);showCardMenu[i]=false" id="_deleteEntity">
-                <span class="fa fa-trash icon mr-2"></span>
-                <span class="text">Delete</span>
-              </div>
-              <div class="button float-left w-50 pl-4 py-2 text-secondary hover" id="_entityApi">
-                <a (click)="openDocs(i);showCardMenu[i]=false" class="text-primary">
-                  <span class="fa fa-link icon mr-2"></span>
-                  <span class="text">API</span>
-                </a>
-              </div>
-              <div *ngIf="canStartStopService(service._id) && serviceList[i].type!='internal'"
-                class="button float-left w-50 px-4 py-2 text-secondary hover"
-                (click)="toggleServiceStatus(i);showCardMenu[i]=false">
-                <span class="fa fa-power-off icon mr-2"></span>
-                <span class="text" *ngIf="serviceList[i].status=='Stopped'">Start</span>
-                <span class="text" *ngIf="serviceList[i].status=='Active'">Stop</span>
-              </div>
-              <div *ngIf="showDeploy(i) && canDeployService(serviceList[i]) && serviceList[i].type!='internal'"
-                class="button float-left text-center w-100 py-2 text-secondary hover border-top" id="deployEntity">
-                <a (click)="deployService(i);showCardMenu[i]=false">
-                  <span class="fa fa-play icon mr-2"></span>
-                  <span class="text">Deploy</span>
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="draft-options d-flex flex-column align-items-center bg-light position-absolute p-2"
-            [ngClass]="{'show':showCardDraft[i]}" odpClickOutside (outside)="showCardDraft[i]=false">
-            <div class="d-flex align-items-start justify-content-between w-100 high-zIndex">
-              <span class="status high-zIndex" [ngClass]="{
-                        'pending':serviceList[i].status=='Pending',
-                        'maintenance':serviceList[i].status=='Maintenance',
-                        'active':serviceList[i].status=='Active',
-                        'stopped':serviceList[i].status=='Stopped',
-                        'draft':serviceList[i].status=='Draft'}" [ngbTooltip]="getTooltipText(serviceList[i].status)"
-                container="body" placement="top">
-                <span *ngIf="serviceList[i].status!='Pending'" class="symbol fa fa-circle"></span>
-                <span *ngIf="serviceList[i].status=='Pending'" class="fa fa-pulse fa-spinner"></span>
-              </span>
-              <span class="name d-inline-block font-weight-bold" id="serviceManagerCardDraftTitle"
-                [attr.title]="service.name">{{service.name}}</span>
-              <button type="button" class="btn btn-link p-0" (click)="editService(i)">Edit draft</button>
-            </div>
-            <p class="font-13 mt-2 text-center">Changes made are saved as draft but are not deployed. To run the
-              dataservice with the new version, deploy
-              them first.</p>
-            <button type="button" class="btn btn-dark my-2" *ngIf="canDeployService(service)"
-              (click)="deployService(i);showCardDraft[i]=false">Deploy
-              v{{service.draftVersion?service.draftVersion:1}}</button>
-            <button type="button" class="btn btn-link text-danger" (click)="discardDraft(service._id)">Discard new
-              version</button>
+          <div class="d-flex align-items-center justify-content-end w-100">
+            <div class="item-actions"></div>
           </div>
         </div>
-      </ng-container>
-      <ng-container *ngIf="showLazyLoader">
-        <div class="card m-2" *ngFor="let item of dummyRows">
-          <div class="card-header bg-white border-0 p-2">
-            <div class="card-title m-0">
-              <span class="name pl-2 d-flex mt-2">
-                <odp-loading-placeholder width="120" height="14"></odp-loading-placeholder>
-              </span>
+        <ng-container *ngFor="let srvc of records;let i=index">
+          <div class="list-group-item d-flex align-items-center justify-content-start" (dblclick)="viewService(i)">
+            <div class="item-name fw-500 d-flex align-items-center">
+              <!-- <odp-checkbox [edit]="{status:true}"></odp-checkbox> -->
+              <span class="ml-2 pl-1 text-dark hover service-name" (click)="viewService(i)" [ngbTooltip]="srvc.name"
+                placement="right">{{srvc.name}}</span>
+              <span class="ml-2 version sub-heading font-11 text-uppercase">(v{{srvc.version}})</span>
+              <span *ngIf="srvc.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-center">
+              <div class="sub-heading item-record-count">{{srvc._records}}</div>
+              <div class="sub-heading item-attribute-count">{{srvc._attributes}}</div>
+              <div class="sub-heading item-reference-count">{{srvc._references}}</div>
+              <div class="sub-heading item-hook-count">{{srvc._webHooks}}</div>
+              <div class="item-status d-flex align-items-center">
+                <span class="fa fa-circle mr-2" [ngClass]="getStatusClass(srvc)"></span>
+                <span class="text font-12 fw-400">{{getStatusLabel(srvc)}}</span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end w-100">
+              <div class="item-actions">
+                <!-- <div class="actions d-flex justify-content-end hover align-items-center">
+                  <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintenance' ">
+                    <span *ngIf="isDeploy(i)" id='deploy_{{i}}' class="dsi dsi-skip-forward text-primary mr-2"
+                      (click)="deployService(i)" [ngbTooltip]="'Deploy v'+(srvc.draftVersion || srvc.version)"
+                      container="body"></span>
+                    <span class="dsi dsi-play hover mr-2" *ngIf="srvc.status == 'Stopped' && isStartStopService(i)"
+                      (click)="toggleServiceStatus(i)" [ngbTooltip]="'Start v'+srvc.version" container="body"></span>
+                    <span class="dsi dsi-stop hover mr-2" *ngIf="srvc.status == 'Active' && isStartStopService(i)"
+                      (click)="toggleServiceStatus(i)" [ngbTooltip]="'Stop v'+srvc.version" container="body"></span>
+                    <span class="dsi dsi-ban hover mr-2" [ngbTooltip]="'Discard Draft'"
+                      *ngIf="srvc.draftVersion && canEditService(srvc._id)" (click)="discardDraft(srvc._id)"
+                      container="body"></span>
+                    <span class="dsi dsi-edit hover mr-2" *ngIf="canEditService(srvc._id)" ngbTooltip="Edit"
+                      (click)="editService(i)"></span>
+                    <span class="dsi dsi-view hover mr-2" *ngIf="canEditService(srvc._id)" ngbTooltip="View"
+                      (click)="viewService(i)"></span>
+                  </ng-container>
+                  <span class="dsi dsi-copy hover mr-2" *ngIf="canCloneService(srvc._id)" ngbTooltip="Clone"
+                    (click)="cloneService(i)"></span>
+                  <span class="dsi dsi-trash hover mr-2" *ngIf="canDeleteService(srvc._id)" ngbTooltip="Delete"
+                    (click)="deleteService(i)"></span>
+                  <span class="api-icon hover mr-2 font-11" (click)="openDocs(i)" ngbTooltip="Open Docs">API</span>
+                  <ng-container *ngIf="canEditService(srvc._id) && easterEggEnabled">
+                    <span class="text-muted mr-2">|</span>
+                    <span id="getYamls" class="hover text-accent mr-2 font-11" (click)="getYamls(i)">YAMLs</span>
+                    <span [ngbTooltip]="'Repair v'+srvc.version" id="repairDataService"
+                      class="fa fa-toolbox text-accent mr-2 hover" (click)="repairService(i)"></span>
+                  </ng-container>
+                </div> -->
+                <div class="actions d-flex justify-content-end hover align-items-center">
+                  <ng-container *ngIf="srvc.status != 'Pending' && srvc.status != 'Maintenance'">
+                    <span *ngIf="isDeploy(i)" id='deploy_{{i}}' class="fw-600 font-13 text-primary mr-3"
+                      (click)="deployService(i)">Deploy</span>
+                    <span class="fw-600 font-13 hover mr-3" *ngIf="srvc.status == 'Stopped' && isStartStopService(i)"
+                      (click)="toggleServiceStatus(i)">Start</span>
+                    <span class="fw-600 font-13 hover mr-3" *ngIf="srvc.status == 'Active' && isStartStopService(i)"
+                      (click)="toggleServiceStatus(i)">Stop</span>
+                    <span class="dsi dsi-more-vertical hover mr-3 ignore-outside"
+                      (click)="showDropDown($event,srvc._id)"></span>
+                  </ng-container>
+                  <div *ngIf="showOptionsDropdown[srvc._id]"
+                    class="more-options bg-white rounded list-group position-fixed border"
+                    (mouseleave)="showOptionsDropdown[srvc._id]=false" [ngStyle]="dropDownStyle" odpClickOutside
+                    (outside)="showOptionsDropdown[srvc._id]=false">
+                    <button class="list-group-item list-group-item-action py-2 border-0"
+                      *ngIf="canEditService(srvc._id)" (click)="viewService(i)">View</button>
+                    <button class="list-group-item list-group-item-action py-2 border-0"
+                      *ngIf="canEditService(srvc._id)" (click)="editService(i)">Edit</button>
+                    <button class="list-group-item list-group-item-action py-2 border-0"
+                      *ngIf="srvc.draftVersion && canEditService(srvc._id)" (click)="discardDraft(srvc._id)">Discard
+                      Draft</button>
+                    <button class="list-group-item list-group-item-action py-2 border-0"
+                      *ngIf="canCloneService(srvc._id)" (click)="cloneService(i)">Clone</button>
+                    <button class="list-group-item list-group-item-action py-2 border-0" (click)="openDocs(i)">API
+                      Docs</button>
+                    <button class="list-group-item list-group-item-action py-2 border-0 text-danger"
+                      *ngIf="canDeleteService(srvc._id)" (click)="deleteService(i)">Delete</button>
+                    <button class="list-group-item list-group-item-action py-2 text-accent"
+                      (click)="getYamls(i)">YAMLs</button>
+                    <button *ngIf="canEditService(srvc._id) && easterEggEnabled"
+                      class="list-group-item list-group-item-action py-2 text-accent"
+                      (click)="repairService(i)">Repair</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="card-body pt-3">
-            <div class="d-flex align-items-center my-2">
-              <div class="d-flex flex-column">
-                <div class="mb-1">
-                  <odp-loading-placeholder width="50" height="30"></odp-loading-placeholder>
-                </div>
-                <div>
-                  <odp-loading-placeholder width="80" height="10"></odp-loading-placeholder>
-                </div>
-              </div>
-              <div class="d-flex flex-column ml-4">
-                <div class="mb-1">
-                  <odp-loading-placeholder width="50" height="30"></odp-loading-placeholder>
-                </div>
-                <div>
-                  <odp-loading-placeholder width="80" height="10"></odp-loading-placeholder>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex align-items-center my-2">
-              <div class="d-flex flex-column">
-                <div class="mb-1">
-                  <odp-loading-placeholder width="50" height="30"></odp-loading-placeholder>
-                </div>
-                <div>
-                  <odp-loading-placeholder width="80" height="10"></odp-loading-placeholder>
-                </div>
-              </div>
-              <div class="d-flex flex-column ml-4">
-                <div class="mb-1">
-                  <odp-loading-placeholder width="50" height="30"></odp-loading-placeholder>
-                </div>
-                <div>
-                  <odp-loading-placeholder width="80" height="10"></odp-loading-placeholder>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-      <div class="d-flex flex-column w-100 justify-content-center align-items-center p-3" *ngIf="!serviceList.length">
-        <h5 class="my-4 text-secondary">zero. zip. zilch. nada.</h5>
+        </ng-container>
       </div>
     </div>
   </div>
 </div>
+
 
 <ng-template #alertModalTemplate>
   <div class="modal-body p-4">
     <div class="d-flex align-items-center justify-content-between w-100">
-      <div class="d-flex align-items-center">
-        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-          <odp-service-icon [size]="18" color="202a36" class="mt-1"></odp-service-icon>
-        </span>
-        <span class="font-weight-bold mb-1">{{alertModal.title}}</span>
-      </div>
-      <span class="fa fa-times text-secondary hover " (click)="alertModalTemplateRef.close(false)"></span>
+      <span class="font-20 fw-600">{{ alertModal.title }}</span>
+      <span class="fa fa-times text-secondary hover" (click)="alertModalTemplateRef.close(false)"></span>
     </div>
-    <p class="text-secondary text-center my-5">{{alertModal.message}}</p>
+    <p class="text-secondary text-center my-5">{{ alertModal.message }}</p>
     <div class="d-flex align-items-center justify-content-end">
-      <button type="button" class="btn btn-min-width btn-dark" (click)="alertModalTemplateRef.close(true)">Yes</button>
+      <button type="button" class="btn btn-min-width btn-primary" (click)="alertModalTemplateRef.close(true)">
+        Yes
+      </button>
     </div>
   </div>
 </ng-template>
 
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-  <odp-service-icon [size]="18" color="DD5151" class="mt-1"></odp-service-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
 
-
-<ng-template #newServiceModal>
-  <div class="new-service-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="form">
-    <div class="d-flex flex-column w-100">
-      <div class="d-flex align-items-center justify-content-between mb-3">
-        <div class="d-flex align-items-center">
-          <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
-            <odp-service-icon size="16" color="1CAD49"></odp-service-icon>
-          </span>
-          <span class="font-weight-bold mb-1">New Data Service</span>
-        </div>
-        <span class="fa fa-times text-muted hover" (click)="newServiceModalRef.close(false)"></span>
+<div [ngClass]="{'show':showNewServiceWindow}"
+  class="new-service-window p-4 page-padding position-fixed bg-white d-flex flex-column" [formGroup]="form">
+  <div class="d-flex align-items-center justify-content-between mb-5">
+    <span class="font-20 fw-600">New Data Service</span>
+    <span class="dsi dsi-close hover" (click)="showNewServiceWindow=false"></span>
+  </div>
+  <div class="d-flex flex-column w-100">
+    <div *ngIf="showNewServiceWindow" class="form-group">
+      <label for="name" class="font-13 text-secondary">
+        <span class="text">Name</span>
+        <sup class="text-danger font-normal high-zIndex sup-top" ngbTooltip="Mandatory field">*</sup>
+      </label>
+      <div class="name-wrapper position-relative">
+        <input newServiceName autocomplete="off" type="text" class="form-control" id="name"
+          placeholder="Untitled Service" formControlName="name" odpAutoFocus (keyup.enter)="triggerServiceCreate()"
+          [ngClass]="{
+            'is-invalid': form.get('name').invalid && form.get('name').dirty
+          }" />
+        <ng-container *ngIf="form.get('name').dirty">
+          <span *ngIf="form.get('name').hasError('required')"
+            class="text-danger position-absolute dsi dsi-danger-circle high-zIndex" container="body"
+            ngbTooltip="Name is required"></span>
+          <span *ngIf="form.get('name').hasError('maxlength')"
+            class="text-danger position-absolute dsi dsi-danger-circle high-zIndex" container="body"
+            ngbTooltip="Name should not be more than 40 characters."></span>
+          <span *ngIf="form.get('name').hasError('pattern')"
+            class="text-danger position-absolute dsi dsi-danger-circle high-zIndex" container="body"
+            ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
+        </ng-container>
       </div>
-      <div class="d-flex flex-column w-100">
-        <label for="name" class="font-sm text-secondary">
-          <span class="text">Name</span>
-          <sup class="text-danger font-normal high-zIndex sup-top" ngbTooltip="Mandatory field">*</sup>
+    </div>
+    <div class="mb-3 mt-2 d-flex align-items-center">
+      <div class="d-flex align-items-center hover mr-3" (click)="toggleSchemaType(false)">
+        <odp-round-radio size="18" [edit]="true" [checked]="form.get('schemaFree').value==false"
+          (checkedChange)="toggleSchemaType(false)">
+        </odp-round-radio>
+        <span class="text ml-2">Schema Based</span>
+      </div>
+      <div class="d-flex align-items-center hover" (click)="toggleSchemaType(true)">
+        <odp-round-radio size="18" [edit]="true" [checked]="form.get('schemaFree').value==true"
+          (checkedChange)="toggleSchemaType(true)">
+        </odp-round-radio>
+        <span class="text ml-2">Schema Free</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="font-13 text-secondary" for="category">Data Connector</label>
+      <select id="data" class="form-control" (change)="selectConnector($event,'data')">
+        <option [value]="connector._id" *ngFor="let connector of dataConnectors"
+          [selected]="checkDefault(connector._id)">{{connector.name}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="font-13 text-secondary" for="table">Tables</label>
+      <div odpClickOutside (outside)="showDropdownOptions=false">
+        <input type="text" name="city" list="tableName" class="form-control" (click)="showDropdownOptions = true"
+          autocomplete="off" [value]="form.get('connectors')?.get('data')?.value?.options?.tableName || ''"
+          (blur)="selectTables($event?.target?.value)">
+        <i class="dsi dsi-drop-down"></i>
+        <div class="popover" *ngIf="showDropdownOptions">
+          <span class="popover-options" *ngFor="let table of tables"
+            (click)="selectTables(table.name);showDropdownOptions=false ">{{table.name}}</span>
+        </div>
+      </div>
+      <!-- <select id="data" class="form-control" (change)="selectTables($event)">
+        <option [value]="table.name" *ngFor="let table of tables">{{table.name}}</option>
+      </select> -->
+    </div>
+    <div class="form-group" *ngIf="!form.get('schemaFree').value">
+      <label class="font-13 text-secondary" for="category">File Connector</label>
+      <select id="file" class="form-control" (change)="selectConnector($event,'file')">
+        <option [value]="connector._id" *ngFor="let connector of fileConnectors"
+          [selected]="checkDefault(connector._id)">{{connector.name}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
+    <button type="button" class="btn btn-primary w-100" id="newServiceModalYes" [disabled]="form.invalid"
+      (click)="triggerServiceCreate()">
+      Create
+    </button>
+  </div>
+</div>
+
+<div [ngClass]="{'show':showCloneServiceWindow}"
+  class="new-service-window p-4 page-padding position-fixed bg-white d-flex flex-column" [formGroup]="cloneForm">
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center justify-content-between mb-5">
+      <span class="font-20 fw-600">Clone Data Service</span>
+      <span class="fa fa-times text-muted hover" (click)="showCloneServiceWindow=false"></span>
+    </div>
+    <p>
+      <span class="text-muted">You are Cloning:&nbsp;</span>
+      <span class="font-weight-bold">{{ cloneData?.name }}</span>
+    </p>
+    <div class="d-flex flex-column w-100">
+      <div *ngIf="showCloneServiceWindow" class="form-group mb-4">
+        <label for="name" class="font-13 text-secondary">
+          <span class="text">Clone Name</span>
+          <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
         </label>
         <div class="name-wrapper position-relative">
-          <input newServiceName type="text" class="form-control" id="name" placeholder="Untitled Service"
-            formControlName="name" (keyup.enter)="newServiceTextarea.focus()" odpAutoFocus
-            [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
-          <ng-container *ngIf="form.get('name').dirty">
-            <span *ngIf="form.get('name').hasError('required')"
-              class="text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
+          <input cloneServiceName autocomplete="off" type="text" class="form-control" id="name"
+            placeholder="Untitled Service" formControlName="name" odpAutoFocus [ngClass]="{
+              'is-invalid': cloneForm.get('name').invalid && cloneForm.get('name').dirty
+            }" />
+          <ng-container *ngIf="cloneForm.get('name').dirty">
+            <span *ngIf="cloneForm.get('name').hasError('required')"
+              class="text-danger position-absolute dsi dsi-danger-circle high-zIndex" container="body"
               ngbTooltip="Name is required"></span>
-            <span *ngIf="form.get('name').hasError('maxlength')"
-              class="text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
-              ngbTooltip="Name should not be more than 40 characters."></span>
-            <span *ngIf="form.get('name').hasError('pattern')"
-              class="text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
+            <span *ngIf="cloneForm.get('name').hasError('maxlength')"
+              class="text-danger position-absolute dsi dsi-danger-circle high-zIndex" container="body"
+              ngbTooltip="Name should be within 40 characters"></span>
+            <span *ngIf="cloneForm.get('name').hasError('pattern')"
+              class="text-danger position-absolute dsi dsi-danger-circle high-zIndex" container="body"
               ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
           </ng-container>
         </div>
-        <label for="description" class="font-sm text-secondary mt-3">Description</label>
-        <div class="name-wrapper position-relative">
-          <textarea #newServiceTextarea class="form-control" id="description" rows="5" placeholder="No description"
-            formControlName="description" (keydown.enter)="$event.preventDefault()"
-            (keyup.enter)="newServiceModalRef.close(true)"></textarea>
-          <ng-container *ngIf="form.get('description').dirty">
-            <span *ngIf="form.get('description').hasError('maxlength')"
-              class="text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
-              ngbTooltip="Description should not be more than 240 characters"></span>
-          </ng-container>
+      </div>
+      <div *ngIf="showCloneServiceWindow" class="d-flex flex-column w-100">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <span class="font-13">Design Tab</span>
+          <odp-switch [checked]="true"></odp-switch>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="font-13">Integration Tab</div>
+          <odp-switch [edit]="{status:canCloneTab('I', cloneData._id)}" [checked]="cloneForm.get('intTab').value"
+            (checkedChange)="cloneForm.get('intTab').setValue($event)"></odp-switch>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="font-13">Experience Tab</div>
+          <odp-switch [edit]="{status:canCloneTab('E', cloneData._id)}" [checked]="cloneForm.get('expTab').value"
+            (checkedChange)="cloneForm.get('expTab').setValue($event)"></odp-switch>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="font-13">Roles Tab</div>
+          <odp-switch [edit]="{status:canCloneTab('R', cloneData._id)}" [checked]="cloneForm.get('rolTab').value"
+            (checkedChange)="cloneForm.get('rolTab').setValue($event)"></odp-switch>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="font-13">Settings Tab</div>
+          <odp-switch [edit]="{status:canCloneTab('S', cloneData._id)}" [checked]="cloneForm.get('setTab').value"
+            (checkedChange)="cloneForm.get('setTab').setValue($event)"></odp-switch>
         </div>
       </div>
-    </div>
-    <div class="d-flex align-self-end justify-content-end w-100 mt-3">
-      <button type="button" class="btn btn-min-width btn-create" id="newServiceModalYes" [disabled]="form.invalid"
-        (click)="newServiceModalRef.close(true)">Create</button>
     </div>
   </div>
-</ng-template>
-
-<ng-template #cloneServiceModal>
-  <div class="clone-service-modal modal-body p-4 d-flex flex-column align-items-center" [formGroup]="cloneForm">
-    <div class="d-flex flex-column w-100">
-      <div class="d-flex align-items-center justify-content-between mb-3">
-        <div class="d-flex align-items-center">
-          <span class="icon-wrapper rounded-circle d-flex align-items-center justify-content-center mr-2">
-            <odp-service-icon size="16" color="1CAD49" class="mt-1"></odp-service-icon>
-          </span>
-          <span class="font-weight-bold mb-1">Clone Data Service</span>
-        </div>
-        <span class="fa fa-times text-muted hover" (click)="cloneServiceModalRef.close(false)"></span>
-      </div>
-      <p>
-        <span class="text-muted">You are Cloning:&nbsp;</span>
-        <span class="font-weight-bold">{{cloneData?.name}}</span>
-      </p>
-      <div class="d-flex flex-column w-100">
-        <div class="form-group">
-          <label for="name" class="font-sm text-secondary">
-            <span class="text">Clone Name</span>
-            <sup class="text-danger font-normal high-zIndex" ngbTooltip="Mandatory field">*</sup>
-          </label>
-          <div class="name-wrapper position-relative">
-            <input cloneServiceName type="text" class="form-control" id="name" placeholder="Untitled Service"
-              formControlName="name" (keyup.enter)="cloneServiceTextarea.focus()" odpAutoFocus
-              [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
-            <ng-container *ngIf="form.get('name').dirty">
-              <span *ngIf="form.get('name').hasError('required')"
-                class="text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
-                ngbTooltip="Name is required"></span>
-              <span *ngIf="form.get('name').hasError('maxlength')"
-                class="text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
-                ngbTooltip="Name should be within 30 characters"></span>
-              <span *ngIf="form.get('name').hasError('pattern')"
-                class="text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
-                ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
-            </ng-container>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="description" class="font-sm text-secondary mt-3">Clone Description</label>
-          <div class="name-wrapper position-relative">
-            <textarea #cloneServiceTextarea class="form-control" id="description" rows="5" placeholder="No description"
-              formControlName="description" (keydown.enter)="$event.preventDefault()"
-              (keyup.enter)="triggerClone()"></textarea>
-            <ng-container *ngIf="form.get('description').dirty">
-              <span *ngIf="form.get('description').hasError('maxlength')"
-                class="text-danger position-absolute fa fa-exclamation-circle high-zIndex" container="body"
-                ngbTooltip="Description should be within 240 characters"></span>
-            </ng-container>
-          </div>
-        </div>
-        <div class="d-flex flex-column w-100">
-          <div class="mb-2">
-            <odp-checkbox-btn>
-              <div class="d-flex align-items-center">
-                <div [ngClass]="{'font-weight-bold': cloneForm.get('desTab').value}">Design Tab</div>
-              </div>
-              <input type="checkbox" class="d-none disabled" name="desTab" checked="true" disabled="true">
-            </odp-checkbox-btn>
-          </div>
-          <div class="mb-2">
-            <odp-checkbox-btn>
-              <div class="d-flex align-items-center">
-                <div [ngClass]="{'font-weight-bold': cloneForm.get('intTab').value}">Integration Tab</div>
-              </div>
-              <input *ngIf="canCloneTab('I',cloneData._id)" type="checkbox" class="d-none" name="intTab"
-                formControlName="intTab" [checked]="cloneForm.get('intTab').value">
-              <input *ngIf="!canCloneTab('I',cloneData._id)" type="checkbox" class="d-none disabled">
-            </odp-checkbox-btn>
-          </div>
-          <div class="mb-2">
-            <odp-checkbox-btn>
-              <div class="d-flex align-items-center">
-                <div [ngClass]="{'font-weight-bold': cloneForm.get('expTab').value}">Experience Tab</div>
-              </div>
-              <input *ngIf="canCloneTab('E',cloneData._id)" type="checkbox" class="d-none" name="expTab"
-                formControlName="expTab" [checked]="cloneForm.get('expTab').value">
-              <input *ngIf="!canCloneTab('E',cloneData._id)" type="checkbox" class="d-none disabled">
-            </odp-checkbox-btn>
-          </div>
-          <div class="mb-2">
-            <odp-checkbox-btn>
-              <div class="d-flex align-items-center">
-                <div [ngClass]="{'font-weight-bold': cloneForm.get('rolTab').value}">Roles Tab</div>
-              </div>
-              <input *ngIf="canCloneTab('R',cloneData._id)" type="checkbox" class="d-none" name="rolTab"
-                formControlName="rolTab" [checked]="cloneForm.get('rolTab').value">
-              <input *ngIf="!canCloneTab('R',cloneData._id)" type="checkbox" class="d-none disabled">
-            </odp-checkbox-btn>
-          </div>
-          <div class="mb-2">
-            <odp-checkbox-btn>
-              <div class="d-flex align-items-center">
-                <div [ngClass]="{'font-weight-bold': cloneForm.get('setTab').value}">Settings Tab</div>
-              </div>
-              <input *ngIf="canCloneTab('S',cloneData._id)" type="checkbox" class="d-none" name="setTab"
-                formControlName="setTab" [checked]="cloneForm.get('setTab').value">
-              <input *ngIf="!canCloneTab('S',cloneData._id)" type="checkbox" class="d-none disabled">
-            </odp-checkbox-btn>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="d-flex align-self-end justify-content-end w-100 mt-3">
-      <button type="button" class="btn btn-min-width btn-create" id="cloneServiceModalYes"
-        [disabled]="cloneForm.invalid" (click)="triggerClone()">Clone</button>
-    </div>
+  <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
+    <button type="button" class="btn btn-primary w-100" id="cloneServiceModalYes" [disabled]="cloneForm.invalid"
+      (click)="triggerClone()">
+      Clone
+    </button>
   </div>
-</ng-template>
+</div>
 
-
-<ng-template #yamlModalTemplate>
-  <div class="modal-body p-4">
-    <div class="d-flex align-items-center justify-content-between w-100">
-      <div class="d-flex align-items-center">
-        <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-          <odp-service-icon [size]="18" color="202a36" class="mt-1"></odp-service-icon>
-        </span>
-        <span class="font-weight-bold mb-1">Yamls</span>
-      </div>
-      <span class="fa fa-times text-secondary hover " (click)="yamlModalTemplateRef.close(false)"></span>
-    </div>
-    <textarea class="form-control my-3" rows="10" cols="30" readonly>{{serviceYaml}}</textarea>
-    <textarea class="form-control my-3" rows="10" cols="30" readonly>{{deploymentYaml}}</textarea>
-    <div class="d-flex align-items-center justify-content-end">
-      <button type="button" class="btn btn-min-width btn-dark"
-        (click)="yamlModalTemplateRef.close(false)">Close</button>
-    </div>
+<div [ngClass]="{'show':showYamlWindow}" class="yaml-window position-fixed p-4 border-left bg-white">
+  <div class="d-flex align-items-center justify-content-between w-100 mb-5">
+    <span class="font-20 fw-600">Yamls</span>
+    <span class="dsi dsi-close hover" (click)="closeYamlWindow()"></span>
   </div>
-</ng-template>
+  <button type="button" class="btn btn-link p-0 mb-4" (click)="downloadYamls()">Download Yamls</button>
+  <ng-container *ngIf="showYamlWindow">
+    <div class="form-group">
+      <label for="service">Service</label>
+      <div class="position-relative">
+        <pre class="form-control">{{selectedService.serviceYaml}}</pre>
+        <small class="form-text position-absolute">
+          <span class="text-secondary hover" *ngIf="!copied['service']"
+            (click)="copyText(selectedService.serviceYaml,'service')">Copy</span>
+          <span class="text-accent" *ngIf="copied['service']">Copied!</span>
+        </small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="deployment">Deployment</label>
+      <div class="position-relative">
+        <pre class="form-control">{{selectedService.deploymentYaml}}</pre>
+        <small class="form-text position-absolute">
+          <span class="text-secondary hover" *ngIf="!copied['deployment']"
+            (click)="copyText(selectedService.deploymentYaml,'deployment')">Copy</span>
+          <span class="text-accent" *ngIf="copied['deployment']">Copied!</span>
+        </small>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<div *ngIf="toggleImportWizard || showNewServiceWindow || showCloneServiceWindow || showYamlWindow" class="overlay">
+</div>
+<div *ngIf="toggleImportWizard" class="wizard-window bg-white rounded">
+  <odp-service-import-wizard (close)="toggleImportWizard=false"></odp-service-import-wizard>
+</div>

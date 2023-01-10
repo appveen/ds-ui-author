@@ -1,0 +1,542 @@
+@import "variables";
+
+@font-face {
+  font-family: '#{$icomoon-font-family}';
+  src: url('./#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?iu0nlv') format('truetype'),
+  url('./#{$icomoon-font-path}/#{$icomoon-font-family}.woff?iu0nlv') format('woff'),
+  url('./#{$icomoon-font-path}/#{$icomoon-font-family}.svg?iu0nlv##{$icomoon-font-family}') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.dsi {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: '#{$icomoon-font-family}' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  font-size: 18px;
+  display: inline-block;
+
+  &.dsi-sm {
+    font-size: 0.875rem !important;
+  }
+}
+
+.dsi-api-reciever {
+  &:before {
+    content: $dsi-api-reciever; 
+  }
+}
+.dsi-logs {
+  &:before {
+    content: $dsi-logs; 
+  }
+}
+.dsi-mapping {
+  &:before {
+    content: $dsi-mapping; 
+  }
+}
+.dsi-response {
+  &:before {
+    content: $dsi-response; 
+  }
+}
+.dsi-connector {
+  &:before {
+    content: $dsi-connector; 
+  }
+}
+.dsi-invoke-api {
+  &:before {
+    content: $dsi-invoke-api; 
+  }
+}
+.dsi-notification-active .path1 {
+  &:before {
+    content: $dsi-notification-active-path1;  
+  }
+}
+.dsi-notification-active .path2 {
+  &:before {
+    content: $dsi-notification-active-path2;  
+    margin-left: -1em;  
+  }
+}
+.dsi-notification-active .path3 {
+  &:before {
+    content: $dsi-notification-active-path3;  
+    margin-left: -1em;  
+    color: rgb(47, 196, 143);
+  }
+}
+.dsi-minus-circle-fill {
+  &:before {
+    content: $dsi-minus-circle-fill; 
+  }
+}
+.dsi-plus-circle-fill {
+  &:before {
+    content: $dsi-plus-circle-fill; 
+  }
+}
+.dsi-id {
+  &:before {
+    content: $dsi-id; 
+  }
+}
+.dsi-date {
+  &:before {
+    content: $dsi-date; 
+  }
+}
+.dsi-library-alt {
+  &:before {
+    content: $dsi-library-alt; 
+  }
+}
+.dsi-file-text {
+  &:before {
+    content: $dsi-file-text; 
+  }
+}
+.dsi-object {
+  &:before {
+    content: $dsi-object; 
+  }
+}
+.dsi-array {
+  &:before {
+    content: $dsi-array; 
+  }
+}
+.dsi-relation {
+  &:before {
+    content: $dsi-relation; 
+  }
+}
+.dsi-number {
+  &:before {
+    content: $dsi-number; 
+  }
+}
+.dsi-location {
+  &:before {
+    content: $dsi-location; 
+  }
+}
+.dsi-Profile {
+  &:before {
+    content: $dsi-Profile; 
+  }
+}
+.dsi-plus-circle {
+  &:before {
+    content: $dsi-plus-circle; 
+  }
+}
+.dsi-create-only .path1 {
+  &:before {
+    content: $dsi-create-only-path1;  
+    color: rgb(59, 151, 210);
+  }
+}
+.dsi-create-only .path2 {
+  &:before {
+    content: $dsi-create-only-path2;  
+    margin-left: -1em;  
+    color: rgb(255, 255, 255);
+  }
+}
+.dsi-minus-circle {
+  &:before {
+    content: $dsi-minus-circle; 
+  }
+}
+.dsi-unique .path1 {
+  &:before {
+    content: $dsi-unique-path1;  
+    color: rgb(129, 178, 154);
+  }
+}
+.dsi-unique .path2 {
+  &:before {
+    content: $dsi-unique-path2;  
+    margin-left: -1em;  
+    color: rgb(255, 255, 255);
+  }
+}
+.dsi-boolean {
+  &:before {
+    content: $dsi-boolean; 
+  }
+}
+.dsi-text {
+  &:before {
+    content: $dsi-text; 
+  }
+}
+.dsi-required .path1 {
+  &:before {
+    content: $dsi-required-path1;  
+    color: rgb(224, 122, 95);
+  }
+}
+.dsi-required .path2 {
+  &:before {
+    content: $dsi-required-path2;  
+    margin-left: -1em;  
+    color: rgb(255, 255, 255);
+  }
+}
+.dsi-drop-up {
+  &:before {
+    content: $dsi-drop-up; 
+  }
+}
+.dsi-drop-down {
+  &:before {
+    content: $dsi-drop-down; 
+  }
+}
+.dsi-console {
+  &:before {
+    content: $dsi-console; 
+  }
+}
+.dsi-plus {
+  &:before {
+    content: $dsi-plus; 
+  }
+}
+.dsi-close {
+  &:before {
+    content: $dsi-close; 
+  }
+}
+.dsi-settings {
+  &:before {
+    content: $dsi-settings; 
+  }
+}
+.dsi-trash {
+  &:before {
+    content: $dsi-trash; 
+  }
+}
+.dsi-drop-down-alt {
+  &:before {
+    content: $dsi-drop-down-alt; 
+  }
+}
+.dsi-minus {
+  &:before {
+    content: $dsi-minus; 
+  }
+}
+.dsi-search {
+  &:before {
+    content: $dsi-search; 
+  }
+}
+.dsi-view {
+  &:before {
+    content: $dsi-view; 
+  }
+}
+.dsi-arrow-right {
+  &:before {
+    content: $dsi-arrow-right; 
+  }
+}
+.dsi-arrow-left {
+  &:before {
+    content: $dsi-arrow-left; 
+  }
+}
+.dsi-copy {
+  &:before {
+    content: $dsi-copy; 
+  }
+}
+.dsi-edit {
+  &:before {
+    content: $dsi-edit; 
+  }
+}
+.dsi-logout {
+  &:before {
+    content: $dsi-logout; 
+  }
+}
+.dsi-info-circle {
+  &:before {
+    content: $dsi-info-circle; 
+  }
+}
+.dsi-danger-circle {
+  &:before {
+    content: $dsi-danger-circle; 
+  }
+}
+.dsi-mail {
+  &:before {
+    content: $dsi-mail; 
+  }
+}
+.dsi-clock {
+  &:before {
+    content: $dsi-clock; 
+  }
+}
+.dsi-check {
+  &:before {
+    content: $dsi-check; 
+  }
+}
+.dsi-download {
+  &:before {
+    content: $dsi-download; 
+  }
+}
+.dsi-upload {
+  &:before {
+    content: $dsi-upload; 
+  }
+}
+.dsi-full-screen {
+  &:before {
+    content: $dsi-full-screen; 
+  }
+}
+.dsi-done {
+  &:before {
+    content: $dsi-done; 
+  }
+}
+.dsi-hide {
+  &:before {
+    content: $dsi-hide; 
+  }
+}
+.dsi-json {
+  &:before {
+    content: $dsi-json; 
+  }
+}
+.dsi-calendar {
+  &:before {
+    content: $dsi-calendar; 
+  }
+}
+.dsi-branch {
+  &:before {
+    content: $dsi-branch; 
+  }
+}
+.dsi-remove {
+  &:before {
+    content: $dsi-remove; 
+  }
+}
+.dsi-more-vertical-6 {
+  &:before {
+    content: $dsi-more-vertical-6; 
+  }
+}
+.dsi-skip-forward {
+  &:before {
+    content: $dsi-skip-forward; 
+  }
+}
+.dsi-cloud {
+  &:before {
+    content: $dsi-cloud; 
+  }
+}
+.dsi-filter-alt {
+  &:before {
+    content: $dsi-filter-alt; 
+  }
+}
+.dsi-dollar-sign {
+  &:before {
+    content: $dsi-dollar-sign; 
+  }
+}
+.dsi-map-pin {
+  &:before {
+    content: $dsi-map-pin; 
+  }
+}
+.dsi-refresh {
+  &:before {
+    content: $dsi-refresh; 
+  }
+}
+.dsi-attach {
+  &:before {
+    content: $dsi-attach; 
+  }
+}
+.dsi-more-vertical {
+  &:before {
+    content: $dsi-more-vertical; 
+  }
+}
+.dsi-play {
+  &:before {
+    content: $dsi-play; 
+  }
+}
+.dsi-ban {
+  &:before {
+    content: $dsi-ban; 
+  }
+}
+.dsi-save {
+  &:before {
+    content: $dsi-save; 
+  }
+}
+.dsi-align-right {
+  &:before {
+    content: $dsi-align-right; 
+  }
+}
+.dsi-align-left {
+  &:before {
+    content: $dsi-align-left; 
+  }
+}
+.dsi-undo {
+  &:before {
+    content: $dsi-undo; 
+  }
+}
+.dsi-redo {
+  &:before {
+    content: $dsi-redo; 
+  }
+}
+.dsi-join {
+  &:before {
+    content: $dsi-join; 
+  }
+}
+.dsi-admin {
+  &:before {
+    content: $dsi-admin; 
+  }
+}
+.dsi-expand {
+  &:before {
+    content: $dsi-expand; 
+  }
+}
+.dsi-collapse {
+  &:before {
+    content: $dsi-collapse; 
+  }
+}
+.dsi-file {
+  &:before {
+    content: $dsi-file; 
+  }
+}
+.dsi-pointer {
+  &:before {
+    content: $dsi-pointer; 
+  }
+}
+.dsi-sort {
+  &:before {
+    content: $dsi-sort; 
+  }
+}
+.dsi-stop {
+  &:before {
+    content: $dsi-stop; 
+  }
+}
+.dsi-notification {
+  &:before {
+    content: $dsi-notification; 
+  }
+}
+.dsi-insight {
+  &:before {
+    content: $dsi-insight; 
+  }
+}
+.dsi-flow {
+  &:before {
+    content: $dsi-flow; 
+  }
+}
+.dsi-bookmark {
+  &:before {
+    content: $dsi-bookmark; 
+  }
+}
+.dsi-function {
+  &:before {
+    content: $dsi-function; 
+  }
+}
+.dsi-agent {
+  &:before {
+    content: $dsi-agent; 
+  }
+}
+.dsi-bot {
+  &:before {
+    content: $dsi-bot; 
+  }
+}
+.dsi-library {
+  &:before {
+    content: $dsi-library; 
+  }
+}
+.dsi-api-doc {
+  &:before {
+    content: $dsi-api-doc; 
+  }
+}
+.dsi-data-service {
+  &:before {
+    content: $dsi-data-service; 
+  }
+}
+.dsi-group {
+  &:before {
+    content: $dsi-group; 
+  }
+}
+.dsi-nano-service {
+  &:before {
+    content: $dsi-nano-service; 
+  }
+}
+.dsi-user {
+  &:before {
+    content: $dsi-user; 
+  }
+}
+.dsi-app-panel {
+  &:before {
+    content: $dsi-app-panel; 
+  }
+}
+

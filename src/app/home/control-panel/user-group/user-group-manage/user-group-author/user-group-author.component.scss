@@ -2,16 +2,16 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 .wrapper {
-  min-height: calc(100vh - 224px);
-  max-height: calc(100vh - 224px);
+  min-height: calc(100vh - 260px);
+  max-height: calc(100vh - 260px);
   overflow-y: auto;
 }
+
 .sub-menu {
-  min-height: calc(100vh - 224px);
-  overflow: auto;
+  width: 200px;
 }
-.sub-menu,
-.service-name {
-  min-width: 128px;
-  max-width: 128px;
+
+.permissions-wrapper {
+  overflow-y: auto;
+  max-height: calc(100vh - 260px);
 }

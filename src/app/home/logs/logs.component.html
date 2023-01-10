@@ -1,85 +1,19 @@
 <div class="d-flex flex-column w-100 h-100">
     <div class="options p-3 d-flex justify-content-between">
         <div class="buttons d-flex">
-
-            <!-- <div class="btn-group">
-                <span class="btn btn-outline-accent" (click)="purgeAudit()">Purge Audit</span>
-            </div> -->
-            <button  (click)="purgeAudit()" type="button" *ngIf="canPurgeAudit()"
-                class="edit-button btn btn-min-width btn-primary" >
-                <span class="odp-trash mr-2"></span>
+            <button (click)="purgeAudit()" type="button" *ngIf="canPurgeAudit()"
+                class="edit-button btn btn-white border d-flex align-items-center ">
+                <span class="dsi dsi-trash mr-2"></span>
                 <span class="text">Purge Audit</span>
             </button>
-            <!--<div class="radio-btn-grp d-flex">
-                <div class="btn-container hover d-flex justify-content-between align-items-center px-1 mr-2 border"
-                     [ngClass]="{'bg-accent': activeTab == 0, 'text-white': activeTab == 0}"
-                     (click)="activateTab(0)">
-                    <div class="d-flex">
-                        <div>
-                            &lt;!&ndash;<span class="fas fa-user-cog mr-1"
-                                  [ngClass]="{'text-secondary': activeTab !== 0, 'text-white': activeTab == 0}"></span>&ndash;&gt;
-                        </div>
-                        <div [ngClass]="{'font-weight-bold': activeTab == 0}">API</div>
-                    </div>
-                    <div>
-                        <span class="far fa-lg"
-                              [ngClass]="{'fa-circle text-muted': activeTab !== 0, 'fa-check-circle text-white': activeTab == 0}"></span>
-                    </div>
-                </div>
-                <div class="btn-container hover d-flex justify-content-between align-items-center px-1 mr-2 border"
-                     [ngClass]="{'bg-accent': activeTab == 1, 'text-white': activeTab == 1}"
-                     (click)="activateTab(1)">
-                    <div class="d-flex">
-                        <div>
-                            &lt;!&ndash;<span class="fas fa-user mr-1"
-                                  [ngClass]="{'text-secondary': activeTab !== 1, 'text-white': activeTab == 1}"></span>&ndash;&gt;
-                        </div>
-                        <div [ngClass]="{'font-weight-bold': activeTab == 1}">Service</div>
-                    </div>
-                    <div>
-                        <span class="far fa-lg"
-                              [ngClass]="{'fa-circle text-muted': activeTab !== 1, 'fa-check-circle text-white': activeTab == 1}"></span>
-                    </div>
-                </div>
-                <div class="btn-container hover d-flex justify-content-between align-items-center px-1 mr-2 border"
-                     [ngClass]="{'bg-accent': activeTab == 2, 'text-white': activeTab == 2}"
-                     (click)="activateTab(2)">
-                    <div class="d-flex">
-                        <div>
-                            &lt;!&ndash;<span class="fas fa-user mr-1"
-                                  [ngClass]="{'text-secondary': activeTab !== 2, 'text-white': activeTab == 2}"></span>&ndash;&gt;
-                        </div>
-                        <div [ngClass]="{'font-weight-bold': activeTab == 2}">Post-hooks</div>
-                    </div>
-                    <div>
-                        <span class="far fa-lg"
-                              [ngClass]="{'fa-circle text-muted': activeTab !== 2, 'fa-check-circle text-white': activeTab == 2}"></span>
-                    </div>
-                </div>
-                <div class="btn-container hover d-flex justify-content-between align-items-center px-1 mr-2 border"
-                     [ngClass]="{'bg-accent': activeTab == 3, 'text-white': activeTab == 3}"
-                     (click)="activateTab(3)">
-                    <div class="d-flex">
-                        <div>
-                            &lt;!&ndash;<span class="fas fa-user mr-1"
-                                  [ngClass]="{'text-secondary': activeTab !== 3, 'text-white': activeTab == 3}"></span>&ndash;&gt;
-                        </div>
-                        <div [ngClass]="{'font-weight-bold': activeTab == 3}">Pre-hooks</div>
-                    </div>
-                    <div>
-                        <span class="far fa-lg"
-                              [ngClass]="{'fa-circle text-muted': activeTab !== 3, 'fa-check-circle text-white': activeTab == 3}"></span>
-                    </div>
-                </div>
-            </div>-->
         </div>
         <div class="filters d-flex w-75 justify-content-end">
             <span class="btn btn-link text-accent" *ngIf="columns" (click)="showColumns=!showColumns">
-                <span class="fa fa-cog mr-2"></span>
+                <span class="dsi dsi-settings mr-2"></span>
                 <span class="text">Columns</span>
             </span>
             <span class="btn btn-link text-accent" (click)="showFilters=!showFilters">
-                <span class="fa fa-filter mr-2"></span>
+                <span class="dsi dsi-filter-alt mr-2"></span>
                 <span class="text">Filter</span>
             </span>
             <div class="mx-3 position-relative w-50" *ngIf="searchOptions.length>0">
@@ -100,14 +34,9 @@
         </div>
     </div>
     <div class="d-flex flex-column h-100 w-100">
-        <!-- <odp-api-logs *ngIf="activeTab==0" [service]="service" [(columns)]="columns" [(filters)]="filters">
-        </odp-api-logs> -->
-        <odp-audit-logs #auditlog *ngIf="activeTab==1" [serviceObj]="service" [(columns)]="columns" [(filters)]="filters">
+        <odp-audit-logs #auditlog *ngIf="activeTab==1" [serviceObj]="service" [(columns)]="columns"
+            [(filters)]="filters">
         </odp-audit-logs>
-        <!-- <odp-post-hook-logs *ngIf="activeTab==2" [service]="service" [(columns)]="columns" [(filters)]="filters">
-        </odp-post-hook-logs>
-        <odp-pre-hook-logs *ngIf="activeTab==3" [service]="service" [(columns)]="columns" [(filters)]="filters">
-        </odp-pre-hook-logs> -->
     </div>
 </div>
 
@@ -170,15 +99,12 @@
         (trigger)="purgeModalTemplateRef.close(true)">
         <div class="d-flex align-items-center justify-content-between mb-2 w-100">
             <div class="d-flex align-items-center">
-                <span
-                    class="icon-wrapper modify-red rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <span class="fas fa-exclamation"></span>
-                </span>
-                <span class="font-weight-bold mb-1"><strong>{{purgeModal.title}}</strong></span>
+                <span class="dsi dsi-danger-circle mr-2 text-danger"></span>
+                <span class="font-20 fw-500"><strong>{{purgeModal.title}}</strong></span>
             </div>
             <span class="fa fa-times text-muted hover" (click)="purgeModalTemplateRef.close(false)"></span>
         </div>
-        <div class="info d-flex flex-column align-self-center justify-content-center w-100">
+        <div class="info d-flex flex-column align-self-center justify-content-center w-100 h-100 mt-4">
             <div class="desc-pos">{{purgeModal.desc}}</div>
             <div class="text-center mt-3 px-4">
                 <span class="confirm-text">
@@ -187,7 +113,7 @@
             </div>
             <input type="text" class="form-control mt-3 service-name" placeholder="Enter the Data Service name"
                 [(ngModel)]="confirmServiceName" odpAutoFocus>
-            <div class="text-center mt-3">
+            <div class="text-center mt-auto">
                 <button class="btn btn-danger" type="button"
                     (click)="purgeModalTemplateRef.close(true)">{{purgeModal.btnText}}</button>
             </div>

@@ -1,49 +1,48 @@
-import { Component, OnInit, ViewChild, OnDestroy, EventEmitter, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { switchMap } from 'rxjs/operators';
+import * as _ from 'lodash';
 
-import { CommonService, GetOptions } from '../../utils/services/common.service';
+import { CommonService } from '../../utils/services/common.service';
 import { AppService } from '../../utils/services/app.service';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
+import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 
 @Component({
     selector: 'odp-library',
     templateUrl: './library.component.html',
-    styleUrls: ['./library.component.scss']
+    styleUrls: ['./library.component.scss'],
+    providers: [CommonFilterPipe]
 })
 export class LibraryComponent implements OnInit, OnDestroy {
 
-    @ViewChild('newLibraryModal', { static: false }) newLibraryModal: TemplateRef<HTMLElement>;
-    app: string;
-    searchForm: FormGroup;
     libraryList: Array<any> = [];
-    config: GetOptions;
     alertModal: {
         statusChange?: boolean;
         title: string;
         message: string;
         index: number;
     };
-    showLazyLoader = true;
-    showCardMenu: any = {};
+    showLazyLoader: boolean;
     subscriptions: any = {};
-    showAddButton: boolean;
     breadcrumbPaths: Array<Breadcrumb>;
     openDeleteModal: EventEmitter<any>;
-    newLibraryModalRef: NgbModalRef;
     form: FormGroup;
+    showNewLibraryWindow: boolean;
+    showOptionsDropdown: any;
+    selectedItemEvent: any
+    selectedLibrary: any;
+    searchTerm: string;
+    sortModel: any;
     constructor(private commonService: CommonService,
         private appService: AppService,
         private router: Router,
         private fb: FormBuilder,
-        private ts: ToastrService) {
+        private ts: ToastrService,
+        private commonPipe: CommonFilterPipe) {
         const self = this;
-        self.searchForm = self.fb.group({
-            searchField: ['name', [Validators.required]],
-            searchTerm: ['', [Validators.required]]
-        });
         self.alertModal = {
             statusChange: false,
             title: '',
@@ -54,29 +53,27 @@ export class LibraryComponent implements OnInit, OnDestroy {
             active: true,
             label: 'Libraries'
         }];
+
+        this.commonService.changeBreadcrumb(self.breadcrumbPaths)
         self.openDeleteModal = new EventEmitter();
-        self.config = {
-            filter: { app: this.commonService.app._id },
-            page: 1,
-            count: 30
-        };
         self.form = self.fb.group({
             name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
             description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]]
         });
+        this.showOptionsDropdown = {};
+        this.showLazyLoader = true;
+        this.sortModel = {};
     }
 
     ngOnInit() {
         const self = this;
-        self.app = self.commonService.app._id;
         self.showLazyLoader = true;
         self.commonService.apiCalls.componentLoading = false;
-        self.clearSearch();
+        self.getLibraries();
         self.subscriptions['changeApp'] = self.commonService.appChange.subscribe(_app => {
             self.commonService.apiCalls.componentLoading = false;
             self.showLazyLoader = true;
-            self.libraryList = [];
-            self.clearSearch();
+            self.getLibraries();
         });
 
     }
@@ -86,22 +83,12 @@ export class LibraryComponent implements OnInit, OnDestroy {
         Object.keys(self.subscriptions).forEach(e => {
             self.subscriptions[e].unsubscribe();
         });
-        if (self.newLibraryModalRef) {
-            self.newLibraryModalRef.close();
-        }
     }
 
     newLibrary() {
         const self = this;
-        self.newLibraryModalRef = self.commonService.modal(self.newLibraryModal, { size: 'sm' });
-        self.newLibraryModalRef.result.then(close => {
-            if (close && self.form.valid) {
-                self.triggerLibraryCreate();
-            }
-            self.form.reset();
-        }, dismiss => {
-            self.form.reset();
-        });
+        self.form.reset();
+        this.showNewLibraryWindow = true;
     }
 
     triggerLibraryCreate() {
@@ -132,63 +119,34 @@ export class LibraryComponent implements OnInit, OnDestroy {
         self.router.navigate(['/app/', self.app, 'gs', self.appService.cloneLibraryId]);
     }
 
-    loadMore(event) {
-        const self = this;
-        if (event.target.scrollTop >= 244) {
-            self.showAddButton = true;
-        } else {
-            self.showAddButton = false;
-        }
-        if (event.target.scrollTop + event.target.offsetHeight === event.target.children[0].offsetHeight) {
-            self.config.page = self.config.page + 1;
-            self.getLibraries();
-        }
-    }
-
-    clearSearch() {
-        const self = this;
-        self.libraryList = [];
-        self.config.page = 1;
-        self.config.filter = null;
-        self.getLibraries();
-    }
-
     getLibraries() {
         const self = this;
         if (self.subscriptions['getLibraries']) {
             self.subscriptions['getLibraries'].unsubscribe();
         }
         self.showLazyLoader = true;
-        self.subscriptions['getLibraries'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/globalSchema`, self.config).subscribe(res => {
-            self.showLazyLoader = false;
-            if (res.length > 0) {
-                res.forEach(_library => {
-                    if (_library.definition) {
-                        _library._attributes = _library.definition[0].definition.length;
-                        _library._references = _library.services.length;
-                    } else {
-                        _library._attributes = 0;
-                        _library._references = _library.services.length;
-                    }
-                    self.libraryList.push(_library);
-                });
-            }
-        }, err => {
-            self.commonService.errorToast(err, 'We are unable to fetch records, please try again later');
-        });
-    }
-
-    search(value) {
-        const self = this;
-        if (!value || !value.trim() || value.trim().length < 3) {
-            return;
-        }
-        if (!self.config.filter) {
-            self.config.filter = {};
-        }
-        self.config.filter.name = '/' + value.trim() + '/';
-        self.libraryList = [];
-        self.getLibraries();
+        this.libraryList = [];
+        self.subscriptions['getLibraries'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/globalSchema/utils/count`)
+            .pipe(switchMap((ev: any) => {
+                return self.commonService.get('serviceManager', `/${this.commonService.app._id}/globalSchema`, { count: ev });
+            }))
+            .subscribe(res => {
+                self.showLazyLoader = false;
+                if (res.length > 0) {
+                    res.forEach(_library => {
+                        if (_library.definition) {
+                            _library._attributes = _library.definition[0]?.definition?.length;
+                            _library._references = _library.services.length;
+                        } else {
+                            _library._attributes = 0;
+                            _library._references = _library.services.length;
+                        }
+                        self.libraryList.push(_library);
+                    });
+                }
+            }, err => {
+                self.commonService.errorToast(err, 'We are unable to fetch records, please try again later');
+            });
     }
 
     deleteLibrary(_index) {
@@ -209,7 +167,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
             self.subscriptions['deleteLibrary'] = self.commonService.delete('serviceManager', url).subscribe(_d => {
                 self.showLazyLoader = false;
                 self.ts.info(_d.message ? _d.message : 'Library deleted');
-                self.clearSearch();
+                self.getLibraries();
             }, err => {
                 self.showLazyLoader = false;
                 self.commonService.errorToast(err, 'Unable to delete, please try again later');
@@ -256,5 +214,83 @@ export class LibraryComponent implements OnInit, OnDestroy {
     hasViewPermission(entity: string) {
         const self = this;
         return self.commonService.hasPermission('PVL', entity);
+    }
+
+    applySort(field: string) {
+        if (!this.sortModel[field]) {
+            this.sortModel = {};
+            this.sortModel[field] = 1;
+        } else if (this.sortModel[field] == 1) {
+            this.sortModel[field] = -1;
+        } else {
+            delete this.sortModel[field];
+        }
+    }
+
+    showDropDown(event: any, i: number) {
+        this.selectedItemEvent = event;
+        Object.keys(this.showOptionsDropdown).forEach(key => {
+            this.showOptionsDropdown[key] = false;
+        })
+        this.selectedLibrary = this.libraryList[i];
+        this.showOptionsDropdown[i] = true;
+    }
+
+    private compare(a: any, b: any) {
+        if (a > b) {
+            return 1;
+        } else if (a < b) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    get dropDownStyle() {
+        let top = (this.selectedItemEvent.clientY + 10);
+        if (this.selectedItemEvent.clientY > 430) {
+            top = this.selectedItemEvent.clientY - 106
+        }
+        return {
+            top: top + 'px',
+            right: '50px'
+        };
+    }
+
+    get records() {
+        let records = this.commonPipe.transform(this.libraryList, 'name', this.searchTerm);
+        const field = Object.keys(this.sortModel)[0];
+        if (field) {
+            records = records.sort((a, b) => {
+                if (this.sortModel[field] == 1) {
+                    if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+                        return this.compare((a[field]), (b[field]));
+                    } else {
+                        return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
+                    }
+                } else if (this.sortModel[field] == -1) {
+                    if (typeof a[field] == 'number' || typeof b[field] == 'number') {
+                        return this.compare((b[field]), (a[field]));
+                    } else {
+                        return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
+                    }
+                } else {
+                    return 0;
+                }
+            });
+        } else {
+            records = records.sort((a, b) => {
+                return this.compare(b._metadata.lastUpdated, a._metadata.lastUpdated);
+            });
+        }
+        return records;
+    }
+
+    get app() {
+        return this.commonService.app._id;
+    }
+
+    navigate(id) {
+        this.router.navigate(['/app/', this.app, 'gs', id])
     }
 }

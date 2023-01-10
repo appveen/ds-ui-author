@@ -1,6 +1,11 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
 .wrapper {
   min-height: calc(100vh - 266px);
 }
+
+
 .role-list {
   min-width: 750px;
   max-width: 750px;
@@ -10,50 +15,61 @@
     max-width: 74px;
   }
 }
-.switch .toggler {
-  top: -3px;
-}
-.b {
-  border: 1px solid #ececec;
+
+
+.admin-option {
+  min-width: 300px;
 }
 
-.b-bottom {
-  border-bottom: 1px solid #ececec;
+.permissions-badge {
+  min-width: 32px;
+  min-height: 32px;
 }
+
+
 
 .data-services-section {
   min-height: calc(100vh - 274px);
+
   .select-ds {
     width: 320px;
   }
+
   .role-list-item {
     transition: 0.25s;
+
     &.selected {
       transform: scale(1.1);
       margin: 15px;
     }
   }
+
   .role-list-item-head {
     min-height: 40px;
     max-height: 40px;
   }
+
   .role-list-item-body {
     .steps-header {
       height: 32px;
       background: #f9f9f9;
     }
+
     .role-list-sub-item {
       min-height: 56px;
       max-height: 56px;
     }
   }
+
   .name {
     min-width: 200px;
     max-width: 200px;
   }
+
   .permissions {
     min-width: 160px;
     max-width: 160px;
+
     .icon {
       min-width: 24px;
       max-width: 24px;
@@ -62,6 +78,7 @@
     }
   }
 }
+
 .no-ds {
   height: 60vh;
 }

@@ -1,14 +1,47 @@
-.audit-object-log {
-  height: calc(100vh - 244px);
-  overflow: auto;
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.overlay {
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: rgba($color: #000000, $alpha: 0.6);
 }
+
+.audit-object-window {
+  height: 100vh;
+  overflow: auto;
+  width: 600px;
+  top: 0;
+  right: -600px;
+  transition: 0.2s;
+  z-index: 2;
+  &.show {
+    right: 0 !important;
+  }
+}
+
 .table-wrapper {
   max-height: calc(100vh - 293px);
 }
+
 .logs {
   cursor: pointer;
 }
+
 .table-height {
-  max-height: calc(100vh - 300px);
-  min-height: calc(100vh - 300px);
+  max-height: calc(100vh - 395px);
+  min-height: calc(100vh - 395px);
+  overflow: auto;
+}
+
+.item-no {
+  width: 80px;
+}
+
+.item-timestamp,
+.item-data {
+  min-width: 200px;
 }

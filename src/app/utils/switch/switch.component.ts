@@ -11,24 +11,31 @@ export class SwitchComponent implements OnInit {
     @Input() type: string;
     @Input() disabled: boolean;
     @Input() checked: boolean;
+    @Input() showLabel: boolean;
+    @Input() checkedText: string;
+    @Input() uncheckedText: string;
     @Output() checkedChange: EventEmitter<boolean>;
     constructor() {
-        const self = this;
-        self.checkedChange = new EventEmitter();
-        self.type = 'accent';
-        self.edit = {};
+        this.checkedChange = new EventEmitter();
+        this.type = 'success';
+        this.edit = {};
+        this.showLabel = false;
     }
 
     ngOnInit() {
-        const self = this;
     }
 
     onChange(val: any) {
-        const self = this;
-        if (self.disabled) {
+        if (this.disabled) {
             return;
         }
-        self.checked = val;
-        self.checkedChange.emit(val);
+        this.checked = val;
+        this.checkedChange.emit(val);
+    }
+
+    get sliderClass() {
+        if (this.checked) {
+            return 'bg-' + this.type;
+        }
     }
 }

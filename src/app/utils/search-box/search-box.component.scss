@@ -4,10 +4,8 @@
     width: 300px !important;
     input {
         width: 300px !important; // background-color: $light;
-        background-color: rgba(0, 0, 0, 0.03);
+        border: 1px solid #ECECEC;
         text-indent: 10px;
-        padding: 0.25rem 0.75rem 0.25rem 0.12rem;
-        border-radius: 20px;
         &:active,
         &:focus {
             background-color: $white;

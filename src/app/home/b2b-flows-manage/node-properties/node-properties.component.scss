@@ -1,0 +1,22 @@
+.node-mapping-window,
+.node-agent-window {
+    top: 0px;
+    right: -800px;
+    z-index: 3;
+    width: 800px;
+    height: 100vh;
+    overflow-y: auto;
+    transition: 0.2s;
+
+    &.show {
+        right: 0px;
+    }
+}
+
+.node-agent-window {
+    width: 360px;
+}
+
+.codeblock-editor {
+    height: calc(100vh - 100px);
+}

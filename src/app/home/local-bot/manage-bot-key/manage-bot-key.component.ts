@@ -3,13 +3,15 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AgGridAngular } from 'ag-grid-angular';
-import { GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
+import { GridApi, GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
 
 import { CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
 import { AgGridSharedFloatingFilterComponent } from 'src/app/utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.component';
 import { AgGridActionsRendererComponent } from 'src/app/utils/ag-grid-actions-renderer/ag-grid-actions-renderer.component';
 import { LocalBotCellRendererComponent } from '../local-bot-cell-renderer/local-bot-cell-renderer.component';
+import * as moment from 'moment';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'odp-manage-bot-key',
@@ -21,6 +23,8 @@ export class ManageBotKeyComponent implements OnInit {
   @ViewChild('agGrid') agGrid: AgGridAngular;
   @Input() selectedBot: any;
   @Output() dataChange: EventEmitter<any>;
+  @Output() editKey: EventEmitter<any> = new EventEmitter();
+  @Output() onAdd: EventEmitter<any> = new EventEmitter();
   openDeleteBotKeyModal: EventEmitter<any>;
   editKeyModalRef: NgbModalRef
   showLazyLoader: boolean;
@@ -29,7 +33,10 @@ export class ManageBotKeyComponent implements OnInit {
   frameworkComponents: any;
   filterModel: any;
   filtering: boolean;
-
+  gridApi: GridApi;
+  searchTerm: string;
+  action: any;
+  data: any;
   constructor(
     private fb: FormBuilder,
     public commonService: CommonService,
@@ -46,153 +53,25 @@ export class ManageBotKeyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setupGrid();
+    this.data = this.selectedBot.botKeys
   }
 
-  setupGrid() {
-    this.frameworkComponents = {
-      customCellRenderer: LocalBotCellRendererComponent,
-      actionCellRenderer: AgGridActionsRendererComponent
-    };
-    this.gridOptions = {
-      defaultColDef: {
-        cellRenderer: 'customCellRenderer',
-        headerClass: 'hide-filter-icon',
-        resizable: true,
-        sortable: true,
-        filter: 'agTextColumnFilter',
-        suppressMenu: true,
-        floatingFilter: true,
-        floatingFilterComponentFramework: AgGridSharedFloatingFilterComponent,
-        filterParams: {
-          caseSensitive: true,
-          suppressAndOrCondition: true,
-          suppressFilterButton: true
-        }
-      },
-      columnDefs: [
-        {
-          headerName: 'Key',
-          field: 'label',
-          refData: {
-            filterType: 'text',
-            namespace: 'keys'
-          }
-        },
-        {
-          headerName: 'Expiry',
-          field: 'createdAt',
-          minWidth: 270,
-          refData: {
-            filterType: 'date-time',
-            timezone: 'Zulu',
-            namespace: 'keys'
-          }
-        },
-        {
-          headerName: 'Value',
-          field: 'keyValue',
-          minWidth: 270,
-          sortable: false,
-          filter: false,
-          refData: {
-            namespace: 'keys'
-          }
-        },
-        ...(this.hasPermission('PMBBU') || this.hasPermission('PMBA')
-          ? [
-            {
-              headerName: 'Actions',
-              pinned: 'right',
-              cellRenderer: 'actionCellRenderer',
-              sortable: false,
-              filter: false,
-              minWidth: (this.hasPermission('PMBBU') ? 94 : 0) + (this.hasPermission('PMBA') ? 164 : 0),
-              maxWidth: (this.hasPermission('PMBBU') ? 94 : 0) + (this.hasPermission('PMBA') ? 164 : 0),
-              refData: {
-                actionButtonsMapperFn: 'actionButtonsMapperFn',
-                actionCallbackFunction: 'onGridAction'
-              }
-            }
-          ]
-          : [])
-      ],
-      context: this,
-      animateRows: true,
-      onGridReady: this.onGridReady.bind(this),
-      onRowDataChanged: this.autoSizeAllColumns.bind(this),
-      onGridSizeChanged: this.forceResizeColumns.bind(this),
-    };
-  }
-
-  private onGridReady(event: GridReadyEvent) {
-    this.forceResizeColumns();
-  }
-
-  private forceResizeColumns() {
-    this.agGrid.api.sizeColumnsToFit();
-    this.autoSizeAllColumns();
-  }
-
-  private autoSizeAllColumns() {
-    const fixedSize = (this.hasPermission('PMBBU') ? 94 : 0) + (this.hasPermission('PMBA') ? 164 : 0);
-    if (!!this.agGrid.api && !!this.agGrid.columnApi) {
-      setTimeout(() => {
-        const container = document.querySelector('.grid-container');
-        const availableWidth = !!container ? container.clientWidth - fixedSize : 730;
-        const allColumns = this.agGrid.columnApi.getAllColumns();
-        allColumns.forEach(col => {
-          this.agGrid.columnApi.autoSizeColumn(col);
-          if (col.getActualWidth() > 200 || this.agGrid.api.getDisplayedRowCount() === 0) {
-            col.setActualWidth(200);
-          }
-        });
-        const occupiedWidth = allColumns.reduce((pv, cv) => pv + cv.getActualWidth(), -fixedSize);
-        if (occupiedWidth < availableWidth) {
-          this.agGrid.api.sizeColumnsToFit();
-        }
-      }, 2000);
-    }
-  }
 
   actionButtonsMapperFn(data: any) {
     const buttons = [];
-    if (this.hasPermission('PMBBU')) {
-      buttons.push('Edit');
-      buttons.push('Delete');
-    }
     if (this.hasPermission('PMBA')) {
       buttons.push('End Session');
       buttons.push(data.isActive ? 'Deactivate' : 'Activate')
     }
+    if (this.hasPermission('PMBBU')) {
+      buttons.push('Edit');
+      buttons.push('Delete');
+    }
+
     return buttons;
   }
 
-  onGridAction(buttonName: string, rowNode: RowNode) {
-    switch (buttonName) {
-      case 'Edit':
-        {
-          this.editBotKey(rowNode.data);
-        }
-        break;
-      case 'End Session':
-        {
-          this.endSession(rowNode.data);
-        }
-        break;
-      case 'Delete':
-        {
-          this.deleteBotKey(rowNode.data);
-        }
-        break;
-      case 'Activate':
-      case 'Deactivate':
-        {
-          this.deactivateKey(rowNode.data);
-        }
-        break;
-    }
-  }
+
 
   onFilterChanged(event) {
     this.filtering = true;
@@ -204,31 +83,7 @@ export class ManageBotKeyComponent implements OnInit {
 
   editBotKey(key: any) {
     const self = this;
-    self.keyForm.get('label').patchValue(key.label)
-    self.keyForm.get('expires').patchValue(key.expires / 1440)
-    self.editKeyModalRef = self.commonService.modal(self.newKeyModal, { size: 'sm' });
-    self.editKeyModalRef.result.then(close => {
-      if (close) {
-        const payload = self.keyForm.value;
-        payload.expires = payload.expires * 1440;
-        payload.keyId = key._id;
-        self.showLazyLoader = true;
-
-        self.commonService.put('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
-          .subscribe((res) => {
-            self.showLazyLoader = false;
-            self.selectedBot = res;
-            self.dataChange.emit(res);
-          }, err => {
-            self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
-          });
-      } else {
-        self.showLazyLoader = false;
-        self.keyForm.reset();
-      }
-    }, dismiss => {
-      self.keyForm.reset();
-    });
+    this.editKey.emit(key);
   }
 
   getDate(key) {
@@ -256,6 +111,7 @@ export class ManageBotKeyComponent implements OnInit {
       .subscribe((res) => {
         self.showLazyLoader = false;
         self.ts.success("Session ended");
+
       }, err => {
         self.showLazyLoader = false;
         self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
@@ -264,6 +120,7 @@ export class ManageBotKeyComponent implements OnInit {
 
   deactivateKey(key) {
     const self = this;
+    this.action = 'Deactivate';
     const payload = key
     payload.isActive = !key.isActive;
     payload.keyId = key._id;
@@ -274,6 +131,7 @@ export class ManageBotKeyComponent implements OnInit {
         self.showLazyLoader = false;
         self.selectedBot = res;
         self.dataChange.emit(res);
+
       }, err => {
         self.showLazyLoader = false;
         self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
@@ -283,6 +141,7 @@ export class ManageBotKeyComponent implements OnInit {
 
   deleteBotKey(key) {
     const self = this;
+    this.action = 'Delete'
     const alertModal: any = {};
     alertModal.statusChange = false;
     alertModal.title = 'Delete Bot Key';
@@ -291,11 +150,50 @@ export class ManageBotKeyComponent implements OnInit {
     self.openDeleteBotKeyModal.emit(alertModal);
   }
 
+  confirmDeactivate(key) {
+    const self = this;
+    this.action = 'Deactivate';
+    const alertModal: any = {};
+    alertModal.statusChange = false;
+    alertModal.title = 'Deactivate Key';
+    alertModal.message = 'Would you like to deactivate the key selected, It will stop all the action being performed unitl the key reactivated';
+    alertModal._id = key._id;
+    alertModal.key = key;
+    alertModal.btnText = 'Deactivate'
+    self.openDeleteBotKeyModal.emit(alertModal);
+  }
+  confirmReactivate(key) {
+    const self = this;
+    this.action = 'Reactivate';
+    const alertModal: any = {};
+    alertModal.statusChange = false;
+    alertModal.usePrimaryButton = true;
+    alertModal.title = 'Reactivate Key';
+    alertModal.message = 'Would you like to reactivate the key selected, It will start  performing all the functions attached to it.';
+    alertModal._id = key._id;
+    alertModal.key = key;
+    alertModal.btnText = 'Reactivate'
+    self.openDeleteBotKeyModal.emit(alertModal);
+  }
+  confirmEndSession(key) {
+    const self = this;
+    this.action = 'End Session';
+    const alertModal: any = {};
+    alertModal.statusChange = false;
+    alertModal.title = 'End Session';
+    alertModal.message = 'Would you like to end the session of the key selected.';
+    alertModal._id = key._id;
+    alertModal.key = key;
+    alertModal.btnText = 'End Session'
+    self.openDeleteBotKeyModal.emit(alertModal);
+  }
 
-  closeDeleteBotKeyModal(data) {
-    if (data) {
+
+  closeDeleteBotKeyModal(event) {
+
+    if (this.action === 'Delete') {
       const self = this;
-      const payload = { keyId: data._id }
+      const payload = { keyId: event._id }
       self.showLazyLoader = true;
 
       self.commonService.delete('user', `/${this.commonService.app._id}/bot/utils/botKey/${self.selectedBot._id}`, payload)
@@ -303,14 +201,56 @@ export class ManageBotKeyComponent implements OnInit {
           self.showLazyLoader = false;
           self.selectedBot = res;
           self.dataChange.emit(res);
+          if (this.gridApi) {
+            this.gridApi.redrawRows()
+          }
         }, err => {
           self.showLazyLoader = false;
           self.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
         });
     }
+    if (this.action === 'Deactivate' || this.action === 'Reactivate') {
+      this.deactivateKey(event.key)
+    }
+    if (this.action === 'End Session') {
+      this.endSession(event.key)
+    }
+
   }
   hasPermission(type: string): boolean {
     const self = this;
     return self.commonService.hasPermission(type);
+  }
+
+  formatLastLogin(timestamp) {
+    if (timestamp) {
+      return moment(timestamp).utc().format('hh:mm A , DD/MM/YYYY' + '(UTC)');
+    }
+  }
+
+  refreshCell() {
+    if (this.agGrid.api) {
+      this.agGrid.api.redrawRows()
+    }
+  }
+
+  enterToSelect(event) {
+    this.searchTerm = event;
+    let filtered;
+    if (event === '' || event === null) {
+      filtered = this.selectedBot.botKeys;
+    }
+    else {
+      filtered = this.selectedBot.botKeys.filter(ele => ele.label.toLowerCase().indexOf(event) > -1)
+    }
+    this.data = filtered
+  }
+
+  add() {
+    this.onAdd.emit('Keys')
+  }
+
+  hasNewKey() {
+    return this.selectedBot.botKeys.find(key => key.isNew)
   }
 }

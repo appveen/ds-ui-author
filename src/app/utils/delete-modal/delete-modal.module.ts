@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteModalComponent } from './delete-modal.component';
 import { ClickOutsideModule } from '../directives/click-outside/click-outside.module';
-import { IconsModule } from '../icons/icons.module';
 import { AutoFocusModule } from '../directives/auto-focus/auto-focus.module';
 
 @NgModule({
@@ -12,7 +11,6 @@ import { AutoFocusModule } from '../directives/auto-focus/auto-focus.module';
     NgbModule,
     ClickOutsideModule,
     AutoFocusModule,
-    IconsModule
   ],
   declarations: [DeleteModalComponent],
   exports: [DeleteModalComponent]

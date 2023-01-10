@@ -1,12 +1,7 @@
 <ng-template #newAgentModalTemplate>
     <div class="modal-body p-4 d-flex flex-column align-items-center">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper create rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-agent-icon [size]="18" color="1CAD49" class="mt-1"></odp-agent-icon>
-                </span>
-                <span class="font-weight-bold">{{agentData.isEdit?'Edit':'Create new'}} App Agent</span>
-            </div>
+            <span class="font-20 fw-600">{{agentData.isEdit?'Edit':'Create new'}} App Agent</span>
             <button type="button" class="btn btn-link text-dark" (click)="newAgentModalTemplateRef.close(false)">
                 <span class="fa fa-times"></span>
             </button>
@@ -106,17 +101,14 @@
 <ng-template #viewPasswordModalTemplate>
     <div class="modal-body p-4 d-flex flex-column align-items-center">
         <div class="d-flex align-items-center align-self-start">
-            <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                <odp-agent-icon [size]="18" color="202a36" class="mt-1"></odp-agent-icon>
-            </span>
-            <span class="font-weight-bold">Agent Details</span>
+            <span class="font-20 fw-600">Agent Details</span>
         </div>
         <div class="d-flex flex-column my-5 w-100">
-            <div class="text-secondary font-sm">Agent ID</div>
+            <div class="text-secondary font-13">Agent ID</div>
             <div class="text-dark mt-1">{{agent.agentID}}</div>
-            <div class="text-secondary font-sm mt-3">Agent Name</div>
+            <div class="text-secondary font-13 mt-3">Agent Name</div>
             <div class="text-dark mt-1">{{agent.name}}</div>
-            <div class="text-secondary font-sm mt-3">Agent Password</div>
+            <div class="text-secondary font-13 mt-3">Agent Password</div>
             <div class="text-dark mt-1">
                 <span *ngIf="!agent.decPassword" class="fa fa-spinner fa-pulse"></span>
                 <span *ngIf="agent.decPassword" class="text">{{agent.decPassword}}</span>
@@ -126,7 +118,7 @@
                 </button>
             </div>
             <div>
-                <span *ngIf="passwordCopied" class="text-info font-sm">Password Copied!</span>
+                <span *ngIf="passwordCopied" class="text-info font-13">Password Copied!</span>
                 &nbsp;
             </div>
         </div>
@@ -140,12 +132,7 @@
 <ng-template #alertModalTemplate>
     <div class="modal-body p-4 d-flex flex-column">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-agent-icon [size]="18" color="202a36" class="mt-1"></odp-agent-icon>
-                </span>
-                <span class="font-weight-bold">{{alertModalData.title}}</span>
-            </div>
+            <span class="font-20 fw-600">{{alertModalData.title}}</span>
             <span class="fa fa-times text-secondary hover" (click)="alertModalTemplateRef.close(false)"></span>
         </div>
         <div class="d-flex flex-column my-5 w-100">
@@ -161,27 +148,22 @@
 <ng-template #changePasswordModalTemplate>
     <div class="modal-body p-4 d-flex flex-column">
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center align-self-start">
-                <span class="icon-wrapper modify rounded-circle d-flex align-items-center justify-content-center mr-2">
-                    <odp-agent-icon [size]="18" color="202a36" class="mt-1"></odp-agent-icon>
-                </span>
-                <span class="font-weight-bold">Change Password</span>
-            </div>
+            <span class="font-20 fw-600">Change Password</span>
             <span class="fa fa-times text-secondary hover" (click)="changePasswordModalTemplateRef.close(false)"></span>
         </div>
         <div class="d-flex flex-column my-5 w-100">
             <div class="form-group">
-                <label for="agentName" class="font-sm text-secondary">Agent Name</label>
+                <label for="agentName" class="font-13 text-secondary">Agent Name</label>
                 <input type="text" class="form-control-plaintext no-outline" [(ngModel)]="agentPasswordModel.agent.name"
                     readonly>
             </div>
             <div class="form-group">
-                <label for="newPassword" class="font-sm text-secondary">New Password</label>
+                <label for="newPassword" class="font-13 text-secondary">New Password</label>
                 <input type="password" class="form-control" autocomplete="new-password"
                     [(ngModel)]="agentPasswordModel.password">
             </div>
             <div class="form-group">
-                <label for="newPassword" class="font-sm text-secondary">Confirm Password</label>
+                <label for="newPassword" class="font-13 text-secondary">Confirm Password</label>
                 <input type="password" class="form-control" [(ngModel)]="agentPasswordModel.cpassword">
             </div>
             <p class="text-danger">
@@ -197,6 +179,4 @@
     </div>
 </ng-template>
 
-<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)">
-    <odp-agent-icon [size]="18" color="DD5151" class="mt-1"></odp-agent-icon>
-</odp-delete-modal>
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
