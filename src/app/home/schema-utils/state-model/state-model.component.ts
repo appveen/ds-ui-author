@@ -53,6 +53,7 @@ export class StateModelComponent implements OnInit {
   stateModelData: any;
   deleteModal: DeleteModalConfig;
   newListAttrType: any;
+  stateModelStatus: boolean = false;
 
   @ViewChild('instance', { static: true }) instance: NgbTypeahead;
   focus$ = new Subject<string>();
@@ -83,7 +84,8 @@ export class StateModelComponent implements OnInit {
     self.sourceDefinition = self.appService.patchDataKey(
       self.fb.array(definitions).value
     );
-    if (self.stateModelEnabled) {
+    this.stateModelStatus = this.form.get(['stateModel', 'enabled']).value;
+    if (self.stateModelEnabled || this.stateModelStatus) {
       self.stateModelData = self.allStates.map((state) => {
         return { state: state, checked: false };
       });
@@ -92,6 +94,7 @@ export class StateModelComponent implements OnInit {
     this.form.get('stateModel').valueChanges.subscribe((selectedValue) => {
       this.form.get('stateModel').markAsDirty();
     });
+
   }
 
   search: OperatorFunction<string, readonly string[]> = (
@@ -130,9 +133,9 @@ export class StateModelComponent implements OnInit {
         return term === ''
           ? states
           : states.filter(
-              (v) =>
-                v.properties.name.toLowerCase().indexOf(term.toLowerCase()) > -1
-            );
+            (v) =>
+              v.properties.name.toLowerCase().indexOf(term.toLowerCase()) > -1
+          );
       })
     );
   };
@@ -329,6 +332,27 @@ export class StateModelComponent implements OnInit {
   // remove the state model
   disableStateModel() {
     const self = this;
+    this.stateModelStatus = false
+    self.form.get(['stateModel', 'enabled']).patchValue(false);
+    // self.deleteModalTemplateRef = self.commonService.modal(
+    //   self.deleteModalTemplate
+    // );
+    // self.deleteModalTemplateRef.result.then(
+    //   (close) => {
+    //     if (close) {
+    //       this.stateModelStatus = false
+    //       self.form.get(['stateModel', 'enabled']).patchValue(false);
+    //       self.form.get(['stateModel', 'attribute']).patchValue('');
+    //       self.form.get(['stateModel', 'initialStates']).patchValue([]);
+    //       self.form.get(['stateModel', 'states']).patchValue({});
+    //       self.stateModelData = [];
+    //     }
+    //   },
+    //   (dismiss) => { }
+    // );
+  }
+  deleteStateModel() {
+    const self = this;
 
     self.deleteModalTemplateRef = self.commonService.modal(
       self.deleteModalTemplate
@@ -336,6 +360,7 @@ export class StateModelComponent implements OnInit {
     self.deleteModalTemplateRef.result.then(
       (close) => {
         if (close) {
+          this.stateModelStatus = false
           self.form.get(['stateModel', 'enabled']).patchValue(false);
           self.form.get(['stateModel', 'attribute']).patchValue('');
           self.form.get(['stateModel', 'initialStates']).patchValue([]);
@@ -343,7 +368,7 @@ export class StateModelComponent implements OnInit {
           self.stateModelData = [];
         }
       },
-      (dismiss) => {}
+      (dismiss) => { }
     );
   }
 
@@ -487,8 +512,8 @@ export class StateModelComponent implements OnInit {
     let states = selectedState
       ? [selectedState]
       : this.stateModelData
-          .filter((state) => state.checked == true)
-          .map((stateData) => stateData.state);
+        .filter((state) => state.checked == true)
+        .map((stateData) => stateData.state);
 
     // delete from enum
     if (self.stateModelAttrIndex > -1) {
@@ -559,7 +584,7 @@ export class StateModelComponent implements OnInit {
     self.form.get(['stateModel', 'states']).patchValue(stateModelConfig);
   }
 
-  sortableOnMove = (event: any) => {};
+  sortableOnMove = (event: any) => { };
 
   sortableOnUpdate = (event: any) => {
     const self = this;
@@ -592,6 +617,19 @@ export class StateModelComponent implements OnInit {
       ).push(new FormControl(state));
     }
   };
+
+  toggleStateModelStatus() {
+    this.stateModelStatus = !this.stateModelStatus;
+    if (this.stateModelStatus && this.allStates.length > 0) {
+      this.stateModelData = this.allStates.map((state) => {
+        return { state: state, checked: false };
+      });
+    }
+    else {
+      this.disableStateModel()
+    }
+    this.form.get(['stateModel', 'enabled']).patchValue(this.stateModelStatus);
+  }
 
   get isSchemaFree() {
     const self = this;
