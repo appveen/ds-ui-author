@@ -54,7 +54,7 @@
                 (nodeListChange)="changesDone = true">
             </div>
             <div [ngClass]="{'show':showNodeProperties}" class="node-properties border-left position-fixed bg-white">
-                <odp-node-properties *ngIf="showNodeProperties" [nodeList]="nodeList" [currNode]="selectedNode.currNode"
+                <odp-node-properties *ngIf="showNodeProperties" [edit]="edit" [nodeList]="nodeList" [currNode]="selectedNode.currNode"
                     [prevNode]="selectedNode.prevNode" (close)="showNodeProperties=false"
                     (changesDone)="changesDone = true">
                 </odp-node-properties>

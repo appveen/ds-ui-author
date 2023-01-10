@@ -8,6 +8,7 @@ import Fuse from 'fuse.js';
 })
 export class TargetFieldsComponent implements OnInit {
 
+  @Input() edit: any;
   @Input() fuzzyMapping: EventEmitter<any>;
   @Input() clearMapping: EventEmitter<any>;
   @Input() definition: any;
@@ -17,6 +18,7 @@ export class TargetFieldsComponent implements OnInit {
   constructor() {
     this.fuzzyMapping = new EventEmitter();
     this.clearMapping = new EventEmitter();
+    this.edit = { status: false };
   }
 
   ngOnInit(): void {

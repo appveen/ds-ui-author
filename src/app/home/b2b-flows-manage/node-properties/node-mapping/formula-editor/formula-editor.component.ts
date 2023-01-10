@@ -7,14 +7,19 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class FormulaEditorComponent implements OnInit {
 
+  @Input() edit: any;
   @Input() definition: any;
   @Input() toggle: boolean;
   @Output() toggleChange: EventEmitter<boolean>;
   constructor() {
     this.toggleChange = new EventEmitter();
+    this.edit = { status: false };
   }
 
   ngOnInit(): void {
+    if (!this.definition.formula) {
+      this.definition.formula = this.baseCode;
+    }
   }
 
   close(flag: boolean) {

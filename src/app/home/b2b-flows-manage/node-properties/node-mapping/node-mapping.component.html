@@ -14,7 +14,7 @@
                     </div>
                 </div>
                 <ng-container *ngFor="let item of customSourceFields; let i=index;">
-                    <odp-source-fields [definition]="item"></odp-source-fields>
+                    <odp-source-fields [edit]="edit" [definition]="item"></odp-source-fields>
                 </ng-container>
             </ng-container>
             <ng-container *ngIf="!sourceFields">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <ng-container *ngFor="let item of customTargetFields; let i=index;">
-                    <odp-target-fields [definition]="item" [sources]="customSourceFields" [fuzzyMapping]="fuzzyMapping"
+                    <odp-target-fields [edit]="edit" [definition]="item" [sources]="customSourceFields" [fuzzyMapping]="fuzzyMapping"
                         [clearMapping]="clearMapping"></odp-target-fields>
                 </ng-container>
             </ng-container>

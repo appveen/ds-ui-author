@@ -13,7 +13,8 @@
             <i>{{item.dataPath}}</i> as <span class="fw-500">input{{sourceIndex+1}}</span>
         </span>
     </div>
-    <div class="px-3">
-        <textarea class="code-editor form-control" [(ngModel)]="definition.formula">{{baseCode}}</textarea>
+    <div class="code-editor px-3">
+        <odp-code-editor [edit]="edit" [(code)]="definition.formula"></odp-code-editor>
+        <!-- <textarea class="code-editor form-control" [(ngModel)]="definition.formula">{{baseCode}}</textarea> -->
     </div>
 </div>

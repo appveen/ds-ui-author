@@ -264,7 +264,7 @@
 </div>
 
 <div [ngClass]="{'show':showNodeMapping}" class="node-mapping-window border-left position-fixed bg-white p-4">
-    <odp-node-mapping *ngIf="showNodeMapping" [nodeList]="nodeList" [prevNode]="prevNode" [currNode]="currNode"
+    <odp-node-mapping *ngIf="showNodeMapping" [edit]="edit" [nodeList]="nodeList" [prevNode]="prevNode" [currNode]="currNode"
         (close)="closeMapping($event)"></odp-node-mapping>
 </div>
 

@@ -7,8 +7,11 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class SourceFieldsComponent implements OnInit {
 
+  @Input() edit: any;
   @Input() definition: any;
-  constructor() { }
+  constructor() {
+    this.edit = { status: false };
+  }
 
   ngOnInit(): void {
   }

@@ -9,6 +9,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 })
 export class SourceSelectorComponent implements OnInit {
 
+  @Input() edit: any;
   @Input() sources: Array<any>;
   @Output() selected: EventEmitter<any>;
   flattenDefinition: Array<any>;
@@ -16,6 +17,7 @@ export class SourceSelectorComponent implements OnInit {
     this.sources = [];
     this.selected = new EventEmitter();
     this.flattenDefinition = [];
+    this.edit = { status: false };
   }
 
   ngOnInit(): void {
