@@ -8,19 +8,18 @@
             <div class="d-flex align-items-center">
                 <ng-container *ngFor="let item of definition.source;let i=index">
                     <div
-                        class="source-tag d-flex align-items-center justify-content-between bg-white px-2 py-1 font-12 fw-400 border">
+                        class="source-tag d-flex align-items-center justify-content-between bg-white px-2 py-1 font-12 fw-400 border mr-2">
                         <span class="text-dark text-truncate">{{item.name}}</span>
                         <span class="dsi dsi-close ml-2 hover" (click)="removeSource(definition,i)"></span>
                     </div>
                 </ng-container>
             </div>
-            <div class="add-source d-flex align-items-center justify-content-start hover font-12 fw-400 ml-2 ignore-outside"
-                (click)="openDropDown($event)">
+            <div *ngIf="!showAddSource" class="add-source d-flex align-items-center justify-content-start hover font-12 fw-400 ml-2 ignore-outside" (click)="showAddSource=true;$event.stopPropagation()">
                 <span class="dsi dsi-plus-circle-fill mr-2 text-primary ignore-outside"></span>
                 <span class="text-dark ignore-outside">Add Source</span>
             </div>
-            <odp-source-selector *ngIf="showAddSource" class="position-absolute" [sources]="sources" odpClickOutside
-                (outside)="showAddSource=false;clickedCoordinates=null" [ngStyle]="dropDownStyle" (selected)="sourceSelected($event)">
+            <odp-source-selector *ngIf="showAddSource" [sources]="sources" odpClickOutside
+                (outside)="showAddSource=false;" (selected)="sourceSelected($event)">
             </odp-source-selector>
             <!-- <div *ngIf="showAddSource" class="d-flex align-items-center justify-content-start font-12 fw-400 ml-2">
                 <input type="text" class="border rounded bg-white">

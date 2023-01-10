@@ -1,4 +1,8 @@
 <div class="source-selector">
+    <input type="text" class="bg-white rounded border" [ngbTypeahead]="search" [resultFormatter]="formatter" (selectItem)="selectItem($event)" odpAutoFocus>
+</div>
+
+<!-- <div class="source-selector">
     <ng-container *ngTemplateOutlet="listItems; context: {def:sources}"></ng-container>
 </div>
 
@@ -14,4 +18,5 @@
             </ng-container>
         </li>
     </ul>
-</ng-template>
+</ng-template> -->
+

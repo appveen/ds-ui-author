@@ -14,7 +14,6 @@ export class TargetFieldsComponent implements OnInit {
   @Input() sources: any;
   showAddSource: boolean;
   showFormulaEditor: boolean;
-  clickedCoordinates: any;
   constructor() {
     this.fuzzyMapping = new EventEmitter();
     this.clearMapping = new EventEmitter();
@@ -44,15 +43,6 @@ export class TargetFieldsComponent implements OnInit {
     });
   }
 
-  openDropDown(event: any) {
-    event.stopPropagation();
-    this.showAddSource = true;
-    this.clickedCoordinates = {
-      x: event.layerX,
-      y: event.layerY
-    };
-  }
-
   removeSource(def: any, index: number) {
     if (def && def.source && def.source.length > 0) {
       def.source.splice(index, 1);
@@ -68,14 +58,5 @@ export class TargetFieldsComponent implements OnInit {
       this.definition.source.push(source);
     }
     this.showAddSource = false;
-  }
-
-  get dropDownStyle() {
-    if (this.clickedCoordinates) {
-      return {
-        top: this.clickedCoordinates.y + 'px',
-        left: this.clickedCoordinates.x + 'px',
-      }
-    }
   }
 }
