@@ -335,11 +335,11 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
         return;
       }
     }
-    for(var i=0;i<list.value?.length;i++){
-      if(list.value[i]?.key==_value.key){
-        return;
-      }
+
+    if (list.value?.find(val => val?.key === _value.key)) {
+      return;
     }
+
     list.push(new FormControl(_value));
   }
   writeData(value) {
