@@ -6,8 +6,8 @@
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
-<div class="flow-manage-page d-flex flex-column w-100 bg-light-gray page-padding">
-    <div class="mb-3">
+<div class="flow-manage-page d-flex flex-column w-100 bg-light-gray">
+    <div class="p-3">
         <odp-basic-info hideLogo="true" [(name)]="flowData.name" [(description)]="flowData.description" [edit]="edit">
             <div class="d-flex justify-content-end align-items-center">
                 <button (click)="cancel()" type="button"
@@ -49,14 +49,62 @@
             <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
             <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
         </div>
-        <div class="flow-designer p-4">
-            <div class="flow-designer-canvas" *ngIf="flowData?.inputNode" odp-flow-node [currNode]="flowData.inputNode" [(nodeList)]="nodeList"
-                (nodeListChange)="changesDone = true">
+        <div class="flow-designer d-flex">
+            <div class="available-nodes border-right h-100">
+                <div draggable="true" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover">
+                    <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
+                    <span class="font-13 fw-400">File Agent</span>
+                </div>
+                <div draggable="true" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover">
+                    <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
+                    <span class="font-13 fw-400">Invoke API</span>
+                </div>
+                <div draggable="true" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover">
+                    <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
+                    <span class="font-13 fw-400">Connector</span>
+                </div>
+                <div draggable="true" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover">
+                    <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
+                    <span class="font-13 fw-400">Data Service</span>
+                </div>
+                <div draggable="true" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover">
+                    <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
+                    <span class="font-13 fw-400">Function</span>
+                </div>
+                <div draggable="true" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover">
+                    <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
+                    <span class="font-13 fw-400">Mapping</span>
+                </div>
+                <div draggable="true" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover">
+                    <span class="node-icon font-16 fw-400 dsi dsi-object mr-2 text-muted"></span>
+                    <span class="font-13 fw-400">Code Block</span>
+                </div>
+                <div draggable="true" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover">
+                    <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
+                    <span class="font-13 fw-400">Change Root</span>
+                </div>
+                <div draggable="true" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover">
+                    <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
+                    <span class="font-13 fw-400">Response</span>
+                </div>
             </div>
+            <!-- <div class="flow-designer-canvas p-4" *ngIf="flowData?.inputNode" odp-flow-node
+                [currNode]="flowData.inputNode" [(nodeList)]="nodeList" (nodeListChange)="changesDone = true">
+            </div> -->
+
+            <div class="flow-designer-svg-wrapper">
+                <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
+                    <g *ngFor="let node of nodeList;let i=index">
+                        <!-- <rect x="30" [attr.y]="30+((60+48)*i)" width="160" height="48" rx="6" /> -->
+                        <g odp-flow-node [currNode]="node" [index]="i" [nodeList]="nodeList"></g>
+                    </g>
+                </svg>
+            </div>
+
             <div [ngClass]="{'show':showNodeProperties}" class="node-properties border-left position-fixed bg-white">
-                <odp-node-properties *ngIf="showNodeProperties" [edit]="edit" [nodeList]="nodeList" [currNode]="selectedNode.currNode"
-                    [prevNode]="selectedNode.prevNode" (close)="showNodeProperties=false"
-                    (changesDone)="changesDone = true">
+                <odp-node-properties *ngIf="showNodeProperties" [edit]="edit" [nodeList]="nodeList"
+                    [currNode]="selectedNode.currNode" [prevNode]="selectedNode.prevNode"
+                    (close)="showNodeProperties=false" (changesDone)="changesDone = true">
                 </odp-node-properties>
             </div>
         </div>
@@ -95,3 +143,47 @@
         </div>
     </div>
 </ng-template>
+
+
+<div *ngIf="contextMenuStyle" class="available-nodes-dropdown bg-white position-fixed border rounded"
+    [ngStyle]="contextMenuStyle" odpClickOutside (outside)="contextMenuStyle=null">
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE')">
+        <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
+        <span class="font-13 fw-400">File Agent</span>
+    </div>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'API')">
+        <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
+        <span class="font-13 fw-400">Invoke API</span>
+    </div>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover"
+        (click)="addNode($event,'CONNECTOR')">
+        <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
+        <span class="font-13 fw-400">Connector</span>
+    </div>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover"
+        (click)="addNode($event,'DATASERVICE')">
+        <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
+        <span class="font-13 fw-400">Data Service</span>
+    </div>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FUNCTION')">
+        <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
+        <span class="font-13 fw-400">Function</span>
+    </div>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'MAPPING')">
+        <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
+        <span class="font-13 fw-400">Mapping</span>
+    </div>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover"
+        (click)="addNode($event,'CODEBLOCK')">
+        <span class="node-icon font-16 fw-400 dsi dsi-object mr-2 text-muted"></span>
+        <span class="font-13 fw-400">Code Block</span>
+    </div>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'UNWIND')">
+        <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
+        <span class="font-13 fw-400">Change Root</span>
+    </div>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'RESPONSE')">
+        <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
+        <span class="font-13 fw-400">Response</span>
+    </div>
+</div>

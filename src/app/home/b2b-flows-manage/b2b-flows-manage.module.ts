@@ -18,12 +18,6 @@ import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.mod
 import { FlowNodeComponent } from './flow-node/flow-node.component';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { B2bFlowService } from './b2b-flow.service';
-import { MappingIconComponent } from './icons/mapping-icon/mapping-icon.component';
-import { InvokeApiIconComponent } from './icons/invoke-api-icon/invoke-api-icon.component';
-import { ResponseIconComponent } from './icons/response-icon/response-icon.component';
-import { DataServiceIconComponent } from './icons/data-service-icon/data-service-icon.component';
-import { FunctionIconComponent } from './icons/function-icon/function-icon.component';
-import { ConnectorIconComponent } from './icons/connector-icon/connector-icon.component';
 import { NodePropertiesComponent } from './node-properties/node-properties.component';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { NodeMappingComponent } from './node-properties/node-mapping/node-mapping.component';
@@ -59,12 +53,6 @@ const routes: Routes = [
     B2bFlowsManageComponent,
     ViewBoxDirective,
     FlowNodeComponent,
-    MappingIconComponent,
-    InvokeApiIconComponent,
-    ResponseIconComponent,
-    DataServiceIconComponent,
-    FunctionIconComponent,
-    ConnectorIconComponent,
     NodePropertiesComponent,
     NodeMappingComponent,
     FunctionSelectorComponent,

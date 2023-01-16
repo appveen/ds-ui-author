@@ -917,7 +917,8 @@ $weights: 200,
 }
 
 .node-options-item,
-.node-block {
+.node-block,
+.node-item {
   .dsi-api-reciever {
     color: #6C7584;
   }
@@ -956,6 +957,49 @@ $weights: 200,
   }
 
   .dsi-response {
+    color: #2FC48F;
+  }
+}
+
+.node-icon {
+  &.dsi-api-reciever {
+    color: #6C7584;
+  }
+
+  &.dsi-invoke-api {
+    color: #00CCCB;
+  }
+
+  &.dsi-clock {
+    color: #2FC48F;
+  }
+
+  &.dsi-data-service {
+    color: #A94CFF;
+  }
+
+  &.dsi-function {
+    color: #FFBB1A;
+  }
+
+  &.dsi-connector,
+  &.dsi-file {
+    color: #009BFF;
+  }
+
+  &.dsi-logs {
+    color: #FF7D4C;
+  }
+
+  &.dsi-mapping {
+    color: #FF4C82;
+  }
+
+  &.dsi-expand {
+    color: #FF4C82;
+  }
+
+  &.dsi-response {
     color: #2FC48F;
   }
 }

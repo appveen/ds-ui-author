@@ -2,16 +2,53 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 .flow-manage-page {
-  height: calc(100vh - 60px);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.available-nodes {
+  min-width: 200px;
+  max-width: 200px;
+  min-height: calc(100vh - 144px);
+  max-height: calc(100vh - 144px);
+  overflow-y: auto;
+
+  .node-item {
+    min-height: 48px;
+    max-height: 48px;
+
+    .node-icon {
+      min-width: 48px;
+      max-width: 48px;
+      min-height: 48px;
+      max-height: 48px;
+      line-height: 48px;
+      text-align: center;
+    }
+
+    &:hover {
+      background: $white;
+    }
+  }
+}
+
+.flow-manage-page {
+  // height: calc(100vh - 60px);
 
   .flow-designer {
-    max-height: calc(100vh - 220px);
-    overflow: auto;
+    // max-height: calc(100vh - 220px);
+    max-height: calc(100vh - 144px);
+    // overflow: auto;
     background: rgba($light, 0.4);
   }
 
   .flow-designer-canvas {
     height: 200vh;
+    overflow: auto;
   }
 }
 
@@ -47,15 +84,44 @@
 }
 
 .node-properties {
-  top: 0px;
+  top: 142px;
   right: -360px;
   z-index: 2;
   width: 360px;
-  height: 100vh;
+  height: calc(100vh - 142px);
   overflow-y: auto;
   transition: 0.2s;
 
   &.show {
     right: 0px;
+  }
+}
+
+.flow-designer-svg-wrapper {
+  width: 100%;
+  min-height: calc(100vh - 144px);
+  max-height: calc(100vh - 144px);
+  overflow: auto;
+}
+
+.flow-designer-svg {
+
+  width: 200vw;
+  height: 200vh;
+
+  rect {
+    fill: #efefef;
+    stroke: #666;
+    stroke-width: 1;
+  }
+}
+
+.available-nodes-dropdown {
+  z-index: 3;
+
+  .node-item {
+    &:hover {
+      background: $light;
+    }
   }
 }

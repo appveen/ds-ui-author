@@ -16,68 +16,65 @@ export class ViewBoxDirective implements AfterViewInit {
   startY: number;
   top: number;
   constructor(private ele: ElementRef) {
-    const self = this;
-    self.startX = 0;
-    self.startY = 0;
-    self.wrapper = self.ele.nativeElement.parentElement;
-    self.move = new EventEmitter();
-    self.moved = new EventEmitter();
+    this.startX = 0;
+    this.startY = 0;
+    this.wrapper = this.ele.nativeElement.parentElement;
+    this.move = new EventEmitter();
+    this.moved = new EventEmitter();
   }
 
   ngAfterViewInit() {
-    const self = this;
-    self.move.subscribe(data => {
-      self.startX = data.left;
-      self.startY = data.top;
-      self.left = 0;
-      this.top = 0;
-      self.svg.setAttribute('viewBox', `${self.startX} ${self.startY} ${self.wrapper.clientWidth} ${self.wrapper.clientHeight}`);
-    });
-    self.svg = (self.ele.nativeElement as SVGElement);
-    self.svg.setAttribute('viewBox', `${self.startX} ${self.startY} ${self.wrapper.clientWidth} ${self.wrapper.clientHeight}`);
-    // self.drawGrid(self.wrapper.clientWidth, self.wrapper.clientHeight);
+    // this.move.subscribe(data => {
+    //   this.startX = data.left;
+    //   this.startY = data.top;
+    //   this.left = 0;
+    //   this.top = 0;
+    //   this.svg.setAttribute('viewBox', `${this.startX} ${this.startY} ${this.wrapper.clientWidth} ${this.wrapper.clientHeight}`);
+    // });
+    this.svg = (this.ele.nativeElement as SVGElement);
+    // this.svg.setAttribute('viewBox', `${this.startX} ${this.startY} ${this.wrapper.clientWidth} ${this.wrapper.clientHeight}`);
+    this.drawGrid(this.wrapper.clientWidth, this.wrapper.clientHeight);
 
 
-    fromEvent(self.ele.nativeElement, 'mousedown').pipe(
-      switchMap((start: MouseEvent) => {
-        return fromEvent(document, 'mousemove').pipe(
-          map((move: MouseEvent) => {
-            move.preventDefault();
-            return {
-              left: start.clientX - move.clientX,
-              top: start.clientY - move.clientY
-            };
-          }),
-          takeUntil(fromEvent(document, 'mouseup').pipe(map(end => {
-            self.startX = self.left;
-            self.startY = self.top;
-          })))
-        );
-      })
-    ).subscribe((ev: any) => {
-      const x = self.startX + ev.left;
-      const y = self.startY + ev.top;
-      self.left = x > 0 ? x : 0;
-      self.top = y > 0 ? y : 0;
-      self.svg.setAttribute('viewBox', `${x > 0 ? x : 0} ${y > 0 ? y : 0} ${self.wrapper.clientWidth} ${self.wrapper.clientHeight}`);
-      self.moved.emit({
-        left: self.left,
-        top: self.top
-      });
-    });
+    // fromEvent(this.ele.nativeElement, 'mousedown').pipe(
+    //   switchMap((start: MouseEvent) => {
+    //     return fromEvent(document, 'mousemove').pipe(
+    //       map((move: MouseEvent) => {
+    //         move.preventDefault();
+    //         return {
+    //           left: start.clientX - move.clientX,
+    //           top: start.clientY - move.clientY
+    //         };
+    //       }),
+    //       takeUntil(fromEvent(document, 'mouseup').pipe(map(end => {
+    //         this.startX = this.left;
+    //         this.startY = this.top;
+    //       })))
+    //     );
+    //   })
+    // ).subscribe((ev: any) => {
+    //   const x = this.startX + ev.left;
+    //   const y = this.startY + ev.top;
+    //   this.left = x > 0 ? x : 0;
+    //   this.top = y > 0 ? y : 0;
+    //   this.svg.setAttribute('viewBox', `${x > 0 ? x : 0} ${y > 0 ? y : 0} ${this.wrapper.clientWidth} ${this.wrapper.clientHeight}`);
+    //   this.moved.emit({
+    //     left: this.left,
+    //     top: this.top
+    //   });
+    // });
 
   }
 
   drawGrid(windowWidth: number, windowHeight: number) {
-    const self = this;
-    const colCount = (windowWidth * 10) / 32 + 1;
-    const rowCount = windowHeight / 32 + 1;
+    const colCount = (windowWidth * 3) / 20 + 1;
+    const rowCount = (windowHeight * 3) / 20 + 1;
     const group: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'g') as SVGElement;
     group.setAttribute('id', 'grid');
     for (let i = 0; i < rowCount; i++) {
       for (let j = 0; j < colCount; j++) {
-        const distX = 32 * (j) - windowWidth;
-        const distY = 32 * (i);
+        const distX = 20 * (j) - windowWidth;
+        const distY = 20 * (i + 1);
         const ele: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle') as SVGElement;
         ele.setAttribute('cx', `${distX}`);
         ele.setAttribute('cy', `${distY}`);
@@ -86,6 +83,7 @@ export class ViewBoxDirective implements AfterViewInit {
         group.appendChild(ele);
       }
     }
-    (self.ele.nativeElement as SVGElement).insertBefore(group, (self.ele.nativeElement as SVGElement).children[0]);
+    (this.ele.nativeElement as SVGElement).prepend(group);
+    // (this.ele.nativeElement as SVGElement).insertBefore(group, (this.ele.nativeElement as SVGElement).children[0]);
   }
 }

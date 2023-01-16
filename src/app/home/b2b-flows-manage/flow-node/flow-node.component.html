@@ -1,4 +1,4 @@
-<div class="node-block-wrapper">
+<!-- <div class="node-block-wrapper">
     <div *ngIf="prevNode" class="add-button d-flex flex-column align-items-start" [ngStyle]="getAddStyle(0)">
         <div *ngIf="branchIndex>0" class="border-left negetive border-grey"></div>
         <div class="border-left border-grey"></div>
@@ -127,4 +127,41 @@
             <span class="font-12 fw-400">Response</span>
         </div>
     </div>
-</div>
+</div> -->
+
+<svg>
+    <g [ngStyle]="style" class="hover">
+        <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)" />
+        <text x="36" y="22" text-anchor="start">{{currNode.type}}</text>
+        <rect *ngIf="index>0" class="node-anchor start" [class.active]="isActive('start')" [attr.data-id]="currNode._id"
+            x="-6" y="12" width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
+        <rect class="node-anchor end" [class.active]="isActive('end')" [attr.data-id]="currNode._id" x="134" y="12"
+            width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
+        <foreignObject width="18" height="18" x="10" y="9">
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='API'"
+                class="node-icon font-18 fw-500 dsi dsi-invoke-api"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE'"
+                class="node-icon font-18 fw-500 dsi dsi-file"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='TIMER'"
+                class="node-icon font-18 fw-500 dsi dsi-clock"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CODEBLOCK'"
+                class="node-icon font-18 fw-500 dsi dsi-object text-muted"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONNECTOR'"
+                class="node-icon font-18 fw-500 dsi dsi-connector"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='DATASERVICE'"
+                class="node-icon font-18 fw-500 dsi dsi-data-service"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FUNCTION'"
+                class="node-icon font-18 fw-500 dsi dsi-function"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='MAPPING'"
+                class="node-icon font-18 fw-500 dsi dsi-mapping"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='UNWIND'"
+                class="node-icon font-18 fw-500 dsi dsi-expand"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='RESPONSE'"
+                class="node-icon font-18 fw-500 dsi dsi-response"></span>
+        </foreignObject>
+    </g>
+    <g *ngFor="let p of paths;let i=index">
+        <path [attr.d]="p.path" [class.selected]="i == selectedPathIndex" (click)="selectPath($event,i,p)"
+            odpClickOutside (outside)="selectedPathIndex=null" />
+    </g>
+</svg>

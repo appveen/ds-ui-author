@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -44,6 +44,8 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   nodeList: Array<any>;
   changesDone: boolean = false;
   saved: boolean = false
+
+  contextMenuStyle: any;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -177,6 +179,12 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
           this.nodeList.push(item);
         });
       }
+      this.nodeList.forEach((node, i) => {
+        node.coordinates = {
+          x: 20 + (i * 120),
+          y: 20 + (i * 72)
+        };
+      });
     }, err => {
       this.apiCalls.getFlow = false;
       this.commonService.errorToast(err);
@@ -372,6 +380,37 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       });
     }
     return true;
+  }
+
+  addNode(event: any, type: string) {
+    this.contextMenuStyle = null;
+    const tempNode = this.flowService.getNodeObject(type);
+    tempNode.coordinates = {};
+    const ele: HTMLElement = document.querySelectorAll('.flow-designer-svg')[0] as HTMLElement;
+    const rect = ele.getBoundingClientRect();
+    console.log(rect, event.pageX - rect.left, event.pageY - rect.top);
+    tempNode.coordinates.x = event.pageX - rect.left - 70;
+    tempNode.coordinates.y = event.pageY - rect.top - 18;
+    this.nodeList.push(tempNode);
+  }
+
+  onRightClick(event: PointerEvent) {
+    event.preventDefault();
+    const clientHeight = (event.target as HTMLElement).clientHeight;
+    if (clientHeight > 330 && (event.clientY + 330) > clientHeight) {
+      this.contextMenuStyle = { top: (event.clientY - 330) + 'px', left: event.clientX + 'px' };
+    } else {
+      this.contextMenuStyle = { top: event.clientY + 'px', left: event.clientX + 'px' };
+    }
+    console.log(this.contextMenuStyle);
+  }
+
+
+  @HostListener('document:keydown', ['$event'])
+  onDeleteKey(event: any) {
+    if ((event.metaKey || event.ctrlKey) && event.key == 'Backspace' && this.selectedNode) {
+      console.log(event);
+    }
   }
 
   get apiCallsPending() {

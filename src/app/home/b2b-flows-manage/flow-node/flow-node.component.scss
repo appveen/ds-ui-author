@@ -1,85 +1,40 @@
-.node-block-wrapper {
-    min-width: 218px;
-    .node-block {
-        min-width: 180px;
-        max-width: 180px;
-        min-height: 58px;
-        max-height: 58px;
-        overflow: hidden;
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
 
-        .delete-icon {
-            right: -100px;
-            z-index: 1;
-            transition: 0.2;
-        }
+rect {
+    fill: #fff;
+    stroke: #666;
+    stroke-width: 2;
+}
 
-        &:hover {
-            .delete-icon {
-                right: 10px;
-            }
-        }
+path {
+    fill: none;
+    stroke: #666;
+    stroke-width: 2;
+
+    &:hover {
+        cursor: pointer;
     }
 
-    .path-sm {
-        width: 64px;
-    }
-
-    .path-t {
-        margin-top: 20px;
-    }
-
-    .path {
-        width: 180px;
-    }
-
-    .path-v {
-        height: 20px;
-    }
-
-    .add-button {
-        min-height: 54px;
-        max-height: 54px;
-
-        &.align-items-start {
-            .border-left {
-                margin-left: 8px;
-            }
-        }
-
-        &.side {
-            min-height: 46px;
-            max-height: 46px;
-        }
-
-        .dsi {
-            font-size: 18px;
-        }
-
-        .border-bottom {
-            width: 18px;
-        }
-
-        .border-left {
-            height: 18px;
-
-            &.negetive {
-                height: 23px;
-                margin-top: -23px;
-            }
-        }
+    &.selected {
+        stroke: $accent;
     }
 }
 
-.node-options-dropdown {
-    width: 180px;
-    overflow-y: auto;
+text {
+    stroke-width: 0;
+    fill: #666;
+    font-size: 12px;
+}
 
-    .node-options-item {
-        height: 32px;
+.node-anchor {
+    fill: #fff;
 
-        &:hover {
-            background: lighten($color: #000000, $amount: 20);
-        }
+    &:hover {
+        fill: $secondary;
+    }
 
+    &.active {
+        fill: $accent;
     }
 }
