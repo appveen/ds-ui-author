@@ -157,6 +157,13 @@ const routes: Routes = [
             (m) => m.ConnectorsManageModule
           ),
       },
+      {
+        path: 'api-keys',
+        loadChildren: () =>
+          import('../home/api-keys/api-keys.module').then(
+            (m) => m.ApiKeysModule
+          ),
+      },
     ],
   },
 ];
