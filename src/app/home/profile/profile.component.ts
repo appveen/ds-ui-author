@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit {
         self.passwordChange.loading = true;
         self.passwordChange.message = null;
         delete value.confirmpassword;
-        self.commonService.put('user', '/auth/change-password', value).subscribe(res => {
+        self.commonService.put('user', '/auth/change-password/'+self.commonService.userDetails.username, value).subscribe(res => {
             self.passwordChange.loading = false;
             self.passwordChange.status = true;
             self.passwordChange.message = 'Password changed successfully';
