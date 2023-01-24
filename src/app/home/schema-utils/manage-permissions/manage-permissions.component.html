@@ -98,23 +98,20 @@
                   </div>
                 </div>
                 <div *ngIf="selectRoleType === 'manage'" class="mt-5">
-                  <div class="d-flex align-items-center mr-3 mb-3"
-                    (click)="edit && edit.status ? canCreate = !canCreate:''">
+                  <div class="d-flex align-items-center mr-3 mb-3">
                     <odp-checkbox id="createCheckbox" [edit]="edit" [checked]="canCreate"
                       (checkedChange)="canCreate = !canCreate" [disabled]="!hasPermission('PMDSR')"></odp-checkbox>
-                    <span class="ml-2">Create</span>
+                    <span (click)="edit && edit.status ? canCreate = !canCreate:''" class="ml-2 hover">Create</span>
                   </div>
-                  <div class="d-flex align-items-center mr-3 mb-3"
-                    (click)="edit && edit.status ? canEdit = !canEdit:''">
+                  <div class="d-flex align-items-center mr-3 mb-3">
                     <odp-checkbox id="editCheckbox" [edit]="edit" [checked]="canEdit"
                       (checkedChange)="canEdit = !canEdit" [disabled]="!hasPermission('PMDSR')"></odp-checkbox>
-                    <span class="ml-2">Edit</span>
+                    <span (click)="edit && edit.status ? canEdit = !canEdit:''" class="ml-2 hover">Edit</span>
                   </div>
-                  <div class="d-flex align-items-center mr-3 mb-3"
-                    (click)="edit && edit.status ? canDelete = !canDelete:''">
+                  <div class="d-flex align-items-center mr-3 mb-3">
                     <odp-checkbox id="deleteCheckbox" [edit]="edit" [checked]="canDelete"
                       (checkedChange)="canDelete = !canDelete" [disabled]="!hasPermission('PMDSR')"></odp-checkbox>
-                    <span class="ml-2">Delete</span>
+                    <span (click)="edit && edit.status ? canDelete = !canDelete:''" class="ml-2 hover">Delete</span>
                   </div>
                 </div>
               </div>
