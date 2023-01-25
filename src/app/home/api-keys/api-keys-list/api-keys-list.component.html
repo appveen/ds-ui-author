@@ -1,93 +1,97 @@
-<div class="bg-light-gray w-100 h-100">
-    <div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
-        <div class="align-self-center text-center">
-            <div class="spinner-border text-dark" role="status">
-                <span class="sr-only">Processing...</span>
-            </div>
-            <div class="text-secondary mt-2">Processing...</div>
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
         </div>
+        <div class="text-secondary mt-2">Processing...</div>
     </div>
-    <div class="d-flex flex-column position-relative">
-        <div class="options d-flex">
-            <div class="fw-600 font-22">Keys</div>
-            <div class="d-flex align-items-center ml-auto">
-                <div class="mr-3">
-                    <!-- <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')"></odp-search-box> -->
-                </div>
-                <!-- <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-white border mr-3"
-            routerLink="bulk-import" ngbTooltip="Bulk Import" id="bulkimport">
-            <span class="dsi dsi-upload"></span>
-          </button> -->
-                <button *ngIf="hasPermission('PMUBC')" type="button" id="newKey"
-                    class="add-new btn btn-primary d-flex align-items-center" (click)="newKeyForm()">
-                    <span class="dsi dsi-plus mr-2"></span>
-                    <span>New</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="bg-white list">
-            <div class="d-flex justify-content-center align-items-center h-100 font-22 fw-600 heading"
-                *ngIf="keyList.length === 0">
-                No keys found
-            </div>
-            <div class="row" *ngIf="keyList.length > 0">
-                <div class="col-3 border-right keys pr-0">
-                    <div *ngFor="let key of keyList; let usrIndex = index" class="d-flex" [id]="'key' + usrIndex"
-                        (click)="showDetails(key)">
-                        <div class="selectedTab" [ngStyle]="{
-                  background: key._id === selectedKey?._id ? '#ff6f00' : 'none'
-                }"></div>
-                        <div class="keyList" [ngClass]="{ selected: key._id === selectedKey?._id }">
-                            <div class="d-flex hover">
-                                <span class="name text-truncate" [ngbTooltip]="key?.name">
-                                    {{ key?.name }}
-                                </span>
-                            </div>
-                            <!-- <span class="email text-secondary font-12">{{ key.keyname }}</span> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-9 keys">
-                    <odp-api-keys-manage></odp-api-keys-manage>
-                </div>
-            </div>
-        </div>
-
-        <div *ngIf="showNewKeyWindow" class="overlay position-fixed"></div>
-
-        <div [ngClass]="{ show: showNewKeyWindow }"
-            class="new-key-window position-fixed bg-white border-left p-4 d-flex flex-column">
-            <div class="d-flex flex-column" *ngIf="showNewKeyWindow">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <div class="d-flex align-items-center">
-                        <h5 class="fw-600 font-20">Create Key</h5>
-                    </div>
-                    <span class="dsi dsi-close hover closeicon" id="closeicon" (click)="closeWindow()"></span>
-                </div>
-                <form class="d-flex flex-column" [formGroup]="keyForm">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <div class="w-100 position-relative">
-                            <input id="name" class="form-control" type="text" placeholder="Enter Name"
-                                formControlName="name" autocomplete="autocomplete_off_hack" odpAutoFocus />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="expiry">Expiry</label>
-                        <div class="w-100 position-relative">
-                            <input id="expiry" class="form-control" type="number" placeholder="Expiry Days"
-                                formControlName="expiry" autocomplete="autocomplete_off_hack" />
-                        </div>
-                    </div>
-                </form>
-                <div class="d-flex align-items-center justify-content-between mt-auto">
-                    <button type="button" class="btn btn-primary add-button w-100" id="createKey" (click)="createKey()">
-                        Create Key
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>
 </div>
+<div class="d-flex flex-column position-relative bg-light-gray page-padding">
+
+    <div class="options d-flex justify-content-between align-items-center w-100 pt-2 pb-4">
+        <div class="fw-600 font-22 d-flex align-items-center">
+            <span>API Keys</span>
+            <span *ngIf="searchTerm" ngbTooltip="Filter Applied" class="dsi dsi-filter-alt text-secondary ml-2"></span>
+        </div>
+        <div class="d-flex align-items-center">
+            <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+            <button type="button" id="addNewDS" class="add-new btn btn-primary ml-3 d-flex align-items-center"
+                (click)="newKeyForm()" *ngIf="hasPermission('PMUBC')">
+                <span class="dsi dsi-plus mr-2"></span>
+                <span class="text">New</span>
+            </button>
+        </div>
+    </div>
+    <div class="grid-container bg-white rounded">
+        <div class="d-flex justify-content-center align-items-center h-100 font-22 fw-600 heading"
+            *ngIf="keyList.length === 0">
+            No keys found
+        </div>
+        <div class="row" *ngIf="keyList.length > 0">
+            <div class="col-3 border-right keys pr-0">
+                <div *ngFor="let key of keyList; let usrIndex = index" class="d-flex" [id]="'key' + usrIndex"
+                    (click)="showDetails(key)">
+                    <div class="selectedTab" [ngStyle]="{
+              background: key._id === selectedKey?._id ? '#ff6f00' : 'none'
+            }"></div>
+                    <div class="keyList" [ngClass]="{ selected: key._id === selectedKey?._id }">
+                        <div class="d-flex hover">
+                            <span class="name text-truncate" [ngbTooltip]="key?.name">
+                                {{ key?.name }}
+                            </span>
+                        </div>
+                        <!-- <span class="email text-secondary font-12">{{ key.keyname }}</span> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-9 keys">
+                <odp-api-keys-manage></odp-api-keys-manage>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="showNewKeyWindow" class="overlay position-fixed"></div>
+
+<div [ngClass]="{ show: showNewKeyWindow }"
+    class="new-key-window position-fixed bg-white border-left p-4 d-flex flex-column">
+    <div class="d-flex flex-column h-100" *ngIf="showNewKeyWindow">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center">
+                <h5 class="fw-600 font-20">Create Key</h5>
+            </div>
+            <span class="dsi dsi-close hover closeicon" id="closeicon" (click)="closeWindow()"></span>
+        </div>
+        <form class="d-flex flex-column" [formGroup]="keyForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <div class="w-100 position-relative">
+                    <input id="name" class="form-control" type="text" placeholder="Enter Name" formControlName="name"
+                        autocomplete="autocomplete_off_hack" odpAutoFocus />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="expiry">Expiry After <small class="font-11 text-secondary">(in Days)</small></label>
+                <div class="w-100 position-relative">
+                    <input id="expiry" class="form-control" type="number" placeholder="Days" formControlName="expiry"
+                        autocomplete="autocomplete_off_hack" />
+                </div>
+            </div>
+            <div *ngIf="showKeyDetails" class="form-group">
+                <label for="apiKey">API Key</label>
+                <div class="w-100 position-relative">
+                    <textarea id="apiKey" class="form-control" formControlName="apiKey"
+                        autocomplete="autocomplete_off_hack" ></textarea>
+                </div>
+            </div>
+        </form>
+        <div *ngIf="!showKeyDetails" class="d-flex align-items-center justify-content-between mt-auto">
+            <button type="button" class="btn btn-primary add-button w-100" id="createKey" [disabled]="keyForm.invalid" (click)="createKey()">
+                Create Key
+            </button>
+        </div>
+    </div>
+</div>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

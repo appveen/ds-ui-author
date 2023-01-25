@@ -1,5 +1,7 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { switchMap } from 'rxjs/operators';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { ApiKeysService } from '../api-keys.service';
@@ -16,25 +18,54 @@ export class ApiKeysListComponent implements OnInit {
   keyForm: FormGroup;
   keyList: Array<any>;
   selectedKey: any;
+  searchTerm: string;
   openDeleteModal: EventEmitter<any>;
+  subscriptions: any;
+  showKeyDetails: boolean;
   constructor(private fb: FormBuilder,
     private commonService: CommonService,
     private appService: AppService,
-    private apiKeyService: ApiKeysService) {
+    private apiKeyService: ApiKeysService,
+    private ts: ToastrService) {
     this.keyForm = this.fb.group({
       name: [null, [Validators.required]],
-      expiry: [365, [Validators.required]]
+      expiry: [365, [Validators.required]],
+      apiKey: []
     });
     this.keyList = [];
     this.openDeleteModal = new EventEmitter();
+    this.subscriptions = {};
   }
 
   ngOnInit(): void {
-
+    this.commonService.changeBreadcrumb([{
+      active: true,
+      label: 'API-Keys'
+    }])
   }
 
   hasPermission(type: string) {
     return this.commonService.hasPermission(type);
+  }
+
+  getAPIKeys() {
+    this.subscriptions['getAPIKeys'] = this.commonService
+      .get('user', `/${this.commonService.app._id}/apiKeys/utils/count`)
+      .pipe(switchMap((ev: any) => {
+        return this.commonService.get('user', `/${this.commonService.app._id}/apiKeys`, {
+          count: ev,
+          sort: 'name'
+        })
+      })).subscribe((res) => {
+        this.showLazyLoader = false;
+        this.keyList = res;
+        if (this.keyList && this.keyList.length > 0) {
+          this.selectedKey = this.keyList[0];
+        }
+      }, err => {
+        this.showLazyLoader = false;
+        this.commonService.errorToast(err);
+      });
   }
 
 
@@ -43,19 +74,30 @@ export class ApiKeysListComponent implements OnInit {
   }
 
   newKeyForm() {
-    this.keyForm.reset();
+    this.keyForm.reset({ expiry: 365 });
     this.showNewKeyWindow = true;
   }
 
   closeWindow() {
     this.showNewKeyWindow = false;
+    this.showKeyDetails = false;
   }
 
   closeDeleteModal(data: any) {
-    
+
   }
 
   createKey() {
-
+    this.showLazyLoader = true;
+    this.commonService.post('user', `/${this.commonService.app._id}/apiKeys`, this.keyForm.value).subscribe(res => {
+      this.showLazyLoader = false;
+      this.ts.success('API Key Created');
+      this.showKeyDetails = true;
+      this.keyForm.get('apiKey').patchValue(res.apiKey);
+      // this.closeWindow();
+    }, err => {
+      this.showLazyLoader = false;
+      this.commonService.errorToast(err);
+    })
   }
 }
