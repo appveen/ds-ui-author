@@ -25,11 +25,11 @@ export class ConnectorPropertiesComponent implements OnInit {
       status: true
     };
     this.connectorList = [];
-    this.typeList = ['SFTP', 'MSSQL'];
+    // this.typeList = ['SFTP', 'MSSQL'];
   }
   ngOnInit(): void {
-    // this.getAvailableConnectors();
-    this.loadInitial();
+    this.getAvailableConnectors();
+    // this.loadInitial();
   }
 
   getAvailableConnectors() {
