@@ -1,0 +1,54 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="grid-container border rounded position-relative mt-3" (scroll)="loadMore($event)"
+    *ngIf="agentSessions.length > 0">
+    <div class="list-group list-group-flush">
+        <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500 d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-start h-100">
+                <div class="item-timestamp">
+                    <!-- <span class="mr-2">Token Hash</span> -->
+                    <span class="mr-2">Token</span>
+                </div>
+                <div (click)="applySort('timestamp')" class="item-level">
+                    <span class="mr-2">Active Since</span>
+                    <span *ngIf="sortModel['timestamp']==1" class="dsi dsi-drop-down"></span>
+                    <span *ngIf="sortModel['timestamp']==-1" class="dsi dsi-drop-up"></span>
+                </div>
+                <div class="item-status">Status</div>
+                <div class="item-message">
+                    <span class="mr-2">Actions</span>
+                </div>
+            </div>
+        </div>
+        <ng-container *ngFor="let agent of agentSessions;let i=index">
+            <div class="list-group-item">
+                <div class="d-flex align-items-center justify-content-start h-100">
+                    <!-- <div class="item-timestamp text-truncate text-uppercase fw-500">{{agent?.key}}</div> -->
+                    <div class="item-timestamp text-truncate fw-500">**********{{agent?.data?.token}}</div>
+                    <div class="item-level"> {{convertDate(agent?.timestamp)}}</div>
+                    <div class="item-status"> {{agent?.status}}</div>
+                    <div class="item-message">
+                        <button *ngIf="agent.status=='Disabled'" type="button" class="btn btn-link px-0"
+                            (click)="changeState($event,agent.key,'Enabled')">Enable</button>
+                        <button *ngIf="agent.status=='Enabled'" type="button" class="btn btn-link px-0"
+                            (click)="changeState($event,agent.key,'Disabled')">Disable</button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<div class="d-flex flex-column" *ngIf="agentSessions.length === 0">
+    <span class="no-logs">
+    </span>
+    <div class="d-flex flex-column mx-auto">
+        <span class="font-20 fw-600">No Session Generated</span>
+        <span>Activate agent to generate session</span>
+    </div>
+</div>
