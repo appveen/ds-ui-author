@@ -131,8 +131,10 @@
 
 <svg>
     <g [ngStyle]="style" class="hover">
-        <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)" />
-        <text x="36" y="22" text-anchor="start" (click)="openProperties($event)">{{currNode.type}}</text>
+        <g [class.active]="isSelected">
+            <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)" />
+            <text x="36" y="22" text-anchor="start" (click)="openProperties($event)">{{currNode.type}}</text>
+        </g>
         <rect *ngIf="index>0" class="node-anchor start" [class.active]="isActive('start')" [attr.data-id]="currNode._id"
             x="-6" y="12" width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
         <rect class="node-anchor end" [class.active]="isActive('end')" [attr.data-id]="currNode._id" x="134" y="12"

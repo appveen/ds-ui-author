@@ -27,6 +27,17 @@ text {
     font-size: 12px;
 }
 
+.active {
+    rect {
+        fill: rgba($accent, 0.3);
+    }
+
+    text {
+        stroke-width: 1 !important;
+        stroke: #000;
+    }
+}
+
 .node-anchor {
     fill: #fff;
 

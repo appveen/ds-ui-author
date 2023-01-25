@@ -34,6 +34,13 @@ export class FlowNodeComponent implements OnInit {
   ngOnInit(): void {
     this.paths = [];
     this.renderPaths();
+    this.flowService.selectedNode.subscribe(data => {
+      if (data.currNode._id == this.currNode._id) {
+        this.selectedNode = data.currNode;
+      } else {
+        this.selectedNode = null;
+      }
+    });
     this.flowService.reCreatePaths.subscribe(() => {
       this.paths = [];
       this.renderPaths();
@@ -150,5 +157,12 @@ export class FlowNodeComponent implements OnInit {
     return {
       transform: `translate(${this.currNode.coordinates.x}px,${this.currNode.coordinates.y}px)`,
     }
+  }
+
+  get isSelected() {
+    if (this.currNode._id && this.selectedNode && this.selectedNode._id) {
+      return true;
+    }
+    return false;
   }
 }
