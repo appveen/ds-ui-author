@@ -36,6 +36,7 @@ export class ApiKeysManageComponent implements OnInit {
     }
     this.commonService.put('user', `/${this.commonService.app._id}/apiKeys/${this.data._id}`, { status: action }).subscribe(res => {
       this.ts.success('Status Chanegd to ' + action);
+      this.data = res;
     }, err => {
       this.commonService.errorToast(err);
     });
@@ -66,6 +67,10 @@ export class ApiKeysManageComponent implements OnInit {
     } else {
       return 'text-white bg-danger';
     }
+  }
+
+  get isDisabled() {
+    return this.data.status == 'Disabled';
   }
 
   // toggleStatus(action: string) {

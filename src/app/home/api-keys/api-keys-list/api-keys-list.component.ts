@@ -56,7 +56,7 @@ export class ApiKeysListComponent implements OnInit {
       .pipe(switchMap((ev: any) => {
         return this.commonService.get('user', `/${this.commonService.app._id}/apiKeys`, {
           count: ev,
-          sort: 'name'
+          sort: '-_metadata.lastUpdated'
         })
       })).subscribe((res) => {
         this.showLazyLoader = false;
@@ -97,7 +97,8 @@ export class ApiKeysListComponent implements OnInit {
       this.ts.success('API Key Created');
       this.showKeyDetails = true;
       this.keyForm.get('apiKey').patchValue(res.apiKey);
-      this.keyForm.get('apiKey').disable();
+      this.keyForm.disable();
+      // this.keyForm.get('apiKey').disable();
       // this.closeWindow();
     }, err => {
       this.showLazyLoader = false;

@@ -11,7 +11,7 @@
         <div class="list-group-item d-flex flex-column">
             <div class="fw-600 text-secondary">{{item.name}}</div>
             <!-- <odp-switch [(checked)]="item._checked" [edit]="{status:hasPermission('PMAPI')}"></odp-switch> -->
-            <ng-container *ngFor="let role of item.role.roles">
+            <ng-container *ngFor="let role of item.role?.roles||[]">
                 <div class="list-group-item d-flex align-items-center justify-content-between pl-4 py-1 border-0">
                     <div class="d-flex align-items-center">
                         <div class="name text-dark font-12">{{role.name}}</div>

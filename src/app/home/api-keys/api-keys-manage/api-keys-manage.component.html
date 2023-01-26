@@ -10,7 +10,8 @@
     <div class="header d-flex align-items-center justify-content-between mb-4">
         <div class="d-flex align-items-center">
             <span class="fw-600 font-20">{{data.name}}</span>
-            <span class="fw-500 font-14 px-2 py-1 rounded ml-4" [ngClass]="daysClass" ngbTooltip="Days Remaining">{{days}}</span>
+            <span class="fw-500 font-14 px-2 py-1 rounded ml-4" [ngClass]="daysClass"
+                ngbTooltip="Days Remaining">{{days}}</span>
         </div>
         <div class="position-relative">
             <odp-switch [checked]="data.status=='Enabled'" (checkedChange)="toggleStatus($event)"
@@ -36,17 +37,21 @@
     </div>
     <div class="content">
         <div class="tab-list d-flex align-items-center border rounded">
-            <div [ngClass]="{'active fw-500':activeTab==0}" class="tab-list-item hover px-3 py-2" (click)="activeTab=0;">
+            <div [ngClass]="{'active fw-500':activeTab==0}" class="tab-list-item hover px-3 py-2"
+                (click)="activeTab=0;">
                 Data Service
             </div>
-            <div [ngClass]="{'active fw-500':activeTab==1}" class="tab-list-item hover px-3 py-2" (click)="activeTab=1;">
+            <div [ngClass]="{'active fw-500':activeTab==1}" class="tab-list-item hover px-3 py-2"
+                (click)="activeTab=1;">
                 Functions
             </div>
-            <div [ngClass]="{'active fw-500':activeTab==2}" class="tab-list-item hover px-3 py-2" (click)="activeTab=2;">
+            <div [ngClass]="{'active fw-500':activeTab==2}" class="tab-list-item hover px-3 py-2"
+                (click)="activeTab=2;">
                 Flows
             </div>
         </div>
-        <div class="tab-container mt-3 rounded border">
+        <div class="tab-container mt-3 rounded border position-relative" [class.no-overflow]="isDisabled">
+            <div *ngIf="isDisabled" class="overlay position-absolute"></div>
             <odp-list-dataservice *ngIf="activeTab==0" [(data)]="data"
                 (dataChange)="onDataChange($event)"></odp-list-dataservice>
             <odp-list-function *ngIf="activeTab==1" [(data)]="data"

@@ -36,4 +36,17 @@
 .tab-container {
     height: calc(100vh - 320px);
     overflow-y: auto;
+
+    &.no-overflow {
+        overflow: hidden !important;
+    }
+}
+
+.overlay {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: rgba($color: #000000, $alpha: 0.3);
 }
