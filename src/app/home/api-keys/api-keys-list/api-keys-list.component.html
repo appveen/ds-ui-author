@@ -36,11 +36,13 @@
             }"></div>
                     <div class="keyList w-100" [ngClass]="{ selected: key._id === selectedKey?._id }">
                         <div class="d-flex flex-column hover p-3">
-                            <span class="name text-truncate" container="body" [ngbTooltip]="key?.name">
+                            <span class="name text-truncate fw-600" container="body" [ngbTooltip]="key?.name">
                                 {{ key?.name }}
                             </span>
-                            <span class="email text-secondary font-12">Expire On: {{ key.expiryAfterDate | date:'medium'
-                                }}</span>
+                            <span class="email text-secondary font-12">
+                                <span class="mr-1 fw-500">Expires On:</span>
+                                <span>{{ key.expiryAfterDate | date:'medium' }}</span>
+                            </span>
                         </div>
                     </div>
                 </div>
