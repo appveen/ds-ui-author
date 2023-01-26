@@ -66,7 +66,7 @@ export class ListFunctionComponent implements OnInit {
       const temp = {
         app: faas.app,
         entity: faas._id,
-        id: 'POST',
+        id: faas._id,
         type: 'appcenter'
       };
       this.data.roles.push(temp);

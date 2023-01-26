@@ -67,7 +67,7 @@ export class ListFlowComponent implements OnInit {
       const temp = {
         app: flow.app,
         entity: flow._id,
-        id: 'POST',
+        id: flow._id,
         type: 'appcenter'
       };
       this.data.roles.push(temp);
