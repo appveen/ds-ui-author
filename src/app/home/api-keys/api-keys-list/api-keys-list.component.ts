@@ -22,6 +22,7 @@ export class ApiKeysListComponent implements OnInit {
   openDeleteModal: EventEmitter<any>;
   subscriptions: any;
   showKeyDetails: boolean;
+  copied: boolean;
   constructor(private fb: FormBuilder,
     private commonService: CommonService,
     private appService: AppService,
@@ -29,7 +30,7 @@ export class ApiKeysListComponent implements OnInit {
     private ts: ToastrService) {
     this.keyForm = this.fb.group({
       name: [null, [Validators.required]],
-      expiry: [365, [Validators.required]],
+      expiryAfter: [365, [Validators.required]],
       apiKey: []
     });
     this.keyList = [];
@@ -42,6 +43,7 @@ export class ApiKeysListComponent implements OnInit {
       active: true,
       label: 'API-Keys'
     }])
+    this.getAPIKeys();
   }
 
   hasPermission(type: string) {
@@ -74,13 +76,14 @@ export class ApiKeysListComponent implements OnInit {
   }
 
   newKeyForm() {
-    this.keyForm.reset({ expiry: 365 });
+    this.keyForm.reset({ expiryAfter: 365 });
     this.showNewKeyWindow = true;
   }
 
   closeWindow() {
     this.showNewKeyWindow = false;
     this.showKeyDetails = false;
+    this.getAPIKeys();
   }
 
   closeDeleteModal(data: any) {
@@ -94,10 +97,18 @@ export class ApiKeysListComponent implements OnInit {
       this.ts.success('API Key Created');
       this.showKeyDetails = true;
       this.keyForm.get('apiKey').patchValue(res.apiKey);
+      this.keyForm.get('apiKey').disable();
       // this.closeWindow();
     }, err => {
       this.showLazyLoader = false;
       this.commonService.errorToast(err);
     })
+  }
+  copyToClipboard() {
+    this.copied = true;
+    this.appService.copyToClipboard(this.keyForm.get('apiKey').value);
+    setTimeout(() => {
+      this.copied = false;
+    }, 2000);
   }
 }

@@ -1,1 +1,57 @@
-<p>api-keys-manage works!</p>
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="p-3">
+    <div class="header d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center">
+            <span class="fw-600 font-20">{{data.name}}</span>
+            <span class="fw-500 font-14 px-2 py-1 rounded ml-4" [ngClass]="daysClass" ngbTooltip="Days Remaining">{{days}}</span>
+        </div>
+        <div class="position-relative">
+            <odp-switch [checked]="data.status=='Enabled'" (checkedChange)="toggleStatus($event)"
+                [edit]="{status:hasPermission('PMAPI')}"></odp-switch>
+            <!-- <div class="settings" *ngIf="hasPermission('PMAPI')">
+                <div class="hover ignore-outside d-flex align-items-center p-2 border rounded-lg"
+                    (click)="showSettings = !showSettings">
+                    <span class="dsi dsi-settings font-20"></span>
+                    <label class="my-0 mx-2">Settings</label>
+                    <span class="dsi" [ngClass]="{
+                      'dsi-drop-down': !showSettings,
+                      'dsi-drop-up': showSettings
+                    }"></span>
+                </div>
+                <div class="popover" *ngIf="showSettings" odpClickOutside (outside)="showSettings=false">
+                    <span *ngIf="data.status=='Disabled'" (click)="toggleStatus('Enabled')"
+                        class="popover-options">Enable</span>
+                    <span *ngIf="data.status=='Enabled'" (click)="toggleStatus('Disabled')"
+                        class="popover-options">Disable</span>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <div class="content">
+        <div class="tab-list d-flex align-items-center border rounded">
+            <div [ngClass]="{'active fw-500':activeTab==0}" class="tab-list-item hover p-3" (click)="activeTab=0;">
+                Data Service
+            </div>
+            <div [ngClass]="{'active fw-500':activeTab==1}" class="tab-list-item hover p-3" (click)="activeTab=1;">
+                Functions
+            </div>
+            <div [ngClass]="{'active fw-500':activeTab==2}" class="tab-list-item hover p-3" (click)="activeTab=2;">
+                Flows
+            </div>
+        </div>
+        <div class="tab-container mt-3 rounded border">
+            <odp-list-dataservice *ngIf="activeTab==0" [(data)]="data"
+                (dataChange)="onDataChange($event)"></odp-list-dataservice>
+            <odp-list-function *ngIf="activeTab==1" [(data)]="data"
+                (dataChange)="onDataChange($event)"></odp-list-function>
+            <odp-list-flow *ngIf="activeTab==2" [(data)]="data" (dataChange)="onDataChange($event)"></odp-list-flow>
+        </div>
+    </div>
+</div>
