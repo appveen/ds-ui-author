@@ -8,7 +8,6 @@ import { Component, OnInit, Input } from '@angular/core';
 export class MssqlConnectorComponent implements OnInit {
 
   @Input() edit: any;
-  @Input() prevNode: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
 

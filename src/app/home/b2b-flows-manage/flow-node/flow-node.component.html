@@ -163,7 +163,7 @@
         </foreignObject>
     </g>
     <g *ngFor="let p of paths;let i=index">
-        <path [attr.d]="p.path" [class.selected]="i == selectedPathIndex" (click)="selectPath($event,i,p)"
+        <path [attr.d]="p.path" class="svg-path ignore-outside" [class.selected]="i == selectedPathIndex" (click)="selectPath($event,i,p)"
             odpClickOutside (outside)="selectedPathIndex=null" />
     </g>
 </svg>

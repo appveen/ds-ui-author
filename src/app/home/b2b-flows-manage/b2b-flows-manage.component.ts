@@ -364,7 +364,6 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       }
       this.flowData.nodes.splice(val.data.nodeIndex - 1, 1);
     }
-    console.log(val);
   }
 
   canDeactivate(): Promise<boolean> | boolean {
@@ -388,7 +387,6 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     tempNode.coordinates = {};
     const ele: HTMLElement = document.querySelectorAll('.flow-designer-svg')[0] as HTMLElement;
     const rect = ele.getBoundingClientRect();
-    console.log(rect, event.pageX - rect.left, event.pageY - rect.top);
     tempNode.coordinates.x = event.pageX - rect.left - 70;
     tempNode.coordinates.y = event.pageY - rect.top - 18;
     this.nodeList.push(tempNode);
@@ -402,14 +400,24 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     } else {
       this.contextMenuStyle = { top: event.clientY + 'px', left: event.clientX + 'px' };
     }
-    console.log(this.contextMenuStyle);
   }
 
 
   @HostListener('document:keydown', ['$event'])
   onDeleteKey(event: any) {
-    if ((event.metaKey || event.ctrlKey) && event.key == 'Backspace' && this.selectedNode) {
-      console.log(event);
+    if ((((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') && this.selectedNode) {
+      this.nodeList.forEach((node: any) => {
+        if (this.selectedNode.prevNode && node._id == this.selectedNode.prevNode._id) {
+          let tempIndex = node.onSuccess.findIndex(e => e._id == this.selectedNode.currNode._id);
+          node.onSuccess.splice(tempIndex, 1);
+        }
+      });
+      let index = this.nodeList.findIndex(e => e._id == this.selectedNode.currNode._id);
+      if (this.flowData.inputNode._id != this.selectedNode.currNode._id) {
+        this.nodeList.splice(index, 1);
+        this.flowService.reCreatePaths.emit(null);
+        this.flowService.selectedNode.emit(null);
+      }
     }
   }
 

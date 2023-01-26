@@ -16,12 +16,12 @@
             </div>
         </div>
     </div>
-    <odp-sftp-connector *ngIf="selectedConnector.type=='SFTP'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-sftp-connector>
-    <odp-mssql-connector *ngIf="selectedConnector.type=='MSSQL'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-mssql-connector>
-    <odp-mysql-connector *ngIf="selectedConnector.type=='MYSQL'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-mysql-connector>
-    <odp-postgre-connector *ngIf="selectedConnector.type=='PG'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-postgre-connector>
-    <odp-kafka-connector *ngIf="selectedConnector.type=='KAFKA'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-kafka-connector>
-    <odp-mongodb-connector *ngIf="selectedConnector.type=='MONGODB'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-mongodb-connector>
+    <odp-sftp-connector *ngIf="selectedConnector.type=='SFTP'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"></odp-sftp-connector>
+    <odp-mssql-connector *ngIf="selectedConnector.type=='MSSQL'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"></odp-mssql-connector>
+    <odp-mysql-connector *ngIf="selectedConnector.type=='MYSQL'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"></odp-mysql-connector>
+    <odp-postgre-connector *ngIf="selectedConnector.type=='PG'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"></odp-postgre-connector>
+    <odp-kafka-connector *ngIf="selectedConnector.type=='KAFKA'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"></odp-kafka-connector>
+    <odp-mongodb-connector *ngIf="selectedConnector.type=='MONGODB'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"></odp-mongodb-connector>
 </ng-container>
 <div *ngIf="!selectedConnector" class="data-format-selector-wrapper">
     <div>

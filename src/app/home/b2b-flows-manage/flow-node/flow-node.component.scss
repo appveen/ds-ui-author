@@ -14,10 +14,12 @@ path {
 
     &:hover {
         cursor: pointer;
+        stroke-width: 3;
     }
 
     &.selected {
         stroke: $accent;
+        stroke-width: 3;
     }
 }
 
@@ -49,3 +51,5 @@ text {
         fill: $accent;
     }
 }
+
+.svg-path {}

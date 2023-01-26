@@ -26,7 +26,7 @@ export class NodeDataSelectorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.nodeList);
+    // console.log(this.nodeList);
   }
 
   onClick(event: any) {

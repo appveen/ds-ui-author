@@ -11,7 +11,6 @@ import * as _ from 'lodash';
 export class ConnectorPropertiesComponent implements OnInit {
 
   @Input() edit: any;
-  @Input() prevNode: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
   connectorList: Array<any>;
@@ -25,6 +24,7 @@ export class ConnectorPropertiesComponent implements OnInit {
       status: true
     };
     this.connectorList = [];
+    this.subscriptions = {};
     // this.typeList = ['SFTP', 'MSSQL'];
   }
   ngOnInit(): void {

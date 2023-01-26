@@ -34,7 +34,7 @@ export class ServiceSelectorComponent implements OnInit {
     this.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, {
       sort: 'name',
       select: 'name definition attributeCount status',
-      count: 10
+      count: 5
     }).subscribe((res) => {
       this.showLoader = false;
       this.serviceList = res;

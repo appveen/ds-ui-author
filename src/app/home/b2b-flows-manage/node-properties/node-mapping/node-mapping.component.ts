@@ -11,7 +11,6 @@ import { AppService } from 'src/app/utils/services/app.service';
 export class NodeMappingComponent implements OnInit {
 
   @Input() edit: any;
-  @Input() prevNode: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
   @Output() close: EventEmitter<any>;
@@ -20,7 +19,7 @@ export class NodeMappingComponent implements OnInit {
   selectedTargetField: any;
   showFormulaBuilder: boolean;
   showAddSource: boolean;
-
+  prevNode: any;
   fuzzyMapping: EventEmitter<any>;
   clearMapping: EventEmitter<any>;
 
@@ -37,6 +36,7 @@ export class NodeMappingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.prevNode = this.nodeList.find(e => e.onSuccess.findIndex(es => es._id == this.currNode._id) > -1);
     let tempSourceFields = [];
     if (this.currNode && this.currNode.mappings) {
       this.currNode.mappings.forEach(item => {
@@ -197,7 +197,7 @@ export class NodeMappingComponent implements OnInit {
     this.fuzzyMapping.emit(true);
   }
 
-  doClearMapping(){
+  doClearMapping() {
     this.clearMapping.emit(true);
   }
 

@@ -11,7 +11,6 @@ import { environment } from 'src/environments/environment';
 export class NodePropertiesComponent implements OnInit {
 
   @Input() edit: any;
-  @Input() prevNode: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
   @Output() close: EventEmitter<any>;
@@ -19,6 +18,7 @@ export class NodePropertiesComponent implements OnInit {
   showNodeMapping: boolean;
   showAgentSelector: boolean;
   showCodeBlock: boolean;
+  prevNode: any;
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.edit = { status: true };
@@ -27,6 +27,7 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.prevNode = this.nodeList.find(e => e.onSuccess.findIndex(es => es._id == this.currNode._id) > -1);
     if (this.prevNode && !this.prevNode.dataStructure) {
       this.prevNode.dataStructure = {};
     }
@@ -55,9 +56,7 @@ export class NodePropertiesComponent implements OnInit {
     if (!environment.production) {
       console.log(type);
     }
-    if (this.prevNode) {
-      this.currNode.options = {};
-    }
+    this.currNode.options = {};
     this.changesDone.emit()
   }
 

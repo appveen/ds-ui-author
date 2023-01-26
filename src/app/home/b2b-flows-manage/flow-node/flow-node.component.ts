@@ -34,8 +34,9 @@ export class FlowNodeComponent implements OnInit {
   ngOnInit(): void {
     this.paths = [];
     this.renderPaths();
-    this.flowService.selectedNode.subscribe(data => {
-      if (data.currNode._id == this.currNode._id) {
+    this.flowService.selectedNode.subscribe((data) => {
+      this.selectedPathIndex = null;
+      if (data && data.currNode._id == this.currNode._id) {
         this.selectedNode = data.currNode;
       } else {
         this.selectedNode = null;
@@ -79,8 +80,9 @@ export class FlowNodeComponent implements OnInit {
   }
 
   selectPath(event: any, index: number, path: any) {
-    console.log(path, this.currNode._id);
-    this.selectedPathIndex = index;
+    setTimeout(() => {
+      this.selectedPathIndex = index;
+    }, 200);
     this.flowService.selectedNode.emit(null);
   }
 
@@ -127,8 +129,17 @@ export class FlowNodeComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   onDeleteKey(event: any) {
-    if ((event.metaKey || event.ctrlKey) && event.key == 'Backspace' && this.selectedPathIndex != null) {
-      console.log(event);
+    if (((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') {
+      if (typeof this.selectedPathIndex == 'number') {
+        const path = this.paths[this.selectedPathIndex];
+        this.nodeList.forEach((node: any) => {
+          let i = node.onSuccess.findIndex(e => e._id == path._id);
+          if (i > -1) {
+            node.onSuccess.splice(i, 1);
+          }
+        });
+        this.paths.splice(this.selectedPathIndex, 1);
+      }
     }
   }
 

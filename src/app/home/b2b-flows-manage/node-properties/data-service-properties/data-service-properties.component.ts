@@ -8,15 +8,15 @@ import { Component, Input, OnInit } from '@angular/core';
 export class DataServicePropertiesComponent implements OnInit {
 
   @Input() edit: any;
-  @Input() prevNode: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
-
+  prevNode: any;
   constructor() {
     this.edit = { status: true };
   }
 
   ngOnInit(): void {
+    this.prevNode = this.nodeList.find(e => e.onSuccess.findIndex(es => es._id == this.currNode._id) > -1);
     this.setDefaultData();
   }
 
@@ -25,8 +25,8 @@ export class DataServicePropertiesComponent implements OnInit {
       if (this.currNode.options.update && !this.currNode.options.fields) {
         this.currNode.options.fields = '_id';
       }
-      if ((this.currNode.options.update || this.currNode.options.insert) && !this.currNode.options.body) {
-        this.currNode.options.body = `{{node["${this.prevNode._id}"].body}}`;
+      if (this.prevNode && (this.currNode.options.update || this.currNode.options.insert) && !this.currNode.options.body) {
+        this.currNode.options.body = `{{node["${this.prevNode?._id}"].body}}`;
       }
       if (this.currNode.options.get) {
         if (!this.currNode.options.select) {
@@ -38,12 +38,15 @@ export class DataServicePropertiesComponent implements OnInit {
         if (!this.currNode.options.count) {
           this.currNode.options.count = 10;
         }
+        if (!this.currNode.options.page) {
+          this.currNode.options.page = 1;
+        }
         if (!this.currNode.options.filter) {
           this.currNode.options.filter = '{}';
         }
       }
-      if (this.currNode.options.delete) {
-        this.currNode.options.documentId = `{{node["${this.prevNode._id}"].body._id}}`;
+      if (this.prevNode && this.currNode.options.delete) {
+        this.currNode.options.documentId = `{{node["${this.prevNode?._id}"].body._id}}`;
       }
     }
   }
