@@ -57,6 +57,12 @@ export class ApiKeysManageComponent implements OnInit {
     return endDate.diff(startDate, 'days');
   }
 
+  get cleanUpDays() {
+    const startDate = moment(new Date(this.data.expiryAfterDate));
+    const endDate = moment(new Date());
+    return endDate.diff(startDate, 'days') + 45;
+  }
+
   get daysClass() {
     if (this.days > 90) {
       return 'text-white bg-success';

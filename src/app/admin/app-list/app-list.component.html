@@ -24,16 +24,16 @@
       <span class="text">New</span>
     </button> -->
     <div class="d-flex align-items-center">
-      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=''"  [selectOnEnter]="true" (enteredPressed)="enterToSelect($event)"></odp-search-box>
-      <button class="add-new btn btn-primary ml-3 d-flex align-items-center"
-        (click)="newApp()" *ngIf="isSuperadmin">
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=''" [selectOnEnter]="true"
+        (enteredPressed)="enterToSelect($event)"></odp-search-box>
+      <button class="add-new btn btn-primary ml-3 d-flex align-items-center" (click)="newApp()" *ngIf="isSuperadmin">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New</span>
       </button>
     </div>
   </div>
   <!-- <div class="apps-container d-flex flex-wrap"> -->
-    <!-- <div class="app-card add d-flex flex-column m-3 px-4 py-3">
+  <!-- <div class="app-card add d-flex flex-column m-3 px-4 py-3">
       <div class="app-thumbnail d-flex align-items-center justify-content-center border hover ml-2" (click)="newApp()">
         <div class="rounded-circle d-flex align-items-center justify-content-center bg-light">
           <span class="dsi dsi-plus fa-lg text-secondary"></span>
@@ -41,12 +41,12 @@
       </div>
       <div class="app-name text-center mt-2 text-primary hover" (click)="newApp()">New app</div>
     </div> -->
-    <!-- <ng-container *ngIf="!appList || appList.length == 0">
+  <!-- <ng-container *ngIf="!appList || appList.length == 0">
       <odp-loading-placeholder width="48" height="48" *ngFor="let app of dummyRows" class="mt-5 mx-5">
       </odp-loading-placeholder>
     </ng-container>
     <ng-container *ngFor="let app of appList | filterApp: searchTerm; let appIndex = index"> -->
-      <!-- <div class="app-card d-flex flex-column mt-4 mx-3 rounded position-relative"
+  <!-- <div class="app-card d-flex flex-column mt-4 mx-3 rounded position-relative"
         (click)="appOptions[appIndex] = true">
         <div class="settings-wrapper d-flex flex-column align-items-center px-4 pt-2 position-relative">
           <div class="app-thumbnail d-flex align-items-center justify-content-center bg-light hover"
@@ -66,7 +66,7 @@
           </div>
         </div>
       </div> -->
-    <!-- </ng-container>
+  <!-- </ng-container>
   </div> -->
   <div class="d-flex flex-column w-100 h-100 position-relative">
     <div class="card-container">
@@ -99,28 +99,26 @@
         </ng-container>
         <ng-container *ngIf="!records || records.length == 0">
           <div class="list-group-item">
-           <p class="m-0">No Application Found, <button type="button" class="btn btn-link px-1 py-0"
-            (click)="newApp()">Click Here</button> to create a new App
-            <span *ngIf="searchTerm">:&nbsp;<span class="fw-500">{{searchTerm}}</span></span>
-           </p>
+            <p class="m-0">No Application Found, <button type="button" class="btn btn-link px-1 py-0"
+                (click)="newApp()">Click Here</button> to create a new App
+              <span *ngIf="searchTerm">:&nbsp;<span class="fw-500">{{searchTerm}}</span></span>
+            </p>
           </div>
         </ng-container>
         <ng-container *ngFor="let app of records | filterApp: searchTerm; let appIndex = index">
           <div class="list-group-item d-flex align-items-center justify-content-start" (dblclick)="useApp(app._id)">
             <div class="item-name fw-500 d-flex align-items-center">
-              <span class="mr-2 pl-1 text-dark hover app-name"  [ngbTooltip]="app._id"
+              <span class="mr-2 pl-1 text-dark hover app-name" [ngbTooltip]="app._id"
                 placement="right">{{app._id}}</span>
             </div>
             <div class="item-actions d-flex align-items-center justify-content-end">
-              <div (click)="useApp(app._id)" >
-                <span class="dsi dsi-view mr-1"></span>
-                <span  class="fw-600 font-13 hover mr-3"
-                  >View</span>
+              <div class="d-flex align-items-center" (click)="useApp(app._id)">
+                <span class="dsi dsi-view mr-2"></span>
+                <span class="fw-600 font-13 hover mr-3">View</span>
               </div>
-              <div (click)="$event.stopPropagation();deleteApp(app, appIndex)">
-                <span class="fas fa-trash mr-1 text-danger"></span>
-                <span  class="fw-600 font-13 hover mr-3 text-danger"
-                >Delete</span>
+              <div class="d-flex align-items-center" (click)="$event.stopPropagation();deleteApp(app, appIndex)">
+                <span class="dsi dsi-trash mr-2 text-danger"></span>
+                <span class="fw-600 font-13 hover mr-3 text-danger">Delete</span>
               </div>
               <!-- <span
                class="dsi dsi-more-vertical hover mr-3 ignore-outside"

@@ -10,29 +10,17 @@
     <div class="header d-flex align-items-center justify-content-between mb-4">
         <div class="d-flex align-items-center">
             <span class="fw-600 font-20">{{data.name}}</span>
-            <span class="fw-500 font-14 px-2 py-1 rounded ml-4" [ngClass]="daysClass"
-                ngbTooltip="Days Remaining">{{days}}</span>
+            <span class="fw-500 font-14 px-2 py-1 rounded ml-4" [ngClass]="daysClass" ngbTooltip="Days Remaining">
+                {{days > 0 ? days : 0}}
+            </span>
+            <span *ngIf="days<1" class="font-12 fw-600 ml-3 text-danger">
+                This key will be removed in {{cleanUpDays}} days
+            </span>
         </div>
-        <div class="position-relative">
+        <div class="d-flex align-items-center justify-content-end position-relative">
+            <span class="mr-3 fw-500 text-dark">{{data.status}}</span>
             <odp-switch [checked]="data.status=='Enabled'" (checkedChange)="toggleStatus($event)"
                 [edit]="{status:hasPermission('PMAPI')}"></odp-switch>
-            <!-- <div class="settings" *ngIf="hasPermission('PMAPI')">
-                <div class="hover ignore-outside d-flex align-items-center p-2 border rounded-lg"
-                    (click)="showSettings = !showSettings">
-                    <span class="dsi dsi-settings font-20"></span>
-                    <label class="my-0 mx-2">Settings</label>
-                    <span class="dsi" [ngClass]="{
-                      'dsi-drop-down': !showSettings,
-                      'dsi-drop-up': showSettings
-                    }"></span>
-                </div>
-                <div class="popover" *ngIf="showSettings" odpClickOutside (outside)="showSettings=false">
-                    <span *ngIf="data.status=='Disabled'" (click)="toggleStatus('Enabled')"
-                        class="popover-options">Enable</span>
-                    <span *ngIf="data.status=='Enabled'" (click)="toggleStatus('Disabled')"
-                        class="popover-options">Disable</span>
-                </div>
-            </div> -->
         </div>
     </div>
     <div class="content">

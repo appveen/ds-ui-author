@@ -1,17 +1,17 @@
 <ng-container *ngFor="let button of buttons">
-    <i *ngIf="button === 'End Session'" class="dsi dsi-ban mr-3 text-secondary cursor-pointer hover"
+    <span *ngIf="button === 'End Session'" class="dsi dsi-ban ml-3 text-secondary cursor-pointer hover"
         (click)="handleButtonClick(button, $event)">
-    </i>
-    <i *ngIf="button === 'Deactivate'" class="dsi dsi-minus-circle mr-3  text-secondary cursor-pointer hover"
+    </span>
+    <span *ngIf="button === 'Deactivate'" class="dsi dsi-minus-circle ml-3  text-secondary cursor-pointer hover"
         (click)="handleButtonClick(button, $event)">
-    </i>
-    <i *ngIf="button === 'Activate'" class="dsi dsi-plus-circle mr-3 text-secondary cursor-pointer hover"
+    </span>
+    <span *ngIf="button === 'Activate'" class="dsi dsi-plus-circle ml-3 text-secondary cursor-pointer hover"
         (click)="handleButtonClick(button, $event)">
-    </i>
-    <i *ngIf="button === 'Edit'" class="dsi dsi-edit mr-3 text-secondary cursor-pointer hover"
+    </span>
+    <span *ngIf="button === 'Edit'" class="dsi dsi-edit ml-3 text-secondary cursor-pointer hover"
         (click)="handleButtonClick(button, $event)">
-    </i>
-    <i *ngIf="button === 'Delete'" class="dsi dsi-trash text-secondary cursor-pointer hover"
+    </span>
+    <span *ngIf="button === 'Delete'" class="dsi dsi-trash ml-3 text-secondary cursor-pointer hover"
         (click)="handleButtonClick(button, $event)">
-    </i>
+    </span>
 </ng-container>

@@ -39,7 +39,8 @@
                             <span class="name text-truncate" container="body" [ngbTooltip]="key?.name">
                                 {{ key?.name }}
                             </span>
-                            <span class="email text-secondary font-12">Expire On: {{ key.expiryAfterDate | date:'medium' }}</span>
+                            <span class="email text-secondary font-12">Expire On: {{ key.expiryAfterDate | date:'medium'
+                                }}</span>
                         </div>
                     </div>
                 </div>
@@ -74,8 +75,8 @@
             <div class="form-group">
                 <label for="expiryAfter">Expiry After <small class="font-11 text-secondary">(in Days)</small></label>
                 <div class="w-100 position-relative">
-                    <input id="expiryAfter" class="form-control" type="number" placeholder="Days" formControlName="expiryAfter"
-                        autocomplete="autocomplete_off_hack" />
+                    <input id="expiryAfter" class="form-control" type="number" min="1" placeholder="Days"
+                        formControlName="expiryAfter" autocomplete="autocomplete_off_hack" />
                 </div>
             </div>
             <div *ngIf="showKeyDetails" class="form-group">

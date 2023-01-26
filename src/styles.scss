@@ -773,8 +773,14 @@ $weights: 200,
     }
   }
 
-  .ag-row {
-    padding: 10px;
+  // .ag-row {
+  //   padding: 10px;
+  // }
+  .ag-row .ag-cell {
+    display: flex;
+    // justify-content: center;
+    /* align horizontal */
+    align-items: center;
   }
 
   .ag-layout-normal {
