@@ -1,5 +1,6 @@
 <div class="source-selector">
-    <input type="text" class="bg-white rounded border" [ngbTypeahead]="search" [resultFormatter]="formatter" (selectItem)="selectItem($event)" odpAutoFocus>
+    <input type="text" class="bg-white rounded border" [ngbTypeahead]="search" [resultFormatter]="formatter"
+        (selectItem)="selectItem($event)" odpAutoFocus (focus)="focus$.next($any($event).target.value)">
 </div>
 
 <!-- <div class="source-selector">
@@ -19,4 +20,3 @@
         </li>
     </ul>
 </ng-template> -->
-

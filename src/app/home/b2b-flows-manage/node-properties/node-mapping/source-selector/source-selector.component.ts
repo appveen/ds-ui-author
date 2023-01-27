@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable, OperatorFunction } from 'rxjs';
+import { merge, Observable, OperatorFunction, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 @Component({
@@ -13,23 +13,28 @@ export class SourceSelectorComponent implements OnInit {
   @Input() sources: Array<any>;
   @Output() selected: EventEmitter<any>;
   flattenDefinition: Array<any>;
+  focus$: Subject<string>;
   constructor() {
     this.sources = [];
     this.selected = new EventEmitter();
     this.flattenDefinition = [];
     this.edit = { status: false };
+    this.focus$ = new Subject<string>()
   }
 
   ngOnInit(): void {
-    this.flattenDefinition = this.flatten(this.sources);
+    this.flattenDefinition = [];
+    console.log(this.sources);
+    this.flattenDefinition = JSON.parse(JSON.stringify(this.flatten(this.sources)));
   }
 
-  flatten(definition: any) {
+  flatten(definition: any, parentDef?: any) {
     let arr = [];
     if (definition && definition.length > 0) {
       definition.forEach(def => {
+        def.name = (parentDef ? parentDef.name + '->' + def.name : def.name) || def.dataPath;
         if (def.type == 'Object') {
-          arr = arr.concat(this.flatten(def.definition));
+          arr = arr.concat(this.flatten(JSON.parse(JSON.stringify(def.definition)), def));
         } else {
           def.definition = [];
           arr.push(def);
@@ -39,10 +44,10 @@ export class SourceSelectorComponent implements OnInit {
     return arr;
   }
 
-  search: OperatorFunction<string, readonly object[]> = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
+  search: OperatorFunction<string, readonly object[]> = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const inputFocus$ = this.focus$;
+    return merge(debouncedText$, inputFocus$).pipe(
       map((term) => {
         return this.flattenDefinition.filter((e) => {
           if (e.name) {
@@ -55,6 +60,7 @@ export class SourceSelectorComponent implements OnInit {
         }).slice(0, 10)
       }),
     );
+  }
 
   formatter = (result: any) => result.name;
 

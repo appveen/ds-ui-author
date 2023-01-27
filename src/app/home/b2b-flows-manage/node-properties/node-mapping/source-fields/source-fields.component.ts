@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'odp-source-fields',
@@ -14,6 +15,9 @@ export class SourceFieldsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!environment.production) {
+      console.log(this.definition);
+    }
   }
 
 }

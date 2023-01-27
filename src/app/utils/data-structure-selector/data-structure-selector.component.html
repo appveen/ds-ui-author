@@ -1,5 +1,5 @@
 <div class="selector-options d-flex flex-column">
-    <div class="d-flex align-items-center justify-content-start w-100 mb-2" (click)="onTypeChange('generic')">
+    <div *ngIf="!hideGeneric" class="d-flex align-items-center justify-content-start w-100 mb-2" (click)="onTypeChange('generic')">
         <odp-round-radio [edit]="edit" [checked]="selectedType == 'generic'" (checkedChange)="onTypeChange('generic')">
         </odp-round-radio>
         <span class="text ml-3">Generic</span>

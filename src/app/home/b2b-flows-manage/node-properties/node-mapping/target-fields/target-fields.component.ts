@@ -18,7 +18,8 @@ export class TargetFieldsComponent implements OnInit {
   constructor() {
     this.fuzzyMapping = new EventEmitter();
     this.clearMapping = new EventEmitter();
-    this.edit = { status: false };
+    this.edit = { status: true };
+    this.showAddSource = false;
   }
 
   ngOnInit(): void {

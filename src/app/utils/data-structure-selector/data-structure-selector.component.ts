@@ -12,6 +12,7 @@ export class DataStructureSelectorComponent implements OnInit {
 
   @Input() edit: any;
   @Input() restrictToFormat: Array<string>;
+  @Input() hideGeneric: boolean;
   @Input() format: any;
   @Output() formatChange: EventEmitter<any>;
 

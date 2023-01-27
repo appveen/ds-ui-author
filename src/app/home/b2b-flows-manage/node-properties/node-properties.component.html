@@ -45,7 +45,7 @@
         </label>
         <small class="form-text text-muted mb-3">Set the data structure that this node will return</small>
         <odp-data-structure-selector class="d-flex ml-4" [edit]="edit" [format]="currNode.dataStructure.outgoing"
-            (formatChange)="onFormatChange($event)">
+            (formatChange)="onFormatChange($event)" [hideGeneric]="currNode?.type=='MAPPING'">
         </odp-data-structure-selector>
     </div>
     <ng-container *ngIf="isInputNode">
