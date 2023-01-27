@@ -1,169 +1,40 @@
-<!-- <div class="node-block-wrapper">
-    <div *ngIf="prevNode" class="add-button d-flex flex-column align-items-start" [ngStyle]="getAddStyle(0)">
-        <div *ngIf="branchIndex>0" class="border-left negetive border-grey"></div>
-        <div class="border-left border-grey"></div>
-        <span class="dsi dsi-plus-circle ignore-outside hover" (click)="addTo='prev';showBranchDropdown($event)"></span>
-        <div class="border-left border-grey"></div>
-    </div>
-    <div class="d-flex align-items-center">
-        <div class="node-block px-3 py-2 border rounded bg-white d-flex flex-column align-items-start justify-content-center hover position-relative"
-            (click)="selectNode()">
-            <div class="node-type">
-                <span *ngIf="node.type=='FILE'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-file"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">File Agent</span>
-                </span>
-                <span *ngIf="!prevNode && node.type=='API'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-api-reciever"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">API Reciever</span>
-                </span>
-                <span *ngIf="prevNode && node.type=='API'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-invoke-api"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Invoke API</span>
-                </span>
-                <span *ngIf="node.type=='TIMER'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-clock"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Timer</span>
-                </span>
-                <span *ngIf="node.type=='CODEBLOCK'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-object text-muted"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Code Block</span>
-                </span>
-                <span *ngIf="node.type=='CONNECTOR'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-connector"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Connector</span>
-                </span>
-                <span *ngIf="node.type=='DATASERVICE'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-data-service"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Data Service</span>
-                </span>
-                <span *ngIf="node.type=='FUNCTION'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-function"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Function</span>
-                </span>
-                <span *ngIf="node.type=='MAPPING'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-mapping"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Mapping</span>
-                </span>
-                <span *ngIf="node.type=='UNWIND'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-expand"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Change Root</span>
-                </span>
-                <span *ngIf="node.type=='RESPONSE'" class="d-flex align-items-center">
-                    <span class="node-icon dsi dsi-response"></span>
-                    <span class="ml-3" [ngClass]="{'fw-500 text-accent':isNodeSelected}">Response</span>
-                </span>
-            </div>
-            <div class="node-name w-100 text-center text-truncate text-muted font-12" *ngIf="node.name">
-                <span class="">{{node.name}}</span>
-            </div>
-            <span *ngIf="b2bflowsmanage.edit.status" class="delete-icon dsi dsi-trash text-danger position-absolute hover"
-                (click)="$event.stopPropagation();deleteNode()"></span>
-        </div>
-        <ng-container *ngFor="let item of node.onSuccess;let f=first">
-            <ng-container *ngIf="!f">
-                <div class="path-sm border-bottom border-grey"></div>
-                <div class="path border-bottom border-grey flex-fill"></div>
-            </ng-container>
-        </ng-container>
-        <div *ngIf="node.onSuccess && node.onSuccess.length>0" class="add-button side d-flex align-items-center">
-            <div class="border-bottom border-grey"></div>
-            <span
-                class="dsi dsi-plus-circle ignore-outside bg-primary border border-primary text-white rounded-circle hover"
-                (click)="addTo='curr';showBranchDropdown($event)"></span>
-        </div>
-    </div>
-    <div *ngIf="!node.onSuccess || node.onSuccess.length==0" class="d-flex align-items-start">
-        <div class="add-button d-flex flex-column align-items-center" [ngStyle]="getAddStyle(0)">
-            <div class="border-left border-grey"></div>
-            <span
-                class="dsi dsi-plus-circle ignore-outside bg-primary border border-primary text-white rounded-circle hover"
-                (click)="addTo='curr';showBranchDropdown($event)"></span>
-        </div>
-    </div>
-    <div *ngIf="node.onSuccess && node.onSuccess.length>0" class="d-flex align-items-start">
-        <ng-container *ngFor="let item of node.onSuccess;let i=index;let f=first;">
-            <div *ngIf="getCurrentNode(item)" [ngClass]="{'ml-4':!f}" odp-flow-node [prevNode]="currNode"
-                [currNode]="getCurrentNode(item)" [(nodeList)]="nodeList" (nodeListChange)="onNodeChange($event)"
-                [branchIndex]="i"></div>
-        </ng-container>
-    </div>
-    <div *ngIf="showNewNodeDropdown" class="node-options-dropdown bg-dark rounded text-white border position-absolute"
-        odpClickOutside (outside)="showNewNodeDropdown=false" [ngStyle]="dropDownStyle">
-        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('FILE')">
-            <span class="font-12 fw-400 dsi dsi-file mr-2"></span>
-            <span class="font-12 fw-400">File Agent</span>
-        </div>
-        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('API')">
-            <span class="font-11 fw-400 dsi dsi-invoke-api mr-2"></span>
-            <span class="font-12 fw-400">Invoke API</span>
-        </div>
-        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('CONNECTOR')">
-            <span class="font-11 fw-400 dsi dsi-connector mr-2"></span>
-            <span class="font-12 fw-400">Connector</span>
-        </div>
-        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('DATASERVICE')">
-            <span class="font-12 fw-400 dsi dsi-data-service mr-2"></span>
-            <span class="font-12 fw-400">Data Service</span>
-        </div>
-        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('FUNCTION')">
-            <span class="font-12 fw-400 dsi dsi-function mr-2"></span>
-            <span class="font-12 fw-400">Function</span>
-        </div>
-        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('MAPPING')">
-            <span class="font-12 fw-400 dsi dsi-mapping mr-2"></span>
-            <span class="font-12 fw-400">Mapping</span>
-        </div>
-        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('CODEBLOCK')">
-            <span class="font-12 fw-400 dsi dsi-object mr-2 text-muted"></span>
-            <span class="font-12 fw-400">Code Block</span>
-        </div>
-        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('UNWIND')">
-            <span class="font-11 fw-400 dsi dsi-expand mr-2"></span>
-            <span class="font-12 fw-400">Change Root</span>
-        </div>
-        <div class="node-options-item px-3 py-2 d-flex align-items-center hover" (click)="addNode('RESPONSE')">
-            <span class="font-12 fw-400 dsi dsi-response mr-2"></span>
-            <span class="font-12 fw-400">Response</span>
-        </div>
-    </div>
-</div> -->
-
 <svg>
-    <g [ngStyle]="style" class="hover">
-        <g [class.active]="isSelected">
-            <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)" />
-            <text x="36" y="22" text-anchor="start" (click)="openProperties($event)">{{currNode.type}}</text>
+    <g class="node-block" [ngStyle]="style" class="hover" [attr.data-id]="currNode._id">
+        <g [class.active]="isSelected" [attr.data-id]="currNode._id">
+            <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" />
+            <text x="36" y="22" text-anchor="start" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id">{{nodeType}}</text>
         </g>
         <rect *ngIf="index>0" class="node-anchor start" [class.active]="isActive('start')" [attr.data-id]="currNode._id"
             x="-6" y="12" width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
         <rect class="node-anchor end" [class.active]="isActive('end')" [attr.data-id]="currNode._id" x="134" y="12"
             width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
-        <foreignObject width="18" height="18" x="10" y="9">
+        <foreignObject width="18" height="18" x="10" y="9" [attr.data-id]="currNode._id">
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='API'"
-                class="node-icon font-18 fw-500 dsi dsi-invoke-api"></span>
+                class="node-icon font-18 fw-500 dsi dsi-invoke-api" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE'"
-                class="node-icon font-18 fw-500 dsi dsi-file"></span>
+                class="node-icon font-18 fw-500 dsi dsi-file" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='TIMER'"
-                class="node-icon font-18 fw-500 dsi dsi-clock"></span>
+                class="node-icon font-18 fw-500 dsi dsi-clock" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CODEBLOCK'"
-                class="node-icon font-18 fw-500 dsi dsi-object text-muted"></span>
+                class="node-icon font-18 fw-500 dsi dsi-object text-muted" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONNECTOR'"
-                class="node-icon font-18 fw-500 dsi dsi-connector"></span>
+                class="node-icon font-18 fw-500 dsi dsi-connector" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='DATASERVICE'"
-                class="node-icon font-18 fw-500 dsi dsi-data-service"></span>
+                class="node-icon font-18 fw-500 dsi dsi-data-service" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FUNCTION'"
-                class="node-icon font-18 fw-500 dsi dsi-function"></span>
+                class="node-icon font-18 fw-500 dsi dsi-function" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='MAPPING'"
-                class="node-icon font-18 fw-500 dsi dsi-mapping"></span>
+                class="node-icon font-18 fw-500 dsi dsi-mapping" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='UNWIND'"
-                class="node-icon font-18 fw-500 dsi dsi-expand"></span>
+                class="node-icon font-18 fw-500 dsi dsi-expand" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='RESPONSE'"
-                class="node-icon font-18 fw-500 dsi dsi-response"></span>
+                class="node-icon font-18 fw-500 dsi dsi-response" [attr.data-id]="currNode._id"></span>
         </foreignObject>
     </g>
     <g *ngFor="let p of paths;let i=index">
-        <path [attr.d]="p.path" class="svg-path ignore-outside" [class.selected]="i == selectedPathIndex" (click)="selectPath($event,i,p)"
-            odpClickOutside (outside)="selectedPathIndex=null" />
+        <path [attr.d]="p.path" class="svg-path ignore-outside" [class.selected]="i == selectedPathIndex"
+            (click)="selectPath($event,i,p)" odpClickOutside (outside)="selectedPathIndex=null" />
     </g>
 </svg>

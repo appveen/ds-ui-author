@@ -104,4 +104,7 @@ export class NodePropertiesComponent implements OnInit {
     this.changesDone.emit()
   }
 
+  get isInputNode() {
+    return this.nodeList[0]._id == this.currNode._id;
+  }
 }

@@ -46,6 +46,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   saved: boolean = false
 
   contextMenuStyle: any;
+  isMouseDown: any;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -420,6 +421,33 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+
+  @HostListener('mousedown', ['$event'])
+  onMouseDown(event: any) {
+    this.isMouseDown = event;
+  }
+
+  @HostListener('document:mouseup', ['$event'])
+  onMouseUp(event: any) {
+    this.isMouseDown = null;
+    // this.flowService.anchorSelected = null;
+  }
+
+  @HostListener('mousemove', ['$event'])
+  onMouseMove(event: any) {
+    if (this.isMouseDown) {
+      let targetEle = (this.isMouseDown.target as HTMLElement);
+      let currNode = this.nodeList.find(e => e._id == targetEle.dataset.id);
+      const tempX = event.clientX - this.isMouseDown.clientX;
+      const tempY = event.clientY - this.isMouseDown.clientY;
+      this.isMouseDown = event;
+      currNode.coordinates.x += tempX;
+      currNode.coordinates.y += tempY;
+      this.flowService.reCreatePaths.emit();
+    }
+  }
+
 
   get apiCallsPending() {
     return Object.values(this.apiCalls).some(e => e);

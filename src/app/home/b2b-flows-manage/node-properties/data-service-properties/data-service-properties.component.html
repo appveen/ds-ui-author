@@ -106,12 +106,17 @@
         </div>
     </ng-container>
     <ng-container *ngIf="currNode.options.update || currNode.options.insert">
-        <div class="form-group position-relative ">
-            <label for="fields">Body</label>
-            <input id="fields" type="text" class="form-control dynamic-variable-addon"
+        <!-- <div class="form-group position-relative ">
+            <label for="nodeBody">Body</label>
+            <input id="nodeBody" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.body">
             <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.body">
             </odp-node-data-selector>
+        </div> -->
+        <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark mb-0" for="nodeBody">Body</label>
+            <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList" [currNode]="currNode">
+            </odp-input-data-selector>
         </div>
     </ng-container>
 </ng-container>

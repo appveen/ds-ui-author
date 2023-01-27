@@ -22,13 +22,24 @@ export class FlowNodeComponent implements OnInit {
   isMouseDown: any;
   selectedPathIndex: number;
   selectedNode: any;
-
+  nodeLabelMap: any;
   constructor(private flowService: B2bFlowService) {
     this.index = -1;
     this.nodeListChange = new EventEmitter();
     this.branchIndex = -1;
     this.paths = [];
     this.nodeList = [];
+    this.nodeLabelMap = {
+      FILE: 'File Agent',
+      TIMER: 'Timer',
+      CODEBLOCK: 'Code Block',
+      CONNECTOR: 'Connector',
+      DATASERVICE: 'Data Service',
+      FUNCTION: 'Function',
+      MAPPING: 'Mapping',
+      UNWIND: 'Change Root',
+      RESPONSE: 'Response'
+    };
   }
 
   ngOnInit(): void {
@@ -104,28 +115,28 @@ export class FlowNodeComponent implements OnInit {
     });
   }
 
-  @HostListener('mousedown', ['$event'])
-  onMouseDown(event: any) {
-    this.isMouseDown = event;
-  }
+  // @HostListener('mousedown', ['$event'])
+  // onMouseDown(event: any) {
+  //   this.isMouseDown = event;
+  // }
 
-  @HostListener('document:mouseup', ['$event'])
-  onMouseUp(event: any) {
-    this.isMouseDown = null;
-    // this.flowService.anchorSelected = null;
-  }
+  // @HostListener('document:mouseup', ['$event'])
+  // onMouseUp(event: any) {
+  //   this.isMouseDown = null;
+  //   // this.flowService.anchorSelected = null;
+  // }
 
-  @HostListener('mousemove', ['$event'])
-  onMouseMove(event: any) {
-    if (this.isMouseDown) {
-      const tempX = event.clientX - this.isMouseDown.clientX;
-      const tempY = event.clientY - this.isMouseDown.clientY;
-      this.isMouseDown = event;
-      this.currNode.coordinates.x += tempX;
-      this.currNode.coordinates.y += tempY;
-      this.flowService.reCreatePaths.emit();
-    }
-  }
+  // @HostListener('mousemove', ['$event'])
+  // onMouseMove(event: any) {
+  //   if (this.isMouseDown) {
+  //     const tempX = event.clientX - this.isMouseDown.clientX;
+  //     const tempY = event.clientY - this.isMouseDown.clientY;
+  //     this.isMouseDown = event;
+  //     this.currNode.coordinates.x += tempX;
+  //     this.currNode.coordinates.y += tempY;
+  //     this.flowService.reCreatePaths.emit();
+  //   }
+  // }
 
   @HostListener('document:keydown', ['$event'])
   onDeleteKey(event: any) {
@@ -175,5 +186,21 @@ export class FlowNodeComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  get isInputNode() {
+    return this.nodeList[0]._id == this.currNode._id;
+  }
+
+  get nodeType() {
+    if (this.currNode.type == 'API' && this.isInputNode) {
+      return 'API Reciever';
+    } else if (this.currNode.type == 'API' && !this.isInputNode) {
+      return 'Invoke API';
+    } else if (this.nodeLabelMap[this.currNode.type]) {
+      return this.nodeLabelMap[this.currNode.type];
+    } else {
+      return this.currNode.type;
+    }
   }
 }

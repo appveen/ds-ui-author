@@ -13,17 +13,17 @@
 </div>
 <div class="p-4">
     <div class="form-group">
-        <label class="font-14 fw-300 text-dark" for="nodeName">Node Name</label>
+        <label class="font-14 fw-400 text-dark" for="nodeName">Node Name</label>
         <input id="nodeName" type="text" class="form-control" [(ngModel)]="currNode.name"
             (ngModelChange)="changesDone.emit()">
     </div>
     <div class="form-group">
-        <label class="font-14 fw-300 text-dark" for="nodeType">Node Type</label>
+        <label class="font-14 fw-400 text-dark" for="nodeType">Node Type</label>
         <select id="nodeType" class="form-control" [(ngModel)]="currNode.type"
             (ngModelChange)="onTypeChange($event); changesDone.emit()">
-            <option *ngIf="!prevNode" value="API">API Reciever</option>
-            <option *ngIf="!prevNode" value="TIMER">Timer</option>
-            <option value="API">API Invoke</option>
+            <option *ngIf="isInputNode" value="API">API Reciever</option>
+            <option *ngIf="isInputNode" value="TIMER">Timer</option>
+            <option *ngIf="!isInputNode" value="API">API Invoke</option>
             <option value="FILE">File Agent</option>
             <option value="MAPPING">Mapping</option>
             <option value="CODEBLOCK">Code Block</option>
@@ -34,19 +34,24 @@
             <option value="RESPONSE">Response</option>
         </select>
     </div>
+    <!-- <div *ngIf="!isInputNode && (currNode?.type=='DATASERVICE' || currNode?.type=='API')" class="form-group">
+        <label class="font-14 fw-400 text-dark mb-0" for="inputDataStructure">Body</label>
+        <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList" [currNode]="currNode">
+        </odp-input-data-selector>
+    </div> -->
     <div *ngIf="currNode?.type!='DATASERVICE'" class="form-group">
-        <label class="font-14 fw-300 text-dark mb-0" for="nodeDataStructure">Data Structure
+        <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure
             <span class="text-muted"><i>(optional)</i></span>
         </label>
         <small class="form-text text-muted mb-3">Set the data structure that this node will return</small>
-        <odp-data-structure-selector [edit]="edit" [format]="currNode.dataStructure.outgoing"
+        <odp-data-structure-selector class="d-flex ml-4" [edit]="edit" [format]="currNode.dataStructure.outgoing"
             (formatChange)="onFormatChange($event)">
         </odp-data-structure-selector>
     </div>
-    <ng-container *ngIf="!prevNode">
+    <ng-container *ngIf="isInputNode">
         <ng-container *ngIf="currNode?.type=='API'">
             <div class="form-group">
-                <label class="font-14 fw-300 text-dark" for="nodeHTTPMethod">HTTP Method</label>
+                <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
                 <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
                     (ngModelChange)="changesDone.emit()">
                     <option value="POST" selected>POST</option>
@@ -56,12 +61,12 @@
                 </select>
             </div>
             <div class="form-group">
-                <label class="font-14 fw-300 text-dark" for="nodeEndpoint">API Endpoint</label>
+                <label class="font-14 fw-400 text-dark" for="nodeEndpoint">API Endpoint</label>
                 <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
                     (ngModelChange)="changesDone.emit()">
             </div>
             <div class="form-group">
-                <label class="font-14 fw-300 text-dark" for="nodeContentType">Content-Type</label>
+                <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
                 <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
                     (ngModelChange)="changesDone.emit()">
                     <option value="application/json" selected>application/json</option>
@@ -87,7 +92,7 @@
         </ng-container> -->
         <ng-container *ngIf="currNode?.type=='TIMER'">
             <div class="form-group">
-                <label class="font-14 fw-300 text-dark" for="nodeEndpoint">CRON Expression</label>
+                <label class="font-14 fw-400 text-dark" for="nodeEndpoint">CRON Expression</label>
                 <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.cron"
                     (ngModelChange)="changesDone.emit()">
             </div>
@@ -98,16 +103,16 @@
         </div>
     </ng-container>
     <!-- <hr> -->
-    <ng-container *ngIf="currNode?.type=='API' && prevNode">
+    <ng-container *ngIf="currNode?.type=='API' && !isInputNode">
         <div class="form-group position-relative">
-            <label class="font-14 fw-300 text-dark" for="nodeUrl">URL</label>
+            <label class="font-14 fw-400 text-dark" for="nodeUrl">URL</label>
             <textarea id="nodeUrl" class="form-control dynamic-variable-addon" cols="30" rows="4"
                 [(ngModel)]="currNode.options.url"></textarea>
             <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.body">
             </odp-node-data-selector>
         </div>
         <div class="form-group">
-            <label class="font-14 fw-300 text-dark" for="nodeHTTPMethod">HTTP Method</label>
+            <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
             <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
                 (ngModelChange)="changesDone.emit()">
                 <option value="POST" selected>POST</option>
@@ -117,7 +122,7 @@
             </select>
         </div>
         <div class="form-group position-relative">
-            <label class="font-14 fw-300 text-dark" for="nodeContentType">Content-Type</label>
+            <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
             <select id="nodeContentType" class="form-control" disabled>
                 <option value="application/json" selected>application/json</option>
                 <option value="application/xml">application/xml</option>
@@ -129,18 +134,24 @@
                 [(value)]="currNode.options.headers">
             </odp-add-headers>
         </div>
-        <div class="form-group position-relative">
-            <label class="font-14 fw-300 text-dark" for="nodeBody">Body</label>
+        <!-- <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark" for="nodeBody">Body</label>
             <textarea id="nodeBody" class="form-control dynamic-variable-addon" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea>
             <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.body">
             </odp-node-data-selector>
+        </div> -->
+        <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark mb-0" for="nodeBody">Body</label>
+            <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body"
+                [nodeList]="nodeList" [currNode]="currNode">
+            </odp-input-data-selector>
         </div>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FILE'">
         <div class="form-group">
             <div class="d-flex align-items-center justify-content-between">
-                <label class="font-14 fw-300 text-dark" for="agentSelector">Agents</label>
+                <label class="font-14 fw-400 text-dark" for="agentSelector">Agents</label>
                 <button type="button" class="btn btn-link btn-sm py-0" (click)="showAgentSelector=true">
                     Select Agent
                 </button>
@@ -173,7 +184,7 @@
     </ng-container>
     <ng-container *ngIf="currNode.type=='UNWIND'">
         <div class="form-group position-relative">
-            <label class="font-14 fw-300 text-dark" for="nodeUnWind">Change Root Path</label>
+            <label class="font-14 fw-400 text-dark" for="nodeUnWind">Change Root Path</label>
             <input id="nodeUnWind" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.unwindPath" (ngModelChange)="changesDone.emit()">
             <odp-node-data-selector [edit]="edit" class="node-data-selector" [nodeList]="nodeList"
@@ -191,7 +202,7 @@
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FUNCTION'">
         <div class="form-group">
-            <label class="font-14 fw-300 text-dark" for="functionSelector">
+            <label class="font-14 fw-400 text-dark" for="functionSelector">
                 {{currNode?.options?.faas ? 'Selected' : 'Select'}}
                 Function
             </label>
@@ -206,12 +217,12 @@
         </div>
         <ng-container *ngIf="currNode?.options?.faas">
             <div class="form-group">
-                <label class="font-14 fw-300 text-dark" for="nodeEndpoint">Function Endpoint</label>
+                <label class="font-14 fw-400 text-dark" for="nodeEndpoint">Function Endpoint</label>
                 <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
                     (ngModelChange)="changesDone.emit()">
             </div>
             <div class="form-group">
-                <label class="font-14 fw-300 text-dark" for="nodeHTTPMethod">HTTP Method</label>
+                <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
                 <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
                     (ngModelChange)="changesDone.emit()">
                     <option value="POST" selected>POST</option>
@@ -229,7 +240,7 @@
     </ng-container>
     <ng-container *ngIf="currNode?.type=='RESPONSE'">
         <div class="form-group position-relative">
-            <label class="font-14 fw-300 text-dark" for="nodeStatusCode">Status Code</label>
+            <label class="font-14 fw-400 text-dark" for="nodeStatusCode">Status Code</label>
             <input id="nodeStatusCode" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.statusCode" (ngModelChange)="changesDone.emit()">
             <odp-node-data-selector class="node-data-selector" [edit]="edit" [nodeList]="nodeList"
@@ -237,7 +248,7 @@
             </odp-node-data-selector>
         </div>
         <div class="form-group position-relative">
-            <label class="font-14 fw-300 text-dark" for="nodeContentType">Content-Type</label>
+            <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
             <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
                 (ngModelChange)="changesDone.emit()">
                 <option value="application/json" selected>application/json</option>
@@ -251,7 +262,7 @@
             </odp-add-headers>
         </div>
         <div *ngIf="currNode.options.contentType=='application/json'" class="form-group position-relative">
-            <label class="font-14 fw-300 text-dark" for="nodeBody">Body</label>
+            <label class="font-14 fw-400 text-dark" for="nodeBody">Body</label>
             <textarea id="nodeBody" class="form-control dynamic-variable-addon" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea>
             <odp-node-data-selector [edit]="edit" class="node-data-selector" [nodeList]="nodeList"

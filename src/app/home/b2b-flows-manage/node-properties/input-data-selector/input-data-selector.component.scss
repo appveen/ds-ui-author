@@ -1,12 +1,20 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.node-mapping-window,
-.node-agent-window {
+.overlay {
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: rgba($color: #000000, $alpha: 0.6);
+}
+
+.custom-window {
     top: 0px;
-    right: -800px;
+    right: -90vw;
     z-index: 3;
-    width: 800px;
+    width: 90vw;
     height: 100vh;
     overflow-y: auto;
     transition: 0.2s;
@@ -14,16 +22,4 @@
     &.show {
         right: 0px;
     }
-}
-.node-mapping-window{
-    right: -90vw;
-    width: 90vw;
-}
-
-.node-agent-window {
-    width: 360px;
-}
-
-.codeblock-editor {
-    height: calc(100vh - 100px);
 }

@@ -41,6 +41,7 @@ import { SourceFieldsComponent } from './node-properties/node-mapping/source-fie
 import { TargetFieldsComponent } from './node-properties/node-mapping/target-fields/target-fields.component';
 import { SourceSelectorComponent } from './node-properties/node-mapping/source-selector/source-selector.component';
 import { FormulaEditorComponent } from './node-properties/node-mapping/formula-editor/formula-editor.component';
+import { InputDataSelectorComponent } from './node-properties/input-data-selector/input-data-selector.component';
 
 const routes: Routes = [
   {
@@ -71,7 +72,8 @@ const routes: Routes = [
     SourceFieldsComponent,
     TargetFieldsComponent,
     SourceSelectorComponent,
-    FormulaEditorComponent
+    FormulaEditorComponent,
+    InputDataSelectorComponent
   ],
   imports: [
     CommonModule,
