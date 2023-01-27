@@ -86,10 +86,10 @@
 
                 <div class="mt-2">
                     <div class="row mb-2" [hidden]="allStates.length == 0">
-                        <div class="col-3">
+                        <div class="col-4">
                             <strong>State</strong>
                         </div>
-                        <div class="col-9">
+                        <div class="col-8">
                             <strong>Add Next State</strong>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                     <div class="state-model-config" [sortablejs]="stateModelData"
                         [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
                         <div class="row align-items-center" *ngFor="let stateData of stateModelData; let i = index ">
-                            <div class="col-3" [ngClass]="{'mb-2': edit.status }">
+                            <div class="col-4" [ngClass]="{'mb-2': edit.status }">
                                 <div *ngIf="edit.status" class="d-inline-block">
                                     <i class="fa fa-bars text-muted hover mr-2 fs-16"></i>
                                 </div>
@@ -113,7 +113,7 @@
                                     (click)="deleteStates(stateData.state)">
                                 </div>
                             </div>
-                            <div class="col-9" [ngClass]="{'mb-2': !edit.status }">
+                            <div class="col-8" [ngClass]="{'mb-2': !edit.status }">
                                 <mat-form-field class="example-chip-list w-100" appearance="fill">
                                     <mat-chip-list #chipList aria-label="Next State selection"
                                         [disabled]="!edit.status">
