@@ -298,7 +298,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     copyPassword(password) {
         const self = this;
         self.appService.copyToClipboard(password);
-        self.ts.success('Id copied successfully');
+        self.ts.success('Password copied successfully');
     }
 
 
