@@ -57,7 +57,7 @@ export class FlowNodeComponent implements OnInit {
       this.paths = [];
       this.renderPaths();
     });
-    this.prevNode = this.nodeList.find((e: any) => e.onSuccess.find(ei => ei._id == this.currNode._id));
+    this.prevNode = this.nodeList.find((e: any) => e.onSuccess?.find(ei => ei._id == this.currNode._id)) || [];
   }
 
   renderPaths() {
