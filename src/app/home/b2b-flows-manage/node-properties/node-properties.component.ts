@@ -27,7 +27,7 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.prevNode = this.nodeList.find(e => e.onSuccess.findIndex(es => es._id == this.currNode._id) > -1);
+    this.prevNode = this.nodeList.find(e => e.onSuccess?.findIndex(es => es._id == this.currNode._id) > -1) || [];
     if (this.prevNode && !this.prevNode.dataStructure) {
       this.prevNode.dataStructure = {};
     }
@@ -64,7 +64,10 @@ export class NodePropertiesComponent implements OnInit {
     if (!environment.production) {
       console.log(data);
     }
-    this.currNode.dataStructure.outgoing = data;
+    if (this.currNode.dataStructure) {
+      this.currNode.dataStructure.outgoing = data;
+    }
+
     this.currNode.mappings = [];
     (this.currNode.onSuccess || []).forEach(item => {
       const temp = this.nodeList.find(r => r._id == item._id);
