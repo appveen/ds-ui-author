@@ -57,7 +57,7 @@ export class FlowNodeComponent implements OnInit {
       this.paths = [];
       this.renderPaths();
     });
-    this.prevNode = this.nodeList.find((e: any) => e.onSuccess.find(ei => ei._id == this.currNode._id));
+    this.prevNode = this.nodeList.find((e: any) => (e.onSuccess || []).find(ei => ei._id == this.currNode._id));
   }
 
   renderPaths() {
@@ -141,16 +141,20 @@ export class FlowNodeComponent implements OnInit {
   @HostListener('document:keydown', ['$event'])
   onDeleteKey(event: any) {
     if (((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') {
-      if (typeof this.selectedPathIndex == 'number') {
-        const path = this.paths[this.selectedPathIndex];
-        this.nodeList.forEach((node: any) => {
-          let i = node.onSuccess.findIndex(e => e._id == path._id);
-          if (i > -1) {
-            node.onSuccess.splice(i, 1);
-          }
-        });
-        this.paths.splice(this.selectedPathIndex, 1);
-      }
+      this.deletePath();
+    }
+  }
+
+  deletePath() {
+    if (typeof this.selectedPathIndex == 'number') {
+      const path = this.paths[this.selectedPathIndex];
+      this.nodeList.forEach((node: any) => {
+        let i = node.onSuccess.findIndex(e => e._id == path._id);
+        if (i > -1) {
+          node.onSuccess.splice(i, 1);
+        }
+      });
+      this.paths.splice(this.selectedPathIndex, 1);
     }
   }
 
