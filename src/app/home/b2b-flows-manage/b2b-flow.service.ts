@@ -11,12 +11,14 @@ export class B2bFlowService {
   selectedNode: EventEmitter<any>;
   deleteNode: EventEmitter<any>;
   reCreatePaths: EventEmitter<any>;
+  selectedPath: EventEmitter<any>;
   anchorSelected: any;
   constructor(private appService: AppService) {
     this.showAddNodeDropdown = new EventEmitter();
     this.selectedNode = new EventEmitter();
     this.deleteNode = new EventEmitter();
     this.reCreatePaths = new EventEmitter();
+    this.selectedPath = new EventEmitter();
   }
 
   getNodeObject(type: string) {

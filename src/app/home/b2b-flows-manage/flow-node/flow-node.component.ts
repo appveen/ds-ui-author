@@ -23,6 +23,7 @@ export class FlowNodeComponent implements OnInit {
   selectedPathIndex: number;
   selectedNode: any;
   nodeLabelMap: any;
+  showDeleteNodeIcon: boolean;
   constructor(private flowService: B2bFlowService) {
     this.index = -1;
     this.nodeListChange = new EventEmitter();
@@ -95,6 +96,7 @@ export class FlowNodeComponent implements OnInit {
       this.selectedPathIndex = index;
     }, 200);
     this.flowService.selectedNode.emit(null);
+    this.flowService.selectedPath.emit({ index, path });
   }
 
   isActive(place: string) {
@@ -174,8 +176,10 @@ export class FlowNodeComponent implements OnInit {
         targetEle = this.flowService.anchorSelected;
       }
       this.flowService.anchorSelected = null;
-      this.createPaths(sourceEle, targetEle);
-      this.flowService.reCreatePaths.emit();
+      if (sourceEle.dataset.id !== targetEle.dataset.id) {
+        this.createPaths(sourceEle, targetEle);
+        this.flowService.reCreatePaths.emit();
+      }
     }
   }
 

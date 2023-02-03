@@ -1,0 +1,34 @@
+<div>
+    <div class="d-flex align-items-center justify-content-between px-4 py-2 mt-4">
+        <span class="font-20 fw-600">Path Condition</span>
+        <div class="d-flex">
+            <button type="button" class="btn btn-link" (click)="deletePath()">
+                <span class="dsi dsi-trash text-danger"></span>
+            </button>
+            <button type="button" class="btn btn-link" (click)="cancel()">
+                <span class="dsi dsi-close"></span>
+            </button>
+        </div>
+    </div>
+    <hr>
+    <!-- <div class="font-12 text-secondary px-4 py-2">
+        <span class="mr-1 fw-500">Node ID:</span>
+        <span>{{currNode?._id}}</span>
+    </div> -->
+</div>
+<div class="p-4">
+    <div class="form-group">
+        <label class="font-14 fw-400 text-dark" for="nodeName">Path Condition</label>
+        <input id="nodeName" type="text" class="form-control" [(ngModel)]="condition"
+            (ngModelChange)="changesDone.emit()">
+    </div>
+</div>
+
+<!-- <div [ngClass]="{'show':showAgentSelector}" class="node-agent-window border-left position-fixed bg-white p-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <span class="fw-500 font-20">Agents</span>
+        <span (click)="showAgentSelector=false" class="dsi dsi-close text-dark"></span>
+    </div>
+    <hr>
+    <odp-agent-selector *ngIf="showAgentSelector" [edit]="edit" (dataChange)="selectAgent($event)"></odp-agent-selector>
+</div> -->

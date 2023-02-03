@@ -47,6 +47,10 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   contextMenuStyle: any;
   isMouseDown: any;
+
+  showPathProperties: boolean;
+  selectedPath: any;
+
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -99,6 +103,19 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.showNodeProperties = false;
       }
     });
+    this.flowService.selectedPath.pipe(
+      tap(() => {
+        this.resetSelection();
+      }),
+      delay(5)
+    ).subscribe((data: any) => {
+      this.selectedPath = data;
+      if (data) {
+        this.showPathProperties = true;
+      } else {
+        this.showPathProperties = false;
+      }
+    });
     this.flowService.deleteNode.subscribe((data: any) => {
       this.openDeleteModal.emit({
         title: 'Delete Node?',
@@ -138,6 +155,8 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     this.showNodeProperties = false;
     this.selectedNode = null;
     this.newNodeDropdownPos = null;
+    this.showPathProperties = false;
+    this.selectedPath = null;
   }
 
   getFlow(id: string, draft?: boolean) {

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
+import { B2bFlowService } from '../b2b-flow.service';
 
 @Component({
   selector: 'odp-node-properties',
@@ -20,7 +21,8 @@ export class NodePropertiesComponent implements OnInit {
   showCodeBlock: boolean;
   prevNode: any;
   constructor(private commonService: CommonService,
-    private appService: AppService) {
+    private appService: AppService,
+    private flowService: B2bFlowService) {
     this.edit = { status: true };
     this.close = new EventEmitter();
     this.changesDone = new EventEmitter();
@@ -50,6 +52,28 @@ export class NodePropertiesComponent implements OnInit {
       this.showNodeMapping = false;
       return;
     }
+  }
+
+  deleteNode() {
+    if (this.prevNode) {
+      const prevIndex = this.nodeList.findIndex(e => e._id == this.prevNode._id);
+      if (prevIndex > -1) {
+        const nextIndex = this.nodeList[prevIndex].onSuccess.findIndex(e => e._id == this.currNode._id);
+        if (nextIndex > -1) {
+          this.nodeList[prevIndex].onSuccess.splice(nextIndex, 1);
+        }
+      }
+    }
+    const currIndex = this.nodeList.findIndex(e => e._id == this.currNode._id);
+    if (currIndex > -1) {
+      this.nodeList.splice(currIndex, 1);
+    }
+    if (!environment.production) {
+      console.log(this.nodeList);
+    }
+    this.flowService.reCreatePaths.emit();
+    this.close.emit(false);
+    this.flowService.selectedNode.emit(null);
   }
 
   onTypeChange(type: string) {

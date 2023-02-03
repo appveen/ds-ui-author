@@ -1,9 +1,14 @@
 <div>
     <div class="d-flex align-items-center justify-content-between px-4 py-2 mt-4">
         <span class="font-20 fw-600">{{currNode.name ? currNode.name : 'Properties'}}</span>
-        <button type="button" class="btn btn-link" (click)="cancel()">
-            <span class="dsi dsi-close"></span>
-        </button>
+        <div class="d-flex">
+            <button type="button" class="btn btn-link" (click)="deleteNode()">
+                <span class="dsi dsi-trash text-danger"></span>
+            </button>
+            <button type="button" class="btn btn-link" (click)="cancel()">
+                <span class="dsi dsi-close"></span>
+            </button>
+        </div>
     </div>
     <hr>
     <div class="font-12 text-secondary px-4 py-2">

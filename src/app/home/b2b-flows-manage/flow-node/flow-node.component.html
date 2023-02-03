@@ -32,9 +32,25 @@
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='RESPONSE'"
                 class="node-icon font-18 fw-500 dsi dsi-response" [attr.data-id]="currNode._id"></span>
         </foreignObject>
+        <!-- <g *ngIf="showDeleteNodeIcon" class="delete-node-icon">
+            <rect [attr.data-id]="currNode._id" x="110" y="6" width="24" height="24" rx="6"
+                style="fill:#fff;stroke-width:1px" />
+            <foreignObject width="18" height="18" x="114" y="9" [attr.data-id]="currNode._id">
+                <span xmlns="http://www.w3.org/1999/xhtml" class="node-icon font-14 fw-500 text-danger dsi dsi-trash"
+                    [attr.data-id]="currNode._id"></span>
+            </foreignObject>
+        </g> -->
     </g>
     <g *ngFor="let p of paths;let i=index">
         <path [attr.d]="p.path" class="svg-path ignore-outside" [class.selected]="i == selectedPathIndex"
             (click)="selectPath($event,i,p)" odpClickOutside (outside)="selectedPathIndex=null" />
+        <!-- <g *ngIf="i == selectedPathIndex">
+            <rect class="delete-icon" [attr.data-id]="currNode._id" x="134" y="12" width="24" height="24" rx="6"
+                (click)="deletePath()" />
+            <foreignObject width="18" height="18" x="10" y="9" [attr.data-id]="currNode._id">
+                <span xmlns="http://www.w3.org/1999/xhtml" class="node-icon font-18 fw-500 text-danger dsi dsi-trash"
+                    [attr.data-id]="currNode._id"></span>
+            </foreignObject>
+        </g> -->
     </g>
 </svg>

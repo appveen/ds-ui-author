@@ -42,6 +42,8 @@ import { TargetFieldsComponent } from './node-properties/node-mapping/target-fie
 import { SourceSelectorComponent } from './node-properties/node-mapping/source-selector/source-selector.component';
 import { FormulaEditorComponent } from './node-properties/node-mapping/formula-editor/formula-editor.component';
 import { InputDataSelectorComponent } from './node-properties/input-data-selector/input-data-selector.component';
+import { OnHoverModule } from 'src/app/utils/on-hover/on-hover.module';
+import { PathPropertiesComponent } from './path-properties/path-properties.component';
 
 const routes: Routes = [
   {
@@ -73,7 +75,8 @@ const routes: Routes = [
     TargetFieldsComponent,
     SourceSelectorComponent,
     FormulaEditorComponent,
-    InputDataSelectorComponent
+    InputDataSelectorComponent,
+    PathPropertiesComponent
   ],
   imports: [
     CommonModule,
@@ -94,7 +97,8 @@ const routes: Routes = [
     AutoFocusModule,
     CheckboxModule,
     DataStructureSelectorModule,
-    RoundRadioModule
+    RoundRadioModule,
+    OnHoverModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService]
