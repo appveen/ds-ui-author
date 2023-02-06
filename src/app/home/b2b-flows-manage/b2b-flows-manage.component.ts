@@ -412,6 +412,12 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     this.nodeList.push(tempNode);
   }
 
+  addNodeToCanvas(type: string) {
+    const temp = this.nodeList[this.nodeList.length - 1];
+    const event = { pageX: temp.coordinates.x + 400, pageY: temp.coordinates.y + 200 };
+    this.addNode(event, type);
+  }
+
   onRightClick(event: PointerEvent) {
     event.preventDefault();
     const clientHeight = (event.target as HTMLElement).clientHeight;

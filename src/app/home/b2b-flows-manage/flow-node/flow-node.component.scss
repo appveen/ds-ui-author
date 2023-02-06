@@ -4,13 +4,13 @@
 rect {
     fill: #fff;
     stroke: #666;
-    stroke-width: 2;
+    stroke-width: 1;
 }
 
 path {
     fill: none;
     stroke: #666;
-    stroke-width: 2;
+    stroke-width: 1;
 
     &:hover {
         cursor: pointer;
@@ -35,8 +35,8 @@ text {
     }
 
     text {
-        stroke-width: 1 !important;
-        stroke: #000;
+        stroke-width: 0.75 !important;
+        stroke: #333;
     }
 }
 

@@ -51,41 +51,68 @@
         </div>
         <div class="flow-designer d-flex">
             <div class="available-nodes border-right h-100">
-                <div draggable="true" class="node-item border-bottom py-2 d-flex align-items-center hover">
-                    <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
-                    <span class="font-13 fw-400">File Agent</span>
+                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                    <div class="d-flex align-items-center">
+                        <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
+                        <span class="font-13 fw-400">File Agent</span>
+                    </div>
+                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover" (click)="addNodeToCanvas('FILE')"></span>
                 </div>
-                <div draggable="true" class="node-item border-bottom py-2 d-flex align-items-center hover">
-                    <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
-                    <span class="font-13 fw-400">Invoke API</span>
+                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                    <div class="d-flex align-items-center">
+                        <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
+                        <span class="font-13 fw-400">Invoke API</span>
+                    </div>
+                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover" (click)="addNodeToCanvas('API')"></span>
                 </div>
-                <div draggable="true" class="node-item border-bottom py-2 d-flex align-items-center hover">
-                    <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
-                    <span class="font-13 fw-400">Connector</span>
+                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                    <div class="d-flex align-items-center">
+                        <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
+                        <span class="font-13 fw-400">Connector</span>
+                    </div>
+                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover" (click)="addNodeToCanvas('CONNECTOR')"></span>
                 </div>
-                <div draggable="true" class="node-item border-bottom py-2 d-flex align-items-center hover">
-                    <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
-                    <span class="font-13 fw-400">Data Service</span>
+                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                    <div class="d-flex align-items-center">
+                        <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
+                        <span class="font-13 fw-400">Data Service</span>
+                    </div>
+                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover" (click)="addNodeToCanvas('DATASERVICE')"></span>
                 </div>
-                <div draggable="true" class="node-item border-bottom py-2 d-flex align-items-center hover">
-                    <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
-                    <span class="font-13 fw-400">Function</span>
+                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                    <div class="d-flex align-items-center">
+                        <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
+                        <span class="font-13 fw-400">Function</span>
+                    </div>
+                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover" (click)="addNodeToCanvas('FUNCTION')"></span>
                 </div>
-                <div draggable="true" class="node-item border-bottom py-2 d-flex align-items-center hover">
-                    <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
-                    <span class="font-13 fw-400">Mapping</span>
+                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                    <div class="d-flex align-items-center">
+                        <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
+                        <span class="font-13 fw-400">Mapping</span>
+                    </div>
+                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover" (click)="addNodeToCanvas('MAPPING')"></span>
                 </div>
-                <div draggable="true" class="node-item border-bottom py-2 d-flex align-items-center hover">
-                    <span class="node-icon font-16 fw-400 dsi dsi-object mr-2 text-muted"></span>
-                    <span class="font-13 fw-400">Code Block</span>
+                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                    <div class="d-flex align-items-center">
+                        <span class="node-icon font-16 fw-400 dsi dsi-object mr-2 text-muted"></span>
+                        <span class="font-13 fw-400">Code Block</span>
+                    </div>
+                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover" (click)="addNodeToCanvas('CODEBLOCK')"></span>
                 </div>
-                <div draggable="true" class="node-item border-bottom py-2 d-flex align-items-center hover">
-                    <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
-                    <span class="font-13 fw-400">Change Root</span>
+                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                    <div class="d-flex align-items-center">
+                        <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
+                        <span class="font-13 fw-400">Change Root</span>
+                    </div>
+                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover" (click)="addNodeToCanvas('UNWIND')"></span>
                 </div>
-                <div draggable="true" class="node-item border-bottom py-2 d-flex align-items-center hover">
-                    <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
-                    <span class="font-13 fw-400">Response</span>
+                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                    <div class="d-flex align-items-center">
+                        <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
+                        <span class="font-13 fw-400">Response</span>
+                    </div>
+                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover" (click)="addNodeToCanvas('RESPONSE')"></span>
                 </div>
             </div>
             <!-- <div class="flow-designer-canvas p-4" *ngIf="flowData?.inputNode" odp-flow-node
@@ -101,7 +128,8 @@
                 </svg>
             </div>
 
-            <div [ngClass]="{'show':showNodeProperties || showPathProperties}" class="node-properties border-left position-fixed bg-white">
+            <div [ngClass]="{'show':showNodeProperties || showPathProperties}"
+                class="node-properties border-left position-fixed bg-white">
                 <odp-node-properties *ngIf="showNodeProperties" [edit]="edit" [nodeList]="nodeList"
                     [currNode]="selectedNode.currNode" (close)="showNodeProperties=false"
                     (changesDone)="changesDone = true">
