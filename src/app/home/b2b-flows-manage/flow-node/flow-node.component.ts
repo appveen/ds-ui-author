@@ -69,6 +69,7 @@ export class FlowNodeComponent implements OnInit {
           const path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 146, this.currNode.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
           this.paths.push({
             _id: nextNode._id,
+            prevNode: this.currNode._id,
             path
           });
         }

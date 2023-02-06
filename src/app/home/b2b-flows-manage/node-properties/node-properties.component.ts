@@ -12,6 +12,7 @@ import { B2bFlowService } from '../b2b-flow.service';
 export class NodePropertiesComponent implements OnInit {
 
   @Input() edit: any;
+  @Input() flowData: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
   @Output() close: EventEmitter<any>;
@@ -132,6 +133,10 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   get isInputNode() {
-    return this.nodeList[0]._id == this.currNode._id;
+    if (this.flowData && this.currNode) {
+      return this.flowData.inputNode._id == this.currNode._id;
+    }
+    return true;
+    // return this.nodeList[0]._id == this.currNode._id;
   }
 }

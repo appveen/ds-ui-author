@@ -13,6 +13,7 @@ export class PathPropertiesComponent implements OnInit {
 
   @Input() edit: any;
   @Input() path: any;
+  @Input() flowData: any;
   @Input() nodeList: Array<any>;
   @Output() close: EventEmitter<any>;
   @Output() changesDone: EventEmitter<any>;
@@ -23,10 +24,12 @@ export class PathPropertiesComponent implements OnInit {
     this.edit = { status: true };
     this.close = new EventEmitter();
     this.changesDone = new EventEmitter();
+    this.nodeList = [];
   }
 
   ngOnInit(): void {
-    this.nodeIndex = this.nodeList.findIndex(e => (e.onSuccess || []).find((es, ei) => es._id == this.path.path._id && ei == this.path.index));
+    // this.nodeIndex = this.nodeList.findIndex(e => (e.onSuccess || []).find((es, ei) => es._id == this.path.path._id && ei == this.path.index));
+    this.nodeIndex = this.nodeList.findIndex(e => e._id == this.path.path.prevNode);
     if (!environment.production) {
       console.log(this.path);
       console.log(this.nodeIndex);

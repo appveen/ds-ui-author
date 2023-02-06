@@ -130,11 +130,11 @@
 
             <div [ngClass]="{'show':showNodeProperties || showPathProperties}"
                 class="node-properties border-left position-fixed bg-white">
-                <odp-node-properties *ngIf="showNodeProperties" [edit]="edit" [nodeList]="nodeList"
+                <odp-node-properties *ngIf="showNodeProperties" [edit]="edit" [flowData]="flowData" [nodeList]="nodeList"
                     [currNode]="selectedNode.currNode" (close)="showNodeProperties=false"
                     (changesDone)="changesDone = true">
                 </odp-node-properties>
-                <odp-path-properties *ngIf="showPathProperties" [edit]="edit" [nodeList]="nodeList"
+                <odp-path-properties *ngIf="showPathProperties" [edit]="edit" [flowData]="flowData" [nodeList]="nodeList"
                     [path]="selectedPath" (close)="showPathProperties=false" (changesDone)="changesDone = true">
                 </odp-path-properties>
             </div>
