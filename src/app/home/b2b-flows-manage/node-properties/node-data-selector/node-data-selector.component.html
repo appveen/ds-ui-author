@@ -121,7 +121,7 @@
     <ng-container *ngIf="valueType=='custom'">
         <div class="form-group my-3">
             <label for="customValue">Value</label>
-            <input *ngIf="!textarea" id="customValue" type="text" class="form-control"
+            <input *ngIf="!textarea" id="customValue" [type]="number?'number':'text'" class="form-control"
                 [(ngModel)]="configuredData.customValue" odpAutoFocus>
             <textarea *ngIf="textarea" id="customValue" rows="5" cols="20" type="text" class="form-control"
                 [(ngModel)]="configuredData.customValue" odpAutoFocus></textarea>

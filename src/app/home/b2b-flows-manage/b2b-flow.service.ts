@@ -45,9 +45,9 @@ export class B2bFlowService {
     }
   }
 
-  parseDynamicValue(value: string) {
+  parseDynamicValue(value: any) {
     const configuredData: any = {};
-    if (value.startsWith('{{')) {
+    if (typeof value == 'string' && value.startsWith('{{')) {
       const charArr = value.split('');
       configuredData.node = charArr.slice(8, 14).join('');
       const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);

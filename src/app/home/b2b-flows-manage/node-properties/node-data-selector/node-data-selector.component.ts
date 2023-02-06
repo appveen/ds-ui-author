@@ -9,9 +9,10 @@ import { B2bFlowService } from '../../b2b-flow.service';
 })
 export class NodeDataSelectorComponent implements OnInit {
 
+  @Input() number: boolean;
   @Input() textarea: boolean;
-  @Input() value: string;
-  @Output() valueChange: EventEmitter<string>;
+  @Input() value: any;
+  @Output() valueChange: EventEmitter<any>;
   @Input() nodeList: Array<any>;
   @Input() edit: any;
   toggleNodeSelector: boolean;
