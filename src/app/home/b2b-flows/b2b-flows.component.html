@@ -97,7 +97,7 @@
                                 <span *ngIf="canDeployFlow(item)" id='deploy_{{i}}' class="text-primary mr-3"
                                     (click)="deployFlow(i)">Deploy</span>
                                 <span class="fw-600 font-13 hover mr-3"
-                                    *ngIf="item.status == 'Undeployed' && canStartStopFlow(i)"
+                                    *ngIf="item.status !== 'Active' && canStartStopFlow(i)"
                                     (click)="toggleFlowStatus(i)">Start</span>
                                 <span class="fw-600 font-13 hover mr-3"
                                     *ngIf="item.status == 'Active' && canStartStopFlow(i)"
