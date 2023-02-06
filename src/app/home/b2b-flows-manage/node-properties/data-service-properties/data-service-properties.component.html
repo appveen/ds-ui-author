@@ -15,9 +15,9 @@
     <div class="d-flex flex-column">
         <div class="form-group position-relative">
             <label for="authorization">Authorization Token</label>
-            <input id="authorization" type="text" class="form-control dynamic-variable-addon"
-                [(ngModel)]="currNode.options.authorization">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList"
+            <!-- <input id="authorization" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.authorization"> -->
+            <odp-node-data-selector [nodeList]="nodeList"
                 [(value)]="currNode.options.authorization">
             </odp-node-data-selector>
         </div>
@@ -45,32 +45,32 @@
     <ng-container *ngIf="currNode.options.get">
         <div class="form-group position-relative ">
             <label for="select">Select</label>
-            <input id="select" type="text" class="form-control dynamic-variable-addon"
-                [(ngModel)]="currNode.options.select">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList"
+            <!-- <input id="select" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.select"> -->
+            <odp-node-data-selector [nodeList]="nodeList"
                 [(value)]="currNode.options.select">
             </odp-node-data-selector>
             <small class="form-text text-muted">Provide Comma Separated Fields</small>
         </div>
         <div class="form-group position-relative ">
             <label for="count">Count</label>
-            <input id="count" type="number" class="form-control dynamic-variable-addon"
-                [(ngModel)]="currNode.options.count">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.count">
+            <!-- <input id="count" type="number" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.count"> -->
+            <odp-node-data-selector [nodeList]="nodeList" [(value)]="currNode.options.count">
             </odp-node-data-selector>
         </div>
         <div class="form-group position-relative ">
             <label for="page">Page</label>
-            <input id="page" type="number" class="form-control dynamic-variable-addon"
-                [(ngModel)]="currNode.options.page">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.page">
+            <!-- <input id="page" type="number" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.page"> -->
+            <odp-node-data-selector [nodeList]="nodeList" [(value)]="currNode.options.page">
             </odp-node-data-selector>
         </div>
         <div class="form-group position-relative ">
             <label for="sort">Sort</label>
-            <input id="sort" type="text" class="form-control dynamic-variable-addon"
-                [(ngModel)]="currNode.options.sort">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.sort">
+            <!-- <input id="sort" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.sort"> -->
+            <odp-node-data-selector [nodeList]="nodeList" [(value)]="currNode.options.sort">
             </odp-node-data-selector>
             <small class="form-text text-muted">Provide Comma Separated Fields<br><i>(prefix: "-" for descending
                     order)</i></small>
@@ -78,9 +78,9 @@
         </div>
         <div class="form-group position-relative ">
             <label for="filter">Filter</label>
-            <textarea id="filter" class="form-control dynamic-variable-addon"
-                [(ngModel)]="currNode.options.filter"></textarea>
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList"
+            <!-- <textarea id="filter" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.filter"></textarea> -->
+            <odp-node-data-selector [textarea]="true" [nodeList]="nodeList"
                 [(value)]="currNode.options.filter">
             </odp-node-data-selector>
         </div>
@@ -88,9 +88,9 @@
     <ng-container *ngIf="currNode.options.delete">
         <div class="form-group position-relative ">
             <label for="docId">ID</label>
-            <input id="docId" type="text" class="form-control dynamic-variable-addon"
-                [(ngModel)]="currNode.options.documentId">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList"
+            <!-- <input id="docId" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.documentId"> -->
+            <odp-node-data-selector [nodeList]="nodeList"
                 [(value)]="currNode.options.documentId">
             </odp-node-data-selector>
         </div>
@@ -98,9 +98,9 @@
     <ng-container *ngIf="currNode.options.update">
         <div class="form-group position-relative ">
             <label for="fields">Update Based on Fields</label>
-            <input id="fields" type="text" class="form-control dynamic-variable-addon"
-                [(ngModel)]="currNode.options.fields">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList"
+            <!-- <input id="fields" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.fields"> -->
+            <odp-node-data-selector [nodeList]="nodeList"
                 [(value)]="currNode.options.fields">
             </odp-node-data-selector>
         </div>
@@ -110,7 +110,7 @@
             <label for="nodeBody">Body</label>
             <input id="nodeBody" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.body">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.body">
+            <odp-node-data-selector [nodeList]="nodeList" [(value)]="currNode.options.body">
             </odp-node-data-selector>
         </div> -->
         <div class="form-group position-relative">

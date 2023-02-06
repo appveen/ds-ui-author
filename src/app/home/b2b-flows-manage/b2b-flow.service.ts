@@ -13,12 +13,79 @@ export class B2bFlowService {
   reCreatePaths: EventEmitter<any>;
   selectedPath: EventEmitter<any>;
   anchorSelected: any;
+  nodeLabelMap: any;
   constructor(private appService: AppService) {
     this.showAddNodeDropdown = new EventEmitter();
     this.selectedNode = new EventEmitter();
     this.deleteNode = new EventEmitter();
     this.reCreatePaths = new EventEmitter();
     this.selectedPath = new EventEmitter();
+    this.nodeLabelMap = {
+      FILE: 'File Agent',
+      TIMER: 'Timer',
+      CODEBLOCK: 'Code Block',
+      CONNECTOR: 'Connector',
+      DATASERVICE: 'Data Service',
+      FUNCTION: 'Function',
+      MAPPING: 'Mapping',
+      UNWIND: 'Change Root',
+      RESPONSE: 'Response'
+    };
+  }
+
+  getNodeType(type: string, isInputNode?: boolean) {
+    if (type == 'API' && isInputNode) {
+      return 'API Reciever';
+    } else if (type == 'API' && !isInputNode) {
+      return 'Invoke API';
+    } else if (this.nodeLabelMap[type]) {
+      return this.nodeLabelMap[type];
+    } else {
+      return type;
+    }
+  }
+
+  parseDynamicValue(value: string) {
+    const configuredData: any = {};
+    if (value.startsWith('{{')) {
+      const charArr = value.split('');
+      configuredData.node = charArr.slice(8, 14).join('');
+      const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
+      configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
+      configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length - 2).join('');
+    } else {
+      configuredData.customValue = value;
+    }
+    return configuredData;
+  }
+
+  getDynamicLabel(configuredData: any, nodeList: Array<any>) {
+    let text = configuredData.customValue || '';
+    if (configuredData && configuredData.node) {
+      const nodeData = nodeList.find(e => e._id == configuredData.node);
+      text += nodeData.name || nodeData._id;
+    }
+    if (configuredData && configuredData.nodeKey) {
+      text += '=>' + configuredData.nodeKey;
+    }
+    if (configuredData && configuredData.dataKey) {
+      text += '=>' + configuredData.dataKey;
+    }
+    return text;
+  }
+
+  getDynamicValue(configuredData: any) {
+    let text = configuredData.customValue || '';
+    if (configuredData && configuredData.node) {
+      text += `node['${configuredData.node}']`;
+    }
+    if (configuredData && configuredData.nodeKey) {
+      text += '.' + configuredData.nodeKey;
+    }
+    if (configuredData && configuredData.dataKey) {
+      text += '.' + configuredData.dataKey;
+    }
+    return text;
   }
 
   getNodeObject(type: string) {

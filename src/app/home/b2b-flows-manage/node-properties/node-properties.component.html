@@ -28,15 +28,15 @@
             (ngModelChange)="onTypeChange($event); changesDone.emit()">
             <option *ngIf="isInputNode" value="API">API Reciever</option>
             <option *ngIf="isInputNode" value="TIMER">Timer</option>
-            <option *ngIf="!isInputNode" value="API">API Invoke</option>
             <option value="FILE">File Agent</option>
-            <option value="MAPPING">Mapping</option>
-            <option value="CODEBLOCK">Code Block</option>
-            <option value="CONNECTOR">Connector</option>
-            <option value="UNWIND">Change Root</option>
-            <option value="DATASERVICE">Data Service</option>
-            <option value="FUNCTION">Function</option>
-            <option value="RESPONSE">Response</option>
+            <option *ngIf="!isInputNode" value="API">API Invoke</option>
+            <option *ngIf="!isInputNode" value="MAPPING">Mapping</option>
+            <option *ngIf="!isInputNode" value="CODEBLOCK">Code Block</option>
+            <option *ngIf="!isInputNode" value="CONNECTOR">Connector</option>
+            <option *ngIf="!isInputNode" value="UNWIND">Change Root</option>
+            <option *ngIf="!isInputNode" value="DATASERVICE">Data Service</option>
+            <option *ngIf="!isInputNode" value="FUNCTION">Function</option>
+            <option *ngIf="!isInputNode" value="RESPONSE">Response</option>
         </select>
     </div>
     <!-- <div *ngIf="!isInputNode && (currNode?.type=='DATASERVICE' || currNode?.type=='API')" class="form-group">
@@ -111,9 +111,9 @@
     <ng-container *ngIf="currNode?.type=='API' && !isInputNode">
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark" for="nodeUrl">URL</label>
-            <textarea id="nodeUrl" class="form-control dynamic-variable-addon" cols="30" rows="4"
-                [(ngModel)]="currNode.options.url"></textarea>
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.body">
+            <!-- <textarea id="nodeUrl" class="form-control dynamic-variable-addon" cols="30" rows="4"
+                [(ngModel)]="currNode.options.url"></textarea> -->
+            <odp-node-data-selector [nodeList]="nodeList" [(value)]="currNode.options.url" [textarea]="true">
             </odp-node-data-selector>
         </div>
         <div class="form-group">

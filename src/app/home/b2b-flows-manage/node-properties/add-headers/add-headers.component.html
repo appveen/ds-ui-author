@@ -1,6 +1,7 @@
 <div class="">
     <div class="font-14 fw-300 text-dark">Custom Headers</div>
-    <button type="button" class="btn btn-link px-0 text-left" (click)="showHeadersWindow=true">
+    <button type="button" class="btn btn-link px-0 text-left d-flex align-items-center" (click)="showHeadersWindow=true">
+        <span class="dsi dsi-settings mr-2"></span>
         <span *ngIf="headerList.length==0">Configure</span>
         <span *ngIf="headerList.length>0">Re-Configure ({{headerList.length}})</span>
     </button>
@@ -25,9 +26,9 @@
                     (keyup.enter)="addHeader()" odpAutoFocus>
             </div>
             <div class="header-value mr-2 w-100 position-relative">
-                <input type="text" class="form-control dynamic-variable-addon" [(ngModel)]="item.value"
-                    placeholder="Header Value" (keyup.enter)="addHeader()">
-                <odp-node-data-selector class="node-data-selector" [edit]="edit" [nodeList]="nodeList"
+                <!-- <input type="text" class="form-control dynamic-variable-addon" [(ngModel)]="item.value"
+                    placeholder="Header Value" (keyup.enter)="addHeader()"> -->
+                <odp-node-data-selector [edit]="edit" [nodeList]="nodeList"
                     [(value)]="item.value">
                 </odp-node-data-selector>
             </div>

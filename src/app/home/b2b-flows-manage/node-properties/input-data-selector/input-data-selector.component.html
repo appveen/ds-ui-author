@@ -10,6 +10,7 @@
                 <odp-round-radio [edit]="edit" [checked]="data" (checkedChange)="onSourceChange('custom')">
                 </odp-round-radio>
                 <span class="text ml-3">Custom</span>
+                <span *ngIf="data" class="text-primary ml-3 hover" (click)="showCustomWindow=true">(change)</span>
             </div>
         </div>
     </div>
@@ -23,6 +24,9 @@
             <button type="button" class="btn btn-link p-0">
                 <span class="dsi dsi-close text-dark ignore-outside" (click)="cancel()"></span>
             </button>
+        </div>
+        <div>
+            
         </div>
     </div>
 </div>

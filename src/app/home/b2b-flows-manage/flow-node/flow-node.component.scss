@@ -25,8 +25,14 @@ path {
 
 text {
     stroke-width: 0;
-    fill: #666;
-    font-size: 12px;
+    fill: $dark;
+    font-size: 10px;
+}
+
+text.node-name {
+    stroke-width: 0;
+    fill: $secondary;
+    font-size: 11px;
 }
 
 .active {
@@ -34,7 +40,7 @@ text {
         fill: rgba($accent, 0.3);
     }
 
-    text {
+    text:not(.node-name) {
         stroke-width: 0.75 !important;
         stroke: #333;
     }

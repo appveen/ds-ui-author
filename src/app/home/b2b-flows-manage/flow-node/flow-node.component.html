@@ -3,8 +3,10 @@
         <g [class.active]="isSelected" [attr.data-id]="currNode._id">
             <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id" />
-            <text x="36" y="22" text-anchor="start" (click)="openProperties($event)"
+            <text x="36" y="16" text-anchor="start" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id">{{nodeType}}</text>
+            <text class="node-name" x="36" y="30" text-anchor="start" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id">{{currNode.name || currNode._id}}</text>
         </g>
         <rect *ngIf="index>0" class="node-anchor start" [class.active]="isActive('start')" [attr.data-id]="currNode._id"
             x="-6" y="12" width="12" height="12" rx="6" (click)="onAnchorClick($event)" />

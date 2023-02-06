@@ -1,73 +1,131 @@
-<div class="position-relative">
-    <span ngbTooltip="Add Dynamic Variable" container="body"
-        class="dynamic-variable-button dsi dsi-object text-primary position-absolute hover bg-white pr-1"
-        (click)="onClick($event)"></span>
-    <!-- <span *ngIf="value">{{currentValue}}</span> -->
+<div class="d-flex align-items-center justify-content-start">
+    <button *ngIf="!this.currentValue" type="button" class="btn btn-link p-1 d-flex align-items-center"
+        (click)="onClick($event)">
+        <span class="dsi dsi-settings mr-2"></span>
+        <span>Configure</span>
+    </button>
+    <ng-container *ngIf="this.currentValue">
+        <span class="fw-500 badge badge-info font-12"> {{userSelectedValue}}</span>
+        <button type="button" class="btn btn-link p-0 d-flex align-items-center ml-3" ngbTooltip="Re-Configure"
+            (click)="onClick($event)">
+            <span class="dsi dsi-settings"></span>
+        </button>
+    </ng-container>
 </div>
 
-<div *ngIf="toggleNodeSelector" class="node-data-selector-wrapper p-3 bg-white position-fixed">
+<div *ngIf="toggleNodeSelector" class="node-data-selector-wrapper p-3 bg-white position-fixed border-left">
     <div class="d-flex align-items-center justify-content-between">
-        <h3 class="font-20 fw-600">Node List</h3>
+        <h3 class="font-20 fw-600">Data Selector</h3>
         <span class="dsi dsi-close hover" (click)="cancel()"></span>
     </div>
-    <span class="fw-500 badge badge-info font-12 my-3"> {{'\{\{'+currentValue +'\}\}'}}</span>
-    <div *ngIf="!selectedNode && !nodeDataField" class="list-group my-3">
-        <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
-            *ngFor="let item of nodeList" (click)="selectNode(item)">
-            <div class="d-flex align-items-center justify-content-start">
-                <odp-round-radio [edit]="edit" [checked]="item._selected">
-                </odp-round-radio>
-                <span class="node-id ml-3">{{item._id}}</span>
-                <span class="node-type ml-3">{{item.type}}</span>
-            </div>
-        </div>
+    <div class="d-flex align-items-center justify-content-start">
+        <span class="fw-500 badge badge-info font-12 my-3"> {{userSelectedValue}}</span>
     </div>
-    <div *ngIf="selectedNode && !nodeDataField">
-        <div class="my-3">
-            <button type="button" class="btn btn-link d-flex align-items-center p-0" (click)="selectNode(null)">
-                <span class="dsi dsi-arrow-left ml-2"></span>
-                <span>Back</span>
-            </button>
-        </div>
-        <div class="list-group my-3">
-            <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
-                (click)="selectNodeDataKey('statusCode')">
-                <div class="d-flex align-items-center justify-content-start">
-                    <span>Status Code</span>
-                </div>
-            </div>
-            <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
-                (click)="selectNodeDataKey('status')">
-                <div class="d-flex align-items-center justify-content-start">
-                    <span>Status</span>
-                </div>
-            </div>
-            <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
-                (click)="selectNodeDataKey('headers')">
-                <div class="d-flex align-items-center justify-content-start">
-                    <span>Headers</span>
-                </div>
-            </div>
-            <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
-                (click)="selectNodeDataKey('body')">
-                <div class="d-flex align-items-center justify-content-start">
-                    <span>Body</span>
-                </div>
-            </div>
-        </div>
+
+    <div class="d-flex align-items-center justify-content-between mt-3">
+        <button type="button" class="undo-btn btn btn-light d-flex align-items-center mr-3 border" (click)="stepBack()">
+            <span class="dsi dsi-drop-down fa-rotate-90"></span>
+            <span>Step Back</span>
+        </button>
+        <select id="valueType" class="form-control" [(ngModel)]="valueType" (ngModelChange)="configuredData={}">
+            <option value="dynamic">Dynamic</option>
+            <option value="custom">Custom</option>
+        </select>
     </div>
-    <div *ngIf="selectedNode && nodeDataField">
-        <div class="my-3">
-            <button type="button" class="btn btn-link d-flex align-items-center p-0" (click)="selectNodeDataKey(null)">
-                <span class="dsi dsi-arrow-left ml-2"></span>
-                <span>Back</span>
-            </button>
+
+    <ng-container *ngIf="valueType=='dynamic'">
+        <div *ngIf="!configuredData.node" class="list-group my-3">
+            <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                *ngFor="let item of nodeList" (click)="configuredData.node=item._id;onNodeSelect(item)">
+                <div class="d-flex align-items-center justify-content-start">
+                    <odp-round-radio [edit]="edit" [checked]="item._selected">
+                    </odp-round-radio>
+                    <span class="node-id ml-3">{{item.name || item._id}}</span>
+                </div>
+                <span class="node-type ml-3 text-accent font-11">{{getNodeType(item.type)}}</span>
+            </div>
         </div>
-        <div class="form-group my-3"
-            *ngIf="selectedNode && nodeDataField && (nodeDataField=='headers' || nodeDataField=='body')">
-            <label for="fieldKey">Field</label>
-            <input type="text" class="form-control" [(ngModel)]="tempDataKey" odpAutoFocus>
+        <div *ngIf="configuredData.node && !configuredData.nodeKey">
+            <div class="list-group my-3">
+                <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                    (click)="configuredData.nodeKey='statusCode'">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <span>Status Code</span>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                    (click)="configuredData.nodeKey='status'">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <span>Status</span>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                    (click)="configuredData.nodeKey='headers'">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <span>Headers</span>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                    (click)="configuredData.nodeKey='body'">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <span>Body</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button type="button" class="btn btn-primary" (click)="saveData()">Done</button>
-    </div>
+        <div *ngIf="configuredData.node && configuredData.nodeKey">
+            <div class="form-group my-3" *ngIf="configuredData.nodeKey=='headers'">
+                <label for="dataKey">Available Data Keys</label>
+                <div class="list-group">
+                    <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                        *ngFor="let item of availableHeaderKeys" (click)="configuredData.dataKey=item;dataKey=item">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <odp-round-radio [edit]="edit" [checked]="dataKey==item">
+                            </odp-round-radio>
+                            <span class="ml-3">{{item}}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <select id="dataKey" class="form-control" [(ngModel)]="dataKey"
+                    (ngModelChange)="configuredData.dataKey=$event">
+                    <option [value]="item" *ngFor="let item of availableHeaderKeys">{{item}}</option>
+                </select> -->
+            </div>
+            <div class="form-group my-3" *ngIf="availableBodyKeys.length > 0 && configuredData.nodeKey=='body'">
+                <label for="dataKey">Available Data Keys</label>
+                <div class="list-group">
+                    <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                        *ngFor="let item of availableBodyKeys"
+                        (click)="configuredData.dataKey=item.properties.name;dataKey=item">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <odp-round-radio [edit]="edit" [checked]="dataKey==item">
+                            </odp-round-radio>
+                            <span class="ml-3">{{item.properties.name}}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <select id="dataKey" class="form-control" [(ngModel)]="dataKey"
+                    (ngModelChange)="configuredData.dataKey=$event">
+                    <option [value]="item.properties.name" *ngFor="let item of availableBodyKeys">{{item.properties.name}}</option>
+                </select> -->
+            </div>
+            <div class="form-group my-3"
+                *ngIf="(configuredData.nodeKey=='headers' && dataKey=='custom') || (configuredData.nodeKey=='body' && dataKey=='custom')">
+                <label for="customDataKey">Custom Data Key</label>
+                <input id="customDataKey" type="text" class="form-control" [(ngModel)]="configuredData.dataKey"
+                    odpAutoFocus>
+            </div>
+            <button type="button" class="btn btn-primary mt-4 w-100" (click)="saveData()">Done</button>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="valueType=='custom'">
+        <div class="form-group my-3">
+            <label for="customValue">Value</label>
+            <input *ngIf="!textarea" id="customValue" type="text" class="form-control"
+                [(ngModel)]="configuredData.customValue" odpAutoFocus>
+            <textarea *ngIf="textarea" id="customValue" rows="5" cols="20" type="text" class="form-control"
+                [(ngModel)]="configuredData.customValue" odpAutoFocus></textarea>
+        </div>
+        <button type="button" class="btn btn-primary mt-4 w-100" (click)="saveData()">Done</button>
+    </ng-container>
 </div>

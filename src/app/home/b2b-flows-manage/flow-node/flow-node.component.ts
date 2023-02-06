@@ -22,7 +22,6 @@ export class FlowNodeComponent implements OnInit {
   isMouseDown: any;
   selectedPathIndex: number;
   selectedNode: any;
-  nodeLabelMap: any;
   showDeleteNodeIcon: boolean;
   constructor(private flowService: B2bFlowService) {
     this.index = -1;
@@ -30,17 +29,6 @@ export class FlowNodeComponent implements OnInit {
     this.branchIndex = -1;
     this.paths = [];
     this.nodeList = [];
-    this.nodeLabelMap = {
-      FILE: 'File Agent',
-      TIMER: 'Timer',
-      CODEBLOCK: 'Code Block',
-      CONNECTOR: 'Connector',
-      DATASERVICE: 'Data Service',
-      FUNCTION: 'Function',
-      MAPPING: 'Mapping',
-      UNWIND: 'Change Root',
-      RESPONSE: 'Response'
-    };
   }
 
   ngOnInit(): void {
@@ -202,14 +190,6 @@ export class FlowNodeComponent implements OnInit {
   }
 
   get nodeType() {
-    if (this.currNode.type == 'API' && this.isInputNode) {
-      return 'API Reciever';
-    } else if (this.currNode.type == 'API' && !this.isInputNode) {
-      return 'Invoke API';
-    } else if (this.nodeLabelMap[this.currNode.type]) {
-      return this.nodeLabelMap[this.currNode.type];
-    } else {
-      return this.currNode.type;
-    }
+    return this.flowService.getNodeType(this.currNode.type, this.isInputNode);
   }
 }
