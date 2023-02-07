@@ -11,8 +11,10 @@ export class DataServicePropertiesComponent implements OnInit {
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
   prevNode: any;
+  toggle: any;
   constructor() {
     this.edit = { status: true };
+    this.toggle = {};
   }
 
   ngOnInit(): void {
@@ -23,13 +25,13 @@ export class DataServicePropertiesComponent implements OnInit {
   setDefaultData() {
     if (this.currNode && this.currNode.options) {
       if (this.prevNode && !this.currNode.options.authorization) {
-        this.currNode.options.authorization = `{{node["${this.prevNode?._id}"].headers.authorization}}`;
+        this.currNode.options.authorization = `{{node['${this.prevNode?._id}'].headers.authorization}}`;
       }
       if (this.currNode.options.update && !this.currNode.options.fields) {
         this.currNode.options.fields = '_id';
       }
       if (this.prevNode && (this.currNode.options.update || this.currNode.options.insert) && !this.currNode.options.body) {
-        this.currNode.options.body = `{{node["${this.prevNode?._id}"].body}}`;
+        this.currNode.options.body = `{{node['${this.prevNode?._id}'].body}}`;
       }
       if (this.currNode.options.get) {
         if (!this.currNode.options.select) {

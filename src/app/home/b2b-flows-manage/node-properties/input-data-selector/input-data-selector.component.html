@@ -25,8 +25,37 @@
                 <span class="dsi dsi-close text-dark ignore-outside" (click)="cancel()"></span>
             </button>
         </div>
-        <div>
-            
+        <div class="py-3 d-flex align-items-center justify-content-between">
+            <select id="" class="form-control col-4" [(ngModel)]="dataType">
+                <option value="single">Single Body</option>
+                <option value="multiple">Multiple Fields</option>
+            </select>
+            <button *ngIf="dataType=='multiple'" type="button" class="btn btn-link d-flex align-items-center"
+                (click)="addField()">
+                <span class="text-primary dsi dsi-plus-circle mr-2"></span>
+                <span class="text-primary">Add Field</span>
+            </button>
+        </div>
+        <div *ngIf="dataType=='single'" class="d-flex flex-column">
+            <span class="font-20 fw-500">Select Body of a Different Node</span>
+            <odp-node-data-selector [edit]="edit" [nodeList]="nodeList" [(value)]="data"
+                (valueChange)="onDataChange($event)">
+            </odp-node-data-selector>
+        </div>
+        <div *ngIf="dataType=='multiple'" class="d-flex flex-column">
+            <span class="font-20 fw-500">Mutiple Fields</span>
+            <div *ngFor="let item of fields" class="d-flex align-items-center justify-content-start">
+                <input type="text" class="form-control" [(ngModel)]="item.key">
+                <select id="" class="form-control mx-3">
+                    <option value="string">String</option>
+                    <option value="number">Number</option>
+                    <option value="boolean">Boolean</option>
+                    <option value="object">Object</option>
+                    <option value="array">Array</option>
+                </select>
+                <odp-node-data-selector [edit]="edit" [nodeList]="nodeList" [(value)]="item.value">
+                </odp-node-data-selector>
+            </div>
         </div>
     </div>
 </div>

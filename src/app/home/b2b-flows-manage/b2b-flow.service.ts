@@ -66,10 +66,10 @@ export class B2bFlowService {
       text += nodeData.name || nodeData._id;
     }
     if (configuredData && configuredData.nodeKey) {
-      text += '=>' + configuredData.nodeKey;
+      text += '<span class="font-16">/</span>' + configuredData.nodeKey;
     }
     if (configuredData && configuredData.dataKey) {
-      text += '=>' + configuredData.dataKey;
+      text += '<span class="font-16">/</span>' + configuredData.dataKey;
     }
     return text;
   }

@@ -21,12 +21,14 @@ export class NodePropertiesComponent implements OnInit {
   showAgentSelector: boolean;
   showCodeBlock: boolean;
   prevNode: any;
+  toggle: any;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private flowService: B2bFlowService) {
     this.edit = { status: true };
     this.close = new EventEmitter();
     this.changesDone = new EventEmitter();
+    this.toggle = {};
   }
 
   ngOnInit(): void {

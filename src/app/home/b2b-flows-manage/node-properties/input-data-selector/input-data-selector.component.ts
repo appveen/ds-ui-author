@@ -14,9 +14,13 @@ export class InputDataSelectorComponent implements OnInit {
   @Output() dataChange: EventEmitter<any>;
   prevNode: any;
   showCustomWindow: boolean;
+  fields: Array<any>;
+  dataType: string;
   constructor() {
     this.edit = { status: true };
     this.dataChange = new EventEmitter();
+    this.fields = [];
+    this.dataType = 'single';
   }
 
   ngOnInit(): void {
@@ -33,7 +37,15 @@ export class InputDataSelectorComponent implements OnInit {
     }
   }
 
+  onDataChange(data: any) {
+    this.dataChange.emit(data);
+  }
+
   cancel() {
     this.showCustomWindow = false;
+  }
+
+  addField() {
+    this.fields.push({});
   }
 }

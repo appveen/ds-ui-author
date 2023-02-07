@@ -115,14 +115,9 @@
                     <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover" (click)="addNodeToCanvas('RESPONSE')"></span>
                 </div>
             </div>
-            <!-- <div class="flow-designer-canvas p-4" *ngIf="flowData?.inputNode" odp-flow-node
-                [currNode]="flowData.inputNode" [(nodeList)]="nodeList" (nodeListChange)="changesDone = true">
-            </div> -->
-
             <div class="flow-designer-svg-wrapper">
                 <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
                     <g *ngFor="let node of nodeList;let i=index">
-                        <!-- <rect x="30" [attr.y]="30+((60+48)*i)" width="160" height="48" rx="6" /> -->
                         <g odp-flow-node [currNode]="node" [index]="i" [nodeList]="nodeList"></g>
                     </g>
                 </svg>

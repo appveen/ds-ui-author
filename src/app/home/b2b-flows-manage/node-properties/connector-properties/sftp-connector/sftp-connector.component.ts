@@ -10,10 +10,9 @@ export class SftpConnectorComponent implements OnInit {
   @Input() edit: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
+  toggle: any;
   constructor() {
-    this.edit = {
-      status: true
-    };
+    this.toggle = {};
   }
 
   ngOnInit(): void {

@@ -1,4 +1,9 @@
 <div class="form-group position-relative">
-    <label for="query">SQL Query</label>
-    <textarea id="query" class="form-control" rows="5" cols="30" [(ngModel)]="currNode.options.query"></textarea>
+    <label for="query" class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between">
+        SQL Query
+        <span class="dsi dsi-settings text-primary hover" (click)="toggle['query']=!toggle['query']"></span>
+    </label>
+    <!-- <textarea id="query" class="form-control" rows="5" cols="30" [(ngModel)]="currNode.options.query"></textarea> -->
+    <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['query']" [textarea]="true" [nodeList]="nodeList"
+        [(value)]="currNode.options.query"></odp-node-data-selector>
 </div>

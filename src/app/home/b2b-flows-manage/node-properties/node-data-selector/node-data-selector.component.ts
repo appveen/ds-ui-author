@@ -9,13 +9,14 @@ import { B2bFlowService } from '../../b2b-flow.service';
 })
 export class NodeDataSelectorComponent implements OnInit {
 
+  @Input() toggle: boolean;
+  @Output() toggleChange: EventEmitter<boolean>;
   @Input() number: boolean;
   @Input() textarea: boolean;
   @Input() value: any;
   @Output() valueChange: EventEmitter<any>;
   @Input() nodeList: Array<any>;
   @Input() edit: any;
-  toggleNodeSelector: boolean;
   configuredData: any;
   availableHeaderKeys: Array<string>;
   availableBodyKeys: Array<any>;
@@ -26,6 +27,7 @@ export class NodeDataSelectorComponent implements OnInit {
     this.edit = {
       status: true
     };
+    this.toggleChange = new EventEmitter();
     this.valueChange = new EventEmitter();
     this.configuredData = {};
     this.availableHeaderKeys = ['authorization', 'content-type', 'token', 'ip', 'custom'];
@@ -50,7 +52,14 @@ export class NodeDataSelectorComponent implements OnInit {
 
   onClick(event: any) {
     event.preventDefault();
-    this.toggleNodeSelector = !this.toggleNodeSelector;
+    this.toggle = !this.toggle;
+  }
+
+  toggleValueType(flag: boolean, type: string) {
+    this.configuredData = {};
+    if (flag) {
+      this.valueType = type;
+    }
   }
 
   onNodeSelect(node: any) {
@@ -68,10 +77,12 @@ export class NodeDataSelectorComponent implements OnInit {
     console.log(this.currentValue);
 
     this.valueChange.emit(this.value);
-    this.toggleNodeSelector = false;
+    this.toggle = false;
+    this.toggleChange.emit(this.toggle);
   }
   cancel() {
-    this.toggleNodeSelector = false;
+    this.toggle = false;
+    this.toggleChange.emit(this.toggle);
     this.configuredData = {};
   }
 

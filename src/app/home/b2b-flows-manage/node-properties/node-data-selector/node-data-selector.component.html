@@ -1,35 +1,46 @@
 <div class="d-flex align-items-center justify-content-start">
-    <button *ngIf="!this.currentValue" type="button" class="btn btn-link p-1 d-flex align-items-center"
+    <!-- <button *ngIf="!this.currentValue" type="button" class="btn btn-link p-1 d-flex align-items-center"
         (click)="onClick($event)">
         <span class="dsi dsi-settings mr-2"></span>
         <span>Configure</span>
-    </button>
+    </button> -->
     <ng-container *ngIf="this.currentValue">
-        <span class="fw-500 badge badge-info font-12"> {{userSelectedValue}}</span>
-        <button type="button" class="btn btn-link p-0 d-flex align-items-center ml-3" ngbTooltip="Re-Configure"
+        <span class="fw-500 rounded bg-light p-2 border font-12 d-flex align-items-center" [innerHTML]="userSelectedValue"></span>
+        <!-- <button type="button" class="btn btn-link p-0 d-flex align-items-center ml-3" ngbTooltip="Re-Configure"
             (click)="onClick($event)">
             <span class="dsi dsi-settings"></span>
-        </button>
+        </button> -->
     </ng-container>
 </div>
 
-<div *ngIf="toggleNodeSelector" class="node-data-selector-wrapper p-3 bg-white position-fixed border-left">
+<div *ngIf="toggle" class="node-data-selector-wrapper p-3 bg-white position-fixed border-left">
     <div class="d-flex align-items-center justify-content-between">
         <h3 class="font-20 fw-600">Data Selector</h3>
         <span class="dsi dsi-close hover" (click)="cancel()"></span>
     </div>
     <div class="d-flex align-items-center justify-content-start">
-        <span class="fw-500 badge badge-info font-12 my-3"> {{userSelectedValue}}</span>
+        <span class="fw-500 rounded bg-light p-2 border font-12 my-3 d-flex align-items-center" [innerHTML]="userSelectedValue"></span>
     </div>
     <div class="d-flex align-items-center justify-content-between mt-3">
-        <button *ngIf="configuredData.node || configuredData.customValue" type="button" class="undo-btn btn btn-light d-flex align-items-center mr-3 border" (click)="stepBack()">
+        <button *ngIf="configuredData.node || configuredData.customValue" type="button"
+            class="undo-btn btn btn-light d-flex align-items-center mr-3 border" (click)="stepBack()">
             <span class="dsi dsi-drop-down fa-rotate-90"></span>
-            <span>Step Back</span>
+            <!-- <span>Step Back</span> -->
         </button>
-        <select id="valueType" class="form-control" [(ngModel)]="valueType" (ngModelChange)="configuredData={}">
+        <div class="d-flex align-items-center">
+            <odp-round-radio [edit]="edit" [checked]="valueType=='dynamic'"
+                (checkedChange)="toggleValueType($event,'dynamic')">
+            </odp-round-radio>
+            <span class="ml-3 mr-4">Dynamic</span>
+            <odp-round-radio [edit]="edit" [checked]="valueType=='custom'"
+                (checkedChange)="toggleValueType($event,'custom')">
+            </odp-round-radio>
+            <span class="ml-3">Static</span>
+        </div>
+        <!-- <select id="valueType" class="form-control" [(ngModel)]="valueType" (ngModelChange)="configuredData={}">
             <option value="dynamic">Dynamic</option>
             <option value="custom">Custom</option>
-        </select>
+        </select> -->
     </div>
 
     <ng-container *ngIf="valueType=='dynamic'">
