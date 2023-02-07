@@ -23,6 +23,23 @@ path {
     }
 }
 
+.svg-path-transparent {
+    fill: none;
+    stroke: #666;
+    stroke-opacity: 0%;
+    stroke-width: 20;
+
+    &:hover {
+        cursor: pointer;
+        stroke-width: 20; //increase the value to increase the hover area
+    }
+}
+
+.svg-path-transparent:hover~path {
+    cursor: pointer;
+    stroke-width: 3;
+}
+
 text {
     stroke-width: 0;
     fill: $dark;
@@ -36,7 +53,7 @@ text.node-name {
 }
 
 .active {
-    rect {
+    .rect {
         fill: rgba($accent, 0.3);
     }
 
