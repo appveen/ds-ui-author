@@ -22,6 +22,8 @@ export class NodeDataSelectorComponent implements OnInit {
   availableBodyKeys: Array<any>;
   dataKey: string;
   valueType: string;
+  insertText: EventEmitter<string>;
+  openSelector: boolean;
   constructor(private flowService: B2bFlowService) {
     this.nodeList = [];
     this.edit = {
@@ -34,6 +36,7 @@ export class NodeDataSelectorComponent implements OnInit {
     this.availableBodyKeys = [];
     this.valueType = 'dynamic';
     this.dataKey = 'authorization';
+    this.insertText = new EventEmitter();
   }
 
   ngOnInit(): void {
@@ -74,8 +77,6 @@ export class NodeDataSelectorComponent implements OnInit {
 
   saveData() {
     this.value = '{{' + this.currentValue + '}}';
-    console.log(this.currentValue);
-
     this.valueChange.emit(this.value);
     this.toggle = false;
     this.toggleChange.emit(this.toggle);

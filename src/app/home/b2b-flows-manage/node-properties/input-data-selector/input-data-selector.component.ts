@@ -16,16 +16,33 @@ export class InputDataSelectorComponent implements OnInit {
   showCustomWindow: boolean;
   fields: Array<any>;
   dataType: string;
+  togglePasteWindow: boolean;
+  toggle: any;
+  insertText: EventEmitter<string>;
   constructor() {
     this.edit = { status: true };
     this.dataChange = new EventEmitter();
     this.fields = [];
     this.dataType = 'single';
+    this.toggle = {};
+    this.insertText = new EventEmitter();
   }
 
   ngOnInit(): void {
     this.prevNode = this.nodeList.find(e => e.onSuccess.findIndex(es => es._id == this.currNode._id) > -1);
     console.log(this.data, this.currNode, this.prevNode);
+  }
+
+  toggleDataType(flag: boolean, type: string) {
+    this.data = null;
+    this.dataChange.emit(null);
+    if (flag) {
+      this.dataType = type;
+    }
+  }
+
+  showPayloadFromWindow() {
+    this.togglePasteWindow = true;
   }
 
   onSourceChange(type: string) {
@@ -35,6 +52,11 @@ export class InputDataSelectorComponent implements OnInit {
     } else {
       this.showCustomWindow = true;
     }
+  }
+
+  onVariableSelect(data: any) {
+    console.log(data);
+    this.insertText.emit(data);
   }
 
   onDataChange(data: any) {
@@ -47,5 +69,10 @@ export class InputDataSelectorComponent implements OnInit {
 
   addField() {
     this.fields.push({});
+  }
+
+  onPaste(event: any) {
+    console.log(event);
+
   }
 }

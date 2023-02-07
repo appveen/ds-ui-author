@@ -5,7 +5,8 @@
         <span>Configure</span>
     </button> -->
     <ng-container *ngIf="this.currentValue">
-        <span class="fw-500 rounded bg-light p-2 border font-12 d-flex align-items-center" [innerHTML]="userSelectedValue"></span>
+        <span class="fw-500 rounded bg-light p-2 border font-12 d-flex align-items-center"
+            [innerHTML]="userSelectedValue"></span>
         <!-- <button type="button" class="btn btn-link p-0 d-flex align-items-center ml-3" ngbTooltip="Re-Configure"
             (click)="onClick($event)">
             <span class="dsi dsi-settings"></span>
@@ -19,7 +20,8 @@
         <span class="dsi dsi-close hover" (click)="cancel()"></span>
     </div>
     <div class="d-flex align-items-center justify-content-start">
-        <span class="fw-500 rounded bg-light p-2 border font-12 my-3 d-flex align-items-center" [innerHTML]="userSelectedValue"></span>
+        <span class="fw-500 rounded bg-light p-2 border font-12 my-3 d-flex align-items-center"
+            [innerHTML]="userSelectedValue"></span>
     </div>
     <div class="d-flex align-items-center justify-content-between mt-3">
         <button *ngIf="configuredData.node || configuredData.customValue" type="button"
@@ -130,11 +132,23 @@
     </ng-container>
     <ng-container *ngIf="valueType=='custom'">
         <div class="form-group my-3">
-            <label for="customValue">Value</label>
+            <label for="customValue" class="d-flex align-items-center justify-content-between">
+                <span>Value</span>
+                <div class="d-flex align-items-center">
+                    <span class="dsi dsi-settings text-primary hover"
+                        (click)="openSelector=!openSelector"></span>
+                    <span class="ml-3 font-12 fw-400">Insert Variable</span>
+                </div>
+            </label>
+            <odp-node-data-selector *ngIf="openSelector" [(toggle)]="openSelector" [edit]="edit"
+                [nodeList]="nodeList" (valueChange)="insertText.emit($event)">
+            </odp-node-data-selector>
             <input *ngIf="!textarea" id="customValue" [type]="number?'number':'text'" class="form-control"
                 [(ngModel)]="configuredData.customValue" odpAutoFocus>
-            <textarea *ngIf="textarea" id="customValue" rows="5" cols="20" type="text" class="form-control"
-                [(ngModel)]="configuredData.customValue" odpAutoFocus></textarea>
+            <odp-code-editor [edit]="edit" [insertText]="insertText"
+                [(code)]="configuredData.customValue"></odp-code-editor>
+            <!-- <textarea *ngIf="textarea" id="customValue" rows="5" cols="20" type="text" class="form-control"
+                [(ngModel)]="configuredData.customValue" odpAutoFocus></textarea> -->
         </div>
         <button type="button" class="btn btn-primary mt-4 w-100" (click)="saveData()">Done</button>
     </ng-container>

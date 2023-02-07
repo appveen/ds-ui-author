@@ -200,6 +200,9 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         });
       }
       this.nodeList.forEach((node, i) => {
+        if (!node.name) {
+          node.name = this.appService.toSnakeCase(this.flowService.getNodeType(node.type, i == 0));
+        }
         if (!node.coordinates || !node.coordinates.x || !node.coordinates.y) {
           node.coordinates = {
             x: 20 + (i * 120),

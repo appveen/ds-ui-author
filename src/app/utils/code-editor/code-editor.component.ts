@@ -12,11 +12,12 @@ let loadPromise: Promise<void>;
 })
 export class CodeEditorComponent implements AfterViewInit, OnChanges {
 
+  @Input() edit: { status: boolean, id?: string };
   @Input() theme: string;
   @Input() fontSize: number;
   @Input() code: string;
-  @Input() edit: { status: boolean, id?: string };
   @Output() codeChange: EventEmitter<string>;
+  @Input() insertText: EventEmitter<string>;
   codeEditorInstance: monaco.editor.IStandaloneCodeEditor;
   typesString: string;
   constructor(private appService: AppService) {
@@ -24,6 +25,7 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
     this.fontSize = 14;
     this.edit = { status: false };
     this.codeChange = new EventEmitter();
+    this.insertText = new EventEmitter();
   }
 
   ngAfterViewInit(): void {
@@ -217,5 +219,9 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
     });
 
     this.codeEditorInstance.layout();
+
+    this.insertText.subscribe((text: string) => {
+      this.codeEditorInstance.trigger('keyboard', 'type', { text });
+    })
   }
 }

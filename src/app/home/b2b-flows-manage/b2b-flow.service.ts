@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { AppService } from 'src/app/utils/services/app.service';
+import * as _ from 'lodash';
 import * as uuid from 'uuid/v1';
 
 @Injectable({
@@ -63,6 +64,9 @@ export class B2bFlowService {
     let text = configuredData.customValue || '';
     if (configuredData && configuredData.node) {
       const nodeData = nodeList.find(e => e._id == configuredData.node);
+      if (!nodeData) {
+        return text;
+      }
       text += nodeData.name || nodeData._id;
     }
     if (configuredData && configuredData.nodeKey) {
@@ -91,6 +95,7 @@ export class B2bFlowService {
   getNodeObject(type: string) {
     const temp: any = {
       _id: this.appService.getNodeID(),
+      name: _.snakeCase(this.getNodeType(type)),
       type: type,
       onSuccess: [],
       onError: [],

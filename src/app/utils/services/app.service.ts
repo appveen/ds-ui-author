@@ -537,6 +537,12 @@ export class AppService {
         }
         return text;
     }
+    toSnakeCase(text: string) {
+        if (text) {
+            return _.snakeCase(text);
+        }
+        return text;
+    }
 
     getSortQuery(model: any): string {
         return Object.keys(model).map(key => model[key] === 'desc' ? '-' + key : key).join(',');
