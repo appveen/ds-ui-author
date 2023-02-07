@@ -3,6 +3,8 @@
         <g [class.active]="isSelected" [attr.data-id]="currNode._id">
             <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id" />
+            <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" class="rect" />
             <text x="36" y="16" text-anchor="start" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id">{{nodeType}}</text>
             <text class="node-name" x="36" y="30" text-anchor="start" (click)="openProperties($event)"
@@ -44,8 +46,12 @@
         </g> -->
     </g>
     <g *ngFor="let p of paths;let i=index">
+        <path [attr.d]="p.path" class="svg-path svg-path-transparent ignore-outside"
+            [class.selected]="i == selectedPathIndex" (click)="selectPath($event,i,p)" odpClickOutside
+            (outside)="selectedPathIndex=null" />
         <path [attr.d]="p.path" class="svg-path ignore-outside" [class.selected]="i == selectedPathIndex"
             (click)="selectPath($event,i,p)" odpClickOutside (outside)="selectedPathIndex=null" />
+
         <!-- <g *ngIf="i == selectedPathIndex">
             <rect class="delete-icon" [attr.data-id]="currNode._id" x="134" y="12" width="24" height="24" rx="6"
                 (click)="deletePath()" />
