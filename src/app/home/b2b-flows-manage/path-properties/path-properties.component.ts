@@ -18,6 +18,9 @@ export class PathPropertiesComponent implements OnInit {
   @Output() close: EventEmitter<any>;
   @Output() changesDone: EventEmitter<any>;
   nodeIndex: number
+  pathType: string;
+  toggle: any;
+  insertText: EventEmitter<string>;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private flowService: B2bFlowService) {
@@ -25,11 +28,20 @@ export class PathPropertiesComponent implements OnInit {
     this.close = new EventEmitter();
     this.changesDone = new EventEmitter();
     this.nodeList = [];
+    this.toggle = {};
+    this.insertText = new EventEmitter();
   }
 
   ngOnInit(): void {
     // this.nodeIndex = this.nodeList.findIndex(e => (e.onSuccess || []).find((es, ei) => es._id == this.path.path._id && ei == this.path.index));
     this.nodeIndex = this.nodeList.findIndex(e => e._id == this.path.path.prevNode);
+    const successIndex = (this.nodeList[this.nodeIndex].onSuccess || []).findIndex(e => e._id == this.path.path._id);
+    const errorIndex = (this.nodeList[this.nodeIndex].onError || []).findIndex(e => e._id == this.path.path._id);
+    if (successIndex > -1) {
+      this.pathType = 'success';
+    } else if (errorIndex > -1) {
+      this.pathType = 'error';
+    }
     if (!environment.production) {
       console.log(this.path);
       console.log(this.nodeIndex);
@@ -45,6 +57,30 @@ export class PathPropertiesComponent implements OnInit {
 
   cancel() {
     this.close.emit(false);
+  }
+
+  onPathTypeChange(event: any, type: string) {
+    this.pathType = type;
+    if (event) {
+      const successIndex = (this.nodeList[this.nodeIndex].onSuccess || []).findIndex(e => e._id == this.path.path._id);
+      const errorIndex = (this.nodeList[this.nodeIndex].onError || []).findIndex(e => e._id == this.path.path._id);
+      if (successIndex > -1) {
+        (this.nodeList[this.nodeIndex].onSuccess || []).splice(successIndex, 1);
+      }
+      if (errorIndex > -1) {
+        (this.nodeList[this.nodeIndex].onError || []).splice(errorIndex, 1);
+      }
+      if (type === 'error') {
+        (this.nodeList[this.nodeIndex].onError || []).push(this.path.path);
+      } else {
+        (this.nodeList[this.nodeIndex].onSuccess || []).push(this.path.path);
+      }
+    }
+  }
+
+  onVariableSelect(data: any) {
+    this.toggle['variable'] = false;
+    this.insertText.emit(data);
   }
 
   get condition() {

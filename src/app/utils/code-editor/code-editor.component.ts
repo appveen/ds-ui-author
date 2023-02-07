@@ -210,7 +210,8 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
       automaticLayout: true,
       scrollBeyondLastLine: false,
       fontSize: this.fontSize,
-      readOnly: !this.edit.status
+      readOnly: !this.edit.status,
+      minimap: { enabled: false }
     });
 
     this.codeEditorInstance.getModel().onDidChangeContent(e => {
