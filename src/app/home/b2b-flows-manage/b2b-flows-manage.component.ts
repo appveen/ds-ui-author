@@ -207,6 +207,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
           };
         }
       });
+      this.flowService.cleanPayload(this.nodeList);
     }, err => {
       this.apiCalls.getFlow = false;
       this.commonService.errorToast(err);
@@ -244,6 +245,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     const dataStructures = {};
     this.flowData.app = this.commonService.app._id;
     const tempNodeList = JSON.parse(JSON.stringify(this.nodeList));
+    this.flowService.cleanPayload(tempNodeList);
     tempNodeList.forEach(item => {
       if (item.dataStructure && item.dataStructure.outgoing && item.dataStructure.outgoing._id) {
         dataStructures[item.dataStructure.outgoing._id] = JSON.parse(JSON.stringify(item.dataStructure.outgoing));

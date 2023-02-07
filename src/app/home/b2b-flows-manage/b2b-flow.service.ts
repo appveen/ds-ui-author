@@ -202,4 +202,23 @@ export class B2bFlowService {
         destX + " " + destY
     }
   }
+
+  cleanPayload(nodeList: Array<any>) {
+    nodeList.forEach((node: any) => {
+      if (node.onSuccess && node.onSuccess.length > 0) {
+        let indexesToRemove = [];
+        node.onSuccess.forEach((nextNode: any, index: number) => {
+          if (nodeList.findIndex(e => e._id == nextNode._id) == -1) {
+            indexesToRemove.push(index);
+          }
+        });
+        if (indexesToRemove.length > 0) {
+          indexesToRemove.reverse();
+          indexesToRemove.forEach((index: number) => {
+            node.onSuccess.splice(index, 1);
+          });
+        }
+      }
+    });
+  }
 }
