@@ -18,21 +18,23 @@ export class FlowNodeComponent implements OnInit {
   @Input() branchIndex: number;
 
   nextNode: any;
-  paths: Array<any>;
+  successPaths: Array<any>;
+  errorPaths: Array<any>;
   isMouseDown: any;
   selectedPathIndex: number;
+  selectedPath: any;
   selectedNode: any;
   showDeleteNodeIcon: boolean;
   constructor(private flowService: B2bFlowService) {
     this.index = -1;
     this.nodeListChange = new EventEmitter();
     this.branchIndex = -1;
-    this.paths = [];
+    this.successPaths = [];
+    this.errorPaths = [];
     this.nodeList = [];
   }
 
   ngOnInit(): void {
-    this.paths = [];
     this.renderPaths();
     this.flowService.selectedNode.subscribe((data) => {
       this.selectedPathIndex = null;
@@ -43,7 +45,8 @@ export class FlowNodeComponent implements OnInit {
       }
     });
     this.flowService.reCreatePaths.subscribe(() => {
-      this.paths = [];
+      this.successPaths = [];
+      this.errorPaths = [];
       this.renderPaths();
     });
     this.prevNode = this.nodeList.find((e: any) => (e.onSuccess || []).find(ei => ei._id == this.currNode._id));
@@ -55,7 +58,22 @@ export class FlowNodeComponent implements OnInit {
         const nextNode = this.nodeList.find((e: any) => e._id == item._id);
         if (nextNode) {
           const path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 146, this.currNode.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
-          this.paths.push({
+          this.successPaths.push({
+            _id: nextNode._id,
+            name: item.name,
+            color: item.color,
+            prevNode: this.currNode._id,
+            path
+          });
+        }
+      });
+    }
+    if (this.currNode.onError && this.currNode.onError.length > 0) {
+      this.currNode.onError.forEach((item: any) => {
+        const nextNode = this.nodeList.find((e: any) => e._id == item._id);
+        if (nextNode) {
+          const path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 146, this.currNode.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
+          this.errorPaths.push({
             _id: nextNode._id,
             name: item.name,
             color: item.color,
@@ -85,6 +103,7 @@ export class FlowNodeComponent implements OnInit {
   selectPath(event: any, index: number, path: any) {
     setTimeout(() => {
       this.selectedPathIndex = index;
+      this.selectedPath = path;
     }, 200);
     this.flowService.selectedNode.emit(null);
     this.flowService.selectedPath.emit({ index, path });
@@ -139,15 +158,18 @@ export class FlowNodeComponent implements OnInit {
   }
 
   deletePath() {
-    if (typeof this.selectedPathIndex == 'number') {
-      const path = this.paths[this.selectedPathIndex];
-      this.nodeList.forEach((node: any) => {
-        let i = node.onSuccess.findIndex(e => e._id == path._id);
-        if (i > -1) {
-          node.onSuccess.splice(i, 1);
-        }
-      });
-      this.paths.splice(this.selectedPathIndex, 1);
+    let onSuccess = true;
+    let findIndex = (this.successPaths || []).findIndex(e => e._id == this.selectedPath._id);
+    if (findIndex == -1) {
+      onSuccess = false;
+      findIndex = (this.errorPaths || []).findIndex(e => e._id == this.selectedPath._id);
+    }
+    if (findIndex > -1) {
+      if (onSuccess) {
+        (this.successPaths || []).splice(findIndex, 1);
+      } else {
+        (this.errorPaths || []).splice(findIndex, 1);
+      }
     }
   }
 
