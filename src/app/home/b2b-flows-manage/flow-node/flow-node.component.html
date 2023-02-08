@@ -57,7 +57,7 @@
             [class.selected]="i == selectedPathIndex" (click)="selectPath($event,i,p)" />
         <path [attr.d]="p.path" class="svg-path ignore-outside" [class.selected]="i == selectedPathIndex"
             (click)="selectPath($event,i,p)" [style]="'stroke:#'+p.color" />
-        <text x="0" y="0" class="path-text" [style]="getPathTextStyle(p)" text-anchor="center"
+        <text x="0" y="0" class="path-text" [style]="getPathTextStyle(p)" text-anchor="middle"
             [attr.data-id]="currNode._id" [class.selected]="selectedPathIndex == i">{{p.name}}</text>
 
 
