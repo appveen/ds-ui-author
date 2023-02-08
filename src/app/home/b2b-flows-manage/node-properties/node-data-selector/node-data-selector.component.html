@@ -145,7 +145,7 @@
             </odp-node-data-selector>
             <input *ngIf="!textarea" id="customValue" [type]="number?'number':'text'" class="form-control"
                 [(ngModel)]="configuredData.customValue" odpAutoFocus>
-            <odp-code-editor *ngIf="textarea" [edit]="edit" [insertText]="insertText"
+            <odp-code-editor *ngIf="textarea" type="json" [edit]="edit" [insertText]="insertText"
                 [(code)]="configuredData.customValue"></odp-code-editor>
             <!-- <textarea *ngIf="textarea" id="customValue" rows="5" cols="20" type="text" class="form-control"
                 [(ngModel)]="configuredData.customValue" odpAutoFocus></textarea> -->

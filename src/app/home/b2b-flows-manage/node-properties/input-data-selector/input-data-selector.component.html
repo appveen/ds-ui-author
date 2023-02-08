@@ -68,7 +68,7 @@
             <odp-node-data-selector *ngIf="toggle['variable']" [(toggle)]="toggle['variable']" [edit]="edit"
                 [nodeList]="nodeList" (valueChange)="onVariableSelect($event)">
             </odp-node-data-selector>
-            <odp-code-editor [edit]="edit" [insertText]="insertText" [(code)]="data"
+            <odp-code-editor [edit]="edit" type="json" [insertText]="insertText" [(code)]="data"
                 (codeChange)="onDataChange($event)"></odp-code-editor>
             <!-- <div *ngFor="let item of fields;let i=index" class="d-flex flex-column border rounded bg-light-gray px-2 py-1 mb-2">
                 <div class="d-flex align-items-center mb-2">
