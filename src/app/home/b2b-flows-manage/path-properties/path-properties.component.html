@@ -31,6 +31,15 @@
             <span class="ml-3">Error</span>
         </div>
     </div>
+    <div class="form-group p-3">
+        <odp-color-picker #colorpicker [(color)]="color" (colorChange)="onChange();">
+        </odp-color-picker>
+    </div>
+    <div class="form-group p-3">
+        <label class="font-14 fw-400 text-dark" for="pathName">Path Name</label>
+        <input id="pathName" type="text" class="form-control" [(ngModel)]="name"
+            (ngModelChange)="changesDone.emit();onChange()">
+    </div>
     <div class="form-group">
         <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between p-3" for="nodeName">
             <span>Path Condition</span>
@@ -46,7 +55,7 @@
             [nodeList]="nodeList" (valueChange)="onVariableSelect($event)">
         </odp-node-data-selector>
         <odp-code-editor [edit]="edit" [insertText]="insertText" [(code)]="condition"
-            (codeChange)="changesDone.emit()"></odp-code-editor>
+            (codeChange)="changesDone.emit();onChange()"></odp-code-editor>
     </div>
 </div>
 

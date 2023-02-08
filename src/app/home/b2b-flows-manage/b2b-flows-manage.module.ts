@@ -44,6 +44,7 @@ import { FormulaEditorComponent } from './node-properties/node-mapping/formula-e
 import { InputDataSelectorComponent } from './node-properties/input-data-selector/input-data-selector.component';
 import { OnHoverModule } from 'src/app/utils/on-hover/on-hover.module';
 import { PathPropertiesComponent } from './path-properties/path-properties.component';
+import { ColorPickerModule } from 'src/app/utils/color-picker/color-picker.module';
 
 const routes: Routes = [
   {
@@ -98,7 +99,8 @@ const routes: Routes = [
     CheckboxModule,
     DataStructureSelectorModule,
     RoundRadioModule,
-    OnHoverModule
+    OnHoverModule,
+    ColorPickerModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService]

@@ -55,6 +55,10 @@ export class PathPropertiesComponent implements OnInit {
     this.flowService.reCreatePaths.emit(null);
   }
 
+  onChange() {
+    this.flowService.reCreatePaths.emit(null);
+  }
+
   cancel() {
     this.close.emit(false);
   }
@@ -75,6 +79,7 @@ export class PathPropertiesComponent implements OnInit {
       } else {
         (this.nodeList[this.nodeIndex].onSuccess || []).push(this.path.path);
       }
+      this.onChange();
     }
   }
 
@@ -92,6 +97,30 @@ export class PathPropertiesComponent implements OnInit {
   set condition(condition: string) {
     if (this.nodeList[this.nodeIndex] && this.nodeList[this.nodeIndex].onSuccess && this.nodeList[this.nodeIndex].onSuccess[this.path.index]) {
       this.nodeList[this.nodeIndex].onSuccess[this.path.index].condition = condition;
+    }
+  }
+
+  get name() {
+    if (this.nodeList[this.nodeIndex] && this.nodeList[this.nodeIndex].onSuccess && this.nodeList[this.nodeIndex].onSuccess[this.path.index]) {
+      return this.nodeList[this.nodeIndex].onSuccess[this.path.index].name;
+    }
+  }
+
+  set name(name: string) {
+    if (this.nodeList[this.nodeIndex] && this.nodeList[this.nodeIndex].onSuccess && this.nodeList[this.nodeIndex].onSuccess[this.path.index]) {
+      this.nodeList[this.nodeIndex].onSuccess[this.path.index].name = name;
+    }
+  }
+
+  get color() {
+    if (this.nodeList[this.nodeIndex] && this.nodeList[this.nodeIndex].onSuccess && this.nodeList[this.nodeIndex].onSuccess[this.path.index]) {
+      return this.nodeList[this.nodeIndex].onSuccess[this.path.index].color;
+    }
+  }
+
+  set color(color: string) {
+    if (this.nodeList[this.nodeIndex] && this.nodeList[this.nodeIndex].onSuccess && this.nodeList[this.nodeIndex].onSuccess[this.path.index]) {
+      this.nodeList[this.nodeIndex].onSuccess[this.path.index].color = color;
     }
   }
 }

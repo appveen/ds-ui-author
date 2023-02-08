@@ -5,10 +5,17 @@
                 [attr.data-id]="currNode._id" />
             <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id" class="rect" />
-            <text x="36" y="16" text-anchor="start" (click)="openProperties($event)"
+            <text x="36" y="22" text-anchor="start" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id">{{nodeType}}</text>
-            <text class="node-name" x="36" y="30" text-anchor="start" (click)="openProperties($event)"
-                [attr.data-id]="currNode._id">{{currNode.name || currNode._id}}</text>
+            <!-- <text class="node-name" x="36" y="30" text-anchor="start" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id">{{currNode.name || currNode._id}}</text> -->
+            <foreignObject width="140" height="42" x="0" y="38" [attr.data-id]="currNode._id"
+                (click)="openProperties($event)">
+                <span xmlns="http://www.w3.org/1999/xhtml"
+                    class="text-wrap d-flex justify-content-center text-center font-10">
+                    {{currNode.name || currNode._id}}
+                </span>
+            </foreignObject>
         </g>
         <rect *ngIf="index>0" class="node-anchor start" [class.active]="isActive('start')" [attr.data-id]="currNode._id"
             x="-6" y="12" width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
@@ -47,10 +54,12 @@
     </g>
     <g *ngFor="let p of paths;let i=index">
         <path [attr.d]="p.path" class="svg-path svg-path-transparent ignore-outside"
-            [class.selected]="i == selectedPathIndex" (click)="selectPath($event,i,p)" odpClickOutside
-            (outside)="selectedPathIndex=null" />
+            [class.selected]="i == selectedPathIndex" (click)="selectPath($event,i,p)" />
         <path [attr.d]="p.path" class="svg-path ignore-outside" [class.selected]="i == selectedPathIndex"
-            (click)="selectPath($event,i,p)" odpClickOutside (outside)="selectedPathIndex=null" />
+            (click)="selectPath($event,i,p)" [style]="'stroke:#'+p.color" />
+        <text x="0" y="0" class="path-text" [style]="getPathTextStyle(p)" text-anchor="center"
+            [attr.data-id]="currNode._id" [class.selected]="selectedPathIndex == i">{{p.name}}</text>
+
 
         <!-- <g *ngIf="i == selectedPathIndex">
             <rect class="delete-icon" [attr.data-id]="currNode._id" x="134" y="12" width="24" height="24" rx="6"

@@ -57,6 +57,8 @@ export class FlowNodeComponent implements OnInit {
           const path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 146, this.currNode.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
           this.paths.push({
             _id: nextNode._id,
+            name: item.name,
+            color: item.color,
             prevNode: this.currNode._id,
             path
           });
@@ -169,6 +171,17 @@ export class FlowNodeComponent implements OnInit {
         this.createPaths(sourceEle, targetEle);
         this.flowService.reCreatePaths.emit();
       }
+    }
+  }
+
+  getPathTextStyle(path: any) {
+    const nextNode = this.nodeList.find((e: any) => e._id == path._id);
+    let sourceNodeX = (this.currNode.coordinates.x + 140);
+    let sourceNodeY = (this.currNode.coordinates.y + 36);
+    let x = (nextNode.coordinates.x - sourceNodeX) / 2 + sourceNodeX;
+    let y = (nextNode.coordinates.y - sourceNodeY) / 2 + sourceNodeY;
+    return {
+      transform: `translate(${x}px,${y}px)`,
     }
   }
 
