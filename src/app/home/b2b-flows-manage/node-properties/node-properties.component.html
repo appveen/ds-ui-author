@@ -116,7 +116,8 @@
             </label>
             <!-- <textarea id="nodeUrl" class="form-control dynamic-variable-addon" cols="30" rows="4"
                 [(ngModel)]="currNode.options.url"></textarea> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['url']" [nodeList]="nodeList" [(value)]="currNode.options.url" [textarea]="true">
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['url']" [nodeList]="nodeList"
+                [(value)]="currNode.options.url" [textarea]="true">
             </odp-node-data-selector>
         </div>
         <div class="form-group">
@@ -194,7 +195,8 @@
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeUnWind">
                 Change Root Path
-                <span class="dsi dsi-settings text-primary hover" (click)="toggle['changeRoot']=!toggle['changeRoot']"></span>
+                <span class="dsi dsi-settings text-primary hover"
+                    (click)="toggle['changeRoot']=!toggle['changeRoot']"></span>
             </label>
             <!-- <input id="nodeUnWind" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.unwindPath" (ngModelChange)="changesDone.emit()"> -->
@@ -251,14 +253,16 @@
     </ng-container>
     <ng-container *ngIf="currNode?.type=='RESPONSE'">
         <div class="form-group position-relative">
-            <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeStatusCode">
+            <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between"
+                for="nodeStatusCode">
                 Status Code
-                <span class="dsi dsi-settings text-primary hover" (click)="toggle['statusCode']=!toggle['statusCode']"></span>
+                <span class="dsi dsi-settings text-primary hover"
+                    (click)="toggle['statusCode']=!toggle['statusCode']"></span>
             </label>
             <!-- <input id="nodeStatusCode" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.statusCode" (ngModelChange)="changesDone.emit()"> -->
             <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['statusCode']" [nodeList]="nodeList"
-                [(value)]="currNode.options.body">
+                [(value)]="currNode.options.statusCode">
             </odp-node-data-selector>
         </div>
         <div class="form-group position-relative">
@@ -282,9 +286,12 @@
             </label>
             <!-- <textarea id="nodeBody" class="form-control dynamic-variable-addon" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['body']" [nodeList]="nodeList"
+            <!-- <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['body']" [nodeList]="nodeList"
                 [(value)]="currNode.options.body">
-            </odp-node-data-selector>
+            </odp-node-data-selector> -->
+            <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body"
+                [nodeList]="nodeList" [currNode]="currNode">
+            </odp-input-data-selector>
         </div>
     </ng-container>
 </div>

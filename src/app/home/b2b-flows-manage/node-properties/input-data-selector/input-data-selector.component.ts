@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { B2bFlowService } from '../../b2b-flow.service';
 
 @Component({
   selector: 'odp-input-data-selector',
@@ -19,7 +20,7 @@ export class InputDataSelectorComponent implements OnInit {
   togglePasteWindow: boolean;
   toggle: any;
   insertText: EventEmitter<string>;
-  constructor() {
+  constructor(private flowService: B2bFlowService) {
     this.edit = { status: true };
     this.dataChange = new EventEmitter();
     this.fields = [];
@@ -54,13 +55,20 @@ export class InputDataSelectorComponent implements OnInit {
     }
   }
 
-  onVariableSelect(data: any) {
-    console.log(data);
+  onVariableSelect(data: string) {
+    if (data.startsWith('{{')) {
+      data = data.substring(2, data.length - 2);
+    }
     this.insertText.emit(data);
   }
 
-  onDataChange(data: any) {
-    this.dataChange.emit(data);
+  onDataChange(data: string) {
+    if (data && data.startsWith('{{')) {
+      this.data = data.substring(2, data.length - 2);
+    } else {
+      this.data = data;
+    }
+    this.dataChange.emit(this.data);
   }
 
   cancel() {
@@ -73,6 +81,14 @@ export class InputDataSelectorComponent implements OnInit {
 
   onPaste(event: any) {
     console.log(event);
+  }
 
+  get userData() {
+    let temp;
+    if (this.data && this.data.startsWith('node[')) {
+      temp = '{{' + this.data + '}}';
+      return this.flowService.getDynamicLabel(this.flowService.parseDynamicValue(temp), this.nodeList);
+    }
+    return this.data;
   }
 }

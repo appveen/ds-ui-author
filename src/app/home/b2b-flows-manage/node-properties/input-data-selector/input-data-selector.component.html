@@ -50,8 +50,10 @@
         <div *ngIf="dataType=='single'" class="d-flex align-items-center justify-content-start mt-3">
             <span class="font-16 fw-500 mr-3">Select Body of a Different Node</span>
             <span class="dsi dsi-settings text-primary hover mr-3" (click)="toggle['single']=!toggle['single']"></span>
-            <odp-node-data-selector [(toggle)]="toggle['single']" [edit]="edit" [nodeList]="nodeList" [(value)]="data"
-                (valueChange)="onDataChange($event)">
+            <span class="fw-500 rounded bg-light p-2 border font-12 d-flex align-items-center"
+                [innerHTML]="data"></span>
+            <odp-node-data-selector *ngIf="toggle['single']" [(toggle)]="toggle['single']" [edit]="edit"
+                [nodeList]="nodeList" (valueChange)="onDataChange($event)">
             </odp-node-data-selector>
         </div>
         <div *ngIf="dataType=='multiple'" class="d-flex flex-column mt-3">
@@ -63,8 +65,8 @@
                     <span class="ml-3 font-12 fw-400">Insert Variable</span>
                 </div>
             </span>
-            <odp-node-data-selector *ngIf="toggle['variable']" [(toggle)]="toggle['variable']" [edit]="edit" [nodeList]="nodeList"
-                (valueChange)="onVariableSelect($event)">
+            <odp-node-data-selector *ngIf="toggle['variable']" [(toggle)]="toggle['variable']" [edit]="edit"
+                [nodeList]="nodeList" (valueChange)="onVariableSelect($event)">
             </odp-node-data-selector>
             <odp-code-editor [edit]="edit" [insertText]="insertText" [(code)]="data"
                 (codeChange)="onDataChange($event)"></odp-code-editor>

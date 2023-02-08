@@ -76,7 +76,11 @@ export class NodeDataSelectorComponent implements OnInit {
   }
 
   saveData() {
-    this.value = '{{' + this.currentValue + '}}';
+    if (this.dataKey == 'dynamic') {
+      this.value = '{{' + this.currentValue + '}}';
+    } else {
+      this.value = this.currentValue;
+    }
     this.valueChange.emit(this.value);
     this.toggle = false;
     this.toggleChange.emit(this.toggle);
