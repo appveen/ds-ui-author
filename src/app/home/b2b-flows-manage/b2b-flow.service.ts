@@ -36,7 +36,7 @@ export class B2bFlowService {
 
   getNodeType(type: string, isInputNode?: boolean) {
     if (type == 'API' && isInputNode) {
-      return 'API Reciever';
+      return 'API Receiver';
     } else if (type == 'API' && !isInputNode) {
       return 'Invoke API';
     } else if (this.nodeLabelMap[type]) {
