@@ -403,8 +403,8 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  viewFlow(index: number) {
-    this.router.navigate(['/app', this.commonService.app._id, 'flow', this.flowList[index]._id]);
+  viewFlow(item: any) {
+    this.router.navigate(['/app', this.commonService.app._id, 'flow', item._id]);
   }
 
   deleteFlow(index: number) {
