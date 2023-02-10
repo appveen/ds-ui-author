@@ -26,7 +26,7 @@
         <label class="font-14 fw-400 text-dark" for="nodeType">Node Type</label>
         <select id="nodeType" class="form-control" [(ngModel)]="currNode.type"
             (ngModelChange)="onTypeChange($event); changesDone.emit()">
-            <option *ngIf="isInputNode" value="API">API Reciever</option>
+            <option *ngIf="isInputNode" value="API">API Receiver</option>
             <option *ngIf="isInputNode" value="TIMER">Timer</option>
             <option value="FILE">File Agent</option>
             <option *ngIf="!isInputNode" value="API">API Invoke</option>
