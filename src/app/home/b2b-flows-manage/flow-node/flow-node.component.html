@@ -43,19 +43,25 @@
         </foreignObject>
     </g>
     <g *ngFor="let p of successPaths;let i=index">
-        <path [attr.d]="p.path" class="svg-path svg-path-transparent ignore-outside" [class.selected]="isSelectedPath && selectedPathType=='success'"
+        <path [attr.d]="p.path" class="svg-path svg-path-transparent ignore-outside"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='success'"
             (click)="selectPath($event,i,p,'success')" />
-        <path [attr.d]="p.path" class="svg-path ignore-outside" [class.selected]="isSelectedPath && selectedPathType=='success'"
+        <path [attr.d]="p.path" class="svg-path ignore-outside"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='success'"
             (click)="selectPath($event,i,p,'success')" [style]="'stroke:#'+p.color" />
         <text x="0" y="0" class="path-text" [style]="getPathTextStyle(p)" text-anchor="middle"
-            [attr.data-id]="currNode._id" [class.selected]="isSelectedPath && selectedPathType=='success'">{{p.name}}</text>
+            [attr.data-id]="currNode._id"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='success'">{{p.name}}</text>
     </g>
     <g *ngFor="let p of errorPaths;let i=index">
-        <path [attr.d]="p.path" class="svg-path svg-path-transparent ignore-outside" [class.selected]="isSelectedPath && selectedPathType=='error'"
+        <path [attr.d]="p.path" class="svg-path svg-path-transparent ignore-outside"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='error'"
             (click)="selectPath($event,i,p,'error')" />
-        <path [attr.d]="p.path" class="svg-path ignore-outside" [class.selected]="isSelectedPath && selectedPathType=='error'"
+        <path [attr.d]="p.path" class="svg-path ignore-outside"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='error'"
             (click)="selectPath($event,i,p,'error')" [style]="'stroke:#'+p.color" />
         <text x="0" y="0" class="path-text" [style]="getPathTextStyle(p)" text-anchor="middle"
-            [attr.data-id]="currNode._id" [class.selected]="isSelectedPath && selectedPathType=='error'">{{p.name}}</text>
+            [attr.data-id]="currNode._id"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='error'">{{p.name}}</text>
     </g>
 </svg>

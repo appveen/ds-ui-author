@@ -161,18 +161,19 @@ export class FlowNodeComponent implements OnInit {
 
   deletePath() {
     let onSuccess = true;
-    let findIndex = (this.successPaths || []).findIndex(e => e._id == this.selectedPath._id);
-    if (findIndex == -1) {
+    let nodeIndex = (this.currNode.onSuccess || []).findIndex(e => e._id == this.selectedPath._id);
+    if (nodeIndex == -1) {
       onSuccess = false;
-      findIndex = (this.errorPaths || []).findIndex(e => e._id == this.selectedPath._id);
+      nodeIndex = (this.currNode.onError || []).findIndex(e => e._id == this.selectedPath._id);
     }
-    if (findIndex > -1) {
+    if (nodeIndex > -1) {
       if (onSuccess) {
-        (this.successPaths || []).splice(findIndex, 1);
+        (this.currNode.onSuccess || []).splice(nodeIndex, 1);
       } else {
-        (this.errorPaths || []).splice(findIndex, 1);
+        (this.currNode.onError || []).splice(nodeIndex, 1);
       }
     }
+    this.flowService.reCreatePaths.emit(null);
   }
 
   onAnchorClick(event: any) {
