@@ -166,9 +166,9 @@ export class FlowNodeComponent implements OnInit {
     }
     if (findIndex > -1) {
       if (onSuccess) {
-        (this.successPaths || []).slice(findIndex, 1);
+        (this.successPaths || []).splice(findIndex, 1);
       } else {
-        (this.errorPaths || []).slice(findIndex, 1);
+        (this.errorPaths || []).splice(findIndex, 1);
       }
     }
   }
