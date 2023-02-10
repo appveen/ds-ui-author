@@ -435,6 +435,13 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     }
   }
 
+  closeProperties() {
+    this.showNodeProperties = false;
+    this.showPathProperties = false;
+    this.flowService.reCreatePaths.emit(null);
+    this.flowService.selectedNode.emit(null);
+  }
+
 
   @HostListener('document:keydown', ['$event'])
   onDeleteKey(event: any) {

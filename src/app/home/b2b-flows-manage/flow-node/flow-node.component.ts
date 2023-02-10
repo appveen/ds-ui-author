@@ -23,6 +23,7 @@ export class FlowNodeComponent implements OnInit {
   isMouseDown: any;
   selectedPathIndex: number;
   selectedPath: any;
+  selectedPathType: any;
   selectedNode: any;
   showDeleteNodeIcon: boolean;
   constructor(private flowService: B2bFlowService) {
@@ -100,10 +101,11 @@ export class FlowNodeComponent implements OnInit {
     }
   }
 
-  selectPath(event: any, index: number, path: any) {
+  selectPath(event: any, index: number, path: any, type: string) {
     setTimeout(() => {
       this.selectedPathIndex = index;
       this.selectedPath = path;
+      this.selectedPathType = type;
     }, 200);
     this.flowService.selectedNode.emit(null);
     this.flowService.selectedPath.emit({ index, path });
@@ -215,6 +217,13 @@ export class FlowNodeComponent implements OnInit {
 
   get isSelected() {
     if (this.currNode._id && this.selectedNode && this.selectedNode._id) {
+      return true;
+    }
+    return false;
+  }
+
+  get isSelectedPath() {
+    if (this.currNode._id && this.selectedPath && this.selectedPath.prevNode == this.currNode._id) {
       return true;
     }
     return false;

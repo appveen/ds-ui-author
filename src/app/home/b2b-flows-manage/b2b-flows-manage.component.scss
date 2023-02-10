@@ -85,12 +85,12 @@
 
 .node-properties {
   // top: 142px;
-  top: 0px;
+  top: 88px;
   right: -360px;
   z-index: 2;
   width: 360px;
   // height: calc(100vh - 142px);
-  height: calc(100vh);
+  height: calc(100vh - 88px);
   overflow-y: auto;
   transition: 0.2s;
 
