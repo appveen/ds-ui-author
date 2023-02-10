@@ -41,9 +41,17 @@ export class FieldTypeSelectorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.appService.connectorsList.length === 0) {
+    if (this.appService.connectorsList?.length === 0) {
       this.types = this.types.filter(ele => ele.value !== 'File')
     }
+    if (this.isDataFormat) {
+      let hideForDataFormat = ['File', 'Relation', 'Library', 'Location', 'User'];
+      if ((this.formatType !== 'JSON' && this.formatType !== 'XML')) {
+        hideForDataFormat = hideForDataFormat.concat(['Collection', 'Group']) // hide for non json/xml
+      }
+      this.types = this.types.filter(ele => hideForDataFormat.indexOf(ele.label) === -1);
+    }
+
   }
 
   getTooltipText(index: number) {

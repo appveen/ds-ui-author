@@ -2,7 +2,7 @@
   (outside)="close()" [ignore]="['.ignore-click']">
   <div *ngIf="!selectedType" class="p-2 d-flex flex-column">
     <div class="type-div-item hover rounded p-2 d-flex align-items-center position-relative ignore-outside"
-      *ngFor="let type of types; let i = index;" [ngClass]="{'disbaled':!selectAllowed(i)}"
+      *ngFor="let type of types; let i = index;" [ngClass]="{'disabled':!selectAllowed(i)}"
       (click)="selectAllowed(i)?checkSubType(type):selectedType=null">
       <div
         class="dsi dsi-sm {{type.class}} rounded-circle mr-2 text-dark type-width d-flex justify-content-center align-items-center ignore-outside"
