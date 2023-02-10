@@ -30,7 +30,7 @@ export class InputDataSelectorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.prevNode = this.nodeList.find(e => e.onSuccess.findIndex(es => es._id == this.currNode._id) > -1);
+    this.prevNode = this.nodeList.find(e => (e.onSuccess||[]).findIndex(es => es._id == this.currNode._id) > -1);
     console.log(this.data, this.currNode, this.prevNode);
   }
 
