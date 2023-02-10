@@ -101,8 +101,8 @@ export class NodeDataSelectorComponent implements OnInit {
     }
   }
 
-  getNodeType(type: string) {
-    return this.flowService.getNodeType(type);
+  getNodeType(node: any) {
+    return this.flowService.getNodeType(node);
   }
 
   get currentValue() {

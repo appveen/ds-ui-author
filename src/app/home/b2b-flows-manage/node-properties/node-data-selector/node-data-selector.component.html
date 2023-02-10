@@ -54,7 +54,7 @@
                     </odp-round-radio>
                     <span class="node-id ml-3">{{item.name || item._id}}</span>
                 </div>
-                <span class="node-type ml-3 text-accent font-11">{{getNodeType(item.type)}}</span>
+                <span class="node-type ml-3 text-accent font-11">{{getNodeType(item)}}</span>
             </div>
         </div>
         <div *ngIf="configuredData.node && !configuredData.nodeKey">

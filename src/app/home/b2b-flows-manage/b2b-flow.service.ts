@@ -34,15 +34,21 @@ export class B2bFlowService {
     };
   }
 
-  getNodeType(type: string, isInputNode?: boolean) {
-    if (type == 'API' && isInputNode) {
-      return 'API Receiver';
-    } else if (type == 'API' && !isInputNode) {
+  getNodeType(node: any, isInputNode?: boolean) {
+    if (node.type == 'API' && isInputNode) {
+      if (node.options.contentType == 'multipart/form-data') {
+        return 'API File Receiver';
+      } else if (node.options.contentType == 'application/xml') {
+        return 'API XML Receiver';
+      } else {
+        return 'API JSON Receiver';
+      }
+    } else if (node.type == 'API' && !isInputNode) {
       return 'Invoke API';
-    } else if (this.nodeLabelMap[type]) {
-      return this.nodeLabelMap[type];
+    } else if (this.nodeLabelMap[node.type]) {
+      return this.nodeLabelMap[node.type];
     } else {
-      return type;
+      return node.type;
     }
   }
 
@@ -95,13 +101,14 @@ export class B2bFlowService {
   getNodeObject(type: string) {
     const temp: any = {
       _id: this.appService.getNodeID(),
-      name: _.snakeCase(this.getNodeType(type)),
+      name: _.snakeCase(this.getNodeType({ type, contentType: 'application/json' })),
       type: type,
       onSuccess: [],
       onError: [],
       options: {
         method: 'POST',
-        headers: {}
+        headers: {},
+        contentType: 'application/json'
       },
       dataStructure: {
         outgoing: {}

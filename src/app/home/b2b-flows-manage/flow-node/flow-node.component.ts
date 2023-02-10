@@ -234,6 +234,6 @@ export class FlowNodeComponent implements OnInit {
   }
 
   get nodeType() {
-    return this.flowService.getNodeType(this.currNode.type, this.isInputNode);
+    return this.flowService.getNodeType(this.currNode, this.isInputNode);
   }
 }
