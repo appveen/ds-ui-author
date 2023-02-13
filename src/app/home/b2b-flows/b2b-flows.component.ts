@@ -186,7 +186,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/count`).pipe(switchMap((count: any) => {
       return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, {
         count: count,
-        select: 'name inputNode status lastInvoked _metadata nodes'
+        select: 'name inputNode status lastInvoked _metadata nodes version draftVersion'
       });
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
