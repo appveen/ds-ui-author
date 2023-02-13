@@ -101,7 +101,8 @@
   background: rgba($color: #000000, $alpha: 0.6);
 }
 
-.new-flow-window, .yaml-window {
+.new-flow-window,
+.yaml-window {
   height: 100vh;
   width: 360px;
   top: 0;
@@ -126,4 +127,8 @@
   .list-group-item {
     height: 36px;
   }
+}
+
+.r-10 {
+  right: 10px;
 }

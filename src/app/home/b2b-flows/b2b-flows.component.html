@@ -213,9 +213,9 @@
     <ng-container *ngIf="showYamlWindow">
         <div class="form-group">
             <label for="service">Service</label>
-            <div class="position-relative">
+            <div class="position-relative d-flex">
                 <pre class="form-control">{{selectedFlow.serviceYaml}}</pre>
-                <small class="form-text position-absolute">
+                <small class="form-text position-absolute r-10">
                     <span class="text-secondary hover" *ngIf="!copied['service']"
                         (click)="copyText(selectedFlow.serviceYaml,'service')">Copy</span>
                     <span class="text-accent" *ngIf="copied['service']">Copied!</span>
@@ -224,9 +224,9 @@
         </div>
         <div class="form-group">
             <label for="deployment">Deployment</label>
-            <div class="position-relative">
+            <div class="position-relative d-flex">
                 <pre class="form-control">{{selectedFlow.deploymentYaml}}</pre>
-                <small class="form-text position-absolute">
+                <small class="form-text position-absolute r-10">
                     <span class="text-secondary hover" *ngIf="!copied['deployment']"
                         (click)="copyText(selectedFlow.deploymentYaml,'deployment')">Copy</span>
                     <span class="text-accent" *ngIf="copied['deployment']">Copied!</span>
