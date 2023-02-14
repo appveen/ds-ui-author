@@ -290,7 +290,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     ) {
       this.alertModal.title = 'Deploy ' + this.flowList[index].name + '?';
       this.alertModal.message =
-        'Are you sure you want to Deploy this function? Once Deployed, "' +
+        'Are you sure you want to Deploy this data pipe? Once Deployed, "' +
         this.flowList[index].name +
         '" will be running the latest version.';
     } else {
@@ -310,7 +310,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
             .put('partnerManager', url, { app: this.commonService.app._id })
             .subscribe(
               (d) => {
-                this.ts.info('Deploying function...');
+                this.ts.info('Deploying data pipe...');
                 this.flowList[index].status = 'Pending';
               },
               (err) => {
@@ -329,11 +329,11 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     if (this.flowList[index].status === 'Active') {
       this.alertModal.title = 'Stop ' + this.flowList[index].name + '?';
       this.alertModal.message =
-        'Are you sure you want to stop this function? : ' + this.flowList[index].name;
+        'Are you sure you want to stop this data pipe? : ' + this.flowList[index].name;
     } else {
       this.alertModal.title = 'Start ' + this.flowList[index].name + '?';
       this.alertModal.message =
-        'Are you sure you want to start this function? : ' + this.flowList[index].name;
+        'Are you sure you want to start this data pipe? : ' + this.flowList[index].name;
     }
     this.alertModalTemplateRef = this.commonService.modal(
       this.alertModalTemplate
@@ -356,9 +356,9 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
             .subscribe(
               (d) => {
                 if (this.flowList[index].status === 'Active') {
-                  this.ts.info('Stopping function...');
+                  this.ts.info('Stopping data pipe...');
                 } else {
-                  this.ts.info('Starting function...');
+                  this.ts.info('Starting data pipe...');
                 }
                 this.flowList[index].status = 'Pending';
               },
