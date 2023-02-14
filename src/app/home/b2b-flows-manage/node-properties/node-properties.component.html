@@ -44,11 +44,11 @@
         <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList" [currNode]="currNode">
         </odp-input-data-selector>
     </div> -->
-    <div *ngIf="currNode?.type!='DATASERVICE'" class="form-group">
+    <div class="form-group">
         <label class="font-14 fw-400 text-dark mb-0" for="inputDataStructure">Input Data Structure
             <span class="text-muted"><i>(optional)</i></span>
         </label>
-        <small class="form-text text-muted mb-3">Set the data structure that this node will return</small>
+        <small class="form-text text-muted mb-3">Set the data structure that this node will accept</small>
         <odp-data-structure-selector id="inputDataStructure" class="d-flex ml-4" [edit]="edit"
             [format]="currNode.dataStructure?.incoming" (formatChange)="onFormatChange($event,'incoming')"
             [hideGeneric]="currNode?.type=='MAPPING'">

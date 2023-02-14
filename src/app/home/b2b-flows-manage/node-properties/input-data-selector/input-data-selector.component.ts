@@ -20,6 +20,8 @@ export class InputDataSelectorComponent implements OnInit {
   togglePasteWindow: boolean;
   toggle: any;
   insertText: EventEmitter<string>;
+  inputDataStructure: any;
+  inputDataFields: Array<any>;
   constructor(private flowService: B2bFlowService) {
     this.edit = { status: true };
     this.dataChange = new EventEmitter();
@@ -27,11 +29,12 @@ export class InputDataSelectorComponent implements OnInit {
     this.dataType = 'single';
     this.toggle = {};
     this.insertText = new EventEmitter();
+    this.inputDataFields = [];
   }
 
   ngOnInit(): void {
-    this.prevNode = this.nodeList.find(e => (e.onSuccess||[]).findIndex(es => es._id == this.currNode._id) > -1);
-    console.log(this.data, this.currNode, this.prevNode);
+    this.prevNode = this.nodeList.find(e => (e.onSuccess || []).findIndex(es => es._id == this.currNode._id) > -1);
+    this.inputDataStructure = this.currNode.dataStructure.incoming || {};
   }
 
   toggleDataType(flag: boolean, type: string) {
