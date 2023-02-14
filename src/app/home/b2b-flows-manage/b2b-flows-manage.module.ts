@@ -45,6 +45,7 @@ import { InputDataSelectorComponent } from './node-properties/input-data-selecto
 import { OnHoverModule } from 'src/app/utils/on-hover/on-hover.module';
 import { PathPropertiesComponent } from './path-properties/path-properties.component';
 import { ColorPickerModule } from 'src/app/utils/color-picker/color-picker.module';
+import { PayloadCreatorModule } from 'src/app/utils/payload-creator/payload-creator.module';
 
 const routes: Routes = [
   {
@@ -100,7 +101,8 @@ const routes: Routes = [
     DataStructureSelectorModule,
     RoundRadioModule,
     OnHoverModule,
-    ColorPickerModule
+    ColorPickerModule,
+    PayloadCreatorModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService]

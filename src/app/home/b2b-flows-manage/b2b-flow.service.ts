@@ -233,4 +233,8 @@ export class B2bFlowService {
       }
     });
   }
+
+  jsonFromStructure(schema: any) {
+    console.log(schema);
+  }
 }

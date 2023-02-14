@@ -1,6 +1,6 @@
 <div class="mt-2">
     <div class="d-flex flex-column">
-        <div class="d-flex align-items-center justify-content-start w-100 mb-2" (click)="onSourceChange(null)">
+        <!-- <div class="d-flex align-items-center justify-content-start w-100 mb-2" (click)="onSourceChange(null)">
             <odp-round-radio [edit]="edit" [checked]="!data" (checkedChange)="onSourceChange(null)">
             </odp-round-radio>
             <span class="text ml-3">Previous Node's Output</span>
@@ -12,35 +12,36 @@
                 <span class="text ml-3">Custom</span>
                 <span *ngIf="data" class="text-primary ml-3 hover" (click)="showCustomWindow=true">(change)</span>
             </div>
+        </div> -->
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center">
+                <odp-round-radio [edit]="edit" [checked]="dataType=='single'"
+                    (checkedChange)="toggleDataType($event,'single')">
+                </odp-round-radio>
+                <span class="ml-3 mr-4">Payload from another Node</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <odp-round-radio [edit]="edit" [checked]="dataType=='multiple'"
+                    (checkedChange)="toggleDataType($event,'multiple')">
+                </odp-round-radio>
+                <span class="ml-3">Custom Payload</span>
+            </div>
         </div>
     </div>
 </div>
 
-<div *ngIf="showCustomWindow || togglePasteWindow" class="overlay"></div>
+<div *ngIf="showCustomWindow" class="overlay"></div>
 <div [class.show]="showCustomWindow" class="custom-window position-fixed bg-white border-left">
     <div class="d-flex flex-column p-3" *ngIf="showCustomWindow">
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
                 <span class="font-22 fw-600">Custom Request Body</span>
-                <!-- <button type="button" class="btn btn-link ml-3 p-0" (click)="showPayloadFromWindow()">
-                    Payload from JSON/XML
-                </button> -->
             </div>
             <button type="button" class="btn btn-link p-0">
                 <span class="dsi dsi-close text-dark ignore-outside" (click)="cancel()"></span>
             </button>
         </div>
         <div class="py-3 d-flex align-items-center justify-content-between mt-3">
-            <div class="d-flex align-items-center">
-                <odp-round-radio [edit]="edit" [checked]="dataType=='single'"
-                    (checkedChange)="toggleDataType($event,'single')">
-                </odp-round-radio>
-                <span class="ml-3 mr-4">Payload from another Node</span>
-                <odp-round-radio [edit]="edit" [checked]="dataType=='multiple'"
-                    (checkedChange)="toggleDataType($event,'multiple')">
-                </odp-round-radio>
-                <span class="ml-3">Custom Payload</span>
-            </div>
             <!-- <button *ngIf="dataType=='multiple'" type="button" class="btn btn-link d-flex align-items-center"
                 (click)="addField()">
                 <span class="text-primary dsi dsi-plus-circle mr-2"></span>
@@ -49,11 +50,11 @@
         </div>
         <div *ngIf="dataType=='single'" class="d-flex align-items-center justify-content-start mt-3">
             <span class="font-16 fw-500 mr-3">Select Body of a Different Node</span>
-            <span class="dsi dsi-settings text-primary hover mr-3" (click)="toggle['single']=!toggle['single']"></span>
+            <span class="dsi dsi-settings text-primary hover mr-3"></span>
             <span class="fw-500 rounded bg-light p-2 border font-12 d-flex align-items-center"
                 [innerHTML]="data"></span>
-            <odp-node-data-selector *ngIf="toggle['single']" [(toggle)]="toggle['single']" [edit]="edit"
-                [nodeList]="nodeList" (valueChange)="onDataChange($event)">
+            <odp-node-data-selector [(toggle)]="toggle['single']" [edit]="edit" [nodeList]="nodeList"
+                (valueChange)="onDataChange($event)">
             </odp-node-data-selector>
         </div>
         <div *ngIf="dataType=='multiple'" class="d-flex flex-column mt-3">
@@ -68,53 +69,9 @@
             <odp-node-data-selector *ngIf="toggle['variable']" [(toggle)]="toggle['variable']" [edit]="edit"
                 [nodeList]="nodeList" (valueChange)="onVariableSelect($event)">
             </odp-node-data-selector>
-            <odp-code-editor [edit]="edit" type="json" [insertText]="insertText" [(code)]="data"
-                (codeChange)="onDataChange($event)"></odp-code-editor>
-            <!-- <div *ngFor="let item of fields;let i=index" class="d-flex flex-column border rounded bg-light-gray px-2 py-1 mb-2">
-                <div class="d-flex align-items-center mb-2">
-                    <span class="font-16 fw-500 mr-3 w-50">Data Key</span>
-                    <input type="text" class="form-control w-50" [(ngModel)]="item.key">
-                </div>
-                <div class="d-flex align-items-center mb-2">
-                    <span class="font-16 fw-500 mr-3 w-50">of type</span>
-                    <select id="" class="form-control w-50">
-                        <option value="string">String</option>
-                        <option value="number">Number</option>
-                        <option value="boolean">Boolean</option>
-                        <option value="object">Object</option>
-                        <option value="array">Array</option>
-                    </select>
-                </div>
-                <div class="d-flex align-items-center">
-                    <span class="font-16 fw-500 mr-3 w-50">containing</span>
-                    <div class="w-50 d-flex align-items-center">
-                        <span class="dsi dsi-settings text-primary hover mr-3" (click)="toggle[i]=!toggle[i]"></span>
-                        <odp-node-data-selector [(toggle)]="toggle[i]" [edit]="edit" [nodeList]="nodeList"
-                            [(value)]="item.value">
-                        </odp-node-data-selector>
-                    </div>
-                </div>
-            </div> -->
+            <!-- <odp-code-editor [edit]="edit" type="json" [insertText]="insertText" [(code)]="data"
+                (codeChange)="onDataChange($event)"></odp-code-editor> -->
+            <odp-payload-creator [data]="sampleJSON" (dataChange)="onDataChange($event)"></odp-payload-creator>
         </div>
-    </div>
-</div>
-
-
-<div [class.show]="togglePasteWindow" class="paste-window position-fixed bg-white border-left p-4">
-    <div *ngIf="togglePasteWindow">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-            <div class="d-flex align-items-center">
-                <span class="font-20 fw-500">Paste JSON/XML</span>
-            </div>
-            <button type="button" class="btn btn-link p-0">
-                <span class="dsi dsi-close text-dark ignore-outside" (click)="togglePasteWindow=false"></span>
-            </button>
-        </div>
-        <div>
-            <textarea class="form-control" id="" cols="30" rows="10" (paste)="onPaste($event)"></textarea>
-        </div>
-        <!-- <div>
-            <button type="button" class="btn btn-primary">Done</button>
-        </div> -->
     </div>
 </div>

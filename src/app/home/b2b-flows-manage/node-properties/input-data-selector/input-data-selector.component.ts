@@ -13,15 +13,13 @@ export class InputDataSelectorComponent implements OnInit {
   @Input() nodeList: Array<any>;
   @Input() data: any;
   @Output() dataChange: EventEmitter<any>;
-  prevNode: any;
   showCustomWindow: boolean;
   fields: Array<any>;
   dataType: string;
-  togglePasteWindow: boolean;
   toggle: any;
   insertText: EventEmitter<string>;
   inputDataStructure: any;
-  inputDataFields: Array<any>;
+  sampleJSON: any;
   constructor(private flowService: B2bFlowService) {
     this.edit = { status: true };
     this.dataChange = new EventEmitter();
@@ -29,12 +27,22 @@ export class InputDataSelectorComponent implements OnInit {
     this.dataType = 'single';
     this.toggle = {};
     this.insertText = new EventEmitter();
-    this.inputDataFields = [];
   }
 
   ngOnInit(): void {
-    this.prevNode = this.nodeList.find(e => (e.onSuccess || []).findIndex(es => es._id == this.currNode._id) > -1);
     this.inputDataStructure = this.currNode.dataStructure.incoming || {};
+    if (this.data != undefined && this.data != null && typeof this.data == 'object') {
+      this.dataType = 'single';
+    } else {
+      this.dataType = 'multiple';
+    }
+    if (this.data && typeof this.data == 'object') {
+      this.sampleJSON = this.data;
+    } else if (!this.data && this.inputDataStructure) {
+      this.sampleJSON = this.flowService.jsonFromStructure(this.inputDataStructure);
+    } else {
+      this.sampleJSON = {};
+    }
   }
 
   toggleDataType(flag: boolean, type: string) {
@@ -43,19 +51,7 @@ export class InputDataSelectorComponent implements OnInit {
     if (flag) {
       this.dataType = type;
     }
-  }
-
-  showPayloadFromWindow() {
-    this.togglePasteWindow = true;
-  }
-
-  onSourceChange(type: string) {
-    if (!type) {
-      this.data = null;
-      this.dataChange.emit(null);
-    } else {
-      this.showCustomWindow = true;
-    }
+    this.showCustomWindow = true;
   }
 
   onVariableSelect(data: string) {
@@ -80,10 +76,6 @@ export class InputDataSelectorComponent implements OnInit {
 
   addField() {
     this.fields.push({});
-  }
-
-  onPaste(event: any) {
-    console.log(event);
   }
 
   get userData() {
