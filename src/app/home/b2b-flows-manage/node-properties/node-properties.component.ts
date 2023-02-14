@@ -87,11 +87,19 @@ export class NodePropertiesComponent implements OnInit {
     this.changesDone.emit()
   }
 
-  onFormatChange(data: any) {
+  onFormatChange(data: any, type: string) {
     if (!environment.production) {
-      console.log(data);
+      console.log(data, type);
     }
-    if (this.currNode.dataStructure) {
+    if (!this.currNode.dataStructure) {
+      this.currNode.dataStructure = {};
+    }
+
+    if (type == 'incoming') {
+      this.currNode.dataStructure.incoming = data;
+    }
+
+    if (type == 'outgoing') {
       this.currNode.dataStructure.outgoing = data;
     }
 
