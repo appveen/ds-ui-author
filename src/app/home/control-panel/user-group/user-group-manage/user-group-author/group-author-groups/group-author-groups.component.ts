@@ -78,10 +78,15 @@ export class GroupAuthorGroupsComponent implements OnInit {
         entity: 'GROUP'
       },
       {
-        label: 'Insignts',
+        label: 'Insights',
         segment: 'GAIS',
         entity: 'GROUP'
-      }
+      },
+      {
+        label: 'Data Pipes',
+        segment: 'GAIF',
+        entity: 'GROUP'
+      },
     ];
     this.appcenterModulesList = [
       {
@@ -89,11 +94,16 @@ export class GroupAuthorGroupsComponent implements OnInit {
         segment: 'GCDS',
         entity: 'GROUP'
       },
-      // {
-      //   label: 'Interactions',
-      //   segment: 'GCI',
-      //   entity: 'GROUP'
-      // },
+      {
+        label: 'Interactions',
+        segment: 'GCI',
+        entity: 'GROUP'
+      },
+      {
+        label: 'Data Pipes',
+        segment: 'GCIF',
+        entity: 'GROUP'
+      },
       // {
       //   label: 'Bookmarks',
       //   segment: 'GCBM',
