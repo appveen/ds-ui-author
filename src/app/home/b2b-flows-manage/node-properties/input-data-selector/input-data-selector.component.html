@@ -1,18 +1,5 @@
 <div class="mt-2">
     <div class="d-flex flex-column">
-        <!-- <div class="d-flex align-items-center justify-content-start w-100 mb-2" (click)="onSourceChange(null)">
-            <odp-round-radio [edit]="edit" [checked]="!data" (checkedChange)="onSourceChange(null)">
-            </odp-round-radio>
-            <span class="text ml-3">Previous Node's Output</span>
-        </div>
-        <div class="d-flex flex-column w-100 mb-2">
-            <div class="d-flex align-items-center justify-content-start w-100" (click)="onSourceChange('custom')">
-                <odp-round-radio [edit]="edit" [checked]="data" (checkedChange)="onSourceChange('custom')">
-                </odp-round-radio>
-                <span class="text ml-3">Custom</span>
-                <span *ngIf="data" class="text-primary ml-3 hover" (click)="showCustomWindow=true">(change)</span>
-            </div>
-        </div> -->
         <div class="d-flex flex-column">
             <div class="d-flex align-items-center">
                 <odp-round-radio [edit]="edit" [checked]="dataType=='single'"
@@ -41,13 +28,6 @@
                 <span class="dsi dsi-close text-dark ignore-outside" (click)="cancel()"></span>
             </button>
         </div>
-        <div class="py-3 d-flex align-items-center justify-content-between mt-3">
-            <!-- <button *ngIf="dataType=='multiple'" type="button" class="btn btn-link d-flex align-items-center"
-                (click)="addField()">
-                <span class="text-primary dsi dsi-plus-circle mr-2"></span>
-                <span class="text-primary">Add Field</span>
-            </button> -->
-        </div>
         <div *ngIf="dataType=='single'" class="d-flex align-items-center justify-content-start mt-3">
             <span class="font-16 fw-500 mr-3">Select Body of a Different Node</span>
             <span class="dsi dsi-settings text-primary hover mr-3"></span>
@@ -59,19 +39,31 @@
         </div>
         <div *ngIf="dataType=='multiple'" class="d-flex flex-column mt-3">
             <span class="font-16 fw-500 mb-3 d-flex align-items-center justify-content-between w-100">
-                <span>Mutiple Fields</span>
-                <div class="d-flex align-items-center">
-                    <span class="dsi dsi-settings text-primary hover"
-                        (click)="toggle['variable']=!toggle['variable']"></span>
-                    <span class="ml-3 font-12 fw-400">Insert Variable</span>
+                <span>Create Payload</span>
+                <div class="d-flex align-items-center hover" (click)="toggle['pasteJSON']=!toggle['pasteJSON']">
+                    <span class="dsi dsi-object text-primary"></span>
+                    <span class="ml-2 font-12 fw-400">Paste JSON</span>
                 </div>
             </span>
-            <odp-node-data-selector *ngIf="toggle['variable']" [(toggle)]="toggle['variable']" [edit]="edit"
+            <!-- <odp-node-data-selector *ngIf="toggle['variable']" [(toggle)]="toggle['variable']" [edit]="edit"
                 [nodeList]="nodeList" (valueChange)="onVariableSelect($event)">
-            </odp-node-data-selector>
+            </odp-node-data-selector> -->
             <!-- <odp-code-editor [edit]="edit" type="json" [insertText]="insertText" [(code)]="data"
                 (codeChange)="onDataChange($event)"></odp-code-editor> -->
-            <odp-payload-creator [data]="sampleJSON" (dataChange)="onDataChange($event)"></odp-payload-creator>
+            <odp-payload-creator *ngIf="toggle['payloadCreator']" [data]="sampleJSON"
+                (dataChange)="onDataChange($event)"></odp-payload-creator>
         </div>
+    </div>
+</div>
+
+<div *ngIf="toggle['pasteJSON']" class="overflow position-fixed"></div>
+<div [class.show]="toggle['pasteJSON']" class="paste-window position-fixed bg-white border-left p-3">
+    <div *ngIf="toggle['pasteJSON']">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <span class="font-18 fw-500">Paste JSON</span>
+            <span class="dsi dsi-close hover"></span>
+        </div>
+        <textarea class="form-control" name="pasteJSON" id="pasteJSON" cols="30" rows="10"
+            (paste)="onPaste($event)"></textarea>
     </div>
 </div>

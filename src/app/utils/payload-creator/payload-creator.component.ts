@@ -24,23 +24,10 @@ export class PayloadCreatorComponent implements OnInit {
     }
   }
 
-  // onPaste(event: ClipboardEvent) {
-  //   let text: string = event.clipboardData?.getData('text') as string;
-  //   try {
-  //     const obj = JSON.parse(text);
-  //     this.data = obj;
-  //     this.fields = [];
-  //     this.init();
-  //   } catch (err) {
-  //     this.fields = [];
-  //     text.split('\n').map((e: string) => {
-  //       this.fields.push(new Field({ key: e, type: 'string' }));
-  //     });
-  //   }
-  // }
-
   onDataChange(data: any) {
     console.log('onDataChange', data);
+    this.data = data;
+    this.dataChange.emit(this.data);
   }
 
   addFromRoot() {

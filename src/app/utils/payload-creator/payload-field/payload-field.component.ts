@@ -44,6 +44,21 @@ export class PayloadFieldComponent implements OnInit {
     });
   }
 
+  onPaste(event: ClipboardEvent) {
+    let text: string = event.clipboardData?.getData('text') as string;
+    try {
+      const obj = JSON.parse(text);
+      this.data = obj;
+      this.field.type = 'object';
+      this.fieldList = [];
+    } catch (err) {
+      this.fieldList = [];
+      text.split('\n').map((e: string) => {
+        this.fieldList.push(new Field({ key: e, type: 'string' }));
+      });
+    }
+  }
+
   addField() {
     let temp = new Field();
     if ((this.fieldList[this.index].type == 'array' || this.fieldList[this.index].type == 'object')) {
@@ -127,8 +142,9 @@ export class PayloadFieldComponent implements OnInit {
   }
 
   onDataChange(data: any) {
-    this.field.data = data
-    this.$trigger.next(null);
+    // this.field.data = data
+    this.onValueChange(data);
+    // this.$trigger.next(null);
   }
 
 }

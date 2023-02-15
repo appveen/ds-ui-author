@@ -1,6 +1,10 @@
+.field-wrapper {
+    overflow: hidden;
+}
+
 .key-holder {
     border: 0px;
-    border-left: 1px solid #ddd;
+    // border-left: 1px solid #ddd;
 }
 
 .type-holder {
@@ -10,7 +14,7 @@
 }
 
 .value-holder {
-    width: 200px;
+    width: 260px;
     border: 0px;
     border-left: 1px solid #ddd;
 }
@@ -18,7 +22,7 @@
 .action-holder {
     width: 64px;
     border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
+    // border-right: 1px solid #ddd;
 
     .icon {
         width: 32px;

@@ -14,22 +14,20 @@ export class InputDataSelectorComponent implements OnInit {
   @Input() data: any;
   @Output() dataChange: EventEmitter<any>;
   showCustomWindow: boolean;
-  fields: Array<any>;
   dataType: string;
   toggle: any;
-  insertText: EventEmitter<string>;
   inputDataStructure: any;
   sampleJSON: any;
+  tempData: any;
   constructor(private flowService: B2bFlowService) {
     this.edit = { status: true };
     this.dataChange = new EventEmitter();
-    this.fields = [];
     this.dataType = 'single';
     this.toggle = {};
-    this.insertText = new EventEmitter();
   }
 
   ngOnInit(): void {
+    this.toggle['payloadCreator'] = true;
     this.inputDataStructure = this.currNode.dataStructure.incoming || {};
     if (this.data != undefined && this.data != null && typeof this.data == 'object') {
       this.dataType = 'single';
@@ -61,28 +59,36 @@ export class InputDataSelectorComponent implements OnInit {
     this.showCustomWindow = true;
   }
 
-  onVariableSelect(data: string) {
-    if (data.startsWith('{{')) {
-      data = data.substring(2, data.length - 2);
-    }
-    this.insertText.emit(data);
-  }
+  // onVariableSelect(data: string) {
+  //   if (data.startsWith('{{')) {
+  //     data = data.substring(2, data.length - 2);
+  //   }
+  // }
 
   onDataChange(data: string) {
-    if (data && data.startsWith('{{')) {
-      this.data = data.substring(2, data.length - 2);
-    } else {
-      this.data = data;
-    }
-    this.dataChange.emit(this.data);
+    // this.dataChange.emit(this.data);
   }
 
   cancel() {
     this.showCustomWindow = false;
   }
 
-  addField() {
-    this.fields.push({});
+  onPaste(event: ClipboardEvent) {
+    let text: string = event.clipboardData?.getData('text') as string;
+    try {
+      const obj = JSON.parse(text);
+      this.sampleJSON = obj;
+    } catch (err) {
+      this.sampleJSON = text.split('\n').reduce((prev: any, e: string) => {
+        prev[e] = "";
+        return prev;
+      }, {});
+    }
+    this.toggle['pasteJSON'] = false;
+    this.toggle['payloadCreator'] = false;
+    setTimeout(() => {
+      this.toggle['payloadCreator'] = true;
+    }, 200);
   }
 
   get userData() {
