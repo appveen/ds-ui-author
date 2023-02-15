@@ -1058,4 +1058,12 @@ $weights: 200,
   left: 0;
 }
 
+.btn-link,
+a {
+  .dsi:before {
+    text-decoration: none;
+    display: inline-block;
+  }
+}
+
 @include altBox(1);
