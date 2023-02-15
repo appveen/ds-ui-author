@@ -41,6 +41,10 @@
         [ngClass]="{'text-dark font-weight-bold': activeSubTab==11}" (click)="activeSubTab=11">
         <span class="">Insights</span>
       </div>
+      <div *ngIf="hasPermission('PVGAIS') || hasPermission('PMGAIS')" class="px-3 py-2 hover"
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==12}" (click)="activeSubTab=12">
+        <span class="">Data Pipes</span>
+      </div>
     </div>
   </div>
   <div class="permissions-wrapper w-100 h-100">
@@ -72,5 +76,7 @@
     <odp-group-author-insights *ngIf="activeSubTab==11" [(roles)]="roles" (rolesChange)="onChange($event)"
       class="w-100">
     </odp-group-author-insights>
+    <odp-group-author-flows *ngIf="activeSubTab==12" [(roles)]="roles" (rolesChange)="onChange($event)" class="w-100">
+    </odp-group-author-flows>
   </div>
 </div>
