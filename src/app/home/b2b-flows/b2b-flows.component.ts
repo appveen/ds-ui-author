@@ -103,10 +103,21 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
           type: type ? type : 'API'
         };
       }
-      inputNode.options = {
-        method: 'POST',
-        path: val ? '/' + _.camelCase(val) : null
-      };
+
+      if (this.isClone && this.cloneData) {
+        this.cloneData['name'] = val;
+        inputNode = this.cloneData?.inputNode || inputNode;
+        if (inputNode.options) {
+          inputNode.options['method'] = 'POST';
+          inputNode.options['path'] = val ? '/' + _.camelCase(val) : null;
+        }
+      }
+      else {
+        inputNode.options = {
+          method: 'POST',
+          path: val ? '/' + _.camelCase(val) : null
+        };
+      }
       this.form.get('inputNode').patchValue(inputNode);
     });
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
@@ -163,6 +174,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.showLazyLoader = true;
     this.showNewFlowWindow = false;
     const payload = _.cloneDeep(this.form.value);
+    payload['dataStructures'] = this.cloneData.dataStructures || [];
     payload['nodes'] = this.cloneData.nodes || [];
     payload.app = this.commonService.app._id;
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
@@ -186,7 +198,6 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/count`).pipe(switchMap((count: any) => {
       return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, {
         count: count,
-        select: 'name inputNode status lastInvoked _metadata nodes version draftVersion'
       });
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
@@ -424,7 +435,8 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.form.get('name').patchValue(temp.name + ' Copy');
     this.form.get('type').patchValue(temp.inputNode.type);
     this.form.get('inputNode').patchValue(temp.inputNode);
-    this.cloneData = temp;
+    this.cloneData = _.cloneDeep(temp);
+    console.log(temp)
     this.showNewFlowWindow = true;
   }
 
@@ -545,3 +557,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     return this.commonService.app._id;
   }
 }
+
+
+
+
