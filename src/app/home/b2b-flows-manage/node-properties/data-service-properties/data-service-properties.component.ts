@@ -13,7 +13,7 @@ export class DataServicePropertiesComponent implements OnInit {
   prevNode: any;
   toggle: any;
   constructor() {
-    this.edit = { status: true };
+    this.edit = { status: false };
     this.toggle = {};
   }
 

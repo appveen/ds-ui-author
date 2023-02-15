@@ -20,7 +20,7 @@ export class InputDataSelectorComponent implements OnInit {
   sampleJSON: any;
   tempData: any;
   constructor(private flowService: B2bFlowService) {
-    this.edit = { status: true };
+    this.edit = { status: false };
     this.dataChange = new EventEmitter();
     this.dataType = 'single';
     this.toggle = {};

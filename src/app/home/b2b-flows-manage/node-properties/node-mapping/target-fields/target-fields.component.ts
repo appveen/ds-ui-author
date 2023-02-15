@@ -18,7 +18,7 @@ export class TargetFieldsComponent implements OnInit {
   constructor() {
     this.fuzzyMapping = new EventEmitter();
     this.clearMapping = new EventEmitter();
-    this.edit = { status: true };
+    this.edit = { status: false };
     this.showAddSource = false;
   }
 

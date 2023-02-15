@@ -21,7 +21,7 @@ export class ConnectorPropertiesComponent implements OnInit {
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.edit = {
-      status: true
+      status: false
     };
     this.connectorList = [];
     this.subscriptions = {};

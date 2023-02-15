@@ -20,7 +20,7 @@ export class AddHeadersComponent implements OnInit {
     this.nodeList = [];
     this.headerList = [];
     this.valueChange = new EventEmitter();
-    this.edit = { status: true };
+    this.edit = { status: false };
   }
 
   ngOnInit(): void {

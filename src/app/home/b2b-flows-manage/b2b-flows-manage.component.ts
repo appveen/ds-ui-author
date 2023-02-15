@@ -211,6 +211,11 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         }
       });
       this.flowService.cleanPayload(this.nodeList);
+      if (!environment.production) {
+        setTimeout(() => {
+          this.enableEditing()
+        }, 1000);
+      }
     }, err => {
       this.apiCalls.getFlow = false;
       this.commonService.errorToast(err);

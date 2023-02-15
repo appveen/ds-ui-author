@@ -19,7 +19,7 @@ export class FunctionSelectorComponent implements OnInit {
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.edit = {
-      status: true
+      status: false
     };
     this.functionList = [];
     this.dataChange = new EventEmitter();

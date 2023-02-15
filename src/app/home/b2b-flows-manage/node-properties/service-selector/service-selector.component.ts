@@ -19,7 +19,7 @@ export class ServiceSelectorComponent implements OnInit {
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.edit = {
-      status: true
+      status: false
     };
     this.serviceList = [];
     this.dataChange = new EventEmitter();

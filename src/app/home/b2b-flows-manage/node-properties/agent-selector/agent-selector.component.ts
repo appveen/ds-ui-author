@@ -19,7 +19,7 @@ export class AgentSelectorComponent implements OnInit {
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.edit = {
-      status: true
+      status: false
     };
     this.agentList = [];
     this.dataChange = new EventEmitter();

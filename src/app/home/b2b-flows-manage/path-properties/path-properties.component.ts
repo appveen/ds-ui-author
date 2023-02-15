@@ -24,7 +24,7 @@ export class PathPropertiesComponent implements OnInit {
   constructor(private commonService: CommonService,
     private appService: AppService,
     private flowService: B2bFlowService) {
-    this.edit = { status: true };
+    this.edit = { status: false };
     this.close = new EventEmitter();
     this.changesDone = new EventEmitter();
     this.nodeList = [];

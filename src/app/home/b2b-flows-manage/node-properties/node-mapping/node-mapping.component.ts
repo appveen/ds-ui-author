@@ -29,7 +29,7 @@ export class NodeMappingComponent implements OnInit {
     this.customSourceFields = [];
     this.customTargetFields = [];
     this.edit = {
-      status: true
+      status: false
     };
     this.fuzzyMapping = new EventEmitter();
     this.clearMapping = new EventEmitter();
