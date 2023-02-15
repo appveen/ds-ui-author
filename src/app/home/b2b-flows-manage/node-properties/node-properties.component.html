@@ -44,13 +44,12 @@
         <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList" [currNode]="currNode">
         </odp-input-data-selector>
     </div> -->
-    <div class="form-group">
-        <label *ngIf="currNode?.type!='RESPONSE' && !isInputNode" class="font-14 fw-400 text-dark mb-0"
-            for="inputDataStructure">Input Data Structure
+    <div *ngIf="currNode?.type!='RESPONSE' && !isInputNode" class="form-group">
+        <label class="font-14 fw-400 text-dark mb-0" for="inputDataStructure">Input Data Structure
             <span class="text-muted"><i>(optional)</i></span>
         </label>
         <small class="form-text text-muted mb-3">Set the data structure that this node will accept</small>
-        <odp-data-structure-selector id="inputDataStructure" class="d-flex ml-4" [edit]="edit"
+        <odp-data-structure-selector id="inputDataStructure" class="d-flex" [edit]="edit"
             [format]="currNode.dataStructure?.incoming" (formatChange)="onFormatChange($event,'incoming')"
             [hideGeneric]="currNode?.type=='MAPPING'">
         </odp-data-structure-selector>
@@ -60,7 +59,7 @@
             <span class="text-muted"><i>(optional)</i></span>
         </label>
         <small class="form-text text-muted mb-3">Set the data structure that this node will return</small>
-        <odp-data-structure-selector id="outputDataStructure" class="d-flex ml-4" [edit]="edit"
+        <odp-data-structure-selector id="outputDataStructure" class="d-flex" [edit]="edit"
             [format]="currNode.dataStructure?.outgoing" (formatChange)="onFormatChange($event,'outgoing')"
             [hideGeneric]="currNode?.type=='MAPPING'">
         </odp-data-structure-selector>

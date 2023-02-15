@@ -10,16 +10,19 @@
     <div>
         <odp-search-box open="true" (enteredText)="searchFormat($event)" (reset)="clearSearch()"></odp-search-box>
     </div>
+    <div class="mt-2">
+        <span class="font-12 text-muted">Last 10 Created/Updated formats are listed, Search for more.</span>
+    </div>
     <div class="list-group my-3">
         <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
             *ngFor="let item of dataFormatList" (click)="toggleItem(!item._selected,item)">
-            <div class="d-flex align-items-center">
+            <div class="list-item-format-name d-flex align-items-center flex-fill">
                 <odp-round-radio [edit]="edit" [checked]="item._selected">
                 </odp-round-radio>
                 <span class="ml-3">{{item.name}}</span>
             </div>
-            <span>{{item.attributeCount}}</span>
-            <span>{{item.formatType}}</span>
+            <span class="list-item-attribute-count text-right">{{item.attributeCount}}</span>
+            <span class="list-item-format-type text-right">{{item.formatType}}</span>
         </div>
         <div *ngIf="!dataFormatList || dataFormatList.length == 0"
             class="list-group-item d-flex align-items-center justify-content-between text-secondary">

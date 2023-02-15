@@ -5,7 +5,7 @@
     top: 0px;
     right: -600px;
     z-index: 3;
-    width: 360px;
+    width: 440px;
     height: 100vh;
     overflow-y: auto;
     transition: 0.2s;
@@ -19,6 +19,13 @@
     }
 }
 
-.selected-format-name {
-    margin-left: 32px;
+.selected-format-name,
+.selected-format-type {
+    .label {
+        width: 80px;
+    }
+    .value {
+        width: 180px;
+        text-overflow: ellipsis;
+    }
 }
