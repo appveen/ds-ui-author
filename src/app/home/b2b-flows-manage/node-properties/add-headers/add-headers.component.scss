@@ -1,9 +1,14 @@
-.dynamic-variable-button {
-    top: 39px;
-    left: 9px;
+.header-item {
+    overflow: hidden;
+    height: 36px;
 }
 
-.node-data-selector-wrapper {
+.icon {
+    width: 32px;
+    height: 32px;
+}
+
+.headers-window {
     width: 559px;
     height: 100vh;
     overflow-y: auto;
@@ -12,15 +17,18 @@
     z-index: 1;
 }
 
-.header-key {
-    min-width: 120px;
-    max-width: 120px;
-}
+.header-key {}
 
 .header-value {
-    width: 100px;
+    min-width: 220px;
+    max-width: 220px;
 }
 
-.node-data-selector {
-    top: -30px;
+.header-action {
+    width: 64px;
+
+    .icon {
+        width: 32px;
+        height: 32px;
+    }
 }

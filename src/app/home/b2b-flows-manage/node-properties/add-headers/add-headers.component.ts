@@ -33,6 +33,13 @@ export class AddHeadersComponent implements OnInit {
     this.defaultHeaderList();
   }
 
+  showHeader() {
+    this.showHeadersWindow = true;
+    if (this.headerList.length == 0) {
+      this.addHeader();
+    }
+  }
+
   defaultHeaderList() {
     this.headerList = Object.keys(this.currNode.options.headers).map(key => {
       const temp: any = {};
@@ -42,12 +49,21 @@ export class AddHeadersComponent implements OnInit {
     });
   }
 
-  addHeader() {
-    this.headerList.push({ key: "", value: "" });
+  addHeader(index?: number) {
+    if (index !== null && index !== undefined) {
+      this.headerList.splice(index + 1, 0, { key: "", value: "" });
+    } else {
+      this.headerList.push({ key: "", value: "" });
+    }
   }
 
   removeHeader(index: number) {
     this.headerList.splice(index, 1);
+  }
+
+  clearHeaders() {
+    this.headerList.splice(0);
+    this.save();
   }
 
   save() {
@@ -68,6 +84,7 @@ export class AddHeadersComponent implements OnInit {
     this.valueChange.emit(this.value);
     this.showHeadersWindow = false;
   }
+
   cancel() {
     this.showHeadersWindow = false;
     this.defaultHeaderList();

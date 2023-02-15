@@ -1,44 +1,48 @@
 <div class="">
-    <div class="font-14 fw-400 text-dark">Custom Headers</div>
-    <button type="button" class="btn btn-link px-0 text-left d-flex align-items-center" (click)="showHeadersWindow=true">
-        <span class="dsi dsi-settings mr-2"></span>
-        <span *ngIf="headerList.length==0">Configure</span>
-        <span *ngIf="headerList.length>0">Re-Configure ({{headerList.length}})</span>
-    </button>
+    <div class="font-14 fw-400 text-dark mb-2">Custom Headers</div>
+    <div class="header-item px-2 py-1 text-left d-flex align-items-center justify-content-between border rounded">
+        <span class="text-secondary" *ngIf="headerList.length==0">Configure</span>
+        <span class="text-secondary" *ngIf="headerList.length>0">{{headerList.length}} Headers</span>
+        <div class="d-flex align-items-center justify-content-end">
+            <span *ngIf="headerList.length>0" class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
+                (click)="clearHeaders()"></span>
+            <span class="icon dsi dsi-settings text-accent hover d-flex align-items-center justify-content-center"
+                (click)="showHeader()"></span>
+        </div>
+    </div>
 </div>
 
-<div *ngIf="showHeadersWindow" class="node-data-selector-wrapper p-4 bg-white position-fixed">
-    <div class="d-flex align-items-center justify-content-between">
+<div *ngIf="showHeadersWindow" class="headers-window p-4 bg-white position-fixed">
+    <div class="d-flex align-items-center justify-content-between mb-3">
         <h3 class="font-20 fw-600">Headers</h3>
         <span class="dsi dsi-close hover" (click)="cancel()"></span>
     </div>
     <div class="headers-list">
-        <div class="">
+        <!-- <div class="">
             <button type="button" class="btn btn-link px-0 text-left d-flex align-items-center mt-3 mb-2"
                 (click)="addHeader()">
                 <span class="dsi dsi-plus-circle mr-2"></span>
                 <span class="">Add New</span>
             </button>
-        </div>
-        <div *ngFor="let item of headerList;let i=index" class="d-flex align-items-center mb-2">
-            <div class="header-key mr-2 position-relative">
-                <input type="text" class="form-control" [(ngModel)]="item.key" placeholder="Header Key"
-                    (keyup.enter)="addHeader()" odpAutoFocus>
+        </div> -->
+        <div *ngFor="let item of headerList;let i=index" class="d-flex align-items-stretch mb-2 border rounded">
+            <div class="header-key flex-fill position-relative">
+                <input type="text" class="border-0 px-2 flex-fill h-100 w-100" [(ngModel)]="item.key"
+                    placeholder="Header Key" (keyup.enter)="addHeader(i)" odpAutoFocus>
             </div>
-            <div class="header-value mr-2 w-100 position-relative">
-                <!-- <input type="text" class="form-control dynamic-variable-addon" [(ngModel)]="item.value"
-                    placeholder="Header Value" (keyup.enter)="addHeader()"> -->
-                <odp-node-data-selector [edit]="edit" [nodeList]="nodeList"
-                    [(value)]="item.value">
-                </odp-node-data-selector>
+            <div class="header-value w-100 position-relative border-left">
+                <input type="text" class="border-0 px-2 h-100 w-100" [(ngModel)]="item.value" placeholder="Header Value"
+                    (keyup.enter)="addHeader(i)">
             </div>
-            <div class="header-action position-relative">
-                <button type="button" class="btn btn-link p-0" (click)="removeHeader(i)">
-                    <span class="dsi dsi-trash text-danger"></span>
-                </button>
+            <div class="header-action position-relative border-left d-flex align-items-center">
+                <span class="icon d-flex align-items-center justify-content-center dsi dsi-minus-circle hover"
+                    (click)="removeHeader(i)"></span>
+                <span class="icon d-flex align-items-center justify-content-center dsi dsi-plus-circle hover"
+                    (click)="addHeader(i)"></span>
             </div>
         </div>
-        <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center" (click)="save()">
+        <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center"
+            (click)="save()">
             <span class="">Done</span>
         </button>
     </div>
