@@ -15,12 +15,14 @@ export class B2bFlowService {
   selectedPath: EventEmitter<any>;
   anchorSelected: any;
   nodeLabelMap: any;
+  dataStructureSelected: EventEmitter<any>;
   constructor(private appService: AppService) {
     this.showAddNodeDropdown = new EventEmitter();
     this.selectedNode = new EventEmitter();
     this.deleteNode = new EventEmitter();
     this.reCreatePaths = new EventEmitter();
     this.selectedPath = new EventEmitter();
+    this.dataStructureSelected = new EventEmitter();
     this.nodeLabelMap = {
       FILE: 'File Agent',
       TIMER: 'Timer',
@@ -235,6 +237,45 @@ export class B2bFlowService {
   }
 
   jsonFromStructure(schema: any) {
-    console.log(schema);
+    if (schema && schema.definition) {
+      return this.convertDefinitionToJSON(schema.definition);
+    }
+    return {};
+  }
+
+  convertDefinitionToJSON(definition: Array<any>) {
+    let temp = {};
+    if (definition) {
+      definition.forEach(item => {
+        if (item.type == 'Array') {
+          let arrayType = item.definition[0].type;
+          temp[item.key] = [];
+          if (arrayType == 'Object') {
+            temp[item.key].push(this.convertDefinitionToJSON(item.definition[0].definition));
+          } else {
+            if (arrayType == 'Number') {
+              temp[item.key].push(2023);
+            } else if (arrayType == 'Boolean') {
+              temp[item.key].push(true);
+            } else if (arrayType == 'Date') {
+              temp[item.key].push(new Date().toISOString());
+            } else {
+              temp[item.key].push('');
+            }
+          }
+        } else if (item.type == 'Object') {
+          temp[item.key] = this.convertDefinitionToJSON(item.definition);
+        } else if (item.type == 'Number') {
+          temp[item.key] = 2023;
+        } else if (item.type == 'Boolean') {
+          temp[item.key] = true;
+        } else if (item.type == 'Date') {
+          temp[item.key] = new Date().toISOString();
+        } else {
+          temp[item.key] = '';
+        }
+      });
+    }
+    return temp;
   }
 }

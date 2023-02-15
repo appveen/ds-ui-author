@@ -110,7 +110,8 @@ export class NodePropertiesComponent implements OnInit {
         temp.mappings = [];
       }
     })
-    this.changesDone.emit()
+    this.changesDone.emit();
+    this.flowService.dataStructureSelected.emit({ currNode: this.currNode, type });
   }
 
   cancel() {

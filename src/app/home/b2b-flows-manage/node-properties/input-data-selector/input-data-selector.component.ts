@@ -43,6 +43,13 @@ export class InputDataSelectorComponent implements OnInit {
     } else {
       this.sampleJSON = {};
     }
+
+    this.flowService.dataStructureSelected.subscribe((data) => {
+      if (data.currNode._id == this.currNode._id && data.type == 'incoming') {
+        this.inputDataStructure = data.currNode.dataStructure.incoming || {};
+        this.sampleJSON = this.flowService.jsonFromStructure(this.inputDataStructure);
+      }
+    });
   }
 
   toggleDataType(flag: boolean, type: string) {
