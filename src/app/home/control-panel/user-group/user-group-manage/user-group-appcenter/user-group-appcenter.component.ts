@@ -23,7 +23,7 @@ export class UserGroupAppcenterComponent implements OnInit {
         const self = this;
         if (self.hasPermission('PVGCDS') || self.hasPermission('PMGCDS')) {
             self.activeSubTab = 0;
-        } else if (self.hasPermission('PVGCI') || self.hasPermission('PMGCI')) {
+        } else if (self.hasPermission('PVGCIF') || self.hasPermission('PMGCIF')) {
             self.activeSubTab = 1;
         } else if (self.hasPermission('PVGCBM') || self.hasPermission('PMGCBM')) {
             self.activeSubTab = 2;
@@ -33,5 +33,10 @@ export class UserGroupAppcenterComponent implements OnInit {
     hasPermission(type: string) {
         const self = this;
         return self.commonService.hasPermission(type);
+    }
+
+    isAppAdmin() {
+        const self = this;
+        return self.commonService.isAppAdmin;
     }
 }

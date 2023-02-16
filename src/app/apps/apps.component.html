@@ -95,7 +95,8 @@
               }">Connectors</span>
             </div>
           </div>
-          <div #flowRoute="routerLinkActive" class="icon-block d-flex align-items-center my-3"
+          <div *ngIf="hasFlowsPermission" #flowRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
             [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
             routerLinkActive="text-primary bg-white active" [routerLink]="['flow']" id="flowManager">
             <div class="d-flex align-items-center">

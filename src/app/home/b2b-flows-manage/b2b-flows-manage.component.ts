@@ -518,11 +518,11 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   }
 
   get hasDeployPermission() {
-    return this.commonService.hasPermission('PMFPD')
+    return this.commonService.hasPermission('PMIFPD')
   }
 
   get hasManagePermission() {
-    return this.commonService.hasPermission('PMF')
+    return this.commonService.hasPermission('PMIF')
   }
 
 }
