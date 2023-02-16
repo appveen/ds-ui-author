@@ -24,8 +24,8 @@ export class GroupAuthorGroupsComponent implements OnInit {
     this.rolesChange = new EventEmitter();
     this.roles = [];
     this.dropdownToggle = {};
-    this.managePermissions = ['PMGBC', 'PMGBU', 'PMGBD', 'PMGBD', 'PMGMBC', 'PMGMBD', 'PMGMUC', 'PMGMUD', 'PMGADS', 'PMGAL', 'PMGACON', 'PMGADF', 'PMGAF', 'PMGAA', 'PMGABM', 'PMGAU', 'PMGAB', 'PMGAG', 'PMGAIS', 'PMGCDS', 'PMGCI', 'PMGCBM'];
-    this.viewPermissions = ['PVGB', 'PVGMB', 'PVGMU', 'PVGADS', 'PVGAL', 'PVGACON', 'PVGADF', 'PVGAF', 'PVGAA', 'PVGABM', 'PVGAU', 'PVGAB', 'PVGAG', 'PVGAIS', 'PVGCDS', 'PVGCI', 'PVGCBM'];
+    this.managePermissions = ['PMGBC', 'PMGBU', 'PMGBD', 'PMGBD', 'PMGMBC', 'PMGMBD', 'PMGMUC', 'PMGMUD', 'PMGADS', 'PMGAL', 'PMGACON', 'PMGADF', 'PMGAF', 'PMGAA', 'PMGABM', 'PMGAU', 'PMGAB', 'PMGAG', 'PMGAIS', 'PMGCDS', 'PMGCI', 'PMGCBM', 'PMGCIF', 'PMGCI'];
+    this.viewPermissions = ['PVGB', 'PVGMB', 'PVGMU', 'PVGADS', 'PVGAL', 'PVGACON', 'PVGADF', 'PVGAF', 'PVGAA', 'PVGABM', 'PVGAU', 'PVGAB', 'PVGAG', 'PVGAIS', 'PVGCDS', 'PVGCI', 'PVGCBM', 'PVGCIF', 'PVGCI'];
     this.authorModulesList = [
       {
         label: 'Connectors',

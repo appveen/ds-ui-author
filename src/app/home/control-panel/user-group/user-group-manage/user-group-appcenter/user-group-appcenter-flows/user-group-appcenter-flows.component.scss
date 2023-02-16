@@ -1,47 +1,61 @@
-.wrapper{
+.wrapper {
     min-height: calc(100vh - 266px);
     // max-height: calc(100vh - 316px);
     // overflow-y: auto;
 }
-.role-list{
+
+.role-list {
     min-width: 750px;
     max-width: 750px;
-    .role-list-item{
+
+    .role-list-item {
         transition: 0.25s;
-        &.selected{
+
+        &.selected {
             transform: scale(1.1);
             margin: 15px;
         }
     }
-    .role-list-item-head{
+
+    .role-list-item-head {
         min-height: 40px;
         max-height: 40px;
     }
-    .role-list-item-body{
-        .role-list-sub-item{
+
+    .role-list-item-body {
+        .role-list-sub-item {
             min-height: 36px;
             max-height: 36px;
         }
     }
-    .name{
+
+    .name {
         min-width: 200px;
         max-width: 200px;
     }
-    .permissions{
+
+    .permissions {
         min-width: 160px;
         max-width: 160px;
-        .icon{
+
+        .icon {
             min-width: 24px;
             max-width: 24px;
             min-height: 24px;
             max-height: 24px;
         }
     }
-    .toggle{
+
+    .toggle {
         min-width: 74px;
         max-width: 74px;
     }
 }
-.switch .toggler{
+
+.switch .toggler {
     top: -3px;
+}
+
+.mt-6 {
+    margin-top: 60px;
 }
