@@ -52,21 +52,21 @@ export class ListFlowComponent implements OnInit {
   }
 
   isRoleSelected(flow: any) {
-    if (this.data && this.data.roles && this.data.roles.findIndex(e => e.entity == flow._id) > -1) {
+    if (this.data && this.data.roles && this.data.roles.findIndex(e => e.entity.split('FLOW_')[1] == flow._id) > -1) {
       return true;
     }
     return false;
   }
 
   toggleRole(flag: boolean, flow: any) {
-    const index = this.data.roles.findIndex(e => e.entity == flow._id);
+    const index = this.data.roles.findIndex(e => e.entity.split('FLOW_')[1] == flow._id);
     if (index > -1) {
       this.data.roles.splice(index, 1);
     }
     if (flag) {
       const temp = {
         app: flow.app,
-        entity: flow._id,
+        entity: 'FLOW_' + flow._id,
         id: flow._id,
         type: 'appcenter'
       };
