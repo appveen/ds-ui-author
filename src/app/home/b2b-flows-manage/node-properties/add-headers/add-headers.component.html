@@ -2,7 +2,7 @@
     <div class="font-14 fw-400 text-dark mb-2">Custom Headers</div>
     <div class="header-item px-2 py-1 text-left d-flex align-items-center justify-content-between border rounded">
         <span class="text-secondary" *ngIf="headerList.length==0">Configure</span>
-        <span class="text-secondary" *ngIf="headerList.length>0">{{headerList.length}} Headers</span>
+        <span class="text-dark" *ngIf="headerList.length>0">{{headerList.length}} Headers</span>
         <div class="d-flex align-items-center justify-content-end">
             <span *ngIf="headerList.length>0" class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
                 (click)="clearHeaders()"></span>

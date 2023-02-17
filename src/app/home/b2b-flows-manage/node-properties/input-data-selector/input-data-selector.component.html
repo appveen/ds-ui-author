@@ -2,8 +2,8 @@
     <div class="header-item px-2 py-1 text-left d-flex align-items-center justify-content-between border rounded">
         <span class="text-secondary" *ngIf="!this.data">Configure</span>
         <ng-container *ngIf="this.data">
-            <span class="text-secondary" *ngIf="isCustomBody">{{bodyFieldsCount}} Attributes</span>
-            <span class="text-secondary" *ngIf="!isCustomBody">{{this.data}}</span>
+            <span class="text-dark" *ngIf="isCustomBody">{{bodyFieldsCount}} Attributes</span>
+            <span class="text-dark" *ngIf="!isCustomBody" [innerHTML]="userSelectedValue"></span>
         </ng-container>
         <div class="d-flex align-items-center justify-content-end">
             <span *ngIf="this.data"
