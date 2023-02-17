@@ -1,7 +1,7 @@
 <div class="">
     <div class="field-wrapper d-flex border rounded w-100 negative-margin">
         <input *ngIf="!parentArray" type="text" class="key-holder flex-fill px-2" [(ngModel)]="field.key"
-            (ngModelChange)="onKeyChange($event)" (keyup.enter)="addField()">
+            (ngModelChange)="onKeyChange($event)" (keyup.enter)="addField()" odpAutoFocus>
         <input *ngIf="parentArray" type="text" class="key-holder flex-fill px-2" [ngModel]="'Index '+index"
             disabled="true">
         <select id="" class="type-holder px-2" [(ngModel)]="field.type" (ngModelChange)="onTypeChange($event)">
@@ -13,7 +13,7 @@
         </select>
         <input *ngIf="field.type!='boolean'" [type]="getInputType()" class="value-holder px-2" [(ngModel)]="field.value"
             [disabled]="field.type=='object' || field.type=='array'" (ngModelChange)="onValueChange($event)"
-            (paste)="onPaste($event)">
+            (paste)="onPaste($event)" (keyup.enter)="addField()">
         <div *ngIf="field.type=='boolean'" class="value-holder px-2 d-flex align-items-center">
             <input #checkbox [type]="getInputType()" class="" [checked]="field.value"
                 (change)="onValueChange(checkbox.checked)">
