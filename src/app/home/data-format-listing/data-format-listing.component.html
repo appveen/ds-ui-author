@@ -64,20 +64,20 @@
               <span id="lib-view" class="fw-600 font-13 hover mr-3"
                 [routerLink]="['/app/',app,'dfm',dataFormat._id]">View</span>
               <span id="lib-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
-                (click)="showDropDown($event,i)"></span>
+                *ngIf="canEditDataFormat(dataFormat._id)" (click)="showDropDown($event,i)"></span>
               <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed border"
                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                 (outside)="showOptionsDropdown[i]=false">
                 <div id="lib-edit" class="list-group-item list-group-item-action py-2 border-0"
-                  *ngIf="canEditDataFormat(dataFormat._id)" (click)="editDataFormat(i)">
+                  (click)="editDataFormat(i)">
                   Edit
                 </div>
                 <div id="lib-clone" class="list-group-item list-group-item-action py-2 border-0"
-                  *ngIf="canEditDataFormat(dataFormat._id) && hasManagePermission('DF')" (click)="cloneDataFormat(i)">
+                  *ngIf="hasManagePermission('DF')" (click)="cloneDataFormat(i)">
                   Clone
                 </div>
                 <div id="lib-delete" class="list-group-item list-group-item-action py-2 border-0 text-danger"
-                  *ngIf="canEditDataFormat(dataFormat._id)" (click)="deleteDataFormat(i);">
+                  (click)="deleteDataFormat(i);">
                   Delete
                 </div>
               </div>
@@ -108,8 +108,9 @@
           <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
         </label>
         <div class="name-wrapper position-relative">
-          <input newDataFormatName autocomplete="off" type="text" class="form-control" id="name" placeholder="Untitled DataFormat"
-            formControlName="name" odpAutoFocus (keyup.enter)="triggerDataFormatCreate()"
+          <input newDataFormatName autocomplete="off" type="text" class="form-control" id="name"
+            placeholder="Untitled DataFormat" formControlName="name" odpAutoFocus
+            (keyup.enter)="triggerDataFormatCreate()"
             [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
           <ng-container *ngIf="form.get('name').dirty">
             <span *ngIf="form.get('name').hasError('required')"
