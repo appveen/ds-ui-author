@@ -48,6 +48,9 @@ export class NodePropertiesComponent implements OnInit {
     if (this.currNode && !this.currNode.options) {
       this.currNode.options = {};
     }
+    if (this.currNode && !this.currNode.options.retry) {
+      this.currNode.options.retry = {};
+    }
   }
 
   closeMapping(data: any) {
@@ -83,7 +86,7 @@ export class NodePropertiesComponent implements OnInit {
     if (!environment.production) {
       console.log(type);
     }
-    this.currNode.options = {};
+    this.currNode.options = { retry: {} };
     this.changesDone.emit()
   }
 

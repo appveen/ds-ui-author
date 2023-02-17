@@ -165,9 +165,20 @@
         </div> -->
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark mb-0" for="nodeBody">Body</label>
-            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
-                [nodeList]="nodeList" [currNode]="currNode">
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList"
+                [currNode]="currNode">
             </odp-input-data-selector>
+        </div>
+        <div class="border rounded p-3">
+            <div class="border-bottom font-14 fw-500 mb-3 pb-1">Configure Retry</div>
+            <div class="form-group position-relative">
+                <label class="font-14 fw-400 text-dark" for="retryCount">Retry Count</label>
+                <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count">
+            </div>
+            <div class="form-group position-relative mb-0">
+                <label class="font-14 fw-400 text-dark" for="retryInterval">Retry Interval (sec)</label>
+                <input id="retryInterval" class="form-control" type="number" [(ngModel)]="currNode.options.retry.interval">
+            </div>
         </div>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FILE'">
@@ -302,8 +313,8 @@
             <!-- <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['body']" [nodeList]="nodeList"
                 [(value)]="currNode.options.body">
             </odp-node-data-selector> -->
-            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
-                [nodeList]="nodeList" [currNode]="currNode">
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList"
+                [currNode]="currNode">
             </odp-input-data-selector>
         </div>
     </ng-container>
