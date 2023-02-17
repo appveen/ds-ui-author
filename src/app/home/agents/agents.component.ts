@@ -165,7 +165,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
 
     closeDeleteModal(data) {
         if (data) {
-            this.subscriptions['deleteAgent'] = this.commonService.delete('partnerManager', `/${this.commonService.app._id}/agent/` + this.agentData._id, this.agentData).subscribe(res => {
+            this.subscriptions['deleteAgent'] = this.commonService.delete('partnerManager', `/${this.commonService.app._id}/agent/` + this.agentList[data.index]._id, this.agentList[data.index]).subscribe(res => {
                 if (res) {
                     this.ts.success('Agent Deleted Sucessfully');
                     this.getAgentList();
