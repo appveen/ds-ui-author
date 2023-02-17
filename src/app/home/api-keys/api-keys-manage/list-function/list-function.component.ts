@@ -65,7 +65,7 @@ export class ListFunctionComponent implements OnInit {
     if (flag) {
       const temp = {
         app: faas.app,
-        entity: faas._id,
+        entity: 'FAAS_' + faas._id,
         id: faas._id,
         type: 'appcenter'
       };

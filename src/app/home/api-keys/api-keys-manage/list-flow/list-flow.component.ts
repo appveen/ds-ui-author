@@ -66,7 +66,7 @@ export class ListFlowComponent implements OnInit {
     if (flag) {
       const temp = {
         app: flow.app,
-        entity: flow._id,
+        entity: 'FLOW_' + flow._id,
         id: flow._id,
         type: 'appcenter'
       };
