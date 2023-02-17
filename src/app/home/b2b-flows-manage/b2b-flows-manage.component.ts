@@ -440,6 +440,9 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     }
   }
 
+  scroll(){
+    this.contextMenuStyle=null
+  }
   closeProperties() {
     this.showNodeProperties = false;
     this.showPathProperties = false;

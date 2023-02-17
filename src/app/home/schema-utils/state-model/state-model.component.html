@@ -19,8 +19,7 @@
             <div class="d-flex align-items-center">
                 <div id="select-state-model" formGroupName="stateModel" odpClickOutside (outside)="searchTerm = '' "
                     class="position-relative">
-                    <input id="typeahead-basic" type="text" class="form-control"
-                        [attr.disabled]="!edit.status ? true : null" [ngbTypeahead]="search"
+                    <input [disabled]="!edit.status || !stateModelStatus" id="typeahead-basic" type="text" class="form-control" [ngbTypeahead]="search"
                         (focus)="focus$.next($any($event).target.value)" [resultTemplate]="rt"
                         [inputFormatter]="inputFormatter" (selectItem)="selectAttribute($event.item)"
                         placeholder="Choose existing attribute or create one..." #instance="ngbTypeahead" />
