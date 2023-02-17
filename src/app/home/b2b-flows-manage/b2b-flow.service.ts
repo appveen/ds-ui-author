@@ -56,12 +56,16 @@ export class B2bFlowService {
 
   parseDynamicValue(value: any) {
     const configuredData: any = {};
-    if (typeof value == 'string' && value.startsWith('{{')) {
+    if (typeof value == 'string' && value.startsWith('{{') && value.endsWith('}}')) {
       const charArr = value.split('');
       configuredData.node = charArr.slice(8, 14).join('');
       const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
-      configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
-      configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length - 2).join('');
+      if (nodeKeyIndexes.length == 1) {
+        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length - 2).join('');
+      } else {
+        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
+        configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length - 2).join('');
+      }
     } else {
       configuredData.customValue = value;
     }

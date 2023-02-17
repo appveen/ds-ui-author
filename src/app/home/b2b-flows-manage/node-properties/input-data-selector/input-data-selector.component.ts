@@ -28,8 +28,9 @@ export class InputDataSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     this.toggle['payloadCreator'] = true;
+    this.toggle['single'] = true;
     this.inputDataStructure = this.currNode.dataStructure.incoming || {};
-    if (this.data != undefined && this.data != null && typeof this.data == 'object') {
+    if (this.data != undefined && this.data != null && typeof this.data == 'string') {
       this.dataType = 'single';
     } else {
       this.dataType = 'multiple';
@@ -56,17 +57,32 @@ export class InputDataSelectorComponent implements OnInit {
     if (flag) {
       this.dataType = type;
     }
+    if (type == 'multiple') {
+      if (!this.sampleJSON) {
+        this.sampleJSON = {};
+      }
+      if (Object.keys(this.sampleJSON).length == 0) {
+        this.sampleJSON = { '': '' };
+      }
+    }
     this.showCustomWindow = true;
   }
 
-  // onVariableSelect(data: string) {
-  //   if (data.startsWith('{{')) {
-  //     data = data.substring(2, data.length - 2);
-  //   }
-  // }
+  unsetData() {
+    this.dataType = 'single';
+    this.data = null;
+    this.dataChange.emit(null);
+  }
+
+  selectNodeBody(item: any) {
+    this.data = `{{node['${item._id}'].body}}`;
+    this.dataChange.emit(this.data);
+  }
 
   onDataChange(data: string) {
-    // this.dataChange.emit(this.data);
+    this.sampleJSON = data;
+    this.data = data;
+    this.dataChange.emit(this.data);
   }
 
   cancel() {
@@ -91,12 +107,25 @@ export class InputDataSelectorComponent implements OnInit {
     }, 200);
   }
 
-  get userData() {
-    let temp;
-    if (this.data && this.data.startsWith('node[')) {
-      temp = '{{' + this.data + '}}';
-      return this.flowService.getDynamicLabel(this.flowService.parseDynamicValue(temp), this.nodeList);
+  getNodeType(node: any) {
+    return this.flowService.getNodeType(node);
+  }
+
+  get isCustomBody() {
+    return this.data && typeof this.data == 'object';
+  }
+  get bodyFieldsCount() {
+    if (this.data) {
+      return Object.keys(this.data).length;
     }
-    return this.data;
+    return 0;
+  }
+
+  get userSelectedValue() {
+    if (this.data && typeof this.data == 'string') {
+      let configuredData = this.flowService.parseDynamicValue(this.data);
+      return this.flowService.getDynamicLabel(configuredData, this.nodeList);
+    }
+    return null;
   }
 }

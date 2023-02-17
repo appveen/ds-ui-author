@@ -41,7 +41,7 @@
     </div>
     <!-- <div *ngIf="!isInputNode && (currNode?.type=='DATASERVICE' || currNode?.type=='API')" class="form-group">
         <label class="font-14 fw-400 text-dark mb-0" for="inputDataStructure">Body</label>
-        <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList" [currNode]="currNode">
+        <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList" [currNode]="currNode">
         </odp-input-data-selector>
     </div> -->
     <div *ngIf="currNode?.type!='RESPONSE' && !isInputNode" class="form-group">
@@ -165,7 +165,7 @@
         </div> -->
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark mb-0" for="nodeBody">Body</label>
-            <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body"
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
                 [nodeList]="nodeList" [currNode]="currNode">
             </odp-input-data-selector>
         </div>
@@ -302,7 +302,7 @@
             <!-- <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['body']" [nodeList]="nodeList"
                 [(value)]="currNode.options.body">
             </odp-node-data-selector> -->
-            <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body"
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
                 [nodeList]="nodeList" [currNode]="currNode">
             </odp-input-data-selector>
         </div>
