@@ -125,11 +125,13 @@
                 URL
                 <span class="dsi dsi-settings text-primary hover" (click)="toggle['url']=!toggle['url']"></span>
             </label>
-            <!-- <textarea id="nodeUrl" class="form-control dynamic-variable-addon" cols="30" rows="4"
-                [(ngModel)]="currNode.options.url"></textarea> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['url']" [nodeList]="nodeList"
-                [(value)]="currNode.options.url" [textarea]="true">
-            </odp-node-data-selector>
+            <div class="position-relative">
+                <textarea id="nodeUrl" class="form-control" cols="30" rows="4"
+                    [(ngModel)]="currNode.options.url"></textarea>
+                <!-- <odp-node-data-selector *ngIf="toggle['url']" [edit]="edit" [(toggle)]="toggle['url']" [nodeList]="nodeList"
+                    [(value)]="currNode.options.url" [textarea]="true">
+                </odp-node-data-selector> -->
+            </div>
         </div>
         <div class="form-group">
             <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
