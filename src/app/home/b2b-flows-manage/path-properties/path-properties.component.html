@@ -16,8 +16,8 @@
         <span>{{currNode?._id}}</span>
     </div> -->
 </div>
-<div class="">
-    <div class="form-group d-flex align-items-center justify-content-start p-3">
+<div class="p-3">
+    <div class="form-group d-flex align-items-center justify-content-start">
         <div class="d-flex align-items-center justify-content-start mr-4">
             <odp-round-radio [edit]="edit" [checked]="pathType=='success'"
                 (checkedChange)="onPathTypeChange($event,'success')">
@@ -31,17 +31,28 @@
             <span class="ml-3">Error</span>
         </div>
     </div>
-    <div class="form-group p-3">
-        <odp-color-picker #colorpicker [(color)]="color" (colorChange)="onChange();">
-        </odp-color-picker>
-    </div>
-    <div class="form-group p-3">
+
+    <div class="form-group">
         <label class="font-14 fw-400 text-dark" for="pathName">Path Name</label>
         <input id="pathName" type="text" class="form-control" [(ngModel)]="name"
             (ngModelChange)="changesDone.emit();onChange()">
     </div>
     <div class="form-group">
-        <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between p-3" for="nodeName">
+        <label class="font-14 fw-400 text-dark" for="pathColor">Path Color</label>
+        <div class="d-flex align-items-center justify-content-start">
+            <div *ngIf="color" class="selected-color hover rounded" [style]="'background:#'+color"
+                (click)="toggle['colorPicker']=!toggle['colorPicker']"></div>
+            <div *ngIf="!color" class="selected-color hover rounded bg-secondary"
+                (click)="toggle['colorPicker']=!toggle['colorPicker']"></div>
+            <!-- <span class="ml-3">Color</span> -->
+        </div>
+    </div>
+    <div *ngIf="toggle['colorPicker']" class="form-group">
+        <odp-color-picker #colorpicker [(color)]="color" (colorChange)="onChange();">
+        </odp-color-picker>
+    </div>
+    <div class="form-group">
+        <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeName">
             <span>Path Condition</span>
             <div class="d-flex align-items-center">
                 <span class="dsi dsi-settings text-primary hover"
@@ -51,11 +62,12 @@
         </label>
         <!-- <input id="nodeName" type="text" class="form-control" [(ngModel)]="condition"
             (ngModelChange)="changesDone.emit()"> -->
-        <odp-node-data-selector *ngIf="toggle['variable']" [(toggle)]="toggle['variable']" [edit]="edit"
+        <odp-path-condition-creator [nodeList]="nodeList" [(value)]="condition"></odp-path-condition-creator>
+        <!-- <odp-node-data-selector *ngIf="toggle['variable']" [(toggle)]="toggle['variable']" [edit]="edit"
             [nodeList]="nodeList" (valueChange)="onVariableSelect($event)">
         </odp-node-data-selector>
         <odp-code-editor [edit]="edit" [insertText]="insertText" [(code)]="condition"
-            (codeChange)="changesDone.emit();onChange()"></odp-code-editor>
+            (codeChange)="changesDone.emit();onChange()"></odp-code-editor> -->
     </div>
 </div>
 

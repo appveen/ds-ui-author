@@ -1,12 +1,12 @@
 <div class="mt-2 w-100">
     <div class="header-item px-2 py-1 text-left d-flex align-items-center justify-content-between border rounded">
-        <span class="text-secondary" *ngIf="!this.data">Configure</span>
-        <ng-container *ngIf="this.data">
+        <span class="text-secondary" *ngIf="!data">Configure</span>
+        <ng-container *ngIf="data">
             <span class="text-dark" *ngIf="isCustomBody">{{bodyFieldsCount}} Attributes</span>
             <span class="text-dark" *ngIf="!isCustomBody" [innerHTML]="userSelectedValue"></span>
         </ng-container>
         <div class="d-flex align-items-center justify-content-end">
-            <span *ngIf="this.data"
+            <span *ngIf="data"
                 class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
                 (click)="unsetData()"></span>
             <span class="icon dsi dsi-settings text-accent hover d-flex align-items-center justify-content-center"
@@ -47,7 +47,7 @@
             <span *ngIf="userSelectedValue" class="d-flex align-items-center mt-2">
                 <span class="fw-500 rounded bg-light p-2 border font-12 d-flex align-items-center"
                     [innerHTML]="userSelectedValue"></span>
-                <span class="dsi dsi-minus-circle text-danger hover ml-3" (click)="this.data=null"></span>
+                <span class="dsi dsi-minus-circle text-danger hover ml-3" (click)="data=null"></span>
             </span>
             <div *ngIf="!userSelectedValue" class="list-group my-3">
                 <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"

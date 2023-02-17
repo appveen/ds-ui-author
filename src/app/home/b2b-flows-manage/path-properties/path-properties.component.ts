@@ -68,6 +68,7 @@ export class PathPropertiesComponent implements OnInit {
   }
 
   onChange() {
+    this.toggle['colorPicker'] = false;
     this.flowService.reCreatePaths.emit(null);
   }
 

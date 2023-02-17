@@ -1,10 +1,10 @@
 <div class="d-flex align-items-center justify-content-start">
-    <!-- <button *ngIf="!this.currentValue" type="button" class="btn btn-link p-1 d-flex align-items-center"
+    <!-- <button *ngIf="!currentValue" type="button" class="btn btn-link p-1 d-flex align-items-center"
         (click)="onClick($event)">
         <span class="dsi dsi-settings mr-2"></span>
         <span>Configure</span>
     </button> -->
-    <ng-container *ngIf="this.currentValue">
+    <ng-container *ngIf="currentValue">
         <span class="fw-500 rounded bg-light p-2 border font-12 d-flex align-items-center"
             [innerHTML]="userSelectedValue"></span>
         <!-- <button type="button" class="btn btn-link p-0 d-flex align-items-center ml-3" ngbTooltip="Re-Configure"
