@@ -51,21 +51,21 @@ export class ListFunctionComponent implements OnInit {
   }
 
   isRoleSelected(faas: any) {
-    if (this.data && this.data.roles && this.data.roles.findIndex(e => e.entity == faas._id) > -1) {
+    if (this.data && this.data.roles && this.data.roles.findIndex(e => e.entity.split('FAAS_')[1] == faas._id) > -1) {
       return true;
     }
     return false;
   }
 
   toggleRole(flag: boolean, faas: any) {
-    const index = this.data.roles.findIndex(e => e.entity == faas._id);
+    const index = this.data.roles.findIndex(e => e.entity.split('FAAS_')[1] == faas._id);
     if (index > -1) {
       this.data.roles.splice(index, 1);
     }
     if (flag) {
       const temp = {
         app: faas.app,
-        entity: faas._id,
+        entity: 'FAAS_' + faas._id,
         id: faas._id,
         type: 'appcenter'
       };

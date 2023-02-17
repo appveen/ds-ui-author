@@ -55,7 +55,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
-      type: ['API'],
+      type: ['API',[Validators.required]],
       inputNode: []
     });
     this.apiConfig = {
@@ -242,12 +242,12 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
       return true;
     } else {
-      return this.hasPermission('PMF');
+      return this.hasPermission('PMIF');
     }
   }
 
   canDeleteFlow(id: string) {
-    return this.hasPermission('PMF');
+    return this.hasPermission('PMIF');
   }
 
   canDeployFlow(flow) {
@@ -267,7 +267,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     ) {
       return false;
     } else {
-      return this.commonService.hasPermission('PMFPD', 'FLOW');
+      return this.commonService.hasPermission('PMIFPD', 'FLOW');
     }
   }
 
@@ -282,7 +282,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     ) {
       return true;
     } else {
-      return this.commonService.hasPermission('PMFPS', 'FLOW');
+      return this.commonService.hasPermission('PMIFPS', 'FLOW');
     }
   }
 
@@ -290,7 +290,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     return this.commonService.hasPermission(type, entity);
   }
   hasWritePermission(entity: string) {
-    return this.commonService.hasPermission('PMF', entity);
+    return this.commonService.hasPermission('PMIF', entity);
   }
 
   deployFlow(index: number) {

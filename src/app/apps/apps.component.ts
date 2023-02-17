@@ -457,6 +457,14 @@ export class AppsComponent implements OnInit, OnDestroy {
     );
   }
 
+  get hasFlowsPermission() {
+    const self = this;
+    return (
+      self.commonService.hasPermissionStartsWith('PMIF') ||
+      self.commonService.hasPermissionStartsWith('PVIF')
+    );
+  }
+
   get authType() {
     const self = this;
     if (self.commonService.userDetails && self.commonService.userDetails.auth) {

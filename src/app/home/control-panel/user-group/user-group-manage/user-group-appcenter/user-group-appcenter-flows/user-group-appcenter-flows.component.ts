@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'odp-user-group-appcenter-flows',
@@ -10,7 +11,8 @@ import { AppService } from 'src/app/utils/services/app.service';
 export class UserGroupAppcenterFlowsComponent implements OnInit {
 
   @Input() roles: Array<any>;
-  serviceList: Array<any>;
+  @Input() type: string;
+  // serviceList: Array<any>;
   toggleAccordion: any;
   subscriptions: any;
   aggregatePermission: any;
@@ -18,12 +20,14 @@ export class UserGroupAppcenterFlowsComponent implements OnInit {
   partnerList: Array<any> = [];
   showLazyLoader: boolean;
   flowList: Array<any>;
+  selectedFlow: any;
+  prefix: string;
 
 
   constructor(private commonService: CommonService,
     private appService: AppService) {
     const self = this;
-    self.serviceList = [];
+    // self.serviceList = [];
     self.toggleAccordion = {};
     self.aggregatePermission = {};
     self.subscriptions = {};
@@ -34,40 +38,12 @@ export class UserGroupAppcenterFlowsComponent implements OnInit {
 
   ngOnInit() {
     const self = this;
-    self.getPartnersList();
+    self.prefix = self.type === 'FLOW' ? 'FLOW_' : 'INTR_';
+    self.getFlows();
 
   }
 
-  roleActive(role: any) {
-    const self = this;
-    if (self.roles.find(r => r.id === 'PVI' && r.entity === 'INTR_' + role)) {
-      return true;
-    }
-    return false;
-  }
-  toggleRole(role: any) {
-    const self = this;
-    const target: HTMLInputElement = <HTMLInputElement>event.target;
 
-    if (target.checked) {
-      self.roles.push({
-        id: 'PVI',
-        entity: 'INTR_' + role,
-        app: self.commonService.app._id,
-        type: 'appcenter'
-      });
-    } else {
-      const index = self.roles.findIndex(r => r.id === 'PVI' && r.entity === 'INTR_' + role);
-      self.roles.splice(index, 1);
-    }
-
-  }
-  collapseAccordion() {
-    const self = this;
-    Object.keys(self.toggleAccordion).forEach(key => {
-      self.toggleAccordion[key] = false;
-    });
-  }
 
   hasPermission(type: string) {
     const self = this;
@@ -76,74 +52,49 @@ export class UserGroupAppcenterFlowsComponent implements OnInit {
 
   // code for flows
 
-  getPartnersList() {
-    const self = this;
-    if (self.subscriptions['getPartners']) {
-      self.subscriptions['getPartners'].unsubscribe();
-    }
-    const options: GetOptions = {
-      count: -1,
-      app: self.commonService.app._id
-    };
-    self.showLazyLoader = true;
-    self.subscriptions['getPartners'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/partner`, options)
-      .subscribe(res => {
-        self.showLazyLoader = false;
-        if (res.length > 0) {
-          res.forEach(_service => {
-            self.partnerList.push(_service);
-            self.flowList = self.flowList.concat(_service['flows']);
-          });
-          self.getFlowDetails();
-        }
-      }, err => {
-        self.showLazyLoader = false;
-        self.commonService.errorToast(err, 'We are unable to fetch partners, please try again later');
+  getFlows() {
+    this.showLazyLoader = true;
+    this.flowList = [];
+    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/count`).pipe(switchMap((count: any) => {
+      return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, {
+        count: count,
       });
-  }
-
-  getFlowDetails() {
-    const self = this;
-    if (self.subscriptions['getFlows']) {
-      self.subscriptions['getFlows'].unsubscribe();
-    }
-    const options: GetOptions = {
-      count: -1,
-      filter: {
-        _id: { '$in': self.flowList }
-      },
-      select: 'name'
-    };
-    self.showLazyLoader = true;
-    self.subscriptions['getFlows'] = self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, options)
-      .subscribe(res => {
-        self.showLazyLoader = false;
-        self.flowList = res;
-      }, err => {
-        self.showLazyLoader = false;
-        self.commonService.errorToast(err, 'We are unable to fetch Flows, please try again later');
-      });
-  }
-
-  getFlowName(flowId) {
-    const self = this;
-    const tempFlow = self.flowList.find(d => d._id === flowId);
-    if (tempFlow && tempFlow.name) {
-      return tempFlow.name;
-    }
-
-  }
-  getAccess(partner) {
-    const self = this;
-    let retVal = 0;
-    partner.flows.forEach(element => {
-      const index = self.roles.findIndex(r => r.id === 'PVI' && r.entity === 'INTR_' + element);
-      if (index > -1) {
-        retVal++;
+    })).subscribe((res: any) => {
+      this.showLazyLoader = false;
+      this.flowList = res;
+      if (res.length > 0) {
+        this.selectedFlow = res[0];
       }
+    }, err => {
+      this.showLazyLoader = false;
+      console.log(err);
+      this.commonService.errorToast(err);
     });
-    return retVal;
+  }
 
+  selectFlow(flow) {
+    this.selectedFlow = flow;
+  }
+
+  checktrigger() {
+    return this.roles.filter(r => r.id == this.prefix + this.selectedFlow._id).length === 1;
+  }
+
+  toggleTrigger(val) {
+    const self = this;
+    if (val) {
+      self.roles.push({
+        id: this.prefix + self.selectedFlow._id,
+        entity: self.selectedFlow._id,
+        app: self.commonService.app._id,
+        type: 'appcenter'
+      });
+    } else {
+      const index = self.roles.findIndex(r => r.id === this.prefix + self.selectedFlow._id && r.entity === self.selectedFlow._id);
+      if (index != -1) {
+        self.roles.splice(index, 1);
+      }
+    }
   }
 
 }

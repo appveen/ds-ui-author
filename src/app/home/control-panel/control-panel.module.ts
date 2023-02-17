@@ -75,6 +75,7 @@ import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 import { UserGroupUsersComponent } from './user-group/user-group-manage/user-group-members/user-group-users/user-group-users.component';
 import { UserGroupMembersSearchComponent } from './user-group/user-group-manage/user-group-members/user-group-members-search/user-group-members-search.component';
 import { GroupAuthorConnectorsComponent } from './user-group/user-group-manage/user-group-author/group-author-connectors/group-author-connectors.component';
+import { GroupAuthorFlowsComponent } from './user-group/user-group-manage/user-group-author/group-author-flows/group-author-flows.component';
 
 @NgModule({
   imports: [
@@ -145,6 +146,7 @@ import { GroupAuthorConnectorsComponent } from './user-group/user-group-manage/u
     GroupAuthorAgentsComponent,
     GroupAuthorLibraryComponent,
     GroupAuthorFunctionsComponent,
+    GroupAuthorFlowsComponent,
     GroupAuthorPartnersComponent,
     GroupAuthorNanoServicesComponent,
     GroupAuthorBookmarksComponent,
