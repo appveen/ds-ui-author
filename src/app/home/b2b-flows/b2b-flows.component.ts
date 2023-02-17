@@ -55,7 +55,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
-      type: ['API'],
+      type: ['API',[Validators.required]],
       inputNode: []
     });
     this.apiConfig = {

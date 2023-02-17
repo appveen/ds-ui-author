@@ -61,7 +61,7 @@
     <div *ngIf="toggle['pasteJSON']">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <span class="font-18 fw-500">Paste JSON</span>
-            <span class="dsi dsi-close hover"></span>
+            <span class="dsi dsi-close hover" (click)="toggle['pasteJSON']=!toggle['pasteJSON']"></span>
         </div>
         <textarea class="form-control" name="pasteJSON" id="pasteJSON" cols="30" rows="10"
             (paste)="onPaste($event)"></textarea>

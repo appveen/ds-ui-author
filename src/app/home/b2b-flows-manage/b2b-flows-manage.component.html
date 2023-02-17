@@ -124,7 +124,7 @@
                         (click)="addNodeToCanvas('RESPONSE')"></span>
                 </div>
             </div>
-            <div class="flow-designer-svg-wrapper">
+            <div class="flow-designer-svg-wrapper" (scroll)="scroll()">
                 <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
                     <g *ngFor="let node of nodeList;let i=index">
                         <g odp-flow-node [currNode]="node" [index]="i" [nodeList]="nodeList"></g>
