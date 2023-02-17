@@ -145,6 +145,59 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.showNewFlowWindow = true;
   }
 
+  discardDraft(id: string) {
+    const flow = this.flowList.find((e) => e._id === id);
+    const flowIndex = this.flowList.findIndex((e) => e._id === id);
+    this.alertModal = {
+      title: 'Discard Draft',
+      message: 'Are you sure you want to discard draft version?',
+      index: 1,
+    };
+    this.alertModalTemplateRef = this.commonService.modal(
+      this.alertModalTemplate,
+      { size: 'bm' }
+    );
+    this.alertModalTemplateRef.result.then(
+      (close) => {
+        if (close) {
+          let request;
+          if (flow.status === 'Draft') {
+            request = this.commonService.put(
+              'partnerManager',
+              `/${this.commonService.app._id}/flow/utils/` + id
+            );
+          } else {
+            request = this.commonService.put(
+              'partnerManager',
+              `/${this.commonService.app._id}/flow/utils/${id}/draftDelete`
+            );
+          }
+          request.subscribe(
+            (res) => {
+              this.ts.success('Draft Deleted.');
+              if (flow.status !== 'Draft') {
+                this.router.navigate([
+                  '/app/',
+                  this.commonService.app._id,
+                  'flow',
+                  id,
+                ]);
+              } else {
+                if (flowIndex > -1) {
+                  this.flowList.splice(flowIndex, 1);
+                }
+              }
+            },
+            (err) => {
+              this.commonService.errorToast(err);
+            }
+          );
+        }
+      },
+      (dismiss) => { }
+    );
+  }
+
   triggerFlowCreate() {
     if (this.form.invalid) {
       return;

@@ -120,6 +120,9 @@
                                     *ngIf="canManageFlow(item._id)" (click)="cloneFlow(i)">
                                     Clone
                                 </div>
+                                <button class="list-group-item list-group-item-action py-2 border-0"
+                                    *ngIf="item.draftVersion || item.status=='Draft' && canManageFlow(item._id)" (click)="discardDraft(item._id)">Discard
+                                    Draft</button>
                                 <div class="list-group-item list-group-item-action py-2 border-0 text-danger"
                                     *ngIf="canManageFlow(item._id)" (click)="deleteFlow(i)">
                                     Delete
