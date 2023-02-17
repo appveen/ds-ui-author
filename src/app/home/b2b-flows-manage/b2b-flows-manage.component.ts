@@ -470,16 +470,19 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: any) {
     this.isMouseDown = event;
+    event.stopPropagation();
   }
 
   @HostListener('document:mouseup', ['$event'])
   onMouseUp(event: any) {
     this.isMouseDown = null;
+    event.stopPropagation();
     // this.flowService.anchorSelected = null;
   }
 
   @HostListener('mousemove', ['$event'])
   onMouseMove(event: any) {
+    event.stopPropagation();
     if (this.isMouseDown) {
       let targetEle = (this.isMouseDown.target as HTMLElement);
       let currNode = this.nodeList.find(e => e._id == targetEle.dataset.id);
