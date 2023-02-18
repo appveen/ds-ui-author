@@ -79,7 +79,7 @@ export class InputDataSelectorComponent implements OnInit {
     this.dataChange.emit(this.data);
   }
 
-  onDataChange(data: string) {
+  onDataChange(data: any) {
     this.sampleJSON = data;
     this.data = data;
     this.dataChange.emit(this.data);
@@ -91,15 +91,17 @@ export class InputDataSelectorComponent implements OnInit {
 
   onPaste(event: ClipboardEvent) {
     let text: string = event.clipboardData?.getData('text') as string;
+    let tempObj = {};
     try {
       const obj = JSON.parse(text);
-      this.sampleJSON = obj;
+      tempObj = obj;
     } catch (err) {
-      this.sampleJSON = text.split('\n').reduce((prev: any, e: string) => {
+      tempObj = text.split('\n').reduce((prev: any, e: string) => {
         prev[e] = "";
         return prev;
       }, {});
     }
+    this.onDataChange(tempObj);
     this.toggle['pasteJSON'] = false;
     this.toggle['payloadCreator'] = false;
     setTimeout(() => {
