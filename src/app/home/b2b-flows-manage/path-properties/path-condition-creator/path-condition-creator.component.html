@@ -3,10 +3,9 @@
         <span class="text-secondary" *ngIf="!value">Configure</span>
         <div class="d-flex flex-wrap align-items-center">
             <span class="segments mr-1 fw-600 hover" [ngClass]="{
-                'text-primary': selectedSegmentIndex==i,
-                'font-18 text-secondary':selectedSegmentIndex!=i &&isLogicalOperator(item),
-                'text-accent':selectedSegmentIndex!=i && !isLogicalOperator(item) && item.label!=item.value,
-                'text-success':selectedSegmentIndex!=i && !isLogicalOperator(item) && item.label==item.value}"
+                'font-18 text-secondary': isLogicalOperator(item),
+                'text-accent': !isLogicalOperator(item) && item.label!=item.value,
+                'text-success': !isLogicalOperator(item) && item.label==item.value}"
                 *ngFor="let item of segments;let i=index;let l=last">{{item.label}}</span>
         </div>
         <!-- <span class="text-dark" *ngIf="value">Re-Configure</span> -->
@@ -27,49 +26,22 @@
         <span class="dsi dsi-close hover" (click)="cancel()"></span>
     </div>
     <div class="headers-list">
-        <!-- <div class="d-flex flex-column">
-            <div class="d-flex align-items-center">
-                <code class="min-width font-20 fw-400 text-secondary">IF (</code>
-                <div class="form-control d-flex align-items-center flex-wrap">
-                    <span class="segments fw-600 hover"
-                        [ngClass]="{
-                            'text-primary': selectedSegmentIndex==i,
-                            'ml-1':!l,
-                            'font-18 text-secondary':selectedSegmentIndex!=i &&isLogicalOperator(item),
-                            'text-accent':selectedSegmentIndex!=i && !isLogicalOperator(item) && item.label!=item.value,
-                            'text-success':selectedSegmentIndex!=i && !isLogicalOperator(item) && item.label==item.value}"
-                        (click)="selectSegment(i)"
-                        *ngFor="let item of segments;let i=index;let l=last">{{item.label}}</span>
-                    <input #typeAhead="ngbTypeahead" type="text" class="border-0" [(ngModel)]="tempValue"
-                        [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
-                        (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)">
-                </div>
-                <code class="min-width font-20 fw-400 text-secondary">) {{"{"}}</code>
-            </div>
-            <code class="font-20 fw-400 ml-4 text-success my-2">//Execute Next</code>
-            <div class="d-flex align-items-start">
-                <code class="font-20 fw-400 text-secondary">{{"}"}} else {{"{"}}</code>
-            </div>
-            <div class="d-flex align-items-start">
-                <code class="font-20 fw-400 ml-4 text-danger my-2">//Stop Here</code>
-            </div>
-            <div class="d-flex align-items-start">
-                <code class="font-20 fw-400 text-secondary">{{"}"}}</code>
-            </div>
-        </div> -->
-
         <div class="form-control d-flex align-items-center flex-wrap">
-            <span class="segments mr-1 fw-600 hover" [ngClass]="{
-                    'text-primary': selectedSegmentIndex==i,
-                    'font-18 text-secondary':selectedSegmentIndex!=i &&isLogicalOperator(item),
-                    'text-accent':selectedSegmentIndex!=i && !isLogicalOperator(item) && item.label!=item.value,
-                    'text-success':selectedSegmentIndex!=i && !isLogicalOperator(item) && item.label==item.value}"
-                (click)="selectSegment(i)" *ngFor="let item of segments;let i=index;let l=last">{{item.label}}</span>
+            <ng-container *ngFor="let item of segments;let i=index;let l=last">
+                <span class="segments mr-1 fw-600 hover" [ngClass]="{
+                        'bg-accent text-white': selectedSegmentIndex==i,
+                        'font-18 text-secondary':selectedSegmentIndex!=i &&isLogicalOperator(item),
+                        'text-accent':selectedSegmentIndex!=i && !isLogicalOperator(item) && item.label!=item.value,
+                        'text-success':selectedSegmentIndex!=i && !isLogicalOperator(item) && item.label==item.value}"
+                    (click)="selectSegment(i)">{{item.label}}</span>
+                <!-- <input type="text" class="inline-input border-0" [(ngModel)]="tempValue"
+                    [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
+                    (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)" odpAutoFocus> -->
+            </ng-container>
             <input #typeAhead="ngbTypeahead" type="text" class="border-0" [(ngModel)]="tempValue"
                 [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
-                (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)">
+                (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)" odpAutoFocus>
         </div>
-
         <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center"
             (click)="save()">
             <span class="">Done</span>
