@@ -126,12 +126,20 @@ export class PathConditionCreatorComponent implements OnInit {
       headers.label = (node.name || node.type) + '/headers'
       headers.value = `node['${node._id}']` + '.headers'
       list.push(headers);
-      node.dataStructure.outgoing.definition.forEach(def => {
-        let item: any = {};
-        item.label = (node.name || node.type) + '/body/' + def.key;
-        item.value = `node['${node._id}']` + '.body.' + def.key;
-        list.push(item);
-      });
+      if (!node.dataStructure) {
+        node.dataStructure = {};
+      }
+      if (!node.dataStructure.outgoing) {
+        node.dataStructure.outgoing = {};
+      }
+      if (node.dataStructure.outgoing.definition) {
+        node.dataStructure.outgoing.definition.forEach(def => {
+          let item: any = {};
+          item.label = (node.name || node.type) + '/body/' + def.key;
+          item.value = `node['${node._id}']` + '.body.' + def.key;
+          list.push(item);
+        });
+      }
       return list;
     })
     return _.flatten(temp);

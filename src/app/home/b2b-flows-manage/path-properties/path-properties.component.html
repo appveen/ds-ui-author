@@ -11,10 +11,6 @@
         </div>
     </div>
     <hr>
-    <!-- <div class="font-12 text-secondary px-4 py-2">
-        <span class="mr-1 fw-500">Node ID:</span>
-        <span>{{currNode?._id}}</span>
-    </div> -->
 </div>
 <div class="p-3">
     <div class="form-group d-flex align-items-center justify-content-start">
@@ -44,7 +40,6 @@
                 (click)="toggle['colorPicker']=!toggle['colorPicker']"></div>
             <div *ngIf="!color" class="selected-color hover rounded bg-secondary"
                 (click)="toggle['colorPicker']=!toggle['colorPicker']"></div>
-            <!-- <span class="ml-3">Color</span> -->
         </div>
     </div>
     <div *ngIf="toggle['colorPicker']" class="form-group">
@@ -54,28 +49,7 @@
     <div class="form-group">
         <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeName">
             <span>Path Condition</span>
-            <div class="d-flex align-items-center">
-                <span class="dsi dsi-settings text-primary hover"
-                    (click)="toggle['variable']=!toggle['variable']"></span>
-                <span class="ml-3 font-12 fw-400">Insert Variable</span>
-            </div>
         </label>
-        <!-- <input id="nodeName" type="text" class="form-control" [(ngModel)]="condition"
-            (ngModelChange)="changesDone.emit()"> -->
         <odp-path-condition-creator [nodeList]="nodeList" [(value)]="condition"></odp-path-condition-creator>
-        <!-- <odp-node-data-selector *ngIf="toggle['variable']" [(toggle)]="toggle['variable']" [edit]="edit"
-            [nodeList]="nodeList" (valueChange)="onVariableSelect($event)">
-        </odp-node-data-selector>
-        <odp-code-editor [edit]="edit" [insertText]="insertText" [(code)]="condition"
-            (codeChange)="changesDone.emit();onChange()"></odp-code-editor> -->
     </div>
 </div>
-
-<!-- <div [ngClass]="{'show':showAgentSelector}" class="node-agent-window border-left position-fixed bg-white p-4">
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <span class="fw-500 font-20">Agents</span>
-        <span (click)="showAgentSelector=false" class="dsi dsi-close text-dark"></span>
-    </div>
-    <hr>
-    <odp-agent-selector *ngIf="showAgentSelector" [edit]="edit" (dataChange)="selectAgent($event)"></odp-agent-selector>
-</div> -->

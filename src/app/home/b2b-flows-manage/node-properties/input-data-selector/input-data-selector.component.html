@@ -50,15 +50,26 @@
                 <span class="dsi dsi-minus-circle text-danger hover ml-3" (click)="data=null"></span>
             </span>
             <div *ngIf="!userSelectedValue" class="list-group my-3">
-                <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
-                    *ngFor="let item of nodeList" (click)="selectNodeBody(item)">
-                    <div class="d-flex align-items-center justify-content-start">
-                        <odp-round-radio [edit]="edit" [checked]="item._selected">
-                        </odp-round-radio>
-                        <span class="node-id ml-3">{{item.name || item._id}}</span>
+                <ng-container *ngFor="let item of nodeList">
+                    <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                        (click)="selectNodeBody(item,'body')">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <odp-round-radio [edit]="edit" [checked]="item._selected">
+                            </odp-round-radio>
+                            <span class="node-id ml-3">{{item.name || item._id}}/Request Body</span>
+                        </div>
+                        <span class="node-type ml-3 text-accent font-11">{{getNodeType(item)}}</span>
                     </div>
-                    <span class="node-type ml-3 text-accent font-11">{{getNodeType(item)}}</span>
-                </div>
+                    <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                        (click)="selectNodeBody(item,'responseBody')">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <odp-round-radio [edit]="edit" [checked]="item._selected">
+                            </odp-round-radio>
+                            <span class="node-id ml-3">{{item.name || item._id}}/Response Body</span>
+                        </div>
+                        <span class="node-type ml-3 text-accent font-11">{{getNodeType(item)}}</span>
+                    </div>
+                </ng-container>
             </div>
         </div>
         <div *ngIf="dataType=='multiple'" class="d-flex flex-column mt-4">

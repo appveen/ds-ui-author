@@ -40,9 +40,6 @@ export class NodeDataSelectorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!environment.production) {
-      console.log(this.nodeList);
-    }
     if (this.value) {
       this.configuredData = this.flowService.parseDynamicValue(this.value);
       if (this.configuredData.customValue) {
