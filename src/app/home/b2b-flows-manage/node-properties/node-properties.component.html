@@ -222,6 +222,14 @@
     </ng-container>
     <ng-container *ngIf="currNode.type=='UNWIND'">
         <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeBody">
+                Body
+            </label>
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList"
+                [currNode]="currNode">
+            </odp-input-data-selector>
+        </div>
+        <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeUnWind">
                 Change Root Path
                 <span class="dsi dsi-settings text-primary hover"
@@ -311,7 +319,6 @@
         <div *ngIf="currNode.options.contentType=='application/json'" class="form-group position-relative">
             <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeBody">
                 Body
-                <span class="dsi dsi-settings text-primary hover" (click)="toggle['body']=!toggle['body']"></span>
             </label>
             <!-- <textarea id="nodeBody" class="form-control dynamic-variable-addon" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea> -->
