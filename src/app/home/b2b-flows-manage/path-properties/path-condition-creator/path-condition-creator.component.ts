@@ -75,7 +75,7 @@ export class PathConditionCreatorComponent implements OnInit {
           this.typeAhead.writeValue(null);
           return [];
         }
-        return term === '' ? [] : this.variableSuggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10);
+        return term === '' ? [] : this.variableSuggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 15);
       }),
     );
 
