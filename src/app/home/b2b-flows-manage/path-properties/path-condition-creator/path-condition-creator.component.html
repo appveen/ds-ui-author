@@ -38,7 +38,7 @@
                     [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
                     (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)" odpAutoFocus> -->
             </ng-container>
-            <input #typeAhead="ngbTypeahead" type="text" class="border-0" [(ngModel)]="tempValue"
+            <input #typeAhead="ngbTypeahead" container="body" type="text" class="border-0" [(ngModel)]="tempValue"
                 [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
                 (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)" odpAutoFocus>
         </div>
