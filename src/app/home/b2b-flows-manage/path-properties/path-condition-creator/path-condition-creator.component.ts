@@ -133,15 +133,42 @@ export class PathConditionCreatorComponent implements OnInit {
         node.dataStructure.outgoing = {};
       }
       if (node.dataStructure.outgoing.definition) {
-        node.dataStructure.outgoing.definition.forEach(def => {
-          let item: any = {};
-          item.label = (node.name || node.type) + '/body/' + def.key;
-          item.value = `node['${node._id}']` + '.body.' + def.key;
-          list.push(item);
-        });
+        list = list.concat(this.getNestedSuggestions(node, node.dataStructure.outgoing.definition));
+        // node.dataStructure.outgoing.definition.forEach(def => {
+        //   let item: any = {};
+        //   item.label = (node.name || node.type) + '/body/' + def.key;
+        //   item.value = `node['${node._id}']` + '.body.' + def.key;
+        //   list.push(item);
+        //   item = {};
+        //   item.label = (node.name || node.type) + '/responseBody/' + def.key;
+        //   item.value = `node['${node._id}']` + '.responseBody.' + def.key;
+        //   list.push(item);
+        // });
       }
       return list;
     })
     return _.flatten(temp);
+  }
+
+  getNestedSuggestions(node: any, definition: Array<any>, parentKey?: any) {
+    let list = [];
+    if (definition && definition.length > 0) {
+      definition.forEach((def: any) => {
+        let key = parentKey ? parentKey + '.' + def.key : def.key;
+        if (def.type == 'Object') {
+          list = list.concat(this.getNestedSuggestions(node, def.definition, key));
+        } else {
+          let item: any = {};
+          item.label = (node.name || node.type) + '/body/' + key;
+          item.value = `node['${node._id}']` + '.body.' + key;
+          list.push(item);
+          item = {};
+          item.label = (node.name || node.type) + '/responseBody/' + key;
+          item.value = `node['${node._id}']` + '.responseBody.' + key;
+          list.push(item);
+        }
+      });
+    }
+    return list;
   }
 }
