@@ -229,6 +229,9 @@ export class B2bFlowService {
           if (nodeList.findIndex(e => e._id == nextNode._id) == -1) {
             indexesToRemove.push(index);
           }
+          if (nextNode._id == node._id) {
+            indexesToRemove.push(index);
+          }
         });
         if (indexesToRemove.length > 0) {
           indexesToRemove.reverse();
