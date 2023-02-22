@@ -9,6 +9,7 @@ import { Field } from '../payload-creator.component';
 export class PayloadArrayComponent implements OnInit {
 
   @Input() data: any;
+  @Input() rcData: any;
   @Output() dataChange: EventEmitter<any>;
   @Input() addChild: EventEmitter<any>;
   fieldList: Array<any>;

@@ -17,6 +17,7 @@
     width: 260px;
     border: 0px;
     border-left: 1px solid #ddd;
+    height: 100%;
 }
 
 .action-holder {
@@ -37,4 +38,8 @@
 
 .negative-margin {
     margin-bottom: -1px;
+}
+
+.highlight {
+    background-color: yellow;
 }

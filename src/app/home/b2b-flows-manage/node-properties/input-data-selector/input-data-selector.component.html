@@ -74,7 +74,7 @@
             </odp-node-data-selector> -->
             <!-- <odp-code-editor [edit]="edit" type="json" [insertText]="insertText" [(code)]="data"
                 (codeChange)="onDataChange($event)"></odp-code-editor> -->
-            <odp-payload-creator *ngIf="toggle['payloadCreator']" [data]="sampleJSON"
+            <odp-payload-creator *ngIf="toggle['payloadCreator']" [data]="sampleJSON" [nodeList]="nodeList"
                 (dataChange)="onDataChange($event)"></odp-payload-creator>
         </div>
     </div>

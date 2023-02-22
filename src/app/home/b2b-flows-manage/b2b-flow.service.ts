@@ -104,6 +104,24 @@ export class B2bFlowService {
     return text;
   }
 
+  getDynamicName(configuredData: any, nodeList: Array<any>) {
+    let text = configuredData.customValue || '';
+    if (configuredData && configuredData.node) {
+      const nodeData = nodeList.find(e => e._id == configuredData.node);
+      if (!nodeData) {
+        return text;
+      }
+      text += nodeData.name || nodeData._id;
+    }
+    if (configuredData && configuredData.nodeKey) {
+      text += '/' + configuredData.nodeKey;
+    }
+    if (configuredData && configuredData.dataKey) {
+      text += '/' + configuredData.dataKey;
+    }
+    return text;
+  }
+
   getNodeObject(type: string) {
     const temp: any = {
       _id: this.appService.getNodeID(),

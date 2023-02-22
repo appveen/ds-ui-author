@@ -11,9 +11,16 @@
             <option value="object">Object</option>
             <option value="array">Array</option>
         </select>
-        <input *ngIf="field.type!='boolean'" [type]="getInputType()" class="value-holder px-2" [(ngModel)]="field.value"
-            [disabled]="field.type=='object' || field.type=='array'" (ngModelChange)="onValueChange($event)"
-            (paste)="onPaste($event)" (keyup.enter)="addField()">
+        <div>
+            <!-- <input *ngIf="field.type!='boolean'" [type]="getInputType()" class="value-holder px-2"
+                [(ngModel)]="field.value" [disabled]="field.type=='object' || field.type=='array'"
+                (ngModelChange)="onValueChange($event)" (paste)="onPaste($event)" (keyup.enter)="addField()"
+                (dblclick)="toggleDropdown()" odpClickOutside (outside)="openDropdown = false" odpEditableBadge> -->
+
+            <odp-styled-text></odp-styled-text>
+            <odp-multi-dropdown [isOpen]="openDropdown" [data]="rcData"
+                (onSelect)="onSelect($event)"></odp-multi-dropdown>
+        </div>
         <div *ngIf="field.type=='boolean'" class="value-holder px-2 d-flex align-items-center">
             <input #checkbox [type]="getInputType()" class="" [checked]="field.value"
                 (change)="onValueChange(checkbox.checked)">
@@ -32,4 +39,5 @@
         <odp-payload-array *ngIf="field.type=='array'" [data]="data" (dataChange)="onDataChange($event)"
             [addChild]="triggerAddChild"></odp-payload-array>
     </div>
+
 </div>

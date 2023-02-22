@@ -15,10 +15,12 @@ export class PayloadFieldComponent implements OnInit {
   @Input() fieldList: Array<Field>;
   @Input() index: number;
   @Input() data: any;
+  @Input() rcData: any;
   @Output() dataChange: EventEmitter<any>;
   field: Field;
   triggerAddChild: EventEmitter<any>;
   $trigger: Subject<any>;
+  openDropdown: boolean;
   constructor() {
     this.index = -1;
     this.parentArray = false;
@@ -145,6 +147,17 @@ export class PayloadFieldComponent implements OnInit {
     // this.field.data = data
     this.onValueChange(data);
     // this.$trigger.next(null);
+  }
+
+  toggleDropdown() {
+    this.openDropdown = !this.openDropdown;
+  }
+
+  onSelect(event) {
+    console.log(event)
+    const finalValue = '${{' + event.name + '}}';
+    this.onValueChange(this.field.value ? this.field.value + finalValue : finalValue);
+    this.openDropdown = false;
   }
 
 }
