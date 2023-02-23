@@ -1,0 +1,23 @@
+.value-holder {
+    width: 260px;
+    border: 0px;
+    border-left: 1px solid #ddd;
+}
+
+.hidden-div {
+    color: transparent;
+    position: absolute;
+    top: 0px;
+    height: 32px;
+    max-width: 260px;
+    overflow-x: auto;
+}
+
+.content-div {
+    // [contenteditable]:focus {
+    //     outline: 0px solid transparent;
+    // }
+    height: 32px;
+    max-width: 260px;
+    overflow-x: auto;
+}

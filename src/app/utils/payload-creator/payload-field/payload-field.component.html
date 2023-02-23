@@ -17,7 +17,7 @@
                 (ngModelChange)="onValueChange($event)" (paste)="onPaste($event)" (keyup.enter)="addField()"
                 (dblclick)="toggleDropdown()" odpClickOutside (outside)="openDropdown = false" odpEditableBadge> -->
 
-            <odp-styled-text></odp-styled-text>
+            <odp-styled-text (onDblClick)="openDropdown = !openDropdown"></odp-styled-text>
             <odp-multi-dropdown [isOpen]="openDropdown" [data]="rcData"
                 (onSelect)="onSelect($event)"></odp-multi-dropdown>
         </div>

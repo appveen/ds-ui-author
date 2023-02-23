@@ -1,3 +1,4 @@
-<p>
-  styled-text works!
-</p>
+<div class="value-holder position-relative" (dblclick)="onDblClick.emit()">
+  <div class="value-holder content-div d-flex align-items-center" [innerHTML]="formattedText" #contentDiv></div>
+  <div class="value-holder hidden-div" (input)="someTrigger($event)" (click)="check()" contenteditable #hiddenDiv></div>
+</div>
