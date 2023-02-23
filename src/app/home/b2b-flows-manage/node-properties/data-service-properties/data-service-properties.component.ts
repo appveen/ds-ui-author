@@ -90,4 +90,11 @@ export class DataServicePropertiesComponent implements OnInit {
     }
     this.setDefaultData();
   }
+
+  get isDataServiceSelected() {
+    if (this.currNode.options.dataService && this.currNode.options.dataService._id) {
+      return true;
+    }
+    return false;
+  }
 }

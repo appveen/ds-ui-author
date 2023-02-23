@@ -14,7 +14,7 @@ export class ColorPickerComponent implements OnInit {
   prevColor: string;
   constructor() {
     this.colorChange = new EventEmitter();
-    this.colors = ['E91E63', '9C27B0', '673AB7', '3F51B5', '009688', '00BCD4', '03A9F4', '0082C9', '4CAF50', '8BC34A', 'CDDC39', 'EB5F66'];
+    this.colors = ['F44336', 'E91E63', '9C27B0', '3F51B5','2196F3', '26C6DA', '009688', '4CAF50', 'FFEB3B', 'FF9800', '795548', '78909C'];
   }
 
   ngOnInit() {

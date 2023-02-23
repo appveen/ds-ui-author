@@ -74,8 +74,8 @@ export class InputDataSelectorComponent implements OnInit {
     this.dataChange.emit(null);
   }
 
-  selectNodeBody(item: any) {
-    this.data = `{{node['${item._id}'].body}}`;
+  selectNodeBody(item: any, type: string) {
+    this.data = `{{node['${item._id}'].${type}}}`;
     this.dataChange.emit(this.data);
   }
 
