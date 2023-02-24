@@ -30,7 +30,10 @@ export class AddHeadersComponent implements OnInit {
     if (this.currNode && this.currNode.options && !this.currNode.options.headers) {
       this.currNode.options.headers = {};
     }
-    this.defaultHeaderList();
+    this.headerList = [];
+    if (this.currNode.options.headers) {
+      this.defaultHeaderList();
+    }
   }
 
   showHeader() {

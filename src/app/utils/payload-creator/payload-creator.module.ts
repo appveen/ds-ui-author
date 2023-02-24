@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { PayloadFieldComponent } from './payload-field/payload-field.component';
 import { PayloadArrayComponent } from './payload-array/payload-array.component';
 import { PayloadObjectComponent } from './payload-object/payload-object.component';
+import { AutoFocusModule } from '../directives/auto-focus/auto-focus.module';
 
 
 
@@ -17,7 +18,8 @@ import { PayloadObjectComponent } from './payload-object/payload-object.componen
   ],
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    AutoFocusModule
   ],
   exports: [PayloadCreatorComponent]
 })

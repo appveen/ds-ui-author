@@ -1,24 +1,23 @@
-<div class="mt-2">
-    <div class="d-flex flex-column">
-        <div class="d-flex flex-column">
-            <div class="d-flex align-items-center">
-                <odp-round-radio [edit]="edit" [checked]="dataType=='single'"
-                    (checkedChange)="toggleDataType($event,'single')">
-                </odp-round-radio>
-                <span class="ml-3 mr-4">Payload from another Node</span>
-            </div>
-            <div class="d-flex align-items-center">
-                <odp-round-radio [edit]="edit" [checked]="dataType=='multiple'"
-                    (checkedChange)="toggleDataType($event,'multiple')">
-                </odp-round-radio>
-                <span class="ml-3">Custom Payload</span>
-            </div>
+<div class="mt-2 w-100">
+    <div class="header-item px-2 py-1 text-left d-flex align-items-center justify-content-between border rounded">
+        <span class="text-secondary" *ngIf="!data">Configure</span>
+        <ng-container *ngIf="data">
+            <span class="text-dark" *ngIf="isCustomBody">{{bodyFieldsCount}} Attributes</span>
+            <span class="text-dark" *ngIf="!isCustomBody" [innerHTML]="userSelectedValue"></span>
+        </ng-container>
+        <div class="d-flex align-items-center justify-content-end">
+            <span *ngIf="data"
+                class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
+                (click)="unsetData()"></span>
+            <span class="icon dsi dsi-settings text-accent hover d-flex align-items-center justify-content-center"
+                (click)="showCustomWindow=true;"></span>
         </div>
     </div>
 </div>
 
 <div *ngIf="showCustomWindow" class="overlay"></div>
-<div [class.show]="showCustomWindow" class="custom-window position-fixed bg-white border-left">
+<div [class.show]="showCustomWindow" [class.more-width]="dataType=='multiple'"
+    class="custom-window position-fixed bg-white border-left">
     <div class="d-flex flex-column p-3" *ngIf="showCustomWindow">
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
@@ -28,16 +27,52 @@
                 <span class="dsi dsi-close text-dark ignore-outside" (click)="cancel()"></span>
             </button>
         </div>
-        <div *ngIf="dataType=='single'" class="d-flex align-items-center justify-content-start mt-3">
-            <span class="font-16 fw-500 mr-3">Select Body of a Different Node</span>
-            <span class="dsi dsi-settings text-primary hover mr-3"></span>
-            <span class="fw-500 rounded bg-light p-2 border font-12 d-flex align-items-center"
-                [innerHTML]="data"></span>
-            <odp-node-data-selector [(toggle)]="toggle['single']" [edit]="edit" [nodeList]="nodeList"
-                (valueChange)="onDataChange($event)">
-            </odp-node-data-selector>
+        <div class="d-flex flex-column p-3">
+            <div class="d-flex align-items-center mb-2">
+                <odp-round-radio [edit]="edit" [checked]="dataType=='single'"
+                    (checkedChange)="toggleDataType($event,'single')">
+                </odp-round-radio>
+                <span class="ml-3 mr-4">Payload from a Node</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <odp-round-radio [edit]="edit" [checked]="dataType=='multiple'"
+                    (checkedChange)="toggleDataType($event,'multiple')">
+                </odp-round-radio>
+                <span class="ml-3">Custom Payload</span>
+            </div>
         </div>
-        <div *ngIf="dataType=='multiple'" class="d-flex flex-column mt-3">
+        <div *ngIf="dataType=='single'" class="d-flex flex-column mt-4">
+            <span *ngIf="!userSelectedValue" class="font-16 fw-500">Select Source</span>
+            <span *ngIf="userSelectedValue" class="font-16 fw-500">Selected Source is:-</span>
+            <span *ngIf="userSelectedValue" class="d-flex align-items-center mt-2">
+                <span class="fw-500 rounded bg-light p-2 border font-12 d-flex align-items-center"
+                    [innerHTML]="userSelectedValue"></span>
+                <span class="dsi dsi-minus-circle text-danger hover ml-3" (click)="data=null"></span>
+            </span>
+            <div *ngIf="!userSelectedValue" class="list-group my-3">
+                <ng-container *ngFor="let item of nodeList">
+                    <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                        (click)="selectNodeBody(item,'body')">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <odp-round-radio [edit]="edit" [checked]="item._selected">
+                            </odp-round-radio>
+                            <span class="node-id ml-3">{{item.name || item._id}}/Request Body</span>
+                        </div>
+                        <span class="node-type ml-3 text-accent font-11">{{getNodeType(item)}}</span>
+                    </div>
+                    <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                        (click)="selectNodeBody(item,'responseBody')">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <odp-round-radio [edit]="edit" [checked]="item._selected">
+                            </odp-round-radio>
+                            <span class="node-id ml-3">{{item.name || item._id}}/Response Body</span>
+                        </div>
+                        <span class="node-type ml-3 text-accent font-11">{{getNodeType(item)}}</span>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div *ngIf="dataType=='multiple'" class="d-flex flex-column mt-4">
             <span class="font-16 fw-500 mb-3 d-flex align-items-center justify-content-between w-100">
                 <span>Create Payload</span>
                 <div class="d-flex align-items-center hover" (click)="toggle['pasteJSON']=!toggle['pasteJSON']">

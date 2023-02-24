@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
@@ -49,6 +49,7 @@ export class AgentViewComponent implements OnInit {
     private appService: AppService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
+    private router: Router,
     private ts: ToastrService) {
     this.agentPasswordModel = {
       password: '',
@@ -97,7 +98,12 @@ export class AgentViewComponent implements OnInit {
       });
       this.selectedTab = 0;
       this.commonService.changeBreadcrumb(this.breadcrumbPaths)
-      this.getAgentPassword(this.agentDetails._id)
+      if (this.hasPermission('PVAPW')) {
+        this.getAgentPassword(this.agentDetails._id)
+      }
+      else {
+        this.agentDetails['thePassword'] = '********'
+      }
     }, err => {
       this.showLazyLoader = false;
       this.commonService.errorToast(err);
@@ -148,7 +154,7 @@ export class AgentViewComponent implements OnInit {
     } else {
       const list2 = this.commonService.getEntityPermissions('AGENT');
       return Boolean(
-        list2.find((e: any) => e.id.startsWith('PMA'))
+        list2.find((e: any) => e.id.startsWith('PMAB'))
       );
     }
   }
@@ -278,17 +284,13 @@ export class AgentViewComponent implements OnInit {
   }
 
   triggerAgentEdit() {
-    if (!this.agentData.name) {
+    if (!this.agentDetails || !this.agentDetails.name) {
       return;
     }
-    delete this.agentData.isEdit;
+    delete this.agentDetails.isEdit;
     this.showEditAgentWindow = false;
     this.showLazyLoader = true;
-<<<<<<< Updated upstream
-    this.commonService.post('partnerManager', `/${this.commonService.app._id}/agent`, this.agentData).subscribe(res => {
-=======
     this.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/`+this.agentDetails._id, this.agentDetails).subscribe(res => {
->>>>>>> Stashed changes
       this.showLazyLoader = false;
       // this.getAgentList();
     }, err => {
@@ -308,7 +310,12 @@ export class AgentViewComponent implements OnInit {
 
   openAgentDetailsWindow(agent: any) {
     this.agentData = agent;
-    this.getAgentPassword(agent._id)
+    if (this.hasPermission('PVAPW')) {
+      this.getAgentPassword(agent._id)
+    }
+    else {
+      this.agentDetails['thePassword'] = '********'
+    }
     this.agentDetailsModalRef = this.commonService.modal(this.agentDetailsModal, { size: 'md' });
     this.agentDetailsModalRef.result.then(close => { }, dismiss => { });
   }
@@ -319,26 +326,19 @@ export class AgentViewComponent implements OnInit {
   }
 
   closeDeleteModal(data) {
+    const url = this.router.url;
+    const previousUrl = url.split('/').slice(0, -1).join('/');
     if (data) {
-      // const url = '/admin/app/' + data._id;
-      // this.showLazyLoader = true;
-      //   this.subscriptions['deleteApp'] = this.commonService
-      //     .delete('user', url)
-      //     .subscribe(
-      //       (d) => {
-      //         this.ts.success('App deleted successfully');
-      //         this.appOptions[data.appIndex] = false;
-      //         this.getApps();
-      //       },
-      //       (err) => {
-      //         this.showLazyLoader = false;
-      //         this.commonService.errorToast(
-      //           err,
-      //           'Unable to delete, please try again later'
-      //         );
-      //       }
-      //     );
-      // }
+      this.subscriptions['deleteAgent'] = this.commonService.delete('partnerManager', `/${this.commonService.app._id}/agent/` + this.agentDetails._id, this.agentDetails).subscribe(res => {
+        if (res) {
+          this.ts.success('Agent Deleted Sucessfully');
+          this.router.navigate([previousUrl]);
+        }
+
+      }, err => {
+        this.commonService.errorToast(err, 'Unable to delete, please try again later');
+        // this.showNewAgentWindow = false;
+      });
     }
   }
 

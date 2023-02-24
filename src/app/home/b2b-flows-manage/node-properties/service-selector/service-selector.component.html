@@ -11,7 +11,7 @@
         <odp-search-box open="true" (enteredText)="searchService($event)" (reset)="clearSearch()" tooltipDir="left">
         </odp-search-box>
     </div>
-    <div class="list-group my-3">
+    <div *ngIf="serviceList && serviceList.length>0" class="list-group my-3">
         <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
             *ngFor="let item of serviceList" (click)="toggleItem(!item._selected,item)">
             <div class="d-flex align-items-center">
@@ -24,6 +24,12 @@
         <div *ngIf="!serviceList || serviceList.length == 0"
             class="list-group-item d-flex align-items-center justify-content-between text-secondary">
             {{searchTerm && serviceList ? 'No Data Service found for the term:' : 'No data service found'}} <span
+                class="fw-500 text-dark">{{searchTerm}}</span>
+        </div>
+    </div>
+    <div *ngIf="!serviceList || serviceList.length==0" class="list-group my-3">
+        <div class="list-group-item d-flex align-items-center justify-content-between text-secondary">
+            {{searchTerm ? 'No Data Service found for the term:' : 'No data service found'}} <span
                 class="fw-500 text-dark">{{searchTerm}}</span>
         </div>
     </div>

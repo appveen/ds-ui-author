@@ -37,16 +37,9 @@
                     <span>Settings</span>
                     <span class="dsi dsi-drop-down ml-auto"></span>
                 </button>
-<<<<<<< Updated upstream
-                <div class="item-actions d-flex align-items-center justify-content-end">
-                    <div *ngIf="showSettingsDropdown"
-                        class="more-options bg-white rounded list-group position-fixed border">
-                        <div id="agent-details" class="list-group-item list-group-item-action py-2 border-0"
-=======
                 <div class="item-actions d-flex align-items-center justify-content-end position-fixed">
                     <div *ngIf="showSettingsDropdown" class="more-options bg-white rounded list-group border">
                         <div id="agent-details" class="list-group-item list-group-item-action py-2 border-0 hover"
->>>>>>> Stashed changes
                             (click)="openAgentDetailsWindow(agentDetails);">
                             Agent Details
                         </div>
@@ -58,19 +51,11 @@
                             (click)="test()">
                             Change Password
                         </div>
-<<<<<<< Updated upstream
-                        <div id=" agent-edit" class="list-group-item list-group-item-action py-2 border-0"
-                            *ngIf="canEditAgent()" (click)="showEditAgentWindow = true">
-                            Edit
-                        </div>
-                        <div id=" agent-clone" class="list-group-item list-group-item-action py-2 border-0">
-=======
                         <div id="agent-edit" class="list-group-item list-group-item-action py-2 border-0 hover"
                             *ngIf="canEditAgent()" (click)="showEditAgentWindow = true">
                             Edit
                         </div>
                         <div id="agent-clone" class="list-group-item list-group-item-action py-2 border-0 hover">
->>>>>>> Stashed changes
                             Clone
                         </div>
                         <div id="agent-delete" class="list-group-item list-group-item-action py-2 border-0 text-danger hover"
@@ -347,7 +332,8 @@
                         <span class="fw-400 text-secondary" *ngIf="agentDetails.thePassword">{{agentDetails.thePassword
                             ||
                             ''}}</span>
-                        <span class="hover dsi dsi-copy text-secondary ml-2" *ngIf="agentDetails.thePassword"
+                        <span class="hover dsi dsi-copy text-secondary ml-2"
+                            *ngIf="agentDetails.thePassword && agentDetails.thePassword !=='********'"
                             (click)="copyPassword(agentDetails.thePassword)"></span>
                     </div>
                     <span class="fw-400 text-secondary" *ngIf="!agentDetails.thePassword">

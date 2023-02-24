@@ -27,11 +27,9 @@
                     </button>
                 </div>
                 <div *ngIf="!customSourceFields || customSourceFields.length==0" class="text-secondary p-4 font-12">
-                    No
-                    Data
-                    Structure
-                    Found. Please add a Data Structure in Previous node or create fields manually
-                    by click on the <span class="dsi dsi-plus-circle text-primary mx-1 font-11"></span> icon</div>
+                    No Input Data Structure Found. Please add a Data Structure or create fields manually
+                    by click on the <span class="dsi dsi-plus-circle text-primary mx-1 font-11"></span> icon
+                </div>
                 <div class="field-block bg-white d-flex align-items-center mb-1"
                     *ngFor="let item of customSourceFields; let i=index;">
                     <div class="input-wrapper w-100 d-flex align-items-center position-relative mr-3">
@@ -63,8 +61,8 @@
                     </div>
                 </div>
                 <ng-container *ngFor="let item of customTargetFields; let i=index;">
-                    <odp-target-fields [edit]="edit" [definition]="item" [sources]="customSourceFields" [fuzzyMapping]="fuzzyMapping"
-                        [clearMapping]="clearMapping"></odp-target-fields>
+                    <odp-target-fields [edit]="edit" [definition]="item" [sources]="customSourceFields"
+                        [fuzzyMapping]="fuzzyMapping" [clearMapping]="clearMapping"></odp-target-fields>
                 </ng-container>
             </ng-container>
             <ng-container *ngIf="!targetFields">
@@ -77,7 +75,7 @@
                 <div *ngIf="!customTargetFields || customTargetFields.length==0" class="text-secondary p-4 font-12">No
                     Data
                     Structure
-                    Found. Please add a Data Structure in Current node or create fields manually
+                    Found. Please add Output Data Structure or create fields manually
                     by click on the <span class="dsi dsi-plus-circle text-primary mx-1 font-11"></span> icon</div>
                 <div class="field-block d-flex align-items-center px-3 py-1"
                     *ngFor="let item of customTargetFields; let i=index;" (click)="selectedTargetField=item">

@@ -41,7 +41,7 @@
     </div>
     <!-- <div *ngIf="!isInputNode && (currNode?.type=='DATASERVICE' || currNode?.type=='API')" class="form-group">
         <label class="font-14 fw-400 text-dark mb-0" for="inputDataStructure">Body</label>
-        <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList" [currNode]="currNode">
+        <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList" [currNode]="currNode">
         </odp-input-data-selector>
     </div> -->
     <div *ngIf="currNode?.type!='RESPONSE' && !isInputNode" class="form-group">
@@ -114,8 +114,13 @@
             </div>
         </ng-container>
         <div class="form-group d-flex align-items-center">
-            <odp-checkbox [edit]="edit" [(checked)]="currNode.options.uniqueTxnId"></odp-checkbox>
+            <odp-switch [edit]="edit" [(checked)]="currNode.options.uniqueTxnId"></odp-switch>
+            <!-- <odp-checkbox [edit]="edit" [(checked)]="currNode.options.uniqueTxnId"></odp-checkbox> -->
             <span class="ml-2">Unique Remote Txn ID</span>
+        </div>
+        <div class="form-group d-flex align-items-center">
+            <odp-switch [edit]="edit" type="warning" [(checked)]="flowData.skipAuth"></odp-switch>
+            <span class="ml-2">Un-Authenticated</span>
         </div>
     </ng-container>
     <!-- <hr> -->
@@ -125,11 +130,13 @@
                 URL
                 <span class="dsi dsi-settings text-primary hover" (click)="toggle['url']=!toggle['url']"></span>
             </label>
-            <!-- <textarea id="nodeUrl" class="form-control dynamic-variable-addon" cols="30" rows="4"
-                [(ngModel)]="currNode.options.url"></textarea> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['url']" [nodeList]="nodeList"
-                [(value)]="currNode.options.url" [textarea]="true">
-            </odp-node-data-selector>
+            <div class="position-relative">
+                <textarea id="nodeUrl" class="form-control" cols="30" rows="4"
+                    [(ngModel)]="currNode.options.url"></textarea>
+                <!-- <odp-node-data-selector *ngIf="toggle['url']" [edit]="edit" [(toggle)]="toggle['url']" [nodeList]="nodeList"
+                    [(value)]="currNode.options.url" [textarea]="true">
+                </odp-node-data-selector> -->
+            </div>
         </div>
         <div class="form-group">
             <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
@@ -163,9 +170,25 @@
         </div> -->
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark mb-0" for="nodeBody">Body</label>
-            <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body"
-                [nodeList]="nodeList" [currNode]="currNode">
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList"
+                [currNode]="currNode">
             </odp-input-data-selector>
+        </div>
+        <div class="border rounded p-3">
+            <div class="border-bottom font-14 fw-500 mb-3 pb-1">Advance Settings</div>
+            <div class="form-group position-relative">
+                <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
+                <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout">
+            </div>
+            <div class="form-group position-relative">
+                <label class="font-14 fw-400 text-dark" for="retryCount">Retry Count</label>
+                <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count">
+            </div>
+            <div class="form-group position-relative mb-0">
+                <label class="font-14 fw-400 text-dark" for="retryInterval">Retry Interval (sec)</label>
+                <input id="retryInterval" class="form-control" type="number"
+                    [(ngModel)]="currNode.options.retry.interval">
+            </div>
         </div>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FILE'">
@@ -203,6 +226,14 @@
         </div>
     </ng-container>
     <ng-container *ngIf="currNode.type=='UNWIND'">
+        <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeBody">
+                Body
+            </label>
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList"
+                [currNode]="currNode">
+            </odp-input-data-selector>
+        </div>
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeUnWind">
                 Change Root Path
@@ -293,15 +324,14 @@
         <div *ngIf="currNode.options.contentType=='application/json'" class="form-group position-relative">
             <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeBody">
                 Body
-                <span class="dsi dsi-settings text-primary hover" (click)="toggle['body']=!toggle['body']"></span>
             </label>
             <!-- <textarea id="nodeBody" class="form-control dynamic-variable-addon" cols="30" rows="4"
                 [(ngModel)]="currNode.options.body"></textarea> -->
             <!-- <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['body']" [nodeList]="nodeList"
                 [(value)]="currNode.options.body">
             </odp-node-data-selector> -->
-            <odp-input-data-selector class="d-flex ml-4" [edit]="edit" [(data)]="currNode.options.body"
-                [nodeList]="nodeList" [currNode]="currNode">
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList"
+                [currNode]="currNode">
             </odp-input-data-selector>
         </div>
     </ng-container>

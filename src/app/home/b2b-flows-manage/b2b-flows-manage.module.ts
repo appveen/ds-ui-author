@@ -46,6 +46,8 @@ import { OnHoverModule } from 'src/app/utils/on-hover/on-hover.module';
 import { PathPropertiesComponent } from './path-properties/path-properties.component';
 import { ColorPickerModule } from 'src/app/utils/color-picker/color-picker.module';
 import { PayloadCreatorModule } from 'src/app/utils/payload-creator/payload-creator.module';
+import { PathConditionCreatorComponent } from './path-properties/path-condition-creator/path-condition-creator.component';
+import { SwitchModule } from 'src/app/utils/switch/switch.module';
 
 const routes: Routes = [
   {
@@ -78,7 +80,8 @@ const routes: Routes = [
     SourceSelectorComponent,
     FormulaEditorComponent,
     InputDataSelectorComponent,
-    PathPropertiesComponent
+    PathPropertiesComponent,
+    PathConditionCreatorComponent
   ],
   imports: [
     CommonModule,
@@ -102,7 +105,8 @@ const routes: Routes = [
     RoundRadioModule,
     OnHoverModule,
     ColorPickerModule,
-    PayloadCreatorModule
+    PayloadCreatorModule,
+    SwitchModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService]

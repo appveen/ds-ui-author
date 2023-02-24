@@ -56,12 +56,26 @@ export class B2bFlowService {
 
   parseDynamicValue(value: any) {
     const configuredData: any = {};
-    if (typeof value == 'string' && value.startsWith('{{')) {
+    if (typeof value == 'string' && value.startsWith('{{') && value.endsWith('}}')) {
       const charArr = value.split('');
       configuredData.node = charArr.slice(8, 14).join('');
       const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
-      configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
-      configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length - 2).join('');
+      if (nodeKeyIndexes.length == 1) {
+        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length - 2).join('');
+      } else {
+        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
+        configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length - 2).join('');
+      }
+    } else if (typeof value == 'string' && value.startsWith('node[')) {
+      const charArr = value.split('');
+      configuredData.node = charArr.slice(6, 12).join('');
+      const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
+      if (nodeKeyIndexes.length == 1) {
+        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length).join('');
+      } else {
+        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
+        configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length).join('');
+      }
     } else {
       configuredData.customValue = value;
     }
@@ -223,6 +237,9 @@ export class B2bFlowService {
         let indexesToRemove = [];
         node.onSuccess.forEach((nextNode: any, index: number) => {
           if (nodeList.findIndex(e => e._id == nextNode._id) == -1) {
+            indexesToRemove.push(index);
+          }
+          if (nextNode._id == node._id) {
             indexesToRemove.push(index);
           }
         });

@@ -1,2 +1,17 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
+
+.selected-color {
+    width: 82px;
+    height: 32px;
+}
+
+.header-item {
+    overflow: hidden;
+    height: 36px;
+}
+
+.icon {
+    width: 32px;
+    height: 32px;
+}

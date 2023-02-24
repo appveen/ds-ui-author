@@ -299,6 +299,15 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     }
   }
 
+  canViewFlow(id: string) {
+    if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
+      return true;
+    } else {
+      return this.hasPermission('PVIF');
+    }
+  }
+
+
   canDeleteFlow(id: string) {
     return this.hasPermission('PMIF');
   }

@@ -40,9 +40,6 @@ export class NodeDataSelectorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!environment.production) {
-      console.log(this.nodeList);
-    }
     if (this.value) {
       this.configuredData = this.flowService.parseDynamicValue(this.value);
       if (this.configuredData.customValue) {
@@ -76,12 +73,12 @@ export class NodeDataSelectorComponent implements OnInit {
   }
 
   saveData() {
-    // if (this.dataKey == 'dynamic') {
-    //   this.value = '{{' + this.currentValue + '}}';
-    // } else {
-    //   this.value = this.currentValue;
-    // }
-    this.value = '{{' + this.currentValue + '}}';
+    if (this.dataKey == 'dynamic') {
+      this.value = '{{' + this.currentValue + '}}';
+    } else {
+      this.value = this.currentValue;
+    }
+    // this.value = '{{' + this.currentValue + '}}';
     this.valueChange.emit(this.value);
     this.toggle = false;
     this.toggleChange.emit(this.toggle);
