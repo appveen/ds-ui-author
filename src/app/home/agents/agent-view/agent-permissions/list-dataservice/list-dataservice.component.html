@@ -1,0 +1,48 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="list-group list-group-flush">
+    <ng-container *ngFor="let item of dataList">
+        <div class="list-group-item d-flex flex-column">
+            <div class="fw-600 text-secondary">{{item.name}}</div>
+            <!-- <odp-switch [(checked)]="item._checked" [edit]="{status:hasPermission('PMAPI')}"></odp-switch> -->
+            <ng-container *ngFor="let role of item.role?.roles||[]">
+                <div class="list-group-item d-flex align-items-center justify-content-between pl-4 py-1 border-0">
+                    <div class="d-flex align-items-center">
+                        <div class="name text-dark font-12">{{role.name}}</div>
+                        <div class="permissions d-flex align-items-center text-muted ">
+                            <div
+                                class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2 border-dark text-dark">
+                                <span class="dsi dsi-view font-13"></span>
+                            </div>
+                            <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
+                                [ngClass]="{'border-dark text-dark':hasMethod(role,'POST')}">
+                                <span class="dsi dsi-plus font-13"></span>
+                            </div>
+                            <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
+                                [ngClass]="{'border-dark text-dark':hasMethod(role,'PUT')}">
+                                <span class="dsi dsi-edit font-13"></span>
+                            </div>
+                            <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
+                                [ngClass]="{'border-dark text-dark':hasMethod(role,'DELETE')}">
+                                <span class="dsi dsi-trash font-13"></span>
+                            </div>
+                            <div class="permissions-badge rounded border d-flex align-items-center justify-content-center mr-2"
+                                [ngClass]="{'border-dark text-dark':hasMethod(role,'RULE')}">
+                                <span class="dsi dsi-filter-alt font-13"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <odp-switch [checked]="isRoleSelected(role)" (checkedChange)="toggleRole($event,role,item)"
+                        [edit]="{status:hasPermission('PMAPI')}"></odp-switch>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+    <div class="list-group-item text-secondary" *ngIf="dataList.length==0">No Records Found</div>
+</div>

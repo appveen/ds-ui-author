@@ -15,15 +15,19 @@ import { CodeEditorModule } from 'src/app/utils/code-editor/code-editor.module';
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
+import { B2bSettingsComponent } from './b2b-settings/b2b-settings.component';
 
 const routes: Routes = [
   {
     path: '', component: B2bFlowsComponent
+  },
+  {
+    path: 'settings', component:B2bSettingsComponent
   }
 ];
 
 @NgModule({
-  declarations: [B2bFlowsComponent],
+  declarations: [B2bFlowsComponent, B2bSettingsComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

@@ -1,0 +1,16 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="list-group list-group-flush">
+    <div class="list-group-item d-flex align-items-center justify-content-between" *ngFor="let item of dataList">
+        <div class="fw-600 text-secondary">{{item.name}}</div>
+        <odp-switch [checked]="isRoleSelected(item)" (checkedChange)="toggleRole($event,item)"
+            [edit]="{status:hasPermission('PMAPI')}"></odp-switch>
+    </div>
+    <div class="list-group-item text-secondary" *ngIf="dataList.length==0">No Records Found</div>
+</div>
