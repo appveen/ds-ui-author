@@ -1,0 +1,52 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.popover {
+    border: 1px solid #ECECEC;
+    display: grid;
+    width: 180px;
+    top: 42px;
+}
+
+.popover-options {
+    padding: 15px;
+    cursor: pointer;
+    color: $headings;
+    font-size: 14px;
+
+    &:hover {
+        background: #F7F7F7;
+    }
+}
+
+.tab-list {
+    .tab-list-item {
+        border-bottom: 3px solid transparent;
+
+        &:hover {
+            border-bottom-color: $secondary;
+        }
+
+        &.active {
+            border-bottom-color: $accent;
+        }
+    }
+}
+
+.tab-container {
+    height: calc(100vh - 356px);
+    overflow-y: auto;
+
+    &.no-overflow {
+        overflow: hidden !important;
+    }
+}
+
+.overlay {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: rgba($color: #000000, $alpha: 0.1);
+}
