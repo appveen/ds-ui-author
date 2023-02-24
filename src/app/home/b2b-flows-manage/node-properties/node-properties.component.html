@@ -114,8 +114,13 @@
             </div>
         </ng-container>
         <div class="form-group d-flex align-items-center">
-            <odp-checkbox [edit]="edit" [(checked)]="currNode.options.uniqueTxnId"></odp-checkbox>
+            <odp-switch [edit]="edit" [(checked)]="currNode.options.uniqueTxnId"></odp-switch>
+            <!-- <odp-checkbox [edit]="edit" [(checked)]="currNode.options.uniqueTxnId"></odp-checkbox> -->
             <span class="ml-2">Unique Remote Txn ID</span>
+        </div>
+        <div class="form-group d-flex align-items-center">
+            <odp-switch [edit]="edit" type="warning" [(checked)]="flowData.skipAuth"></odp-switch>
+            <span class="ml-2">Un-Authenticated</span>
         </div>
     </ng-container>
     <!-- <hr> -->
