@@ -66,6 +66,16 @@ export class B2bFlowService {
         configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
         configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length - 2).join('');
       }
+    } else if (typeof value == 'string' && value.startsWith('node[')) {
+      const charArr = value.split('');
+      configuredData.node = charArr.slice(6, 12).join('');
+      const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
+      if (nodeKeyIndexes.length == 1) {
+        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length).join('');
+      } else {
+        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
+        configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length).join('');
+      }
     } else {
       configuredData.customValue = value;
     }
