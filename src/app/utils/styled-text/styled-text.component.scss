@@ -7,10 +7,14 @@
 .hidden-div {
     color: transparent;
     position: absolute;
-    top: 0px;
+    inset: 0;
     height: 32px;
     max-width: 260px;
     overflow-x: auto;
+
+    ::selection {
+        color: transparent
+    }
 }
 
 .content-div {
@@ -20,4 +24,8 @@
     height: 32px;
     max-width: 260px;
     overflow-x: auto;
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+
 }
