@@ -31,7 +31,7 @@ export class AgentPermissionsComponent implements OnInit {
 
   onDataChange(data: any) {
     this.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/${this.agentDetails._id}`, data).subscribe(res => {
-      this.ts.success('API Key Modified');
+      this.ts.success('Permission Modified');
     }, err => {
       this.commonService.errorToast(err);
     });
