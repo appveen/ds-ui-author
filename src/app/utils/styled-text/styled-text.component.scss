@@ -2,6 +2,10 @@
     width: 260px;
     border: 0px;
     border-left: 1px solid #ddd;
+    max-width: 260px;
+    height: 32px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .hidden-div {

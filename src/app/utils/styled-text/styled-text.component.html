@@ -1,12 +1,14 @@
 <div class="value-holder position-relative" (dblclick)="onDblClick.emit()">
-  <div id="hidden-div" class="value-holder d-flex" (input)="someTrigger($event)" contenteditable #hiddenDiv>
+  <div id="hidden-div" class="value-holder d-flex align-items-center" (input)="someTrigger($event)"
+    contenteditable="true">
   </div>
   <!-- <div id="class-div" class="value-holder content-div d-flex align-items-center" [innerHTML]="formattedText"
     #contentDiv></div> -->
 </div>
 
 
-<div *ngIf="suggestions.length > 0" class="more-options bg-white rounded list-group position-fixed border">
+<div *ngIf="searchTerm && suggestions.length > 0"
+  class="more-options bg-white rounded list-group position-fixed border">
   <div class="list-group-item list-group-item-action py-2 border-0" *ngFor="let suggestion of suggestions"
     (click)="selectItem(suggestion)">
     {{suggestion}}

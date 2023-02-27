@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, ViewChild, ViewEncapsulation, } from '@angular/core';
 import { OperatorFunction, Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 
 
@@ -20,34 +21,15 @@ export class StyledTextComponent implements OnInit {
   formattedText: string = '';
   model: any;
   states: any;
-  @ViewChild('contentDiv') contentDiv: ElementRef;
-  @ViewChild('hiddenDiv') hiddenDiv: ElementRef;
   suggestions: any = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   searchTerm: any;
   editableDiv: HTMLElement;
+  list: any
   constructor() {
+    this.list = _.cloneDeep(this.suggestions)
 
-    this.searchSubject
-      .pipe(
-        debounceTime(200),
-        distinctUntilChanged(),
-        switchMap((term: string) => this.searchBackend(term)),
-        map(results => {
-          this.suggestions = results;
-          console.log(this.suggestions)
-        })
-      )
-      .subscribe();
   }
 
-  private searchBackend(query: string): Observable<string[]> {
-    // implement your search logic here and return an Observable<string[]>
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-    const results = months.filter(month => month.toLowerCase().startsWith(query.toLowerCase()));
-
-    return of(results);
-  }
 
   ngOnInit() {
     this.editableDiv = document.getElementById('hidden-div');
@@ -56,15 +38,21 @@ export class StyledTextComponent implements OnInit {
 
   someTrigger(event, value?) {
     this.unformattedText = event?.target?.innerText || value;
-    this.unformattedText = this.unformattedText.replace(/(\r\n|\n|\r)/gm, "");
-    this.searchTerm = this.unformattedText.split(/\s+/).filter(term => term !== '');
+    this.suggestions = _.cloneDeep(this.list)
+    this.unformattedText = this.unformattedText ? this.unformattedText.replace(/(\r\n|\n|\r)/gm, "") : '';
+    let term = this.unformattedText.split(/[\{\}]+/).pop();
+
+    console.log(term)
+    this.searchTerm = term && term.trim() !== '' ? [term.trim()] : null;
     this.formatText();
     this.setRange();
-    // this.searchSubject.next(this.unformattedText);
 
-    this.search(this.searchTerm).subscribe(results => {
-      this.suggestions = results;
-    });
+    if (this.searchTerm && this.searchTerm[0] !== '') {
+      this.search(this.searchTerm).subscribe(results => {
+        this.suggestions = results;
+      });
+    }
+
 
   }
 
@@ -81,46 +69,49 @@ export class StyledTextComponent implements OnInit {
   }
 
   setRange() {
-    var caretPosition = this.getCaretPosition(this.editableDiv);
-    var content = this.editableDiv.innerText;
-    var newContent = content.slice(0, caretPosition) + 'newText' + content.slice(caretPosition);
-    this.editableDiv.innerHTML = newContent;
-
+    this.getCaretPosition(this.editableDiv);
     let sel = window.getSelection();
+    console.log(document.getSelection().getRangeAt(0).startOffset)
     sel.selectAllChildren(this.editableDiv);
     sel.collapseToEnd();
   }
 
 
+  // getCaretPosition(editableDiv) {
+  //   var caretPosition = 0;
+  //   var range = window.getSelection().getRangeAt(0);
+  //   var preCaretRange = range.cloneRange();
+  //   preCaretRange.selectNodeContents(editableDiv);
+  //   preCaretRange.setEnd(range.endContainer, range.endOffset);
+  //   caretPosition = preCaretRange.toString().length;
+  //   return caretPosition;
+  // }
+
+
   getCaretPosition(editableDiv) {
-    var caretPosition = 0;
-    var range = window.getSelection().getRangeAt(0);
-    var preCaretRange = range.cloneRange();
-    preCaretRange.selectNodeContents(editableDiv);
-    preCaretRange.setEnd(range.endContainer, range.endOffset);
-    caretPosition = preCaretRange.toString().length;
-    return caretPosition;
+    var caretPos = 0,
+      sel, range;
+    if (window.getSelection) {
+      sel = window.getSelection();
+      if (sel.rangeCount) {
+        range = sel.getRangeAt(0);
+        if (range.commonAncestorContainer.parentNode == editableDiv) {
+          caretPos = range.endOffset;
+        }
+      }
+    }
+    return caretPos;
   }
 
   selectItem(suggestion) {
-    const el = document.getElementById('hidden-div');
-    const range = window.getSelection().getRangeAt(0);
-    const start = range.startOffset - this.searchTerm.length;
-    const end = range.startOffset;
-    const newContent = el.innerText.slice(0, start) + suggestion + el.innerText.slice(end);
-    el.innerText = newContent;
 
-    this.searchTerm = suggestion;
+    const val = '${{' + suggestion + '}}';
+    const completeText = this.editableDiv.innerText.replace(new RegExp(this.searchTerm.toString() + '$'), ' ' + val + ' ');
+    // const completeText = this.editableDiv.innerText + ' ' + val;
+    this.searchTerm = []
+    this.someTrigger(null, completeText);
 
-    const newRange = document.createRange();
-    newRange.setStart(el.childNodes[0], start + suggestion.length);
-    newRange.setEnd(el.childNodes[0], start + suggestion.length);
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(newRange);
-
-    el.focus();
-
+    this.editableDiv.focus();
 
   }
 
