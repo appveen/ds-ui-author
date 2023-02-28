@@ -39,26 +39,26 @@
                 </button>
                 <div class="item-actions d-flex align-items-center justify-content-end position-fixed">
                     <div *ngIf="showSettingsDropdown" class="more-options bg-white rounded list-group border">
-                        <div id="agent-details" class="list-group-item list-group-item-action py-2 border-0"
+                        <div id="agent-details" class="list-group-item list-group-item-action py-2 border-0 hover"
                             (click)="openAgentDetailsWindow(agentDetails);">
                             Agent Details
                         </div>
-                        <div id="agent-dowload" class="list-group-item list-group-item-action py-2 border-0"
+                        <div id="agent-dowload" class="list-group-item list-group-item-action py-2 border-0 hover"
                             (click)="openDownloadAgentWindow(agentDetails);">
                             Download
                         </div>
-                        <div id="agent-change-password" class="list-group-item list-group-item-action py-2 border-0"
+                        <div id="agent-change-password" class="list-group-item list-group-item-action py-2 border-0 hover"
                             (click)="test()">
                             Change Password
                         </div>
-                        <div id="agent-edit" class="list-group-item list-group-item-action py-2 border-0"
+                        <div id="agent-edit" class="list-group-item list-group-item-action py-2 border-0 hover"
                             *ngIf="canEditAgent()" (click)="showEditAgentWindow = true">
                             Edit
                         </div>
-                        <div id="agent-clone" class="list-group-item list-group-item-action py-2 border-0">
+                        <div id="agent-clone" class="list-group-item list-group-item-action py-2 border-0 hover">
                             Clone
                         </div>
-                        <div id="agent-delete" class="list-group-item list-group-item-action py-2 border-0 text-danger"
+                        <div id="agent-delete" class="list-group-item list-group-item-action py-2 border-0 text-danger hover"
                             *ngIf="canEditAgent()" (click)="deleteAgent();">
                             Delete
                         </div>
@@ -114,10 +114,13 @@
                     (click)="selectedTab=0">Logs</div>
                 <div class="tab-list-item py-3 text-center" [ngClass]="{'active fw-500':selectedTab==1}"
                     (click)="selectedTab=1">Sessions</div>
+                <div class="tab-list-item py-3 text-center" [ngClass]="{'active fw-500':selectedTab==2}"
+                    (click)="selectedTab=2">Permissions</div>
             </div>
             <div class="tab-container">
                 <odp-agent-logs *ngIf="selectedTab==0" [agentDetails]="agentDetails"></odp-agent-logs>
                 <odp-agent-sessions *ngIf="selectedTab==1" [agentDetails]="agentDetails"></odp-agent-sessions>
+                <odp-agent-permissions *ngIf="selectedTab==2" [agentDetails]="agentDetails"></odp-agent-permissions>
             </div>
         </div>
     </div>

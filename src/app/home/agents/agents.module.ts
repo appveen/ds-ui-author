@@ -21,6 +21,10 @@ import { BasicInfoModule } from '../../utils/basic-info/basic-info.module';
 import { AgentViewComponent } from './agent-view/agent-view.component';
 import { AgentLogsComponent } from './agent-view/agent-logs/agent-logs.component';
 import { AgentSessionsComponent } from './agent-view/agent-sessions/agent-sessions.component';
+import { AgentPermissionsComponent } from './agent-view/agent-permissions/agent-permissions.component';
+import { ListDataserviceComponent } from './agent-view/agent-permissions/list-dataservice/list-dataservice.component';
+import { ListFlowComponent } from './agent-view/agent-permissions/list-flow/list-flow.component';
+import { ListFunctionComponent } from './agent-view/agent-permissions/list-function/list-function.component';
 
 const routes: Routes = [
     { path: '', component: AgentsComponent, pathMatch: 'full' },
@@ -53,6 +57,11 @@ const routes: Routes = [
         AgentViewComponent,
         AgentLogsComponent,
         AgentSessionsComponent,
+        AgentPermissionsComponent,
+        ListDataserviceComponent,
+        ListFlowComponent,
+        ListFunctionComponent
+
     ],
     exports: [RouterModule],
     providers: [DatePipe]
