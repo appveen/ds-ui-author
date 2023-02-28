@@ -2,20 +2,16 @@ import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@a
 import { B2bFlowService } from '../b2b-flow.service';
 
 @Component({
-  selector: '[odp-flow-node]',
-  templateUrl: './flow-node.component.html',
-  styleUrls: ['./flow-node.component.scss']
+  selector: '[odp-error-node]',
+  templateUrl: './error-node.component.html',
+  styleUrls: ['./error-node.component.scss']
 })
-export class FlowNodeComponent implements OnInit {
+export class ErrorNodeComponent implements OnInit {
 
-  @Input() index: number;
-  @Input() prevNode: any;
-  @Input() currNode: any;
-  @Input() nodeList: any;
-  @Output() nodeListChange: EventEmitter<any>;
-  @Input() branchIndex: number;
+  @Input() node: any;
+  @Input() nodeList: Array<any>;
+  @Output() nodeListChange: EventEmitter<Array<any>>;
 
-  nextNode: any;
   successPaths: Array<any>;
   errorPaths: Array<any>;
   isMouseDown: any;
@@ -23,21 +19,18 @@ export class FlowNodeComponent implements OnInit {
   selectedPath: any;
   selectedPathType: any;
   selectedNode: any;
-  showDeleteNodeIcon: boolean;
   constructor(private flowService: B2bFlowService) {
-    this.index = -1;
+    this.nodeList = [];
     this.nodeListChange = new EventEmitter();
-    this.branchIndex = -1;
     this.successPaths = [];
     this.errorPaths = [];
-    this.nodeList = [];
   }
 
   ngOnInit(): void {
     this.renderPaths();
     this.flowService.selectedNode.subscribe((data) => {
       this.selectedPathIndex = null;
-      if (data && data.currNode._id == this.currNode._id) {
+      if (data && data.currNode._id == this.node._id) {
         this.selectedNode = data.currNode;
       } else {
         this.selectedNode = null;
@@ -48,35 +41,34 @@ export class FlowNodeComponent implements OnInit {
       this.errorPaths = [];
       this.renderPaths();
     });
-    this.prevNode = this.nodeList.find((e: any) => (e.onSuccess || []).find(ei => ei._id == this.currNode._id));
   }
 
   renderPaths() {
-    if (this.currNode.onSuccess && this.currNode.onSuccess.length > 0) {
-      this.currNode.onSuccess.forEach((item: any) => {
+    if (this.node.onSuccess && this.node.onSuccess.length > 0) {
+      this.node.onSuccess.forEach((item: any) => {
         const nextNode = this.nodeList.find((e: any) => e._id == item._id);
         if (nextNode) {
-          const path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 146, this.currNode.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
+          const path = this.flowService.generateLinkPath(this.node.coordinates.x + 146, this.node.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
           this.successPaths.push({
             _id: nextNode._id,
             name: item.name,
             color: item.color,
-            prevNode: this.currNode._id,
+            prevNode: this.node._id,
             path
           });
         }
       });
     }
-    if (this.currNode.onError && this.currNode.onError.length > 0) {
-      this.currNode.onError.forEach((item: any) => {
+    if (this.node.onError && this.node.onError.length > 0) {
+      this.node.onError.forEach((item: any) => {
         const nextNode = this.nodeList.find((e: any) => e._id == item._id);
         if (nextNode) {
-          const path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 146, this.currNode.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
+          const path = this.flowService.generateLinkPath(this.node.coordinates.x + 146, this.node.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
           this.errorPaths.push({
             _id: nextNode._id,
             name: item.name,
             color: item.color,
-            prevNode: this.currNode._id,
+            prevNode: this.node._id,
             path
           });
         }
@@ -110,7 +102,7 @@ export class FlowNodeComponent implements OnInit {
   }
 
   isActive(place: string) {
-    if (this.flowService.anchorSelected && this.flowService.anchorSelected.dataset.id == this.currNode._id) {
+    if (this.flowService.anchorSelected && this.flowService.anchorSelected.dataset.id == this.node._id) {
       if (place == 'start' && this.flowService.anchorSelected.classList.contains('start')) {
         return true;
       } else if (place == 'end' && this.flowService.anchorSelected.classList.contains('end')) {
@@ -122,33 +114,9 @@ export class FlowNodeComponent implements OnInit {
 
   openProperties(event: any) {
     this.flowService.selectedNode.emit({
-      currNode: this.currNode,
-      prevNode: this.prevNode
+      currNode: this.node
     });
   }
-
-  // @HostListener('mousedown', ['$event'])
-  // onMouseDown(event: any) {
-  //   this.isMouseDown = event;
-  // }
-
-  // @HostListener('document:mouseup', ['$event'])
-  // onMouseUp(event: any) {
-  //   this.isMouseDown = null;
-  //   // this.flowService.anchorSelected = null;
-  // }
-
-  // @HostListener('mousemove', ['$event'])
-  // onMouseMove(event: any) {
-  //   if (this.isMouseDown) {
-  //     const tempX = event.clientX - this.isMouseDown.clientX;
-  //     const tempY = event.clientY - this.isMouseDown.clientY;
-  //     this.isMouseDown = event;
-  //     this.currNode.coordinates.x += tempX;
-  //     this.currNode.coordinates.y += tempY;
-  //     this.flowService.reCreatePaths.emit();
-  //   }
-  // }
 
   @HostListener('document:keydown', ['$event'])
   onDeleteKey(event: any) {
@@ -159,16 +127,16 @@ export class FlowNodeComponent implements OnInit {
 
   deletePath() {
     let onSuccess = true;
-    let nodeIndex = (this.currNode.onSuccess || []).findIndex(e => e._id == this.selectedPath._id);
+    let nodeIndex = (this.node.onSuccess || []).findIndex(e => e._id == this.selectedPath._id);
     if (nodeIndex == -1) {
       onSuccess = false;
-      nodeIndex = (this.currNode.onError || []).findIndex(e => e._id == this.selectedPath._id);
+      nodeIndex = (this.node.onError || []).findIndex(e => e._id == this.selectedPath._id);
     }
     if (nodeIndex > -1) {
       if (onSuccess) {
-        (this.currNode.onSuccess || []).splice(nodeIndex, 1);
+        (this.node.onSuccess || []).splice(nodeIndex, 1);
       } else {
-        (this.currNode.onError || []).splice(nodeIndex, 1);
+        (this.node.onError || []).splice(nodeIndex, 1);
       }
     }
     this.flowService.reCreatePaths.emit(null);
@@ -199,8 +167,8 @@ export class FlowNodeComponent implements OnInit {
 
   getPathTextStyle(path: any) {
     const nextNode = this.nodeList.find((e: any) => e._id == path._id);
-    let sourceNodeX = (this.currNode.coordinates.x + 140);
-    let sourceNodeY = (this.currNode.coordinates.y + 36);
+    let sourceNodeX = (this.node.coordinates.x + 140);
+    let sourceNodeY = (this.node.coordinates.y + 36);
     let x = (nextNode.coordinates.x - sourceNodeX) / 2 + sourceNodeX;
     let y = (nextNode.coordinates.y - sourceNodeY) / 2 + sourceNodeY;
     return {
@@ -209,30 +177,36 @@ export class FlowNodeComponent implements OnInit {
   }
 
   get style() {
+    if (this.node && this.node.coordinates) {
+      return {
+        transform: `translate(${this.node.coordinates.x}px, ${this.node.coordinates.y}px)`,
+      }
+    }
     return {
-      transform: `translate(${this.currNode.coordinates.x}px,${this.currNode.coordinates.y}px)`,
+      transform: `translate(400px, 30px)`,
     }
   }
 
   get isSelected() {
-    if (this.currNode._id && this.selectedNode && this.selectedNode._id) {
+    if (this.node._id && this.selectedNode && this.selectedNode._id) {
       return true;
     }
     return false;
   }
 
   get isSelectedPath() {
-    if (this.currNode._id && this.selectedPath && this.selectedPath.prevNode == this.currNode._id) {
+    if (this.node._id && this.selectedPath && this.selectedPath.prevNode == this.node._id) {
       return true;
     }
     return false;
   }
 
   get isInputNode() {
-    return this.nodeList[0]._id == this.currNode._id;
+    return this.nodeList[0]._id == this.node._id;
   }
 
   get nodeType() {
-    return this.flowService.getNodeType(this.currNode, this.isInputNode);
+    return this.flowService.getNodeType(this.node, this.isInputNode);
   }
+
 }

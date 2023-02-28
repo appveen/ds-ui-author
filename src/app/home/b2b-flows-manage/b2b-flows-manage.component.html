@@ -127,7 +127,8 @@
             <div class="flow-designer-svg-wrapper" (scroll)="scroll()">
                 <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
                     <g *ngFor="let node of nodeList;let i=index">
-                        <g odp-flow-node [currNode]="node" [index]="i" [nodeList]="nodeList"></g>
+                        <g odp-flow-node *ngIf="node.type!='ERROR'" [currNode]="node" [index]="i" [nodeList]="nodeList"></g>
+                        <g odp-error-node *ngIf="node.type=='ERROR'" [node]="node"  [nodeList]="nodeList"></g>
                     </g>
                 </svg>
             </div>

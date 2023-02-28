@@ -32,7 +32,8 @@ export class B2bFlowService {
       FUNCTION: 'Function',
       MAPPING: 'Mapping',
       UNWIND: 'Change Root',
-      RESPONSE: 'Response'
+      RESPONSE: 'Response',
+      ERROR: 'Global Error'
     };
   }
 

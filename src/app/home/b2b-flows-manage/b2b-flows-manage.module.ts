@@ -48,6 +48,7 @@ import { ColorPickerModule } from 'src/app/utils/color-picker/color-picker.modul
 import { PayloadCreatorModule } from 'src/app/utils/payload-creator/payload-creator.module';
 import { PathConditionCreatorComponent } from './path-properties/path-condition-creator/path-condition-creator.component';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
+import { ErrorNodeComponent } from './error-node/error-node.component';
 
 const routes: Routes = [
   {
@@ -81,7 +82,8 @@ const routes: Routes = [
     FormulaEditorComponent,
     InputDataSelectorComponent,
     PathPropertiesComponent,
-    PathConditionCreatorComponent
+    PathConditionCreatorComponent,
+    ErrorNodeComponent
   ],
   imports: [
     CommonModule,
