@@ -8,7 +8,7 @@
 </div>
 <div class="d-flex flex-column w-100 h-100 position-relative bg-light-gray">
     <div class="wrapper">
-        <div class="w-100 position-relative px-4 pt-5 d-flex" *ngIf="agentDetails">
+        <div class="w-100 position-relative px-4 pt-4 d-flex" *ngIf="agentDetails">
             <span class="dsi dsi-arrow-left text-secondary mr-3 hover" style="font-size:24px"
                 [routerLink]="['../../agent']"></span>
             <odp-basic-info hideLogo=" true" [(name)]="agentDetails.name" [hideLogo]="true" [edit]="{status:false}">
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="d-flex flex-column px-4 pb-3" *ngIf="agentDetails">
-            <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-4">
+            <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-2">
                 <div class="d-flex">
                     <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Type</label>
