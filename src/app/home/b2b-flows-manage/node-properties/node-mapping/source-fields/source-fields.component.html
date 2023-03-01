@@ -1,11 +1,31 @@
-<div class="field-block d-flex flex-column justify-content-center p-2 mx-2 mt-2 border rounded flex-fill">
-    <div class="d-flex align-items-center w-100">
-        <div class="input-wrapper w-100 d-flex align-items-center position-relative mr-3 text-truncate">
-            <span class="dsi dsi-more-vertical-6 mr-2"></span>
-            <span class="font-14 fw-400 text-dark">{{definition?.name}}</span>
-        </div>
-    </div>
-    <ng-container *ngFor="let item of definition.definition">
-        <odp-source-fields [definition]="item"></odp-source-fields>
-    </ng-container>
-</div>
+<svg>
+    <g class="node-block" [ngStyle]="style" class="hover" [attr.data-id]="definition.properties.dataPath">
+        <g [attr.data-id]="definition.properties.dataPath">
+            <rect x="0" y="0" width="300" height="36" rx="6" [attr.data-id]="definition.properties.dataPath" />
+            <rect x="0" y="0" width="300" height="36" rx="6" [attr.data-id]="definition.properties.dataPath"
+                class="rect" />
+            <text x="36" y="22" text-anchor="start"
+                [attr.data-id]="definition.properties.dataPath">{{definition.properties.name}}</text>
+        </g>
+        <rect class="node-anchor end" [attr.data-id]="definition.properties.dataPath" x="294" y="12" width="12"
+            height="12" rx="6" (click)="selectField()"
+            [class.active]="selectedNode && selectedNode._id == definition._id" />
+        <foreignObject width="18" height="18" x="10" y="9" [attr.data-id]="definition.properties.dataPath">
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='String'"
+                class="node-icon font-18 fw-500 dsi dsi-text" [attr.data-id]="definition.properties.dataPath"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Number'"
+                class="node-icon font-18 fw-500 dsi dsi-number" [attr.data-id]="definition.properties.dataPath"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Boolean'"
+                class="node-icon font-18 fw-500 dsi dsi-boolean" [attr.data-id]="definition.properties.dataPath"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Date'"
+                class="node-icon font-18 fw-500 dsi dsi-date" [attr.data-id]="definition.properties.dataPath"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Object'"
+                class="node-icon font-18 fw-500 dsi dsi-object" [attr.data-id]="definition.properties.dataPath"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Array'"
+                class="node-icon font-18 fw-500 dsi dsi-array" [attr.data-id]="definition.properties.dataPath"></span>
+        </foreignObject>
+    </g>
+    <!-- <g class="indent" *ngFor="let item of definition.definition;;let i=index">
+        <g odp-source-fields [index]="i" [definition]="item"></g>
+    </g> -->
+</svg>

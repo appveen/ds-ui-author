@@ -55,6 +55,7 @@ import { DataArrayComponent } from './node-properties/data-transform/data-array/
 import { DataActualComponent } from './node-properties/data-transform/data-actual/data-actual.component';
 import { DataCreatorComponent } from './node-properties/data-transform/data-creator/data-creator.component';
 import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
+import { MappingService } from './node-properties/node-mapping/mapping.service';
 
 const routes: Routes = [
   {
@@ -123,6 +124,6 @@ const routes: Routes = [
     CommonFilterModule
   ],
   exports: [B2bFlowsManageComponent],
-  providers: [B2bFlowService]
+  providers: [B2bFlowService, MappingService]
 })
 export class B2bFlowsManageModule { }

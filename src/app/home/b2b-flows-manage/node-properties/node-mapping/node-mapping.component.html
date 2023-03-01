@@ -6,94 +6,19 @@
         </button>
     </div>
     <div class="mapping-container my-3 d-flex border rounded">
-        <div class="source-fields show position-relative">
-            <ng-container *ngIf="sourceFields">
-                <div class="sub-header d-flex align-items-start justify-content-between p-3 mb-2">
-                    <div class="d-flex flex-column">
-                        <span class="font-20 fw-600">Source</span>
-                    </div>
-                </div>
-                <ng-container *ngFor="let item of customSourceFields; let i=index;">
-                    <odp-source-fields [edit]="edit" [definition]="item"></odp-source-fields>
-                </ng-container>
-            </ng-container>
-            <ng-container *ngIf="!sourceFields">
-                <div class="sub-header d-flex align-items-start justify-content-between mb-3 p-3">
-                    <div class="d-flex flex-column">
-                        <span class="font-20 fw-600">Source</span>
-                    </div>
-                    <button type="button" class="btn btn-link text-primary" (click)="addField('source')">
-                        <span class="dsi dsi-plus-circle"></span>
-                    </button>
-                </div>
-                <div *ngIf="!customSourceFields || customSourceFields.length==0" class="text-secondary p-4 font-12">
-                    No Input Data Structure Found. Please add a Data Structure or create fields manually
-                    by click on the <span class="dsi dsi-plus-circle text-primary mx-1 font-11"></span> icon
-                </div>
-                <div class="field-block bg-white d-flex align-items-center mb-1"
-                    *ngFor="let item of customSourceFields; let i=index;">
-                    <div class="input-wrapper w-100 d-flex align-items-center position-relative mr-3">
-                        <span class="dsi dsi-more-vertical-6 mr-2"></span>
-                        <input type="text" class="form-control" placeholder="Data Path" odpAutoFocus
-                            (keyup.enter)="addField('source')" [(ngModel)]="item.dataPath"
-                            (paste)="onPaste($event,'source', i)">
-                        <button type="button" class="delete-btn btn btn-link text-danger"
-                            (click)="removeField('source',i)">
-                            <span class="dsi dsi-trash"></span>
-                        </button>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-        <div class="destination-fields bg-white position-relative border-left">
-            <ng-container *ngIf="targetFields">
-                <div class="sub-header d-flex align-items-center justify-content-between bg-white p-3">
-                    <span class="font-20 fw-600">Target</span>
-                    <div class="d-flex align-items-center justify-content-end">
-                        <button type="button" class="btn btn-link d-flex align-items-center" (click)="doFuzzyMapping()">
-                            <span class="dsi dsi-mapping mr-2 text-primary"></span>
-                            <span class="text-dark">Fuzzy Mapping</span>
-                        </button>
-                        <button type="button" class="btn btn-link d-flex align-items-center" (click)="doClearMapping()">
-                            <span class="dsi dsi-undo mr-2 text-primary"></span>
-                            <span class="text-dark">Clear Mapping</span>
-                        </button>
-                    </div>
-                </div>
-                <ng-container *ngFor="let item of customTargetFields; let i=index;">
-                    <odp-target-fields [edit]="edit" [definition]="item" [sources]="customSourceFields"
-                        [fuzzyMapping]="fuzzyMapping" [clearMapping]="clearMapping"></odp-target-fields>
-                </ng-container>
-            </ng-container>
-            <ng-container *ngIf="!targetFields">
-                <div class="sub-header d-flex align-items-center justify-content-between bg-white p-3">
-                    <span class="font-20 fw-600">Target</span>
-                    <button type="button" class="btn btn-link text-primary" (click)="addField('target')">
-                        <span class="dsi dsi-plus-circle"></span>
-                    </button>
-                </div>
-                <div *ngIf="!customTargetFields || customTargetFields.length==0" class="text-secondary p-4 font-12">No
-                    Data
-                    Structure
-                    Found. Please add Output Data Structure or create fields manually
-                    by click on the <span class="dsi dsi-plus-circle text-primary mx-1 font-11"></span> icon</div>
-                <div class="field-block d-flex align-items-center px-3 py-1"
-                    *ngFor="let item of customTargetFields; let i=index;" (click)="selectedTargetField=item">
-                    <span class="dsi dsi-more-vertical-6 mr-2"></span>
-                    <span class="mr-3 text-success font-12 hover underline"
-                        (click)="showFormulaBuilder=true"><i>fn()</i></span>
-                    <div class="input-wrapper w-100 d-flex align-items-center position-relative">
-                        <input type="text" class="form-control" placeholder="Data Path" odpAutoFocus
-                            (keyup.enter)="addField('target')" [(ngModel)]="item.dataPath"
-                            (paste)="onPaste($event,'target', i)">
-                        <button type="button" class="delete-btn btn btn-link text-danger"
-                            (click)="removeField('target',i)">
-                            <span class="dsi dsi-trash"></span>
-                        </button>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
+        <svg #svgCanvas class="mapping-svg w-100">
+            <g class="source-fields">
+                <g *ngFor="let item of allSources;let i=index">
+                    <g odp-source-fields [index]="i" [definition]="item"></g>
+                </g>
+            </g>
+            <g class="mapping-paths"></g>
+            <g class="target-fields">
+                <g *ngFor="let item of customTargetFields;let i=index">
+                    <g odp-target-fields [allSources]="allSources" [index]="i" [definition]="item"></g>
+                </g>
+            </g>
+        </svg>
     </div>
     <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary btn-min-width" (click)="done()">Done</button>

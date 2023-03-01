@@ -1,36 +1,40 @@
-<div class="field-block d-flex flex-column justify-content-center p-2 mx-2 mt-2 border rounded hover">
-    <div class="d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center justify-content-start">
-            <span class="dsi dsi-more-vertical-6 mr-2"></span>
-            <div class="input-wrapper w-100 d-flex align-items-center position-relative mr-3 text-truncate">
-                <span class="font-14 fw-400 text-dark">{{definition?.name}}</span>
-            </div>
-            <div class="d-flex align-items-center">
-                <ng-container *ngFor="let item of definition.source;let i=index">
-                    <div
-                        class="source-tag d-flex align-items-center justify-content-between bg-white px-2 py-1 font-12 fw-400 border mr-2">
-                        <span class="text-dark text-truncate">{{item.name}}</span>
-                        <span class="dsi dsi-close ml-2 hover" (click)="removeSource(definition,i)"></span>
-                    </div>
-                </ng-container>
-            </div>
-            <div *ngIf="!showAddSource" class="add-source d-flex align-items-center justify-content-start hover font-12 fw-400 ml-2 ignore-outside" (click)="showAddSource=true;$event.stopPropagation()">
-                <span class="dsi dsi-plus-circle-fill mr-2 text-primary ignore-outside"></span>
-                <span class="text-dark ignore-outside">Add Source</span>
-            </div>
-            <odp-source-selector *ngIf="showAddSource" [sources]="sources" odpClickOutside
-                (outside)="showAddSource=false;" (selected)="sourceSelected($event)">
-            </odp-source-selector>
-            <!-- <div *ngIf="showAddSource" class="d-flex align-items-center justify-content-start font-12 fw-400 ml-2">
-                <input type="text" class="border rounded bg-white">
-            </div> -->
-        </div>
-        <span class="mr-3 text-success font-12 hover underline" (click)="showFormulaEditor=true"><i>fn()</i></span>
-    </div>
-    <ng-container *ngFor="let item of definition.definition">
-        <odp-target-fields [definition]="item" [sources]="sources" [clearMapping]="clearMapping" [fuzzyMapping]="fuzzyMapping"></odp-target-fields>
-    </ng-container>
-</div>
-<div *ngIf="showFormulaEditor" class="formula-builder position-fixed border rounded">
-    <odp-formula-editor [edit]="edit" [definition]="definition" [(toggle)]="showFormulaEditor"></odp-formula-editor>
-</div>
+<svg>
+    <g class="node-block" [ngStyle]="style" class="hover" [attr.data-id]="definition.properties.dataPath">
+        <g [attr.data-id]="definition.properties.dataPath">
+            <rect x="0" y="0" width="300" height="36" rx="6" [attr.data-id]="definition.properties.dataPath" />
+            <rect x="0" y="0" width="300" height="36" rx="6" [attr.data-id]="definition.properties.dataPath"
+                class="rect" />
+            <rect x="0" y="0" width="36" height="36" rx="6" [attr.data-id]="definition.properties.dataPath"
+                class="function" />
+            <text x="72" y="22" text-anchor="start"
+                [attr.data-id]="definition.properties.dataPath">{{definition.properties.name}}</text>
+        </g>
+        <rect class="node-anchor start" [attr.data-id]="definition.properties.dataPath" x="-6" y="12" width="12"
+            height="12" rx="6" (click)="selectField()"
+            [class.active]="selectedNode && selectedNode._id == definition._id" />
+        <foreignObject width="18" height="18" x="10" y="6" [attr.data-id]="definition.properties.dataPath">
+            <span xmlns="http://www.w3.org/1999/xhtml" class="node-icon font-10 fw-500 text-success hover underline"
+                [attr.data-id]="definition.properties.dataPath"><i xmlns="http://www.w3.org/1999/xhtml">fn()</i></span>
+        </foreignObject>
+        <foreignObject width="18" height="18" x="46" y="9" [attr.data-id]="definition.properties.dataPath">
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='String'"
+                class="node-icon font-18 fw-500 dsi dsi-text" [attr.data-id]="definition.properties.dataPath"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Number'"
+                class="node-icon font-18 fw-500 dsi dsi-number" [attr.data-id]="definition.properties.dataPath"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Boolean'"
+                class="node-icon font-18 fw-500 dsi dsi-boolean" [attr.data-id]="definition.properties.dataPath"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Date'"
+                class="node-icon font-18 fw-500 dsi dsi-date" [attr.data-id]="definition.properties.dataPath"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Object'"
+                class="node-icon font-18 fw-500 dsi dsi-object" [attr.data-id]="definition.properties.dataPath"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Array'"
+                class="node-icon font-18 fw-500 dsi dsi-array" [attr.data-id]="definition.properties.dataPath"></span>
+        </foreignObject>
+    </g>
+    <g class="indent" *ngFor="let item of definition.definition;;let i=index">
+        <g odp-target-fields [allSources]="allSources" [index]="i" [definition]="item"></g>
+    </g>
+    <g *ngFor="let p of pathList;let i=index">
+        <path [attr.d]="p.path" class="svg-path ignore-outside" />
+    </g>
+</svg>
