@@ -5,17 +5,27 @@
             <span class="dsi dsi-close text-dark ignore-outside" (click)="cancel()"></span>
         </button>
     </div>
-    <div class="mapping-container my-3 d-flex border rounded">
+    <div class="mapping-container my-3 border rounded">
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-link d-flex align-items-center" (click)="doFuzzyMapping()">
+                <span class="dsi dsi-mapping mr-2"></span>
+                <span>Fuzzy Mappings</span>
+            </button>
+            <button type="button" class="btn btn-link d-flex align-items-center" (click)="doClearMapping()">
+                <span class="dsi dsi-ban mr-2"></span>
+                <span>Clear Mappings</span>
+            </button>
+        </div>
         <svg #svgCanvas class="mapping-svg w-100">
             <g class="source-fields">
                 <g *ngFor="let item of allSources;let i=index">
                     <g odp-source-fields [index]="i" [definition]="item"></g>
                 </g>
             </g>
-            <g class="mapping-paths"></g>
             <g class="target-fields">
-                <g *ngFor="let item of customTargetFields;let i=index">
-                    <g odp-target-fields [allSources]="allSources" [index]="i" [definition]="item"></g>
+                <g *ngFor="let item of allTargets;let i=index">
+                    <g odp-target-fields [allSources]="allSources" [allTargets]="allTargets" [index]="i"
+                        [definition]="item"></g>
                 </g>
             </g>
         </svg>

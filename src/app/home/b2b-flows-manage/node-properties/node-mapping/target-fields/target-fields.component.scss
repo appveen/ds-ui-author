@@ -1,8 +1,17 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
+.node-name {
+    height: 48px;
+    word-break: break-all;
+}
+
+rect.stroke-danger {
+    stroke: $danger;
+}
+
 rect {
-    fill: #fff;
+    fill: transparent;
     stroke: #ccc;
     stroke-width: 1;
 }
@@ -10,16 +19,16 @@ rect {
 path {
     fill: none;
     stroke: #666;
-    stroke-width: 2;
+    stroke-width: 1;
 
     &:hover {
         cursor: pointer;
-        stroke-width: 3;
+        stroke-width: 2;
     }
 
     &.selected {
-        stroke: $accent;
-        stroke-width: 3;
+        stroke: $dark !important;
+        stroke-width: 2;
     }
 }
 
@@ -37,7 +46,7 @@ path {
 
 .svg-path-transparent:hover~path {
     cursor: pointer;
-    stroke-width: 3;
+    stroke-width: 2;
 }
 
 text {

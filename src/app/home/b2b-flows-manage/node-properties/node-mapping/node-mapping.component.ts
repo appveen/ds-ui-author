@@ -1,9 +1,9 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as _ from 'lodash';
-import { fromEvent } from 'rxjs';
-import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 import { AppService } from 'src/app/utils/services/app.service';
+import { environment } from 'src/environments/environment';
+import { MappingService } from './mapping.service';
 
 @Component({
   selector: 'odp-node-mapping',
@@ -19,12 +19,12 @@ export class NodeMappingComponent implements OnInit {
   customSourceFields: Array<any>;
   customTargetFields: Array<any>;
   showFormulaBuilder: boolean;
-  fuzzyMapping: EventEmitter<any>;
-  clearMapping: EventEmitter<any>;
 
-  selectedField: any;
   allSources: Array<any>;
-  constructor(private appService: AppService) {
+  allTargets: Array<any>;
+  tempMappings: Array<any>;
+  constructor(private appService: AppService,
+    private mappingService: MappingService) {
     this.nodeList = [];
     this.close = new EventEmitter();
     this.customSourceFields = [];
@@ -32,15 +32,24 @@ export class NodeMappingComponent implements OnInit {
     this.edit = {
       status: false
     };
-    this.fuzzyMapping = new EventEmitter();
-    this.clearMapping = new EventEmitter();
     this.allSources = [];
+    this.allTargets = [];
   }
 
   ngOnInit(): void {
-    this.customSourceFields = this.currNode.dataStructure.incoming.definition || [];
-    this.customTargetFields = this.currNode.dataStructure.outgoing.definition || [];
-    this.allSources = this.flatten(this.customSourceFields);
+    this.customSourceFields = this.appService.cloneObject(this.currNode.dataStructure.incoming.definition) || [];
+    this.customTargetFields = this.appService.cloneObject(this.currNode.dataStructure.outgoing.definition) || [];
+    this.allSources = this.mappingService.flatten(this.customSourceFields);
+    this.allTargets = this.mappingService.flatten(this.customTargetFields);
+    if (this.currNode.mappings && this.currNode.mappings.length > 0) {
+      this.tempMappings = this.appService.cloneObject(this.currNode.mappings);
+      this.allTargets.forEach((item: any) => {
+        let temp = this.tempMappings.find((e: any) => e.target.dataPath == item.dataPath);
+        if (temp && temp.source) {
+          item.source = (temp.source || []).map((source: any) => this.allSources.find((src: any) => src.dataPath == source.dataPath)).filter(e => e);
+        }
+      });
+    }
   }
 
   cancel() {
@@ -49,18 +58,12 @@ export class NodeMappingComponent implements OnInit {
 
 
   done() {
-    let mappings = this.customTargetFields.map(item => {
-      const temp: any = this.convertToMapping(item);
-      let arr = [temp];
-      if (item.definition) {
-        arr = arr.concat(item.definition.map(e => this.convertToMapping(e)));
-      }
-      return arr;
-    });
-    mappings = _.flatten(mappings);
+    let mappings = this.allTargets.map(item => this.convertToMapping(item));
     this.currNode.mappings = mappings;
     this.cancel();
-    console.log(mappings);
+    if (!environment.production) {
+      console.log(mappings);
+    }
   }
 
   convertToMapping(item: any) {
@@ -70,42 +73,24 @@ export class NodeMappingComponent implements OnInit {
       dataPath: item.dataPath,
     };
     temp.source = (item.source || []).map((s) => {
-      const t = this.appService.cloneObject(s);
-      delete t.definition;
-      return t
+      let temp: any = {};
+      temp.type = s.type;
+      temp.dataPath = s.dataPath;
+      return temp;
     });
     temp.formula = item.formula;
     return temp;
   }
 
   doFuzzyMapping() {
-    this.fuzzyMapping.emit(true);
+    this.mappingService.fuzzyMapping.emit(true);
   }
 
   doClearMapping() {
-    this.clearMapping.emit(true);
+    this.mappingService.clearMappings.emit(true);
   }
 
-  flatten(definition: Array<any>, parentKey?: string) {
-    let list = [];
-    if (definition && definition.length > 0) {
-      definition.forEach((item, i) => {
-        let key = parentKey ? parentKey + '.' + item.key : item.key;
-        if (item.type == 'Array') {
-          if (item.definition[0].type == 'Object') {
-            list = list.concat(this.flatten(item.definition[0].definition, key));
-          } else {
-            list.push(item);
-          }
-        } else if (item.type == 'Object') {
-          list = list.concat(this.flatten(item.definition, key));
-        } else {
-          list.push(item);
-        }
-      });
-    };
-    return list;
-  }
+
 
   get viewBox() {
     return `0 0 1300 670`;

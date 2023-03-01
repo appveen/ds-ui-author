@@ -1,16 +1,22 @@
 <svg>
-    <g class="node-block" [ngStyle]="style" class="hover" [attr.data-id]="definition.properties.dataPath">
+    <g class="node-block" [ngStyle]="style" [attr.data-id]="definition.properties.dataPath">
         <g [attr.data-id]="definition.properties.dataPath">
-            <rect x="0" y="0" width="300" height="36" rx="6" [attr.data-id]="definition.properties.dataPath" />
-            <rect x="0" y="0" width="300" height="36" rx="6" [attr.data-id]="definition.properties.dataPath"
+            <rect x="0" y="0" width="300" height="48" rx="6" [attr.data-id]="definition.properties.dataPath" />
+            <rect x="0" y="0" width="300" height="48" rx="6" [attr.data-id]="definition.properties.dataPath"
                 class="rect" />
-            <text x="36" y="22" text-anchor="start"
-                [attr.data-id]="definition.properties.dataPath">{{definition.properties.name}}</text>
+            <!-- <text x="36" y="22" text-anchor="start"
+                [attr.data-id]="definition.properties.dataPath">{{definition.properties.name}}</text> -->
         </g>
-        <rect class="node-anchor end" [attr.data-id]="definition.properties.dataPath" x="294" y="12" width="12"
+        <rect class="node-anchor end hover" [attr.data-id]="definition.properties.dataPath" x="294" y="18" width="12"
             height="12" rx="6" (click)="selectField()"
             [class.active]="selectedNode && selectedNode._id == definition._id" />
-        <foreignObject width="18" height="18" x="10" y="9" [attr.data-id]="definition.properties.dataPath">
+        <foreignObject width="250" height="48" x="36" y="0" [attr.data-id]="definition.properties.dataPath">
+            <span xmlns="http://www.w3.org/1999/xhtml"
+                class="node-name text-wrap d-flex align-items-center justify-content-start font-11 fw-500">
+                {{definition.properties.name}}
+            </span>
+        </foreignObject>
+        <foreignObject width="18" height="18" x="10" y="15" [attr.data-id]="definition.properties.dataPath">
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='String'"
                 class="node-icon font-18 fw-500 dsi dsi-text" [attr.data-id]="definition.properties.dataPath"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Number'"

@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import * as uuid from 'uuid/v1';
 
-import { environment } from 'src/environments/environment';
 import { MappingService } from '../mapping.service';
 
 @Component({
@@ -19,16 +18,13 @@ export class SourceFieldsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!environment.production) {
-      console.log(this.definition);
-    }
     if (!this.definition._id) {
       this.definition._id = uuid();
     }
     if (!this.definition.coordinates) {
       this.definition.coordinates = {};
     }
-    this.definition.coordinates.y = (this.index + 1) * 50;
+    this.definition.coordinates.y = (this.index + 1) * 55;
   }
 
   selectField() {
@@ -37,8 +33,9 @@ export class SourceFieldsComponent implements OnInit {
   }
 
   get style() {
+    let x = (this.definition.depth * 20) + 30;
     return {
-      transform: `translate(30px, ${this.definition.coordinates.y}px)`,
+      transform: `translate(${x}px, ${this.definition.coordinates.y}px)`,
     }
   }
 

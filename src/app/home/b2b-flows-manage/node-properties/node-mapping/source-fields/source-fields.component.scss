@@ -1,6 +1,11 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
+.node-name {
+    height: 48px;
+    word-break: break-all;
+}
+
 rect {
     fill: #fff;
     stroke: #ccc;
