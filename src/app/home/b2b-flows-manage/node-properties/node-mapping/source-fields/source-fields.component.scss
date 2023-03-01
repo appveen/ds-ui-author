@@ -6,6 +6,15 @@
     word-break: break-all;
 }
 
+.node-icon-bg {
+    width: 26px;
+    height: 26px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 rect {
     fill: #fff;
     stroke: #ccc;
