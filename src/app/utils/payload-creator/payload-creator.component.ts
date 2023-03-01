@@ -7,15 +7,17 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class PayloadCreatorComponent implements OnInit {
 
+  @Input() nodeList: Array<any>;
   @Input() data: any;
   @Output() dataChange: EventEmitter<any>;
   globalType: string;
   triggerAddChild: EventEmitter<any>;
   constructor() {
+    this.nodeList = [];
+    this.data = {};
     this.dataChange = new EventEmitter();
     this.globalType = 'object';
     this.triggerAddChild = new EventEmitter();
-    this.data = {};
   }
 
   ngOnInit(): void {

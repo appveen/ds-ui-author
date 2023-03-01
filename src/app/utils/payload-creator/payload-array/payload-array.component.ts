@@ -8,11 +8,13 @@ import { Field } from '../payload-creator.component';
 })
 export class PayloadArrayComponent implements OnInit {
 
+  @Input() nodeList: Array<any>;
   @Input() data: any;
   @Output() dataChange: EventEmitter<any>;
   @Input() addChild: EventEmitter<any>;
   fieldList: Array<any>;
   constructor() {
+    this.nodeList = [];
     this.fieldList = [];
     this.data = [];
     this.dataChange = new EventEmitter();
