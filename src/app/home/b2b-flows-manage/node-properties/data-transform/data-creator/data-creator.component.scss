@@ -1,0 +1,32 @@
+.configure-window {
+    top: 0px;
+    right: -1000px;
+    z-index: 3;
+    width: 1000px;
+    height: 100vh;
+    overflow-y: auto;
+    transition: 0.2s;
+
+    &.show {
+        right: 0px;
+    }
+}
+
+.input-height {
+    min-height: calc(100vh - 352px);
+    max-height: calc(100vh - 352px);
+}
+
+.suggestion-list {
+    min-width: 420px;
+    max-width: 420px;
+    min-height: calc(100vh - 188px);
+    max-height: calc(100vh - 188px);
+    overflow-y: auto;
+}
+
+.methods-list {
+    min-width: 420px;
+    // max-width: 420px;
+    overflow-y: auto;
+}

@@ -177,7 +177,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       if (res.inputNode.dataStructure && res.inputNode.dataStructure.outgoing) {
         this.patchDataStructure(res.inputNode.dataStructure.outgoing, res.dataStructures);
       }
-      if (!res.errorNode) {
+      if (!res.errorNode || _.isEmpty(res.errorNode)) {
         let errorNode = this.flowService.getNodeObject('ERROR');
         errorNode.coordinates = {
           x: 400,

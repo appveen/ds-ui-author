@@ -182,9 +182,7 @@ export class ErrorNodeComponent implements OnInit {
         transform: `translate(${this.node.coordinates.x}px, ${this.node.coordinates.y}px)`,
       }
     }
-    return {
-      transform: `translate(400px, 30px)`,
-    }
+    return {}
   }
 
   get isSelected() {

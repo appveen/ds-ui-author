@@ -18,7 +18,7 @@ export class DataServicePropertiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.prevNode = this.nodeList.find(e => e.onSuccess.findIndex(es => es._id == this.currNode._id) > -1);
+    this.prevNode = this.nodeList.find(e => (e.onSuccess || []).findIndex(es => es._id == this.currNode._id) > -1);
     this.setDefaultData();
   }
 

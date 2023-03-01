@@ -126,30 +126,7 @@ export class FlowNodeComponent implements OnInit {
       prevNode: this.prevNode
     });
   }
-
-  // @HostListener('mousedown', ['$event'])
-  // onMouseDown(event: any) {
-  //   this.isMouseDown = event;
-  // }
-
-  // @HostListener('document:mouseup', ['$event'])
-  // onMouseUp(event: any) {
-  //   this.isMouseDown = null;
-  //   // this.flowService.anchorSelected = null;
-  // }
-
-  // @HostListener('mousemove', ['$event'])
-  // onMouseMove(event: any) {
-  //   if (this.isMouseDown) {
-  //     const tempX = event.clientX - this.isMouseDown.clientX;
-  //     const tempY = event.clientY - this.isMouseDown.clientY;
-  //     this.isMouseDown = event;
-  //     this.currNode.coordinates.x += tempX;
-  //     this.currNode.coordinates.y += tempY;
-  //     this.flowService.reCreatePaths.emit();
-  //   }
-  // }
-
+  
   @HostListener('document:keydown', ['$event'])
   onDeleteKey(event: any) {
     if (((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') {

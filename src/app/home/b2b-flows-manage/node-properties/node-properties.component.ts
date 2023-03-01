@@ -17,9 +17,6 @@ export class NodePropertiesComponent implements OnInit {
   @Input() nodeList: Array<any>;
   @Output() close: EventEmitter<any>;
   @Output() changesDone: EventEmitter<any>;
-  showNodeMapping: boolean;
-  showAgentSelector: boolean;
-  showCodeBlock: boolean;
   prevNode: any;
   toggle: any;
   constructor(private commonService: CommonService,
@@ -50,13 +47,6 @@ export class NodePropertiesComponent implements OnInit {
     }
     if (this.currNode && !this.currNode.options.retry) {
       this.currNode.options.retry = {};
-    }
-  }
-
-  closeMapping(data: any) {
-    if (!data) {
-      this.showNodeMapping = false;
-      return;
     }
   }
 
@@ -129,7 +119,7 @@ export class NodePropertiesComponent implements OnInit {
     if (index == -1) {
       this.currNode.options.agents.push(data);
     }
-    this.showAgentSelector = false;
+    this.toggle['agentSelector'] = false;
     this.changesDone.emit()
   }
 
