@@ -10,6 +10,7 @@ import { AppService } from 'src/app/utils/services/app.service';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'odp-b2b-flows',
@@ -55,7 +56,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
-      type: ['API',[Validators.required]],
+      type: ['API', [Validators.required]],
       inputNode: []
     });
     this.apiConfig = {
@@ -131,6 +132,11 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     });
     this.subscriptions['flow.new'] = this.commonService.flow.new.subscribe(data => {
       this.getFlows()
+    });
+    interval(10000).subscribe(() => {
+      if (!this.searchTerm) {
+        this.getFlows();
+      }
     });
   }
 
