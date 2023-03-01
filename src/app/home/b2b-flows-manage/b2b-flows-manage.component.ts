@@ -289,6 +289,11 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     });
     this.flowData.inputNode = tempNodeList[0];
     tempNodeList.splice(0, 1);
+    let errorIndex = tempNodeList.findIndex(e => e.type == 'ERROR');
+    if (errorIndex > -1) {
+      this.flowData.errorNode = tempNodeList[errorIndex];
+      tempNodeList.splice(errorIndex, 1);
+    }
     this.flowData.nodes = tempNodeList;
     this.flowData.dataStructures = dataStructures;
     if (!environment.production) {
