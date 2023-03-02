@@ -149,8 +149,7 @@
         <div *ngIf="showNewAgentWindow" class="position-relative agent-name-wrapper">
             <input #agentName="ngModel" autocomplete="off" type="text" class="form-control" [(ngModel)]="agentData.name"
                 [ngClass]="{'is-invalid':agentName.invalid && (agentName.dirty || agentName.touched)}" maxlength="24"
-                required [pattern]="'[a-z0-9A-Z\\s_-]+'" odpAutoFocus (keyup.enter)="triggerAgentCreate()"
-                [disabled]="agentData.isEdit">
+                required [pattern]="'[a-z0-9A-Z\\s_-]+'" odpAutoFocus (keyup.enter)="triggerAgentCreate()">
             <ng-container *ngIf="agentName.invalid && (agentName.dirty || agentName.touched)">
                 <span *ngIf="agentName?.errors?.required" class="dsi dsi-danger-circle text-danger position-absolute"
                     ngbTooltip="Name is required" container="body"></span>

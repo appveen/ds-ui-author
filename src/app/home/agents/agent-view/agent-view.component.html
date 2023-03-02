@@ -289,18 +289,18 @@
                 </ng-container>
             </div>
         </div>
-        <div class="form-group position-relative agent-config-wrapper w-100">
+        <div *ngIf="agentDetails" class="form-group position-relative agent-config-wrapper w-100">
             <div class="d-flex align-items-center justify-content-between mt-2">
                 <label class="font-14 text-dark mr-2">Encrypt file</label>
-                <odp-switch [checked]="agentDetails?.encryptFile" [edit]="{status:true}"></odp-switch>
+                <odp-switch [(checked)]="agentDetails.encryptFile" [edit]="{status:true}"></odp-switch>
             </div>
             <div class="d-flex align-items-center justify-content-between mt-2">
                 <label class="font-14 text-dark mr-2">Retain file on success</label>
-                <odp-switch [checked]="agentDetails?.retainFileOnSuccess" [edit]="{status:true}"></odp-switch>
+                <odp-switch [(checked)]="agentDetails.retainFileOnSuccess" [edit]="{status:true}"></odp-switch>
             </div>
             <div class="d-flex align-items-center justify-content-between mt-2">
                 <label class="font-14 text-dark mr-2">Retain file on error</label>
-                <odp-switch [checked]="agentDetails?.retainFileOnError" [edit]="{status:true}"></odp-switch>
+                <odp-switch [(checked)]="agentDetails.retainFileOnError" [edit]="{status:true}"></odp-switch>
             </div>
         </div>
         <div class="d-flex w-100 mt-auto">
