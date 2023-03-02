@@ -112,8 +112,11 @@ export class AgentsComponent implements OnInit, OnDestroy {
             retainFileOnError: true
         };
         if (agent) {
-            this.agentData._id=agent._id
-            this.agentData.name = agent.name
+            this.agentData._id=agent._id,
+            this.agentData.name = agent.name,
+            this.agentData.encryptFile= agent.encryptFile,
+            this.agentData.retainFileOnSuccess= agent.retainFileOnSuccess,
+            this.agentData.retainFileOnError= agent.retainFileOnError,
             this.agentData.isEdit = true
         }
         this.showNewAgentWindow = true;
@@ -133,6 +136,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
                     this.ts.success('Agent Saved Sucessfully');
                     this.showNewAgentWindow = false;
                     this.showLazyLoader = false;
+                    this.getAgentList();
                 }
 
             }, err => {
