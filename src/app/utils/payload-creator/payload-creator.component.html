@@ -17,15 +17,8 @@
                 (click)="addFromRoot()"></span>
         </div>
     </div>
-<<<<<<< HEAD
     <odp-payload-object *ngIf="globalType=='object'" [data]="data" (dataChange)="onDataChange($event)"
         [addChild]="triggerAddChild" [rcData]="rcData"></odp-payload-object>
     <odp-payload-array *ngIf="globalType=='array'" [data]="data" (dataChange)="onDataChange($event)"
         [addChild]="triggerAddChild" [rcData]="rcData"></odp-payload-array>
-=======
-    <odp-payload-object *ngIf="globalType=='object'" [nodeList]="nodeList" [data]="data"
-        (dataChange)="onDataChange($event)" [addChild]="triggerAddChild"></odp-payload-object>
-    <odp-payload-array *ngIf="globalType=='array'" [nodeList]="nodeList" [data]="data"
-        (dataChange)="onDataChange($event)" [addChild]="triggerAddChild"></odp-payload-array>
->>>>>>> main
 </div>
