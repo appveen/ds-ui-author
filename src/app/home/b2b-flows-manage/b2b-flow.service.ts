@@ -32,7 +32,8 @@ export class B2bFlowService {
       FUNCTION: 'Function',
       MAPPING: 'Mapping',
       UNWIND: 'Change Root',
-      RESPONSE: 'Response'
+      RESPONSE: 'Response',
+      ERROR: 'Global Error'
     };
   }
 
@@ -65,6 +66,16 @@ export class B2bFlowService {
       } else {
         configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
         configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length - 2).join('');
+      }
+    } else if (typeof value == 'string' && value.startsWith('node[')) {
+      const charArr = value.split('');
+      configuredData.node = charArr.slice(6, 12).join('');
+      const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
+      if (nodeKeyIndexes.length == 1) {
+        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length).join('');
+      } else {
+        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
+        configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length).join('');
       }
     } else {
       configuredData.customValue = value;
@@ -302,5 +313,60 @@ export class B2bFlowService {
       });
     }
     return temp;
+  }
+
+  getAvailableTransformMethods() {
+    return [
+      {
+        name: 'HTTP.POST',
+        params: [
+          {
+            name: 'URL',
+            type: 'String'
+          },
+          {
+            name: 'Body',
+            type: 'Object'
+          },
+          {
+            name: 'Response Data Path',
+            type: 'String'
+          }
+        ],
+        value: 'http.post( "URL", { Body }, "Response DataPath" )'
+      },
+      {
+        name: 'HTTP.GET',
+        params: [
+          {
+            name: 'URL',
+            type: 'String'
+          },
+          {
+            name: 'Response Data Path',
+            type: 'String'
+          }
+        ],
+        value: 'http.get( "URL", "Response DataPath" )'
+      },
+      {
+        name: 'DS.GET',
+        params: [
+          {
+            name: 'Name',
+            type: 'String'
+          },
+          {
+            name: 'Filter',
+            type: 'Object'
+          },
+          {
+            name: 'Response Data Path',
+            type: 'String'
+          }
+        ],
+        value: 'ds.get( "NAME", { filter }, "Response DataPath" )'
+      }
+    ];
   }
 }

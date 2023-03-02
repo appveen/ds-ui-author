@@ -290,7 +290,7 @@ export class AgentViewComponent implements OnInit {
     delete this.agentDetails.isEdit;
     this.showEditAgentWindow = false;
     this.showLazyLoader = true;
-    this.commonService.post('partnerManager', `/${this.commonService.app._id}/agent`, this.agentDetails).subscribe(res => {
+    this.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/`+this.agentDetails._id, this.agentDetails).subscribe(res => {
       this.showLazyLoader = false;
       // this.getAgentList();
     }, err => {

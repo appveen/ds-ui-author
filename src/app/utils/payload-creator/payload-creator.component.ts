@@ -8,17 +8,23 @@ import { B2bFlowService } from '../../home/b2b-flows-manage/b2b-flow.service';
 })
 export class PayloadCreatorComponent implements OnInit {
 
+  @Input() nodeList: Array<any>;
   @Input() data: any;
   @Input() nodeList: any;
   @Output() dataChange: EventEmitter<any>;
   globalType: string;
   triggerAddChild: EventEmitter<any>;
+<<<<<<< HEAD
   rcData: any;
   constructor(private flowService: B2bFlowService) {
+=======
+  constructor() {
+    this.nodeList = [];
+    this.data = {};
+>>>>>>> main
     this.dataChange = new EventEmitter();
     this.globalType = 'object';
     this.triggerAddChild = new EventEmitter();
-    this.data = {};
   }
 
   ngOnInit(): void {

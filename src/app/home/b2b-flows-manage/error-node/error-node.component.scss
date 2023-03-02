@@ -1,0 +1,90 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+rect {
+    fill: #fff;
+    stroke: #F44336;
+    stroke-width: 1;
+}
+
+path {
+    fill: none;
+    stroke: #666;
+    stroke-width: 2;
+
+    &:hover {
+        cursor: pointer;
+        stroke-width: 3;
+    }
+
+    &.selected {
+        stroke: $accent;
+        stroke-width: 3;
+    }
+}
+
+.svg-path-transparent {
+    fill: none;
+    stroke: #666;
+    stroke-opacity: 0%;
+    stroke-width: 20;
+
+    &:hover {
+        cursor: pointer;
+        stroke-width: 20; //increase the value to increase the hover area
+    }
+}
+
+.svg-path-transparent:hover~path {
+    cursor: pointer;
+    stroke-width: 3;
+}
+
+text {
+    stroke-width: 0;
+    fill: #F44336;
+    font-size: 12px;
+}
+
+text.path-text {
+    &.selected {
+        stroke-width: 0.75;
+        stroke: #000;
+    }
+}
+
+// text.node-name {
+//     stroke-width: 0;
+//     fill: $secondary;
+//     font-size: 11px;
+// }
+
+.active {
+    .rect {
+        fill: rgba($accent, 0.3);
+    }
+
+    text:not(.node-name) {
+        stroke-width: 0.75 !important;
+        stroke: #F44336;
+    }
+}
+
+.node-anchor {
+    fill: #fff;
+
+    &:hover {
+        fill: $secondary;
+    }
+
+    &.active {
+        fill: $accent;
+    }
+}
+
+.delete-icon {
+    fill: #cfcfcf;
+    stroke: #cccc;
+    stroke-width: 1;
+
+}

@@ -10,7 +10,7 @@ import { Field } from '../payload-creator.component';
 })
 export class PayloadFieldComponent implements OnInit {
 
-
+  @Input() nodeList: Array<any>;
   @Input() parentArray: boolean;
   @Input() fieldList: Array<Field>;
   @Input() index: number;
@@ -22,6 +22,7 @@ export class PayloadFieldComponent implements OnInit {
   $trigger: Subject<any>;
   openDropdown: boolean;
   constructor() {
+    this.nodeList = [];
     this.index = -1;
     this.parentArray = false;
     this.data = {};
