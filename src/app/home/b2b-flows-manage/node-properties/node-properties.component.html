@@ -93,6 +93,10 @@
                     <option value="multipart/form-data">multipart/form-data</option>
                 </select>
             </div>
+            <div class="form-group position-relative">
+                <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
+                <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout">
+            </div>
         </ng-container>
         <!-- <ng-container *ngIf="currNode?.type=='FILE'">
             <div class="form-group">
