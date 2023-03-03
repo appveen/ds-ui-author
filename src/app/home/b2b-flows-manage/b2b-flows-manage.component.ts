@@ -178,7 +178,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.patchDataStructure(res.inputNode.dataStructure.outgoing, res.dataStructures);
       }
       if (!res.errorNode || _.isEmpty(res.errorNode)) {
-        let errorNode = this.flowService.getNodeObject('ERROR');
+        let errorNode = this.flowService.getNodeObject('ERROR', this.nodeList);
         errorNode.coordinates = {
           x: 400,
           y: 30
@@ -431,7 +431,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   addNode(event: any, type: string) {
     this.contextMenuStyle = null;
-    const tempNode = this.flowService.getNodeObject(type);
+    const tempNode = this.flowService.getNodeObject(type, this.nodeList);
     tempNode.coordinates = {};
     const ele: HTMLElement = document.querySelectorAll('.flow-designer-svg')[0] as HTMLElement;
     const rect = ele.getBoundingClientRect();

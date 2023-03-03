@@ -1,6 +1,9 @@
 <div>
     <div class="d-flex align-items-center justify-content-between px-4 py-2 mt-4">
-        <span class="font-20 fw-600">{{currNode.name ? currNode.name : 'Properties'}}</span>
+        <div class="d-flex flex-column align-items-start">
+            <span class="font-20 fw-600">{{currNode.name ? currNode.name : 'Properties'}}</span>
+            <span class="rounded p-1 bg-light font-10 mt-1 border">{{currNode?._id}}</span>
+        </div>
         <div class="d-flex">
             <button *ngIf="!isInputNode" type="button" class="btn btn-link" (click)="deleteNode()">
                 <span class="dsi dsi-trash text-danger"></span>
@@ -11,10 +14,6 @@
         </div>
     </div>
     <hr>
-    <div class="font-12 text-secondary px-4 py-2">
-        <span class="mr-1 fw-500">Node ID:</span>
-        <span>{{currNode?._id}}</span>
-    </div>
 </div>
 <div class="p-4">
     <div class="form-group">
@@ -31,7 +30,7 @@
             <option value="FILE">File Agent</option>
             <option *ngIf="!isInputNode" value="API">API Invoke</option>
             <option *ngIf="!isInputNode" value="MAPPING">Mapping</option>
-            <option *ngIf="!isInputNode" value="TRANSFORM">Transform</option>
+            <option *ngIf="!isInputNode" value="PAYLOAD">Payload Creator</option>
             <option *ngIf="!isInputNode" value="CODEBLOCK">Code Block</option>
             <option *ngIf="!isInputNode" value="CONNECTOR">Connector</option>
             <option *ngIf="!isInputNode" value="UNWIND">Change Root</option>
@@ -46,7 +45,7 @@
         </odp-input-data-selector>
     </div> -->
     <ng-container *ngIf="currNode?.type!='ERROR'">
-        <div *ngIf="currNode?.type!='RESPONSE' && currNode?.type!='TRANSFORM' && !isInputNode" class="form-group">
+        <div *ngIf="currNode?.type!='RESPONSE' && currNode?.type!='PAYLOAD' && !isInputNode" class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="inputDataStructure">Input Data Structure
                 <span class="text-muted"><i>(optional)</i></span>
             </label>
@@ -226,11 +225,11 @@
             </button>
         </div>
     </ng-container>
-    <ng-container *ngIf="currNode.type=='TRANSFORM'">
+    <ng-container *ngIf="currNode.type=='PAYLOAD'">
         <div class="form-group">
             <button type="button" class="btn btn-dark w-100 ignore-outside"
-                (click)="toggle['transform']=!toggle['transform']">
-                Transform
+                (click)="toggle['payload']=!toggle['payload']">
+                Create Payload
             </button>
         </div>
     </ng-container>
@@ -359,9 +358,9 @@
         (close)="toggle['mapping']=false"></odp-node-mapping>
 </div>
 
-<div [ngClass]="{'show':toggle['transform']}" class="node-mapping-window border-left position-fixed bg-white p-4">
-    <odp-data-transform *ngIf="toggle['transform']" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
-        (close)="toggle['transform']=false"></odp-data-transform>
+<div [ngClass]="{'show':toggle['payload']}" class="node-mapping-window border-left position-fixed bg-white p-4">
+    <odp-data-transform *ngIf="toggle['payload']" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
+        (close)="toggle['payload']=false"></odp-data-transform>
 </div>
 
 <div [ngClass]="{'show':toggle['codeBlock']}" class="node-mapping-window border-left position-fixed bg-white p-4">

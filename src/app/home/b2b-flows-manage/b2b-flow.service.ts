@@ -31,6 +31,8 @@ export class B2bFlowService {
       DATASERVICE: 'Data Service',
       FUNCTION: 'Function',
       MAPPING: 'Mapping',
+      TRANSFORM: 'Transform',
+      PAYLOAD: 'Payload Creator',
       UNWIND: 'Change Root',
       RESPONSE: 'Response',
       ERROR: 'Global Error'
@@ -115,9 +117,10 @@ export class B2bFlowService {
     return text;
   }
 
-  getNodeObject(type: string) {
+  getNodeObject(type: string, nodeList: Array<any>) {
+    let allIds = nodeList.map(e => e._id);
     const temp: any = {
-      _id: this.appService.getNodeID(),
+      _id: this.appService.getNodeID(allIds),
       name: _.snakeCase(this.getNodeType({ type, contentType: 'application/json' })),
       type: type,
       onSuccess: [],

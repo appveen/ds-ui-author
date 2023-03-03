@@ -206,6 +206,10 @@
         <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
         <span class="font-13 fw-400">Function</span>
     </div>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'PAYLOAD')">
+        <span class="node-icon font-16 fw-400 dsi dsi-object mr-2"></span>
+        <span class="font-13 fw-400">Payload Creator</span>
+    </div>
     <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'MAPPING')">
         <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
         <span class="font-13 fw-400">Mapping</span>
@@ -216,7 +220,7 @@
     </div>
     <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover"
         (click)="addNode($event,'CODEBLOCK')">
-        <span class="node-icon font-16 fw-400 dsi dsi-object mr-2 text-muted"></span>
+        <span class="node-icon font-16 fw-400 dsi dsi-console mr-2 text-secondary"></span>
         <span class="font-13 fw-400">Code Block</span>
     </div>
     <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'UNWIND')">
