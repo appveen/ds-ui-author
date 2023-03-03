@@ -14,7 +14,8 @@ import { B2bFlowService } from './b2b-flow.service';
 @Component({
   selector: 'odp-b2b-flows-manage',
   templateUrl: './b2b-flows-manage.component.html',
-  styleUrls: ['./b2b-flows-manage.component.scss']
+  styleUrls: ['./b2b-flows-manage.component.scss'],
+  providers: [B2bFlowService]
 })
 export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
@@ -214,6 +215,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         if (!node.name) {
           node.name = this.appService.toSnakeCase(this.flowService.getNodeType(node, i == 0));
         }
+        this.flowService.nameIdMap[node._id] = node.name;
         if (!node.coordinates || !node.coordinates.x || !node.coordinates.y) {
           node.coordinates = {
             x: 20 + (i * 120),

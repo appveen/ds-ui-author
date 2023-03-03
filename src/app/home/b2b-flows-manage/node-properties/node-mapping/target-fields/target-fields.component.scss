@@ -1,105 +1,36 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.node-name {
-    height: 48px;
-    word-break: break-all;
-}
+.field-block {
+    .field-anchor {
+        min-height: 12px;
+        max-height: 12px;
+        min-width: 12px;
+        max-width: 12px;
+        border-radius: 4px;
+        margin-left: -6px;
+        background: $white;
 
-.node-icon-bg {
-    width: 26px;
-    height: 26px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        &:hover {
+            background: $secondary;
+        }
 
-rect.stroke-danger {
-    stroke: $danger;
-}
-
-rect {
-    fill: transparent;
-    stroke: #ccc;
-    stroke-width: 1;
-}
-
-path {
-    fill: none;
-    stroke: #666;
-    stroke-width: 1;
-
-    &:hover {
-        cursor: pointer;
-        stroke-width: 2;
+        &.selected {
+            background: $accent;
+        }
     }
 
-    &.selected {
-        stroke: $dark !important;
-        stroke-width: 2;
-    }
-}
-
-.svg-path-transparent {
-    fill: none;
-    stroke: #666;
-    stroke-opacity: 0%;
-    stroke-width: 20;
-
-    &:hover {
-        cursor: pointer;
-        stroke-width: 20; //increase the value to increase the hover area
-    }
-}
-
-.svg-path-transparent:hover~path {
-    cursor: pointer;
-    stroke-width: 2;
-}
-
-text {
-    stroke-width: 0;
-    fill: #333;
-    font-size: 12px;
-}
-
-text.path-text {
-    &.selected {
-        stroke-width: 0.75;
-        stroke: #000;
-    }
-}
-
-.active {
-    .rect {
-        fill: rgba($accent, 0.3);
+    .function-holder,
+    .attribute-type-holder,
+    .attribute-name-holder {
+        min-height: 48px;
+        max-height: 48px;
+        word-break: break-all;
     }
 
-    text:not(.node-name) {
-        stroke-width: 0.75 !important;
-        stroke: #ccc;
+    .function-holder,
+    .attribute-type-holder {
+        min-width: 48px;
+        max-width: 48px;
     }
-}
-
-.node-anchor {
-    fill: #fff;
-
-    &:hover {
-        fill: $secondary;
-    }
-
-    &.active {
-        fill: $accent;
-    }
-}
-
-.delete-icon {
-    fill: #cfcfcf;
-    stroke: #cccc;
-    stroke-width: 1;
-}
-
-.indent {
-    transform: translateX(50px);
 }

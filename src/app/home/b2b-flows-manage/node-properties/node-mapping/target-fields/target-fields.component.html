@@ -1,75 +1,18 @@
-<svg>
-    <g class="node-block" [ngStyle]="style" [attr.data-id]="definition.properties.dataPath">
-        <g [attr.data-id]="definition.properties.dataPath">
-            <rect x="0" y="0" width="300" height="48" rx="6" [attr.data-id]="definition.properties.dataPath" />
-            <rect x="0" y="0" width="36" height="48" rx="6" [attr.data-id]="definition.properties.dataPath"
-                class="function" />
-            <!-- <text x="72" y="22" text-anchor="start"
-                [attr.data-id]="definition.properties.dataPath">{{definition.properties.name}}</text> -->
-        </g>
-        <rect class="node-anchor start hover" [attr.data-id]="definition.properties.dataPath" x="-6" y="18" width="12"
-            height="12" rx="6" (click)="selectField()"
-            [class.active]="selectedNode && selectedNode._id == definition._id" />
-        <foreignObject width="220" height="48" x="72" y="0" [attr.data-id]="definition.properties.dataPath">
-            <span xmlns="http://www.w3.org/1999/xhtml"
-                class="node-name text-wrap d-flex align-items-center justify-content-start font-11 fw-500">
-                {{definition.properties.name}}
-            </span>
-        </foreignObject>
-        <foreignObject width="18" height="18" x="10" y="12" [attr.data-id]="definition.properties.dataPath">
-            <span xmlns="http://www.w3.org/1999/xhtml" class="node-icon font-10 fw-500 text-success underline hover"
-                [attr.data-id]="definition.properties.dataPath"><i xmlns="http://www.w3.org/1999/xhtml">fn()</i></span>
-        </foreignObject>
-        <foreignObject width="26" height="26" x="42" y="11" [attr.data-id]="definition.properties.dataPath">
-            <div xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='String'" class="node-icon-bg"
-                style="background-color: #E7CBD4;">
-                <span xmlns="http://www.w3.org/1999/xhtml" class="node-icon font-18 fw-500 dsi dsi-text"
-                    [attr.data-id]="definition.properties.dataPath"></span>
-            </div>
-            <div xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Number'" class="node-icon-bg"
-                style="background-color: #E7CBE6;">
-                <span xmlns="http://www.w3.org/1999/xhtml" class="node-icon font-18 fw-500 dsi dsi-number"
-                    [attr.data-id]="definition.properties.dataPath"></span>
-            </div>
-            <div xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Boolean'" class="node-icon-bg"
-                style="background-color: #CBE7CE;">
-                <span xmlns="http://www.w3.org/1999/xhtml" class="node-icon font-18 fw-500 dsi dsi-boolean"
-                    [attr.data-id]="definition.properties.dataPath"></span>
-            </div>
-            <div xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Date'" class="node-icon-bg"
-                style="background-color: #FFE6D8;">
-                <span xmlns="http://www.w3.org/1999/xhtml" class="node-icon font-18 fw-500 dsi dsi-date"
-                    [attr.data-id]="definition.properties.dataPath"></span>
-            </div>
-            <div xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Object'" class="node-icon-bg"
-                style="background-color: #D7D4EF;">
-                <span xmlns="http://www.w3.org/1999/xhtml" class="node-icon font-18 fw-500 dsi dsi-object"
-                    [attr.data-id]="definition.properties.dataPath"></span>
-            </div>
-            <div xmlns="http://www.w3.org/1999/xhtml" *ngIf="definition.type=='Array'" class="node-icon-bg"
-                style="background-color: #D3E4FF;">
-                <span xmlns="http://www.w3.org/1999/xhtml" class="node-icon font-18 fw-500 dsi dsi-array"
-                    [attr.data-id]="definition.properties.dataPath"></span>
-            </div>
-        </foreignObject>
-    </g>
-    <!-- <g class="indent" *ngFor="let item of definition.definition;;let i=index">
-        <g odp-target-fields [allSources]="allSources" [index]="i" [definition]="item"></g>
-    </g> -->
-    <g *ngFor="let p of pathList;let i=index">
-        <path [attr.d]="p.path" class="svg-path svg-path-transparent ignore-outside"
-            [class.selected]="selectedPathIndex == i" (click)="selectPath(i)" />
-        <path [attr.d]="p.path" [class.selected]="selectedPathIndex==i" class="svg-path ignore-outside"
-            (click)="selectPath(i)" [style]="'stroke:'+p.color" />
-        <g *ngIf="selectedPathIndex==i">
-            <rect class="stroke-danger hover" [attr.x]="p.cx-5" [attr.y]="p.cy-5" width="30" height="30" rx="6"
-                style="fill:#fff;" />
-            <foreignObject width="18" height="18" [attr.x]="p.cx" [attr.y]="p.cy"
-                [attr.data-id]="definition.properties.dataPath" (click)="deletePath(p)">
-                <span xmlns="http://www.w3.org/1999/xhtml"
-                    class="node-icon font-20 fw-500 dsi dsi-trash text-danger hover" (click)="deletePath(p)"
-                    [attr.data-id]="definition.properties.dataPath"></span>
-            </foreignObject>
-        </g>
-    </g>
-</svg>
+<div class="field-wrapper">
+    <div class="field-block d-flex align-items-center border rounded mb-1">
+        <div class="field-anchor d-flex align-items-center justify-content-center border hover"
+            [class.selected]="isSelected" [attr.data-path]="definition.properties.dataPath"
+            [attr.data-id]="definition._id" (click)="selectField($event)"></div>
+        <div class="function-holder d-flex align-items-center justify-content-center border-right hover underline"
+            (click)="showFormulaEditor()">
+            <i class="text-success">fn()</i>
+        </div>
+        <div class="attribute-type-holder d-flex align-items-center justify-content-center">
+            <odp-field-type [field]="definition"></odp-field-type>
+        </div>
+        <div class="attribute-name-holder d-flex align-items-center text-wrap pr-2">{{definition.dataPath}}</div>
+    </div>
+</div>
+
+<odp-formula-editor *ngIf="toggleFormulaEditor" [field]="definition" [nodeList]="nodeList" [(data)]="definition.formula"
+    (close)="toggleFormulaEditor=false"></odp-formula-editor>

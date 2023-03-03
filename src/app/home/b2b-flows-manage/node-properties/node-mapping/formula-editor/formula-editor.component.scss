@@ -1,4 +1,33 @@
-.code-editor {
-    min-height: calc(100vh - 250px);
-    max-height: calc(100vh - 250px);
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.configure-window {
+    top: 0px;
+    right: 0px;
+    z-index: 4;
+    width: 1000px;
+    height: 100vh;
+    overflow-y: auto;
+    transition: 0.2s;
+}
+
+.input-height {
+    min-height: calc(100vh - 352px);
+    max-height: calc(100vh - 352px);
+    word-break: break-all;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.suggestion-list {
+    min-width: 500px;
+    max-width: 500px;
+    min-height: calc(100vh - 540px);
+    max-height: calc(100vh - 540px);
+    overflow-y: auto;
+}
+
+.methods-list {
+    min-width: 420px;
+    // max-width: 420px;
+    overflow-y: auto;
 }

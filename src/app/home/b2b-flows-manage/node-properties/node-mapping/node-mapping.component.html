@@ -16,7 +16,70 @@
                 <span>Clear Mappings</span>
             </button>
         </div>
-        <svg #svgCanvas class="mapping-svg w-100">
+        <div class="mapping-box d-flex align-items-stretch p-4">
+            <div class="source-list">
+                <ng-container *ngFor="let node of nodeList;let i=index">
+                    <div *ngIf="node._id!=currNode._id" class="border mb-3 rounded p-2">
+                        <div>
+                            <div *ngIf="node.type=='FILE'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">File Agent</span>
+                            </div>
+                            <div *ngIf="node.type=='API'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">Invoke API</span>
+                            </div>
+                            <div *ngIf="node.type=='CONNECTOR'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">Connector</span>
+                            </div>
+                            <div *ngIf="node.type=='DATASERVICE'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">Data Service</span>
+                            </div>
+                            <div *ngIf="node.type=='FUNCTION'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">Function</span>
+                            </div>
+                            <div *ngIf="node.type=='PAYLOAD'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-object mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">Payload Creator</span>
+                            </div>
+                            <div *ngIf="node.type=='MAPPING'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">Mapping</span>
+                            </div>
+                            <div *ngIf="node.type=='CODEBLOCK'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-console mr-2 text-secondary"></span>
+                                <span class="font-13 fw-400 text-secondary">Code Block</span>
+                            </div>
+                            <div *ngIf="node.type=='UNWIND'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">Change Root</span>
+                            </div>
+                            <div *ngIf="node.type=='RESPONSE'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">Response</span>
+                            </div>
+                        </div>
+                        <div class="font-14 fw-500 mb-2">{{node.name}}</div>
+                        <odp-source-selector [nodeList]="nodeList" [index]="i"></odp-source-selector>
+                    </div>
+                </ng-container>
+            </div>
+            <svg #svgCanvas class="mapping-paths" [ngStyle]="svgStyle">
+                <g *ngFor="let p of pathList">
+                    <path [attr.d]="p.path" />
+                </g>
+            </svg>
+            <div class="target-list">
+                <div *ngFor="let item of allTargets;let i=index">
+                    <odp-target-fields [allSources]="allSources" [definition]="item" [index]="i"
+                        [nodeList]="nodeList"></odp-target-fields>
+                </div>
+            </div>
+        </div>
+        <!-- <svg #svgCanvas class="mapping-svg w-100">
             <g class="source-fields">
                 <g *ngFor="let item of allSources;let i=index">
                     <g odp-source-fields [index]="i" [definition]="item"></g>
@@ -28,7 +91,7 @@
                         [definition]="item"></g>
                 </g>
             </g>
-        </svg>
+        </svg> -->
     </div>
     <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary btn-min-width" (click)="done()">Done</button>

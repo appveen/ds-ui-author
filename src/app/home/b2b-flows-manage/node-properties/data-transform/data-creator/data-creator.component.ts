@@ -101,38 +101,6 @@ export class DataCreatorComponent implements OnInit {
     return [];
   }
 
-  // get variableSuggestions(): Array<{ label: string, value: string }> {
-  //   if (!this.nodeList || this.nodeList.length == 0) {
-  //     return [];
-  //   }
-  //   const temp = this.nodeList.map(node => {
-  //     let list = [];
-  //     let statusCode: any = {};
-  //     statusCode.label = (node.name || node.type) + '/statusCode'
-  //     statusCode.value = `node['${node._id}']` + '.statusCode'
-  //     list.push(statusCode);
-  //     let status: any = {};
-  //     status.label = (node.name || node.type) + '/status'
-  //     status.value = `node['${node._id}']` + '.status'
-  //     list.push(status);
-  //     let headers: any = {};
-  //     headers.label = (node.name || node.type) + '/headers'
-  //     headers.value = `node['${node._id}']` + '.headers'
-  //     list.push(headers);
-  //     if (!node.dataStructure) {
-  //       node.dataStructure = {};
-  //     }
-  //     if (!node.dataStructure.outgoing) {
-  //       node.dataStructure.outgoing = {};
-  //     }
-  //     if (node.dataStructure.outgoing.definition) {
-  //       list = list.concat(this.getNestedSuggestions(node, node.dataStructure.outgoing.definition));
-  //     }
-  //     return list;
-  //   })
-  //   return _.flatten(temp);
-  // }
-
   getNestedSuggestions(node: any, definition: Array<any>, bodyKey: string, parentKey?: any) {
     let list = [];
     if (definition && definition.length > 0) {

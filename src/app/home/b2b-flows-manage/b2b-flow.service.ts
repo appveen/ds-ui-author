@@ -16,6 +16,7 @@ export class B2bFlowService {
   anchorSelected: any;
   nodeLabelMap: any;
   dataStructureSelected: EventEmitter<any>;
+  nameIdMap: any;
   constructor(private appService: AppService) {
     this.showAddNodeDropdown = new EventEmitter();
     this.selectedNode = new EventEmitter();
@@ -37,6 +38,7 @@ export class B2bFlowService {
       RESPONSE: 'Response',
       ERROR: 'Global Error'
     };
+    this.nameIdMap = {};
   }
 
   getNodeType(node: any, isInputNode?: boolean) {
@@ -351,6 +353,54 @@ export class B2bFlowService {
           }
         ],
         value: 'ds.get( "NAME", { filter }, "Response DataPath" )'
+      },
+      {
+        name: '_.CONCAT',
+        params: [
+          {
+            name: 'Array 1',
+            type: 'Array'
+          },
+          {
+            name: 'Array 2',
+            type: 'Array'
+          }
+        ],
+        value: '_.concat( [ array1 ], [ array2 ] )'
+      },
+      {
+        name: '_.FIRST',
+        params: [
+          {
+            name: 'Array',
+            type: 'Array'
+          }
+        ],
+        value: '_.first( [ array ] )'
+      },
+      {
+        name: '_.LAST',
+        params: [
+          {
+            name: 'Array',
+            type: 'Array'
+          }
+        ],
+        value: '_.last( [ array ] )'
+      },
+      {
+        name: '_.NTH',
+        params: [
+          {
+            name: 'Array',
+            type: 'Array'
+          },
+          {
+            name: 'Index',
+            type: 'Number'
+          }
+        ],
+        value: '_.nth( [ array ], index )'
       }
     ];
   }
