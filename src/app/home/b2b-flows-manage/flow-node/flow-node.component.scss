@@ -64,7 +64,7 @@ text.path-text {
         fill: rgba($accent, 0.3);
     }
 
-    text:not(.node-name) {
+    text:not(.node-name):not(.id-holder) {
         stroke-width: 0.75 !important;
         stroke: #333;
     }
@@ -87,4 +87,68 @@ text.path-text {
     stroke: #cccc;
     stroke-width: 1;
 
+}
+
+
+rect.id-holder {
+    fill: #ccc;
+    stroke: #666;
+    stroke-width: 1;
+}
+
+text.id-holder {
+    stroke-width: 0;
+    fill: $light;
+    font-size: 10px;
+}
+
+rect.API.START {
+    fill: #6C7584;
+}
+
+rect.API {
+    fill: #00CCCB;
+}
+
+rect.TIMER {
+    fill: #2FC48F;
+}
+
+rect.DATASERVICE {
+    fill: #A94CFF;
+}
+
+rect.FUNCTION {
+    fill: #FFBB1A;
+}
+
+text.FUNCTION {
+    fill: $dark;
+}
+
+rect.CODEBLOCK {
+    fill: $secondary;
+}
+
+rect.CONNECTOR,
+rect.FILE {
+    fill: #009BFF;
+}
+
+rect.LOGS {
+    fill: #FF7D4C;
+}
+
+rect.MAPPING,
+rect.TRANSFORM,
+rect.PAYLOAD {
+    fill: #FF4C82;
+}
+
+rect.UNWIND {
+    fill: #FF4C82;
+}
+
+rect.RESPONSE {
+    fill: #2FC48F;
 }
