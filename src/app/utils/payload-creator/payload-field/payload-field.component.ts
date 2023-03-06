@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { Field } from '../payload-creator.component';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'odp-payload-field',
@@ -15,7 +16,6 @@ export class PayloadFieldComponent implements OnInit {
   @Input() fieldList: Array<Field>;
   @Input() index: number;
   @Input() data: any;
-  @Input() rcData: any;
   @Output() dataChange: EventEmitter<any>;
   field: Field;
   triggerAddChild: EventEmitter<any>;
@@ -160,5 +160,6 @@ export class PayloadFieldComponent implements OnInit {
     this.onValueChange(this.field.value ? this.field.value + finalValue : finalValue);
     this.openDropdown = false;
   }
+
 
 }

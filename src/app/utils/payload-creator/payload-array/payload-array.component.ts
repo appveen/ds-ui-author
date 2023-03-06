@@ -10,7 +10,6 @@ export class PayloadArrayComponent implements OnInit {
 
   @Input() nodeList: Array<any>;
   @Input() data: any;
-  @Input() rcData: any;
   @Output() dataChange: EventEmitter<any>;
   @Input() addChild: EventEmitter<any>;
   fieldList: Array<any>;

@@ -17,9 +17,7 @@
                 (ngModelChange)="onValueChange($event)" (paste)="onPaste($event)" (keyup.enter)="addField()"
                 (dblclick)="toggleDropdown()" odpClickOutside (outside)="openDropdown = false" odpEditableBadge> -->
 
-            <odp-styled-text (onDblClick)="openDropdown = !openDropdown"></odp-styled-text>
-            <odp-multi-dropdown [isOpen]="openDropdown" [data]="rcData"
-                (onSelect)="onSelect($event)"></odp-multi-dropdown>
+            <odp-styled-text></odp-styled-text>
         </div>
         <div *ngIf="field.type=='boolean'" class="value-holder px-2 d-flex align-items-center">
             <input #checkbox [type]="getInputType()" class="" [checked]="field.value"
@@ -34,10 +32,10 @@
         </div>
     </div>
     <div class="object-array">
-        <odp-payload-object *ngIf="field.type=='object'" [nodeList]="nodeList" [data]="data" (dataChange)="onDataChange($event)"
-            [addChild]="triggerAddChild"></odp-payload-object>
-        <odp-payload-array *ngIf="field.type=='array'" [nodeList]="nodeList" [data]="data" (dataChange)="onDataChange($event)"
-            [addChild]="triggerAddChild"></odp-payload-array>
+        <odp-payload-object *ngIf="field.type=='object'" [nodeList]="nodeList" [data]="data"
+            (dataChange)="onDataChange($event)" [addChild]="triggerAddChild"></odp-payload-object>
+        <odp-payload-array *ngIf="field.type=='array'" [nodeList]="nodeList" [data]="data"
+            (dataChange)="onDataChange($event)" [addChild]="triggerAddChild"></odp-payload-array>
     </div>
 
 </div>

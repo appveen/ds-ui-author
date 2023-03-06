@@ -56,6 +56,7 @@ import { DataActualComponent } from './node-properties/data-transform/data-actua
 import { DataCreatorComponent } from './node-properties/data-transform/data-creator/data-creator.component';
 import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
 import { MappingService } from './node-properties/node-mapping/mapping.service';
+import { StyledTextModule } from '../../utils/styled-text/styled-text.module';
 
 const routes: Routes = [
   {
@@ -121,7 +122,8 @@ const routes: Routes = [
     ColorPickerModule,
     PayloadCreatorModule,
     SwitchModule,
-    CommonFilterModule
+    CommonFilterModule,
+    StyledTextModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService, MappingService]

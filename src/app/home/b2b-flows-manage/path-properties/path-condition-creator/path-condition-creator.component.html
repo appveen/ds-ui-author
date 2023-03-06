@@ -41,7 +41,9 @@
             <input #typeAhead="ngbTypeahead" container="body" type="text" class="border-0" [(ngModel)]="tempValue"
                 [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
                 (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)" odpAutoFocus>
+
         </div>
+        <odp-styled-text [suggestions]="variableSuggestions" (value)="test($event)"></odp-styled-text>
         <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center"
             (click)="save()">
             <span class="">Done</span>

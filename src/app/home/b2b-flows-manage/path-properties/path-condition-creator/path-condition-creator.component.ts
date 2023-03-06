@@ -171,4 +171,8 @@ export class PathConditionCreatorComponent implements OnInit {
     }
     return list;
   }
+
+  test(event) {
+    console.log(event)
+  }
 }

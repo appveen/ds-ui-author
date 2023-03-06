@@ -12,7 +12,6 @@ export class PayloadObjectComponent implements OnInit {
   @Input() data: any;
   @Output() dataChange: EventEmitter<any>;
   @Input() addChild: EventEmitter<any>;
-  @Input() rcData: any;
   fieldList: Array<any>;
   constructor() {
     this.nodeList = [];

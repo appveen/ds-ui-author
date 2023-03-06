@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { B2bFlowService } from '../../home/b2b-flows-manage/b2b-flow.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'odp-payload-creator',
