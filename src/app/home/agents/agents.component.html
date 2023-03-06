@@ -101,12 +101,13 @@
                                 class="more-options bg-white rounded list-group position-fixed border"
                                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                                 (outside)="showOptionsDropdown[i]=false">
-                                <div id="agent-dowload" class="list-group-item list-group-item-action py-2 border-0 hover"
+                                <div id="agent-dowload"
+                                    class="list-group-item list-group-item-action py-2 border-0 hover"
                                     (click)="openDownloadAgentWindow(agent);">
                                     Download
                                 </div>
                                 <div id="agent-edit" class="list-group-item list-group-item-action py-2 border-0 hover"
-                                    *ngIf="canEditAgent(agent._id)" (click)="newAgent(agent)">
+                                    *ngIf="canEditAgent(agent._id)" (click)="newAgent(agent, true)">
                                     Edit
                                 </div>
                                 <div id="agent-change-passowrd"
@@ -121,7 +122,7 @@
                                 <div id="agent-delete"
                                     class="list-group-item list-group-item-action py-2 border-0 text-danger hover"
                                     (click)="deleteAgent(i);">
-                                      Delete
+                                    Delete
                                 </div>
                             </div>
                         </div>
