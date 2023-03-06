@@ -100,29 +100,22 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       });
     });
     this.form.get('name').valueChanges.subscribe(val => {
-      let inputNode = this.form.get('inputNode').value;
-      const type = this.form.get('type').value;
-      if (!inputNode) {
-        inputNode = {
-          type: type ? type : 'API'
-        };
-      }
-
-      if (this.isClone && this.cloneData) {
-        this.cloneData['name'] = val;
-        inputNode = this.cloneData?.inputNode || inputNode;
-        if (inputNode.options) {
-          inputNode.options['method'] = 'POST';
-          inputNode.options['path'] = val ? '/' + _.camelCase(val) : null;
+      if (!this.isClone) {
+        let inputNode = this.form.get('inputNode').value;
+        const type = this.form.get('type').value;
+        if (!inputNode) {
+          inputNode = {
+            type: type ? type : 'API'
+          };
         }
-      }
-      else {
+
+
         inputNode.options = {
           method: 'POST',
           path: val ? '/' + _.camelCase(val) : null
-        };
+        }
+        this.form.get('inputNode').patchValue(inputNode);
       }
-      this.form.get('inputNode').patchValue(inputNode);
     });
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
       this.getFlows()
@@ -235,11 +228,18 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     }
     this.showLazyLoader = true;
     this.showNewFlowWindow = false;
-    const payload = _.cloneDeep(this.form.value);
-    payload['dataStructures'] = this.cloneData.dataStructures || [];
-    payload['nodes'] = this.cloneData.nodes || [];
-    payload.app = this.commonService.app._id;
-    this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
+    // const payload = _.cloneDeep(this.form.value);
+    // payload['dataStructures'] = this.cloneData.dataStructures || [];
+    // payload['nodes'] = this.cloneData.nodes || [];
+    // payload.app = this.commonService.app._id;
+    const keyArray = ['deploymentName', '_id', '_metadata', 'lastInvoked', 'status', 'version', 'url'];
+    keyArray.forEach(key => {
+      delete this.cloneData[key];
+    });
+    const val = this.form.get('name').value
+    this.cloneData.name = val;
+    this.cloneData.inputNode.options.path = val ? '/' + _.camelCase(val) : null;
+    this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, this.cloneData).subscribe(res => {
       this.showLazyLoader = false;
       this.isClone = false;
       this.form.reset({ type: 'API' });
