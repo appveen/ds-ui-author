@@ -101,12 +101,13 @@
                                 class="more-options bg-white rounded list-group position-fixed border"
                                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                                 (outside)="showOptionsDropdown[i]=false">
-                                <div id="agent-dowload" class="list-group-item list-group-item-action py-2 border-0 hover"
+                                <div id="agent-dowload"
+                                    class="list-group-item list-group-item-action py-2 border-0 hover"
                                     (click)="openDownloadAgentWindow(agent);">
                                     Download
                                 </div>
                                 <div id="agent-edit" class="list-group-item list-group-item-action py-2 border-0 hover"
-                                    *ngIf="canEditAgent(agent._id)" (click)="newAgent(agent)">
+                                    *ngIf="canEditAgent(agent._id)" (click)="newAgent(agent, true)">
                                     Edit
                                 </div>
                                 <div id="agent-change-passowrd"
@@ -121,7 +122,7 @@
                                 <div id="agent-delete"
                                     class="list-group-item list-group-item-action py-2 border-0 text-danger hover"
                                     (click)="deleteAgent(i);">
-                                      Delete
+                                    Delete
                                 </div>
                             </div>
                         </div>
@@ -149,8 +150,7 @@
         <div *ngIf="showNewAgentWindow" class="position-relative agent-name-wrapper">
             <input #agentName="ngModel" autocomplete="off" type="text" class="form-control" [(ngModel)]="agentData.name"
                 [ngClass]="{'is-invalid':agentName.invalid && (agentName.dirty || agentName.touched)}" maxlength="24"
-                required [pattern]="'[a-z0-9A-Z\\s_-]+'" odpAutoFocus (keyup.enter)="triggerAgentCreate()"
-                [disabled]="agentData.isEdit">
+                required [pattern]="'[a-z0-9A-Z\\s_-]+'" odpAutoFocus (keyup.enter)="triggerAgentCreate()">
             <ng-container *ngIf="agentName.invalid && (agentName.dirty || agentName.touched)">
                 <span *ngIf="agentName?.errors?.required" class="dsi dsi-danger-circle text-danger position-absolute"
                     ngbTooltip="Name is required" container="body"></span>

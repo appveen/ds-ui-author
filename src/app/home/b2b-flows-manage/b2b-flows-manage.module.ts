@@ -57,6 +57,8 @@ import { DataCreatorComponent } from './node-properties/data-transform/data-crea
 import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
 import { MappingService } from './node-properties/node-mapping/mapping.service';
 import { StyledTextModule } from '../../utils/styled-text/styled-text.module';
+import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
+import { EditorDirective } from './node-properties/node-mapping/formula-editor/editor.directive';
 
 const routes: Routes = [
   {
@@ -96,7 +98,8 @@ const routes: Routes = [
     DataObjectComponent,
     DataArrayComponent,
     DataActualComponent,
-    DataCreatorComponent
+    DataCreatorComponent,
+    EditorDirective
   ],
   imports: [
     CommonModule,
@@ -123,7 +126,8 @@ const routes: Routes = [
     PayloadCreatorModule,
     SwitchModule,
     CommonFilterModule,
-    StyledTextModule
+    StyledTextModule,
+    FieldTypeModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService, MappingService]

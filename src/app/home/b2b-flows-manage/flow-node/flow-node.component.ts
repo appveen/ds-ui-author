@@ -185,12 +185,6 @@ export class FlowNodeComponent implements OnInit {
     }
   }
 
-  get style() {
-    return {
-      transform: `translate(${this.currNode.coordinates.x}px,${this.currNode.coordinates.y}px)`,
-    }
-  }
-
   get isSelected() {
     if (this.currNode._id && this.selectedNode && this.selectedNode._id) {
       return true;

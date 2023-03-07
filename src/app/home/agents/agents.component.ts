@@ -103,7 +103,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
 
-    newAgent(agent?) {
+    newAgent(agent?, isEdit = false) {
         this.agentData = {
             app: this.commonService.app._id,
             type: 'APPAGENT',
@@ -112,9 +112,14 @@ export class AgentsComponent implements OnInit, OnDestroy {
             retainFileOnError: true
         };
         if (agent) {
-            this.agentData._id=agent._id
-            this.agentData.name = agent.name
-            this.agentData.isEdit = true
+            if (isEdit) {
+                this.agentData._id = agent._id
+            }
+            this.agentData.name = isEdit ? agent.name : agent.name + ' Copy',
+                this.agentData.encryptFile = agent.encryptFile,
+                this.agentData.retainFileOnSuccess = agent.retainFileOnSuccess,
+                this.agentData.retainFileOnError = agent.retainFileOnError,
+                this.agentData.isEdit = isEdit;
         }
         this.showNewAgentWindow = true;
     }
@@ -133,6 +138,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
                     this.ts.success('Agent Saved Sucessfully');
                     this.showNewAgentWindow = false;
                     this.showLazyLoader = false;
+                    this.getAgentList();
                 }
 
             }, err => {
@@ -153,8 +159,8 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
     cloneAgent(_index) {
-        this.appService.cloneLibraryId = this.agentList[_index]._id;
-        this.router.navigate(['/app/', this.app, 'agent', this.appService.cloneLibraryId]);
+        const cloneDetails = this.agentList[_index];
+        this.newAgent(cloneDetails)
     }
 
     deleteAgent(_index) {

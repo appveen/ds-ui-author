@@ -1,6 +1,12 @@
 <svg>
-    <g class="node-block" [style]="'transform: translate('+currNode.coordinates.x+'px,'+ currNode.coordinates.y+'px)'" class="hover" [attr.data-id]="currNode._id">
+    <g class="node-block" [style]="'transform: translate('+currNode.coordinates.x+'px,'+ currNode.coordinates.y+'px)'"
+        class="hover" [attr.data-id]="currNode._id">
         <g [class.active]="isSelected" [attr.data-id]="currNode._id">
+            <!-- <rect class="id-holder {{currNode.type}}" [class.START]="isInputNode" x="0" y="-14" width="50" height="14" rx="4"
+                [attr.data-id]="currNode._id" />
+            <text class="id-holder {{currNode.type}}" x="2" y="-4" text-anchor="start"
+                [attr.data-id]="currNode._id">{{currNode._id}}</text> -->
+
             <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id" />
             <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
@@ -9,10 +15,16 @@
                 [attr.data-id]="currNode._id">{{nodeType}}</text>
             <foreignObject width="140" height="42" x="0" y="38" [attr.data-id]="currNode._id"
                 (click)="openProperties($event)">
-                <span xmlns="http://www.w3.org/1999/xhtml"
-                    class="text-wrap d-flex justify-content-center text-center font-10">
-                    {{currNode.name || currNode._id}}
-                </span>
+                <div xmlns="http://www.w3.org/1999/xhtml" class="d-flex align-items-center justify-content-center">
+                    <!-- <span xmlns="http://www.w3.org/1999/xhtml"
+                        class="d-flex justify-content-center text-center font-10 border rounded mr-2 bg-light">
+                        {{currNode._id}}
+                    </span> -->
+                    <span xmlns="http://www.w3.org/1999/xhtml"
+                        class="text-wrap d-flex justify-content-center text-center font-10">
+                        {{currNode.name}}
+                    </span>
+                </div>
             </foreignObject>
         </g>
         <rect *ngIf="index>0" class="node-anchor start" [class.active]="isActive('start')" [attr.data-id]="currNode._id"
@@ -20,14 +32,16 @@
         <rect class="node-anchor end" [class.active]="isActive('end')" [attr.data-id]="currNode._id" x="134" y="12"
             width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
         <foreignObject width="18" height="18" x="10" y="9" [attr.data-id]="currNode._id">
-            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='API'"
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='API' && isInputNode"
+                class="node-icon font-18 fw-500 dsi dsi-api-reciever" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='API' && !isInputNode"
                 class="node-icon font-18 fw-500 dsi dsi-invoke-api" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE'"
                 class="node-icon font-18 fw-500 dsi dsi-file" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='TIMER'"
                 class="node-icon font-18 fw-500 dsi dsi-clock" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CODEBLOCK'"
-                class="node-icon font-18 fw-500 dsi dsi-object text-muted" [attr.data-id]="currNode._id"></span>
+                class="node-icon font-18 fw-500 dsi dsi-console text-secondary" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONNECTOR'"
                 class="node-icon font-18 fw-500 dsi dsi-connector" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='DATASERVICE'"
@@ -36,6 +50,8 @@
                 class="node-icon font-18 fw-500 dsi dsi-function" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='MAPPING' || currNode.type=='TRANSFORM'"
                 class="node-icon font-18 fw-500 dsi dsi-mapping" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='PAYLOAD'"
+                class="node-icon font-18 fw-500 dsi dsi-object" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='UNWIND'"
                 class="node-icon font-18 fw-500 dsi dsi-expand" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='RESPONSE'"

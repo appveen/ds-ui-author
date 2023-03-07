@@ -176,15 +176,6 @@ export class ErrorNodeComponent implements OnInit {
     }
   }
 
-  get style() {
-    if (this.node && this.node.coordinates) {
-      return {
-        transform: `translate(${this.node.coordinates.x}px, ${this.node.coordinates.y}px)`,
-      }
-    }
-    return {}
-  }
-
   get isSelected() {
     if (this.node._id && this.selectedNode && this.selectedNode._id) {
       return true;

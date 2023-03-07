@@ -1,16 +1,28 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
+
 .search-box {
     width: 300px !important;
+
+    &.full-width {
+        width: 100% !important;
+    }
+
     input {
         width: 300px !important; // background-color: $light;
         border: 1px solid #ECECEC;
         text-indent: 10px;
+
+        &.full-width {
+            width: 100% !important;
+        }
+
         &:active,
         &:focus {
             background-color: $white;
         }
     }
+
     .info,
     .fa-times-circle {
         right: 4px;

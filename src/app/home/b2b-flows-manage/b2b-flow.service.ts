@@ -16,6 +16,7 @@ export class B2bFlowService {
   anchorSelected: any;
   nodeLabelMap: any;
   dataStructureSelected: EventEmitter<any>;
+  nameIdMap: any;
   constructor(private appService: AppService) {
     this.showAddNodeDropdown = new EventEmitter();
     this.selectedNode = new EventEmitter();
@@ -31,10 +32,13 @@ export class B2bFlowService {
       DATASERVICE: 'Data Service',
       FUNCTION: 'Function',
       MAPPING: 'Mapping',
+      TRANSFORM: 'Transform',
+      PAYLOAD: 'Payload Creator',
       UNWIND: 'Change Root',
       RESPONSE: 'Response',
       ERROR: 'Global Error'
     };
+    this.nameIdMap = {};
   }
 
   getNodeType(node: any, isInputNode?: boolean) {
@@ -133,9 +137,10 @@ export class B2bFlowService {
     return text;
   }
 
-  getNodeObject(type: string) {
+  getNodeObject(type: string, nodeList: Array<any>) {
+    let allIds = nodeList.map(e => e._id);
     const temp: any = {
-      _id: this.appService.getNodeID(),
+      _id: this.appService.getNodeID(allIds),
       name: _.snakeCase(this.getNodeType({ type, contentType: 'application/json' })),
       type: type,
       onSuccess: [],
@@ -366,6 +371,54 @@ export class B2bFlowService {
           }
         ],
         value: 'ds.get( "NAME", { filter }, "Response DataPath" )'
+      },
+      {
+        name: '_.CONCAT',
+        params: [
+          {
+            name: 'Array 1',
+            type: 'Array'
+          },
+          {
+            name: 'Array 2',
+            type: 'Array'
+          }
+        ],
+        value: '_.concat( [ array1 ], [ array2 ] )'
+      },
+      {
+        name: '_.FIRST',
+        params: [
+          {
+            name: 'Array',
+            type: 'Array'
+          }
+        ],
+        value: '_.first( [ array ] )'
+      },
+      {
+        name: '_.LAST',
+        params: [
+          {
+            name: 'Array',
+            type: 'Array'
+          }
+        ],
+        value: '_.last( [ array ] )'
+      },
+      {
+        name: '_.NTH',
+        params: [
+          {
+            name: 'Array',
+            type: 'Array'
+          },
+          {
+            name: 'Index',
+            type: 'Number'
+          }
+        ],
+        value: '_.nth( [ array ], index )'
       }
     ];
   }

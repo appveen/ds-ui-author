@@ -3,7 +3,7 @@
 
 
 .grid-container {
-  max-height: calc(100vh - 352px);
+  max-height: calc(100vh - 300px);
   overflow: auto;
 }
 
@@ -11,6 +11,24 @@
   .dsi-danger-circle {
     top: 9px;
     right: 6px;
+  }
+}
+
+.filter{
+  border-bottom: 2px solid rgba(0, 0, 0, 0.125);
+}
+
+.list{
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    height: 0.5em;
+    border-radius: 10px;
+    background-color: #efeeee;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: #b8b6b6;
+    border-radius: 10px;
   }
 }
 
@@ -29,8 +47,8 @@
   }
 
   .item-level {
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 150px;
+    max-width: 150px;
   }
 
   .item-content {

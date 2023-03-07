@@ -16,6 +16,8 @@ export class AgentLogsComponent implements OnInit {
   agentLogs: Array<any>;
   sortModel: any;
   filterModel: any;
+  selectedFilter='ALL';
+  logsCount: any;
   constructor(private commonService: CommonService,) {
     this.apiConfig = {
       page: 1,
@@ -29,6 +31,7 @@ export class AgentLogsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getLogsCount();
     this.getLogs();
   }
 
@@ -42,10 +45,18 @@ export class AgentLogsComponent implements OnInit {
     });
   }
 
+  getLogsCount(){
+    this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent/utils/${this.agentDetails.agentId}/logs?countOnly=true`).subscribe(res => {
+      this.logsCount=res
+    });
+  }
+
   loadMore(event: any) {
-    if (event.target.scrollTop + event.target.offsetHeight === event.target.scrollHeight + 2) {
-      this.apiConfig.page++;
-      this.getLogs();
+    if(this.logsCount>this.apiConfig.page*30 && this.agentLogs.length>0){
+      if (Math.floor(event.target.scrollTop + event.target.offsetHeight) === event.target.scrollHeight + 1) {
+        this.apiConfig.page++;
+        this.getLogs();
+      }
     }
   }
 

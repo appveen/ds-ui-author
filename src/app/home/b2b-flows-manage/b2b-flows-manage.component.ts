@@ -14,7 +14,8 @@ import { B2bFlowService } from './b2b-flow.service';
 @Component({
   selector: 'odp-b2b-flows-manage',
   templateUrl: './b2b-flows-manage.component.html',
-  styleUrls: ['./b2b-flows-manage.component.scss']
+  styleUrls: ['./b2b-flows-manage.component.scss'],
+  providers: [B2bFlowService]
 })
 export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
@@ -178,7 +179,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.patchDataStructure(res.inputNode.dataStructure.outgoing, res.dataStructures);
       }
       if (!res.errorNode || _.isEmpty(res.errorNode)) {
-        let errorNode = this.flowService.getNodeObject('ERROR');
+        let errorNode = this.flowService.getNodeObject('ERROR', this.nodeList);
         errorNode.coordinates = {
           x: 400,
           y: 30
@@ -214,6 +215,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         if (!node.name) {
           node.name = this.appService.toSnakeCase(this.flowService.getNodeType(node, i == 0));
         }
+        this.flowService.nameIdMap[node._id] = node.name;
         if (!node.coordinates || !node.coordinates.x || !node.coordinates.y) {
           node.coordinates = {
             x: 20 + (i * 120),
@@ -364,6 +366,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.apiCalls.deploy = false;
         this.ts.success('Saved ' + this.flowData.name + ' and deployment process has started.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
+        this.appService.getFlows();
       }, err => {
         this.apiCalls.deploy = false;
         this.commonService.errorToast(err);
@@ -431,7 +434,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   addNode(event: any, type: string) {
     this.contextMenuStyle = null;
-    const tempNode = this.flowService.getNodeObject(type);
+    const tempNode = this.flowService.getNodeObject(type, this.nodeList);
     tempNode.coordinates = {};
     const ele: HTMLElement = document.querySelectorAll('.flow-designer-svg')[0] as HTMLElement;
     const rect = ele.getBoundingClientRect();

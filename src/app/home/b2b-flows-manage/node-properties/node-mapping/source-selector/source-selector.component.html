@@ -1,22 +1,35 @@
 <div class="source-selector">
-    <input type="text" class="bg-white rounded border" [ngbTypeahead]="search" [resultFormatter]="formatter"
-        (selectItem)="selectItem($event)" odpAutoFocus (focus)="focus$.next($any($event).target.value)">
-</div>
-
-<!-- <div class="source-selector">
-    <ng-container *ngTemplateOutlet="listItems; context: {def:sources}"></ng-container>
-</div>
-
-<ng-template #listItems let-def="def">
-    <ul class="p-0 m-0 bg-white rounded border">
-        <li class="d-block" *ngFor="let item of def">
-            <div class="d-flex pl-3 pr-1 py-2 align-items-center justify-content-between" (click)="selectItem(item)">
-                <span>{{item.name || item.dataPath}}</span>
-                <span *ngIf="item.definition" class="dsi dsi-drop-up fa-rotate-90"></span>
-            </div>
-            <ng-container *ngIf="item.definition">
-                <ng-container *ngTemplateOutlet="listItems; context: {def:item.definition}"></ng-container>
+    <div>
+        <div class="mb-2 fw-500 text-secondary font-12 d-flex align-items-center justify-content-between">
+            <span class="text">Incoming</span>
+            <span class="dsi hover dsi-drop-down" (click)="toggle['incoming']=!toggle['incoming'];reCreatePaths()"
+                [class.fa-rotate-90]="!toggle['incoming']" [attr.data-id]="node._id"></span>
+        </div>
+        <div *ngIf="(!inputSourceList || inputSourceList.length==0) && toggle['incoming']"
+            class="mb-2 fw-400 text-muted font-12">
+            Configure Input Structure
+        </div>
+        <ng-container *ngIf="inputSourceList && inputSourceList.length>0 && toggle['incoming']">
+            <ng-container *ngFor="let item of inputSourceList">
+                <odp-source-fields [node]="node" [definition]="item"></odp-source-fields>
             </ng-container>
-        </li>
-    </ul>
-</ng-template> -->
+        </ng-container>
+    </div>
+
+    <div>
+        <div class="mb-2 fw-500 text-secondary font-12 d-flex align-items-center justify-content-between">
+            <span class="text">Outgoing</span>
+            <span class="dsi hover dsi-drop-down" (click)="toggle['outgoing']=!toggle['outgoing'];reCreatePaths()"
+                [class.fa-rotate-90]="!toggle['outgoing']"></span>
+        </div>
+        <div *ngIf="(!outputSourceList || outputSourceList.length==0) && toggle['outgoing']"
+            class="mb-2 fw-400 text-muted font-12">
+            Configure Output Structure
+        </div>
+        <ng-container *ngIf="outputSourceList && outputSourceList.length>0 && toggle['outgoing']">
+            <ng-container *ngFor="let item of outputSourceList">
+                <odp-source-fields [node]="node" [definition]="item"></odp-source-fields>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>

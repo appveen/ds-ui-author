@@ -292,6 +292,9 @@ export class AgentViewComponent implements OnInit {
     this.showLazyLoader = true;
     this.commonService.put('partnerManager', `/${this.commonService.app._id}/agent/`+this.agentDetails._id, this.agentDetails).subscribe(res => {
       this.showLazyLoader = false;
+      if(res){
+        this.ts.success('Agent Saved Sucessfully');
+      }
       // this.getAgentList();
     }, err => {
       this.showLazyLoader = false;
