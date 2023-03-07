@@ -46,7 +46,7 @@
         <div *ngIf="agentLogs.length > 0">
             <ng-container  *ngFor="let agent of agentLogs;let i=index">
                 <div class="list-group-item">
-                    <div class="d-flex align-items-center justify-content-start h-100">
+                    <div class="d-flex align-items-center justify-content-start h-100 list">
                         <div class="item-timestamp text-truncate fw-500">{{agent?.timestamp &&
                             convertDate(agent.timestamp )}}</div>
                         <div class="item-level ">

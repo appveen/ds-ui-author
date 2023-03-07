@@ -61,7 +61,7 @@ export class UserGroupAppcenterFlowsComponent implements OnInit {
       });
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
-      this.flowList = res;
+      this.flowList = res.reverse();
       if (res.length > 0) {
         this.selectedFlow = res[0];
       }

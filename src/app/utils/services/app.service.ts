@@ -8,6 +8,7 @@ import * as momentTimeZone from 'moment-timezone';
 import { ipValidate } from '../validators/ip.validator';
 import { RoleModel } from 'src/app/home/schema-utils/manage-permissions/manage-permissions.component';
 import { NodeData } from '../integration-flow/integration-flow.model';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -38,6 +39,7 @@ export class AppService {
     connectorsList: Array<any>;
     storageTypes: Array<any>
     cityNames: Array<string>;
+    invokeEvent = new Subject()
     constructor() {
         const self = this;
         self.toggleSideNav = new EventEmitter<boolean>();
@@ -160,6 +162,10 @@ export class AppService {
 
     cloneObject(obj) {
         return JSON.parse(JSON.stringify(obj));
+    }
+
+    getFlows(){
+        this.invokeEvent.next()
     }
 
     rand(index: number) {
