@@ -9,7 +9,6 @@ import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
     CommonModule,
     FormsModule,
     NgbTypeaheadModule
-
   ],
   exports: [StyledTextComponent],
   declarations: [StyledTextComponent]

@@ -1,20 +1,13 @@
-<div class="value-holder position-relative">
-  <div id="hidden-div" class="value-holder d-flex align-items-center" (input)="someTrigger($event)"
-    contenteditable="true">
+<div class="value-holder">
+  <div class="input-container">
+    <input id="myInput" [value]="value" (input)="onChange($event)" [ngbTypeahead]="ngbTypeahead"
+      [resultFormatter]="resultFormatter" [inputFormatter]="inputFormatter" (selectItem)="selectItem($event)">
+
+    <div class="input-renderer">
+      <div *ngFor="let word of valueArray">
+        <span [ngClass]="{'text-primary': regexMatch(word)}">{{word}}</span>
+      </div>
+    </div>
   </div>
-  <!-- <div id="class-div" class="value-holder content-div d-flex align-items-center" [innerHTML]="formattedText"
-    #contentDiv></div> -->
+
 </div>
-
-
-<div *ngIf="showSuggestions" class="more-options bg-white rounded list-group position-fixed border">
-  <div class="list-group-item list-group-item-action py-2 border-0" *ngFor="let suggestion of list"
-    (click)="selectItem(suggestion)">
-    {{suggestion.label || suggestion}}
-  </div>
-</div>
-
-
-<!-- <div *ngIf="suggestions?.length">
-  <option *ngFor="let suggestion of suggestions" [label]="suggestion" [value]="suggestion">{{ suggestion }}</option>
-</div> -->

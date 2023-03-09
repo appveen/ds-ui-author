@@ -1,35 +1,53 @@
-.value-holder {
+// .value-holder {
+//     width: 260px;
+//     border: 0px;
+//     border-left: 1px solid #ddd;
+//     max-width: 260px;
+//     height: 32px;
+//     white-space: nowrap;
+//     overflow: hidden;
+// }
+
+.input-container {
+    border: 1px solid gray;
+    border-radius: 4px;
     width: 260px;
-    border: 0px;
-    border-left: 1px solid #ddd;
-    max-width: 260px;
     height: 32px;
-    white-space: nowrap;
-    overflow: hidden;
+    position: relative;
+    margin-right: 1px;
 }
 
-.hidden-div {
-    color: transparent;
+.input-container input {
+    width: 100%;
+    border: none;
     position: absolute;
     inset: 0;
-    height: 32px;
-    max-width: 260px;
-    overflow-x: auto;
-
-    ::selection {
-        color: transparent
-    }
+    z-index: 1;
+    outline: none;
+    padding: 0 0.5rem;
+    background: transparent;
 }
 
-.content-div {
-    // [contenteditable]:focus {
-    //     outline: 0px solid transparent;
-    // }
-    height: 32px;
-    max-width: 260px;
-    overflow-x: auto;
-    pointer-events: none;
+/* For showing through placeholder */
+.input-container input:not([value=""]) {
+    -webkit-text-fill-color: transparent;
+}
+
+.input-container .input-renderer {
     position: absolute;
     inset: 0;
+    display: flex;
+    align-items: center;
+    margin: 0 0.5rem;
+    /* This line preserves trailing
+        whitespaces */
+    white-space: pre;
 
+    overflow-x: auto;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.input-container .input-renderer::-webkit-scrollbar {
+    display: none;
 }
