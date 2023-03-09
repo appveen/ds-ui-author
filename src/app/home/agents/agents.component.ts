@@ -85,6 +85,12 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        if (this.agentDetailsModalRef) {
+            this.agentDetailsModalRef.close();
+        }
+        if(this.downloadAgentModalRef){
+            this.downloadAgentModalRef.close(false)
+        }
         Object.keys(this.subscriptions).forEach(key => {
             if (this.subscriptions[key]) {
                 this.subscriptions[key].unsubscribe();
