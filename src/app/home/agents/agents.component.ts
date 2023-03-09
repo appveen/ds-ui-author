@@ -48,6 +48,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     resetPasswordForm: FormGroup;
     showPassword: any;
     showPasswordSide: boolean = false;
+    isClone: boolean=false;
     constructor(
         public commonService: CommonService,
         private appService: AppService,
@@ -150,6 +151,12 @@ export class AgentsComponent implements OnInit, OnDestroy {
         else {
             this.commonService.post('partnerManager', `/${this.commonService.app._id}/agent`, this.agentData).subscribe(res => {
                 this.showLazyLoader = false;
+                if(this.isClone){
+                    this.ts.success('Agent Cloned.')
+                    this.isClone=false
+                }else{
+                    this.ts.success('Agent has been created.')
+                }
                 this.getAgentList();
             }, err => {
                 this.showLazyLoader = false;
@@ -160,6 +167,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
 
     cloneAgent(_index) {
         const cloneDetails = this.agentList[_index];
+        this.isClone=true;
         this.newAgent(cloneDetails)
     }
 
