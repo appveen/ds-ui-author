@@ -91,7 +91,7 @@
                     </div>
                     <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Pending Files</label>
-                        <span class="fw-500 text-dark">{{agentDetails.type}}</span>
+                        <span class="fw-500 text-dark">{{(agentDetails.pendingFiles==null)? 'N.A':agentDetails.pendingFiles}}</span>
                     </div>
                     <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Version</label>
@@ -99,11 +99,11 @@
                     </div>
                     <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">IP Address</label>
-                        <span class="fw-500 text-dark">{{agentDetails?.ipAddress}}</span>
+                        <span class="fw-500 text-dark">{{agentDetails?.ipAddress || 'N.A'}}</span>
                     </div>
                     <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Mac Address</label>
-                        <span class="fw-500 text-dark">{{agentDetails?.macAddress}}</span>
+                        <span class="fw-500 text-dark">{{agentDetails?.macAddress || 'N.A'}}</span>
                     </div>
                 </div>
             </div>
