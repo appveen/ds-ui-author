@@ -16,7 +16,8 @@ export class B2bFlowService {
   anchorSelected: any;
   nodeLabelMap: any;
   dataStructureSelected: EventEmitter<any>;
-  nameIdMap: any;
+  nodeList: Array<any>;
+  nodeIDCounter: number;
   constructor(private appService: AppService) {
     this.showAddNodeDropdown = new EventEmitter();
     this.selectedNode = new EventEmitter();
@@ -38,7 +39,8 @@ export class B2bFlowService {
       RESPONSE: 'Response',
       ERROR: 'Global Error'
     };
-    this.nameIdMap = {};
+    this.nodeList = [];
+    this.nodeIDCounter = 0;
   }
 
   getNodeType(node: any, isInputNode?: boolean) {
@@ -121,9 +123,15 @@ export class B2bFlowService {
 
   getNodeObject(type: string, nodeList: Array<any>) {
     let allIds = nodeList.map(e => e._id);
+    if (this.nodeIDCounter == 0) {
+      this.nodeIDCounter = this.nodeList.length;
+    }
+    this.nodeIDCounter++;
+    let defaultName = this.getNodeType({ type, contentType: 'application/json' }) + ' ' + this.nodeIDCounter;
     const temp: any = {
-      _id: this.appService.getNodeID(allIds),
-      name: _.snakeCase(this.getNodeType({ type, contentType: 'application/json' })),
+      // _id: this.appService.getNodeID(allIds),
+      _id: _.snakeCase(defaultName),
+      name: defaultName,
       type: type,
       onSuccess: [],
       onError: [],

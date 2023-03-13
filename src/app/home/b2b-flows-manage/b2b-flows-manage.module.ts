@@ -58,6 +58,7 @@ import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-fil
 import { MappingService } from './node-properties/node-mapping/mapping.service';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { EditorDirective } from './node-properties/node-mapping/formula-editor/editor.directive';
+import { ChangeOnEditModule } from 'src/app/utils/change-on-edit/change-on-edit.module';
 
 const routes: Routes = [
   {
@@ -125,7 +126,8 @@ const routes: Routes = [
     PayloadCreatorModule,
     SwitchModule,
     CommonFilterModule,
-    FieldTypeModule
+    FieldTypeModule,
+    ChangeOnEditModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService, MappingService]
