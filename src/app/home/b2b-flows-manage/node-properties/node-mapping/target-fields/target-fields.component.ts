@@ -58,7 +58,7 @@ export class TargetFieldsComponent implements OnInit {
           result = result.sort((a, b) => a.score - b.score);
           if (result.length > 0) {
             this.definition.source.push(result[0].item);
-            this.definition.formula = `VAR(${result[0].item._id})`;
+            this.definition.formula = `${result[0].item._id}`;
             // this.mappingService.reCreatePaths.emit();
           }
         }
