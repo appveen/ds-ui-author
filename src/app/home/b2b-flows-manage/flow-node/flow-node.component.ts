@@ -126,7 +126,7 @@ export class FlowNodeComponent implements OnInit {
       prevNode: this.prevNode
     });
   }
-  
+
   @HostListener('document:keydown', ['$event'])
   onDeleteKey(event: any) {
     if (((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') {
@@ -176,6 +176,9 @@ export class FlowNodeComponent implements OnInit {
 
   getPathTextStyle(path: any) {
     const nextNode = this.nodeList.find((e: any) => e._id == path._id);
+    if (!nextNode) {
+      return '';
+    }
     let sourceNodeX = (this.currNode.coordinates.x + 140);
     let sourceNodeY = (this.currNode.coordinates.y + 36);
     let x = (nextNode.coordinates.x - sourceNodeX) / 2 + sourceNodeX;

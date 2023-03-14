@@ -11,8 +11,8 @@ export class FormulaEditorComponent implements OnInit {
 
   @Input() class: string;
   @Input() disabled: boolean;
-  @Input() nodeList: Array<any>;
   @Input() field: any;
+  @Input() currNode: any;
   @Input() data: any;
   @Output() dataChange: EventEmitter<any>;
   @Output() close: EventEmitter<any>;
@@ -21,8 +21,8 @@ export class FormulaEditorComponent implements OnInit {
   variableSuggestions: Array<{ label: string, value: string }>;
   availableMethods: Array<any>;
   insertText: EventEmitter<string>;
+  nodeList: Array<any>;
   constructor(private flowService: B2bFlowService) {
-    this.nodeList = [];
     this.dataChange = new EventEmitter();
     this.close = new EventEmitter();
     this.variableSuggestions = [];
@@ -34,22 +34,23 @@ export class FormulaEditorComponent implements OnInit {
   ngOnInit(): void {
     this.availableMethods = this.flowService.getAvailableTransformMethods();
     this.tempData = this.data;
+    this.nodeList = this.flowService.getNodesBefore(this.currNode);
     const temp = this.nodeList.map(node => {
       let list = [];
       let statusCode: any = {};
       statusCode.nodeId = node._id;
-      statusCode.label = (node.name || node.type) + '/statusCode'
-      statusCode.value = `node['${node._id}']` + '.statusCode'
+      statusCode.label = (node.name || node.type) + '/statusCode';
+      statusCode.value = `{{${node._id}.statusCode}}`;
       list.push(statusCode);
       let status: any = {};
       status.nodeId = node._id;
-      status.label = (node.name || node.type) + '/status'
-      status.value = `node['${node._id}']` + '.status'
+      status.label = (node.name || node.type) + '/status';
+      status.value = `{{${node._id}.status}}`;
       list.push(status);
       let headers: any = {};
       headers.nodeId = node._id;
-      headers.label = (node.name || node.type) + '/headers'
-      headers.value = `node['${node._id}']` + '.headers'
+      headers.label = (node.name || node.type) + '/headers';
+      headers.value = `{{${node._id}.headers}}`;
       list.push(headers);
       if (!node.dataStructure) {
         node.dataStructure = {};
@@ -108,7 +109,7 @@ export class FormulaEditorComponent implements OnInit {
           let item: any = {};
           item.nodeId = node._id;
           item.label = (node.name || node.type) + `/${bodyKey}/` + key;
-          item.value = `node['${node._id}']` + `.${bodyKey}.` + key;
+          item.value = `{{${node._id}.${bodyKey}.${key}}}`;
           list.push(item);
         }
       });

@@ -27,12 +27,13 @@ export class EditorDirective implements OnInit {
     this.element = (this.ele.nativeElement as HTMLElement);
     this.element.innerHTML = this.data;
     this.insertText.subscribe((text: string) => {
-      console.table([this.selectedObj]);
-      this.rangeObj.deleteContents();
-      this.rangeObj.insertNode(this.document.createTextNode(text));
-      this.selectedObj.addRange(this.rangeObj);
-      this.data = this.element.innerHTML;
-      this.dataChange.emit(this.data);
+      if (this.selectedObj && this.rangeObj) {
+        this.rangeObj.deleteContents();
+        this.rangeObj.insertNode(this.document.createTextNode(text));
+        this.selectedObj.addRange(this.rangeObj);
+        this.data = this.element.innerHTML;
+        this.dataChange.emit(this.data);
+      }
     });
   }
 

@@ -364,16 +364,16 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     return this.commonService.hasPermission('PMIF', entity);
   }
 
-  deployFlow(index: number) {
+  deployFlow(item: any) {
     this.alertModal.statusChange = true;
     if (
-      this.flowList[index].status === 'Draft' ||
-      this.flowList[index].draftVersion
+      item.status === 'Draft' ||
+      item.draftVersion
     ) {
-      this.alertModal.title = 'Deploy ' + this.flowList[index].name + '?';
+      this.alertModal.title = 'Deploy ' + item.name + '?';
       this.alertModal.message =
         'Are you sure you want to Deploy this data pipe? Once Deployed, "' +
-        this.flowList[index].name +
+        item.name +
         '" will be running the latest version.';
     } else {
       return;
@@ -386,14 +386,14 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
         if (close) {
           const url =
             `/${this.commonService.app._id}/flow/utils/` +
-            this.flowList[index]._id +
+            item._id +
             '/deploy';
           this.subscriptions['updateservice'] = this.commonService
             .put('partnerManager', url, { app: this.commonService.app._id })
             .subscribe(
               (d) => {
                 this.ts.info('Deploying data pipe...');
-                this.flowList[index].status = 'Pending';
+                item.status = 'Pending';
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -405,17 +405,17 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     );
   }
 
-  toggleFlowStatus(index: number) {
+  toggleFlowStatus(item: any) {
     this.alertModal.statusChange = true;
 
-    if (this.flowList[index].status === 'Active') {
-      this.alertModal.title = 'Stop ' + this.flowList[index].name + '?';
+    if (item.status === 'Active') {
+      this.alertModal.title = 'Stop ' + item.name + '?';
       this.alertModal.message =
-        'Are you sure you want to stop this data pipe? : ' + this.flowList[index].name;
+        'Are you sure you want to stop this data pipe? : ' + item.name;
     } else {
-      this.alertModal.title = 'Start ' + this.flowList[index].name + '?';
+      this.alertModal.title = 'Start ' + item.name + '?';
       this.alertModal.message =
-        'Are you sure you want to start this data pipe? : ' + this.flowList[index].name;
+        'Are you sure you want to start this data pipe? : ' + item.name;
     }
     this.alertModalTemplateRef = this.commonService.modal(
       this.alertModalTemplate
@@ -425,24 +425,24 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
         if (close) {
           let url =
             `/${this.commonService.app._id}/flow/utils/` +
-            this.flowList[index]._id +
+            item._id +
             '/start';
-          if (this.flowList[index].status === 'Active') {
+          if (item.status === 'Active') {
             url =
               `/${this.commonService.app._id}/flow/utils/` +
-              this.flowList[index]._id +
+              item._id +
               '/stop';
           }
           this.subscriptions['updateservice'] = this.commonService
             .put('partnerManager', url, { app: this.commonService.app._id })
             .subscribe(
               (d) => {
-                if (this.flowList[index].status === 'Active') {
+                if (item.status === 'Active') {
                   this.ts.info('Stopping data pipe...');
                 } else {
                   this.ts.info('Starting data pipe...');
                 }
-                this.flowList[index].status = 'Pending';
+                item.status = 'Pending';
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -458,7 +458,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     if (data) {
       const url =
         `/${this.commonService.app._id}/flow/` +
-        this.flowList[data.index]._id;
+        this.records[data.index]._id;
       this.showLazyLoader = true;
       this.subscriptions['deleteservice'] = this.commonService
         .delete('partnerManager', url)
@@ -479,8 +479,8 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     }
   }
 
-  editFlow(index: number) {
-    this.appService.edit = this.flowList[index]._id;
+  editFlow(item: any) {
+    this.appService.edit = item._id;
     this.router.navigate(['/app/', this.commonService.app._id, 'flow', this.appService.edit,
     ]);
   }
@@ -493,16 +493,16 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.alertModal.statusChange = false;
     this.alertModal.title = 'Delete Flow?';
     this.alertModal.message =
-      'Are you sure you want to delete this flow? This action will delete : ' + this.flowList[index].name;
+      'Are you sure you want to delete this flow? This action will delete : ' + this.records[index].name;
     this.alertModal.index = index;
     this.openDeleteModal.emit(this.alertModal);
   }
 
-  cloneFlow(index: number) {
+  cloneFlow(item: any) {
     this.cloneData = null;
     this.form.reset();
     this.isClone = true;
-    const temp = this.flowList[index];
+    const temp = item;
     this.form.get('name').patchValue(temp.name + ' Copy');
     this.form.get('type').patchValue(temp.inputNode.type);
     this.form.get('inputNode').patchValue(temp.inputNode);
@@ -516,11 +516,10 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.selectedFlow = null;
   }
 
-  getYamls(index: number) {
-    this.selectedFlow = this.flowList[index];
-
+  getYamls(item: any) {
+    this.selectedFlow = item;
     if (!this.selectedFlow.serviceYaml || !this.selectedFlow.deploymentYaml) {
-      this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/${this.flowList[index]._id}/yamls`, {})
+      this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/${item._id}/yamls`, {})
         .subscribe(data => {
           this.selectedFlow.serviceYaml = data.service;
           this.selectedFlow.deploymentYaml = data.deployment;

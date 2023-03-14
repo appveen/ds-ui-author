@@ -116,7 +116,7 @@
                                     Change Password
                                 </div>
                                 <div id="agent-clone" class="list-group-item list-group-item-action py-2 border-0 hover"
-                                    *ngIf="hasManagePermission('AGENT')" (click)="cloneAgent(i)">
+                                    *ngIf="hasManagePermission('AGENT')" (click)="cloneAgent(agent)">
                                     Clone
                                 </div>
                                 <div id="agent-delete"
@@ -141,7 +141,7 @@
     class="new-data-format-window position-fixed p-4 d-flex flex-column align-items-center bg-white border-left">
     <div class="d-flex align-items-center justify-content-between w-100">
         <span class="font-20 fw-600">{{agentData.isEdit?'Edit':'Create new'}} App Agent</span>
-        <button type="button" class="btn btn-link text-dark" (click)="showNewAgentWindow=false">
+        <button type="button" class="btn btn-link text-dark" (click)="showNewAgentWindow=false;isClone=false">
             <span class="dsi dsi-close"></span>
         </button>
     </div>

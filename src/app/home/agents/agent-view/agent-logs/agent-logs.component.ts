@@ -53,7 +53,7 @@ export class AgentLogsComponent implements OnInit {
 
   loadMore(event: any) {
     if(this.logsCount>this.apiConfig.page*30 && this.agentLogs.length>0){
-      if (Math.floor(event.target.scrollTop + event.target.offsetHeight) === event.target.scrollHeight + 1) {
+      if (event.target.scrollTop + event.target.offsetHeight >= event.target.scrollHeight) {
         this.apiConfig.page++;
         this.getLogs();
       }
