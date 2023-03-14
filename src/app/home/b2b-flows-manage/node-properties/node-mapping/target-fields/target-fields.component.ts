@@ -15,20 +15,20 @@ import { CommonService } from 'src/app/utils/services/common.service';
 export class TargetFieldsComponent implements OnInit {
 
   @Input() edit: any;
+  @Input() currNode: any;
   @Input() index: number;
   @Input() definition: any;
-  @Input() nodeList: Array<any>;
   @Input() allSources: Array<any>;
   pathList: Array<any>;
   selectedPathIndex: any;
   colors: Array<string>;
   toggleFormulaEditor: boolean;
+  
   constructor(private mappingService: MappingService,
     private flowService: B2bFlowService,
     private commonService: CommonService) {
     this.edit = { status: false };
     this.pathList = [];
-    this.nodeList = [];
     this.colors = ['#F06292', '#BA68C8', '#7986CB', '#64B5F6', '#4DD0E1', '#4DB6AC', '#81C784', '#AED581', '#DCE775', '#FFD54F', '#FF8A65', '#A1887F'];
     this.allSources = [];
   }
@@ -37,9 +37,6 @@ export class TargetFieldsComponent implements OnInit {
     if (!this.definition._id) {
       this.definition._id = uuid();
     }
-    this.nodeList.forEach((item: any) => {
-
-    });
     this.mappingService.fuzzyMapping.subscribe(() => {
       if (this.definition.type != 'Object') {
         const options = {
@@ -58,7 +55,7 @@ export class TargetFieldsComponent implements OnInit {
           result = result.sort((a, b) => a.score - b.score);
           if (result.length > 0) {
             this.definition.source.push(result[0].item);
-            this.definition.formula = `VAR(${result[0].item._id})`;
+            this.definition.formula = `${result[0].item._id}`;
             // this.mappingService.reCreatePaths.emit();
           }
         }

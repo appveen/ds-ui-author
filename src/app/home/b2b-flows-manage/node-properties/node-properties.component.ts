@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import * as _ from 'lodash';
+
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
@@ -19,6 +21,7 @@ export class NodePropertiesComponent implements OnInit {
   @Output() changesDone: EventEmitter<any>;
   prevNode: any;
   toggle: any;
+  nodeNameErrorMessage: string;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private flowService: B2bFlowService) {
@@ -48,6 +51,10 @@ export class NodePropertiesComponent implements OnInit {
     if (this.currNode && !this.currNode.options.retry) {
       this.currNode.options.retry = {};
     }
+  }
+
+  enableEditing() {
+    this.edit.status = true;
   }
 
   deleteNode() {
@@ -134,6 +141,41 @@ export class NodePropertiesComponent implements OnInit {
   setFunctionEndpoint(data: any) {
     this.currNode.options.path = `/${this.commonService.app._id}/${this.appService.toCamelCase(data.name)}`
     this.changesDone.emit()
+  }
+
+  nodeNameChanged(value: string) {
+    console.log(value);
+    const oldId = this.currNode._id;
+    const newId = _.snakeCase(value);
+    // this.currNode._id = newId;
+    let regex = new RegExp(`${oldId}`, 'g');
+    let replacer = newId;
+    console.log(regex, replacer);
+    this.nodeList.forEach((item) => {
+      let temp = this.appService.cloneObject(item);
+      delete temp.dataStructure;
+      let content = JSON.stringify(temp);
+      let fixedNode = JSON.parse(content.replace(regex, replacer));
+      _.merge(item, fixedNode);
+    });
+    // content = _.replace(content, regex, replacer);
+    // content = content.replace(regex, replacer);
+    // console.log(content);
+    // JSON.parse(content);
+    // console.log(JSON.stringify(this.nodeList), oldId, newId);
+  }
+
+
+  checkNameForUnique(value: string) {
+    this.nodeNameErrorMessage = '';
+    if (!value) {
+      this.nodeNameErrorMessage = 'Node name cannot be empty.';
+      return;
+    }
+    const matchDocs = this.flowService.nodeList.filter(e => e._id != this.currNode._id && _.camelCase(e.name) == _.camelCase(value));
+    if (matchDocs && matchDocs.length > 0) {
+      this.nodeNameErrorMessage = 'Duplicate node name.';
+    }
   }
 
   get isInputNode() {

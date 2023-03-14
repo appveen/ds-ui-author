@@ -215,7 +215,6 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         if (!node.name) {
           node.name = this.appService.toSnakeCase(this.flowService.getNodeType(node, i == 0));
         }
-        this.flowService.nameIdMap[node._id] = node.name;
         if (!node.coordinates || !node.coordinates.x || !node.coordinates.y) {
           node.coordinates = {
             x: 20 + (i * 120),
@@ -224,6 +223,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         }
       });
       this.flowService.cleanPayload(this.nodeList);
+      this.flowService.nodeList = this.nodeList;
       if (!environment.production) {
         setTimeout(() => {
           this.enableEditing()

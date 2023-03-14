@@ -59,6 +59,7 @@ import { MappingService } from './node-properties/node-mapping/mapping.service';
 import { StyledTextModule } from '../../utils/styled-text/styled-text.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { EditorDirective } from './node-properties/node-mapping/formula-editor/editor.directive';
+import { ChangeOnEditModule } from 'src/app/utils/change-on-edit/change-on-edit.module';
 
 const routes: Routes = [
   {
@@ -127,7 +128,8 @@ const routes: Routes = [
     SwitchModule,
     CommonFilterModule,
     StyledTextModule,
-    FieldTypeModule
+    FieldTypeModule,
+    ChangeOnEditModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService, MappingService]
