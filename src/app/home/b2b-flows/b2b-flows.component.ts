@@ -466,7 +466,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
           (d) => {
             this.showLazyLoader = false;
             this.ts.info(d.message ? d.message : 'Deleting Data Pipe...');
-            this.flowList[data.index].status = 'Pending';
+            this.records[data.index].status = 'Pending';
           },
           (err) => {
             this.showLazyLoader = false;
