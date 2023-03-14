@@ -198,8 +198,8 @@ export class NodeMappingComponent implements OnInit {
     return list;
   }
 
-  selectPath(path: any, index: number) {
-    console.log(path, index);
+  selectPath(event: any, path: any, index: number) {
+    event.stopPropagation();
     this.selectedPath = path;
   }
 
@@ -217,7 +217,8 @@ export class NodeMappingComponent implements OnInit {
     return { transform: `translate(${x}px,${y}px)` };
   }
 
-  deletePath(path: any, index: number) {
+  deletePath(event: any, path: any, index: number) {
+    event.stopPropagation();
     this.pathList.splice(index, 1);
     const temp = this.allTargets.find(e => e._id == path.target);
     if (temp && temp.source && temp.source.length > 0) {

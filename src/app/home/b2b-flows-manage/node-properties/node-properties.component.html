@@ -86,8 +86,10 @@
             </div>
             <div class="form-group">
                 <label class="font-14 fw-400 text-dark" for="nodeEndpoint">API Endpoint</label>
-                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
-                    (ngModelChange)="changesDone.emit()">
+                <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="currNode.options.path"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
+                    (ngModelChange)="changesDone.emit()"> -->
             </div>
             <div class="form-group">
                 <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
@@ -100,7 +102,9 @@
             </div>
             <div class="form-group position-relative">
                 <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
-                <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout">
+                <odp-change-on-edit id="requestTimeout" [(ngModel)]="currNode.options.timeout"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout"> -->
             </div>
         </ng-container>
         <!-- <ng-container *ngIf="currNode?.type=='FILE'">
@@ -121,8 +125,10 @@
         <ng-container *ngIf="currNode?.type=='TIMER'">
             <div class="form-group">
                 <label class="font-14 fw-400 text-dark" for="nodeEndpoint">CRON Expression</label>
-                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.cron"
-                    (ngModelChange)="changesDone.emit()">
+                <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="currNode.options.cron"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.cron"
+                    (ngModelChange)="changesDone.emit()"> -->
             </div>
         </ng-container>
         <div class="form-group d-flex align-items-center">
@@ -190,16 +196,22 @@
             <div class="border-bottom font-14 fw-500 mb-3 pb-1">Advanced Settings</div>
             <div class="form-group position-relative">
                 <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
-                <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout">
+                <odp-change-on-edit id="requestTimeout" [(ngModel)]="currNode.options.timeout"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="a" class="form-control" type="number" [(ngModel)]="currNode.options.timeout"> -->
             </div>
             <div class="form-group position-relative">
                 <label class="font-14 fw-400 text-dark" for="retryCount">Retry Count</label>
-                <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count">
+                <odp-change-on-edit id="retryCount" [(ngModel)]="currNode.options.retry.count"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count"> -->
             </div>
             <div class="form-group position-relative mb-0">
                 <label class="font-14 fw-400 text-dark" for="retryInterval">Retry Interval (sec)</label>
-                <input id="retryInterval" class="form-control" type="number"
-                    [(ngModel)]="currNode.options.retry.interval">
+                <odp-change-on-edit id="retryInterval" [(ngModel)]="currNode.options.retry.interval"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="retryInterval" class="form-control" type="number"
+                    [(ngModel)]="currNode.options.retry.interval"> -->
             </div>
         </div>
     </ng-container>

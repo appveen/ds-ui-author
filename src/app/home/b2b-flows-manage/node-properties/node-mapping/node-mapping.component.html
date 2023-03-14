@@ -77,14 +77,15 @@
                     </div>
                 </ng-container>
             </div>
-            <svg #svgCanvas class="mapping-paths" [ngStyle]="svgStyle">
+            <svg #svgCanvas class="mapping-paths" [ngStyle]="svgStyle" (click)="selectedPath=null;">
                 <g *ngFor="let p of pathList;let i=index;">
-                    <path class="transparent-path" [attr.d]="p.path" (click)="selectPath(p,i)" />
-                    <path [class.selected]="isPathSelected(p)" [attr.d]="p.path" (click)="selectPath(p,i)" />
+                    <path class="transparent-path" [attr.d]="p.path" (click)="selectPath($event,p,i)" />
+                    <path [class.selected]="isPathSelected(p)" [attr.d]="p.path" (click)="selectPath($event,p,i)" />
                     <g *ngIf="isPathSelected(p)" [ngStyle]="getDeleteIconStyle(p)">
-                        <rect x="0" y="0" width="18" height="18" rx="6" class="delete-rect" (click)="deletePath(p,i)" />
+                        <rect x="0" y="0" width="18" height="18" rx="6" class="delete-rect"
+                            (click)="deletePath($event,p,i)" />
                         <foreignObject x="0" y="3" width="18" height="18">
-                            <span xmlns="http://www.w3.org/1999/xhtml" (click)="deletePath(p,i)"
+                            <span xmlns="http://www.w3.org/1999/xhtml" (click)="deletePath($event,p,i)"
                                 class="text-wrap d-flex justify-content-center text-center hover font-10 dsi dsi-trash text-danger"></span>
                         </foreignObject>
                     </g>
