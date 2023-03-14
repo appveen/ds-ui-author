@@ -178,14 +178,14 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       if (res.inputNode.dataStructure && res.inputNode.dataStructure.outgoing) {
         this.patchDataStructure(res.inputNode.dataStructure.outgoing, res.dataStructures);
       }
-      if (!res.errorNode || _.isEmpty(res.errorNode)) {
-        let errorNode = this.flowService.getNodeObject('ERROR', this.nodeList);
-        errorNode.coordinates = {
-          x: 400,
-          y: 30
-        };
-        res.errorNode = errorNode;
-      }
+      // if (!res.errorNode || _.isEmpty(res.errorNode)) {
+      //   let errorNode = this.flowService.getNodeObject('ERROR', this.nodeList);
+      //   errorNode.coordinates = {
+      //     x: 400,
+      //     y: 30
+      //   };
+      //   res.errorNode = errorNode;
+      // }
       res.nodes.forEach(item => {
         if (item.dataStructure && item.dataStructure.outgoing) {
           this.patchDataStructure(item.dataStructure.outgoing, res.dataStructures);
@@ -519,6 +519,9 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     }
   }
 
+  get hasErrorNode() {
+    return this.flowService.nodeList.some(e => e.type == 'ERROR');
+  }
 
   get apiCallsPending() {
     return Object.values(this.apiCalls).some(e => e);
