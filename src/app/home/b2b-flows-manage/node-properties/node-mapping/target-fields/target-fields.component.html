@@ -14,5 +14,5 @@
     </div>
 </div>
 
-<odp-formula-editor *ngIf="toggleFormulaEditor" [field]="definition" [nodeList]="nodeList" [(data)]="definition.formula"
+<odp-formula-editor *ngIf="toggleFormulaEditor" [currNode]="currNode" [field]="definition" [(data)]="definition.formula"
     (close)="toggleFormulaEditor=false"></odp-formula-editor>

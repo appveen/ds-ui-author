@@ -4,6 +4,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { AppService } from 'src/app/utils/services/app.service';
 import { environment } from 'src/environments/environment';
+import { B2bFlowService } from '../../b2b-flow.service';
 import { MappingService } from './mapping.service';
 
 @Component({
@@ -16,15 +17,16 @@ export class NodeMappingComponent implements OnInit {
 
   @Input() edit: any;
   @Input() currNode: any;
-  @Input() nodeList: Array<any>;
   @Output() close: EventEmitter<any>;
   allSources: Array<any>;
   allTargets: Array<any>;
   tempMappings: Array<any>;
   pathList: Array<any>;
   svgStyle: any;
+  nodeList: Array<any>;
   constructor(private appService: AppService,
-    private mappingService: MappingService) {
+    private mappingService: MappingService,
+    private flowService: B2bFlowService) {
     this.nodeList = [];
     this.close = new EventEmitter();
     this.edit = {
@@ -42,13 +44,15 @@ export class NodeMappingComponent implements OnInit {
       customTargetFields = this.appService.cloneObject(this.currNode.dataStructure.outgoing.definition) || [];
     }
     this.allTargets = this.mappingService.flatten(customTargetFields);
+
+    this.nodeList = this.flowService.getNodesBefore(this.currNode);
     this.nodeList.forEach((node: any) => {
       let incoming, outgoing;
       if (node._id != this.currNode._id) {
-        if (node.dataStructure.incoming && node.dataStructure.incoming.definition) {
-          incoming = this.appService.cloneObject(node.dataStructure.incoming.definition);
-          this.allSources = this.allSources.concat(this.flattenSource(node, incoming, 'body'));
-        }
+        // if (node.dataStructure.incoming && node.dataStructure.incoming.definition) {
+        //   incoming = this.appService.cloneObject(node.dataStructure.incoming.definition);
+        //   this.allSources = this.allSources.concat(this.flattenSource(node, incoming, 'body'));
+        // }
         if (node.dataStructure.outgoing && node.dataStructure.outgoing.definition) {
           outgoing = this.appService.cloneObject(node.dataStructure.outgoing.definition);
           this.allSources = this.allSources.concat(this.flattenSource(node, outgoing, 'responseBody'));

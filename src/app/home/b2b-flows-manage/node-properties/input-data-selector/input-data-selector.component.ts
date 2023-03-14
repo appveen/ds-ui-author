@@ -10,7 +10,7 @@ export class InputDataSelectorComponent implements OnInit {
 
   @Input() edit: any;
   @Input() currNode: any;
-  @Input() nodeList: Array<any>;
+  // @Input() nodeList: Array<any>;
   @Input() data: any;
   @Output() dataChange: EventEmitter<any>;
   showCustomWindow: boolean;
@@ -19,6 +19,7 @@ export class InputDataSelectorComponent implements OnInit {
   inputDataStructure: any;
   sampleJSON: any;
   tempData: any;
+  nodeList: Array<any>;
   constructor(private flowService: B2bFlowService) {
     this.edit = { status: false };
     this.dataChange = new EventEmitter();
@@ -29,6 +30,7 @@ export class InputDataSelectorComponent implements OnInit {
   ngOnInit(): void {
     this.toggle['payloadCreator'] = true;
     this.toggle['single'] = true;
+    this.nodeList = this.flowService.getNodesBefore(this.currNode);
     this.inputDataStructure = this.currNode.dataStructure.incoming || {};
     if (this.data != undefined && this.data != null && typeof this.data == 'string') {
       this.dataType = 'single';

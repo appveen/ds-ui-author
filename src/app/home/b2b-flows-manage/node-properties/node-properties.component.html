@@ -182,7 +182,7 @@
         </div> -->
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark mb-0" for="nodeBody">Body</label>
-            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList"
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
                 [currNode]="currNode">
             </odp-input-data-selector>
         </div>
@@ -252,7 +252,7 @@
             <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeBody">
                 Body
             </label>
-            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList"
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
                 [currNode]="currNode">
             </odp-input-data-selector>
         </div>
@@ -352,7 +352,7 @@
             <!-- <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['body']" [nodeList]="nodeList"
                 [(value)]="currNode.options.body">
             </odp-node-data-selector> -->
-            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList"
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
                 [currNode]="currNode">
             </odp-input-data-selector>
         </div>
@@ -360,7 +360,7 @@
 </div>
 
 <div [ngClass]="{'show':toggle['mapping']}" class="node-mapping-window border-left position-fixed bg-white p-4">
-    <odp-node-mapping *ngIf="toggle['mapping']" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
+    <odp-node-mapping *ngIf="toggle['mapping']" [edit]="edit" [currNode]="currNode"
         (close)="toggle['mapping']=false"></odp-node-mapping>
 </div>
 

@@ -11,8 +11,8 @@ export class FormulaEditorComponent implements OnInit {
 
   @Input() class: string;
   @Input() disabled: boolean;
-  @Input() nodeList: Array<any>;
   @Input() field: any;
+  @Input() currNode: any;
   @Input() data: any;
   @Output() dataChange: EventEmitter<any>;
   @Output() close: EventEmitter<any>;
@@ -21,8 +21,8 @@ export class FormulaEditorComponent implements OnInit {
   variableSuggestions: Array<{ label: string, value: string }>;
   availableMethods: Array<any>;
   insertText: EventEmitter<string>;
+  nodeList: Array<any>;
   constructor(private flowService: B2bFlowService) {
-    this.nodeList = [];
     this.dataChange = new EventEmitter();
     this.close = new EventEmitter();
     this.variableSuggestions = [];
@@ -34,6 +34,7 @@ export class FormulaEditorComponent implements OnInit {
   ngOnInit(): void {
     this.availableMethods = this.flowService.getAvailableTransformMethods();
     this.tempData = this.data;
+    this.nodeList = this.flowService.getNodesBefore(this.currNode);
     const temp = this.nodeList.map(node => {
       let list = [];
       let statusCode: any = {};

@@ -21,43 +21,53 @@
                 <ng-container *ngFor="let node of nodeList;let i=index">
                     <div *ngIf="node._id!=currNode._id" class="border mb-3 rounded p-2">
                         <div>
-                            <div *ngIf="node.type=='FILE'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                            <div *ngIf="node.type=='FILE'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">File Agent</span>
                             </div>
-                            <div *ngIf="node.type=='API'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                            <div *ngIf="node.type=='API'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Invoke API</span>
                             </div>
-                            <div *ngIf="node.type=='CONNECTOR'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                            <div *ngIf="node.type=='CONNECTOR'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Connector</span>
                             </div>
-                            <div *ngIf="node.type=='DATASERVICE'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                            <div *ngIf="node.type=='DATASERVICE'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Data Service</span>
                             </div>
-                            <div *ngIf="node.type=='FUNCTION'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                            <div *ngIf="node.type=='FUNCTION'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Function</span>
                             </div>
-                            <div *ngIf="node.type=='PAYLOAD'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                            <div *ngIf="node.type=='PAYLOAD'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-object mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Payload Creator</span>
                             </div>
-                            <div *ngIf="node.type=='MAPPING'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                            <div *ngIf="node.type=='MAPPING'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Mapping</span>
                             </div>
-                            <div *ngIf="node.type=='CODEBLOCK'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                            <div *ngIf="node.type=='CODEBLOCK'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-console mr-2 text-secondary"></span>
                                 <span class="font-13 fw-400 text-secondary">Code Block</span>
                             </div>
-                            <div *ngIf="node.type=='UNWIND'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                            <div *ngIf="node.type=='UNWIND'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Change Root</span>
                             </div>
-                            <div *ngIf="node.type=='RESPONSE'" class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                            <div *ngIf="node.type=='RESPONSE'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Response</span>
                             </div>
@@ -75,7 +85,7 @@
             <div class="target-list">
                 <div *ngFor="let item of allTargets;let i=index">
                     <odp-target-fields [allSources]="allSources" [definition]="item" [index]="i"
-                        [nodeList]="nodeList"></odp-target-fields>
+                        [currNode]="currNode"></odp-target-fields>
                 </div>
             </div>
         </div>

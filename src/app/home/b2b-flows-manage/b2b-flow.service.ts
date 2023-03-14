@@ -166,6 +166,22 @@ export class B2bFlowService {
     return temp;
   }
 
+  getNodesBefore(currNode: any) {
+    let temp = [];
+    let prevNode = this.nodeList.find(e => {
+      let nexItems = _.concat((e.onSuccess || []), (e.onError || []));
+      if (nexItems.find((es) => es._id == currNode._id)) {
+        return true;
+      }
+      return false;
+    });
+    if (prevNode) {
+      temp.push(prevNode);
+      temp = temp.concat(this.getNodesBefore(prevNode));
+    }
+    return temp;
+  }
+
   generateLinkPath(origX: number, origY: number, destX: number, destY: number, sc: number) {
     var lineCurveScale = 0.75,
       node_width = 100,
