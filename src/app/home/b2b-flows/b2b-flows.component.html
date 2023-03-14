@@ -141,7 +141,7 @@
 <div [ngClass]="{'show':showNewFlowWindow}"
     class="new-flow-window p-4 position-fixed border-left bg-white d-flex flex-column" [formGroup]="form">
     <div class="d-flex align-items-center justify-content-between mb-3">
-        <span class="font-22 fw-500">New Pipeline</span>
+        <span class="font-22 fw-500">New Data Pipe</span>
         <span class="dsi dsi-close hover" (click)="showNewFlowWindow=false;"></span>
     </div>
     <div *ngIf="showNewFlowWindow" class="d-flex flex-column w-100">
@@ -152,7 +152,7 @@
             </label>
             <div class="name-wrapper position-relative mb-3">
                 <input newFlowName autocomplete="off" type="text" class="form-control" id="name"
-                    placeholder="Untitled Flow" formControlName="name" odpAutoFocus
+                    placeholder="Untitled Data Pipe" formControlName="name" odpAutoFocus
                     (keyup.enter)="isClone ? triggerFlowClone() : triggerFlowCreate()"
                     [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
                 <ng-container *ngIf="form.get('name').dirty">

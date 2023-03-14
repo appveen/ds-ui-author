@@ -146,7 +146,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
       this.showLazyLoader = false;
       this.form.reset({ type: 'API' });
-      this.ts.success('Flow has been created.');
+      this.ts.success('Data Pipe has been created.');
       this.appService.edit = res._id;
       this.router.navigate(['/app/', this.commonService.app._id, 'flow', res._id]);
     }, err => {
@@ -169,7 +169,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       this.showLazyLoader = false;
       this.isClone = false;
       this.form.reset({ type: 'API' });
-      this.ts.success('Flow has been created.');
+      this.ts.success('Data Pipe has been created.');
       this.appService.edit = res._id;
       this.router.navigate(['/app/', this.commonService.app._id, 'flow', res._id]);
     }, err => {
