@@ -60,15 +60,18 @@ export class NodeMappingComponent implements OnInit {
         }
       }
     });
-    // if (this.currNode.mappings && this.currNode.mappings.length > 0) {
-    //   this.tempMappings = this.appService.cloneObject(this.currNode.mappings);
-    //   this.allTargets.forEach((item: any) => {
-    //     let temp = this.tempMappings.find((e: any) => e.target.dataPath == item.dataPath);
-    //     if (temp && temp.source) {
-    //       item.source = (temp.source || []).map((source: any) => this.allSources.find((src: any) => src.dataPath == source.dataPath)).filter(e => e);
-    //     }
-    //   });
-    // }
+    if (this.currNode.mappings && this.currNode.mappings.length > 0) {
+      this.tempMappings = this.appService.cloneObject(this.currNode.mappings);
+      this.allTargets.forEach((item: any) => {
+        let temp = this.tempMappings.find((e: any) => e.target.dataPath == item.dataPath);
+        if (temp && temp.source && temp.source.length > 0) {
+          item.source = (temp.source || []).map((source: any) => this.allSources.find((src: any) => src._id == source._id)).filter(e => e);
+        }
+      });
+      setTimeout(() => {
+        this.mappingService.reCreatePaths.emit(null);
+      }, 200);
+    }
 
     this.mappingService.reCreatePaths.pipe(debounceTime(200)).subscribe((data: any) => {
       if (data) {
@@ -107,9 +110,11 @@ export class NodeMappingComponent implements OnInit {
     temp.target = {
       type: item.type,
       dataPath: item.dataPath,
+      _id: item._id
     };
     temp.source = (item.source || []).map((s) => {
       let temp: any = {};
+      temp._id = s._id;
       temp.type = s.type;
       temp.dataPath = s.dataPath;
       return temp;
@@ -170,7 +175,7 @@ export class NodeMappingComponent implements OnInit {
           delete def._id;
           let key = parentDef ? parentDef.dataPath + '.' + def.key : def.key;
           let name = parentDef ? parentDef.properties.name + '/' + def.properties.name : def.properties.name;
-          def._id = `{{${node._id}.${bodyKey}.${key}}}`;
+          def._id = `${node._id}.${bodyKey}.${key}`;
           def.nodeId = node._id;
           def.properties.name = name;
           def.properties.dataPath = key;
