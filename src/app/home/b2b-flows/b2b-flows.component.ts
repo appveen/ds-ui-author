@@ -458,7 +458,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     if (data) {
       const url =
         `/${this.commonService.app._id}/flow/` +
-        this.flowList[data.index]._id;
+        this.records[data.index]._id;
       this.showLazyLoader = true;
       this.subscriptions['deleteservice'] = this.commonService
         .delete('partnerManager', url)
@@ -466,7 +466,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
           (d) => {
             this.showLazyLoader = false;
             this.ts.info(d.message ? d.message : 'Deleting flow...');
-            this.flowList[data.index].status = 'Pending';
+            this.records[data.index].status = 'Pending';
           },
           (err) => {
             this.showLazyLoader = false;
@@ -489,11 +489,11 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/app', this.commonService.app._id, 'flow', item._id]);
   }
 
-  deleteFlow(item:any,index: number) {
+  deleteFlow(index: number) {
     this.alertModal.statusChange = false;
     this.alertModal.title = 'Delete Flow?';
     this.alertModal.message =
-      'Are you sure you want to delete this flow? This action will delete : ' + item.name;
+      'Are you sure you want to delete this flow? This action will delete : ' + this.records[index].name;
     this.alertModal.index = index;
     this.openDeleteModal.emit(this.alertModal);
   }

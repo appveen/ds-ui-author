@@ -181,14 +181,15 @@ export class AgentsComponent implements OnInit, OnDestroy {
         this.alertModal.statusChange = false;
         this.alertModal.title = 'Delete Agent';
         this.alertModal.message = 'Are you sure you want to delete <span class="text-delete font-weight-bold">'
-            + this.agentList[_index].name + '</span> Agent?';
+            + this.records[_index].name + '</span> Agent?';
+            console.log(this.records[_index])
         this.alertModal.index = _index;
         this.openDeleteModal.emit(this.alertModal);
     }
 
     closeDeleteModal(data) {
         if (data) {
-            this.subscriptions['deleteAgent'] = this.commonService.delete('partnerManager', `/${this.commonService.app._id}/agent/` + this.agentList[data.index]._id, this.agentList[data.index]).subscribe(res => {
+            this.subscriptions['deleteAgent'] = this.commonService.delete('partnerManager', `/${this.commonService.app._id}/agent/` + this.records[data.index]._id, this.records[data.index]).subscribe(res => {
                 if (res) {
                     this.ts.success('Agent Deleted Sucessfully');
                     this.getAgentList();
