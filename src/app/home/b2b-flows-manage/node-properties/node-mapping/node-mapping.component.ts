@@ -24,6 +24,7 @@ export class NodeMappingComponent implements OnInit {
   pathList: Array<any>;
   svgStyle: any;
   nodeList: Array<any>;
+  selectedPath: any;
   constructor(private appService: AppService,
     private mappingService: MappingService,
     private flowService: B2bFlowService) {
@@ -157,7 +158,7 @@ export class NodeMappingComponent implements OnInit {
         y: targetRect.top - pathRect.top + 6
       };
       let path = this.mappingService.generateLinkPath(sourceCoordinates.x, sourceCoordinates.y, targetCoordinates.x, targetCoordinates.y, 1.5);
-      this.pathList.push({ path });
+      this.pathList.push({ path, source: source._id, target: target._id });
     }
   }
 
@@ -195,5 +196,33 @@ export class NodeMappingComponent implements OnInit {
       console.log(err);
     }
     return list;
+  }
+
+  selectPath(path: any, index: number) {
+    console.log(path, index);
+    this.selectedPath = path;
+  }
+
+  isPathSelected(path: any) {
+    if (this.selectedPath && this.selectedPath.source == path.source && this.selectedPath.target == path.target) {
+      return true;
+    }
+    return false;
+  }
+
+  getDeleteIconStyle(path: any) {
+    const segs = path.path.split(" ");
+    let x = segs[8] - 100;
+    let y = segs[9];
+    return { transform: `translate(${x}px,${y}px)` };
+  }
+
+  deletePath(path: any, index: number) {
+    this.pathList.splice(index, 1);
+    const temp = this.allTargets.find(e => e._id == path.target);
+    if (temp && temp.source && temp.source.length > 0) {
+      let tempIndex = temp.source.findIndex(e => e._id == path.source);
+      temp.source.splice(tempIndex, 1);
+    }
   }
 }

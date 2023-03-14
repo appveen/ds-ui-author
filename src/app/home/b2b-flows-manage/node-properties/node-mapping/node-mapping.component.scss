@@ -1,3 +1,6 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
 .mapping-container {
     .mapping-box {
         min-height: calc(100vh - 204px);
@@ -26,4 +29,36 @@ path {
     stroke: #ccc;
     stroke-width: 2;
     fill: none;
+
+    &:hover {
+        cursor: pointer;
+        stroke-width: 4;
+    }
+
+    &.selected {
+        stroke: $accent;
+        stroke-width: 3;
+    }
+}
+
+.transparent-path {
+    stroke: transparent;
+    stroke-width: 4;
+    fill: none;
+
+    &:hover {
+        cursor: pointer;
+        stroke-width: 20;
+    }
+}
+
+.svg-path-transparent:hover~path {
+    cursor: pointer;
+    stroke-width: 4;
+}
+
+.delete-rect {
+    fill: #fff;
+    stroke: $danger;
+    stroke-width: 1;
 }

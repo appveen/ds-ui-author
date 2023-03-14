@@ -30,7 +30,7 @@ export class MappingService {
         nodeId: this.selectedSourceNode.node._id,
       }
       this.selectedTargetNode.definition.source.push(temp);
-      this.selectedTargetNode.definition.formula = `VAR(${temp._id})`;
+      this.selectedTargetNode.definition.formula = `{{${temp._id}}}`;
       this.reCreatePaths.emit({ source: this.selectedSourceNode, target: this.selectedTargetNode });
       this.selectedSourceNode = null;
       this.selectedTargetNode = null;
