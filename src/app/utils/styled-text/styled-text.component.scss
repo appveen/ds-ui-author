@@ -11,7 +11,7 @@
 .input-container {
     border: 1px solid gray;
     border-radius: 4px;
-    width: 260px;
+    // width: 260px;
     height: 32px;
     position: relative;
     margin-right: 1px;
@@ -30,7 +30,8 @@
 
 /* For showing through placeholder */
 .input-container input:not([value=""]) {
-    -webkit-text-fill-color: transparent;
+    -webkit-text-fill-color: transparent !important;
+    letter-spacing: 0.15px;
 }
 
 .input-container .input-renderer {
@@ -42,7 +43,6 @@
     /* This line preserves trailing
         whitespaces */
     white-space: pre;
-
     overflow-x: auto;
     -webkit-user-select: none;
     user-select: none;
@@ -50,4 +50,8 @@
 
 .input-container .input-renderer::-webkit-scrollbar {
     display: none;
+}
+
+.ml2 {
+    margin-left: 2px;
 }

@@ -20,6 +20,9 @@ export class PathConditionCreatorComponent implements OnInit {
   segments: Array<{ label: string, value: string }>;
   logicalConditions: Array<string>;
   selectedSegmentIndex: number;
+  textValue: string;
+  searchTerm: string = '';
+  displayValue: string = '';
   constructor() {
     this.nodeList = [];
     this.segments = [];
@@ -41,7 +44,8 @@ export class PathConditionCreatorComponent implements OnInit {
 
   unsetValue() {
     this.tempValue = null;
-    this.value = null;
+    this.value = '';
+    this.displayValue = '';
     this.valueChange.emit(null);
     this.segments.splice(0);
     this.showConditionWindow = false;
@@ -52,7 +56,7 @@ export class PathConditionCreatorComponent implements OnInit {
   }
 
   save() {
-    this.value = this.segments.map(e => e.value).join(' ');
+    // this.value = this.segments.map(e => e.value).join(' ');
     console.log(this.value);
     this.valueChange.emit(this.value);
     this.cancel();
@@ -60,7 +64,7 @@ export class PathConditionCreatorComponent implements OnInit {
 
   formatter(result: any) {
     if (result && typeof result == 'object') {
-      return result.label.toUpperCase();
+      return result.label;
     }
     return result;
   };
@@ -70,6 +74,9 @@ export class PathConditionCreatorComponent implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       map((term) => {
+        term = term.split(' ').filter((ele) => ele.startsWith("{{") && !ele.endsWith("}")).pop() || '';
+        this.searchTerm = term;
+        term = term.replace('{{', '');
         if (this.logicalConditions.indexOf(term) > -1) {
           this.segments.push({ label: term, value: term });
           this.typeAhead.writeValue(null);
@@ -78,6 +85,7 @@ export class PathConditionCreatorComponent implements OnInit {
         return term === '' ? [] : this.variableSuggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 15);
       }),
     );
+
 
   selectItem(event: any) {
     this.segments.push(event.item);
@@ -172,7 +180,21 @@ export class PathConditionCreatorComponent implements OnInit {
     return list;
   }
 
-  test(event) {
-    console.log(event)
+  changeLabel(event) {
+    this.textValue = event;
+    this.displayValue = event;
+    const regex = /{{\S+}}/g;
+    const matches = this.textValue.match(regex) || [];
+    if (matches.length > 0) {
+      matches.forEach((match) => {
+        const label = match.replace('{{', '').replace('}}', '');
+        const suggestion = this.variableSuggestions.find(item => item.label === label);
+        if (suggestion) {
+          this.textValue = this.textValue.replace(match, suggestion.value);
+        }
+      });
+    }
+    this.value = this.textValue;
   }
+
 }

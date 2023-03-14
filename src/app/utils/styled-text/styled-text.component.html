@@ -1,9 +1,10 @@
 <div class="value-holder">
   <div class="input-container">
     <input id="myInput" [value]="value" (input)="onChange($event)" [ngbTypeahead]="ngbTypeahead"
-      [resultFormatter]="resultFormatter" [inputFormatter]="inputFormatter" (selectItem)="selectItem($event)">
+      (scroll)="handleScroll($event)" [resultFormatter]="resultFormatter" [inputFormatter]="inputFormatter"
+      (selectItem)="selectItem($event)">
 
-    <div class="input-renderer">
+    <div class="input-renderer" #renderer>
       <div *ngFor="let word of valueArray">
         <span [ngClass]="{'text-primary': regexMatch(word)}">{{word}}</span>
       </div>
