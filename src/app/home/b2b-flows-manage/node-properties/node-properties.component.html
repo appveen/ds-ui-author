@@ -21,8 +21,9 @@
 <div class="p-4">
     <div class="form-group">
         <label class="font-14 fw-400 text-dark" for="nodeName">Node Name</label>
-        <odp-change-on-edit id="nodeName" [(ngModel)]="currNode.name" (ngModelChange)="nodeNameChanged($event)" (ngModelChange)="changesDone.emit()"
-            (tempValue)="checkNameForUnique($event)" [errorMessage]="nodeNameErrorMessage"></odp-change-on-edit>
+        <odp-change-on-edit id="nodeName" [(ngModel)]="currNode.name" (ngModelChange)="nodeNameChanged($event)"
+            (ngModelChange)="changesDone.emit()" (tempValue)="checkNameForUnique($event)"
+            [errorMessage]="nodeNameErrorMessage"></odp-change-on-edit>
         <!-- <input id="nodeName" type="text" class="form-control" [(ngModel)]="currNode.name"
             (ngModelChange)="changesDone.emit()" odpChangeOnEdit> -->
     </div>
@@ -50,7 +51,7 @@
         </odp-input-data-selector>
     </div> -->
     <ng-container *ngIf="currNode?.type!='ERROR'">
-        <div *ngIf="currNode?.type!='RESPONSE' && currNode?.type!='PAYLOAD' && !isInputNode" class="form-group">
+        <div *ngIf="currNode?.type=='API' && !isInputNode" class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="inputDataStructure">Input Data Structure
                 <span class="text-muted"><i>(optional)</i></span>
             </label>

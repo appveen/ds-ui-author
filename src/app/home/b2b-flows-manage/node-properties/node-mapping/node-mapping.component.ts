@@ -165,7 +165,7 @@ export class NodeMappingComponent implements OnInit {
           delete def._id;
           let key = parentDef ? parentDef.dataPath + '.' + def.key : def.key;
           let name = parentDef ? parentDef.properties.name + '/' + def.properties.name : def.properties.name;
-          def._id = node._id + '.' + bodyKey + '.' + key;
+          def._id = `{{${node._id}.${bodyKey}.${key}}}`;
           def.nodeId = node._id;
           def.properties.name = name;
           def.properties.dataPath = key;
