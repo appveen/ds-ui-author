@@ -44,7 +44,7 @@
                 (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)" odpAutoFocus>
 
         </div> -->
-        <odp-styled-text (finalValue)="changeLabel($event)" [initValue]="value" #typeAhead [ngbTypeahead]="search"
+        <odp-styled-text (finalValue)="changeLabel($event)" [value]="value" #typeAhead [ngbTypeahead]="search"
             [resultFormatter]="formatter" [inputFormatter]="formatter" [searchTerm]="searchTerm"></odp-styled-text>
         <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center"
             (click)="save()">

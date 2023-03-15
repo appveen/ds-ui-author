@@ -19,7 +19,7 @@ export class StyledTextComponent implements OnInit {
   @Input() inputFormatter: any;
   @Input() searchTerm: any;
   @Input() class: any;
-  @Input() initValue: string = '';
+  @Input() value: string = '';
   @Input() disabled: boolean = false
   @Input() type: string = "text"
   @Input() pattern: RegExp = /.*/g
@@ -27,7 +27,6 @@ export class StyledTextComponent implements OnInit {
   @Output() onEnter: EventEmitter<any> = new EventEmitter();
   @ViewChild('renderer') renderer: any;
 
-  value: string = '';
 
   constructor() {
 
@@ -35,7 +34,7 @@ export class StyledTextComponent implements OnInit {
 
 
   ngOnInit() {
-    this.value = this.initValue || '';
+
   }
 
   onChange = (event) => {

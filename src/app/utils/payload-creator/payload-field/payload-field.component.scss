@@ -1,3 +1,6 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
 .field-wrapper {
     overflow: hidden;
 }
@@ -48,5 +51,12 @@
     position: absolute;
     height: 32px;
     width: 260px;
+}
 
+.white-bg {
+    background: $white;
+}
+
+.disabled-bg {
+    background: $gray-200;
 }

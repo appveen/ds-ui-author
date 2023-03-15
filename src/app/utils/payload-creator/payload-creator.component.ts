@@ -14,7 +14,6 @@ export class PayloadCreatorComponent implements OnInit {
   @Output() dataChange: EventEmitter<any>;
   globalType: string;
   triggerAddChild: EventEmitter<any>;
-  rcData: any;
   constructor(private flowService: B2bFlowService) {
     this.nodeList = [];
     this.data = {};
@@ -27,16 +26,6 @@ export class PayloadCreatorComponent implements OnInit {
     if (!this.data) {
       this.data = {};
     }
-
-    this.rcData = this.nodeList.map(ele => {
-      return {
-        name: ele.name || ele._id,
-        value: ele._id,
-        ref: this.userSelectedValue(`{{node['${ele._id}'].body}}`)
-      }
-    })
-
-    console.log(this.rcData);
   }
 
   onDataChange(data: any) {

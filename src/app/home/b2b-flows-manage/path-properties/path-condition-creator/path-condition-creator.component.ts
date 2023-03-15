@@ -22,7 +22,6 @@ export class PathConditionCreatorComponent implements OnInit {
   selectedSegmentIndex: number;
   textValue: string;
   searchTerm: string = '';
-  displayValue: string = '';
   constructor() {
     this.nodeList = [];
     this.segments = [];
@@ -45,7 +44,6 @@ export class PathConditionCreatorComponent implements OnInit {
   unsetValue() {
     this.tempValue = null;
     this.value = '';
-    this.displayValue = '';
     this.valueChange.emit(null);
     this.segments.splice(0);
     this.showConditionWindow = false;
@@ -182,7 +180,6 @@ export class PathConditionCreatorComponent implements OnInit {
 
   changeLabel(event) {
     this.textValue = event;
-    this.displayValue = event;
     // const regex = /{{\S+}}/g;
     // const matches = this.textValue.match(regex) || [];
     // if (matches.length > 0) {
