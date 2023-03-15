@@ -6,13 +6,6 @@
                 [attr.data-id]="node._id" />
             <text x="36" y="22" text-anchor="start" (click)="openProperties($event)"
                 [attr.data-id]="node._id">{{nodeType}}</text>
-            <foreignObject width="140" height="42" x="0" y="38" [attr.data-id]="node._id"
-                (click)="openProperties($event)">
-                <span xmlns="http://www.w3.org/1999/xhtml"
-                    class="text-wrap d-flex justify-content-center text-center font-10">
-                    Global Error
-                </span>
-            </foreignObject>
         </g>
         <rect class="node-anchor end" [class.active]="isActive('end')" [attr.data-id]="node._id" x="134" y="12"
             width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
