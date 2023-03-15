@@ -121,6 +121,24 @@ export class B2bFlowService {
     return text;
   }
 
+  getDynamicName(configuredData: any, nodeList: Array<any>) {
+    let text = configuredData.customValue || '';
+    if (configuredData && configuredData.node) {
+      const nodeData = nodeList.find(e => e._id == configuredData.node);
+      if (!nodeData) {
+        return text;
+      }
+      text += nodeData.name || nodeData._id;
+    }
+    if (configuredData && configuredData.nodeKey) {
+      text += '/' + configuredData.nodeKey;
+    }
+    if (configuredData && configuredData.dataKey) {
+      text += '/' + configuredData.dataKey;
+    }
+    return text;
+  }
+
   getNodeObject(type: string, nodeList: Array<any>) {
     let allIds = nodeList.map(e => e._id);
     if (this.nodeIDCounter == 0) {
@@ -427,5 +445,69 @@ export class B2bFlowService {
         value: '_.nth( [ array ], index )'
       }
     ];
+  }
+
+  getNestedSuggestions(node: any, definition: Array<any>, parentKey?: any) {
+    let list = [];
+    if (definition && definition.length > 0) {
+      definition.forEach((def: any) => {
+        let key = parentKey ? parentKey + '.' + def.key : def.key;
+        if (def.type == 'Object') {
+          list = list.concat(this.getNestedSuggestions(node, def.definition, key));
+        } else {
+          let item: any = {};
+          item.label = (node._id || node.type) + '/body/' + key;
+          item.value = node._id + '.body.' + key;
+          list.push(item);
+          item = {};
+          item.label = (node._id || node.type) + '/responseBody/' + key;
+          item.value = node._id + '.responseBody.' + key;
+          list.push(item);
+        }
+      });
+    }
+    return list;
+  }
+
+  getSuggestions(): Array<{ label: string, value: string }> {
+    if (!this.nodeList || this.nodeList.length == 0) {
+      return [];
+    }
+    const temp = this.nodeList.map(node => {
+      let list = [];
+      let statusCode: any = {};
+      statusCode.label = (node._id || node.type) + '/statusCode'
+      statusCode.value = node._id + '.statusCode'
+      list.push(statusCode);
+      let status: any = {};
+      status.label = (node._id || node.type) + '/status'
+      status.value = node._id + '.status'
+      list.push(status);
+      let headers: any = {};
+      headers.label = (node._id || node.type) + '/headers'
+      headers.value = node._id + '.headers'
+      list.push(headers);
+      if (!node.dataStructure) {
+        node.dataStructure = {};
+      }
+      if (!node.dataStructure.outgoing) {
+        node.dataStructure.outgoing = {};
+      }
+      if (node.dataStructure.outgoing.definition) {
+        list = list.concat(this.getNestedSuggestions(node, node.dataStructure.outgoing.definition));
+        // node.dataStructure.outgoing.definition.forEach(def => {
+        //   let item: any = {};
+        //   item.label = (node._id || node.type) + '/body/' + def.key;
+        //   item.value =node._id + '.body.' + def.key;
+        //   list.push(item);
+        //   item = {};
+        //   item.label = (node._id || node.type) + '/responseBody/' + def.key;
+        //   item.value =node._id + '.responseBody.' + def.key;
+        //   list.push(item);
+        // });
+      }
+      return list;
+    })
+    return _.flatten(temp);
   }
 }
