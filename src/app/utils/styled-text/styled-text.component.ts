@@ -22,10 +22,12 @@ export class StyledTextComponent implements OnInit {
   @Input() value: string = '';
   @Input() disabled: boolean = false
   @Input() type: string = "text"
+  @Input() uid: string = '0'
   @Input() pattern: RegExp = /.*/g
   @Output() onPaste: EventEmitter<any> = new EventEmitter();
   @Output() onEnter: EventEmitter<any> = new EventEmitter();
   @ViewChild('renderer') renderer: any;
+  @ViewChild('styledInputText') styledInputText: any;
 
 
   constructor() {
@@ -34,7 +36,9 @@ export class StyledTextComponent implements OnInit {
 
 
   ngOnInit() {
-
+    if (!this.value) {
+      this.value = ''
+    }
   }
 
   onChange = (event) => {
@@ -56,7 +60,7 @@ export class StyledTextComponent implements OnInit {
   }
 
   getCursor() {
-    let cursor = document.getElementById('myInput') as HTMLInputElement;
+    let cursor = this.styledInputText.nativeElement;
     let start = cursor.selectionStart;
     let end = cursor.selectionEnd;
     return [start, end];
