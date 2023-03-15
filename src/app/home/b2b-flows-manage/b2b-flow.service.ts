@@ -354,56 +354,6 @@ export class B2bFlowService {
   getAvailableTransformMethods() {
     return [
       {
-        name: 'HTTP.POST',
-        params: [
-          {
-            name: 'URL',
-            type: 'String'
-          },
-          {
-            name: 'Body',
-            type: 'Object'
-          },
-          {
-            name: 'Response Data Path',
-            type: 'String'
-          }
-        ],
-        value: 'http.post( "URL", { Body }, "Response DataPath" )'
-      },
-      {
-        name: 'HTTP.GET',
-        params: [
-          {
-            name: 'URL',
-            type: 'String'
-          },
-          {
-            name: 'Response Data Path',
-            type: 'String'
-          }
-        ],
-        value: 'http.get( "URL", "Response DataPath" )'
-      },
-      {
-        name: 'DS.GET',
-        params: [
-          {
-            name: 'Name',
-            type: 'String'
-          },
-          {
-            name: 'Filter',
-            type: 'Object'
-          },
-          {
-            name: 'Response Data Path',
-            type: 'String'
-          }
-        ],
-        value: 'ds.get( "NAME", { filter }, "Response DataPath" )'
-      },
-      {
         name: '_.CONCAT',
         params: [
           {
@@ -417,6 +367,27 @@ export class B2bFlowService {
         ],
         value: '_.concat( [ array1 ], [ array2 ] )'
       },
+      {
+        name: '_.ESCAPE',
+        params: [
+          {
+            name: 'String',
+            type: 'String'
+          }
+        ],
+        value: '_.escape("String")'
+      },
+      {
+        name: '_.UNESCAPE',
+        params: [
+          {
+            name: 'String',
+            type: 'String'
+          }
+        ],
+        value: '_.unescape("String")'
+      },
+
       {
         name: '_.FIRST',
         params: [

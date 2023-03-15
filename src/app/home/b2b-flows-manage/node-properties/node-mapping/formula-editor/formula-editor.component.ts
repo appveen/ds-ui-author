@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as _ from 'lodash';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { CommonService } from 'src/app/utils/services/common.service';
 import { B2bFlowService } from '../../../b2b-flow.service';
 
 @Component({
@@ -22,17 +25,22 @@ export class FormulaEditorComponent implements OnInit {
   availableMethods: Array<any>;
   insertText: EventEmitter<string>;
   nodeList: Array<any>;
-  constructor(private flowService: B2bFlowService) {
+  fetchingFormulas: boolean;
+  $triggerSearch: Subject<string>;
+  constructor(private flowService: B2bFlowService,
+    private commonService: CommonService) {
     this.dataChange = new EventEmitter();
     this.close = new EventEmitter();
     this.variableSuggestions = [];
     this.availableMethods = [];
     this.field = {};
     this.insertText = new EventEmitter();
+    this.$triggerSearch = new Subject();
   }
 
   ngOnInit(): void {
-    this.availableMethods = this.flowService.getAvailableTransformMethods();
+    // this.availableMethods = this.flowService.getAvailableTransformMethods();
+    this.fetchAllFormulas();
     this.tempData = this.data;
     this.nodeList = this.flowService.getNodesBefore(this.currNode);
     const temp = this.nodeList.map(node => {
@@ -70,6 +78,30 @@ export class FormulaEditorComponent implements OnInit {
       return list;
     })
     this.variableSuggestions = _.flatten(temp);
+    this.$triggerSearch.pipe(debounceTime(200)).subscribe(() => {
+      this.fetchAllFormulas();
+    });
+  }
+
+  fetchAllFormulas() {
+    this.fetchingFormulas = true;
+    let options: any = {
+      count: 10,
+      page: 1,
+      noApp: true
+    };
+    if (this.searchTerm) {
+      options.filter = {
+        name: `/${this.searchTerm}/`
+      };
+    }
+    this.commonService.get('user', '/admin/metadata/mapper/formula', options).subscribe(res => {
+      this.availableMethods = res;
+      this.fetchingFormulas = false;
+    }, err => {
+      this.fetchingFormulas = false;
+      this.commonService.errorToast(err);
+    })
   }
 
   placeValue(item: any) {
@@ -77,7 +109,8 @@ export class FormulaEditorComponent implements OnInit {
   }
 
   placeMethod(item: any) {
-    this.insertText.emit(item.value);
+    let value = `${item.name}(${item.params.map(e => e.name).join(', ')})`;
+    this.insertText.emit(value);
   }
 
   cancel() {
@@ -89,6 +122,23 @@ export class FormulaEditorComponent implements OnInit {
     this.close.emit(false);
     this.data = this.tempData;
     this.dataChange.emit(this.data);
+  }
+
+  getDataTypeStyleClass(type: string) {
+    switch (type) {
+      case 'String':
+        return 'text-success';
+      case 'Number':
+        return 'text-warning';
+      case 'Boolean':
+        return 'text-info';
+      case 'Object':
+        return 'text-grey';
+      case 'Array':
+        return 'text-grey';
+      default:
+        return 'text-primary';
+    }
   }
 
   getLableAsArray(label: string) {
