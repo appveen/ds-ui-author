@@ -24,7 +24,7 @@
         </ng-container>
         <ng-container *ngIf="selectedFormula">
             <div class="form-group">
-                <label for="name">Function Name</label>
+                <label for="name">Formula Name</label>
                 <input id="name" class="form-control" type="text" [(ngModel)]="selectedFormula.name" odpAutoFocus>
             </div>
             <div class="form-group">
@@ -108,7 +108,7 @@
     class="new-formula-window position-fixed p-4 d-flex flex-column bg-white border-left">
     <div class="d-flex flex-column w-100">
         <div class="d-flex align-items-center justify-content-between mb-5">
-            <span class="font-20 fw-600">New App</span>
+            <span class="font-20 fw-600">New Formula</span>
             <span class="dsi dsi-close text-muted hover" (click)="toggleNewFormulaWindow=false"></span>
         </div>
         <div class="d-flex flex-column w-100" [formGroup]="form">
