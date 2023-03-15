@@ -80,7 +80,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       active: true,
       label: 'Data Pipes'
     }];
-    appService.invokeEvent.subscribe(res=>{
+    appService.invokeEvent.subscribe(res => {
       this.getFlows();
     })
   }
@@ -90,8 +90,16 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.commonService.apiCalls.componentLoading = false;
     this.form.get('type').valueChanges.subscribe(val => {
       const name = this.form.get('name').value;
+      let nodeId = '';
+      if (val == 'API') {
+        nodeId = 'api_json_receiver';
+      } else if (val == 'FILE') {
+        nodeId = 'file_agent_reciever';
+      } else {
+        nodeId = 'init_timer';
+      }
       this.form.get('inputNode').patchValue({
-        _id: this.appService.getNodeID(),
+        _id: nodeId,
         type: val,
         options: {
           method: 'POST',
@@ -105,10 +113,10 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
         const type = this.form.get('type').value;
         if (!inputNode) {
           inputNode = {
-            type: type ? type : 'API'
+            type: type ? type : 'API',
+            name: val
           };
         }
-
 
         inputNode.options = {
           method: 'POST',
