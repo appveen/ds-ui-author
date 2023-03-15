@@ -87,7 +87,7 @@
                     </div>
                     <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Last Invoked</label>
-                        <span class="fw-500 text-dark">{{convertDate(agentDetails._metadata.lastUpdated )}}</span>
+                        <span class="fw-500 text-dark">{{convertDate(agentDetails.lastInvokedAt )}}</span>
                     </div>
                     <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Pending Files</label>
@@ -95,7 +95,7 @@
                     </div>
                     <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">Version</label>
-                        <span class="fw-500 text-dark">{{agentDetails.__v}} </span>
+                        <span class="fw-500 text-dark">{{agentDetails.version}} </span>
                     </div>
                     <div class="d-flex flex-column mr-5">
                         <label class="font-12 text-secondary">IP Address</label>
