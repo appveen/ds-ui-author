@@ -129,11 +129,11 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.subscriptions['flow.new'] = this.commonService.flow.new.subscribe(data => {
       this.getFlows()
     });
-    interval(10000).subscribe(() => {
-      if (!this.searchTerm) {
-        this.getFlows();
-      }
-    });
+    // interval(10000).subscribe(() => {
+    //   if (!this.searchTerm) {
+    //     this.getFlows();
+    //   }
+    // });
   }
 
   ngOnDestroy() {
