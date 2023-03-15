@@ -84,6 +84,9 @@ export class AgentSessionsComponent implements OnInit {
   }
 
   convertDate(dateString: string) {
+    if(!dateString){
+      return 'N.A'
+    }
     const date = new Date(dateString);
     return moment(date).format('DD MMM YYYY, hh:mm:ss A')
   }
