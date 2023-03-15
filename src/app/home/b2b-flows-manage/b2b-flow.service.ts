@@ -64,26 +64,33 @@ export class B2bFlowService {
   parseDynamicValue(value: any) {
     const configuredData: any = {};
     if (typeof value == 'string' && value.startsWith('{{') && value.endsWith('}}')) {
-      const charArr = value.split('');
-      configuredData.node = charArr.slice(8, 14).join('');
-      const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
-      if (nodeKeyIndexes.length == 1) {
-        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length - 2).join('');
-      } else {
-        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
-        configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length - 2).join('');
+      const segments = value.split('.');
+      let nodeSeg = segments[0];
+      let nodeKeySeg = segments[1];
+      let dateKeySeg = segments.splice(2).join('.');
+      configuredData.node = nodeSeg.split('').slice(2, nodeSeg.length).join('');
+      if (configuredData.node.startsWith('node[')) {
+        configuredData.node = configuredData.node.split('').slice(6, configuredData.node.length - 2).join('');
       }
-    } else if (typeof value == 'string' && value.startsWith('node[')) {
-      const charArr = value.split('');
-      configuredData.node = charArr.slice(6, 12).join('');
-      const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
-      if (nodeKeyIndexes.length == 1) {
-        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length).join('');
+      if (dateKeySeg) {
+        configuredData.nodeKey = nodeKeySeg;
+        configuredData.dataKey = dateKeySeg.split('').slice(0, dateKeySeg.length - 2).join('');
       } else {
-        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
-        configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length).join('');
+        configuredData.nodeKey = nodeKeySeg.split('').slice(0, nodeKeySeg.length - 2).join('');
       }
-    } else {
+    }
+    // else if (typeof value == 'string' && value.startsWith('node[')) {
+    //   const charArr = value.split('');
+    //   configuredData.node = charArr.slice(6, 12).join('');
+    //   const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
+    //   if (nodeKeyIndexes.length == 1) {
+    //     configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length).join('');
+    //   } else {
+    //     configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
+    //     configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length).join('');
+    //   }
+    // } 
+    else {
       configuredData.customValue = value;
     }
     return configuredData;
