@@ -20,6 +20,11 @@ export class StyledTextComponent implements OnInit {
   @Input() searchTerm: any;
   @Input() class: any;
   @Input() initValue: string = '';
+  @Input() disabled: boolean = false
+  @Input() type: string = "text"
+  @Input() pattern: RegExp = /.*/g
+  @Output() onPaste: EventEmitter<any> = new EventEmitter();
+  @Output() onEnter: EventEmitter<any> = new EventEmitter();
   @ViewChild('renderer') renderer: any;
 
   value: string = '';
@@ -30,7 +35,7 @@ export class StyledTextComponent implements OnInit {
 
 
   ngOnInit() {
-    this.value = this.initValue;
+    this.value = this.initValue || '';
   }
 
   onChange = (event) => {
@@ -39,17 +44,16 @@ export class StyledTextComponent implements OnInit {
   };
 
   get valueArray() {
-    const temp = this.value.split(this.regex)
-    return this.value.split(this.regex);
+    return this.value ? this.value.split(this.regex) : [];
   }
 
   regexMatch(word) {
-    return word.match(this.regex) !== null;
+    return String(word).match(this.regex) !== null;
   }
 
   selectItem(event) {
     // console.log(event)
-    this.patchValue(`{{${event.item.label}}}`);
+    this.patchValue(`{{${event.item.value}}}`);
   }
 
   getCursor() {

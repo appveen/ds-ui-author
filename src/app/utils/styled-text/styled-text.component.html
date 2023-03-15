@@ -1,8 +1,9 @@
-<div class="value-holder">
+<div>
   <div class="input-container">
     <input id="myInput" [value]="value" (input)="onChange($event)" [ngbTypeahead]="ngbTypeahead"
       (scroll)="handleScroll($event)" [resultFormatter]="resultFormatter" [inputFormatter]="inputFormatter"
-      (selectItem)="selectItem($event)">
+      (selectItem)="selectItem($event)" [disabled]="disabled" (paste)="onPaste.emit($event)"
+      (keyup.enter)="onEnter.emit($event)" [pattern]="pattern.source">
 
     <div class="input-renderer" #renderer>
       <div *ngFor="let word of valueArray">

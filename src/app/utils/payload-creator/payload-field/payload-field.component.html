@@ -11,13 +11,17 @@
             <option value="object">Object</option>
             <option value="array">Array</option>
         </select>
-        <div>
+        <div class="d-flex" *ngIf="getInputType()=='text' || getInputType()=='number'" style="width: 260px">
             <!-- <input *ngIf="field.type!='boolean'" [type]="getInputType()" class="value-holder px-2"
                 [(ngModel)]="field.value" [disabled]="field.type=='object' || field.type=='array'"
-                (ngModelChange)="onValueChange($event)" (paste)="onPaste($event)" (keyup.enter)="addField()"
-                (dblclick)="toggleDropdown()" odpClickOutside (outside)="openDropdown = false" odpEditableBadge> -->
+                (ngModelChange)="onValueChange($event)" (paste)="onPaste($event)" (keyup.enter)="addField()"> -->
 
-            <odp-styled-text></odp-styled-text>
+
+            <odp-styled-text (finalValue)="onValueChange($event)" [initValue]="field.value" #typeAhead
+                [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
+                [searchTerm]="searchTerm" class="styled-wrapper" (onPaste)="onPaste($event)" (onEnter)="addField()"
+                [disabled]="field.type=='object'" [pattern]="pattern"></odp-styled-text>
+
         </div>
         <div *ngIf="field.type=='boolean'" class="value-holder px-2 d-flex align-items-center">
             <input #checkbox [type]="getInputType()" class="" [checked]="field.value"

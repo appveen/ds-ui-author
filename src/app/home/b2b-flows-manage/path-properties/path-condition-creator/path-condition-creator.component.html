@@ -9,7 +9,7 @@
                 *ngFor="let item of segments;let i=index;let l=last">{{item.label}}</span>
         </div> -->
         <!-- <span class="text-dark" *ngIf="value">Re-Configure</span> -->
-        <span class="mr-1 fw-600 hover">{{displayValue}}</span>
+        <span class="mr-1 fw-600 hover">{{value}}</span>
         <div class="d-flex align-items-center justify-content-end">
             <span *ngIf="value"
                 class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
@@ -44,9 +44,8 @@
                 (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)" odpAutoFocus>
 
         </div> -->
-        <odp-styled-text (finalValue)="changeLabel($event)" [initValue]="displayValue" #typeAhead
-            [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
-            [searchTerm]="searchTerm"></odp-styled-text>
+        <odp-styled-text (finalValue)="changeLabel($event)" [initValue]="value" #typeAhead [ngbTypeahead]="search"
+            [resultFormatter]="formatter" [inputFormatter]="formatter" [searchTerm]="searchTerm"></odp-styled-text>
         <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center"
             (click)="save()">
             <span class="">Done</span>

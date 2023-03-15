@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Observable, OperatorFunction, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Field } from '../payload-creator.component';
 import * as _ from 'lodash';
+import { B2bFlowService } from '../../../home/b2b-flows-manage/b2b-flow.service';
 
 @Component({
   selector: 'odp-payload-field',
@@ -21,7 +22,9 @@ export class PayloadFieldComponent implements OnInit {
   triggerAddChild: EventEmitter<any>;
   $trigger: Subject<any>;
   openDropdown: boolean;
-  constructor() {
+  searchTerm: string;
+  pattern: RegExp;
+  constructor(public b2bService: B2bFlowService) {
     this.nodeList = [];
     this.index = -1;
     this.parentArray = false;
@@ -79,10 +82,12 @@ export class PayloadFieldComponent implements OnInit {
 
   getInputType() {
     if (this.field.type == 'number') {
+      this.pattern = /\d+|\{\{\s*\w+(\s+\w+)*\s*\}\}/g
       return 'number';
     } else if (this.field.type == 'boolean') {
       return 'checkbox';
     }
+    this.pattern = /.*/g
     return 'text';
   }
 
@@ -150,15 +155,33 @@ export class PayloadFieldComponent implements OnInit {
     // this.$trigger.next(null);
   }
 
-  toggleDropdown() {
-    this.openDropdown = !this.openDropdown;
+
+  formatter(result: any) {
+    if (result && typeof result == 'object') {
+      return result.label;
+    }
+    return result;
+  };
+
+  search: OperatorFunction<string, readonly { label: string, value: string }[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map((term) => {
+        term = term.split(' ').filter((ele) => ele.startsWith("{{") && !ele.endsWith("}")).pop() || '';
+        this.searchTerm = term;
+        term = term.replace('{{', '');
+        return term === '' && this.searchTerm === '' ? [] : this.variableSuggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 15);
+      }),
+    );
+
+  get variableSuggestions() {
+    return this.b2bService.getSuggestions()
   }
 
-  onSelect(event) {
+  changeLabel(event, field) {
+    field.value = event
     console.log(event)
-    const finalValue = '${{' + event.name + '}}';
-    this.onValueChange(this.field.value ? this.field.value + finalValue : finalValue);
-    this.openDropdown = false;
   }
 
 

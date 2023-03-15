@@ -82,7 +82,7 @@ export class PathConditionCreatorComponent implements OnInit {
           this.typeAhead.writeValue(null);
           return [];
         }
-        return term === '' ? [] : this.variableSuggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 15);
+        return term === '' && this.searchTerm === '' ? [] : this.variableSuggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 15);
       }),
     );
 
@@ -123,16 +123,16 @@ export class PathConditionCreatorComponent implements OnInit {
     const temp = this.nodeList.map(node => {
       let list = [];
       let statusCode: any = {};
-      statusCode.label = (node.name || node.type) + '/statusCode'
-      statusCode.value = `node['${node._id}']` + '.statusCode'
+      statusCode.label = (node._id || node.type) + '/statusCode'
+      statusCode.value = node._id + '.statusCode'
       list.push(statusCode);
       let status: any = {};
-      status.label = (node.name || node.type) + '/status'
-      status.value = `node['${node._id}']` + '.status'
+      status.label = (node._id || node.type) + '/status'
+      status.value = node._id + '.status'
       list.push(status);
       let headers: any = {};
-      headers.label = (node.name || node.type) + '/headers'
-      headers.value = `node['${node._id}']` + '.headers'
+      headers.label = (node._id || node.type) + '/headers'
+      headers.value = node._id + '.headers'
       list.push(headers);
       if (!node.dataStructure) {
         node.dataStructure = {};
@@ -144,12 +144,12 @@ export class PathConditionCreatorComponent implements OnInit {
         list = list.concat(this.getNestedSuggestions(node, node.dataStructure.outgoing.definition));
         // node.dataStructure.outgoing.definition.forEach(def => {
         //   let item: any = {};
-        //   item.label = (node.name || node.type) + '/body/' + def.key;
-        //   item.value = `node['${node._id}']` + '.body.' + def.key;
+        //   item.label = (node._id || node.type) + '/body/' + def.key;
+        //   item.value =node._id + '.body.' + def.key;
         //   list.push(item);
         //   item = {};
-        //   item.label = (node.name || node.type) + '/responseBody/' + def.key;
-        //   item.value = `node['${node._id}']` + '.responseBody.' + def.key;
+        //   item.label = (node._id || node.type) + '/responseBody/' + def.key;
+        //   item.value =node._id + '.responseBody.' + def.key;
         //   list.push(item);
         // });
       }
@@ -167,12 +167,12 @@ export class PathConditionCreatorComponent implements OnInit {
           list = list.concat(this.getNestedSuggestions(node, def.definition, key));
         } else {
           let item: any = {};
-          item.label = (node.name || node.type) + '/body/' + key;
-          item.value = `node['${node._id}']` + '.body.' + key;
+          item.label = (node._id || node.type) + '/body/' + key;
+          item.value = node._id + '.body.' + key;
           list.push(item);
           item = {};
-          item.label = (node.name || node.type) + '/responseBody/' + key;
-          item.value = `node['${node._id}']` + '.responseBody.' + key;
+          item.label = (node._id || node.type) + '/responseBody/' + key;
+          item.value = node._id + '.responseBody.' + key;
           list.push(item);
         }
       });
@@ -183,17 +183,17 @@ export class PathConditionCreatorComponent implements OnInit {
   changeLabel(event) {
     this.textValue = event;
     this.displayValue = event;
-    const regex = /{{\S+}}/g;
-    const matches = this.textValue.match(regex) || [];
-    if (matches.length > 0) {
-      matches.forEach((match) => {
-        const label = match.replace('{{', '').replace('}}', '');
-        const suggestion = this.variableSuggestions.find(item => item.label === label);
-        if (suggestion) {
-          this.textValue = this.textValue.replace(match, suggestion.value);
-        }
-      });
-    }
+    // const regex = /{{\S+}}/g;
+    // const matches = this.textValue.match(regex) || [];
+    // if (matches.length > 0) {
+    //   matches.forEach((match) => {
+    //     const label = match.replace('{{', '').replace('}}', '');
+    //     const suggestion = this.variableSuggestions.find(item => item.label === label);
+    //     if (suggestion) {
+    //       this.textValue = this.textValue.replace(match, suggestion.value);
+    //     }
+    //   });
+    // }
     this.value = this.textValue;
   }
 
