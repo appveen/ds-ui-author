@@ -31,7 +31,7 @@
                 <div class="d-flex align-items-center justify-content-start h-100">
                     <!-- <div class="item-timestamp text-truncate text-uppercase fw-500">{{agent?.key}}</div> -->
                     <div class="item-timestamp text-truncate fw-500">**********{{agent?.data?.token}}</div>
-                    <div class="item-level"> {{convertDate(agent?.timestamp)}}</div>
+                    <div class="item-level"> {{convertDate(agent?.data?.lastLoggedIn)}}</div>
                     <div class="item-status"> {{agent?.status}}</div>
                     <div class="item-message">
                         <button *ngIf="agent.status=='Disabled'" type="button" class="btn btn-link px-0"

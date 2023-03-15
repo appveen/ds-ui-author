@@ -123,10 +123,10 @@ export class AgentsComponent implements OnInit, OnDestroy {
                 this.agentData._id = agent._id
             }
             this.agentData.name = isEdit ? agent.name : agent.name + ' Copy',
-                this.agentData.encryptFile = agent.encryptFile,
-                this.agentData.retainFileOnSuccess = agent.retainFileOnSuccess,
-                this.agentData.retainFileOnError = agent.retainFileOnError,
-                this.agentData.isEdit = isEdit;
+            this.agentData.encryptFile = agent.encryptFile,
+            this.agentData.retainFileOnSuccess = agent.retainFileOnSuccess,
+            this.agentData.retainFileOnError = agent.retainFileOnError,
+            this.agentData.isEdit = isEdit;
         }
         this.showNewAgentWindow = true;
     }
@@ -171,10 +171,9 @@ export class AgentsComponent implements OnInit, OnDestroy {
         }
     }
 
-    cloneAgent(_index) {
-        const cloneDetails = this.agentList[_index];
+    cloneAgent(agent) {
         this.isClone=true;
-        this.newAgent(cloneDetails)
+        this.newAgent(agent)
     }
 
     deleteAgent(_index) {
@@ -361,6 +360,9 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
     convertDate(dateString) {
+        if(!dateString){
+            return 'N.A'
+        }
         const date = new Date(dateString);
         return moment(date).format('DD-MMM\'YY, hh:mm:ss A')
     }

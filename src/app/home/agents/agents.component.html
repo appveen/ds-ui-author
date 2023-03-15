@@ -89,7 +89,7 @@
                             'text-warning': agent.status === 'PENDING',
                             'text-danger': agent.status === 'STOPPED'
                           }">{{agent.status}}</span></div>
-                        <div class="item-last-invoked-at font-12">{{convertDate(agent._metadata.lastUpdated)}}</div>
+                        <div class="item-last-invoked-at font-12">{{convertDate(agent.lastInvokedAt)}}</div>
                         <!-- <div class="item-release">{{agent.release}}</div>
                         <div class="item-pending-files">{{agent.pendingFiles}}</div> -->
                         <div class="item-actions d-flex align-items-center justify-content-end">
