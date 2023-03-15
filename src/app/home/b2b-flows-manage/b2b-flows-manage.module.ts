@@ -56,6 +56,7 @@ import { DataActualComponent } from './node-properties/data-transform/data-actua
 import { DataCreatorComponent } from './node-properties/data-transform/data-creator/data-creator.component';
 import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
 import { MappingService } from './node-properties/node-mapping/mapping.service';
+import { StyledTextModule } from '../../utils/styled-text/styled-text.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { EditorDirective } from './node-properties/node-mapping/formula-editor/editor.directive';
 import { ChangeOnEditModule } from 'src/app/utils/change-on-edit/change-on-edit.module';
@@ -126,6 +127,7 @@ const routes: Routes = [
     PayloadCreatorModule,
     SwitchModule,
     CommonFilterModule,
+    StyledTextModule,
     FieldTypeModule,
     ChangeOnEditModule
   ],
