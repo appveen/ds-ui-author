@@ -243,7 +243,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       this.showLazyLoader = false;
       this.isClone = false;
       this.form.reset({ type: 'API' });
-      this.ts.success('Data Pipe has been created.');
+      this.ts.success('Data Pipe has been cloned.');
       this.appService.edit = res._id;
       this.router.navigate(['/app/', this.commonService.app._id, 'flow', res._id]);
     }, err => {
