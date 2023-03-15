@@ -19,7 +19,7 @@
             </label>
             <!-- <input id="authorization" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.authorization"> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['token']" [nodeList]="nodeList"
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['token']" [currNode]="currNode"
                 [(value)]="currNode.options.authorization">
             </odp-node-data-selector>
         </div>
@@ -52,7 +52,7 @@
             </label>
             <!-- <input id="select" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.select"> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['select']" [nodeList]="nodeList"
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['select']" [currNode]="currNode"
                 [(value)]="currNode.options.select">
             </odp-node-data-selector>
             <small class="form-text text-muted">Provide Comma Separated Fields</small>
@@ -64,7 +64,7 @@
             </label>
             <!-- <input id="count" type="number" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.count"> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['count']" [nodeList]="nodeList" [number]="true"
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['count']" [currNode]="currNode" [number]="true"
                 [(value)]="currNode.options.count">
             </odp-node-data-selector>
         </div>
@@ -75,7 +75,7 @@
             </label>
             <!-- <input id="page" type="number" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.page"> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['page']" [nodeList]="nodeList" [number]="true"
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['page']" [currNode]="currNode" [number]="true"
                 [(value)]="currNode.options.page">
             </odp-node-data-selector>
         </div>
@@ -86,7 +86,7 @@
             </label>
             <!-- <input id="sort" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.sort"> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['sort']" [nodeList]="nodeList"
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['sort']" [currNode]="currNode"
                 [(value)]="currNode.options.sort">
             </odp-node-data-selector>
             <small class="form-text text-muted">Provide Comma Separated Fields<br>
@@ -113,7 +113,7 @@
             </label>
             <!-- <input id="docId" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.documentId"> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['id']" [nodeList]="nodeList"
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['id']" [currNode]="currNode"
                 [(value)]="currNode.options.documentId">
             </odp-node-data-selector>
         </div>
@@ -126,7 +126,7 @@
             </label>
             <!-- <input id="fields" type="text" class="form-control dynamic-variable-addon"
                 [(ngModel)]="currNode.options.fields"> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['fields']" [nodeList]="nodeList"
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['fields']" [currNode]="currNode"
                 [(value)]="currNode.options.fields">
             </odp-node-data-selector>
         </div>

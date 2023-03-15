@@ -80,11 +80,6 @@
                     <span class="ml-2 font-12 fw-400">Paste JSON</span>
                 </div>
             </span>
-            <!-- <odp-node-data-selector *ngIf="toggle['variable']" [(toggle)]="toggle['variable']" [edit]="edit"
-                [nodeList]="nodeList" (valueChange)="onVariableSelect($event)">
-            </odp-node-data-selector> -->
-            <!-- <odp-code-editor [edit]="edit" type="json" [insertText]="insertText" [(code)]="data"
-                (codeChange)="onDataChange($event)"></odp-code-editor> -->
             <odp-payload-creator *ngIf="toggle['payloadCreator']" [data]="sampleJSON"
                 (dataChange)="onDataChange($event)"></odp-payload-creator>
         </div>
