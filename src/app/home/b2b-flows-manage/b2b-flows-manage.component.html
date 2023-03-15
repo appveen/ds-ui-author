@@ -123,16 +123,24 @@
                     <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
                         (click)="addNodeToCanvas('RESPONSE')"></span>
                 </div>
+                <div *ngIf="!hasErrorNode" class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                    <div class="d-flex align-items-center">
+                        <span class="node-icon font-16 fw-400 dsi dsi-danger-circle text-danger mr-2"></span>
+                        <span class="font-13 fw-400">Global Error</span>
+                    </div>
+                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
+                        (click)="addNodeToCanvas('ERROR')"></span>
+                </div>
             </div>
             <div class="flow-designer-svg-wrapper" (scroll)="scroll()">
                 <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
                     <g *ngFor="let node of nodeList;let i=index">
-                        <g odp-flow-node *ngIf="node.type!='ERROR'" [currNode]="node" [index]="i" [nodeList]="nodeList"></g>
-                        <g odp-error-node *ngIf="node.type=='ERROR'" [node]="node"  [nodeList]="nodeList"></g>
+                        <g odp-flow-node *ngIf="node.type!='ERROR'" [currNode]="node" [index]="i" [nodeList]="nodeList">
+                        </g>
+                        <g odp-error-node *ngIf="node.type=='ERROR'" [node]="node" [nodeList]="nodeList"></g>
                     </g>
                 </svg>
             </div>
-
             <div [ngClass]="{'show':showNodeProperties || showPathProperties}"
                 class="node-properties border-left border-top position-fixed bg-white">
                 <odp-node-properties *ngIf="showNodeProperties" [edit]="edit" [flowData]="flowData"
@@ -226,5 +234,10 @@
     <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'RESPONSE')">
         <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
         <span class="font-13 fw-400">Response</span>
+    </div>
+    <div *ngIf="!hasErrorNode" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover"
+        (click)="addNode($event,'ERROR')">
+        <span class="node-icon font-16 fw-400 dsi dsi-danger-circle text-danger mr-2"></span>
+        <span class="font-13 fw-400">Global Error</span>
     </div>
 </div>

@@ -110,7 +110,7 @@ export class B2bFlowService {
   getDynamicValue(configuredData: any) {
     let text = configuredData.customValue || '';
     if (configuredData && configuredData.node) {
-      text += `node['${configuredData.node}']`;
+      text += `${configuredData.node}`;
     }
     if (configuredData && configuredData.nodeKey) {
       text += '.' + configuredData.nodeKey;

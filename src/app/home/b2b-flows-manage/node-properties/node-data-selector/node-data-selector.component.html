@@ -140,8 +140,7 @@
                     <span class="ml-3 font-12 fw-400">Insert Variable</span>
                 </div>
             </label>
-            <odp-node-data-selector *ngIf="openSelector" [(toggle)]="openSelector" [edit]="edit"
-                [nodeList]="nodeList" (valueChange)="insertText.emit($event)">
+            <odp-node-data-selector *ngIf="openSelector" [currNode]="currNode" [(toggle)]="openSelector" [edit]="edit" (valueChange)="insertText.emit($event)">
             </odp-node-data-selector>
             <input *ngIf="!textarea" id="customValue" [type]="number?'number':'text'" class="form-control"
                 [(ngModel)]="configuredData.customValue" odpAutoFocus>

@@ -24,6 +24,7 @@ export class NodeMappingComponent implements OnInit {
   pathList: Array<any>;
   svgStyle: any;
   nodeList: Array<any>;
+  selectedPath: any;
   constructor(private appService: AppService,
     private mappingService: MappingService,
     private flowService: B2bFlowService) {
@@ -59,15 +60,18 @@ export class NodeMappingComponent implements OnInit {
         }
       }
     });
-    // if (this.currNode.mappings && this.currNode.mappings.length > 0) {
-    //   this.tempMappings = this.appService.cloneObject(this.currNode.mappings);
-    //   this.allTargets.forEach((item: any) => {
-    //     let temp = this.tempMappings.find((e: any) => e.target.dataPath == item.dataPath);
-    //     if (temp && temp.source) {
-    //       item.source = (temp.source || []).map((source: any) => this.allSources.find((src: any) => src.dataPath == source.dataPath)).filter(e => e);
-    //     }
-    //   });
-    // }
+    if (this.currNode.mappings && this.currNode.mappings.length > 0) {
+      this.tempMappings = this.appService.cloneObject(this.currNode.mappings);
+      this.allTargets.forEach((item: any) => {
+        let temp = this.tempMappings.find((e: any) => e.target.dataPath == item.dataPath);
+        if (temp && temp.source && temp.source.length > 0) {
+          item.source = (temp.source || []).map((source: any) => this.allSources.find((src: any) => src._id == source._id)).filter(e => e);
+        }
+      });
+      setTimeout(() => {
+        this.mappingService.reCreatePaths.emit(null);
+      }, 200);
+    }
 
     this.mappingService.reCreatePaths.pipe(debounceTime(200)).subscribe((data: any) => {
       if (data) {
@@ -106,9 +110,11 @@ export class NodeMappingComponent implements OnInit {
     temp.target = {
       type: item.type,
       dataPath: item.dataPath,
+      _id: item._id
     };
     temp.source = (item.source || []).map((s) => {
       let temp: any = {};
+      temp._id = s._id;
       temp.type = s.type;
       temp.dataPath = s.dataPath;
       return temp;
@@ -157,7 +163,7 @@ export class NodeMappingComponent implements OnInit {
         y: targetRect.top - pathRect.top + 6
       };
       let path = this.mappingService.generateLinkPath(sourceCoordinates.x, sourceCoordinates.y, targetCoordinates.x, targetCoordinates.y, 1.5);
-      this.pathList.push({ path });
+      this.pathList.push({ path, source: source._id, target: target._id });
     }
   }
 
@@ -169,7 +175,7 @@ export class NodeMappingComponent implements OnInit {
           delete def._id;
           let key = parentDef ? parentDef.dataPath + '.' + def.key : def.key;
           let name = parentDef ? parentDef.properties.name + '/' + def.properties.name : def.properties.name;
-          def._id = `{{${node._id}.${bodyKey}.${key}}}`;
+          def._id = `${node._id}.${bodyKey}.${key}`;
           def.nodeId = node._id;
           def.properties.name = name;
           def.properties.dataPath = key;
@@ -195,5 +201,34 @@ export class NodeMappingComponent implements OnInit {
       console.log(err);
     }
     return list;
+  }
+
+  selectPath(event: any, path: any, index: number) {
+    event.stopPropagation();
+    this.selectedPath = path;
+  }
+
+  isPathSelected(path: any) {
+    if (this.selectedPath && this.selectedPath.source == path.source && this.selectedPath.target == path.target) {
+      return true;
+    }
+    return false;
+  }
+
+  getDeleteIconStyle(path: any) {
+    const segs = path.path.split(" ");
+    let x = segs[8] - 100;
+    let y = segs[9];
+    return { transform: `translate(${x}px,${y}px)` };
+  }
+
+  deletePath(event: any, path: any, index: number) {
+    event.stopPropagation();
+    this.pathList.splice(index, 1);
+    const temp = this.allTargets.find(e => e._id == path.target);
+    if (temp && temp.source && temp.source.length > 0) {
+      let tempIndex = temp.source.findIndex(e => e._id == path.source);
+      temp.source.splice(tempIndex, 1);
+    }
   }
 }

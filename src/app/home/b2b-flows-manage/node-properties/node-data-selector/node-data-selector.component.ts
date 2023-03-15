@@ -11,11 +11,11 @@ export class NodeDataSelectorComponent implements OnInit {
 
   @Input() toggle: boolean;
   @Output() toggleChange: EventEmitter<boolean>;
+  @Input() currNode: any;
   @Input() number: boolean;
   @Input() textarea: boolean;
   @Input() value: any;
   @Output() valueChange: EventEmitter<any>;
-  @Input() nodeList: Array<any>;
   @Input() edit: any;
   configuredData: any;
   availableHeaderKeys: Array<string>;
@@ -24,6 +24,7 @@ export class NodeDataSelectorComponent implements OnInit {
   valueType: string;
   insertText: EventEmitter<string>;
   openSelector: boolean;
+  nodeList: Array<any>;
   constructor(private flowService: B2bFlowService) {
     this.nodeList = [];
     this.edit = {
@@ -40,6 +41,7 @@ export class NodeDataSelectorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.nodeList = this.flowService.getNodesBefore(this.currNode);
     if (this.value) {
       this.configuredData = this.flowService.parseDynamicValue(this.value);
       if (this.configuredData.customValue) {
@@ -73,7 +75,7 @@ export class NodeDataSelectorComponent implements OnInit {
   }
 
   saveData() {
-    if (this.dataKey == 'dynamic') {
+    if (this.valueType == 'dynamic') {
       this.value = '{{' + this.currentValue + '}}';
     } else {
       this.value = this.currentValue;

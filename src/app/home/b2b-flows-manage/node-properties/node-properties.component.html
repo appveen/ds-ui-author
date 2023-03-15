@@ -86,8 +86,10 @@
             </div>
             <div class="form-group">
                 <label class="font-14 fw-400 text-dark" for="nodeEndpoint">API Endpoint</label>
-                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
-                    (ngModelChange)="changesDone.emit()">
+                <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="currNode.options.path"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
+                    (ngModelChange)="changesDone.emit()"> -->
             </div>
             <div class="form-group">
                 <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
@@ -100,7 +102,9 @@
             </div>
             <div class="form-group position-relative">
                 <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
-                <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout">
+                <odp-change-on-edit id="requestTimeout" [(ngModel)]="currNode.options.timeout"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout"> -->
             </div>
         </ng-container>
         <!-- <ng-container *ngIf="currNode?.type=='FILE'">
@@ -121,8 +125,10 @@
         <ng-container *ngIf="currNode?.type=='TIMER'">
             <div class="form-group">
                 <label class="font-14 fw-400 text-dark" for="nodeEndpoint">CRON Expression</label>
-                <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.cron"
-                    (ngModelChange)="changesDone.emit()">
+                <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="currNode.options.cron"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.cron"
+                    (ngModelChange)="changesDone.emit()"> -->
             </div>
         </ng-container>
         <div class="form-group d-flex align-items-center">
@@ -145,9 +151,6 @@
             <div class="position-relative">
                 <textarea id="nodeUrl" class="form-control" cols="30" rows="4"
                     [(ngModel)]="currNode.options.url"></textarea>
-                <!-- <odp-node-data-selector *ngIf="toggle['url']" [edit]="edit" [(toggle)]="toggle['url']" [nodeList]="nodeList"
-                    [(value)]="currNode.options.url" [textarea]="true">
-                </odp-node-data-selector> -->
             </div>
         </div>
         <div class="form-group">
@@ -173,13 +176,6 @@
                 [(value)]="currNode.options.headers">
             </odp-add-headers>
         </div>
-        <!-- <div class="form-group position-relative">
-            <label class="font-14 fw-400 text-dark" for="nodeBody">Body</label>
-            <textarea id="nodeBody" class="form-control dynamic-variable-addon" cols="30" rows="4"
-                [(ngModel)]="currNode.options.body"></textarea>
-            <odp-node-data-selector [nodeList]="nodeList" [(value)]="currNode.options.body">
-            </odp-node-data-selector>
-        </div> -->
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark mb-0" for="nodeBody">Body</label>
             <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
@@ -190,16 +186,22 @@
             <div class="border-bottom font-14 fw-500 mb-3 pb-1">Advanced Settings</div>
             <div class="form-group position-relative">
                 <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
-                <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout">
+                <odp-change-on-edit id="requestTimeout" [(ngModel)]="currNode.options.timeout"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="a" class="form-control" type="number" [(ngModel)]="currNode.options.timeout"> -->
             </div>
             <div class="form-group position-relative">
                 <label class="font-14 fw-400 text-dark" for="retryCount">Retry Count</label>
-                <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count">
+                <odp-change-on-edit id="retryCount" [(ngModel)]="currNode.options.retry.count"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count"> -->
             </div>
             <div class="form-group position-relative mb-0">
                 <label class="font-14 fw-400 text-dark" for="retryInterval">Retry Interval (sec)</label>
-                <input id="retryInterval" class="form-control" type="number"
-                    [(ngModel)]="currNode.options.retry.interval">
+                <odp-change-on-edit id="retryInterval" [(ngModel)]="currNode.options.retry.interval"
+                    (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                <!-- <input id="retryInterval" class="form-control" type="number"
+                    [(ngModel)]="currNode.options.retry.interval"> -->
             </div>
         </div>
     </ng-container>
@@ -262,9 +264,7 @@
                 <span class="dsi dsi-settings text-primary hover"
                     (click)="toggle['changeRoot']=!toggle['changeRoot']"></span>
             </label>
-            <!-- <input id="nodeUnWind" type="text" class="form-control dynamic-variable-addon"
-                [(ngModel)]="currNode.options.unwindPath" (ngModelChange)="changesDone.emit()"> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['changeRoot']" [nodeList]="nodeList"
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['changeRoot']" [currNode]="currNode"
                 [(value)]="currNode.options.unwindPath">
             </odp-node-data-selector>
         </div>
@@ -323,9 +323,7 @@
                 <span class="dsi dsi-settings text-primary hover"
                     (click)="toggle['statusCode']=!toggle['statusCode']"></span>
             </label>
-            <!-- <input id="nodeStatusCode" type="text" class="form-control dynamic-variable-addon"
-                [(ngModel)]="currNode.options.statusCode" (ngModelChange)="changesDone.emit()"> -->
-            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['statusCode']" [nodeList]="nodeList"
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['statusCode']" [currNode]="currNode"
                 [(value)]="currNode.options.statusCode">
             </odp-node-data-selector>
         </div>
@@ -347,11 +345,6 @@
             <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeBody">
                 Body
             </label>
-            <!-- <textarea id="nodeBody" class="form-control dynamic-variable-addon" cols="30" rows="4"
-                [(ngModel)]="currNode.options.body"></textarea> -->
-            <!-- <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['body']" [nodeList]="nodeList"
-                [(value)]="currNode.options.body">
-            </odp-node-data-selector> -->
             <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
                 [currNode]="currNode">
             </odp-input-data-selector>

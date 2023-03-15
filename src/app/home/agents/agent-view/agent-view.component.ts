@@ -324,6 +324,9 @@ export class AgentViewComponent implements OnInit {
   }
 
   convertDate(dateString) {
+    if(!dateString){
+      return 'N.A'
+    }
     const date = new Date(dateString);
     return moment(date).format('DD MMM YYYY, hh:mm:ss A')
   }
