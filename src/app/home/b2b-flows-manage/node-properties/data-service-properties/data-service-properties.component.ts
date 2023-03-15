@@ -25,13 +25,13 @@ export class DataServicePropertiesComponent implements OnInit {
   setDefaultData() {
     if (this.currNode && this.currNode.options) {
       if (this.prevNode && !this.currNode.options.authorization) {
-        this.currNode.options.authorization = `{{node['${this.prevNode?._id}'].headers.authorization}}`;
+        this.currNode.options.authorization = `{{${this.prevNode?._id}.headers.authorization}}`;
       }
       if (this.currNode.options.update && !this.currNode.options.fields) {
         this.currNode.options.fields = '_id';
       }
       if (this.prevNode && (this.currNode.options.update || this.currNode.options.insert) && !this.currNode.options.body) {
-        this.currNode.options.body = `node['${this.prevNode?._id}'].responseBody`;
+        this.currNode.options.body = `{{${this.prevNode?._id}.responseBody}}`;
       }
       if (this.currNode.options.get) {
         if (!this.currNode.options.select) {
@@ -51,7 +51,7 @@ export class DataServicePropertiesComponent implements OnInit {
         }
       }
       if (this.prevNode && this.currNode.options.delete) {
-        this.currNode.options.documentId = `{{node["${this.prevNode?._id}"].responseBody._id}}`;
+        this.currNode.options.documentId = `{{${this.prevNode?._id}.responseBody._id}}`;
       }
     }
   }
