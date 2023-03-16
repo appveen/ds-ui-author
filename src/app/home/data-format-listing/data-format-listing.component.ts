@@ -36,6 +36,8 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
   searchTerm: string;
   sortModel: any;
   formatList: Array<any>;
+  cloneData: any;
+  isClone: boolean;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -119,8 +121,39 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
   }
 
   cloneDataFormat(_index) {
-    this.appService.cloneLibraryId = this.dataFormatList[_index]._id;
-    this.router.navigate(['/app/', this.app, 'dfm', this.appService.cloneLibraryId]);
+    this.appService.cloneLibraryId = this.records[_index]._id;
+    this.cloneData= this.records[_index];
+    this.isClone=true;
+    this.form.patchValue({
+      name: this.cloneData.name + ' Copy',
+      formatType: this.cloneData.formatType
+    });
+    this.showNewDataFormatWindow=true;
+  }
+
+  triggerDataFormatClone(){
+    this.isClone=false;
+    const payload = {
+      name:this.form.value.name,
+      formatType: this.form.value.formatType,
+      app:this.cloneData.app,
+      attributeCount:this.cloneData.attributeCount,
+      character:this.cloneData.character,
+      definition:this.cloneData.definition,
+      excelType:this.cloneData.excelType,
+      lineSeparator:this.cloneData.lineSeparator,
+      strictValidation:this.cloneData.strictValidation
+    };
+    this.showLazyLoader = true;
+    this.commonService.post('partnerManager', `/${this.commonService.app._id}/dataFormat`, payload).subscribe(res => {
+      this.ts.success('DataFormat Cloned.');
+      this.appService.editLibraryId = res._id;
+      this.router.navigate(['/app/', this.commonService.app._id, 'dfm', res._id]);
+      this.showLazyLoader = false;
+    }, err => {
+      this.showLazyLoader = false;
+      this.commonService.errorToast(err);
+    });
   }
 
   getDataFormats() {

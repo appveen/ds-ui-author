@@ -3,6 +3,7 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { B2bFlowService } from '../../b2b-flow.service';
 
 @Component({
   selector: 'odp-path-condition-creator',
@@ -22,7 +23,7 @@ export class PathConditionCreatorComponent implements OnInit {
   selectedSegmentIndex: number;
   textValue: string;
   searchTerm: string = '';
-  constructor() {
+  constructor(private flowService: B2bFlowService) {
     this.nodeList = [];
     this.segments = [];
     this.logicalConditions = ['<', '>', '=', '!', '&&', '||', '(', ')'];
@@ -114,69 +115,31 @@ export class PathConditionCreatorComponent implements OnInit {
     return this.logicalConditions.indexOf(seg.value) > -1;
   }
 
-  get variableSuggestions(): Array<{ label: string, value: string }> {
-    if (!this.nodeList || this.nodeList.length == 0) {
-      return [];
-    }
-    const temp = this.nodeList.map(node => {
-      let list = [];
-      let statusCode: any = {};
-      statusCode.label = (node._id || node.type) + '/statusCode'
-      statusCode.value = node._id + '.statusCode'
-      list.push(statusCode);
-      let status: any = {};
-      status.label = (node._id || node.type) + '/status'
-      status.value = node._id + '.status'
-      list.push(status);
-      let headers: any = {};
-      headers.label = (node._id || node.type) + '/headers'
-      headers.value = node._id + '.headers'
-      list.push(headers);
-      if (!node.dataStructure) {
-        node.dataStructure = {};
-      }
-      if (!node.dataStructure.outgoing) {
-        node.dataStructure.outgoing = {};
-      }
-      if (node.dataStructure.outgoing.definition) {
-        list = list.concat(this.getNestedSuggestions(node, node.dataStructure.outgoing.definition));
-        // node.dataStructure.outgoing.definition.forEach(def => {
-        //   let item: any = {};
-        //   item.label = (node._id || node.type) + '/body/' + def.key;
-        //   item.value =node._id + '.body.' + def.key;
-        //   list.push(item);
-        //   item = {};
-        //   item.label = (node._id || node.type) + '/responseBody/' + def.key;
-        //   item.value =node._id + '.responseBody.' + def.key;
-        //   list.push(item);
-        // });
-      }
-      return list;
-    })
-    return _.flatten(temp);
+  get variableSuggestions() {
+    return this.flowService.getSuggestions()
   }
 
-  getNestedSuggestions(node: any, definition: Array<any>, parentKey?: any) {
-    let list = [];
-    if (definition && definition.length > 0) {
-      definition.forEach((def: any) => {
-        let key = parentKey ? parentKey + '.' + def.key : def.key;
-        if (def.type == 'Object') {
-          list = list.concat(this.getNestedSuggestions(node, def.definition, key));
-        } else {
-          let item: any = {};
-          item.label = (node._id || node.type) + '/body/' + key;
-          item.value = node._id + '.body.' + key;
-          list.push(item);
-          item = {};
-          item.label = (node._id || node.type) + '/responseBody/' + key;
-          item.value = node._id + '.responseBody.' + key;
-          list.push(item);
-        }
-      });
-    }
-    return list;
-  }
+  // getNestedSuggestions(node: any, definition: Array<any>, parentKey?: any) {
+  //   let list = [];
+  //   if (definition && definition.length > 0) {
+  //     definition.forEach((def: any) => {
+  //       let key = parentKey ? parentKey + '.' + def.key : def.key;
+  //       if (def.type == 'Object') {
+  //         list = list.concat(this.getNestedSuggestions(node, def.definition, key));
+  //       } else {
+  //         let item: any = {};
+  //         item.label = (node._id || node.type) + '/body/' + key;
+  //         item.value = node._id + '.body.' + key;
+  //         list.push(item);
+  //         item = {};
+  //         item.label = (node._id || node.type) + '/responseBody/' + key;
+  //         item.value = node._id + '.responseBody.' + key;
+  //         list.push(item);
+  //       }
+  //     });
+  //   }
+  //   return list;
+  // }
 
   changeLabel(event) {
     this.textValue = event;
