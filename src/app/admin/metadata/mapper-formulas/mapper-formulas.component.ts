@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CommonService } from 'src/app/utils/services/common.service';
@@ -15,10 +15,12 @@ export class MapperFormulasComponent implements OnInit {
   selectedFormula: any;
   toggleNewFormulaWindow: boolean;
   createFormulaLoader: boolean;
+  openDeleteModal: EventEmitter<any>;
   constructor(private fb: FormBuilder,
     private commonService: CommonService,
     private ts: ToastrService) {
     this.formulaList = [];
+    this.openDeleteModal = new EventEmitter();
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.pattern(/[a-zA-Z_\\.]{2,30}/)]]
     })
@@ -60,6 +62,20 @@ export class MapperFormulasComponent implements OnInit {
   }
 
   deleteFormula(item: any) {
+    this.openDeleteModal.emit({
+      title: 'Delete Formula?',
+      message: `Are you sure you want to delete formula <strong>${item.name}</strong>`,
+      item
+    });
+  }
+
+  closeDeleteModal(data: any) {
+    if (data) {
+      this.triggerDeleteFormula(data.item);
+    }
+  }
+
+  triggerDeleteFormula(item: any) {
     this.createFormulaLoader = true;
     this.commonService.delete('user', `/admin/metadata/mapper/formula/${item._id}`).subscribe(res => {
       this.fetchAllFormulas();
