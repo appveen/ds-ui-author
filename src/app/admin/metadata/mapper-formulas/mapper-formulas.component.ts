@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { switchMap } from 'rxjs/operators';
 import { CommonService } from 'src/app/utils/services/common.service';
 
 @Component({
@@ -31,11 +32,15 @@ export class MapperFormulasComponent implements OnInit {
   }
 
   fetchAllFormulas() {
-    this.commonService.get('user', '/admin/metadata/mapper/formula', { count: 30 }).subscribe(res => {
-      this.formulaList = res;
-    }, err => {
-      this.commonService.errorToast(err);
-    })
+    this.commonService.get('user', '/admin/metadata/mapper/formula/count')
+      .pipe(switchMap((ev: any) => {
+        return this.commonService.get('user', '/admin/metadata/mapper/formula', { count: ev })
+      }))
+      .subscribe(res => {
+        this.formulaList = res;
+      }, err => {
+        this.commonService.errorToast(err);
+      });
   }
 
   openNewFormulaWindow() {
