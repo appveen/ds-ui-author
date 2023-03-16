@@ -49,3 +49,11 @@
         right: 10px;
     }
 }
+
+.editor-wrapper {
+    min-height: 600px;
+
+    .code-editor {
+        height: 600px;
+    }
+}

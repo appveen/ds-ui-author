@@ -43,6 +43,7 @@ import { AgGridSharedFloatingFilterModule } from '../utils/ag-grid-shared-floati
 import { DateFormatModule } from '../utils/date-format/date-format.module';
 import { MetadataComponent } from './metadata/metadata.component';
 import { MapperFormulasComponent } from './metadata/mapper-formulas/mapper-formulas.component';
+import { CodeEditorModule } from '../utils/code-editor/code-editor.module';
 
 @NgModule({
   imports: [
@@ -81,6 +82,7 @@ import { MapperFormulasComponent } from './metadata/mapper-formulas/mapper-formu
     AgGridSharedFloatingFilterModule,
     DateFormatModule,
     ClickOutsideModule,
+    CodeEditorModule
   ],
   exports: [AppListComponent],
   declarations: [

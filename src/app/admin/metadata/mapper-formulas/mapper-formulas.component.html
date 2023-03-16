@@ -92,11 +92,15 @@
             </div>
             <div class="form-group">
                 <label for="code">Code</label>
-                <textarea id="code" class="form-control" rows="10" cols="30"
-                    [(ngModel)]="selectedFormula.code"></textarea>
+                <div class="editor-wrapper border rounded py-3">
+                    <odp-code-editor class="code-editor" [edit]="{status:true}" [(code)]="selectedFormula.code"></odp-code-editor>
+                </div>
+                <!-- <textarea id="code" class="form-control" rows="10" cols="30"
+                    [(ngModel)]="selectedFormula.code"></textarea> -->
             </div>
             <div class="form-group d-flex align-items-center justify-content-end">
-                <button type="button" class="btn btn-danger mr-3" (click)="deleteFormula(this.selectedFormula)">Delete</button>
+                <button type="button" class="btn btn-danger mr-3"
+                    (click)="deleteFormula(this.selectedFormula)">Delete</button>
                 <button type="button" class="btn btn-success" (click)="saveFormula()">Save</button>
             </div>
         </ng-container>
