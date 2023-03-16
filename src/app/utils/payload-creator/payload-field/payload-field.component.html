@@ -21,7 +21,7 @@
             <odp-styled-text (finalValue)="onValueChange($event)" [value]="field.value" #typeAhead
                 [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
                 [searchTerm]="searchTerm" class="styled-wrapper" (onPaste)="onPaste($event)" (onEnter)="addField()"
-                [disabled]="field.type=='object'" [pattern]="pattern"></odp-styled-text>
+                [disabled]="field.type=='object'" [uid]="index"></odp-styled-text>
 
         </div>
         <div *ngIf="field.type=='boolean'" class="value-holder px-2 d-flex align-items-center">
