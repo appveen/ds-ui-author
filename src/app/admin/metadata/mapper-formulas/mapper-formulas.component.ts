@@ -43,6 +43,13 @@ export class MapperFormulasComponent implements OnInit {
       });
   }
 
+  selectFormula(item: any) {
+    this.selectedFormula = null;
+    setTimeout(() => {
+      this.selectedFormula = item;
+    }, 100);
+  }
+
   openNewFormulaWindow() {
     this.form.reset({});
     this.toggleNewFormulaWindow = true;

@@ -11,7 +11,7 @@
         <div class="list-group list-group-flush">
             <div class="list-group-item list-group-item-action hover d-flex align-items-center justify-content-between"
                 [class.selected]="selectedFormula==item" *ngFor="let item of formulaList"
-                (click)="selectedFormula=item">
+                (click)="selectFormula(item)">
                 <span class="">{{item.name}}</span>
                 <span class="dsi dsi-trash text-danger hover" (click)="deleteFormula(item)"></span>
             </div>
