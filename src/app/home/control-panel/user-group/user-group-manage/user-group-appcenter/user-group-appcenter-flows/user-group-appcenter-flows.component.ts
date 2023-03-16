@@ -58,10 +58,11 @@ export class UserGroupAppcenterFlowsComponent implements OnInit {
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/count`).pipe(switchMap((count: any) => {
       return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, {
         count: count,
+        sort: "-_metadata.lastUpdated"
       });
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
-      this.flowList = res.reverse();
+      this.flowList = res;
       if (res.length > 0) {
         this.selectedFlow = res[0];
       }
