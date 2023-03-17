@@ -67,7 +67,6 @@ export class NodePropertiesComponent implements OnInit {
             }
           }
         ))
-        this.changesDone.emit()
       }
     });
   }
