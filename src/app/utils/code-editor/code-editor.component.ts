@@ -1,5 +1,5 @@
 /// <reference path="../../../../node_modules/monaco-editor/monaco.d.ts" />
-import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges, ElementRef } from '@angular/core';
 import { AppService } from '../services/app.service';
 
 let loadedMonaco = false;
@@ -21,7 +21,8 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
   @Input() insertText: EventEmitter<string>;
   codeEditorInstance: monaco.editor.IStandaloneCodeEditor;
   typesString: string;
-  constructor(private appService: AppService) {
+  constructor(private appService: AppService,
+    private ele: ElementRef) {
     this.theme = 'vs-light';
     this.fontSize = 14;
     this.edit = { status: false };
@@ -222,7 +223,9 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
       this.codeChange.emit(val);
     });
 
-    this.codeEditorInstance.layout();
+    let height = (this.ele.nativeElement as HTMLElement).parentElement.clientHeight;
+    let width = (this.ele.nativeElement as HTMLElement).parentElement.clientWidth;
+    this.codeEditorInstance.layout({ height, width });
 
     this.insertText.subscribe((text: string) => {
       this.codeEditorInstance.trigger('keyboard', 'type', { text });

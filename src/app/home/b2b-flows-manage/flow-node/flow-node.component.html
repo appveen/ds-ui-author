@@ -2,25 +2,19 @@
     <g class="node-block" [style]="'transform: translate('+currNode.coordinates.x+'px,'+ currNode.coordinates.y+'px)'"
         class="hover" [attr.data-id]="currNode._id">
         <g [class.active]="isSelected" [attr.data-id]="currNode._id">
-            <!-- <rect class="id-holder {{currNode.type}}" [class.START]="isInputNode" x="0" y="-14" width="50" height="14" rx="4"
-                [attr.data-id]="currNode._id" />
-            <text class="id-holder {{currNode.type}}" x="2" y="-4" text-anchor="start"
-                [attr.data-id]="currNode._id">{{currNode._id}}</text> -->
-
+            <rect x="0" y="-18" width="120" height="24" rx="4" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" class="id-holder" />
+            <text x="10" y="-5" text-anchor="start" (click)="openProperties($event)" [attr.data-id]="currNode._id"
+                class="id-holder">{{nodeType}}</text>
             <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id" />
             <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id" class="rect" />
-            <text x="36" y="22" text-anchor="start" (click)="openProperties($event)"
-                [attr.data-id]="currNode._id">{{nodeType}}</text>
-            <foreignObject width="140" height="42" x="0" y="38" [attr.data-id]="currNode._id"
+            <foreignObject width="100" height="32" x="30" y="2" [attr.data-id]="currNode._id"
                 (click)="openProperties($event)">
-                <div xmlns="http://www.w3.org/1999/xhtml" class="d-flex align-items-center justify-content-center">
-                    <!-- <span xmlns="http://www.w3.org/1999/xhtml"
-                        class="d-flex justify-content-center text-center font-10 border rounded mr-2 bg-light">
-                        {{currNode._id}}
-                    </span> -->
-                    <span xmlns="http://www.w3.org/1999/xhtml"
+                <div xmlns="http://www.w3.org/1999/xhtml" [attr.data-id]="currNode._id"
+                    class="d-flex align-items-center justify-content-center h-100">
+                    <span xmlns="http://www.w3.org/1999/xhtml" [attr.data-id]="currNode._id" [class.fw-600]="isSelected"
                         class="text-wrap d-flex justify-content-center text-center font-10">
                         {{currNode.name}}
                     </span>

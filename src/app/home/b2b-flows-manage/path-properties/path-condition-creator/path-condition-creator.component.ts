@@ -3,6 +3,7 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { B2bFlowService } from '../../b2b-flow.service';
 
 @Component({
   selector: 'odp-path-condition-creator',
@@ -20,7 +21,9 @@ export class PathConditionCreatorComponent implements OnInit {
   segments: Array<{ label: string, value: string }>;
   logicalConditions: Array<string>;
   selectedSegmentIndex: number;
-  constructor() {
+  textValue: string;
+  searchTerm: string = '';
+  constructor(private flowService: B2bFlowService) {
     this.nodeList = [];
     this.segments = [];
     this.logicalConditions = ['<', '>', '=', '!', '&&', '||', '(', ')'];
@@ -41,7 +44,7 @@ export class PathConditionCreatorComponent implements OnInit {
 
   unsetValue() {
     this.tempValue = null;
-    this.value = null;
+    this.value = '';
     this.valueChange.emit(null);
     this.segments.splice(0);
     this.showConditionWindow = false;
@@ -52,7 +55,7 @@ export class PathConditionCreatorComponent implements OnInit {
   }
 
   save() {
-    this.value = this.segments.map(e => e.value).join(' ');
+    // this.value = this.segments.map(e => e.value).join(' ');
     console.log(this.value);
     this.valueChange.emit(this.value);
     this.cancel();
@@ -60,7 +63,7 @@ export class PathConditionCreatorComponent implements OnInit {
 
   formatter(result: any) {
     if (result && typeof result == 'object') {
-      return result.label.toUpperCase();
+      return result.label;
     }
     return result;
   };
@@ -70,14 +73,18 @@ export class PathConditionCreatorComponent implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       map((term) => {
+        term = term.split(' ').filter((ele) => ele.startsWith("{{") && !ele.endsWith("}")).pop() || '';
+        this.searchTerm = term;
+        term = term.replace('{{', '');
         if (this.logicalConditions.indexOf(term) > -1) {
           this.segments.push({ label: term, value: term });
           this.typeAhead.writeValue(null);
           return [];
         }
-        return term === '' ? [] : this.variableSuggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 15);
+        return term === '' && this.searchTerm === '' ? [] : this.variableSuggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 15);
       }),
     );
+
 
   selectItem(event: any) {
     this.segments.push(event.item);
@@ -108,67 +115,46 @@ export class PathConditionCreatorComponent implements OnInit {
     return this.logicalConditions.indexOf(seg.value) > -1;
   }
 
-  get variableSuggestions(): Array<{ label: string, value: string }> {
-    if (!this.nodeList || this.nodeList.length == 0) {
-      return [];
-    }
-    const temp = this.nodeList.map(node => {
-      let list = [];
-      let statusCode: any = {};
-      statusCode.label = (node.name || node.type) + '/statusCode'
-      statusCode.value = `node['${node._id}']` + '.statusCode'
-      list.push(statusCode);
-      let status: any = {};
-      status.label = (node.name || node.type) + '/status'
-      status.value = `node['${node._id}']` + '.status'
-      list.push(status);
-      let headers: any = {};
-      headers.label = (node.name || node.type) + '/headers'
-      headers.value = `node['${node._id}']` + '.headers'
-      list.push(headers);
-      if (!node.dataStructure) {
-        node.dataStructure = {};
-      }
-      if (!node.dataStructure.outgoing) {
-        node.dataStructure.outgoing = {};
-      }
-      if (node.dataStructure.outgoing.definition) {
-        list = list.concat(this.getNestedSuggestions(node, node.dataStructure.outgoing.definition));
-        // node.dataStructure.outgoing.definition.forEach(def => {
-        //   let item: any = {};
-        //   item.label = (node.name || node.type) + '/body/' + def.key;
-        //   item.value = `node['${node._id}']` + '.body.' + def.key;
-        //   list.push(item);
-        //   item = {};
-        //   item.label = (node.name || node.type) + '/responseBody/' + def.key;
-        //   item.value = `node['${node._id}']` + '.responseBody.' + def.key;
-        //   list.push(item);
-        // });
-      }
-      return list;
-    })
-    return _.flatten(temp);
+  get variableSuggestions() {
+    return this.flowService.getSuggestions()
   }
 
-  getNestedSuggestions(node: any, definition: Array<any>, parentKey?: any) {
-    let list = [];
-    if (definition && definition.length > 0) {
-      definition.forEach((def: any) => {
-        let key = parentKey ? parentKey + '.' + def.key : def.key;
-        if (def.type == 'Object') {
-          list = list.concat(this.getNestedSuggestions(node, def.definition, key));
-        } else {
-          let item: any = {};
-          item.label = (node.name || node.type) + '/body/' + key;
-          item.value = `node['${node._id}']` + '.body.' + key;
-          list.push(item);
-          item = {};
-          item.label = (node.name || node.type) + '/responseBody/' + key;
-          item.value = `node['${node._id}']` + '.responseBody.' + key;
-          list.push(item);
-        }
-      });
-    }
-    return list;
+  // getNestedSuggestions(node: any, definition: Array<any>, parentKey?: any) {
+  //   let list = [];
+  //   if (definition && definition.length > 0) {
+  //     definition.forEach((def: any) => {
+  //       let key = parentKey ? parentKey + '.' + def.key : def.key;
+  //       if (def.type == 'Object') {
+  //         list = list.concat(this.getNestedSuggestions(node, def.definition, key));
+  //       } else {
+  //         let item: any = {};
+  //         item.label = (node._id || node.type) + '/body/' + key;
+  //         item.value = node._id + '.body.' + key;
+  //         list.push(item);
+  //         item = {};
+  //         item.label = (node._id || node.type) + '/responseBody/' + key;
+  //         item.value = node._id + '.responseBody.' + key;
+  //         list.push(item);
+  //       }
+  //     });
+  //   }
+  //   return list;
+  // }
+
+  changeLabel(event) {
+    this.textValue = event;
+    // const regex = /{{\S+}}/g;
+    // const matches = this.textValue.match(regex) || [];
+    // if (matches.length > 0) {
+    //   matches.forEach((match) => {
+    //     const label = match.replace('{{', '').replace('}}', '');
+    //     const suggestion = this.variableSuggestions.find(item => item.label === label);
+    //     if (suggestion) {
+    //       this.textValue = this.textValue.replace(match, suggestion.value);
+    //     }
+    //   });
+    // }
+    this.value = this.textValue;
   }
+
 }

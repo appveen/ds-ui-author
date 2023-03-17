@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { B2bFlowService } from '../../home/b2b-flows-manage/b2b-flow.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'odp-payload-creator',
@@ -12,7 +14,7 @@ export class PayloadCreatorComponent implements OnInit {
   @Output() dataChange: EventEmitter<any>;
   globalType: string;
   triggerAddChild: EventEmitter<any>;
-  constructor() {
+  constructor(private flowService: B2bFlowService) {
     this.nodeList = [];
     this.data = {};
     this.dataChange = new EventEmitter();
@@ -34,6 +36,14 @@ export class PayloadCreatorComponent implements OnInit {
 
   addFromRoot() {
     this.triggerAddChild.emit();
+  }
+
+  userSelectedValue(data) {
+    if (data && typeof data == 'string') {
+      let configuredData = this.flowService.parseDynamicValue(data);
+      return this.flowService.getDynamicName(configuredData, this.nodeList);
+    }
+    return null;
   }
 
   get globalValue() {

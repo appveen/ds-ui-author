@@ -25,7 +25,7 @@ export class PayloadObjectComponent implements OnInit {
     this.init();
     this.addChild.subscribe(() => {
       let temp = new Field();
-      this.fieldList.splice(this.fieldList.length, 0, temp);   
+      this.fieldList.splice(this.fieldList.length, 0, temp);
     });
   }
 

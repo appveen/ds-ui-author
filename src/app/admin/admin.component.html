@@ -22,9 +22,9 @@
         </button> -->
       </div>
       <div *ngIf="isSuperAdmin" (click)="loadAdminPage()"
-        class="admin-settings bg-light rounded d-flex flex-column justify-content-center align-items-center mr-3 pt-1 hover"
+        class="admin-settings d-flex flex-column justify-content-center align-items-center mr-3 pt-1 hover"
         ngbTooltip="Admin Panel" placement="bottom">
-        <span class="dsi dsi-admin"></span>
+        <span class="dsi dsi-agent font-22"></span>
         <!-- <odp-admin-console-icon size="28"></odp-admin-console-icon> -->
       </div>
       <!-- <div [@userProfileIcon]="showProfileOptions"
@@ -118,15 +118,18 @@
   <div class="d-flex align-items-center px-4 fw-600 font-22 py-3">
     Super Admin
   </div>
-    <div class="d-flex align-items-center px-4 fw-400 item hover">
-      <span #adminActive="routerLinkActive" routerLinkActive="active" routerLink="apps" class="text">
-        Applications</span>
-    <span class="d-flex align-items-center px-4 fw-400 item hover"
-      *ngIf="isSuperAdmin">
+  <div class="d-flex align-items-center px-4 fw-400 item hover">
+    <span #adminActive="routerLinkActive" routerLinkActive="active" routerLink="apps" class="text">
+      Applications
+    </span>
+    <span class="d-flex align-items-center px-4 fw-400 item hover" *ngIf="isSuperAdmin">
       <span routerLinkActive="active" routerLink="users" class="text">Users</span>
     </span>
-    </div>
-    <!-- <div #agentActive="routerLinkActive" class="d-flex align-items-center px-3 item hover" routerLinkActive="active"
+    <span class="d-flex align-items-center px-4 fw-400 item hover" *ngIf="isSuperAdmin">
+      <span routerLinkActive="active" routerLink="metadata/mapper" class="text">Mapper Formulas</span>
+    </span>
+  </div>
+  <!-- <div #agentActive="routerLinkActive" class="d-flex align-items-center px-3 item hover" routerLinkActive="active"
       routerLink="integration">
       <span class="odp-flows"></span>
       <span class="text mt-1 ml-2">Integration</span>

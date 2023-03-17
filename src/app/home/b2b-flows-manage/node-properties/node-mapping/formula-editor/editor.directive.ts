@@ -41,6 +41,7 @@ export class EditorDirective implements OnInit {
   onKeyUp(event: KeyboardEvent) {
     this.selectedObj = this.document.getSelection();
     this.rangeObj = this.selectedObj.getRangeAt(0);
+    console.table([this.rangeObj])
     this.data = this.element.innerText;
     this.dataChange.emit(this.data);
   }
@@ -49,6 +50,7 @@ export class EditorDirective implements OnInit {
   onMouseUp(event: MouseEvent) {
     this.selectedObj = this.document.getSelection();
     this.rangeObj = this.selectedObj.getRangeAt(0);
+    console.table([this.rangeObj])
     this.data = this.element.innerText;
     this.dataChange.emit(this.data);
   }
