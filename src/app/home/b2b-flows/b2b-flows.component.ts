@@ -273,8 +273,9 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       this.showLazyLoader = false;
       res.forEach(item => {
         item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/pipes/${this.app}` + item.inputNode.options.path;
-        this.flowList.push(item);
+        // this.flowList.push(item);
       });
+      this.flowList=res;
     }, err => {
       this.showLazyLoader = false;
       console.log(err);
