@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as _ from 'lodash';
 
 import { AppService } from 'src/app/utils/services/app.service';
-import { CommonService } from 'src/app/utils/services/common.service';
+import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
 import { B2bFlowService } from '../b2b-flow.service';
 
@@ -51,6 +51,25 @@ export class NodePropertiesComponent implements OnInit {
     if (this.currNode && !this.currNode.options.retry) {
       this.currNode.options.retry = {};
     }
+    const options:  GetOptions={
+      filter: {
+        app: this.commonService.app._id
+      },
+      select: 'agentId'
+    }
+    this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, options).subscribe(res=>{
+      if(res){
+        var selected=this.currNode.options.agents;
+        this.currNode.options.agents=[];
+        res.some(r=> selected?.find(e=>{
+            if(e._id==r._id){
+              this.currNode.options.agents.push(e)
+            }
+          }
+        ))
+        this.changesDone.emit()
+      }
+    });
   }
 
   enableEditing() {
