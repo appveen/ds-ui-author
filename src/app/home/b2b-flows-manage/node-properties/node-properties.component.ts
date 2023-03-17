@@ -59,7 +59,7 @@ export class NodePropertiesComponent implements OnInit {
     }
     this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, options).subscribe(res=>{
       if(res){
-        var selected=this.currNode.options.agents;
+        const selected=this.currNode.options.agents;
         this.currNode.options.agents=[];
         res.some(r=> selected?.find(e=>{
             if(e._id==r._id){
