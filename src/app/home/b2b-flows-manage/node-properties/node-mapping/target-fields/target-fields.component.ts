@@ -65,6 +65,7 @@ export class TargetFieldsComponent implements OnInit {
       if (this.definition.source && this.definition.source.length > 0) {
         this.definition.source.splice(0);
       }
+      this.definition.formula = '';
     });
   }
 

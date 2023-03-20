@@ -44,7 +44,7 @@ export class NodeMappingComponent implements OnInit {
     if (this.currNode.dataStructure && this.currNode.dataStructure.outgoing && this.currNode.dataStructure.outgoing.definition) {
       customTargetFields = this.appService.cloneObject(this.currNode.dataStructure.outgoing.definition) || [];
     }
-    this.allTargets = this.mappingService.flatten(customTargetFields);
+    this.allTargets = this.mappingService.flatten((this.currNode.dataStructure.outgoing.formatType || 'JSON'), customTargetFields);
 
     this.nodeList = this.flowService.getNodesBefore(this.currNode);
     this.nodeList.forEach((node: any) => {
@@ -177,13 +177,23 @@ export class NodeMappingComponent implements OnInit {
         definition.forEach((def, i) => {
           delete def._id;
           let key = parentDef ? parentDef.dataPath + '.' + def.key : def.key;
+          let nameAsKey = parentDef ? parentDef.properties.name + '.' + def.properties.name : def.properties.name;
           let name = parentDef ? parentDef.properties.name + '/' + def.properties.name : def.properties.name;
-          def._id = `${node._id}.${bodyKey}.${key}`;
+          if (node.dataStructure.outgoing && node.dataStructure.outgoing.formatType == 'JSON') {
+            def._id = `${node._id}.${bodyKey}.${key}`;
+          } else {
+            def._id = `${node._id}.${bodyKey}.${nameAsKey}`;
+          }
           def.nodeId = node._id;
           def.properties.name = name;
-          def.properties.dataPath = key;
+          if (node.dataStructure.outgoing && node.dataStructure.outgoing.formatType == 'JSON') {
+            def.properties.dataPath = key;
+            def.dataPath = key;
+          } else {
+            def.properties.dataPath = nameAsKey;
+            def.dataPath = nameAsKey;
+          }
           def.name = name;
-          def.dataPath = key;
           def.depth = parentDef ? parentDef.depth + 1 : 0;
           if (def.type == 'Array') {
             if (def.definition[0].type == 'Object') {
