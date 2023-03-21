@@ -15,6 +15,8 @@ export class AddHeadersComponent implements OnInit {
   @Input() edit: any;
   showHeadersWindow: boolean;
   headerList: Array<any>;
+  toggleTextBox: boolean;
+  // sampleJSON: any
   constructor() {
     this.showHeadersWindow = false;
     this.nodeList = [];
@@ -88,8 +90,34 @@ export class AddHeadersComponent implements OnInit {
     this.showHeadersWindow = false;
   }
 
+  onTextDataChange(text: string) {
+    try {
+      this.headerList = [];
+      if (!text) {
+        return;
+      }
+      let data = JSON.parse(text);
+      Object.keys(data).forEach(key => {
+        let val = data[key];;
+        if (val && typeof val == 'object') {
+          val = JSON.stringify(val);
+        }
+        this.headerList.push({ key: key, value: val + '' });
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   cancel() {
     this.showHeadersWindow = false;
     this.defaultHeaderList();
+  }
+
+  get sampleJSON() {
+    return this.headerList.reduce((prev, curr) => {
+      prev[curr.key] = curr.value;
+      return prev;
+    }, {});
   }
 }
