@@ -15,6 +15,7 @@ export class PathConditionCreatorComponent implements OnInit {
   @ViewChild('typeAhead') typeAhead: NgbTypeahead;
   @Input() nodeList: Array<any>;
   @Input() value: string;
+  @Input() prevNode: any;
   @Output() valueChange: EventEmitter<string>;
   showConditionWindow: boolean;
   tempValue: string;
@@ -116,7 +117,7 @@ export class PathConditionCreatorComponent implements OnInit {
   }
 
   get variableSuggestions() {
-    return this.flowService.getSuggestions()
+    return this.flowService.getSuggestions(this.prevNode)
   }
 
   // getNestedSuggestions(node: any, definition: Array<any>, parentKey?: any) {

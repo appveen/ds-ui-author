@@ -38,9 +38,9 @@
     </div>
     <div class="object-array">
         <odp-payload-object *ngIf="field.type=='object'" [nodeList]="nodeList" [data]="data"
-            (dataChange)="onDataChange($event)" [addChild]="triggerAddChild"></odp-payload-object>
+            (dataChange)="onDataChange($event)" [addChild]="triggerAddChild" [currNode]="currNode"></odp-payload-object>
         <odp-payload-array *ngIf="field.type=='array'" [nodeList]="nodeList" [data]="data"
-            (dataChange)="onDataChange($event)" [addChild]="triggerAddChild"></odp-payload-array>
+            (dataChange)="onDataChange($event)" [addChild]="triggerAddChild" [currNode]="currNode"></odp-payload-array>
     </div>
 
 </div>

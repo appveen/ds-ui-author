@@ -51,21 +51,21 @@ export class NodePropertiesComponent implements OnInit {
     if (this.currNode && !this.currNode.options.retry) {
       this.currNode.options.retry = {};
     }
-    const options:  GetOptions={
+    const options: GetOptions = {
       filter: {
         app: this.commonService.app._id
       },
       select: 'agentId'
     }
-    this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, options).subscribe(res=>{
-      if(res){
-        const selected=this.currNode.options.agents;
-        this.currNode.options.agents=[];
-        res.some(r=> selected?.find(e=>{
-            if(e._id==r._id){
-              this.currNode.options.agents.push(e)
-            }
+    this.commonService.get('partnerManager', `/${this.commonService.app._id}/agent`, options).subscribe(res => {
+      if (res) {
+        const selected = this.currNode.options.agents;
+        this.currNode.options.agents = [];
+        res.some(r => selected?.find(e => {
+          if (e._id == r._id) {
+            this.currNode.options.agents.push(e)
           }
+        }
         ))
       }
     });
@@ -176,6 +176,7 @@ export class NodePropertiesComponent implements OnInit {
       let fixedNode = JSON.parse(content.replace(regex, replacer));
       _.merge(item, fixedNode);
     });
+    this.flowService.reCreatePaths.emit();
     // content = _.replace(content, regex, replacer);
     // content = content.replace(regex, replacer);
     // console.log(content);
