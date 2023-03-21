@@ -4,7 +4,8 @@
         <span class="text-secondary" *ngIf="headerList.length==0">Configure</span>
         <span class="text-dark" *ngIf="headerList.length>0">{{headerList.length}} Headers</span>
         <div class="d-flex align-items-center justify-content-end">
-            <span *ngIf="headerList.length>0" class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
+            <span *ngIf="headerList.length>0"
+                class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
                 (click)="clearHeaders()"></span>
             <span class="icon dsi dsi-settings text-accent hover d-flex align-items-center justify-content-center"
                 (click)="showHeader()"></span>
@@ -15,25 +16,43 @@
 <div *ngIf="showHeadersWindow" class="headers-window p-4 bg-white position-fixed">
     <div class="d-flex align-items-center justify-content-between mb-3">
         <h3 class="font-20 fw-600">Headers</h3>
-        <span class="dsi dsi-close hover" (click)="cancel()"></span>
+        <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center hover" (click)="toggleTextBox=!toggleTextBox">
+                <ng-container *ngIf="toggleTextBox">
+                    <span class="dsi dsi-array text-primary"></span>
+                    <span class="ml-2 font-12 fw-400">List</span>
+                </ng-container>
+                <ng-container *ngIf="!toggleTextBox">
+                    <span class="dsi dsi-object text-primary"></span>
+                    <span class="ml-2 font-12 fw-400">JSON</span>
+                </ng-container>
+            </div>
+            <span class="dsi dsi-close hover ml-3" (click)="cancel()"></span>
+        </div>
     </div>
     <div class="headers-list">
-        <div *ngFor="let item of headerList;let i=index" class="d-flex align-items-stretch mb-2 border rounded">
-            <div class="header-key flex-fill position-relative">
-                <input type="text" class="border-0 px-2 flex-fill h-100 w-100" [(ngModel)]="item.key"
-                    placeholder="Header Key" (keyup.enter)="addHeader(i)" odpAutoFocus>
+        <ng-container *ngIf="toggleTextBox">
+            <textarea rows="10" cols="30" class="form-control" [ngModel]="sampleJSON | json"
+                (ngModelChange)="onTextDataChange($event)"></textarea>
+        </ng-container>
+        <ng-container *ngIf="!toggleTextBox">
+            <div *ngFor="let item of headerList;let i=index" class="d-flex align-items-stretch mb-2 border rounded">
+                <div class="header-key flex-fill position-relative">
+                    <input type="text" class="border-0 px-2 flex-fill h-100 w-100" [(ngModel)]="item.key"
+                        placeholder="Header Key" (keyup.enter)="addHeader(i)" odpAutoFocus>
+                </div>
+                <div class="header-value w-100 position-relative border-left">
+                    <input type="text" class="border-0 px-2 h-100 w-100" [(ngModel)]="item.value"
+                        placeholder="Header Value" (keyup.enter)="addHeader(i)">
+                </div>
+                <div class="header-action position-relative border-left d-flex align-items-center">
+                    <span class="icon d-flex align-items-center justify-content-center dsi dsi-minus-circle hover"
+                        (click)="removeHeader(i)"></span>
+                    <span class="icon d-flex align-items-center justify-content-center dsi dsi-plus-circle hover"
+                        (click)="addHeader(i)"></span>
+                </div>
             </div>
-            <div class="header-value w-100 position-relative border-left">
-                <input type="text" class="border-0 px-2 h-100 w-100" [(ngModel)]="item.value" placeholder="Header Value"
-                    (keyup.enter)="addHeader(i)">
-            </div>
-            <div class="header-action position-relative border-left d-flex align-items-center">
-                <span class="icon d-flex align-items-center justify-content-center dsi dsi-minus-circle hover"
-                    (click)="removeHeader(i)"></span>
-                <span class="icon d-flex align-items-center justify-content-center dsi dsi-plus-circle hover"
-                    (click)="addHeader(i)"></span>
-            </div>
-        </div>
+        </ng-container>
         <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center"
             (click)="save()">
             <span class="">Done</span>
