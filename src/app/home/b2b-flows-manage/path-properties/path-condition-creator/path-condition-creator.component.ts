@@ -32,7 +32,6 @@ export class PathConditionCreatorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.prevNode)
     if (this.value) {
       this.segments = this.value.split(' ').map(e => {
         let t = this.variableSuggestions.find(item => item.value == e);
