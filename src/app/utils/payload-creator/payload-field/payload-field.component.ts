@@ -17,6 +17,7 @@ export class PayloadFieldComponent implements OnInit {
   @Input() fieldList: Array<Field>;
   @Input() index: number;
   @Input() data: any;
+  @Input() currNode: any;
   @Output() dataChange: EventEmitter<any>;
   field: Field;
   triggerAddChild: EventEmitter<any>;
@@ -176,7 +177,7 @@ export class PayloadFieldComponent implements OnInit {
     );
 
   get variableSuggestions() {
-    return this.b2bService.getSuggestions()
+    return this.b2bService.getSuggestions(this.currNode)
   }
 
   changeLabel(event, field) {
