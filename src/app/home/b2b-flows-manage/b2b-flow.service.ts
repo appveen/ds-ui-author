@@ -193,9 +193,16 @@ export class B2bFlowService {
 
   getNodesBefore(currNode: any) {
     let temp = [];
+    let nodeId = '';
+    if (typeof currNode == 'string') {
+      nodeId = currNode;
+    }
+    else {
+      nodeId = currNode._id;
+    }
     let prevNode = this.nodeList.find(e => {
       let nexItems = _.concat((e.onSuccess || []), (e.onError || []));
-      if (nexItems.find((es) => es._id == currNode._id)) {
+      if (nexItems.find((es) => es._id == nodeId)) {
         return true;
       }
       return false;
@@ -447,11 +454,12 @@ export class B2bFlowService {
     return list;
   }
 
-  getSuggestions(): Array<{ label: string, value: string }> {
+  getSuggestions(currNode?): Array<{ label: string, value: string }> {
     if (!this.nodeList || this.nodeList.length == 0) {
       return [];
     }
-    const temp = this.nodeList.map(node => {
+    const list = currNode ? this.getNodesBefore(currNode) : this.nodeList;
+    const temp = list.map(node => {
       let list = [];
       let statusCode: any = {};
       statusCode.label = (node._id || node.type) + '/statusCode'

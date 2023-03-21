@@ -12,6 +12,7 @@ export class PayloadCreatorComponent implements OnInit {
   @Input() nodeList: Array<any>;
   @Input() data: any;
   @Output() dataChange: EventEmitter<any>;
+  @Input() currNode: any;
   globalType: string;
   triggerAddChild: EventEmitter<any>;
   constructor(private flowService: B2bFlowService) {

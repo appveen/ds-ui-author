@@ -81,7 +81,7 @@
                 </div>
             </span>
             <odp-payload-creator *ngIf="toggle['payloadCreator']" [data]="sampleJSON"
-                (dataChange)="onDataChange($event)"></odp-payload-creator>
+                (dataChange)="onDataChange($event)" [currNode]="currNode"></odp-payload-creator>
         </div>
     </div>
 </div>
