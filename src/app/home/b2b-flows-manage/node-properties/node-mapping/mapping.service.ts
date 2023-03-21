@@ -51,6 +51,7 @@ export class MappingService {
           delete item._id;
           item.properties.name = name;
           item.name = name;
+          item.key = key;
           item.depth = parentDef ? parentDef.depth + 1 : 0;
           if (type == 'JSON') {
             item.properties.dataPath = key;

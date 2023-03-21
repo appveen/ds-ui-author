@@ -49,7 +49,7 @@ export class SourceSelectorComponent implements OnInit {
       definition.forEach((def: any) => {
         delete def._id;
         let dataPath = parentDef ? parentDef.dataPath + '.' + def.key : def.key;
-        let nameAsDataPath = parentDef ? parentDef.properties.name + '.' + def.properties.name : def.properties.name;
+        let nameAsDataPath = parentDef ? parentDef.name + '.' + def.properties.name : def.properties.name;
         if (def.key == '_self') {
           dataPath = parentDef ? parentDef.dataPath + '[#].' + def.key : def.key;
         }
@@ -59,7 +59,7 @@ export class SourceSelectorComponent implements OnInit {
           def._id = this.node._id + '.' + bodyKey + '.' + nameAsDataPath;
         }
         def.nodeId = this.node._id;
-        def.name = def.properties.name;
+        def.name = nameAsDataPath;
         if (type == 'JSON') {
           def.dataPath = dataPath;
           def.properties.dataPath = dataPath;
