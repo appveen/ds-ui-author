@@ -30,6 +30,7 @@ export class InputDataSelectorComponent implements OnInit {
   ngOnInit(): void {
     this.toggle['payloadCreator'] = true;
     this.toggle['single'] = true;
+    this.toggle['editorType'] = 'json';
     this.nodeList = this.flowService.getNodesBefore(this.currNode);
     this.inputDataStructure = this.currNode.dataStructure.incoming || {};
     if (this.data != undefined && this.data != null && typeof this.data == 'string') {
@@ -85,6 +86,17 @@ export class InputDataSelectorComponent implements OnInit {
     this.sampleJSON = data;
     this.data = data;
     this.dataChange.emit(this.data);
+  }
+
+  onTextDataChange(text: string) {
+    try {
+      let data = JSON.parse(text);
+      this.sampleJSON = data;
+      this.data = data;
+      this.dataChange.emit(this.data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   cancel() {

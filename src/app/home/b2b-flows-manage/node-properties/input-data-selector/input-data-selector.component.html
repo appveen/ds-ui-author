@@ -75,13 +75,31 @@
         <div *ngIf="dataType=='multiple'" class="d-flex flex-column mt-4">
             <span class="font-16 fw-500 mb-3 d-flex align-items-center justify-content-between w-100">
                 <span>Create Payload</span>
-                <div class="d-flex align-items-center hover" (click)="toggle['pasteJSON']=!toggle['pasteJSON']">
-                    <span class="dsi dsi-object text-primary"></span>
-                    <span class="ml-2 font-12 fw-400">Paste JSON</span>
+                <div class="d-flex align-items-center">
+                    <div *ngIf="toggle['editorType']=='json'" class="d-flex align-items-center hover"
+                        (click)="toggle['editorType']='text'">
+                        <span class="dsi dsi-object text-primary"></span>
+                        <span class="ml-2 font-12 fw-400">Text</span>
+                    </div>
+                    <div *ngIf="toggle['editorType']=='text'" class="d-flex align-items-center hover"
+                        (click)="toggle['editorType']='json'">
+                        <span class="dsi dsi-object text-primary"></span>
+                        <span class="ml-2 font-12 fw-400">JSON</span>
+                    </div>
+                    <!-- <div class="d-flex align-items-center hover" (click)="toggle['pasteJSON']=!toggle['pasteJSON']">
+                        <span class="dsi dsi-object text-primary"></span>
+                        <span class="ml-2 font-12 fw-400">Paste JSON</span>
+                    </div> -->
                 </div>
             </span>
-            <odp-payload-creator *ngIf="toggle['payloadCreator']" [data]="sampleJSON"
-                (dataChange)="onDataChange($event)"></odp-payload-creator>
+            <ng-container *ngIf="toggle['editorType']=='json'">
+                <odp-payload-creator *ngIf="toggle['payloadCreator']" [data]="sampleJSON"
+                    (dataChange)="onDataChange($event)"></odp-payload-creator>
+            </ng-container>
+            <ng-container *ngIf="toggle['editorType']=='text'">
+                <textarea rows="10" cols="30" class="form-control" [ngModel]="sampleJSON | json"
+                    (ngModelChange)="onTextDataChange($event)"></textarea>
+            </ng-container>
         </div>
     </div>
 </div>
