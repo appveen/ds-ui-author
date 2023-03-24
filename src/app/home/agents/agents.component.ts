@@ -206,7 +206,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
     hasManagePermission(entity: string) {
-        return this.commonService.hasPermission('PMA', entity);
+        return this.commonService.hasPermissionStartsWith('PMA', entity);
     }
 
     hasViewPermission(entity: string) {
