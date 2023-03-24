@@ -12,7 +12,7 @@
         <div class="fw-600 font-22">Agents</div>
         <span class="d-flex align-items-center">
             <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
-            <button *ngIf="hasManagePermission('AGENT')" type="button"
+            <button *ngIf="hasCreatePermission('AGENT')" type="button"
                 class="btn btn-primary ml-3 d-flex align-items-center" (click)="newAgent()">
                 <span class="dsi dsi-plus mr-2"></span>
                 <span class="text">New Agent</span>
@@ -116,7 +116,7 @@
                                     Change Password
                                 </div>
                                 <div id="agent-clone" class="list-group-item list-group-item-action py-2 border-0 hover"
-                                    *ngIf="hasManagePermission('AGENT')" (click)="cloneAgent(agent)">
+                                    *ngIf="hasCreatePermission('AGENT')" (click)="cloneAgent(agent)">
                                     Clone
                                 </div>
                                 <div id="agent-delete"
