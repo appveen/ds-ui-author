@@ -381,7 +381,7 @@
               <ng-container *ngIf="
                   !userInLocal &&
                   !userInAzureAD &&
-                  userForm.get('userData.auth.authType').value === 'local'
+                  (selectedAuthType == 'local'||selectedAuthType == 'ldap' )
                 ">
                 <div class="form-group">
                   <label for="password">
@@ -471,7 +471,7 @@
         </form>
         <div class="d-flex align-items-center justify-content-between mt-auto">
           <button *ngIf="
-              selectedAuthType == 'local' &&
+              (selectedAuthType == 'local'||selectedAuthType == 'ldap' ) &&
               !userInLocal &&
               !userInAzureAD &&
               hasPermission('PMUBC')
