@@ -64,26 +64,33 @@ export class B2bFlowService {
   parseDynamicValue(value: any) {
     const configuredData: any = {};
     if (typeof value == 'string' && value.startsWith('{{') && value.endsWith('}}')) {
-      const charArr = value.split('');
-      configuredData.node = charArr.slice(8, 14).join('');
-      const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
-      if (nodeKeyIndexes.length == 1) {
-        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length - 2).join('');
-      } else {
-        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
-        configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length - 2).join('');
+      const segments = value.split('.');
+      let nodeSeg = segments[0];
+      let nodeKeySeg = segments[1];
+      let dateKeySeg = segments.splice(2).join('.');
+      configuredData.node = nodeSeg.split('').slice(2, nodeSeg.length).join('');
+      if (configuredData.node.startsWith('node[')) {
+        configuredData.node = configuredData.node.split('').slice(6, configuredData.node.length - 2).join('');
       }
-    } else if (typeof value == 'string' && value.startsWith('node[')) {
-      const charArr = value.split('');
-      configuredData.node = charArr.slice(6, 12).join('');
-      const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
-      if (nodeKeyIndexes.length == 1) {
-        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length).join('');
+      if (dateKeySeg) {
+        configuredData.nodeKey = nodeKeySeg;
+        configuredData.dataKey = dateKeySeg.split('').slice(0, dateKeySeg.length - 2).join('');
       } else {
-        configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
-        configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length).join('');
+        configuredData.nodeKey = nodeKeySeg.split('').slice(0, nodeKeySeg.length - 2).join('');
       }
-    } else {
+    }
+    // else if (typeof value == 'string' && value.startsWith('node[')) {
+    //   const charArr = value.split('');
+    //   configuredData.node = charArr.slice(6, 12).join('');
+    //   const nodeKeyIndexes = charArr.map((e, i) => e == '.' ? i : null).filter(e => e);
+    //   if (nodeKeyIndexes.length == 1) {
+    //     configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, charArr.length).join('');
+    //   } else {
+    //     configuredData.nodeKey = charArr.slice(nodeKeyIndexes[0] + 1, nodeKeyIndexes[1]).join('');
+    //     configuredData.dataKey = charArr.slice(nodeKeyIndexes[1] + 1, charArr.length).join('');
+    //   }
+    // } 
+    else {
       configuredData.customValue = value;
     }
     return configuredData;
@@ -117,6 +124,24 @@ export class B2bFlowService {
     }
     if (configuredData && configuredData.dataKey) {
       text += '.' + configuredData.dataKey;
+    }
+    return text;
+  }
+
+  getDynamicName(configuredData: any, nodeList: Array<any>) {
+    let text = configuredData.customValue || '';
+    if (configuredData && configuredData.node) {
+      const nodeData = nodeList.find(e => e._id == configuredData.node);
+      if (!nodeData) {
+        return text;
+      }
+      text += nodeData.name || nodeData._id;
+    }
+    if (configuredData && configuredData.nodeKey) {
+      text += '/' + configuredData.nodeKey;
+    }
+    if (configuredData && configuredData.dataKey) {
+      text += '/' + configuredData.dataKey;
     }
     return text;
   }
@@ -329,56 +354,6 @@ export class B2bFlowService {
   getAvailableTransformMethods() {
     return [
       {
-        name: 'HTTP.POST',
-        params: [
-          {
-            name: 'URL',
-            type: 'String'
-          },
-          {
-            name: 'Body',
-            type: 'Object'
-          },
-          {
-            name: 'Response Data Path',
-            type: 'String'
-          }
-        ],
-        value: 'http.post( "URL", { Body }, "Response DataPath" )'
-      },
-      {
-        name: 'HTTP.GET',
-        params: [
-          {
-            name: 'URL',
-            type: 'String'
-          },
-          {
-            name: 'Response Data Path',
-            type: 'String'
-          }
-        ],
-        value: 'http.get( "URL", "Response DataPath" )'
-      },
-      {
-        name: 'DS.GET',
-        params: [
-          {
-            name: 'Name',
-            type: 'String'
-          },
-          {
-            name: 'Filter',
-            type: 'Object'
-          },
-          {
-            name: 'Response Data Path',
-            type: 'String'
-          }
-        ],
-        value: 'ds.get( "NAME", { filter }, "Response DataPath" )'
-      },
-      {
         name: '_.CONCAT',
         params: [
           {
@@ -392,6 +367,27 @@ export class B2bFlowService {
         ],
         value: '_.concat( [ array1 ], [ array2 ] )'
       },
+      {
+        name: '_.ESCAPE',
+        params: [
+          {
+            name: 'String',
+            type: 'String'
+          }
+        ],
+        value: '_.escape("String")'
+      },
+      {
+        name: '_.UNESCAPE',
+        params: [
+          {
+            name: 'String',
+            type: 'String'
+          }
+        ],
+        value: '_.unescape("String")'
+      },
+
       {
         name: '_.FIRST',
         params: [
@@ -427,5 +423,69 @@ export class B2bFlowService {
         value: '_.nth( [ array ], index )'
       }
     ];
+  }
+
+  getNestedSuggestions(node: any, definition: Array<any>, parentKey?: any) {
+    let list = [];
+    if (definition && definition.length > 0) {
+      definition.forEach((def: any) => {
+        let key = parentKey ? parentKey + '.' + def.key : def.key;
+        if (def.type == 'Object') {
+          list = list.concat(this.getNestedSuggestions(node, def.definition, key));
+        } else {
+          let item: any = {};
+          item.label = (node._id || node.type) + '/body/' + key;
+          item.value = node._id + '.body.' + key;
+          list.push(item);
+          item = {};
+          item.label = (node._id || node.type) + '/responseBody/' + key;
+          item.value = node._id + '.responseBody.' + key;
+          list.push(item);
+        }
+      });
+    }
+    return list;
+  }
+
+  getSuggestions(): Array<{ label: string, value: string }> {
+    if (!this.nodeList || this.nodeList.length == 0) {
+      return [];
+    }
+    const temp = this.nodeList.map(node => {
+      let list = [];
+      let statusCode: any = {};
+      statusCode.label = (node._id || node.type) + '/statusCode'
+      statusCode.value = node._id + '.statusCode'
+      list.push(statusCode);
+      let status: any = {};
+      status.label = (node._id || node.type) + '/status'
+      status.value = node._id + '.status'
+      list.push(status);
+      let headers: any = {};
+      headers.label = (node._id || node.type) + '/headers'
+      headers.value = node._id + '.headers'
+      list.push(headers);
+      if (!node.dataStructure) {
+        node.dataStructure = {};
+      }
+      if (!node.dataStructure.outgoing) {
+        node.dataStructure.outgoing = {};
+      }
+      if (node.dataStructure.outgoing.definition) {
+        list = list.concat(this.getNestedSuggestions(node, node.dataStructure.outgoing.definition));
+        // node.dataStructure.outgoing.definition.forEach(def => {
+        //   let item: any = {};
+        //   item.label = (node._id || node.type) + '/body/' + def.key;
+        //   item.value =node._id + '.body.' + def.key;
+        //   list.push(item);
+        //   item = {};
+        //   item.label = (node._id || node.type) + '/responseBody/' + def.key;
+        //   item.value =node._id + '.responseBody.' + def.key;
+        //   list.push(item);
+        // });
+      }
+      return list;
+    })
+    return _.flatten(temp);
   }
 }

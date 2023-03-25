@@ -11,9 +11,19 @@
             <option value="object">Object</option>
             <option value="array">Array</option>
         </select>
-        <input *ngIf="field.type!='boolean'" [type]="getInputType()" class="value-holder px-2" [(ngModel)]="field.value"
-            [disabled]="field.type=='object' || field.type=='array'" (ngModelChange)="onValueChange($event)"
-            (paste)="onPaste($event)" (keyup.enter)="addField()">
+        <div class="d-flex" *ngIf="getInputType()=='text' || getInputType()=='number'" style="width: 260px"
+            [ngClass]="{'white-bg' : field.type !== 'object' ,'disabled-bg': field.type == 'object' }">
+            <!-- <input *ngIf="field.type!='boolean'" [type]="getInputType()" class="value-holder px-2"
+                [(ngModel)]="field.value" [disabled]="field.type=='object' || field.type=='array'"
+                (ngModelChange)="onValueChange($event)" (paste)="onPaste($event)" (keyup.enter)="addField()"> -->
+
+
+            <odp-styled-text (finalValue)="onValueChange($event)" [value]="field.value" #typeAhead
+                [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
+                [searchTerm]="searchTerm" class="styled-wrapper" (onPaste)="onPaste($event)" (onEnter)="addField()"
+                [disabled]="field.type=='object'" [uid]="index"></odp-styled-text>
+
+        </div>
         <div *ngIf="field.type=='boolean'" class="value-holder px-2 d-flex align-items-center">
             <input #checkbox [type]="getInputType()" class="" [checked]="field.value"
                 (change)="onValueChange(checkbox.checked)">
@@ -27,9 +37,10 @@
         </div>
     </div>
     <div class="object-array">
-        <odp-payload-object *ngIf="field.type=='object'" [nodeList]="nodeList" [data]="data" (dataChange)="onDataChange($event)"
-            [addChild]="triggerAddChild"></odp-payload-object>
-        <odp-payload-array *ngIf="field.type=='array'" [nodeList]="nodeList" [data]="data" (dataChange)="onDataChange($event)"
-            [addChild]="triggerAddChild"></odp-payload-array>
+        <odp-payload-object *ngIf="field.type=='object'" [nodeList]="nodeList" [data]="data"
+            (dataChange)="onDataChange($event)" [addChild]="triggerAddChild"></odp-payload-object>
+        <odp-payload-array *ngIf="field.type=='array'" [nodeList]="nodeList" [data]="data"
+            (dataChange)="onDataChange($event)" [addChild]="triggerAddChild"></odp-payload-array>
     </div>
+
 </div>

@@ -50,7 +50,7 @@
       <div *ngIf="!records || records.length==0" class="list-group-item">No Records Found</div>
       <ng-container *ngFor="let dataFormat of records;let i=index">
         <div *ngIf="hasPermissionForDataFormat(dataFormat._id)" class="list-group-item">
-          <div class="d-flex align-items-center justify-content-start h-100" [attr.title]="dataFormat.name"
+          <div class="d-flex align-items-center justify-content-start h-100 hover" [attr.title]="dataFormat.name"
             (dblclick)="navigate(dataFormat)">
             <div class="item-name text-dark fw-500">{{dataFormat.name}}</div>
             <div class="d-flex align-items-center sub-heading">
@@ -98,8 +98,8 @@
   [formGroup]="form">
   <div class="d-flex flex-column w-100">
     <div class="d-flex align-items-center justify-content-between mb-3">
-      <span class="font-20 fw-600">New Data Format</span>
-      <span class="dsi dsi-close hover" (click)="showNewDataFormatWindow=false"></span>
+      <span class="font-20 fw-600">{{isClone? 'Clone':'New'}} Data Format</span>
+      <span class="dsi dsi-close hover" (click)="showNewDataFormatWindow=false;isClone=false;"></span>
     </div>
     <ng-container *ngIf="showNewDataFormatWindow">
       <div class="form-group">
@@ -138,6 +138,6 @@
   </div>
   <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
     <button type="button" class="btn btn-primary w-100" id="newDataFormatModalYes" [disabled]="form.invalid"
-      (click)="triggerDataFormatCreate()">Create</button>
+      (click)="isClone? triggerDataFormatClone():triggerDataFormatCreate()">Create</button>
   </div>
 </div>

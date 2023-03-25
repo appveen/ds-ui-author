@@ -41,6 +41,9 @@ import { UserListCellRendererModule } from '../utils/user-list-cell-renderer/use
 import { TimezonePickerModule } from '../utils/timezone-picker/timezone-picker.module';
 import { AgGridSharedFloatingFilterModule } from '../utils/ag-grid-shared-floating-filter/ag-grid-shared-floating-filter.module';
 import { DateFormatModule } from '../utils/date-format/date-format.module';
+import { MetadataComponent } from './metadata/metadata.component';
+import { MapperFormulasComponent } from './metadata/mapper-formulas/mapper-formulas.component';
+import { CodeEditorModule } from '../utils/code-editor/code-editor.module';
 
 @NgModule({
   imports: [
@@ -79,6 +82,7 @@ import { DateFormatModule } from '../utils/date-format/date-format.module';
     AgGridSharedFloatingFilterModule,
     DateFormatModule,
     ClickOutsideModule,
+    CodeEditorModule
   ],
   exports: [AppListComponent],
   declarations: [
@@ -92,6 +96,8 @@ import { DateFormatModule } from '../utils/date-format/date-format.module';
     UserGroupsComponent,
     UserBulkUploadComponent,
     AgentsComponent,
+    MetadataComponent,
+    MapperFormulasComponent,
   ],
 })
 export class AdminModule {}

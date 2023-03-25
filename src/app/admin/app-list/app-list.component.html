@@ -25,7 +25,7 @@
     </button> -->
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=''" [selectOnEnter]="true"
-        (enteredPressed)="enterToSelect($event)"></odp-search-box>
+        (enteredPressed)="enterToSelect($event)" [open]="true"></odp-search-box>
       <button class="add-new btn btn-primary ml-3 d-flex align-items-center" (click)="newApp()" *ngIf="isSuperadmin">
         <span class="dsi dsi-plus mr-2"></span>
         <span class="text">New</span>

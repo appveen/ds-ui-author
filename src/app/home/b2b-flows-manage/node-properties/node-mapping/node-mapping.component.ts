@@ -67,6 +67,9 @@ export class NodeMappingComponent implements OnInit {
         if (temp && temp.source && temp.source.length > 0) {
           item.source = (temp.source || []).map((source: any) => this.allSources.find((src: any) => src._id == source._id)).filter(e => e);
         }
+        if (temp && temp.formula) {
+          item.formula = temp.formula;
+        }
       });
       setTimeout(() => {
         this.mappingService.reCreatePaths.emit(null);

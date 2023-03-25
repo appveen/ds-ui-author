@@ -23,7 +23,7 @@ export class TargetFieldsComponent implements OnInit {
   selectedPathIndex: any;
   colors: Array<string>;
   toggleFormulaEditor: boolean;
-  
+
   constructor(private mappingService: MappingService,
     private flowService: B2bFlowService,
     private commonService: CommonService) {
@@ -55,7 +55,7 @@ export class TargetFieldsComponent implements OnInit {
           result = result.sort((a, b) => a.score - b.score);
           if (result.length > 0) {
             this.definition.source.push(result[0].item);
-            this.definition.formula = `${result[0].item._id}`;
+            this.definition.formula = `{{${result[0].item._id}}}`;
             // this.mappingService.reCreatePaths.emit();
           }
         }

@@ -1,0 +1,15 @@
+<div>
+  <div class="input-container">
+    <input #styledInputText [value]="value" (input)="onChange($event)" [ngbTypeahead]="ngbTypeahead"
+      (scroll)="handleScroll($event)" [resultFormatter]="resultFormatter" [inputFormatter]="inputFormatter"
+      (selectItem)="selectItem($event)" [disabled]="disabled" (paste)="onPaste.emit($event)"
+      (keyup.enter)="onEnter.emit($event)" [pattern]="pattern.source">
+
+    <div class="input-renderer" #renderer>
+      <div *ngFor="let word of valueArray">
+        <span [ngClass]="{'text-primary': regexMatch(word)}">{{word}}</span>
+      </div>
+    </div>
+  </div>
+
+</div>
