@@ -493,6 +493,16 @@ export class B2bFlowService {
         //   list.push(item);
         // });
       }
+      else {
+        let item: any = {};
+        item.label = (node._id || node.type) + '/body';
+        item.value = node._id + '.body';
+        list.push(item);
+        item = {};
+        item.label = (node._id || node.type) + '/responseBody';
+        item.value = node._id + '.responseBody';
+        list.push(item);
+      }
       return list;
     })
     return _.flatten(temp);
