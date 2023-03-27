@@ -42,10 +42,10 @@
                 class="node-icon font-18 fw-500 dsi dsi-data-service" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FUNCTION'"
                 class="node-icon font-18 fw-500 dsi dsi-function" [attr.data-id]="currNode._id"></span>
-            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='MAPPING' || currNode.type=='TRANSFORM'"
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='MAPPING'"
                 class="node-icon font-18 fw-500 dsi dsi-mapping" [attr.data-id]="currNode._id"></span>
-            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='PAYLOAD'"
-                class="node-icon font-18 fw-500 dsi dsi-object" [attr.data-id]="currNode._id"></span>
+                <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='DEDUPE_PAYLOAD' || currNode.type=='DEDUPE_DATASERVICE'"
+                class="node-icon font-18 fw-500 dsi dsi-copy" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='UNWIND'"
                 class="node-icon font-18 fw-500 dsi dsi-expand" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='RESPONSE'"

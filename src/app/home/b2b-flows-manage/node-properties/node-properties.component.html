@@ -36,7 +36,8 @@
             <option value="FILE">File Agent</option>
             <option *ngIf="!isInputNode" value="API">API Invoke</option>
             <option *ngIf="!isInputNode" value="MAPPING">Mapping</option>
-            <option *ngIf="!isInputNode" value="PAYLOAD">Payload Creator</option>
+            <option *ngIf="!isInputNode" value="DEDUPE_PAYLOAD">De-Dupe Payload</option>
+            <option *ngIf="!isInputNode" value="DEDUPE_DATASERVICE">De-Dupe Data Service</option>
             <option *ngIf="!isInputNode" value="CODEBLOCK">Code Block</option>
             <option *ngIf="!isInputNode" value="CONNECTOR">Connector</option>
             <option *ngIf="!isInputNode" value="UNWIND">Change Root</option>
@@ -230,14 +231,6 @@
             <button type="button" class="btn btn-dark w-100 ignore-outside"
                 (click)="toggle['mapping']=!toggle['mapping']">
                 Set Mapping
-            </button>
-        </div>
-    </ng-container>
-    <ng-container *ngIf="currNode.type=='PAYLOAD'">
-        <div class="form-group">
-            <button type="button" class="btn btn-dark w-100 ignore-outside"
-                (click)="toggle['payload']=!toggle['payload']">
-                Create Payload
             </button>
         </div>
     </ng-container>
