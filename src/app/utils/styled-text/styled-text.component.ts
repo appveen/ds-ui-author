@@ -23,6 +23,7 @@ export class StyledTextComponent implements OnInit {
   @Input() disabled: boolean = false
   @Input() type: string = "text"
   @Input() uid: string = '0'
+  @Input() placeholder: string = ''
   @Input() pattern: RegExp = /.*/g
   @Output() onPaste: EventEmitter<any> = new EventEmitter();
   @Output() onEnter: EventEmitter<any> = new EventEmitter();
