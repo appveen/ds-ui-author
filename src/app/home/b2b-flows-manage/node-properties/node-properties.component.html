@@ -36,8 +36,8 @@
             <option value="FILE">File Agent</option>
             <option *ngIf="!isInputNode" value="API">API Invoke</option>
             <option *ngIf="!isInputNode" value="MAPPING">Mapping</option>
-            <option *ngIf="!isInputNode" value="DEDUPE_PAYLOAD">De-Dupe Payload</option>
-            <option *ngIf="!isInputNode" value="DEDUPE_DATASERVICE">De-Dupe Data Service</option>
+            <option *ngIf="!isInputNode" value="DEDUPE">De-Dupe</option>
+            <option *ngIf="!isInputNode" value="CONFLICT">Conflict</option>
             <option *ngIf="!isInputNode" value="CODEBLOCK">Code Block</option>
             <option *ngIf="!isInputNode" value="CONNECTOR">Connector</option>
             <option *ngIf="!isInputNode" value="UNWIND">Change Root</option>
@@ -62,7 +62,9 @@
                 [hideGeneric]="currNode?.type=='MAPPING'">
             </odp-data-structure-selector>
         </div>
-        <div *ngIf="currNode?.type!='DATASERVICE'" class="form-group">
+        <div *ngIf="currNode?.type!='DATASERVICE' 
+        && currNode?.type!='DEDUPE' 
+        && currNode?.type!='CONFLICT'" class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure
                 <span class="text-muted"><i>(optional)</i></span>
             </label>
@@ -234,6 +236,59 @@
             </button>
         </div>
     </ng-container>
+    <ng-container *ngIf="currNode.type=='DEDUPE'">
+        <div class="form-group position-relative ">
+            <label for="fields" class="d-flex align-items-center justify-content-between">
+                De-Dupe Check using Fields
+                <span class="dsi dsi-settings text-primary hover"
+                    (click)="toggle['dedupeFields']=!toggle['dedupeFields']"></span>
+            </label>
+            <!-- <input id="dedupeFields" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.dedupeFields"> -->
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['dedupeFields']" [currNode]="currNode"
+                [(value)]="currNode.options.fields">
+            </odp-node-data-selector>
+        </div>
+        <div class="form-group ">
+            <div class="d-flex align-items-center">
+                <odp-switch [edit]="edit" [(checked)]="currNode.options.rejectAll"></odp-switch>
+                <span class="ml-2">Reject All</span>
+            </div>
+            <small *ngIf="currNode.options.rejectAll" class="form-text text-secondary">Will reject all records if
+                at-least one duplicate is found</small>
+            <small *ngIf="!currNode.options.rejectAll" class="form-text text-secondary">Will process all unique
+                records</small>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="currNode.type=='CONFLICT'">
+        <div class="form-group position-relative ">
+            <label for="fields" class="d-flex align-items-center justify-content-between">
+                Conflict Check using Fields
+                <span class="dsi dsi-settings text-primary hover"
+                    (click)="toggle['conflictFields']=!toggle['conflictFields']"></span>
+            </label>
+            <!-- <input id="conflictFields" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.conflictFields"> -->
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['conflictFields']" [currNode]="currNode"
+                [(value)]="currNode.options.fields">
+            </odp-node-data-selector>
+        </div>
+        <div class="form-group">
+            <label class="text-secondary" for="serviceSelector">
+                {{currNode.options.dataService ? 'Selected' : 'Select'}} Data Service
+            </label>
+            <div *ngIf="currNode.options.dataService"
+                class="border rounded p-2 d-flex align-items-center justify-content-between">
+                <span>{{currNode?.options?.dataService?.name}}</span>
+                <span class="dsi dsi-remove text-danger hover" (click)="currNode.options.dataService=null"></span>
+            </div>
+            <odp-service-selector *ngIf="!currNode.options.dataService" [edit]="edit"
+                [(data)]="currNode.options.dataService" (dataChange)="selectDataService($event)">
+            </odp-service-selector>
+        </div>
+    </ng-container>
+
     <ng-container *ngIf="currNode.type=='CODEBLOCK'">
         <div class="form-group">
             <button type="button" class="btn btn-dark w-100 ignore-outside"

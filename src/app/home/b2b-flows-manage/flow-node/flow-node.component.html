@@ -44,8 +44,10 @@
                 class="node-icon font-18 fw-500 dsi dsi-function" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='MAPPING'"
                 class="node-icon font-18 fw-500 dsi dsi-mapping" [attr.data-id]="currNode._id"></span>
-                <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='DEDUPE_PAYLOAD' || currNode.type=='DEDUPE_DATASERVICE'"
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='DEDUPE'"
                 class="node-icon font-18 fw-500 dsi dsi-copy" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONFLICT'"
+                class="node-icon font-18 fw-500 dsi dsi-insight" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='UNWIND'"
                 class="node-icon font-18 fw-500 dsi dsi-expand" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='RESPONSE'"

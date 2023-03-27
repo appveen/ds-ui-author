@@ -34,8 +34,8 @@ export class B2bFlowService {
       FUNCTION: 'Function',
       MAPPING: 'Mapping',
       TRANSFORM: 'Transform',
-      DEDUPE_PAYLOAD: 'De-Dupe Payload',
-      DEDUPE_DATASERVICE: 'De-Dupe Data Service',
+      DEDUPE: 'De-Dupe',
+      CONFLICT: 'Conflict',
       UNWIND: 'Change Root',
       RESPONSE: 'Response',
       ERROR: 'Global Error'

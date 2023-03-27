@@ -136,6 +136,10 @@ export class NodePropertiesComponent implements OnInit {
     this.close.emit(false);
   }
 
+  selectDataService(data: any) {
+    this.currNode.dataStructure.outgoing = data;
+  }
+
   selectAgent(data: any) {
     if (!this.currNode.options.agents) {
       this.currNode.options.agents = [];
