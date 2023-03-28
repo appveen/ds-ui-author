@@ -36,6 +36,8 @@ export class B2bFlowService {
       TRANSFORM: 'Transform',
       DEDUPE: 'De-Dupe',
       CONFLICT: 'Conflict',
+      FOREACH: 'For Each',
+      REDUCE: 'Reduce',
       UNWIND: 'Change Root',
       RESPONSE: 'Response',
       ERROR: 'Global Error'
