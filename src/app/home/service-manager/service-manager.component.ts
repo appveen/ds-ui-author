@@ -118,9 +118,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.selectedService = {};
     this.showOptionsDropdown = {};
     this.sortModel = {};
-    this.commonService.invokeEvent.subscribe(value => {
-      this.getConnectors();
-    });
   }
 
   ngOnInit() {
@@ -189,6 +186,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       this.showLazyLoader = true;
       this.commonService.apiCalls.componentLoading = false;
       this.getServices();
+      this.getConnectors();
     });
     // this.form.get('name').valueChanges.subscribe(_val => {
     //   this.form.controls.api.patchValue('/' + _.camelCase(_val));
