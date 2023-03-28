@@ -46,10 +46,15 @@
                                 <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Function</span>
                             </div>
-                            <div *ngIf="node.type=='PAYLOAD'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-object mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Payload Creator</span>
+                            <div *ngIf="node.type=='DEDUPE'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover">
+                                <span class="node-icon font-16 fw-400 dsi dsi-copy mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">De-Dupe</span>
+                            </div>
+                            <div *ngIf="node.type=='CONFLICT'"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover">
+                                <span class="node-icon font-16 fw-400 dsi dsi-insight mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">Conflict</span>
                             </div>
                             <div *ngIf="node.type=='MAPPING'"
                                 class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">

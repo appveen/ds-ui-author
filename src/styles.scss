@@ -954,10 +954,9 @@ $weights: 200,
     color: #FF7D4C;
   }
 
-  .dsi-mapping {
-    color: #FF4C82;
-  }
-
+  .dsi-mapping,
+  .dsi-object,
+  .dsi-insight,
   .dsi-expand {
     color: #FF4C82;
   }
@@ -968,7 +967,9 @@ $weights: 200,
 }
 
 .node-icon {
-  &.dsi-api-reciever {
+
+  &.dsi-api-reciever,
+  &.dsi-copy {
     color: #6C7584;
   }
 
@@ -998,7 +999,8 @@ $weights: 200,
   }
 
   &.dsi-mapping,
-  &.dsi-object {
+  &.dsi-object,
+  &.dsi-insight {
     color: #FF4C82;
   }
 

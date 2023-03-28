@@ -34,7 +34,8 @@ export class B2bFlowService {
       FUNCTION: 'Function',
       MAPPING: 'Mapping',
       TRANSFORM: 'Transform',
-      PAYLOAD: 'Payload Creator',
+      DEDUPE: 'De-Dupe',
+      CONFLICT: 'Conflict',
       UNWIND: 'Change Root',
       RESPONSE: 'Response',
       ERROR: 'Global Error'
@@ -193,9 +194,16 @@ export class B2bFlowService {
 
   getNodesBefore(currNode: any) {
     let temp = [];
+    let nodeId = '';
+    if (typeof currNode == 'string') {
+      nodeId = currNode;
+    }
+    else {
+      nodeId = currNode._id;
+    }
     let prevNode = this.nodeList.find(e => {
       let nexItems = _.concat((e.onSuccess || []), (e.onError || []));
-      if (nexItems.find((es) => es._id == currNode._id)) {
+      if (nexItems.find((es) => es._id == nodeId)) {
         return true;
       }
       return false;
@@ -447,11 +455,12 @@ export class B2bFlowService {
     return list;
   }
 
-  getSuggestions(): Array<{ label: string, value: string }> {
+  getSuggestions(currNode?): Array<{ label: string, value: string }> {
     if (!this.nodeList || this.nodeList.length == 0) {
       return [];
     }
-    const temp = this.nodeList.map(node => {
+    const list = currNode ? this.getNodesBefore(currNode) : this.nodeList;
+    const temp = list.map(node => {
       let list = [];
       let statusCode: any = {};
       statusCode.label = (node._id || node.type) + '/statusCode'
@@ -483,6 +492,16 @@ export class B2bFlowService {
         //   item.value =node._id + '.responseBody.' + def.key;
         //   list.push(item);
         // });
+      }
+      else {
+        let item: any = {};
+        item.label = (node._id || node.type) + '/body';
+        item.value = node._id + '.body';
+        list.push(item);
+        item = {};
+        item.label = (node._id || node.type) + '/responseBody';
+        item.value = node._id + '.responseBody';
+        list.push(item);
       }
       return list;
     })

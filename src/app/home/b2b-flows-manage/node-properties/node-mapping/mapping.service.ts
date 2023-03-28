@@ -40,29 +40,36 @@ export class MappingService {
     }
   }
 
-  flatten(definition: Array<any>, parentDef?: any) {
+  flatten(type: string, definition: Array<any>, parentDef?: any) {
     let list = [];
     try {
       if (definition && definition.length > 0) {
         definition.forEach((item, i) => {
           let key = parentDef ? parentDef.key + '.' + item.key : item.key;
+          let nameAsKey = parentDef ? parentDef.properties.name + '.' + item.properties.name : item.properties.name;
           let name = parentDef ? parentDef.properties.name + '/' + item.properties.name : item.properties.name;
           delete item._id;
           item.properties.name = name;
-          item.properties.dataPath = key;
           item.name = name;
-          item.dataPath = key;
+          item.key = key;
           item.depth = parentDef ? parentDef.depth + 1 : 0;
+          if (type == 'JSON') {
+            item.properties.dataPath = key;
+            item.dataPath = key;
+          } else {
+            item.properties.dataPath = nameAsKey;
+            item.dataPath = nameAsKey;
+          }
           if (item.type == 'Array') {
             if (item.definition[0].type == 'Object') {
               list.push(item);
-              list = list.concat(this.flatten(item.definition[0].definition, item));
+              list = list.concat(this.flatten(type, item.definition[0].definition, item));
             } else {
               list.push(item);
             }
           } else if (item.type == 'Object') {
             list.push(item);
-            list = list.concat(this.flatten(item.definition, item));
+            list = list.concat(this.flatten(type, item.definition, item));
           } else {
             list.push(item);
           }

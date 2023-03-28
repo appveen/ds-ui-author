@@ -214,9 +214,13 @@
         <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
         <span class="font-13 fw-400">Function</span>
     </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'PAYLOAD')">
-        <span class="node-icon font-16 fw-400 dsi dsi-object mr-2"></span>
-        <span class="font-13 fw-400">Payload Creator</span>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'DEDUPE')">
+        <span class="node-icon font-16 fw-400 dsi dsi-copy mr-2"></span>
+        <span class="font-13 fw-400">De-Dupe</span>
+    </div>
+    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'CONFLICT')">
+        <span class="node-icon font-16 fw-400 dsi dsi-insight mr-2"></span>
+        <span class="font-13 fw-400">Conflict</span>
     </div>
     <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'MAPPING')">
         <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
