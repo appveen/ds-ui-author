@@ -280,6 +280,25 @@
             </div>
         </div>
     </div>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-relation mr-2"></span>
+            <span class="font-13 fw-400">Loop</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border" style="top: 127px;">
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'FOREACH')">
+                <span class="node-icon font-16 fw-400 dsi dsi-refresh mr-2"></span>
+                <span class="font-13 fw-400">For Each</span>
+            </div>
+            <div class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'REDUCE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-undo mr-2"></span>
+                <span class="font-13 fw-400">Reduce</span>
+            </div>
+        </div>
+    </div>
     <div *ngIf="!hasErrorNode" class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover"
         (click)="addNode($event,'ERROR')">
         <span class="node-icon font-16 fw-400 dsi dsi-danger-circle text-danger mr-2"></span>
