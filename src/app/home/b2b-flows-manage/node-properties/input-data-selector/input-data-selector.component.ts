@@ -100,6 +100,9 @@ export class InputDataSelectorComponent implements OnInit {
   }
 
   cancel() {
+    if(this.data){
+      delete this.data[""];
+    }
     this.showCustomWindow = false;
   }
 
