@@ -29,7 +29,7 @@
 }
 
 /* For showing through placeholder */
-.input-container input:not([value=""]) {
+.input-container input:not(:placeholder-shown) {
     -webkit-text-fill-color: transparent !important;
     letter-spacing: 0.15px;
 }
