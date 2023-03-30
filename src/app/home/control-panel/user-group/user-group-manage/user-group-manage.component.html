@@ -72,7 +72,7 @@
         </div>
         <div *ngIf="showAuthorTab || showAppcenterTab || showMembersTab || showBotsTab">
           <odp-user-group-author *ngIf="activeTab===0 && showAuthorTab" [(roles)]="group.roles"></odp-user-group-author>
-          <odp-user-group-appcenter *ngIf="activeTab===1 && showAppcenterTab" [roles]="group.roles">
+          <odp-user-group-appcenter *ngIf="activeTab===1 && showAppcenterTab" [roles]="group.roles" [users]="allUsers">
           </odp-user-group-appcenter>
           <odp-user-group-members *ngIf="activeTab===2 && showMembersTab" [users]="allUsers"></odp-user-group-members>
           <!-- <odp-user-group-bots *ngIf="activeTab===3 && showBotsTab" [users]="allUsers"></odp-user-group-bots> -->

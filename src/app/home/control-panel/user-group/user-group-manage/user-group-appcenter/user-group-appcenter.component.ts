@@ -10,6 +10,7 @@ import { AppService } from 'src/app/utils/services/app.service';
 export class UserGroupAppcenterComponent implements OnInit {
 
     @Input() roles: Array<any>;
+    @Input() users: Array<string>;
     activeSubTab: number;
 
     constructor(private commonService: CommonService,

@@ -9,6 +9,7 @@ import { AppService } from 'src/app/utils/services/app.service';
 })
 export class UserGroupAppcenterServicesComponent implements OnInit {
     @Input() roles: Array<any>;
+    @Input() users: Array<string>;
     serviceList: Array<any>;
     toggleAccordion: any;
     subscriptions: any;
