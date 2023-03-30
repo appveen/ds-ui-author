@@ -20,7 +20,7 @@
     </div>
   </div>
   <div class="px-3 w-100">
-    <odp-user-group-appcenter-services *ngIf="activeSubTab==0" [(roles)]="roles" class="w-100">
+    <odp-user-group-appcenter-services *ngIf="activeSubTab==0" [(roles)]="roles" [users]="users" class="w-100">
     </odp-user-group-appcenter-services>
     <odp-user-group-appcenter-flows *ngIf="activeSubTab==1" [roles]="roles" class="w-100" type="INTR">
     </odp-user-group-appcenter-flows>
