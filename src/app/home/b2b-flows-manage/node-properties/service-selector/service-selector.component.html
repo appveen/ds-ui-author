@@ -8,7 +8,8 @@
 </div>
 <div class="data-format-selector-wrapper">
     <div>
-        <odp-search-box open="true" (enteredText)="searchService($event)" (reset)="clearSearch()" tooltipDir="left">
+        <odp-search-box open="true" (enteredText)="searchService($event)" (reset)="clearSearch()" tooltipDir="left"
+        (keydown.delete)="$event.stopPropagation();">
         </odp-search-box>
     </div>
     <div *ngIf="serviceList && serviceList.length>0" class="list-group my-3">

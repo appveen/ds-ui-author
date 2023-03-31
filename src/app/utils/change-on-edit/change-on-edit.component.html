@@ -1,6 +1,6 @@
 <div class="position-relative">
     <input #inputField type="text" class="form-control" [disabled]="isDisabled || !editEnabled" [ngModel]="value"
-        (ngModelChange)="onValueChange($event)" [class.is-invalid]="errorMessage">
+        (ngModelChange)="onValueChange($event)" [class.is-invalid]="errorMessage" (keydown.delete)="$event.stopPropagation();">
     <span *ngIf="editEnabled && !errorMessage" class="position-absolute hover dsi dsi-check text-success"
         (click)="save()"></span>
     <span *ngIf="editEnabled" class="position-absolute hover dsi dsi-close text-danger" (click)="cancel()"></span>
