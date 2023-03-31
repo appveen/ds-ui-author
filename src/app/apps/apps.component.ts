@@ -269,7 +269,6 @@ export class AppsComponent implements OnInit, OnDestroy {
       self.commonService.connectSocket();
     }
     self.showAppOptions = false;
-    self.commonService.getconnectors();
     self.router.navigate(['/app', app._id]);
   }
 

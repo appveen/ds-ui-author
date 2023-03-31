@@ -36,6 +36,8 @@ export class B2bFlowService {
       TRANSFORM: 'Transform',
       DEDUPE: 'De-Dupe',
       CONFLICT: 'Conflict',
+      FOREACH: 'For Each',
+      REDUCE: 'Reduce',
       UNWIND: 'Change Root',
       RESPONSE: 'Response',
       ERROR: 'Global Error'
@@ -445,10 +447,17 @@ export class B2bFlowService {
           item.label = (node._id || node.type) + '/body/' + key;
           item.value = node._id + '.body.' + key;
           list.push(item);
-          item = {};
-          item.label = (node._id || node.type) + '/responseBody/' + key;
-          item.value = node._id + '.responseBody.' + key;
-          list.push(item);
+          if(node.type=="DATASERVICE"){
+            item = {};
+            item.label = (node._id || node.type) + '/responseBody[0]/' + key;
+            item.value = node._id + '.responseBody[0].' + key;
+            list.push(item);
+          }else{
+            item = {};
+            item.label = (node._id || node.type) + '/responseBody/' + key;
+            item.value = node._id + '.responseBody.' + key;
+            list.push(item);
+          }
         }
       });
     }

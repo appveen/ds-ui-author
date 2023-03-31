@@ -123,7 +123,8 @@
                     <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
                         (click)="addNodeToCanvas('RESPONSE')"></span>
                 </div>
-                <div *ngIf="!hasErrorNode" class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
+                <div *ngIf="!hasErrorNode"
+                    class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
                     <div class="d-flex align-items-center">
                         <span class="node-icon font-16 fw-400 dsi dsi-danger-circle text-danger mr-2"></span>
                         <span class="font-13 fw-400">Global Error</span>
@@ -192,54 +193,113 @@
 
 <div *ngIf="contextMenuStyle" class="available-nodes-dropdown bg-white position-fixed border rounded"
     [ngStyle]="contextMenuStyle" odpClickOutside (outside)="contextMenuStyle=null">
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE')">
-        <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
-        <span class="font-13 fw-400">File Agent</span>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
+            <span class="font-13 fw-400">File</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border">
+            <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
+                <span class="font-13 fw-400">File Agent</span>
+            </div>
+        </div>
     </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'API')">
-        <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
-        <span class="font-13 fw-400">Invoke API</span>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
+            <span class="font-13 fw-400">API</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border" style="top: 31px;">
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'API')">
+                <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
+                <span class="font-13 fw-400">Invoke API</span>
+            </div>
+            <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'RESPONSE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
+                <span class="font-13 fw-400">Response</span>
+            </div>
+        </div>
     </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover"
-        (click)="addNode($event,'CONNECTOR')">
-        <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
-        <span class="font-13 fw-400">Connector</span>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-function alt mr-2"></span>
+            <span class="font-13 fw-400">Process</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border" style="top: 63px;">
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'CONNECTOR')">
+                <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
+                <span class="font-13 fw-400">Connector</span>
+            </div>
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'DATASERVICE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
+                <span class="font-13 fw-400">Data Service</span>
+            </div>
+            <div class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover" (click)="addNode($event,'FUNCTION')">
+                <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
+                <span class="font-13 fw-400">Function</span>
+            </div>
+        </div>
     </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover"
-        (click)="addNode($event,'DATASERVICE')">
-        <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
-        <span class="font-13 fw-400">Data Service</span>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
+            <span class="font-13 fw-400">Transform</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border" style="top: 95px;">
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'MAPPING')">
+                <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
+                <span class="font-13 fw-400">Mapping</span>
+            </div>
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'DEDUPE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-copy mr-2"></span>
+                <span class="font-13 fw-400">De-Dupe</span>
+            </div>
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'CONFLICT')">
+                <span class="node-icon font-16 fw-400 dsi dsi-insight mr-2"></span>
+                <span class="font-13 fw-400">Conflict</span>
+            </div>
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'CODEBLOCK')">
+                <span class="node-icon font-16 fw-400 dsi dsi-console mr-2 text-secondary"></span>
+                <span class="font-13 fw-400">Code Block</span>
+            </div>
+            <div class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover" (click)="addNode($event,'UNWIND')">
+                <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
+                <span class="font-13 fw-400">Change Root</span>
+            </div>
+        </div>
     </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FUNCTION')">
-        <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
-        <span class="font-13 fw-400">Function</span>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-relation mr-2"></span>
+            <span class="font-13 fw-400">Loop</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border" style="top: 127px;">
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'FOREACH')">
+                <span class="node-icon font-16 fw-400 dsi dsi-refresh mr-2"></span>
+                <span class="font-13 fw-400">For Each</span>
+            </div>
+            <div class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'REDUCE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-undo mr-2"></span>
+                <span class="font-13 fw-400">Reduce</span>
+            </div>
+        </div>
     </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'DEDUPE')">
-        <span class="node-icon font-16 fw-400 dsi dsi-copy mr-2"></span>
-        <span class="font-13 fw-400">De-Dupe</span>
-    </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'CONFLICT')">
-        <span class="node-icon font-16 fw-400 dsi dsi-insight mr-2"></span>
-        <span class="font-13 fw-400">Conflict</span>
-    </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'MAPPING')">
-        <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
-        <span class="font-13 fw-400">Mapping</span>
-    </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover"
-        (click)="addNode($event,'CODEBLOCK')">
-        <span class="node-icon font-16 fw-400 dsi dsi-console mr-2 text-secondary"></span>
-        <span class="font-13 fw-400">Code Block</span>
-    </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'UNWIND')">
-        <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
-        <span class="font-13 fw-400">Change Root</span>
-    </div>
-    <div class="node-item border-bottom px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'RESPONSE')">
-        <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
-        <span class="font-13 fw-400">Response</span>
-    </div>
-    <div *ngIf="!hasErrorNode" class="node-item border-bottom px-3 py-2 d-flex align-items-center hover"
+    <div *ngIf="!hasErrorNode" class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover"
         (click)="addNode($event,'ERROR')">
         <span class="node-icon font-16 fw-400 dsi dsi-danger-circle text-danger mr-2"></span>
         <span class="font-13 fw-400">Global Error</span>

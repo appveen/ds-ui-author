@@ -977,15 +977,19 @@ $weights: 200,
     color: #00CCCB;
   }
 
-  &.dsi-clock {
+  &.dsi-clock,
+  &.dsi-relation {
     color: #2FC48F;
   }
 
-  &.dsi-data-service {
+  &.dsi-data-service,
+  &.dsi-refresh {
     color: #A94CFF;
   }
 
-  &.dsi-function {
+  &.dsi-function,
+  &.dsi-nano-service,
+  &.dsi-undo {
     color: #FFBB1A;
   }
 

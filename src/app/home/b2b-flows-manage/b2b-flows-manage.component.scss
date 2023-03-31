@@ -122,8 +122,37 @@
   z-index: 3;
 
   .node-item {
+    min-height: 32px;
+    max-height: 32px;
+    min-width: 140px;
+    max-width: 140px;
+
+    .node-list-item {
+      min-width: 140px;
+      max-width: 140px;
+      position: absolute;
+      left: 140px;
+      display: none;
+      overflow: hidden;
+
+      .node-item {
+        min-height: 32px;
+        max-height: 32px;
+        min-width: 140px;
+        max-width: 140px;
+      }
+    }
+
     &:hover {
       background: $light;
+
+      .node-list-item {
+        display: block;
+      }
     }
   }
+}
+
+.dsi-function.alt {
+  color: #A94CFF;
 }
