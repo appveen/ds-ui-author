@@ -42,6 +42,12 @@
                         placeholder="Header Key" (keyup.enter)="addHeader(i)" (keydown.delete)="$event.stopPropagation();" odpAutoFocus>
                 </div>
                 <div class="header-value w-100 position-relative border-left">
+                    <odp-styled-text (finalValue)="onValueChange($event, item)" [value]="item.value" #typeAhead
+                        [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
+                        [searchTerm]="searchTerm" class="styled-wrapper" (onEnter)="addHeader(i)"
+                        placeholder="Header Value"></odp-styled-text>
+                    <!-- <input type="text" class="border-0 px-2 h-100 w-100" [(ngModel)]="item.value"
+                        placeholder="Header Value" (keyup.enter)="addHeader(i)"> -->
                     <input type="text" class="border-0 px-2 h-100 w-100" [(ngModel)]="item.value"
                         placeholder="Header Value" (keyup.enter)="addHeader(i)" (keydown.delete)="$event.stopPropagation();">
                 </div>
