@@ -100,7 +100,7 @@
           </div>
         </div>
         <div class="role-list-item-body bg-white font-normal b rounded mt-4">
-          <span *ngIf="users.length<totalApprovals" class="text-color align-self-end pl-2">Members are less than total Approvals</span>
+          <span *ngIf="users.length<totalApprovals && flag" class="text-color align-self-end pl-2">Members are less than the required total Approvals.</span>
           <div class='steps-header b-bottom d-flex justify-content-between align-items-center text-muted px-4'>
             <div>{{makerCheckerData.steps.length}} STEPS</div>
             <div>{{totalApprovals}} APPROVALS</div>
