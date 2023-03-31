@@ -39,11 +39,11 @@
             <div *ngFor="let item of headerList;let i=index" class="d-flex align-items-stretch mb-2 border rounded">
                 <div class="header-key flex-fill position-relative">
                     <input type="text" class="border-0 px-2 flex-fill h-100 w-100" [(ngModel)]="item.key"
-                        placeholder="Header Key" (keyup.enter)="addHeader(i)" odpAutoFocus>
+                        placeholder="Header Key" (keyup.enter)="addHeader(i)" (keydown.delete)="$event.stopPropagation();" odpAutoFocus>
                 </div>
                 <div class="header-value w-100 position-relative border-left">
                     <input type="text" class="border-0 px-2 h-100 w-100" [(ngModel)]="item.value"
-                        placeholder="Header Value" (keyup.enter)="addHeader(i)">
+                        placeholder="Header Value" (keyup.enter)="addHeader(i)" (keydown.delete)="$event.stopPropagation();">
                 </div>
                 <div class="header-action position-relative border-left d-flex align-items-center">
                     <span class="icon d-flex align-items-center justify-content-center dsi dsi-minus-circle hover"

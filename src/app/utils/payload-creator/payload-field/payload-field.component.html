@@ -1,9 +1,9 @@
 <div class="">
     <div class="field-wrapper d-flex border rounded w-100 negative-margin">
         <input *ngIf="!parentArray" type="text" class="key-holder flex-fill px-2" [(ngModel)]="field.key"
-            (ngModelChange)="onKeyChange($event)" (keyup.enter)="addField()" odpAutoFocus>
+            (ngModelChange)="onKeyChange($event)" (keyup.enter)="addField()" odpAutoFocus (keydown.delete)="$event.stopPropagation();">
         <input *ngIf="parentArray" type="text" class="key-holder flex-fill px-2" [ngModel]="'Index '+index"
-            disabled="true">
+            disabled="true" (keydown.delete)="$event.stopPropagation();">
         <select id="" class="type-holder px-2" [(ngModel)]="field.type" (ngModelChange)="onTypeChange($event)">
             <option value="string">String</option>
             <option value="number">Number</option>
@@ -12,7 +12,7 @@
             <option value="array">Array</option>
         </select>
         <div class="d-flex" *ngIf="getInputType()=='text' || getInputType()=='number'" style="width: 260px"
-            [ngClass]="{'white-bg' : field.type !== 'object' ,'disabled-bg': field.type == 'object' }">
+            [ngClass]="{'white-bg' : field.type !== 'object' ,'disabled-bg': field.type == 'object' }" (keydown.delete)="$event.stopPropagation();">
             <!-- <input *ngIf="field.type!='boolean'" [type]="getInputType()" class="value-holder px-2"
                 [(ngModel)]="field.value" [disabled]="field.type=='object' || field.type=='array'"
                 (ngModelChange)="onValueChange($event)" (paste)="onPaste($event)" (keyup.enter)="addField()"> -->

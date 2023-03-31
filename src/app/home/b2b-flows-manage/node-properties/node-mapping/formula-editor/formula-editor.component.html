@@ -14,13 +14,13 @@
             <!-- <textarea class="input-height form-control" [disabled]="disabled" cols="30" rows="15" [(ngModel)]="tempData"
                 odpAutoFocus>
             </textarea> -->
-            <div class="input-height form-control" odpEditor [(data)]="tempData" [insertText]="insertText"></div>
+            <div class="input-height form-control" odpEditor [(data)]="tempData" [insertText]="insertText" (keydown.delete)="$event.stopPropagation();"></div>
             <button type="button" class="btn btn-primary mt-3 w-100" (click)="done()">Done</button>
         </div>
         <div class="suggestion-list-wrapper">
             <div class="mb-3">
                 <odp-search-box [open]="true" [fullWidth]="true" [selectOnEnter]="true"
-                    (enteredText)="searchTerm=$event;$triggerSearch.next($event)" (reset)="searchTerm=null">
+                    (enteredText)="searchTerm=$event;$triggerSearch.next($event)" (reset)="searchTerm=null" (keydown.delete)="$event.stopPropagation();">
                 </odp-search-box>
             </div>
             <div class="border rounded">

@@ -125,7 +125,7 @@
                 *ngIf="(configuredData.nodeKey=='headers' && dataKey=='custom') || (configuredData.nodeKey=='body' && dataKey=='custom')">
                 <label for="customDataKey">Custom Data Key</label>
                 <input id="customDataKey" type="text" class="form-control" [(ngModel)]="configuredData.dataKey"
-                    odpAutoFocus>
+                    odpAutoFocus (keydown.delete)="$event.stopPropagation();">
             </div>
             <button type="button" class="btn btn-primary mt-4 w-100" (click)="saveData()">Done</button>
         </div>
@@ -143,7 +143,7 @@
             <odp-node-data-selector *ngIf="openSelector" [currNode]="currNode" [(toggle)]="openSelector" [edit]="edit" (valueChange)="insertText.emit($event)">
             </odp-node-data-selector>
             <input *ngIf="!textarea" id="customValue" [type]="number?'number':'text'" class="form-control"
-                [(ngModel)]="configuredData.customValue" odpAutoFocus>
+                [(ngModel)]="configuredData.customValue" odpAutoFocus (keydown.delete)="$event.stopPropagation();">
             <odp-code-editor *ngIf="textarea" type="json" [edit]="edit" [insertText]="insertText"
                 [(code)]="configuredData.customValue"></odp-code-editor>
             <!-- <textarea *ngIf="textarea" id="customValue" rows="5" cols="20" type="text" class="form-control"
