@@ -40,7 +40,9 @@ export class B2bFlowService {
       REDUCE: 'Reduce',
       UNWIND: 'Change Root',
       RESPONSE: 'Response',
-      ERROR: 'Global Error'
+      ERROR: 'Global Error',
+      FILE_READ: 'File Reader',
+      FILE_WRITE: 'File Writer'
     };
     this.nodeList = [];
     this.nodeIDCounter = 0;

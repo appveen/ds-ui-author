@@ -46,6 +46,8 @@
             <option *ngIf="!isInputNode" value="DATASERVICE">Data Service</option>
             <option *ngIf="!isInputNode" value="FUNCTION">Function</option>
             <option *ngIf="!isInputNode" value="RESPONSE">Response</option>
+            <option *ngIf="!isInputNode" value="FILE_READ">File Reader</option>
+            <option *ngIf="!isInputNode" value="FILE_WRITE">File Writer</option>
         </select>
     </div>
     <!-- <div *ngIf="!isInputNode && (currNode?.type=='DATASERVICE' || currNode?.type=='API')" class="form-group">
@@ -66,7 +68,8 @@
         </div>
         <div *ngIf="currNode?.type!='DATASERVICE' 
         && currNode?.type!='DEDUPE' 
-        && currNode?.type!='CONFLICT'" class="form-group">
+        && currNode?.type!='CONFLICT'
+        && currNode?.type!='FILE_WRITE'" class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure
                 <span class="text-muted"><i>(optional)</i></span>
             </label>
@@ -92,7 +95,8 @@
             <div class="form-group">
                 <label class="font-14 fw-400 text-dark" for="nodeEndpoint">API Endpoint</label>
                 <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="currNode.options.path"
-                    (ngModelChange)="changesDone.emit()" (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
+                    (ngModelChange)="changesDone.emit()"
+                    (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
                 <!-- <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
                     (ngModelChange)="changesDone.emit()"> -->
             </div>
@@ -293,7 +297,6 @@
             </odp-service-selector>
         </div>
     </ng-container>
-
     <ng-container *ngIf="currNode.type=='CODEBLOCK'">
         <div class="form-group">
             <button type="button" class="btn btn-dark w-100 ignore-outside"
@@ -322,6 +325,9 @@
             </odp-node-data-selector>
         </div>
     </ng-container>
+
+
+
     <ng-container *ngIf="currNode?.type=='CONNECTOR'">
         <odp-connector-properties [edit]="edit" [nodeList]="nodeList" [currNode]="currNode">
         </odp-connector-properties>
@@ -401,6 +407,23 @@
             <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
                 [currNode]="currNode">
             </odp-input-data-selector>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="currNode?.type=='FILE_READ' || currNode?.type=='FILE_WRITE'">
+        <div class="form-group" *ngIf="currNode?.type=='FILE_WRITE'">
+            <label class="font-14 fw-400 text-dark" for="fileExt">File Extension</label>
+            <odp-change-on-edit id="fileExt" [(ngModel)]="currNode.options.fileExt"
+                (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
+        </div>
+        <div class="form-group">
+            <label class="font-14 fw-400 text-dark" for="folderPath">Folder Path</label>
+            <odp-change-on-edit id="folderPath" [(ngModel)]="currNode.options.folderPath"
+                (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
+        </div>
+        <div class="form-group">
+            <label class="font-14 fw-400 text-dark" for="fileName">File Name</label>
+            <odp-change-on-edit id="fileName" [(ngModel)]="currNode.options.fileName"
+                (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
         </div>
     </ng-container>
 </div>

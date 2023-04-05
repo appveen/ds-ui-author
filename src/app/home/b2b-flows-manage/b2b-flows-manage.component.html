@@ -199,10 +199,18 @@
             <span class="font-13 fw-400">File</span>
         </div>
         <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
-        <div class="node-list-item bg-white rounded border">
+        <div class="node-list-item bg-white rounded border" style="top: 0px;">
             <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE')">
                 <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
                 <span class="font-13 fw-400">File Agent</span>
+            </div>
+            <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE_READ')">
+                <span class="node-icon font-16 fw-400 dsi read dsi-file mr-2"></span>
+                <span class="font-13 fw-400">File Reader</span>
+            </div>
+            <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE_WRITE')">
+                <span class="node-icon font-16 fw-400 dsi write dsi-file mr-2"></span>
+                <span class="font-13 fw-400">File Writer</span>
             </div>
         </div>
     </div>

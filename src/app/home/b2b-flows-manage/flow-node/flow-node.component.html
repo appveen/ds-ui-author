@@ -56,6 +56,10 @@
                 class="node-icon font-18 fw-500 dsi dsi-expand" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='RESPONSE'"
                 class="node-icon font-18 fw-500 dsi dsi-response" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE_READ'"
+                class="node-icon font-18 fw-500 dsi dsi-file read" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE_WRITE'"
+                class="node-icon font-18 fw-500 dsi dsi-file write" [attr.data-id]="currNode._id"></span>
         </foreignObject>
     </g>
     <g *ngFor="let p of successPaths;let i=index">
