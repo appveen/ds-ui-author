@@ -93,7 +93,9 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       this.getFaas();
     });
     this.subscriptions['faas.status'] = this.commonService.faas.status.subscribe(data => {
-      this.getFaas();
+      if(data[0].status!='Pending'){
+        this.getFaas();
+      }
     });
     this.subscriptions['faas.new'] = this.commonService.faas.new.subscribe(data => {
       this.getFaas();
@@ -142,6 +144,11 @@ export class FaasListingComponent implements OnInit, OnDestroy {
         item.url = 'https://' + this.commonService.userDetails.fqdn + item.url;
         this.faasList.push(item);
       });
+      this.faasList.forEach(e=>{
+        if(e.status=='Pending'){
+          this.commonService.updateStatus(e._id,'faas');
+        }
+      })
     }, err => {
       this.showLazyLoader = false;
       this.commonService.errorToast(err);
@@ -305,6 +312,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
                   this.ts.info('Starting function...');
                 }
                 this.faasList[index].status = 'Pending';
+                this.commonService.updateStatus(this.faasList[index]._id,'faas');
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -329,6 +337,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
             this.showLazyLoader = false;
             this.ts.info(d.message ? d.message : 'Deleting function...');
             this.faasList[data.index].status = 'Pending';
+            this.commonService.updateDelete(this.faasList[data.index]._id,'faas');
           },
           (err) => {
             this.showLazyLoader = false;

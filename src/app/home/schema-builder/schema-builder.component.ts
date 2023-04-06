@@ -651,6 +651,7 @@ export class SchemaBuilderComponent implements
             self.roleChange = false;
             self.ts.success('Saved ' + payload.name + ' and deployment process has started.');
             self.form.markAsPristine();
+            this.commonService.updateStatus(payload._id,'service')
             self.router.navigate(['/app/', self.commonService.app._id, 'sm']);
         },
             err => {

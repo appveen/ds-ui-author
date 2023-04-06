@@ -77,7 +77,7 @@
                     formControlName="name" maxlength="40" [ngClass]="{'is-invalid': hookNameErr}"
                     [value]="actionHookForm.get('name').value" (blur)="uniqHookName()" odpAutoFocus>
                 <span class="dsi dsi-danger-circle text-danger position-absolute error-icon" *ngIf="hookNameErr"
-                    [ngbTooltip]="validationError" triggers="manual" #t1="ngbTooltip" triggers="hover"
+                    ngbTooltip="Name is required" triggers="manual" #t1="ngbTooltip" triggers="hover"
                     container="body"></span>
             </div>
         </div>
@@ -88,7 +88,7 @@
                     placeholder="http://<hostname>:<port>/<path>" formControlName="url"
                     [value]="actionHookForm.get('url').value" [ngClass]="{'is-invalid': hookUrlErr }"></textarea>
                 <span class="dsi dsi-danger-circle text-danger position-absolute error-icon" *ngIf="hookUrlErr"
-                    [ngbTooltip]="validationError" triggers="manual" #t2="ngbTooltip" triggers="hover"
+                    ngbTooltip="Enter valid URL" triggers="manual" #t2="ngbTooltip" triggers="hover"
                     container="body"></span>
             </div>
         </div>

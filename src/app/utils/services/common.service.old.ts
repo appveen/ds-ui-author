@@ -805,7 +805,7 @@ export class CommonService {
         self.userDetails = {};
         self.apiCalls = {};
         self.noAccess = false;
-        self.disconnectSocket();
+        // self.disconnectSocket();
         self.ts.clear();
     }
 
