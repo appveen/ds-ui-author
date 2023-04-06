@@ -280,7 +280,6 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       });
       this.flowList=res;
       this.flowList.forEach(e=>{
-        console.log(e.status=='Pending')
         if(e.status=='Pending'){
           this.commonService.updateStatus(e._id,'flow');
         }

@@ -1207,7 +1207,6 @@ export class CommonService {
   updateStatus(_id,type){
     const self=this;
     if(type=='flow' && !this.timeInterval[_id]){
-      console.log("ex")
       this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/flow`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
         self.flow.status.emit(res)
         if(res[0].status!='Pending'){
@@ -1226,7 +1225,6 @@ export class CommonService {
       })},10000)
     }
     if(type=='faas' && !this.timeInterval[_id]){
-      console.log("ex")
       this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/faas`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
         self.faas.status.emit(res);
         if(res[0].status!='Pending'){
@@ -1235,7 +1233,15 @@ export class CommonService {
         }
       })},10000)
     }
-
+    if(type=='bulkUpload' && !this.timeInterval[_id]){
+      this.timeInterval[_id]=setInterval(()=>{this.get('user', `/${this.app._id}/user/utils/bulkCreate/fileTransfers`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
+        if(res[0].status!='Pending'){
+          self.bulkUpload.status.emit(res);
+          clearInterval(this.timeInterval[_id])
+          delete this.timeInterval[_id]
+        }
+      })},10000)
+    }
   }
 
   updateDelete(_id,type){

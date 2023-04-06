@@ -493,7 +493,6 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             this.serviceList.push(service);
           });
           this.serviceList.forEach(e=>{
-            console.log(e.status=='Pending')
             if(e.status=='Pending'){
               this.commonService.updateStatus(e._id,'service');
             }
