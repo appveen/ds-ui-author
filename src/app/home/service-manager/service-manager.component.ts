@@ -128,7 +128,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.commonService.apiCalls.componentLoading = false;
     this.subscriptions['entity.delete'] = this.commonService.entity.delete.subscribe((data) => {
       const index = this.serviceList.findIndex((s) => {
-        if (s._id === data._id) {
+        if (s._id === data) {
           return s;
         }
       });
@@ -138,21 +138,18 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions['entity.status'] = this.commonService.entity.status.subscribe((data) => {
-      const index = this.serviceList.findIndex((s) => {
-        if (s._id === data._id) {
-          return s;
-        }
-      });
-      if (index === -1) {
-        return;
+      const index = this.serviceList.findIndex(e =>e._id === data[0]._id);
+      if (index !== -1) {
+        this.serviceList[index].status = data[0].status;
       }
-      if (data.message === 'Undeployed') {
+      if (data[0].status === 'Undeployed') {
         this.ts.success('Stopped ' + this.serviceList[index].name + '.');
-      } else if (data.message === 'Deployed') {
+      } else if (data[0].message === 'Deployed') {
         this.ts.success('Started ' + this.serviceList[index].name + '.');
-      } else if (data.message === 'Pending') {
-        this.serviceList[index].status = 'Pending';
       }
+      //  else if (data[0].status === 'Pending') {
+      //   this.serviceList[index].status = 'Pending';
+      // }
       this.getLatestRecord(this.serviceList[index], index);
     });
     this.subscriptions['entity.new'] = this.commonService.entity.new.subscribe((data) => {
@@ -495,6 +492,12 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             service._records = 0;
             this.serviceList.push(service);
           });
+          this.serviceList.forEach(e=>{
+            console.log(e.status=='Pending')
+            if(e.status=='Pending'){
+              this.commonService.updateStatus(e._id,'service');
+            }
+          })
           if (this.commonService.userDetails.verifyDeploymentUser) {
             this.getServicesWithDraftData();
           }
@@ -593,6 +596,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         this.showLazyLoader = false;
         this.ts.info(d.message ? d.message : 'Deleting data service...');
         this.records[data.index].status = 'Working';
+        this.commonService.updateDelete(this.records[data.index]._id,'service');
       }, (err) => {
         this.showLazyLoader = false;
         this.commonService.errorToast(err, 'Oops, something went wrong. Please try again later.');
@@ -634,6 +638,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
                 } else {
                   this.ts.info('Starting data service...');
                 }
+                this.commonService.updateStatus(this.records[index]._id,'service')
                 this.records[index].status = 'Pending';
               },
               (err) => {
@@ -672,6 +677,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
             .subscribe((d) => {
               this.ts.info('Deploying data service...');
               this.records[index].status = 'Pending';
+              this.commonService.updateStatus(this.records[index]._id,'service')
             }, (err) => {
               this.commonService.errorToast(err);
             });

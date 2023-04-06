@@ -192,7 +192,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       filter: {},
     };
     if (environment.production) {
-      self.commonService.connectSocket();
+      // self.commonService.connectSocket();
     }
   }
 
@@ -253,8 +253,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     self.showProfileOptions = false;
     self.commonService.app = app;
     if (environment.production) {
-      self.commonService.disconnectSocket();
-      self.commonService.connectSocket();
+      // self.commonService.disconnectSocket();
+      // self.commonService.connectSocket();
     }
     self.router.navigate(['/app', app._id]);
   }

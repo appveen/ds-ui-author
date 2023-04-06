@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       self.commonService.userDetails?.isSuperAdmin ||
       JSON.parse(localStorage.getItem('ba-user'))?.isSuperAdmin;
     if (environment.production) {
-      self.commonService.connectSocket();
+      // self.commonService.connectSocket();
     }
   }
 

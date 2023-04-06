@@ -196,7 +196,7 @@ export class AppsComponent implements OnInit, OnDestroy {
     const self = this;
     self.isSuperAdmin = self.commonService.userDetails.isSuperAdmin;
     if (environment.production) {
-      self.commonService.connectSocket();
+      // self.commonService.connectSocket();
     }
   }
 
@@ -265,8 +265,8 @@ export class AppsComponent implements OnInit, OnDestroy {
     self.showProfileOptions = false;
     self.commonService.app = app;
     if (environment.production) {
-      self.commonService.disconnectSocket();
-      self.commonService.connectSocket();
+      // self.commonService.disconnectSocket();
+      // self.commonService.connectSocket();
     }
     self.showAppOptions = false;
     self.router.navigate(['/app', app._id]);

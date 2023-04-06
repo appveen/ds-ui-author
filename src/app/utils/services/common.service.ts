@@ -110,6 +110,7 @@ export class CommonService {
   breadcrumbTrigger: Subject<any> = new Subject();
   appData: any;
   serviceData: any;
+  timeInterval: any;
 
   constructor(
     private http: HttpClient,
@@ -121,6 +122,7 @@ export class CommonService {
   ) {
     const self = this;
     self.commonSpinner = false;
+    self.timeInterval={};
     self.apiCalls = {};
     self.permissions = [];
     self.appList = [];
@@ -1052,7 +1054,7 @@ export class CommonService {
     self.userDetails = {};
     self.apiCalls = {};
     self.noAccess = false;
-    self.disconnectSocket();
+    // self.disconnectSocket();
     self.ts.clear();
     this.deleteAllCookies();
   }
@@ -1202,85 +1204,150 @@ export class CommonService {
     // });
   }
 
-  connectSocket() {
-    const self = this;
-    if (!self.socket && self.app && self.app._id) {
-      const socketConfig: Partial<ManagerOptions & SocketOptions> = {
-        query: {
-          app: self.app._id,
-          userId: self.userDetails._id,
-          portal: 'author',
-        },
-      };
-      self.socket = connect(
-        environment.production ? '/' : 'http://localhost',
-        socketConfig
-      );
-      self.socket.on('connected', (data) => {
-        self.socket.emit('authenticate', { token: self.userDetails.token });
-      });
-      self.socket.on('deleteService', (data) => {
-        if (data.app === self.app._id) {
-          self.entity.delete.emit(data);
+  updateStatus(_id,type){
+    const self=this;
+    if(type=='flow' && !this.timeInterval[_id]){
+      console.log("ex")
+      this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/flow`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
+        self.flow.status.emit(res)
+        if(res[0].status!='Pending'){
+          clearInterval(this.timeInterval[_id])
+          delete this.timeInterval[_id]
         }
-      });
+      })},10000)
+    }
+    if(type=='service' && !this.timeInterval[_id]){
+      this.timeInterval[_id]=setInterval(()=>{this.get('serviceManager', `/${this.app._id}/service`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
+        self.entity.status.emit(res);
+        if(res[0].status!='Pending'){
+          clearInterval(this.timeInterval[_id])
+          delete this.timeInterval[_id]
+        }
+      })},10000)
+    }
+    if(type=='faas' && !this.timeInterval[_id]){
+      console.log("ex")
+      this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/faas`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
+        self.faas.status.emit(res);
+        if(res[0].status!='Pending'){
+          clearInterval(this.timeInterval[_id])
+          delete this.timeInterval[_id]
+        }
+      })},10000)
+    }
 
-      self.socket.on('serviceStatus', (data) => {
-        if (data.app === self.app._id) {
-          self.entity.status.emit(data);
-        }
-      });
+  }
 
-      self.socket.on('newService', (data) => {
-        if (data.app === self.app._id) {
-          self.entity.new.emit(data);
+  updateDelete(_id,type){
+    const self=this;
+    if(type=='flow'){
+      this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/flow`, {filter:{"_id":_id}}).subscribe(res=>{
+        if(!res.length){
+          self.flow.delete.emit(_id)
+          clearInterval(this.timeInterval[_id])
+          delete this.timeInterval[_id]
         }
-      });
-      self.socket.on('flowDeleted', (data) => {
-        if (data.app === self.app._id) {
-          self.flow.delete.emit(data);
+      })},10000)
+    }
+    if(type=='service'){
+      this.timeInterval[_id]=setInterval(()=>{this.get('serviceManager', `/${this.app._id}/service`, {filter:{"_id":_id}}).subscribe(res=>{
+        if(!res.length){
+          self.entity.delete.emit(_id);
+          clearInterval(this.timeInterval[_id])
+          delete this.timeInterval[_id]
         }
-      });
-      self.socket.on('flowStatus', (data) => {
-        if (data.app === self.app._id) {
-          self.flow.status.emit(data);
+      })},10000)
+    }
+    if(type=='faas'){
+      this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/faas`, {filter:{"_id":_id}}).subscribe(res=>{
+        if(!res.length){
+          self.faas.delete.emit(_id);
+          clearInterval(this.timeInterval[_id])
+          delete this.timeInterval[_id]
         }
-      });
-      self.socket.on('flowCreated', (data) => {
-        if (data.app === self.app._id) {
-          self.flow.new.emit(data);
-        }
-      });
-      self.socket.on('faasDeleted', (data) => {
-        if (data.app === self.app._id) {
-          self.faas.delete.emit(data);
-        }
-      });
-      self.socket.on('faasStatus', (data) => {
-        if (data.app === self.app._id) {
-          self.faas.status.emit(data);
-        }
-      });
-      self.socket.on('faasCreated', (data) => {
-        if (data.app === self.app._id) {
-          self.faas.new.emit(data);
-        }
-      });
-      self.socket.on('bulk-upload', (data) => {
-        if (data.app === self.app._id) {
-          self.bulkUpload.status.emit(data);
-        }
-      });
+      })},10000)
     }
   }
 
-  disconnectSocket() {
-    const self = this;
-    if (self.socket) {
-      self.socket.close();
-      self.socket = null;
-    }
-  }
+  // connectSocket() {
+  //   const self = this;
+  //   if (!self.socket && self.app && self.app._id) {
+  //     const socketConfig: Partial<ManagerOptions & SocketOptions> = {
+  //       query: {
+  //         app: self.app._id,
+  //         userId: self.userDetails._id,
+  //         portal: 'author',
+  //       },
+  //     };
+  //     self.socket = connect(
+  //       environment.production ? '/' : 'http://localhost',
+  //       socketConfig
+  //     );
+  //     self.socket.on('connected', (data) => {
+  //       self.socket.emit('authenticate', { token: self.userDetails.token });
+  //     });
+  //     self.socket.on('deleteService', (data) => {
+  //       if (data.app === self.app._id) {
+  //         self.entity.delete.emit(data);
+  //       }
+  //     });
+
+  //     self.socket.on('serviceStatus', (data) => {
+  //       if (data.app === self.app._id) {
+  //         self.entity.status.emit(data);
+  //       }
+  //     });
+
+  //     self.socket.on('newService', (data) => {
+  //       if (data.app === self.app._id) {
+  //         self.entity.new.emit(data);
+  //       }
+  //     });
+  //     self.socket.on('flowDeleted', (data) => {
+  //       if (data.app === self.app._id) {
+  //         self.flow.delete.emit(data);
+  //       }
+  //     });
+  //     self.socket.on('flowStatus', (data) => {
+  //       if (data.app === self.app._id) {
+  //         self.flow.status.emit(data);
+  //       }
+  //     });
+  //     self.socket.on('flowCreated', (data) => {
+  //       if (data.app === self.app._id) {
+  //         self.flow.new.emit(data);
+  //       }
+  //     });
+  //     self.socket.on('faasDeleted', (data) => {
+  //       if (data.app === self.app._id) {
+  //         self.faas.delete.emit(data);
+  //       }
+  //     });
+  //     self.socket.on('faasStatus', (data) => {
+  //       if (data.app === self.app._id) {
+  //         self.faas.status.emit(data);
+  //       }
+  //     });
+  //     self.socket.on('faasCreated', (data) => {
+  //       if (data.app === self.app._id) {
+  //         self.faas.new.emit(data);
+  //       }
+  //     });
+  //     self.socket.on('bulk-upload', (data) => {
+  //       if (data.app === self.app._id) {
+  //         self.bulkUpload.status.emit(data);
+  //       }
+  //     });
+  //   }
+  // }
+
+  // disconnectSocket() {
+  //   const self = this;
+  //   if (self.socket) {
+  //     self.socket.close();
+  //     self.socket = null;
+  //   }
+  // }
 
   modal(template, options?: NgbModalOptions): NgbModalRef {
     const self = this;
