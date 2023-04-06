@@ -100,6 +100,6 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     if (this.tooltipDir) {
       return this.tooltipDir;
     }
-    return 'right';
+    return 'left';
   }
 }
