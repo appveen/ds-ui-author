@@ -164,10 +164,6 @@ export class AppService {
         return JSON.parse(JSON.stringify(obj));
     }
 
-    getFlows(){
-        this.invokeEvent.next()
-    }
-
     rand(index: number) {
         const i = Math.pow(10, index - 1);
         const j = Math.pow(10, index) - 1;

@@ -367,7 +367,6 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.ts.success('Saved ' + this.flowData.name + ' and deployment process has started.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
         this.commonService.updateStatus(this.edit.id,'flow');
-        this.appService.getFlows();
       }, err => {
         this.apiCalls.deploy = false;
         this.commonService.errorToast(err);

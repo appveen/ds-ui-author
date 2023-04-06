@@ -80,9 +80,6 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       active: true,
       label: 'Data Pipes'
     }];
-    appService.invokeEvent.subscribe(res => {
-      this.getFlows();
-    })
   }
   ngOnInit() {
     this.getFlows();
