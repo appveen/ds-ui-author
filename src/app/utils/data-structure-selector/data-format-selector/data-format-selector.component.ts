@@ -100,6 +100,7 @@ export class DataFormatSelectorComponent implements OnInit {
   clearSearch() {
     this.dataFormatList = [];
     this.searchTerm = null;
+    delete this.apiOptions.filter;
     this.loadInitial();
   }
 
