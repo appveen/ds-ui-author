@@ -246,8 +246,4 @@ export class NodePropertiesComponent implements OnInit {
     return true;
     // return this.nodeList[0]._id == this.currNode._id;
   }
-
-  test(event?) {
-    console.log(event)
-  }
 }

@@ -159,8 +159,7 @@
                     [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
                     [searchTerm]="searchTerm" class="styled-wrapper"></odp-styled-text> -->
                 <odp-autocomplete-on-edit #typeAhead [(ngModel)]="currNode.options.url"
-                    (ngModelChange)="onValueChange($event)" [ngbTypeahead]="search" [resultFormatter]="formatter"
-                    [inputFormatter]="formatter" [searchTerm]="searchTerm"
+                    (ngModelChange)="onValueChange($event)" [currNode]="currNode"
                     class="styled-wrapper"></odp-autocomplete-on-edit>
                 <!-- <textarea id="nodeUrl" class="form-control" cols="30" rows="4"
                     [(ngModel)]="currNode.options.url"></textarea> -->

@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import * as _ from 'lodash';
+import { OperatorFunction, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { B2bFlowService } from '../../home/b2b-flows-manage/b2b-flow.service';
 
 
 @Component({
@@ -24,10 +28,10 @@ export class AutocompleteOnEditComponent implements OnInit, ControlValueAccessor
   @Input() inputFormatter: any;
   @Input() searchTerm: any;
   @Input() class: any;
-  @Input() type: string = "text"
-  @Input() uid: string = '0'
-  @Input() placeholder: string = ''
-  @Input() pattern: RegExp = /.*/g
+  @Input() type: string = "text";
+  @Input() placeholder: string = '';
+  @Input() pattern: RegExp = /.*/g;
+  @Input() currNode: any;
   @Output() onPaste: EventEmitter<any> = new EventEmitter();
   @Output() onEnter: EventEmitter<any> = new EventEmitter();
   @ViewChild('renderer') renderer: any;
@@ -41,7 +45,7 @@ export class AutocompleteOnEditComponent implements OnInit, ControlValueAccessor
   editEnabled: boolean;
   @Input() errorMessage: string;
   @Output() tempValue: EventEmitter<string>;
-  constructor() { }
+  constructor(private flowService: B2bFlowService) { }
 
   ngOnInit() {
     if (!this.value) {
@@ -129,6 +133,37 @@ export class AutocompleteOnEditComponent implements OnInit, ControlValueAccessor
     this.editEnabled = false;
     // this.tempValue.emit(this.value);
   }
+
+  formatter(result: any) {
+    if (result && typeof result == 'object') {
+      return result.label;
+    }
+    return result;
+  };
+
+
+  search: OperatorFunction<string, readonly { label: string, value: string }[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map((term) => {
+        const regex = /{{(?!.*}})(.*)/g;
+        const matches = term.match(regex) || [];
+        this.searchTerm = matches.length > 0 ? _.cloneDeep(matches).pop() : '';
+        // term = term.split(' ').filter((ele) => ele.startsWith("{{") && !ele.endsWith("}")).pop() || '';
+        // this.searchTerm = term;
+        if (this.searchTerm) {
+          term = this.searchTerm.replace('{{', '');
+        }
+        return matches.length === 0 && this.searchTerm === '' ? [] : this.variableSuggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 15);
+      }),
+    );
+
+
+  get variableSuggestions() {
+    return this.flowService.getSuggestions(this.currNode)
+  }
+
 
 
 
