@@ -17,7 +17,8 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     showLazyLoader: boolean;
     selectedDS: any;
     adminRole: boolean;
-    flag: boolean=false;
+    checkedApprovalsCount: number = 0;
+    checkedRoles: any = [];
 
     constructor(private commonService: CommonService,
         private appService: AppService) {
@@ -67,7 +68,8 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
 
     selectDataService(srvc) {
         const self = this;
-        self.flag=false
+        self.checkedApprovalsCount = 0;
+        this.checkedRoles = [];
         self.selectedDS = srvc;
         self.adminRole = self.roles.filter(r => r.id == 'ADMIN_' + self.selectedDS._id).length == 1;
     }
@@ -102,7 +104,10 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     roleActive(role: any) {
         const self = this;
         if (self.roles.find(r => r.id === role.id && r.entity === self.selectedDS._id)) {
-            this.flag=true;
+            if (role.approvals && !this.checkedRoles.find(e => e.id == role.id)) {
+                this.checkedRoles.push(role)
+            }
+            self.checkedApprovalsCount=this.checkedRoles.reduce((sum, { approvals }) =>sum + approvals,0);
             return true;
         }
         return false;
@@ -111,7 +116,10 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
     toggleRole(flag: boolean, role: any, service: any) {
         const self = this;
         if (flag) {
-            this.flag=true;
+            if (role.approvals && !this.checkedRoles.find(e => e.id == role.id)) {
+                this.checkedRoles.push(role)
+                self.checkedApprovalsCount=this.checkedRoles.reduce((sum, { approvals }) =>sum + approvals,0);
+            }
             self.roles.push({
                 id: role.id,
                 entity: self.selectedDS._id,
@@ -119,9 +127,11 @@ export class UserGroupAppcenterServicesComponent implements OnInit {
                 type: 'appcenter'
             });
         } else {
-            this.flag=false;
             const index = self.roles.findIndex(r => r.id === role.id && r.entity === self.selectedDS._id);
+            const index1 = this.checkedRoles.findIndex(e => e == role);
             self.roles.splice(index, 1);
+            this.checkedRoles.splice(index1, 1);
+            self.checkedApprovalsCount=this.checkedRoles.reduce((sum, { approvals }) =>sum + approvals,0);
         }
     }
 
