@@ -177,7 +177,7 @@ export class NodeMappingComponent implements OnInit {
         definition.forEach((def, i) => {
           delete def._id;
           let key = parentDef ? parentDef.dataPath + '.' + def.key : def.key;
-          let nameAsKey = parentDef ? parentDef.properties.name + '.' + def.properties.name : def.properties.name;
+          let nameAsKey = parentDef ? parentDef.dataPath + '.' + def.properties.name : def.properties.name;
           let name = parentDef ? parentDef.properties.name + '.' + def.properties.name : def.properties.name;
           if (node.dataStructure.outgoing && node.dataStructure.outgoing.formatType == 'JSON') {
             def._id = `${node._id}.${bodyKey}.${key}`;
