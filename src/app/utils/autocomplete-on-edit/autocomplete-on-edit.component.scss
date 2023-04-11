@@ -1,0 +1,79 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+// .value-holder {
+//     width: 260px;
+//     border: 0px;
+//     border-left: 1px solid #ddd;
+//     max-width: 260px;
+//     height: 32px;
+//     white-space: nowrap;
+//     overflow: hidden;
+// }
+
+.input-container {
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    // width: 260px;
+    height: 32px;
+    position: relative;
+    margin-right: 1px;
+}
+
+.input-container input {
+    width: 100%;
+    border: none;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    outline: none;
+    padding: 0 0.5rem;
+    background: transparent;
+    max-width: 240px;
+}
+
+/* For showing through placeholder */
+.input-container input:not(:placeholder-shown) {
+    -webkit-text-fill-color: transparent !important;
+    letter-spacing: 0.15px;
+}
+
+.input-container .input-renderer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    margin: 0 0.5rem;
+    /* This line preserves trailing
+        whitespaces */
+    white-space: pre;
+    overflow-x: auto;
+    -webkit-user-select: none;
+    user-select: none;
+    max-width: 224px;
+
+}
+
+.input-container .input-renderer::-webkit-scrollbar {
+    display: none;
+}
+
+.ml2 {
+    margin-left: 2px;
+}
+
+.dsi {
+    top: 6px;
+    right: 10px;
+    z-index: 2
+}
+
+.dsi-check {
+    right: 36px;
+}
+
+.disabled-input {
+    background-color: $light;
+    color: #495057;
+    font-weight: 400;
+}

@@ -60,6 +60,8 @@ import { StyledTextModule } from '../../utils/styled-text/styled-text.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { EditorDirective } from './node-properties/node-mapping/formula-editor/editor.directive';
 import { ChangeOnEditModule } from 'src/app/utils/change-on-edit/change-on-edit.module';
+import { AutocompleteOnEditModule } from '../../utils/autocomplete-on-edit/autocomplete-on-edit.module';
+import { ChangeOnEditComponent } from '../../utils/change-on-edit/change-on-edit.component';
 
 const routes: Routes = [
   {
@@ -129,9 +131,10 @@ const routes: Routes = [
     CommonFilterModule,
     StyledTextModule,
     FieldTypeModule,
-    ChangeOnEditModule
+    ChangeOnEditModule,
+    AutocompleteOnEditModule
   ],
   exports: [B2bFlowsManageComponent],
-  providers: [B2bFlowService, MappingService]
+  providers: [B2bFlowService, MappingService, ChangeOnEditComponent]
 })
 export class B2bFlowsManageModule { }
