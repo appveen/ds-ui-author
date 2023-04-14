@@ -144,7 +144,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       }
       if (data[0].status === 'Undeployed') {
         this.ts.success('Stopped ' + this.serviceList[index].name + '.');
-      } else if (data[0].message === 'Deployed') {
+      } else if (data[0].status === 'Active') {
         this.ts.success('Started ' + this.serviceList[index].name + '.');
       }
       //  else if (data[0].status === 'Pending') {
@@ -634,10 +634,11 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
               (d) => {
                 if (this.records[index].status === 'Active') {
                   this.ts.info('Stopping data service...');
+                  this.commonService.updateStatus(this.records[index]._id,'service')
                 } else {
                   this.ts.info('Starting data service...');
+                  this.commonService.updateStatus(this.records[index]._id,'service','start')
                 }
-                this.commonService.updateStatus(this.records[index]._id,'service')
                 this.records[index].status = 'Pending';
               },
               (err) => {
