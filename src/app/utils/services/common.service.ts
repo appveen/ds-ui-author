@@ -1204,12 +1204,12 @@ export class CommonService {
     // });
   }
 
-  updateStatus(_id,type){
+  updateStatus(_id, type, operation?){
     const self=this;
     if(type=='flow' && !this.timeInterval[_id]){
       this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/flow`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
-        self.flow.status.emit(res)
         if(res[0].status!='Pending'){
+          self.flow.status.emit(res)
           clearInterval(this.timeInterval[_id])
           delete this.timeInterval[_id]
         }
@@ -1217,8 +1217,12 @@ export class CommonService {
     }
     if(type=='service' && !this.timeInterval[_id]){
       this.timeInterval[_id]=setInterval(()=>{this.get('serviceManager', `/${this.app._id}/service`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
-        self.entity.status.emit(res);
-        if(res[0].status!='Pending'){
+        if(operation=='start' && res[0].status!='Pending' && res[0].status!='Undeployed'){
+          self.entity.status.emit(res);
+          clearInterval(this.timeInterval[_id])
+          delete this.timeInterval[_id]
+        }else if(res[0].status!='Pending' && !operation){
+          self.entity.status.emit(res);
           clearInterval(this.timeInterval[_id])
           delete this.timeInterval[_id]
         }
@@ -1226,8 +1230,8 @@ export class CommonService {
     }
     if(type=='faas' && !this.timeInterval[_id]){
       this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/faas`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
-        self.faas.status.emit(res);
         if(res[0].status!='Pending'){
+          self.faas.status.emit(res);
           clearInterval(this.timeInterval[_id])
           delete this.timeInterval[_id]
         }
