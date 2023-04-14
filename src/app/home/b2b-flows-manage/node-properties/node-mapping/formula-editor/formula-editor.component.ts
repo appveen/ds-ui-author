@@ -39,7 +39,6 @@ export class FormulaEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.availableMethods = this.flowService.getAvailableTransformMethods();
     this.fetchAllFormulas();
     this.tempData = this.data;
     this.nodeList = this.flowService.getNodesBefore(this.currNode);

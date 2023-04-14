@@ -49,11 +49,6 @@ import { PayloadCreatorModule } from 'src/app/utils/payload-creator/payload-crea
 import { PathConditionCreatorComponent } from './path-properties/path-condition-creator/path-condition-creator.component';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { ErrorNodeComponent } from './error-node/error-node.component';
-import { DataTransformComponent } from './node-properties/data-transform/data-transform.component';
-import { DataObjectComponent } from './node-properties/data-transform/data-object/data-object.component';
-import { DataArrayComponent } from './node-properties/data-transform/data-array/data-array.component';
-import { DataActualComponent } from './node-properties/data-transform/data-actual/data-actual.component';
-import { DataCreatorComponent } from './node-properties/data-transform/data-creator/data-creator.component';
 import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
 import { MappingService } from './node-properties/node-mapping/mapping.service';
 import { StyledTextModule } from '../../utils/styled-text/styled-text.module';
@@ -97,11 +92,6 @@ const routes: Routes = [
     PathPropertiesComponent,
     PathConditionCreatorComponent,
     ErrorNodeComponent,
-    DataTransformComponent,
-    DataObjectComponent,
-    DataArrayComponent,
-    DataActualComponent,
-    DataCreatorComponent,
     EditorDirective
   ],
   imports: [

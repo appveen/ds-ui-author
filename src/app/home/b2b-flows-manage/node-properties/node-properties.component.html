@@ -436,11 +436,6 @@
         (close)="toggle['mapping']=false"></odp-node-mapping>
 </div>
 
-<div [ngClass]="{'show':toggle['payload']}" class="node-mapping-window border-left position-fixed bg-white p-4">
-    <odp-data-transform *ngIf="toggle['payload']" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
-        (close)="toggle['payload']=false"></odp-data-transform>
-</div>
-
 <div [ngClass]="{'show':toggle['codeBlock']}" class="node-mapping-window border-left position-fixed bg-white p-4">
     <ng-container *ngIf="toggle['codeBlock']">
         <div class="d-flex flex-column">
