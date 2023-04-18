@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash';
 
 
@@ -18,17 +18,23 @@ export class StyledTextComponent implements OnInit {
   @Input() resultFormatter: any;
   @Input() inputFormatter: any;
   @Input() searchTerm: any;
-  @Input() class: any;
-  @Input() value: string = '';
+  @Input() className: any;
+  @Input() value: string;
   @Input() disabled: boolean = false
   @Input() type: string = "text"
   @Input() uid: string = '0'
   @Input() placeholder: string = ''
+  @Input() useEditableDiv: boolean = false;
+  @Input() insertText: EventEmitter<string>;
   @Input() pattern: RegExp = /.*/g
   @Output() onPaste: EventEmitter<any> = new EventEmitter();
   @Output() onEnter: EventEmitter<any> = new EventEmitter();
   @ViewChild('renderer') renderer: any;
-  @ViewChild('styledInputText') styledInputText: any;
+  @ViewChild('styledInputText', { static: false }) styledInputText: any;
+  @ViewChild('styledDivText', { static: false }) styledDivText: any;
+
+  rendererStyle: any = {}
+  divStyle: any = {}
 
 
   constructor() {
@@ -40,10 +46,31 @@ export class StyledTextComponent implements OnInit {
     if (!this.value) {
       this.value = ''
     }
+    if (this.useEditableDiv) {
+      // document.querySelector('#parent').setAttribute('class', this.className);
+      document.querySelector('.input-container').setAttribute('class', document.querySelector('.input-container').getAttribute('class') + ' ' + this.className);
+      document.querySelector('.input-container').setAttribute('style', 'background: transparent');
+
+      const height = document.querySelector('.input-container').clientHeight
+      const width = document.querySelector('.input-container').clientWidth
+
+      this.divStyle = {
+        height: height + 'px !important',
+        width: width + 'px !important',
+        'max-height': height + 'px !important',
+        overflow: 'auto',
+      }
+
+      this.rendererStyle = {
+        'white-space': 'pre-wrap',
+        'max-height': height + 'px !important',
+        overflow: 'auto',
+      }
+    }
   }
 
-  onChange = (event) => {
-    this.value = event.target.value;
+  onChange = (event, isDiv?) => {
+    this.value = isDiv ? event : event.target.value;
     this.finalValue.emit(this.value);
   };
 
@@ -79,6 +106,16 @@ export class StyledTextComponent implements OnInit {
   handleScroll(event) {
     this.renderer.nativeElement.scrollTop = event.target.scrollTop;
     this.renderer.nativeElement.scrollLeft = event.target.scrollLeft;
+  }
+
+  get getStyle() {
+    const height = document.querySelector('.input-container').clientHeight
+    const width = document.querySelector('.input-container').clientWidth
+
+    this.styledDivText.nativeElement.style.height = height;
+    // this.styledDivText.nativeElement.style.height = height;
+
+    return {}
   }
 
 

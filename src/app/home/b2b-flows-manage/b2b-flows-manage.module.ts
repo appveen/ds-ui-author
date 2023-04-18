@@ -134,7 +134,7 @@ const routes: Routes = [
     ChangeOnEditModule,
     AutocompleteOnEditModule
   ],
-  exports: [B2bFlowsManageComponent],
+  exports: [B2bFlowsManageComponent, EditorDirective],
   providers: [B2bFlowService, MappingService, ChangeOnEditComponent]
 })
 export class B2bFlowsManageModule { }
