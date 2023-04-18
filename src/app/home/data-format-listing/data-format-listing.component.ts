@@ -126,7 +126,8 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     this.isClone=true;
     this.form.patchValue({
       name: this.cloneData.name + ' Copy',
-      formatType: this.cloneData.formatType
+      formatType: this.cloneData.formatType,
+      excelType: this.cloneData.excelType
     });
     this.showNewDataFormatWindow=true;
   }
