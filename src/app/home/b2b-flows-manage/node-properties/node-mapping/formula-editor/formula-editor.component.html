@@ -18,7 +18,7 @@
                 (keydown.delete)="$event.stopPropagation();"></div> -->
 
             <odp-styled-text [value]="tempData" [useEditableDiv]="true" className="input-height"
-                [insertText]="insertText"></odp-styled-text>
+                [insertText]="insertText" [suggestions]="suggestions"></odp-styled-text>
             <button type="button" class="btn btn-primary mt-3 w-100" (click)="done()">Done</button>
         </div>
         <div class="suggestion-list-wrapper">

@@ -1,5 +1,8 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash';
+import { OperatorFunction, Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { B2bFlowService } from '../../home/b2b-flows-manage/b2b-flow.service';
 
 
 
@@ -33,11 +36,13 @@ export class StyledTextComponent implements OnInit {
   @ViewChild('styledInputText', { static: false }) styledInputText: any;
   @ViewChild('styledDivText', { static: false }) styledDivText: any;
 
-  rendererStyle: any = {}
-  divStyle: any = {}
+  rendererStyle: any = {};
+  divStyle: any = {};
+  list: any = [];
+  eventValue: any;
 
 
-  constructor() {
+  constructor(private b2bService: B2bFlowService) {
 
   }
 
@@ -66,13 +71,24 @@ export class StyledTextComponent implements OnInit {
         'max-height': height + 'px !important',
         overflow: 'auto',
       }
+      this.list = _.cloneDeep(this.suggestions)
     }
   }
 
   onChange = (event, isDiv?) => {
     this.value = isDiv ? event : event.target.value;
+    if (isDiv) {
+      this.search(of(this.value)).subscribe(res => {
+        this.list = res
+      })
+    }
     this.finalValue.emit(this.value);
   };
+
+  onChangeEvent(event) {
+    this.eventValue = event;
+    this.getCursorPosition()
+  }
 
   get valueArray() {
     return this.value ? this.value.split(this.regex) : [];
@@ -87,8 +103,48 @@ export class StyledTextComponent implements OnInit {
     this.patchValue(`{{${event.item.value}}}`);
   }
 
+
+  selectOption(event) {
+    // this.insertText.emit(event.value + '}}');
+    this.replaceValue(event.value)
+    this.searchTerm = '';
+  }
+
+  replaceValue(value) {
+
+    const regex1 = /{{(?!.*}})(.*)/g;
+    const matches = this.value.match(regex1) || [];
+    this.searchTerm = matches.length > 0 ? _.cloneDeep(matches).pop() : '';
+    const regex = `${this.searchTerm}(?!.*}})(.*)`;
+    const mainReg = new RegExp(regex, 'gm')
+    console.log(this.value.search(mainReg))
+    let index = this.value.search(mainReg);
+    if (index >= 0) {
+      const removedSearch = this.removeFromString(this.value, index, this.searchTerm.length);
+      const final = removedSearch.substring(0, index) + `{{${value}}}` + removedSearch.substring(index);
+      this.styledDivText.nativeElement.innerText = final;
+      this.value = final
+    }
+  }
+
+
+  removeFromString(str, index, number) {
+    const outputStringArray = str.split('');
+    outputStringArray.splice(index, number);
+    return outputStringArray.join('');
+  }
+
+  getCursorOnDiv() {
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+    const start = range.startOffset;
+    const end = range.endOffset;
+    return [start, end]
+  }
+
+
   getCursor() {
-    let cursor = this.styledInputText.nativeElement;
+    let cursor = this.useEditableDiv ? this.styledDivText.nativeElement : this.styledInputText.nativeElement;
     let start = cursor.selectionStart;
     let end = cursor.selectionEnd;
     return [start, end];
@@ -96,7 +152,7 @@ export class StyledTextComponent implements OnInit {
 
   patchValue(selectedValue) {
     let currentValue = this.value;
-    let cursor = this.getCursor();
+    let cursor = this.useEditableDiv ? this.getCursorOnDiv() : this.getCursor();
     let patchedValue = currentValue.substring(0, cursor[0] - this.searchTerm.length) + selectedValue + currentValue.substring(cursor[1]);
     this.value = patchedValue;
     this.finalValue.emit(this.value);
@@ -118,6 +174,49 @@ export class StyledTextComponent implements OnInit {
     return {}
   }
 
+  search: OperatorFunction<string, readonly { label: string, value: string }[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map((term) => {
+        const regex = /{{(?!.*}})(.*)/g;
+        const matches = term.match(regex) || [];
+        this.searchTerm = matches.length > 0 ? _.cloneDeep(matches).pop() : '';
+        // term = term.split(' ').filter((ele) => ele.startsWith("{{") && !ele.endsWith("}")).pop() || '';
+        // this.searchTerm = term;
+        if (this.searchTerm) {
+          term = this.searchTerm.replace('{{', '');
+        }
+        return matches.length === 0 && this.searchTerm === '' ? [] : this.suggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 15);
+      }),
+    );
+
+  get someStyle() {
+    let { top, left } = this.getCursorPosition()
+    if (left > 53) {
+      left = left - 53
+    }
+
+    return {
+      position: 'absolute',
+      top: top / 10 + 'rem',
+      left: left / 2 + 'rem',
+    }
+  }
+
+  getCursorPosition() {
+    const div = this.styledDivText.nativeElement;
+    let selection = window.getSelection();
+    let range = selection.getRangeAt(0);
+    let cursorPosition = range.startOffset;
+
+    const fn = selection.focusNode;
+
+    return {
+      top: cursorPosition,
+      left: fn['length']
+    }
+  }
 
 }
 

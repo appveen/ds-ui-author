@@ -9,6 +9,7 @@ export class EditorDirective implements OnInit {
   @Input() insertText: EventEmitter<string>;
   @Input() data: string;
   @Output() dataChange: EventEmitter<string>;
+  @Output() changeEvent: EventEmitter<any>;
   element: HTMLElement;
   selectedObj: Selection;
   rangeObj: Range;
@@ -16,6 +17,7 @@ export class EditorDirective implements OnInit {
     @Inject(DOCUMENT) private document: Document) {
     this.insertText = new EventEmitter();
     this.dataChange = new EventEmitter();
+    this.changeEvent = new EventEmitter();
     this.data = '';
     (this.ele.nativeElement as HTMLElement).setAttribute('contenteditable', 'true');
     (this.ele.nativeElement as HTMLElement).style.display = 'inline-block';
@@ -38,22 +40,24 @@ export class EditorDirective implements OnInit {
     });
   }
 
-  @HostListener('keyup', ['$event'])
+  @HostListener('input', ['$event'])
   onKeyUp(event: KeyboardEvent) {
     this.ele.nativeElement.scrollTop = this.ele.nativeElement.scrollHeight;
     this.selectedObj = this.document.getSelection();
     this.rangeObj = this.selectedObj.getRangeAt(0);
-    console.table([this.rangeObj])
+    // console.table([this.rangeObj])
     this.data = this.element.innerText;
     this.dataChange.emit(this.data);
+    this.changeEvent.emit(event);
   }
 
   @HostListener('mouseup', ['$event'])
   onMouseUp(event: MouseEvent) {
     this.selectedObj = this.document.getSelection();
     this.rangeObj = this.selectedObj.getRangeAt(0);
-    console.table([this.rangeObj])
+    // console.table([this.rangeObj])
     this.data = this.element.innerText;
     this.dataChange.emit(this.data);
+    this.changeEvent.emit(event)
   }
 }
