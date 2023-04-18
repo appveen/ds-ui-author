@@ -92,7 +92,8 @@
             <div class="form-group">
                 <label class="font-14 fw-400 text-dark" for="nodeEndpoint">API Endpoint</label>
                 <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="currNode.options.path"
-                    (ngModelChange)="changesDone.emit()" (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
+                    (ngModelChange)="changesDone.emit()"
+                    (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
                 <!-- <input id="nodeEndpoint" type="text" class="form-control" [(ngModel)]="currNode.options.path"
                     (ngModelChange)="changesDone.emit()"> -->
             </div>
@@ -154,9 +155,12 @@
                 <span class="dsi dsi-settings text-primary hover" (click)="toggle['url']=!toggle['url']"></span>
             </label>
             <div class="position-relative">
-                <odp-styled-text (finalValue)="onValueChange($event)" [value]="currNode.options.url" #typeAhead
+                <!-- <odp-styled-text (finalValue)="onValueChange($event)" [value]="currNode.options.url" #typeAhead
                     [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
-                    [searchTerm]="searchTerm" class="styled-wrapper"></odp-styled-text>
+                    [searchTerm]="searchTerm" class="styled-wrapper"></odp-styled-text> -->
+                <odp-autocomplete-on-edit #typeAhead [(ngModel)]="currNode.options.url"
+                    (ngModelChange)="onValueChange($event)" [currNode]="currNode"
+                    class="styled-wrapper"></odp-autocomplete-on-edit>
                 <!-- <textarea id="nodeUrl" class="form-control" cols="30" rows="4"
                     [(ngModel)]="currNode.options.url"></textarea> -->
             </div>

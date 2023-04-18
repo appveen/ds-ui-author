@@ -75,9 +75,9 @@ import { AdminModule } from './admin/admin.module';
     DateFormatModule,
     AuthUsersModule,
     ClickOutsideModule,
-    AdminModule,
     ChangePasswordModule,
-    NgbTypeaheadModule
+    NgbTypeaheadModule,
+    AdminModule
   ],
   providers: [
     {

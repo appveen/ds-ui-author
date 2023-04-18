@@ -11,7 +11,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 @Component({
   selector: 'odp-node-properties',
   templateUrl: './node-properties.component.html',
-  styleUrls: ['./node-properties.component.scss']
+  styleUrls: ['./node-properties.component.scss'],
 })
 export class NodePropertiesComponent implements OnInit {
 
@@ -211,6 +211,7 @@ export class NodePropertiesComponent implements OnInit {
     }
     return result;
   };
+
 
   search: OperatorFunction<string, readonly { label: string, value: string }[]> = (text$: Observable<string>) =>
     text$.pipe(
