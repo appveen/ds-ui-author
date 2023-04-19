@@ -130,7 +130,6 @@ export class StyledTextComponent implements OnInit {
     this.searchTerm = matches.length > 0 ? _.cloneDeep(matches).pop() : '';
     const regex = `${this.searchTerm}(?!.*}})(.*)`;
     const mainReg = new RegExp(regex, 'gm')
-    console.log(this.value.search(mainReg))
     let index = this.value.search(mainReg);
     if (index >= 0) {
       const removedSearch = this.removeFromString(this.value, index, this.searchTerm.length);
@@ -205,7 +204,7 @@ export class StyledTextComponent implements OnInit {
       }),
     );
 
-  get someStyle() {
+  get suggestionStyle() {
     let left = this.left;
     if (left > 53) {
       left = left - 53

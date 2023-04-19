@@ -11,7 +11,7 @@
         (scroll)="handleScroll($event)" odpEditor [(data)]="value" *ngIf="useEditableDiv" [style]="divStyle"
         [insertText]="insertText">
       </div>
-      <div class="suggestions" *ngIf="list.length > 0 && this.searchTerm" [style]="someStyle">
+      <div class="suggestions" *ngIf="list.length > 0 && this.searchTerm" [style]="suggestionStyle">
         <div *ngFor="let option of list" class="d-flex flex-column">
           <span class="hover option" (click)="selectOption(option)">{{option.label}}</span>
         </div>
