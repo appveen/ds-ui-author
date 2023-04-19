@@ -99,7 +99,7 @@
                 Filter
                 <!-- <span class="dsi dsi-settings text-primary hover" (click)="toggle['filter']=!toggle['filter']"></span> -->
             </label>
-            <textarea id="filter" class="form-control" [(ngModel)]="currNode.options.filter"></textarea>
+            <textarea id="filter" class="form-control" [(ngModel)]="currNode.options.filter" (keydown.delete)="$event.stopPropagation()"></textarea>
             <!-- <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['filter']" [textarea]="true" [nodeList]="nodeList"
                 [(value)]="currNode.options.filter">
             </odp-node-data-selector> -->
