@@ -83,21 +83,22 @@
 }
 
 .suggestions {
-    border: 1px solid grey;
-    border-radius: 4px;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
     background-color: white;
     display: flex;
     flex-direction: column;
     width: max-content;
-    z-index: 999
+    z-index: 999;
+
 }
 
 .option {
     height: 32px;
-    border-bottom: 1px solid grey;
     padding: 0.4rem;
 
     &:hover {
-        background-color: $gray-200;
+        background-color: $primary;
+        color: white;
     }
 }

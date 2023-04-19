@@ -126,6 +126,10 @@ export class FormulaEditorComponent implements OnInit {
     this.dataChange.emit(this.data);
   }
 
+  tempDataChange(event) {
+    this.tempData = event;
+  }
+
   getDataTypeStyleClass(type: string) {
     switch (type) {
       case 'String':

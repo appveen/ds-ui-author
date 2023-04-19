@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash';
-import { OperatorFunction, Observable, of } from 'rxjs';
+import { Observable, OperatorFunction, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { B2bFlowService } from '../../home/b2b-flows-manage/b2b-flow.service';
 
 
 
@@ -46,7 +45,7 @@ export class StyledTextComponent implements OnInit {
   top: any;
 
 
-  constructor(private b2bService: B2bFlowService) {
+  constructor() {
 
   }
 
@@ -76,6 +75,11 @@ export class StyledTextComponent implements OnInit {
         overflow: 'auto',
       }
       this.list = _.cloneDeep(this.suggestions)
+    }
+    else {
+      this.rendererStyle = {
+        'margin-top': '0.3rem'
+      }
     }
   }
 
@@ -132,7 +136,8 @@ export class StyledTextComponent implements OnInit {
       const removedSearch = this.removeFromString(this.value, index, this.searchTerm.length);
       const final = removedSearch.substring(0, index) + `{{${value}}}` + removedSearch.substring(index);
       this.styledDivText.nativeElement.innerText = final;
-      this.value = final
+      this.value = final;
+      this.finalValue.emit(this.value);
     }
   }
 
@@ -211,6 +216,9 @@ export class StyledTextComponent implements OnInit {
     }
     else {
       top = top * 1.25
+    }
+    if (top === 0) {
+      top++;
     }
 
     return {
