@@ -40,6 +40,10 @@ export class StyledTextComponent implements OnInit {
   divStyle: any = {};
   list: any = [];
   eventValue: any;
+  offSet: number;
+  oldData: any = '';
+  left: any;
+  top: any;
 
 
   constructor(private b2bService: B2bFlowService) {
@@ -78,16 +82,21 @@ export class StyledTextComponent implements OnInit {
   onChange = (event, isDiv?) => {
     this.value = isDiv ? event : event.target.value;
     if (isDiv) {
-      this.search(of(this.value)).subscribe(res => {
+      this.search(of(this.styledDivText.nativeElement.innerText)).subscribe(res => {
         this.list = res
       })
+      this.getLeft();
+      this.getTop();
+      this.oldData = this.styledDivText.nativeElement.innerHTML || '';
+
+
     }
+
     this.finalValue.emit(this.value);
   };
 
   onChangeEvent(event) {
     this.eventValue = event;
-    this.getCursorPosition()
   }
 
   get valueArray() {
@@ -164,15 +173,15 @@ export class StyledTextComponent implements OnInit {
     this.renderer.nativeElement.scrollLeft = event.target.scrollLeft;
   }
 
-  get getStyle() {
-    const height = document.querySelector('.input-container').clientHeight
-    const width = document.querySelector('.input-container').clientWidth
+  // get getStyle() {
+  //   const height = document.querySelector('.input-container').clientHeight
+  //   const width = document.querySelector('.input-container').clientWidth
 
-    this.styledDivText.nativeElement.style.height = height;
-    // this.styledDivText.nativeElement.style.height = height;
+  //   this.styledDivText.nativeElement.style.height = height;
+  //   // this.styledDivText.nativeElement.style.height = height;
 
-    return {}
-  }
+  //   return {}
+  // }
 
   search: OperatorFunction<string, readonly { label: string, value: string }[]> = (text$: Observable<string>) =>
     text$.pipe(
@@ -192,31 +201,53 @@ export class StyledTextComponent implements OnInit {
     );
 
   get someStyle() {
-    let { top, left } = this.getCursorPosition()
+    let left = this.left;
     if (left > 53) {
       left = left - 53
+    }
+    let top = this.top
+    if (top < 10) {
+      top = top * 1.5
+    }
+    else {
+      top = top * 1.25
     }
 
     return {
       position: 'absolute',
-      top: top / 10 + 'rem',
+      top: top + 'rem',
       left: left / 2 + 'rem',
     }
   }
 
-  getCursorPosition() {
-    const div = this.styledDivText.nativeElement;
+  getLeft() {
     let selection = window.getSelection();
-    let range = selection.getRangeAt(0);
-    let cursorPosition = range.startOffset;
-
     const fn = selection.focusNode;
-
-    return {
-      top: cursorPosition,
-      left: fn['length']
-    }
+    this.left = fn['length']
   }
+
+  getTop() {
+    const currentData = this.styledDivText.nativeElement.innerHTML || '';
+    const index = this.findFirstDifferencePos(this.oldData, currentData);
+    const preText = currentData.substring(0, index);
+    const count = (preText.match(/<br>/g) || []).length;
+    this.top = count > 0 ? count : (currentData.match(/<br>/g) || []).length;
+
+  }
+  findFirstDifferencePos(str1, str2) {
+    var len = Math.min(str1.length, str2.length);
+    for (var i = 0; i < len; i++) {
+      if (str1[i] !== str2[i]) {
+        return i;
+      }
+    }
+    if (str1.length !== str2.length) {
+      return len;
+    }
+    return -1;
+  }
+
+
 
 }
 
