@@ -37,6 +37,7 @@ export class B2bFlowService {
       DEDUPE: 'De-Dupe',
       CONFLICT: 'Conflict',
       FOREACH: 'For Each',
+      MARKETPLACE: 'Marketplace',
       REDUCE: 'Reduce',
       UNWIND: 'Change Root',
       RESPONSE: 'Response',
@@ -177,6 +178,9 @@ export class B2bFlowService {
     if (type == 'DATASERVICE') {
       temp.options.update = true;
       temp.options.insert = true;
+    }
+    if (type == 'FOREACH' || type == 'REDUCE') {
+      temp.options.startNode = null;
     }
     if (type == 'CODEBLOCK') {
       const tempCode = [];
@@ -375,12 +379,12 @@ export class B2bFlowService {
           item.label = (node._id || node.type) + '/body/' + key;
           item.value = node._id + '.body.' + key;
           list.push(item);
-          if(node.type=="DATASERVICE"){
+          if (node.type == "DATASERVICE") {
             item = {};
             item.label = (node._id || node.type) + '/responseBody[0]/' + key;
             item.value = node._id + '.responseBody[0].' + key;
             list.push(item);
-          }else{
+          } else {
             item = {};
             item.label = (node._id || node.type) + '/responseBody/' + key;
             item.value = node._id + '.responseBody.' + key;

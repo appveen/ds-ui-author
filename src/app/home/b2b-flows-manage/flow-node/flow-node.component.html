@@ -54,6 +54,8 @@
                 class="node-icon font-18 fw-500 dsi dsi-undo" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='UNWIND'"
                 class="node-icon font-18 fw-500 dsi dsi-expand" [attr.data-id]="currNode._id"></span>
+                <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='MARKETPLACE'"
+                class="node-icon font-18 fw-500 dsi dsi-library" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='RESPONSE'"
                 class="node-icon font-18 fw-500 dsi dsi-response" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE_READ'"

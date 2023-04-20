@@ -37,17 +37,18 @@
             <option *ngIf="!isInputNode" value="API">API Invoke</option>
             <option *ngIf="!isInputNode" value="MAPPING">Mapping</option>
             <option *ngIf="!isInputNode" value="DEDUPE">De-Dupe</option>
-            <option *ngIf="!isInputNode" value="CONFLICT">Conflict</option>
-            <option *ngIf="!isInputNode" value="FOREACH">For Each</option>
-            <option *ngIf="!isInputNode" value="REDUCE">Reduce</option>
+            <!-- <option *ngIf="!isInputNode" value="CONFLICT">Conflict</option> -->
+            <!-- <option *ngIf="!isInputNode" value="FOREACH">For Each</option>
+            <option *ngIf="!isInputNode" value="REDUCE">Reduce</option> -->
             <option *ngIf="!isInputNode" value="CODEBLOCK">Code Block</option>
             <option *ngIf="!isInputNode" value="CONNECTOR">Connector</option>
             <option *ngIf="!isInputNode" value="UNWIND">Change Root</option>
             <option *ngIf="!isInputNode" value="DATASERVICE">Data Service</option>
             <option *ngIf="!isInputNode" value="FUNCTION">Function</option>
+            <option *ngIf="!isInputNode" value="MARKETPLACE">Marketplace</option>
             <option *ngIf="!isInputNode" value="RESPONSE">Response</option>
-            <option *ngIf="!isInputNode" value="FILE_READ">File Reader</option>
-            <option *ngIf="!isInputNode" value="FILE_WRITE">File Writer</option>
+            <!-- <option *ngIf="!isInputNode" value="FILE_READ">File Reader</option>
+            <option *ngIf="!isInputNode" value="FILE_WRITE">File Writer</option> -->
         </select>
     </div>
     <!-- <div *ngIf="!isInputNode && (currNode?.type=='DATASERVICE' || currNode?.type=='API')" class="form-group">
@@ -69,7 +70,8 @@
         <div *ngIf="currNode?.type!='DATASERVICE' 
         && currNode?.type!='DEDUPE' 
         && currNode?.type!='CONFLICT'
-        && currNode?.type!='FILE_WRITE'" class="form-group">
+        && currNode?.type!='FILE_WRITE'
+        && currNode?.type!='MARKETPLACE'" class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure
                 <span class="text-muted"><i>(optional)</i></span>
             </label>
@@ -272,7 +274,6 @@
                 records</small>
         </div>
     </ng-container>
-
     <ng-container *ngIf="currNode.type=='CONFLICT'">
         <div class="form-group position-relative ">
             <label for="fields" class="d-flex align-items-center justify-content-between">
@@ -328,9 +329,6 @@
             </odp-node-data-selector>
         </div>
     </ng-container>
-
-
-
     <ng-container *ngIf="currNode?.type=='CONNECTOR'">
         <odp-connector-properties [edit]="edit" [nodeList]="nodeList" [currNode]="currNode">
         </odp-connector-properties>
@@ -428,6 +426,12 @@
             <odp-change-on-edit id="fileName" [(ngModel)]="currNode.options.fileName"
                 (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
         </div>
+    </ng-container>
+
+
+    <ng-container *ngIf="currNode?.type=='MARKETPLACE'">
+        <odp-marketplace-selector [edit]="edit" [currNode]="currNode">
+        </odp-marketplace-selector>
     </ng-container>
 </div>
 

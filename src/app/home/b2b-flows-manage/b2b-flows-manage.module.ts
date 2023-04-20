@@ -57,6 +57,7 @@ import { EditorDirective } from './node-properties/node-mapping/formula-editor/e
 import { ChangeOnEditModule } from 'src/app/utils/change-on-edit/change-on-edit.module';
 import { AutocompleteOnEditModule } from '../../utils/autocomplete-on-edit/autocomplete-on-edit.module';
 import { ChangeOnEditComponent } from '../../utils/change-on-edit/change-on-edit.component';
+import { MarketplaceSelectorComponent } from './node-properties/marketplace-selector/marketplace-selector.component';
 
 const routes: Routes = [
   {
@@ -92,7 +93,8 @@ const routes: Routes = [
     PathPropertiesComponent,
     PathConditionCreatorComponent,
     ErrorNodeComponent,
-    EditorDirective
+    EditorDirective,
+    MarketplaceSelectorComponent
   ],
   imports: [
     CommonModule,
