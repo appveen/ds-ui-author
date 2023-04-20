@@ -95,6 +95,18 @@
               }">Connectors</span>
             </div>
           </div>
+          <div *ngIf="hasFlowsPermission" #processNodeRoute="routerLinkActive"
+            class="icon-block d-flex align-items-center my-3"
+            [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"
+            routerLinkActive="text-primary bg-white active" [routerLink]="['process-node']" id="processNodeManager">
+            <div class="d-flex align-items-center">
+              <span [ngClass]="{'nav-inactive':!processNodeRoute.isActive}" class="dsi dsi-refresh"></span>
+              <span *ngIf="showSideNav" class="text items font-14" [ngClass]="{
+                  'fw-600 nav-active': processNodeRoute.isActive,
+                  'nav-inactive': !processNodeRoute.isActive
+                }">Process Nodes</span>
+            </div>
+          </div>
           <div *ngIf="hasFlowsPermission" #flowRoute="routerLinkActive"
             class="icon-block d-flex align-items-center my-3"
             [ngClass]="{'justify-content-between':showSideNav, 'justify-content-center':!showSideNav}"

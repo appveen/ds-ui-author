@@ -164,6 +164,13 @@ const routes: Routes = [
             (m) => m.ApiKeysModule
           ),
       },
+      {
+        path: 'process-node',
+        loadChildren: () =>
+          import('../home/custom-node/custom-node.module').then(
+            (m) => m.CustomNodeModule
+          ),
+      }
     ],
   },
 ];
