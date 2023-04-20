@@ -345,7 +345,7 @@ export class DataFormatManageComponent implements
         self.commonService.commonSpinner = true;
         payload.app = self.commonService.app._id;
         payload.formatType = self.form.value.formatType;
-        payload.excelType = self.form.value.excelType;
+        payload.excelType = self.selectedFormat.excelType;
         payload.character = self.form.value.character;
         payload.length = self.form.value.length;
         payload.lineSeparator = self.form.value.lineSeparator;

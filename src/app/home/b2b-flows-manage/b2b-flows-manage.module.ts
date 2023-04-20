@@ -53,11 +53,11 @@ import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-fil
 import { MappingService } from './node-properties/node-mapping/mapping.service';
 import { StyledTextModule } from '../../utils/styled-text/styled-text.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
-import { EditorDirective } from './node-properties/node-mapping/formula-editor/editor.directive';
 import { ChangeOnEditModule } from 'src/app/utils/change-on-edit/change-on-edit.module';
 import { AutocompleteOnEditModule } from '../../utils/autocomplete-on-edit/autocomplete-on-edit.module';
 import { ChangeOnEditComponent } from '../../utils/change-on-edit/change-on-edit.component';
 import { MarketplaceSelectorComponent } from './node-properties/marketplace-selector/marketplace-selector.component';
+import { EditorModule } from 'src/app/utils/editor/editor.module';
 
 const routes: Routes = [
   {
@@ -93,7 +93,6 @@ const routes: Routes = [
     PathPropertiesComponent,
     PathConditionCreatorComponent,
     ErrorNodeComponent,
-    EditorDirective,
     MarketplaceSelectorComponent
   ],
   imports: [
@@ -124,7 +123,8 @@ const routes: Routes = [
     StyledTextModule,
     FieldTypeModule,
     ChangeOnEditModule,
-    AutocompleteOnEditModule
+    AutocompleteOnEditModule,
+    EditorModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService, MappingService, ChangeOnEditComponent]

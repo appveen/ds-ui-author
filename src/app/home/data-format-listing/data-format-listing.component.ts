@@ -126,7 +126,8 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     this.isClone=true;
     this.form.patchValue({
       name: this.cloneData.name + ' Copy',
-      formatType: this.cloneData.formatType
+      formatType: this.cloneData.formatType,
+      excelType: this.cloneData.excelType
     });
     this.showNewDataFormatWindow=true;
   }
@@ -136,11 +137,11 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     const payload = {
       name:this.form.value.name,
       formatType: this.form.value.formatType,
+      excelType: this.form.value.excelType,
       app:this.cloneData.app,
       attributeCount:this.cloneData.attributeCount,
       character:this.cloneData.character,
       definition:this.cloneData.definition,
-      excelType:this.cloneData.excelType,
       lineSeparator:this.cloneData.lineSeparator,
       strictValidation:this.cloneData.strictValidation
     };
