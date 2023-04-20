@@ -3,7 +3,7 @@
     <input #styledInputText [value]="value" (input)="onChange($event)" [ngbTypeahead]="ngbTypeahead"
       (scroll)="handleScroll($event)" [resultFormatter]="resultFormatter" [inputFormatter]="inputFormatter"
       (selectItem)="selectItem($event)" [disabled]="disabled" (paste)="onPaste.emit($event)"
-      (keyup.enter)="onEnter.emit($event)" [pattern]="pattern.source" [placeholder]="placeholder">
+      (keyup.enter)="onEnter.emit($event)" [pattern]="pattern.source" [placeholder]="placeholder" (keydown.delete)="$event.stopPropagation();">
 
     <div class="input-renderer" #renderer>
       <div *ngFor="let word of valueArray">
