@@ -39,8 +39,10 @@ export class CustomNodeComponent implements OnInit {
   breadcrumbPaths: Array<Breadcrumb>;
   openDeleteModal: EventEmitter<any>;
   searchTerm: string;
-  isClone: boolean = false;
+  isClone: boolean;
+  isEdit: boolean;
   cloneData: any;
+  showEditNodeWindow: boolean;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -51,6 +53,9 @@ export class CustomNodeComponent implements OnInit {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
+      code: [],
+      category: [],
+      type: []
     });
     this.apiConfig = {
       page: 1,
@@ -72,9 +77,6 @@ export class CustomNodeComponent implements OnInit {
       active: true,
       label: 'Process Nodes'
     }];
-    appService.invokeEvent.subscribe(res => {
-      this.getNodes();
-    })
   }
   ngOnInit() {
     this.getNodes();
@@ -89,6 +91,8 @@ export class CustomNodeComponent implements OnInit {
   }
 
   newNode() {
+    this.form.get('category').clearValidators();
+    this.form.get('type').clearValidators();
     this.form.reset({});
     this.showNewNodeWindow = true;
   }
@@ -104,13 +108,10 @@ export class CustomNodeComponent implements OnInit {
     payload.nodes = [];
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/node`, payload).subscribe(res => {
       this.showLazyLoader = false;
-      this.form.reset({ type: 'API' });
       this.ts.success('Process Node has been created.');
-      this.appService.edit = res._id;
-      this.router.navigate(['/app/', this.commonService.app._id, 'node', res._id]);
+      this.getNodes();
     }, err => {
       this.showLazyLoader = false;
-      this.form.reset({ type: 'API' });
       this.commonService.errorToast(err);
     });
   }
@@ -131,13 +132,10 @@ export class CustomNodeComponent implements OnInit {
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/node`, this.cloneData).subscribe(res => {
       this.showLazyLoader = false;
       this.isClone = false;
-      this.form.reset({ type: 'API' });
       this.ts.success('Process Node has been cloned.');
-      this.appService.edit = res._id;
-      this.router.navigate(['/app/', this.commonService.app._id, 'node', res._id]);
+      this.getNodes();
     }, err => {
       this.showLazyLoader = false;
-      this.form.reset({ type: 'API' });
       this.isClone = false;
       this.commonService.errorToast(err);
     });
@@ -198,9 +196,7 @@ export class CustomNodeComponent implements OnInit {
         .subscribe(
           (d) => {
             this.showLazyLoader = false;
-            this.ts.info(d.message ? d.message : 'Deleting Process Node...');
-            this.records[data.index].status = 'Pending';
-            this.commonService.updateDelete(this.records[data.index]._id, 'node')
+            this.records.splice(data.index, 1);
           },
           (err) => {
             this.showLazyLoader = false;
@@ -216,10 +212,26 @@ export class CustomNodeComponent implements OnInit {
   editNode(item: any) {
     // this.appService.edit = item._id;
     // this.router.navigate(['/app/', this.commonService.app._id, 'node', this.appService.edit]);
+    if (!item.code || !item.code.trim()) {
+      item.code = '// do something\nreturn state;'
+    }
+    this.form.patchValue(item);
+    this.form.get('category').setValidators([Validators.required]);
+    this.form.get('type').setValidators([Validators.required]);
+    this.showEditNodeWindow = true;
+    this.isEdit = true;
   }
 
   viewNode(item: any) {
     // this.router.navigate(['/app', this.commonService.app._id, 'node', item._id]);
+    if (!item.code || !item.code.trim()) {
+      item.code = '// do something\nreturn state;'
+    }
+    this.form.patchValue(item);
+    this.form.get('category').setValidators([Validators.required]);
+    this.form.get('type').setValidators([Validators.required]);
+    this.showEditNodeWindow = true;
+    this.isEdit = false;
   }
 
   deleteNode(index: number) {
@@ -262,6 +274,14 @@ export class CustomNodeComponent implements OnInit {
     })
     this.selectedLibrary = this.nodeList[i];
     this.showOptionsDropdown[i] = true;
+  }
+
+  saveNode() {
+
+  }
+
+  triggerSaveNode() {
+
   }
 
   private compare(a: any, b: any) {
@@ -318,4 +338,11 @@ export class CustomNodeComponent implements OnInit {
     return this.commonService.app._id;
   }
 
+  get code() {
+    return this.form.get('code').value;
+  }
+
+  set code(data: string) {
+    this.form.get('code').patchValue(data);
+  }
 }

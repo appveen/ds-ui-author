@@ -99,7 +99,7 @@
     </div>
 </div>
 
-<div *ngIf="showNewNodeWindow" class="overlay position-fixed"></div>
+<div *ngIf="showNewNodeWindow || showEditNodeWindow" class="overlay position-fixed"></div>
 <div [ngClass]="{'show':showNewNodeWindow}"
     class="new-node-window p-4 position-fixed border-left bg-white d-flex flex-column" [formGroup]="form">
     <div class="d-flex align-items-center justify-content-between mb-3">
@@ -134,6 +134,87 @@
     <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
         <button type="button" class="btn btn-min-width btn-primary w-100" id="newNodeModalYes" [disabled]="form.invalid"
             (click)="isClone ? triggerNodeClone() : triggerNodeCreate()">Create</button>
+    </div>
+</div>
+
+<div [ngClass]="{'show':showEditNodeWindow}"
+    class="edit-node-window p-4 position-fixed border-left bg-white d-flex flex-column" [formGroup]="form">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <span class="font-22 fw-500">Edit Process Node</span>
+        <span class="dsi dsi-close hover" (click)="showEditNodeWindow=false;"></span>
+    </div>
+    <div *ngIf="showEditNodeWindow" class="d-flex flex-column align-items-start w-100">
+        <div class="d-flex align-items-center w-100">
+            <div class="d-flex flex-column w-100 mr-3">
+                <label for="name" class="font-13 text-secondary">
+                    <span class="text">Name</span>
+                    <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+                </label>
+                <div class="name-wrapper position-relative mb-3">
+                    <input newNodeName autocomplete="off" type="text" class="form-control" id="name"
+                        placeholder="Untitled Process Node" formControlName="name" odpAutoFocus
+                        (keyup.enter)="isClone ? triggerNodeClone() : triggerNodeCreate()"
+                        [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
+                    <ng-container *ngIf="form.get('name').dirty">
+                        <span *ngIf="form.get('name').hasError('required')"
+                            class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                            ngbTooltip="Name is required"></span>
+                        <span *ngIf="form.get('name').hasError('maxlength')"
+                            class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                            ngbTooltip="Name should be within 30 characters"></span>
+                        <span *ngIf="form.get('name').hasError('pattern')"
+                            class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                            ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="d-flex flex-column w-100 mr-3">
+                <label for="type" class="font-13 text-secondary">
+                    <span class="text">Type</span>
+                    <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+                </label>
+                <div class="type-wrapper position-relative mb-3">
+                    <input newNodeName autocomplete="off" type="text" class="form-control" id="type"
+                        placeholder="Untitled Process Node" formControlName="type">
+                </div>
+            </div>
+            <div class="d-flex flex-column w-100">
+                <label for="category" class="font-13 text-secondary">
+                    <span class="text">Category</span>
+                    <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+                </label>
+                <div class="category-wrapper position-relative mb-3">
+                    <input newNodeName autocomplete="off" type="text" class="form-control" id="category"
+                        placeholder="Untitled Process Node" formControlName="category">
+                </div>
+            </div>
+        </div>
+        <pre class="bg-light border rounded p-2 d-flex flex-column w-100">
+            <div class="d-flex align-items-center justify-content-start">
+                <span class="text-info fw-500 mr-2 d-flex">
+                    <strong>var</strong>
+                </span>
+                <strong>node;</strong>
+                <span class="text-success ml-3">//Contains state data of all the nodes.</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start">
+                <span class="text-info fw-500 mr-2 d-flex">
+                    <strong>var</strong>
+                </span>
+                <strong>state;</strong>
+                <span class="text-success ml-3">//Contains the state of this node. Write code and update this state object an return it.</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start text-secondary mt-2">
+                <strong>Note:</strong>
+                <span class="ml-2">Outer function is <span class="text-info fw-600">async</span> so using <span class="text-info fw-600">await</span> keyword is allowed.</span>
+            </div>
+        </pre>
+        <odp-code-editor class="code-editor border rounded py-3" [edit]="{status:isEdit}"
+            [(code)]="code"></odp-code-editor>
+    </div>
+    <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
+        <button type="button" class="btn btn-min-width btn-primary w-100" id="newNodeModalYes" [disabled]="form.invalid"
+            (click)="saveNode()">Save</button>
     </div>
 </div>
 
