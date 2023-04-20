@@ -7,6 +7,7 @@ import { AppManageComponent } from 'src/app/admin/app-manage/app-manage.componen
 import { AgentsComponent } from './agents/agents.component';
 import { MetadataComponent } from './metadata/metadata.component';
 import { MapperFormulasComponent } from './metadata/mapper-formulas/mapper-formulas.component';
+import { CustomNodeComponent } from './metadata/custom-node/custom-node.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
         path: 'metadata', component: MetadataComponent, children: [
           { path: '', pathMatch: 'full', redirectTo: 'mapper' },
           { path: 'mapper', component: MapperFormulasComponent },
+          { path: 'node', component: CustomNodeComponent },
         ]
       },
     ],

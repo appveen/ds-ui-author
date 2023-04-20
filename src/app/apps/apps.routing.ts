@@ -163,13 +163,6 @@ const routes: Routes = [
           import('../home/api-keys/api-keys.module').then(
             (m) => m.ApiKeysModule
           ),
-      },
-      {
-        path: 'process-node',
-        loadChildren: () =>
-          import('../home/custom-node/custom-node.module').then(
-            (m) => m.CustomNodeModule
-          ),
       }
     ],
   },

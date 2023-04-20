@@ -4,6 +4,11 @@
 .node-page {
     height: calc(100vh - 60px);
 
+    .node-list-wrapper {
+        min-width: 360px;
+        max-width: 360px;
+    }
+
     .card-container {
         height: calc(100vh - 170px);
         overflow: auto;
@@ -18,31 +23,18 @@
             }
 
             .item-name {
-                min-width: 210px;
-                max-width: 210px;
+                min-width: 120px;
+                max-width: 120px;
             }
 
-            .item-url {
-                min-width: 325px;
-                max-width: 325px;
+            .item-type {
+                min-width: 96px;
+                max-width: 96px;
             }
 
-            .item-status {
-                min-width: 95px;
-                max-width: 95px;
-
-                .text-warning {
-                    animation: blink 0.5s alternate infinite;
-                }
-
-                .fa-circle {
-                    font-size: 8px;
-                }
-            }
-
-            .item-last-invoked {
-                min-width: 140px;
-                max-width: 140px;
+            .item-category {
+                min-width: 96px;
+                max-width: 96px;
             }
 
             .item-actions {
@@ -97,13 +89,11 @@
     width: 100vw;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 2;
     background: rgba($color: #000000, $alpha: 0.6);
 }
 
-.new-node-window,
-.edit-node-window,
-.yaml-window {
+.new-node-window {
     height: 100vh;
     width: 360px;
     top: 0;
@@ -116,11 +106,6 @@
     &.show {
         right: 0px !important;
     }
-}
-
-.edit-node-window {
-    width: 1000px !important;
-    right: -1000px;
 }
 
 .more-options {
@@ -140,4 +125,25 @@
 
 .code-editor {
     height: calc(100vh - 340px);
+}
+
+.edit-node-window {
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+}
+
+.code-editor-wrapper {
+    &.expanded {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 2;
+        background: $white;
+        transition: 0.2s;
+
+        .code-editor {
+            height: calc(100vh - 40px);
+        }
+    }
 }

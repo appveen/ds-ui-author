@@ -7,7 +7,6 @@ import * as _ from 'lodash';
 
 import { GetOptions, CommonService } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
-import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filter.pipe';
 
 
@@ -21,7 +20,7 @@ export class CustomNodeComponent implements OnInit {
 
   form: FormGroup;
   apiConfig: GetOptions;
-  nodeList: Array<any>;
+  customNodeList: Array<any>;
   alertModal: {
     statusChange?: boolean;
     title: string;
@@ -32,17 +31,14 @@ export class CustomNodeComponent implements OnInit {
   showNewNodeWindow: boolean;
   showLazyLoader: boolean;
   selectedNode: any;
-  showOptionsDropdown: any;
   selectedItemEvent: any
-  selectedLibrary: any;
   sortModel: any;
-  breadcrumbPaths: Array<Breadcrumb>;
   openDeleteModal: EventEmitter<any>;
   searchTerm: string;
   isClone: boolean;
   isEdit: boolean;
   cloneData: any;
-  showEditNodeWindow: boolean;
+  toggleExpand: boolean;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -61,7 +57,7 @@ export class CustomNodeComponent implements OnInit {
       page: 1,
       count: 30
     };
-    this.nodeList = [];
+    this.customNodeList = [];
     this.alertModal = {
       statusChange: false,
       title: '',
@@ -69,18 +65,11 @@ export class CustomNodeComponent implements OnInit {
       index: -1,
     };
     this.openDeleteModal = new EventEmitter();
-    this.showOptionsDropdown = {};
     this.showLazyLoader = true;
     this.sortModel = {};
-    this.selectedNode = {};
-    this.breadcrumbPaths = [{
-      active: true,
-      label: 'Process Nodes'
-    }];
   }
   ngOnInit() {
     this.getNodes();
-    this.commonService.changeBreadcrumb(this.breadcrumbPaths);
     this.commonService.apiCalls.componentLoading = false;
   }
 
@@ -106,7 +95,7 @@ export class CustomNodeComponent implements OnInit {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     payload.nodes = [];
-    this.commonService.post('partnerManager', `/${this.commonService.app._id}/node`, payload).subscribe(res => {
+    this.commonService.post('partnerManager', `/admin/node`, payload).subscribe(res => {
       this.showLazyLoader = false;
       this.ts.success('Process Node has been created.');
       this.getNodes();
@@ -129,7 +118,7 @@ export class CustomNodeComponent implements OnInit {
     const val = this.form.get('name').value
     this.cloneData.name = val;
     this.cloneData.inputNode.options.path = val ? '/' + _.camelCase(val) : null;
-    this.commonService.post('partnerManager', `/${this.commonService.app._id}/node`, this.cloneData).subscribe(res => {
+    this.commonService.post('partnerManager', `/admin/node`, this.cloneData).subscribe(res => {
       this.showLazyLoader = false;
       this.isClone = false;
       this.ts.success('Process Node has been cloned.');
@@ -143,14 +132,14 @@ export class CustomNodeComponent implements OnInit {
 
   getNodes() {
     this.showLazyLoader = true;
-    this.nodeList = [];
-    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/node/utils/count`).pipe(switchMap((count: any) => {
-      return this.commonService.get('partnerManager', `/${this.commonService.app._id}/node`, {
+    this.customNodeList = [];
+    return this.commonService.get('partnerManager', `/admin/node/utils/count`).pipe(switchMap((count: any) => {
+      return this.commonService.get('partnerManager', `/admin/node`, {
         count: count,
       });
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
-      this.nodeList = res;
+      this.customNodeList = res;
     }, err => {
       this.showLazyLoader = false;
       console.log(err);
@@ -188,7 +177,7 @@ export class CustomNodeComponent implements OnInit {
   closeDeleteModal(data) {
     if (data) {
       const url =
-        `/${this.commonService.app._id}/node/` +
+        `/admin/node/` +
         this.records[data.index]._id;
       this.showLazyLoader = true;
       this.subscriptions['deleteservice'] = this.commonService
@@ -210,28 +199,14 @@ export class CustomNodeComponent implements OnInit {
   }
 
   editNode(item: any) {
-    // this.appService.edit = item._id;
-    // this.router.navigate(['/app/', this.commonService.app._id, 'node', this.appService.edit]);
     if (!item.code || !item.code.trim()) {
       item.code = '// do something\nreturn state;'
     }
-    this.form.patchValue(item);
-    this.form.get('category').setValidators([Validators.required]);
-    this.form.get('type').setValidators([Validators.required]);
-    this.showEditNodeWindow = true;
+    this.selectedNode = null;
+    setTimeout(() => {
+      this.selectedNode = item;
+    }, 100);
     this.isEdit = true;
-  }
-
-  viewNode(item: any) {
-    // this.router.navigate(['/app', this.commonService.app._id, 'node', item._id]);
-    if (!item.code || !item.code.trim()) {
-      item.code = '// do something\nreturn state;'
-    }
-    this.form.patchValue(item);
-    this.form.get('category').setValidators([Validators.required]);
-    this.form.get('type').setValidators([Validators.required]);
-    this.showEditNodeWindow = true;
-    this.isEdit = false;
   }
 
   deleteNode(index: number) {
@@ -267,17 +242,25 @@ export class CustomNodeComponent implements OnInit {
     }
   }
 
-  showDropDown(event: any, i: number) {
-    this.selectedItemEvent = event;
-    Object.keys(this.showOptionsDropdown).forEach(key => {
-      this.showOptionsDropdown[key] = false;
-    })
-    this.selectedLibrary = this.nodeList[i];
-    this.showOptionsDropdown[i] = true;
-  }
-
   saveNode() {
-
+    const url = `/admin/node/` + this.selectedNode._id;
+    this.showLazyLoader = true;
+    this.commonService
+      .put('partnerManager', url, this.selectedNode)
+      .subscribe(
+        (d) => {
+          this.showLazyLoader = false;
+          this.getNodes();
+          this.ts.success('Node Saved Successfully');
+        },
+        (err) => {
+          this.showLazyLoader = false;
+          this.commonService.errorToast(
+            err,
+            'Oops, something went wrong. Please try again later.'
+          );
+        }
+      );
   }
 
   triggerSaveNode() {
@@ -306,7 +289,7 @@ export class CustomNodeComponent implements OnInit {
   }
 
   get records() {
-    let records = this.commonFilter.transform(this.nodeList, 'name', this.searchTerm);
+    let records = this.commonFilter.transform(this.customNodeList, 'name', this.searchTerm);
     const field = Object.keys(this.sortModel)[0];
     if (field) {
       records = records.sort((a, b) => {
@@ -338,11 +321,19 @@ export class CustomNodeComponent implements OnInit {
     return this.commonService.app._id;
   }
 
-  get code() {
-    return this.form.get('code').value;
-  }
-
-  set code(data: string) {
-    this.form.get('code').patchValue(data);
+  get isInvalid() {
+    if (!this.selectedNode) {
+      return true;
+    }
+    if (!this.selectedNode.name || !this.selectedNode.name.trim()) {
+      return true;
+    }
+    if (!this.selectedNode.type || !this.selectedNode.type.trim()) {
+      return true;
+    }
+    if (!this.selectedNode.category || !this.selectedNode.category.trim()) {
+      return true;
+    }
+    return false;
   }
 }
