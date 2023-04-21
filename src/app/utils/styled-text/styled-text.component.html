@@ -9,7 +9,7 @@
     <div>
       <div class="check" #styledDivText (dataChange)="onChange($event, true)" (changeEvent)="onChangeEvent($event)"
         (scroll)="handleScroll($event)" odpEditor [(data)]="value" *ngIf="useEditableDiv" [style]="divStyle"
-        [insertText]="insertText">
+        [insertText]="insertText" (keydown.delete)="$event.stopPropagation();">
       </div>
       <div class="suggestions" *ngIf="list.length > 0 && this.searchTerm" [style]="suggestionStyle">
         <div *ngFor="let option of list" class="d-flex flex-column">

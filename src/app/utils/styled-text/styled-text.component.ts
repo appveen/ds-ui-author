@@ -198,7 +198,7 @@ export class StyledTextComponent implements OnInit {
         // term = term.split(' ').filter((ele) => ele.startsWith("{{") && !ele.endsWith("}")).pop() || '';
         // this.searchTerm = term;
         if (this.searchTerm) {
-          term = this.searchTerm.replace('{{', '');
+          term = this.searchTerm.replace('{{', '').trim();
         }
         return matches.length === 0 && this.searchTerm === '' ? [] : this.suggestions.filter((v) => v.label.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 15);
       }),
