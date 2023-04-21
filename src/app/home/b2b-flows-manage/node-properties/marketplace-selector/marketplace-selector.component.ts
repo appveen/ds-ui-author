@@ -93,7 +93,7 @@ export class MarketplaceSelectorComponent implements OnInit {
     if (!this.data.params) {
       this.data.params = [];
     }
-    this.currNode.node = this.data;
+    this.currNode.options.node = this.data;
   }
 
   get isNodeSelected() {
