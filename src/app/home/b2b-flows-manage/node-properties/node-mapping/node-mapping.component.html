@@ -26,10 +26,15 @@
                                 <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">File Agent</span>
                             </div>
-                            <div *ngIf="node.type=='API'"
+                            <div *ngIf="node.type=='API' && node._id!=inputNode"
                                 class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Invoke API</span>
+                            </div>
+                            <div *ngIf="node.type=='API' && node._id==inputNode"
+                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
+                                <span class="node-icon font-16 fw-400 dsi dsi-api-reciever mr-2"></span>
+                                <span class="font-13 fw-400 text-secondary">API Json Receiver</span>
                             </div>
                             <div *ngIf="node.type=='CONNECTOR'"
                                 class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">

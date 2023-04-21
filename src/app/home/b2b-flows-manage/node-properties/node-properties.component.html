@@ -436,7 +436,7 @@
 </div>
 
 <div [ngClass]="{'show':toggle['mapping']}" class="node-mapping-window border-left position-fixed bg-white p-4">
-    <odp-node-mapping *ngIf="toggle['mapping']" [edit]="edit" [currNode]="currNode"
+    <odp-node-mapping *ngIf="toggle['mapping']" [edit]="edit" [currNode]="currNode" [inputNode]="this.flowData.inputNode._id"
         (close)="toggle['mapping']=false"></odp-node-mapping>
 </div>
 
