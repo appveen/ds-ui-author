@@ -39,6 +39,7 @@ export class CustomNodeComponent implements OnInit {
   isEdit: boolean;
   cloneData: any;
   toggleExpand: boolean;
+  params: Array<any>;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -49,9 +50,9 @@ export class CustomNodeComponent implements OnInit {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
-      code: [],
-      category: [],
-      type: []
+      category: ['', [Validators.required, Validators.maxLength(24), Validators.pattern(/\w+/)]],
+      type: ['', [Validators.required, Validators.maxLength(24), Validators.pattern(/\w+/)]],
+      code: []
     });
     this.apiConfig = {
       page: 1,
@@ -67,6 +68,7 @@ export class CustomNodeComponent implements OnInit {
     this.openDeleteModal = new EventEmitter();
     this.showLazyLoader = true;
     this.sortModel = {};
+    this.params = [];
   }
   ngOnInit() {
     this.getNodes();
@@ -80,8 +82,6 @@ export class CustomNodeComponent implements OnInit {
   }
 
   newNode() {
-    this.form.get('category').clearValidators();
-    this.form.get('type').clearValidators();
     this.form.reset({});
     this.showNewNodeWindow = true;
   }
@@ -133,9 +133,10 @@ export class CustomNodeComponent implements OnInit {
   getNodes() {
     this.showLazyLoader = true;
     this.customNodeList = [];
-    return this.commonService.get('partnerManager', `/admin/node/utils/count`).pipe(switchMap((count: any) => {
+    return this.commonService.get('partnerManager', `/admin/node/utils/count`, { noApp: true }).pipe(switchMap((count: any) => {
       return this.commonService.get('partnerManager', `/admin/node`, {
         count: count,
+        noApp: true
       });
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
@@ -198,11 +199,12 @@ export class CustomNodeComponent implements OnInit {
     }
   }
 
-  editNode(item: any) {
+  selectNode(item: any) {
     if (!item.code || !item.code.trim()) {
       item.code = '// do something\nreturn state;'
     }
     this.selectedNode = null;
+    this.params = item.params || [];
     setTimeout(() => {
       this.selectedNode = item;
     }, 100);
@@ -243,6 +245,7 @@ export class CustomNodeComponent implements OnInit {
   }
 
   saveNode() {
+    this.selectedNode.params = this.params;
     const url = `/admin/node/` + this.selectedNode._id;
     this.showLazyLoader = true;
     this.commonService
@@ -265,6 +268,18 @@ export class CustomNodeComponent implements OnInit {
 
   triggerSaveNode() {
 
+  }
+
+  addParam() {
+    this.params.push({ htmlType: 'input', dataType: 'text' });
+  }
+
+  removeParam(index: number) {
+    this.params.splice(index, 1);
+  }
+
+  convertToKey(value: string, item: any) {
+    item.key = this.appService.toCamelCase(value);
   }
 
   private compare(a: any, b: any) {

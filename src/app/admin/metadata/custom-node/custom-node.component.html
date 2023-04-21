@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="list-group-item d-flex align-items-center justify-content-start hover"
-                    *ngFor="let item of records;let i=index" (dblclick)="editNode(item)" (click)="editNode(item)">
+                    *ngFor="let item of records;let i=index" (dblclick)="selectNode(item)" (click)="selectNode(item)">
                     <div class="item-name fw-500 d-flex align-items-center">
                         <span class="ml-2 pl-1 text-dark text-truncate" [ngbTooltip]="item.name"
                             placement="right">{{item.name}}</span>
@@ -103,27 +103,79 @@
                         </div>
                     </div>
                 </div>
-                <pre class="bg-light border rounded p-2 d-flex flex-column w-100">
-                <div class="d-flex align-items-center justify-content-start">
-                    <span class="text-info fw-500 mr-2 d-flex">
-                        <strong>var</strong>
-                    </span>
-                    <strong>node;</strong>
-                    <span class="text-success ml-3">//Contains state data of all the nodes.</span>
+                <div class="form-group w-100">
+                    <label for="params">User Params</label>
+                    <table class="table table-bordered">
+                        <thead class="table-grey font-10 text-uppercase text-secondary">
+                            <tr>
+                                <th>Label</th>
+                                <th>Key</th>
+                                <th>Data Type</th>
+                                <th>HTML Type</th>
+                                <th>
+                                    <span class="dsi dsi-plus-circle text-accent hover" (click)="addParam()"></span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="!params || params.length==0">
+                                <td colspan="5">No Params</td>
+                            </tr>
+                            <tr *ngFor="let item of params;let i=index">
+                                <td>
+                                    <input type="text" class="form-control" [(ngModel)]="item.label"
+                                        (ngModelChange)="convertToKey($event,item)">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" [(ngModel)]="item.key">
+                                </td>
+                                <td>
+                                    <select class="form-control" [(ngModel)]="item.dataType">
+                                        <option value="text" selected>Text</option>
+                                        <option value="password">Password</option>
+                                        <option value="number">Number</option>
+                                        <option value="boolean">Boolean</option>
+                                        <option value="date">Date</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" [(ngModel)]="item.htmlType">
+                                        <option value="input" selected>Input</option>
+                                        <option *ngIf="item.dataType=='text'" value="textarea">Textarea</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <span class="dsi dsi-minus-circle text-danger hover"
+                                        (click)="removeParam(i)"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="d-flex align-items-center justify-content-start">
-                    <span class="text-info fw-500 mr-2 d-flex">
-                        <strong>var</strong>
-                    </span>
-                    <strong>state;</strong>
-                    <span class="text-success ml-3">//Contains the state of this node. Write code and update this state object an return it.</span>
+                <div class="bg-light border rounded p-2 d-flex flex-column w-100 text-monospace">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <span class="text-info fw-500 mr-2 d-flex">
+                            <strong>var</strong>
+                        </span>
+                        <strong>node;</strong>
+                        <span class="text-success ml-3">//Contains state data of all the nodes.</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-start">
+                        <span class="text-info fw-500 mr-2 d-flex">
+                            <strong>var</strong>
+                        </span>
+                        <strong>state;</strong>
+                        <span class="text-success ml-3">//Contains the state of this node. Write code and update this
+                            state object an return it.</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-start text-secondary mt-2">
+                        <strong>Note:</strong>
+                        <span class="ml-2">Outer function is <span class="text-info fw-600">async</span> so using <span
+                                class="text-info fw-600">await</span> keyword is allowed.</span>
+                    </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-start text-secondary mt-2">
-                    <strong>Note:</strong>
-                    <span class="ml-2">Outer function is <span class="text-info fw-600">async</span> so using <span class="text-info fw-600">await</span> keyword is allowed.</span>
-                </div>
-            </pre>
-                <div class="code-editor-wrapper d-flex flex-column border rounded w-100" [class.expanded]="toggleExpand">
+                <div class="code-editor-wrapper d-flex flex-column border rounded w-100 mt-3"
+                    [class.expanded]="toggleExpand">
                     <div class="border-bottom d-flex align-items-center justify-content-between w-100 p-2 bg-light">
                         <span class="text-monospace font-12 fw-600 text-secondary">Write Your Code Here</span>
                         <span *ngIf="!toggleExpand" ngbTooltip="Expand" class="dsi dsi-expand hover"
@@ -157,9 +209,8 @@
                 <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
             </label>
             <div class="name-wrapper position-relative mb-3">
-                <input newNodeName autocomplete="off" type="text" class="form-control" id="name"
-                    placeholder="Untitled Process Node" formControlName="name" odpAutoFocus
-                    (keyup.enter)="isClone ? triggerNodeClone() : triggerNodeCreate()"
+                <input autocomplete="off" type="text" class="form-control" id="name" placeholder="Untitled Process Node"
+                    formControlName="name" odpAutoFocus
                     [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
                 <ng-container *ngIf="form.get('name').dirty">
                     <span *ngIf="form.get('name').hasError('required')"
@@ -167,10 +218,55 @@
                         ngbTooltip="Name is required"></span>
                     <span *ngIf="form.get('name').hasError('maxlength')"
                         class="text-danger position-absolute dsi dsi-danger-circle" container="body"
-                        ngbTooltip="Name should be within 30 characters"></span>
+                        ngbTooltip="Name should be within 40 characters"></span>
                     <span *ngIf="form.get('name').hasError('pattern')"
                         class="text-danger position-absolute dsi dsi-danger-circle" container="body"
                         ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
+                </ng-container>
+            </div>
+        </div>
+        <div class="d-flex flex-column w-100">
+            <label for="type" class="font-13 text-secondary">
+                <span class="text">Type</span>
+                <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+            </label>
+            <div class="name-wrapper position-relative mb-3">
+                <input autocomplete="off" type="text" class="form-control" id="type" placeholder="Type of Process Node"
+                    formControlName="type"
+                    [ngClass]="{'is-invalid':form.get('type').invalid && form.get('type').dirty}">
+                <ng-container *ngIf="form.get('type').dirty">
+                    <span *ngIf="form.get('type').hasError('required')"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Type is required"></span>
+                    <span *ngIf="form.get('type').hasError('maxlength')"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Type should be within 24 characters"></span>
+                    <span *ngIf="form.get('type').hasError('pattern')"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Type can be only alphanumeric and can only contain spaces"></span>
+                </ng-container>
+            </div>
+        </div>
+        <div class="d-flex flex-column w-100">
+            <label for="category" class="font-13 text-secondary">
+                <span class="text">Category</span>
+                <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
+            </label>
+            <div class="name-wrapper position-relative mb-3">
+                <input autocomplete="off" type="text" class="form-control" id="category"
+                    placeholder="Category of Process Node" formControlName="category"
+                    (keyup.enter)="isClone ? triggerNodeClone() : triggerNodeCreate()"
+                    [ngClass]="{'is-invalid':form.get('category').invalid && form.get('category').dirty}">
+                <ng-container *ngIf="form.get('category').dirty">
+                    <span *ngIf="form.get('category').hasError('required')"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Category is required"></span>
+                    <span *ngIf="form.get('category').hasError('maxlength')"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Category should be within 24 characters"></span>
+                    <span *ngIf="form.get('category').hasError('pattern')"
+                        class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                        ngbTooltip="Category can be only alphanumeric and can only contain spaces"></span>
                 </ng-container>
             </div>
         </div>

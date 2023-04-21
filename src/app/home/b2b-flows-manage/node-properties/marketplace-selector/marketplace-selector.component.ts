@@ -27,9 +27,10 @@ export class MarketplaceSelectorComponent implements OnInit {
 
   loadInitial() {
     this.showLoader = true;
-    this.commonService.get('partnerManager', `/${this.commonService.app._id}/nodes`, {
+    this.commonService.get('partnerManager', '/admin/node', {
       sort: 'name',
-      count: 5
+      count: 5,
+      noApp: true
     }).subscribe((res) => {
       this.showLoader = false;
       this.customNodeList = res;
@@ -45,11 +46,12 @@ export class MarketplaceSelectorComponent implements OnInit {
       filter: {
         name: '/' + searchTerm + '/'
       },
-      count: 5
+      count: 5,
+      noApp: true
     };
     this.searchTerm = searchTerm;
     this.showLoader = true;
-    this.commonService.get('partnerManager', `/${this.commonService.app._id}/nodes`, options).subscribe((res) => {
+    this.commonService.get('partnerManager', '/admin/node', options).subscribe((res) => {
       this.showLoader = false;
       this.customNodeList = res;
       this.selectDefault();
@@ -88,7 +90,10 @@ export class MarketplaceSelectorComponent implements OnInit {
 
   selectNode() {
     this.data = this.customNodeList.find(e => e._selected);
-    this.currNode.subType = this.data.type;
+    if (!this.data.params) {
+      this.data.params = [];
+    }
+    this.currNode.node = this.data;
   }
 
   get isNodeSelected() {

@@ -53,89 +53,6 @@
             <div class="fw-500 font-12 text-secondary">Right Click on the canvas for Node Options</div>
         </div>
         <div class="flow-designer d-flex">
-            <!-- <div class="available-nodes border-right h-100">
-                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
-                    <div class="d-flex align-items-center">
-                        <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
-                        <span class="font-13 fw-400">File Agent</span>
-                    </div>
-                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
-                        (click)="addNodeToCanvas('FILE')"></span>
-                </div>
-                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
-                    <div class="d-flex align-items-center">
-                        <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
-                        <span class="font-13 fw-400">Invoke API</span>
-                    </div>
-                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
-                        (click)="addNodeToCanvas('API')"></span>
-                </div>
-                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
-                    <div class="d-flex align-items-center">
-                        <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
-                        <span class="font-13 fw-400">Connector</span>
-                    </div>
-                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
-                        (click)="addNodeToCanvas('CONNECTOR')"></span>
-                </div>
-                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
-                    <div class="d-flex align-items-center">
-                        <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
-                        <span class="font-13 fw-400">Data Service</span>
-                    </div>
-                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
-                        (click)="addNodeToCanvas('DATASERVICE')"></span>
-                </div>
-                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
-                    <div class="d-flex align-items-center">
-                        <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
-                        <span class="font-13 fw-400">Function</span>
-                    </div>
-                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
-                        (click)="addNodeToCanvas('FUNCTION')"></span>
-                </div>
-                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
-                    <div class="d-flex align-items-center">
-                        <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
-                        <span class="font-13 fw-400">Mapping</span>
-                    </div>
-                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
-                        (click)="addNodeToCanvas('MAPPING')"></span>
-                </div>
-                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
-                    <div class="d-flex align-items-center">
-                        <span class="node-icon font-16 fw-400 dsi dsi-object mr-2 text-muted"></span>
-                        <span class="font-13 fw-400">Code Block</span>
-                    </div>
-                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
-                        (click)="addNodeToCanvas('CODEBLOCK')"></span>
-                </div>
-                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
-                    <div class="d-flex align-items-center">
-                        <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
-                        <span class="font-13 fw-400">Change Root</span>
-                    </div>
-                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
-                        (click)="addNodeToCanvas('UNWIND')"></span>
-                </div>
-                <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
-                    <div class="d-flex align-items-center">
-                        <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
-                        <span class="font-13 fw-400">Response</span>
-                    </div>
-                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
-                        (click)="addNodeToCanvas('RESPONSE')"></span>
-                </div>
-                <div *ngIf="!hasErrorNode"
-                    class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
-                    <div class="d-flex align-items-center">
-                        <span class="node-icon font-16 fw-400 dsi dsi-danger-circle text-danger mr-2"></span>
-                        <span class="font-13 fw-400">Global Error</span>
-                    </div>
-                    <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
-                        (click)="addNodeToCanvas('ERROR')"></span>
-                </div>
-            </div> -->
             <div class="flow-designer-svg-wrapper" (scroll)="scroll()">
                 <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
                     <g *ngFor="let node of nodeList;let i=index">
@@ -162,20 +79,6 @@
 
 
 <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteNodeModal($event)"></odp-delete-modal>
-
-<!-- <ng-template #deleteModalTemplate>
-    <div class="modal-body p-4">
-        <div class="d-flex align-items-center justify-content-between w-100">
-            <span class="font-20 fw-600">{{deleteModal.title}}</span>
-            <span class="fa fa-times text-secondary hover" (click)="deleteModalTemplateRef.close(false)"></span>
-        </div>
-        <p class="text-secondary text-center my-5">{{deleteModal.message}}</p>
-        <div class="d-flex align-items-center justify-content-end">
-            <button type="button" class="btn btn-min-width btn-danger" (click)="deleteModalTemplateRef.close(true)"
-                id="sbDeleteModalYes">Yes</button>
-        </div>
-    </div>
-</ng-template> -->
 
 <ng-template #pageChangeModalTemplate>
     <div class="modal-body p-4">
