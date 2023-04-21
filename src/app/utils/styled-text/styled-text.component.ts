@@ -73,6 +73,7 @@ export class StyledTextComponent implements OnInit {
         'white-space': 'pre-wrap',
         'max-height': height + 'px !important',
         overflow: 'auto',
+        'z-index':-1
       }
       this.list = _.cloneDeep(this.suggestions)
     }
