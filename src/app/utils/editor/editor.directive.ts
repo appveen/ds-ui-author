@@ -40,12 +40,12 @@ export class EditorDirective implements OnInit {
     });
   }
 
-  @HostListener('input', ['$event'])
+  @HostListener('keyup', ['$event'])
   onKeyUp(event: KeyboardEvent) {
-    this.ele.nativeElement.scrollTop = this.ele.nativeElement.scrollHeight;
     this.selectedObj = this.document.getSelection();
     this.rangeObj = this.selectedObj.getRangeAt(0);
     // console.table([this.rangeObj])
+    this.ele.nativeElement.scrollTop = this.ele.nativeElement.scrollHeight;
     this.data = this.element.innerText;
     this.dataChange.emit(this.data);
     this.changeEvent.emit(event);
