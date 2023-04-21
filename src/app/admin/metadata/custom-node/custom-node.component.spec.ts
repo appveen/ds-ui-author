@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataActualComponent } from './data-actual.component';
+import { CustomNodeComponent } from './custom-node.component';
 
-describe('DataActualComponent', () => {
-  let component: DataActualComponent;
-  let fixture: ComponentFixture<DataActualComponent>;
+describe('CustomNodeComponent', () => {
+  let component: CustomNodeComponent;
+  let fixture: ComponentFixture<CustomNodeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DataActualComponent ]
+      declarations: [ CustomNodeComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DataActualComponent);
+    fixture = TestBed.createComponent(CustomNodeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

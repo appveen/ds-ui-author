@@ -37,10 +37,13 @@ export class B2bFlowService {
       DEDUPE: 'De-Dupe',
       CONFLICT: 'Conflict',
       FOREACH: 'For Each',
+      MARKETPLACE: 'Marketplace',
       REDUCE: 'Reduce',
       UNWIND: 'Change Root',
       RESPONSE: 'Response',
-      ERROR: 'Global Error'
+      ERROR: 'Global Error',
+      FILE_READ: 'File Reader',
+      FILE_WRITE: 'File Writer'
     };
     this.nodeList = [];
     this.nodeIDCounter = 0;
@@ -175,6 +178,9 @@ export class B2bFlowService {
     if (type == 'DATASERVICE') {
       temp.options.update = true;
       temp.options.insert = true;
+    }
+    if (type == 'FOREACH' || type == 'REDUCE') {
+      temp.options.startNode = null;
     }
     if (type == 'CODEBLOCK') {
       const tempCode = [];
@@ -361,80 +367,6 @@ export class B2bFlowService {
     return temp;
   }
 
-  getAvailableTransformMethods() {
-    return [
-      {
-        name: '_.CONCAT',
-        params: [
-          {
-            name: 'Array 1',
-            type: 'Array'
-          },
-          {
-            name: 'Array 2',
-            type: 'Array'
-          }
-        ],
-        value: '_.concat( [ array1 ], [ array2 ] )'
-      },
-      {
-        name: '_.ESCAPE',
-        params: [
-          {
-            name: 'String',
-            type: 'String'
-          }
-        ],
-        value: '_.escape("String")'
-      },
-      {
-        name: '_.UNESCAPE',
-        params: [
-          {
-            name: 'String',
-            type: 'String'
-          }
-        ],
-        value: '_.unescape("String")'
-      },
-
-      {
-        name: '_.FIRST',
-        params: [
-          {
-            name: 'Array',
-            type: 'Array'
-          }
-        ],
-        value: '_.first( [ array ] )'
-      },
-      {
-        name: '_.LAST',
-        params: [
-          {
-            name: 'Array',
-            type: 'Array'
-          }
-        ],
-        value: '_.last( [ array ] )'
-      },
-      {
-        name: '_.NTH',
-        params: [
-          {
-            name: 'Array',
-            type: 'Array'
-          },
-          {
-            name: 'Index',
-            type: 'Number'
-          }
-        ],
-        value: '_.nth( [ array ], index )'
-      }
-    ];
-  }
-
   getNestedSuggestions(node: any, definition: Array<any>, parentKey?: any) {
     let list = [];
     if (definition && definition.length > 0) {
@@ -447,12 +379,12 @@ export class B2bFlowService {
           item.label = (node._id || node.type) + '/body/' + key;
           item.value = node._id + '.body.' + key;
           list.push(item);
-          if(node.type=="DATASERVICE"){
+          if (node.type == "DATASERVICE") {
             item = {};
             item.label = (node._id || node.type) + '/responseBody[0]/' + key;
             item.value = node._id + '.responseBody[0].' + key;
             list.push(item);
-          }else{
+          } else {
             item = {};
             item.label = (node._id || node.type) + '/responseBody/' + key;
             item.value = node._id + '.responseBody.' + key;

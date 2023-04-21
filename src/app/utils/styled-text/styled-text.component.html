@@ -1,14 +1,27 @@
-<div>
+<div id="parent">
   <div class="input-container">
     <input #styledInputText [value]="value" (input)="onChange($event)" [ngbTypeahead]="ngbTypeahead"
       (scroll)="handleScroll($event)" [resultFormatter]="resultFormatter" [inputFormatter]="inputFormatter"
       (selectItem)="selectItem($event)" [disabled]="disabled" (paste)="onPaste.emit($event)"
-      (keyup.enter)="onEnter.emit($event)" [pattern]="pattern.source" [placeholder]="placeholder" (keydown.delete)="$event.stopPropagation();">
+      (keyup.enter)="onEnter.emit($event)" [pattern]="pattern.source" [placeholder]="placeholder"
+      (keydown.delete)="$event.stopPropagation();" *ngIf="!useEditableDiv">
 
-    <div class="input-renderer" #renderer>
-      <div *ngFor="let word of valueArray">
-        <span [ngClass]="{'text-primary': regexMatch(word)}">{{word}}</span>
+    <div>
+      <div class="check" #styledDivText (dataChange)="onChange($event, true)" (changeEvent)="onChangeEvent($event)"
+        (scroll)="handleScroll($event)" odpEditor [(data)]="value" *ngIf="useEditableDiv" [style]="divStyle"
+        [insertText]="insertText">
       </div>
+      <div class="suggestions" *ngIf="list.length > 0 && this.searchTerm" [style]="suggestionStyle">
+        <div *ngFor="let option of list" class="d-flex flex-column">
+          <span class="hover option" (click)="selectOption(option)">{{option.label}}</span>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="input-renderer" #renderer [style]="rendererStyle">
+      <span *ngFor="let word of valueArray" [ngClass]="{'text-primary': regexMatch(word)}">{{word}}</span>
     </div>
   </div>
 

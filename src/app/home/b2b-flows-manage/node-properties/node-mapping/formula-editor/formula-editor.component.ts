@@ -22,6 +22,7 @@ export class FormulaEditorComponent implements OnInit {
   searchTerm: string;
   tempData: any;
   variableSuggestions: Array<{ label: string, value: string }>;
+  suggestions: any = [];
   availableMethods: Array<any>;
   insertText: EventEmitter<string>;
   nodeList: Array<any>;
@@ -39,7 +40,6 @@ export class FormulaEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.availableMethods = this.flowService.getAvailableTransformMethods();
     this.fetchAllFormulas();
     this.tempData = this.data;
     this.nodeList = this.flowService.getNodesBefore(this.currNode);
@@ -81,6 +81,7 @@ export class FormulaEditorComponent implements OnInit {
     this.$triggerSearch.pipe(debounceTime(200)).subscribe(() => {
       this.fetchAllFormulas();
     });
+    this.suggestions = this.flowService.getSuggestions(this.currNode)
   }
 
   fetchAllFormulas() {
@@ -122,6 +123,10 @@ export class FormulaEditorComponent implements OnInit {
     this.close.emit(false);
     this.data = this.tempData;
     this.dataChange.emit(this.data);
+  }
+
+  tempDataChange(event) {
+    this.tempData = event;
   }
 
   getDataTypeStyleClass(type: string) {

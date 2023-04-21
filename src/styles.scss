@@ -998,6 +998,14 @@ $weights: 200,
     color: #009BFF;
   }
 
+  &.dsi-file.read {
+    color: #2FC48F;
+  }
+
+  &.dsi-file.write {
+    color: #FF4C82;
+  }
+
   &.dsi-logs {
     color: #FF7D4C;
   }

@@ -45,12 +45,15 @@
         </odp-basic-info>
     </div>
     <div class="border rounded bg-white">
-        <div class="url-info d-flex align-items-center p-3 border-bottom">
-            <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
-            <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
+        <div class="url-info d-flex align-items-center justify-content-between p-3 border-bottom">
+            <div class="d-flex align-items-center">
+                <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
+                <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
+            </div>
+            <div class="fw-500 font-12 text-secondary">Right Click on the canvas for Node Options</div>
         </div>
         <div class="flow-designer d-flex">
-            <div class="available-nodes border-right h-100">
+            <!-- <div class="available-nodes border-right h-100">
                 <div class="node-item border-bottom py-2 d-flex align-items-center justify-content-between pr-2">
                     <div class="d-flex align-items-center">
                         <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
@@ -132,7 +135,7 @@
                     <span class="font-16 fw-400 dsi dsi-plus-circle text-primary hover"
                         (click)="addNodeToCanvas('ERROR')"></span>
                 </div>
-            </div>
+            </div> -->
             <div class="flow-designer-svg-wrapper" (scroll)="scroll()">
                 <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
                     <g *ngFor="let node of nodeList;let i=index">
@@ -199,11 +202,19 @@
             <span class="font-13 fw-400">File</span>
         </div>
         <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
-        <div class="node-list-item bg-white rounded border">
+        <div class="node-list-item bg-white rounded border" style="top: 0px;">
             <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE')">
                 <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
                 <span class="font-13 fw-400">File Agent</span>
             </div>
+            <!-- <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE_READ')">
+                <span class="node-icon font-16 fw-400 dsi read dsi-file mr-2"></span>
+                <span class="font-13 fw-400">File Reader</span>
+            </div>
+            <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE_WRITE')">
+                <span class="node-icon font-16 fw-400 dsi write dsi-file mr-2"></span>
+                <span class="font-13 fw-400">File Writer</span>
+            </div> -->
         </div>
     </div>
     <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
@@ -264,11 +275,11 @@
                 <span class="node-icon font-16 fw-400 dsi dsi-copy mr-2"></span>
                 <span class="font-13 fw-400">De-Dupe</span>
             </div>
-            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+            <!-- <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
                 (click)="addNode($event,'CONFLICT')">
                 <span class="node-icon font-16 fw-400 dsi dsi-insight mr-2"></span>
                 <span class="font-13 fw-400">Conflict</span>
-            </div>
+            </div> -->
             <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
                 (click)="addNode($event,'CODEBLOCK')">
                 <span class="node-icon font-16 fw-400 dsi dsi-console mr-2 text-secondary"></span>
@@ -280,7 +291,7 @@
             </div>
         </div>
     </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+    <!-- <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
         <div class="d-flex align-items-center">
             <span class="node-icon font-16 fw-400 dsi dsi-relation mr-2"></span>
             <span class="font-13 fw-400">Loop</span>
@@ -298,6 +309,11 @@
                 <span class="font-13 fw-400">Reduce</span>
             </div>
         </div>
+    </div> -->
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+        (click)="addNode($event,'MARKETPLACE')">
+        <span class="node-icon font-16 fw-400 dsi dsi-library text-info mr-2"></span>
+        <span class="font-13 fw-400">Marketplace</span>
     </div>
     <div *ngIf="!hasErrorNode" class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover"
         (click)="addNode($event,'ERROR')">

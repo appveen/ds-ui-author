@@ -49,19 +49,15 @@ import { PayloadCreatorModule } from 'src/app/utils/payload-creator/payload-crea
 import { PathConditionCreatorComponent } from './path-properties/path-condition-creator/path-condition-creator.component';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { ErrorNodeComponent } from './error-node/error-node.component';
-import { DataTransformComponent } from './node-properties/data-transform/data-transform.component';
-import { DataObjectComponent } from './node-properties/data-transform/data-object/data-object.component';
-import { DataArrayComponent } from './node-properties/data-transform/data-array/data-array.component';
-import { DataActualComponent } from './node-properties/data-transform/data-actual/data-actual.component';
-import { DataCreatorComponent } from './node-properties/data-transform/data-creator/data-creator.component';
 import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
 import { MappingService } from './node-properties/node-mapping/mapping.service';
 import { StyledTextModule } from '../../utils/styled-text/styled-text.module';
 import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
-import { EditorDirective } from './node-properties/node-mapping/formula-editor/editor.directive';
 import { ChangeOnEditModule } from 'src/app/utils/change-on-edit/change-on-edit.module';
 import { AutocompleteOnEditModule } from '../../utils/autocomplete-on-edit/autocomplete-on-edit.module';
 import { ChangeOnEditComponent } from '../../utils/change-on-edit/change-on-edit.component';
+import { MarketplaceSelectorComponent } from './node-properties/marketplace-selector/marketplace-selector.component';
+import { EditorModule } from 'src/app/utils/editor/editor.module';
 
 const routes: Routes = [
   {
@@ -97,12 +93,7 @@ const routes: Routes = [
     PathPropertiesComponent,
     PathConditionCreatorComponent,
     ErrorNodeComponent,
-    DataTransformComponent,
-    DataObjectComponent,
-    DataArrayComponent,
-    DataActualComponent,
-    DataCreatorComponent,
-    EditorDirective
+    MarketplaceSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -132,7 +123,8 @@ const routes: Routes = [
     StyledTextModule,
     FieldTypeModule,
     ChangeOnEditModule,
-    AutocompleteOnEditModule
+    AutocompleteOnEditModule,
+    EditorModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService, MappingService, ChangeOnEditComponent]

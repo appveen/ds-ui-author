@@ -163,7 +163,7 @@ const routes: Routes = [
           import('../home/api-keys/api-keys.module').then(
             (m) => m.ApiKeysModule
           ),
-      },
+      }
     ],
   },
 ];

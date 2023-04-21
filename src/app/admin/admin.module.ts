@@ -44,6 +44,7 @@ import { DateFormatModule } from '../utils/date-format/date-format.module';
 import { MetadataComponent } from './metadata/metadata.component';
 import { MapperFormulasComponent } from './metadata/mapper-formulas/mapper-formulas.component';
 import { CodeEditorModule } from '../utils/code-editor/code-editor.module';
+import { CustomNodeComponent } from './metadata/custom-node/custom-node.component';
 
 @NgModule({
   imports: [
@@ -98,6 +99,7 @@ import { CodeEditorModule } from '../utils/code-editor/code-editor.module';
     AgentsComponent,
     MetadataComponent,
     MapperFormulasComponent,
+    CustomNodeComponent
   ],
 })
-export class AdminModule {}
+export class AdminModule { }
