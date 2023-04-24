@@ -100,6 +100,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       }
       this.form.get('inputNode').patchValue({
         _id: nodeId,
+        name: nodeId,
         type: val,
         options: {
           method: 'POST',
@@ -132,7 +133,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       this.getFlows()
     });
     this.subscriptions['flow.status'] = this.commonService.flow.status.subscribe(data => {
-      const index = this.flowList.findIndex(e =>e._id === data[0]._id);
+      const index = this.flowList.findIndex(e => e._id === data[0]._id);
       if (index !== -1) {
         this.flowList[index].status = data[0].status;
       }
@@ -249,7 +250,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     });
     const val = this.form.get('name').value
     this.cloneData.name = val;
-    this.cloneData.inputNode.options.path = val ? '/' + _.camelCase(val) : null;
+    this.cloneData.inputNode = { ...this.cloneData.inputNode, ...this.form.get('inputNode').value };
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, this.cloneData).subscribe(res => {
       this.showLazyLoader = false;
       this.isClone = false;
@@ -278,10 +279,10 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
         item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/pipes/${this.app}` + item.inputNode.options.path;
         // this.flowList.push(item);
       });
-      this.flowList=res;
-      this.flowList.forEach(e=>{
-        if(e.status=='Pending'){
-          this.commonService.updateStatus(e._id,'flow');
+      this.flowList = res;
+      this.flowList.forEach(e => {
+        if (e.status == 'Pending') {
+          this.commonService.updateStatus(e._id, 'flow');
         }
       })
     }, err => {
@@ -411,7 +412,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
               (d) => {
                 this.ts.info('Deploying data pipe...');
                 item.status = 'Pending';
-                this.commonService.updateStatus(item._id,'flow');
+                this.commonService.updateStatus(item._id, 'flow');
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -461,7 +462,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
                   this.ts.info('Starting data pipe...');
                 }
                 item.status = 'Pending';
-                this.commonService.updateStatus(item._id,'flow');
+                this.commonService.updateStatus(item._id, 'flow');
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -486,7 +487,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
             this.showLazyLoader = false;
             this.ts.info(d.message ? d.message : 'Deleting Data Pipe...');
             this.records[data.index].status = 'Pending';
-            this.commonService.updateDelete(this.records[data.index]._id,'flow')
+            this.commonService.updateDelete(this.records[data.index]._id, 'flow')
           },
           (err) => {
             this.showLazyLoader = false;
