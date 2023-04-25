@@ -169,7 +169,6 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   nodeNameChanged(value: string) {
-    console.log(value);
     const oldId = this.currNode._id;
     const newId = _.snakeCase(value);
     // this.currNode._id = newId;

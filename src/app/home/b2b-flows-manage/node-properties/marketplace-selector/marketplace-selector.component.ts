@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
+import * as _ from 'lodash';
+import { AppService } from 'src/app/utils/services/app.service';
+import { B2bFlowService } from '../../b2b-flow.service';
 
 @Component({
   selector: 'odp-marketplace-selector',
@@ -10,13 +13,17 @@ export class MarketplaceSelectorComponent implements OnInit {
 
   @Input() currNode: any;
   @Input() edit: any
+  @Input() nodeList: Array<any>;
   showLoader: boolean;
   customNodeList: Array<any>;
   searchTerm: string;
   data: any;
-  constructor(private commonService: CommonService) {
+  constructor(private commonService: CommonService,
+    private flowService: B2bFlowService,
+    private appService: AppService) {
     this.edit = { status: false };
     this.customNodeList = [];
+    this.nodeList = [];
   }
 
   ngOnInit(): void {
@@ -94,6 +101,22 @@ export class MarketplaceSelectorComponent implements OnInit {
       this.data.params = [];
     }
     this.currNode.options.node = this.data;
+    const oldId = this.currNode._id;
+    const nodeName = this.data.name + ' ' + this.flowService.nodeIDCounter;
+    const newId = _.snakeCase(nodeName);
+    this.flowService.nodeIDCounter++;
+    let regex = new RegExp(`${oldId}`, 'g');
+    let replacer = newId;
+    this.nodeList.forEach((item) => {
+      let temp = this.appService.cloneObject(item);
+      delete temp.dataStructure;
+      let content = JSON.stringify(temp);
+      let fixedNode = JSON.parse(content.replace(regex, replacer));
+      _.merge(item, fixedNode);
+    });
+    this.flowService.reCreatePaths.emit();
+    this.currNode._id = newId;
+    this.currNode.name = nodeName;
   }
 
   get isNodeSelected() {

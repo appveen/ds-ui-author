@@ -153,12 +153,15 @@ export class B2bFlowService {
   }
 
   getNodeObject(type: string, nodeList: Array<any>) {
-    let allIds = nodeList.map(e => e._id);
     if (this.nodeIDCounter == 0) {
       this.nodeIDCounter = this.nodeList.length;
     }
     this.nodeIDCounter++;
     let defaultName = this.getNodeType({ type, contentType: 'application/json' }) + ' ' + this.nodeIDCounter;
+    while (nodeList.findIndex(e => e._id == _.snakeCase(defaultName)) > -1) {
+      this.nodeIDCounter++;
+      defaultName = this.getNodeType({ type, contentType: 'application/json' }) + ' ' + this.nodeIDCounter;
+    }
     const temp: any = {
       // _id: this.appService.getNodeID(allIds),
       _id: _.snakeCase(defaultName),
