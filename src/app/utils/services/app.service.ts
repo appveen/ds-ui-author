@@ -21,6 +21,7 @@ export class AppService {
     cloneLibraryId: string;
     loginComponent: boolean;
     editUser: boolean;
+    code:any;
     toggleSideNav: EventEmitter<boolean>;
     detectPermissionChange: EventEmitter<boolean>;
     ldapUserPass: string;
