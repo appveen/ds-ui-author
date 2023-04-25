@@ -44,7 +44,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   selectedLibrary: any;
   sortModel: any;
   breadcrumbPaths: Array<Breadcrumb>;
-  cloneOldName: any;
+  cloneOldUrl: any;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -119,15 +119,15 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     this.showLazyLoader = true;
-    if (this.isClone) {
-      const newName=this.form.value.name.replaceAll(' ','')
-      payload.code = payload.code.replaceAll(this.cloneOldName, newName)
-      this.isClone=false;
-      this.appService.code=payload.code;
-    }
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/faas`, payload).subscribe(res => {
       this.showLazyLoader = false;
       this.form.reset();
+      if (this.isClone) {
+        const newUrl=res.url.split('/').at(-1);
+        payload.code = payload.code.replaceAll(this.cloneOldUrl, newUrl);
+        this.isClone=false;
+        this.appService.code=payload.code;
+      }
       this.ts.success('Function has been created.');
       this.appService.edit = res._id;
       this.router.navigate(['/app/', this.commonService.app._id, 'faas', res._id]);
@@ -141,7 +141,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   cloneFunction(index: number) {
     this.form.reset();
     const temp = this.faasList[index];
-    this.cloneOldName=temp.name;
+    this.cloneOldUrl=temp.url.split('/').at(-1);
     this.form.get('name').patchValue(temp.name + ' Copy');
     this.form.get('code').patchValue(temp.code);
     this.showNewFaasWindow = true;
