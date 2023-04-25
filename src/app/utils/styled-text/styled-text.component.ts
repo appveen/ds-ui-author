@@ -73,13 +73,17 @@ export class StyledTextComponent implements OnInit {
         'white-space': 'pre-wrap',
         'max-height': height + 'px !important',
         overflow: 'auto',
-        'z-index':-1
+        'z-index':-1,
+        'margin': '0 0.2em 0 0.5rem',
+        'position': 'absolute'
       }
       this.list = _.cloneDeep(this.suggestions)
     }
     else {
       this.rendererStyle = {
-        'margin-top': '0.3rem'
+        'margin-top': '0.3rem',
+        'padding': '0 0.5rem',
+        'position': 'relative'
       }
     }
   }
