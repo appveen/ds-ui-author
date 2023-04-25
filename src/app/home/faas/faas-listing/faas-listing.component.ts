@@ -121,7 +121,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     this.showLazyLoader = true;
     if (this.isColne) {
       payload.code = payload.code.replaceAll(this.cloneOldName, this.form.value.name)
-      console.log(payload.code)
       this.isColne=false;
       this.appService.code=payload.code;
     }
