@@ -123,7 +123,7 @@
                   View
                 </div>
                 <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFaas(item._id)"
-                  (click)="cloneFunction(i)">
+                  (click)="cloneFunction(i);isColne=true">
                   Clone
                 </div>
                 <div class="list-group-item list-group-item-action py-2 border-0 text-danger" *ngIf="canManageFaas(item._id)"
@@ -143,7 +143,7 @@
     [ngClass]="{'show': showNewFaasWindow}" [formGroup]="form">
     <div class="d-flex align-items-center justify-content-between">
       <h5 class="m-0 font-20 fw-600">New Function</h5>
-      <button type="button" class="close" (click)="showNewFaasWindow=false">
+      <button type="button" class="close" (click)="showNewFaasWindow=false;isColne=false">
         <span>&times;</span>
       </button>
     </div>

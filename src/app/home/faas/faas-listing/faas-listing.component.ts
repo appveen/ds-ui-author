@@ -27,6 +27,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   showNewFaasWindow: boolean;
   searchTerm: string;
   faasList: Array<any>;
+  isColne: boolean=false;
   alertModal: {
     statusChange?: boolean;
     title: string;
@@ -43,6 +44,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   selectedLibrary: any;
   sortModel: any;
   breadcrumbPaths: Array<Breadcrumb>;
+  cloneOldName: any;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -117,6 +119,12 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     this.showLazyLoader = true;
+    if (this.isColne) {
+      payload.code = payload.code.replaceAll(this.cloneOldName, this.form.value.name)
+      console.log(payload.code)
+      this.isColne=false;
+      this.appService.code=payload.code;
+    }
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/faas`, payload).subscribe(res => {
       this.showLazyLoader = false;
       this.form.reset();
@@ -128,6 +136,15 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       this.form.reset();
       this.commonService.errorToast(err);
     });
+  }
+
+  cloneFunction(index: number) {
+    this.form.reset();
+    const temp = this.faasList[index];
+    this.cloneOldName=temp.name;
+    this.form.get('name').patchValue(temp.name + ' Copy');
+    this.form.get('code').patchValue(temp.code);
+    this.showNewFaasWindow = true;
   }
 
   getFaas() {
@@ -367,14 +384,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       'Are you sure you want to delete this function? This action will delete : <span class="text-delete font-weight-bold">' + this.faasList[index].name + '</span>';
     this.alertModal.index = index;
     this.openDeleteModal.emit(this.alertModal);
-  }
-
-  cloneFunction(index: number) {
-    this.form.reset();
-    const temp = this.faasList[index];
-    this.form.get('name').patchValue(temp.name + ' Copy');
-    this.form.get('code').patchValue(temp.code);
-    this.showNewFaasWindow = true;
   }
 
   copyUrl(faas: any) {

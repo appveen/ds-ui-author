@@ -99,6 +99,10 @@ export class FaasManageComponent implements OnInit, OnDestroy {
       this.apiCalls.getFaas = false;
       this.showCodeEditor = true;
       this.faasData = this.appService.cloneObject(res);
+      if (this.appService.code) {
+        this.faasData.code = this.appService.code;
+        this.saveDummyCode(false,true);
+      }
       delete this.faasData.__v;
       delete this.faasData._metadata;
       this.oldData = this.appService.cloneObject(this.faasData);
@@ -135,7 +139,7 @@ export class FaasManageComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveDummyCode(deploy?: boolean) {
+  saveDummyCode(deploy?: boolean, nav?:boolean) {
     this.faasData.app = this.commonService.app._id;
     let request;
     this.apiCalls.save = true;
@@ -158,8 +162,12 @@ export class FaasManageComponent implements OnInit, OnDestroy {
         this.ts.success('Saved ' + this.faasData.name + ' and deployment process has started.');
         this.router.navigate(['/app', this.commonService.app._id, 'faas']);
       } else {
-        this.ts.success('Saved ' + this.faasData.name + '.');
-        this.router.navigate(['/app', this.commonService.app._id, 'faas']);
+        if(!nav){
+          this.ts.success('Saved ' + this.faasData.name + '.');
+          this.router.navigate(['/app', this.commonService.app._id, 'faas']);
+        }else{
+          this.appService.code=null;
+        }
       }
     }, err => {
       this.apiCalls.save = false;
