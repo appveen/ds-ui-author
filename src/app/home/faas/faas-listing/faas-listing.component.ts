@@ -127,7 +127,6 @@ export class FaasListingComponent implements OnInit, OnDestroy {
         payload.code = payload.code.replaceAll(this.cloneOldUrl, newUrl);
         this.isClone=false;
         this.appService.code=payload.code;
-        console.log(this.appService.code)
       }
       this.ts.success('Function has been created.');
       this.appService.edit = res._id;
