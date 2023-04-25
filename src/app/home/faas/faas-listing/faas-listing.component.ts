@@ -27,7 +27,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   showNewFaasWindow: boolean;
   searchTerm: string;
   faasList: Array<any>;
-  isColne: boolean=false;
+  isClone: boolean=false;
   alertModal: {
     statusChange?: boolean;
     title: string;
@@ -119,10 +119,10 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     this.showLazyLoader = true;
-    if (this.isColne) {
+    if (this.isClone) {
       const newName=this.form.value.name.replaceAll(' ','')
       payload.code = payload.code.replaceAll(this.cloneOldName, newName)
-      this.isColne=false;
+      this.isClone=false;
       this.appService.code=payload.code;
     }
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/faas`, payload).subscribe(res => {
