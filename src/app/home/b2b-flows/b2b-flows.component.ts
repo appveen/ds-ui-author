@@ -251,6 +251,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     const val = this.form.get('name').value
     this.cloneData.name = val;
     this.cloneData.inputNode = { ...this.cloneData.inputNode, ...this.form.get('inputNode').value };
+    this.cloneData.inputNode.options.path = val ? '/' + _.camelCase(val) : null;
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, this.cloneData).subscribe(res => {
       this.showLazyLoader = false;
       this.isClone = false;
