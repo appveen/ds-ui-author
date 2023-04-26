@@ -27,7 +27,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   showNewFaasWindow: boolean;
   searchTerm: string;
   faasList: Array<any>;
-  isClone: boolean=false;
+  isClone: boolean = false;
   alertModal: {
     statusChange?: boolean;
     title: string;
@@ -95,7 +95,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       this.getFaas();
     });
     this.subscriptions['faas.status'] = this.commonService.faas.status.subscribe(data => {
-      if(data[0].status!='Pending'){
+      if (data[0].status != 'Pending') {
         this.getFaas();
       }
     });
@@ -123,10 +123,10 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       this.showLazyLoader = false;
       this.form.reset();
       if (this.isClone) {
-        const newUrl=res.url.split('/').at(-1);
-        payload.code = payload.code.replaceAll(this.cloneOldUrl, newUrl);
-        this.isClone=false;
-        this.appService.code=payload.code;
+        const newUrl = res.url.split('/').at(-1);
+        payload.code = payload.code.replaceAll('/' + payload.app + '/' + this.cloneOldUrl, '/' + payload.app + '/' + newUrl);
+        this.isClone = false;
+        this.appService.code = payload.code;
       }
       this.ts.success('Function has been created.');
       this.appService.edit = res._id;
@@ -141,7 +141,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
   cloneFunction(index: number) {
     this.form.reset();
     const temp = this.faasList[index];
-    this.cloneOldUrl=temp.url.split('/').at(-1);
+    this.cloneOldUrl = temp.url.split('/').at(-1);
     this.form.get('name').patchValue(temp.name + ' Copy');
     this.form.get('code').patchValue(temp.code);
     this.showNewFaasWindow = true;
@@ -161,9 +161,9 @@ export class FaasListingComponent implements OnInit, OnDestroy {
         item.url = 'https://' + this.commonService.userDetails.fqdn + item.url;
         this.faasList.push(item);
       });
-      this.faasList.forEach(e=>{
-        if(e.status=='Pending'){
-          this.commonService.updateStatus(e._id,'faas');
+      this.faasList.forEach(e => {
+        if (e.status == 'Pending') {
+          this.commonService.updateStatus(e._id, 'faas');
         }
       })
     }, err => {
@@ -329,7 +329,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
                   this.ts.info('Starting function...');
                 }
                 this.faasList[index].status = 'Pending';
-                this.commonService.updateStatus(this.faasList[index]._id,'faas');
+                this.commonService.updateStatus(this.faasList[index]._id, 'faas');
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -354,7 +354,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
             this.showLazyLoader = false;
             this.ts.info(d.message ? d.message : 'Deleting function...');
             this.faasList[data.index].status = 'Pending';
-            this.commonService.updateDelete(this.faasList[data.index]._id,'faas');
+            this.commonService.updateDelete(this.faasList[data.index]._id, 'faas');
           },
           (err) => {
             this.showLazyLoader = false;
