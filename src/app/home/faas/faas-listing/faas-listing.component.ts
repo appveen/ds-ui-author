@@ -124,7 +124,12 @@ export class FaasListingComponent implements OnInit, OnDestroy {
       this.form.reset();
       if (this.isClone) {
         const newUrl = res.url.split('/').at(-1);
-        payload.code = payload.code.replaceAll('/' + payload.app + '/' + this.cloneOldUrl, '/' + payload.app + '/' + newUrl);
+        let code = payload.code.split('\n').filter(e => e.includes('router.'))
+        let codeCopy = [...code]
+        codeCopy = codeCopy.map(e => e.replace('/' + payload.app + '/' + this.cloneOldUrl, '/' + payload.app + '/' + newUrl))
+        code.forEach((value, index) => {
+          payload.code = payload.code.replace(value, codeCopy[index]);
+        });
         this.isClone = false;
         this.appService.code = payload.code;
       }
