@@ -127,19 +127,19 @@ export class FlowNodeComponent implements OnInit {
     });
   }
 
-  @HostListener('document:keydown', ['$event'])
-  onDeleteKey(event: any) {
-    if (((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') {
-      this.deletePath();
-    }
-  }
+  // @HostListener('document:keydown', ['$event'])
+  // onDeleteKey(event: any) {
+  //   if (((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') {
+  //     this.deletePath();
+  //   }
+  // }
 
   deletePath() {
     let onSuccess = true;
-    let nodeIndex = (this.currNode.onSuccess || []).findIndex(e => e._id == this.selectedPath._id);
+    let nodeIndex = (this.currNode.onSuccess || []).findIndex(e => e._id == this.selectedPath?._id);
     if (nodeIndex == -1) {
       onSuccess = false;
-      nodeIndex = (this.currNode.onError || []).findIndex(e => e._id == this.selectedPath._id);
+      nodeIndex = (this.currNode.onError || []).findIndex(e => e._id == this.selectedPath?._id);
     }
     if (nodeIndex > -1) {
       if (onSuccess) {

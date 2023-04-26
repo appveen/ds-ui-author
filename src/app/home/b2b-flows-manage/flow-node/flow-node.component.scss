@@ -70,6 +70,7 @@ text.path-text {
     // }
 }
 
+
 .node-anchor {
     fill: #fff;
 
@@ -101,7 +102,8 @@ text.id-holder {
     fill: #666;
     font-size: 10px;
     text-transform: uppercase;
-    font-weight: 500;;
+    font-weight: 500;
+    ;
 }
 
 rect.API.START {
@@ -153,4 +155,8 @@ rect.UNWIND {
 
 rect.RESPONSE {
     fill: #2FC48F;
+}
+
+.no-outline {
+    outline: none;
 }
