@@ -104,6 +104,10 @@
   min-height: calc(100vh - 144px);
   max-height: calc(100vh - 144px);
   overflow: auto;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .flow-designer-svg {

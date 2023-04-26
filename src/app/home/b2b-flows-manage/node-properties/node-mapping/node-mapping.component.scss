@@ -37,6 +37,10 @@ path {
     }
 }
 
+.no-outline {
+    outline: none !important;
+}
+
 .transparent-path {
     stroke: transparent;
     stroke-width: 4;

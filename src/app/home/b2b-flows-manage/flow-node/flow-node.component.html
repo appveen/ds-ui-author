@@ -1,6 +1,6 @@
 <svg>
     <g class="node-block" [style]="'transform: translate('+currNode.coordinates.x+'px,'+ currNode.coordinates.y+'px)'"
-        class="hover" [attr.data-id]="currNode._id">
+        class="hover no-outline " [attr.data-id]="currNode._id" [tabIndex]="index" (keydown.delete)="deletePath()">
         <g [class.active]="isSelected" [attr.data-id]="currNode._id">
             <rect x="0" y="-18" width="120" height="24" rx="4" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id" class="id-holder" />
@@ -54,7 +54,7 @@
                 class="node-icon font-18 fw-500 dsi dsi-undo" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='UNWIND'"
                 class="node-icon font-18 fw-500 dsi dsi-expand" [attr.data-id]="currNode._id"></span>
-                <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='MARKETPLACE'"
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='MARKETPLACE'"
                 class="node-icon font-18 fw-500 dsi dsi-library" [attr.data-id]="currNode._id"></span>
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='RESPONSE'"
                 class="node-icon font-18 fw-500 dsi dsi-response" [attr.data-id]="currNode._id"></span>

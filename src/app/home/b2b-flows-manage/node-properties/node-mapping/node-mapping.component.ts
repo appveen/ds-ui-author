@@ -17,7 +17,7 @@ export class NodeMappingComponent implements OnInit {
 
   @Input() edit: any;
   @Input() currNode: any;
-  @Input() inputNode:any;
+  @Input() inputNode: any;
   @Output() close: EventEmitter<any>;
   allSources: Array<any>;
   allTargets: Array<any>;

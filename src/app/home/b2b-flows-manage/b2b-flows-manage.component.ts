@@ -366,7 +366,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.apiCalls.deploy = false;
         this.ts.success('Saved ' + this.flowData.name + ' and deployment process has started.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
-        this.commonService.updateStatus(this.edit.id,'flow');
+        this.commonService.updateStatus(this.edit.id, 'flow');
         this.appService.getFlows();
       }, err => {
         this.apiCalls.deploy = false;
@@ -488,6 +488,24 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  // deleteNode(event) {
+  //   console.log("what is this")
+  //   if ((((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') && this.selectedNode) {
+  //     this.nodeList.forEach((node: any) => {
+  //       if (this.selectedNode.prevNode && node._id == this.selectedNode.prevNode._id) {
+  //         let tempIndex = node.onSuccess.findIndex(e => e._id == this.selectedNode.currNode._id);
+  //         node.onSuccess.splice(tempIndex, 1);
+  //       }
+  //     });
+  //     let index = this.nodeList.findIndex(e => e._id == this.selectedNode.currNode._id);
+  //     if (this.flowData.inputNode._id != this.selectedNode.currNode._id) {
+  //       this.nodeList.splice(index, 1);
+  //       this.flowService.reCreatePaths.emit(null);
+  //       this.flowService.selectedNode.emit(null);
+  //     }
+  //   }
+  // }
 
 
   @HostListener('mousedown', ['$event'])

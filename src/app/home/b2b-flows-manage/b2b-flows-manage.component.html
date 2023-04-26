@@ -53,7 +53,7 @@
             <div class="fw-500 font-12 text-secondary">Right Click on the canvas for Node Options</div>
         </div>
         <div class="flow-designer d-flex">
-            <div class="flow-designer-svg-wrapper" (scroll)="scroll()">
+            <div class="flow-designer-svg-wrapper" (scroll)="scroll()" tabIndex="0">
                 <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
                     <g *ngFor="let node of nodeList;let i=index">
                         <g odp-flow-node *ngIf="node.type!='ERROR'" [currNode]="node" [index]="i" [nodeList]="nodeList">
