@@ -17,9 +17,11 @@
             <!-- <div class="input-height form-control" odpEditor [(data)]="tempData" [insertText]="insertText"
                 (keydown.delete)="$event.stopPropagation();"></div> -->
 
-            <odp-styled-text [value]="tempData" [useEditableDiv]="true" className="input-height"
-                [insertText]="insertText" [suggestions]="suggestions"
-                (finalValue)="tempDataChange($event)"></odp-styled-text>
+            <div (keydown.delete)="$event.stopPropagation();">
+                <odp-styled-text [value]=" tempData" [useEditableDiv]="true" className="input-height"
+                    [insertText]="insertText" [suggestions]="suggestions" (finalValue)="tempDataChange($event)">
+                </odp-styled-text>
+            </div>
             <button type="button" class="btn btn-primary mt-3 w-100" (click)="done()">Done</button>
         </div>
         <div class="suggestion-list-wrapper">
