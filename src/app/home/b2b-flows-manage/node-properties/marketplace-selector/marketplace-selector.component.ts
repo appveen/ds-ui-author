@@ -9,7 +9,7 @@ import { B2bFlowService } from '../../b2b-flow.service';
   templateUrl: './marketplace-selector.component.html',
   styleUrls: ['./marketplace-selector.component.scss']
 })
-export class MarketplaceSelectorComponent implements OnInit {
+export class PluginSelectorComponent implements OnInit {
 
   @Input() currNode: any;
   @Input() edit: any

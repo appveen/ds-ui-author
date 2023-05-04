@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MarketplaceSelectorComponent } from './marketplace-selector.component';
+import { PluginSelectorComponent } from './marketplace-selector.component';
 
-describe('MarketplaceSelectorComponent', () => {
-  let component: MarketplaceSelectorComponent;
-  let fixture: ComponentFixture<MarketplaceSelectorComponent>;
+describe('PluginSelectorComponent', () => {
+  let component: PluginSelectorComponent;
+  let fixture: ComponentFixture<PluginSelectorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MarketplaceSelectorComponent ]
+      declarations: [ PluginSelectorComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MarketplaceSelectorComponent);
+    fixture = TestBed.createComponent(PluginSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

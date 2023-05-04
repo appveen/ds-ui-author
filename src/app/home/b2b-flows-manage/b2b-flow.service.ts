@@ -37,7 +37,7 @@ export class B2bFlowService {
       DEDUPE: 'De-Dupe',
       CONFLICT: 'Conflict',
       FOREACH: 'For Each',
-      MARKETPLACE: 'Marketplace',
+      PLUGIN: 'Plugin',
       REDUCE: 'Reduce',
       UNWIND: 'Change Root',
       RESPONSE: 'Response',

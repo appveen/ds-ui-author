@@ -56,7 +56,7 @@ import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
 import { ChangeOnEditModule } from 'src/app/utils/change-on-edit/change-on-edit.module';
 import { AutocompleteOnEditModule } from '../../utils/autocomplete-on-edit/autocomplete-on-edit.module';
 import { ChangeOnEditComponent } from '../../utils/change-on-edit/change-on-edit.component';
-import { MarketplaceSelectorComponent } from './node-properties/marketplace-selector/marketplace-selector.component';
+import { PluginSelectorComponent } from './node-properties/marketplace-selector/marketplace-selector.component';
 import { EditorModule } from 'src/app/utils/editor/editor.module';
 
 const routes: Routes = [
@@ -93,7 +93,7 @@ const routes: Routes = [
     PathPropertiesComponent,
     PathConditionCreatorComponent,
     ErrorNodeComponent,
-    MarketplaceSelectorComponent
+    PluginSelectorComponent
   ],
   imports: [
     CommonModule,

@@ -45,7 +45,7 @@
             <option *ngIf="!isInputNode" value="UNWIND">Change Root</option>
             <option *ngIf="!isInputNode" value="DATASERVICE">Data Service</option>
             <option *ngIf="!isInputNode" value="FUNCTION">Function</option>
-            <option *ngIf="!isInputNode" value="MARKETPLACE">Marketplace</option>
+            <option *ngIf="!isInputNode" value="PLUGIN">Plugin</option>
             <option *ngIf="!isInputNode" value="RESPONSE">Response</option>
             <!-- <option *ngIf="!isInputNode" value="FILE_READ">File Reader</option>
             <option *ngIf="!isInputNode" value="FILE_WRITE">File Writer</option> -->
@@ -71,7 +71,7 @@
         && currNode?.type!='DEDUPE' 
         && currNode?.type!='CONFLICT'
         && currNode?.type!='FILE_WRITE'
-        && currNode?.type!='MARKETPLACE'" class="form-group">
+        && currNode?.type!='PLUGIN'" class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure
                 <span class="text-muted"><i>(optional)</i></span>
             </label>
@@ -429,7 +429,7 @@
     </ng-container>
 
 
-    <ng-container *ngIf="currNode?.type=='MARKETPLACE'">
+    <ng-container *ngIf="currNode?.type=='PLUGIN'">
         <odp-marketplace-selector [edit]="edit" [nodeList]="nodeList" [currNode]="currNode">
         </odp-marketplace-selector>
     </ng-container>
