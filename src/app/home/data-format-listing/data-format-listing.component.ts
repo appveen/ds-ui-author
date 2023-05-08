@@ -58,8 +58,8 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.openDeleteModal = new EventEmitter();
     this.form = this.fb.group({
-      name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
-      description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
+      name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/^[a-zA-Z]/)]],
+      description: [null, [Validators.maxLength(240), Validators.pattern(/^[a-zA-Z]/)]],
       strictValidation: [false],
       formatType: ['JSON', [Validators.required]],
       character: [',', [Validators.required]],
@@ -122,28 +122,28 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
 
   cloneDataFormat(_index) {
     this.appService.cloneLibraryId = this.records[_index]._id;
-    this.cloneData= this.records[_index];
-    this.isClone=true;
+    this.cloneData = this.records[_index];
+    this.isClone = true;
     this.form.patchValue({
       name: this.cloneData.name + ' Copy',
       formatType: this.cloneData.formatType,
       excelType: this.cloneData.excelType
     });
-    this.showNewDataFormatWindow=true;
+    this.showNewDataFormatWindow = true;
   }
 
-  triggerDataFormatClone(){
-    this.isClone=false;
+  triggerDataFormatClone() {
+    this.isClone = false;
     const payload = {
-      name:this.form.value.name,
+      name: this.form.value.name,
       formatType: this.form.value.formatType,
       excelType: this.form.value.excelType,
-      app:this.cloneData.app,
-      attributeCount:this.cloneData.attributeCount,
-      character:this.cloneData.character,
-      definition:this.cloneData.definition,
-      lineSeparator:this.cloneData.lineSeparator,
-      strictValidation:this.cloneData.strictValidation
+      app: this.cloneData.app,
+      attributeCount: this.cloneData.attributeCount,
+      character: this.cloneData.character,
+      definition: this.cloneData.definition,
+      lineSeparator: this.cloneData.lineSeparator,
+      strictValidation: this.cloneData.strictValidation
     };
     this.showLazyLoader = true;
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/dataFormat`, payload).subscribe(res => {
