@@ -40,6 +40,7 @@ export class CustomNodeComponent implements OnInit {
   cloneData: any;
   toggleExpand: boolean;
   params: Array<any>;
+  categoryList: Array<any>;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -69,6 +70,24 @@ export class CustomNodeComponent implements OnInit {
     this.showLazyLoader = true;
     this.sortModel = {};
     this.params = [];
+    this.categoryList = [
+      {
+        label: 'File',
+        value: 'FILE'
+      },
+      {
+        label: 'API',
+        value: 'API'
+      },
+      {
+        label: 'Transform',
+        value: 'TRANSFORM'
+      },
+      {
+        label: 'Miscellaneous',
+        value: 'MISC'
+      }
+    ];
   }
   ngOnInit() {
     this.getNodes();
@@ -82,7 +101,7 @@ export class CustomNodeComponent implements OnInit {
   }
 
   newNode() {
-    this.form.reset({});
+    this.form.reset({ type: 'PROCESS', category: 'MISC' });
     this.showNewNodeWindow = true;
   }
 
@@ -201,7 +220,13 @@ export class CustomNodeComponent implements OnInit {
 
   selectNode(item: any) {
     if (!item.code || !item.code.trim()) {
-      item.code = '// do something\nreturn state;'
+      item.code = '// do something\nreturn state;';
+    }
+    if (!item.type || !item.type.trim()) {
+      item.type = 'PROCESS';
+    }
+    if (!item.category || !item.category.trim()) {
+      item.category = 'MISC';
     }
     this.selectedNode = null;
     this.params = item.params || [];

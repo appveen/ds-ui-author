@@ -88,8 +88,12 @@
                             <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
                         </label>
                         <div class="type-wrapper position-relative mb-3">
-                            <input autocomplete="off" type="text" class="form-control" id="type"
-                                placeholder="Untitled Process Node" [(ngModel)]="selectedNode.type">
+                            <!-- <input autocomplete="off" type="text" class="form-control" id="type"
+                                placeholder="Untitled Process Node" [(ngModel)]="selectedNode.type"> -->
+                            <select class="form-control" name="type" id="type" [(ngModel)]="selectedNode.type">
+                                <option value="INPUT">Start</option>
+                                <option value="PROCESS">Process</option>
+                            </select>
                         </div>
                     </div>
                     <div class="d-flex flex-column w-100">
@@ -98,8 +102,13 @@
                             <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
                         </label>
                         <div class="category-wrapper position-relative mb-3">
-                            <input autocomplete="off" type="text" class="form-control" id="category"
-                                placeholder="Untitled Process Node" [(ngModel)]="selectedNode.category">
+                            <!-- <input autocomplete="off" type="text" class="form-control" id="category"
+                                placeholder="Untitled Process Node" [(ngModel)]="selectedNode.category"> -->
+                            <select class="form-control" name="category" id="category"
+                                [(ngModel)]="selectedNode.category">
+                                <option value="">---select---</option>
+                                <option *ngFor="let item of categoryList" [value]="item.value">{{item.label}}</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -173,6 +182,13 @@
                         <span class="ml-2">Outer function is <span class="text-info fw-600">async</span> so using <span
                                 class="text-info fw-600">await</span> keyword is allowed.</span>
                     </div>
+                    <div *ngIf="selectedNode.type=='INPUT'"
+                        class="d-flex align-items-center justify-content-start text-secondary mt-2">
+                        <strong>Note:</strong>
+                        <span class="ml-2">Please Call <span class="text-info fw-600">process(<span
+                                    class="text-success fw-600">data</span>)</span> method to
+                            start the flow. Where <span class="text-success fw-600">data</span> being the initial body.</span>
+                    </div>
                 </div>
                 <div class="code-editor-wrapper d-flex flex-column border rounded w-100 mt-3"
                     [class.expanded]="toggleExpand">
@@ -199,7 +215,7 @@
 <div [ngClass]="{'show':showNewNodeWindow}"
     class="new-node-window p-4 position-fixed border-left bg-white d-flex flex-column" [formGroup]="form">
     <div class="d-flex align-items-center justify-content-between mb-3">
-        <span class="font-22 fw-500">New Process Node</span>
+        <span class="font-22 fw-500">New Plugin</span>
         <span class="dsi dsi-close hover" (click)="showNewNodeWindow=false;"></span>
     </div>
     <div *ngIf="showNewNodeWindow" class="d-flex flex-column w-100">
@@ -231,7 +247,7 @@
                 <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
             </label>
             <div class="name-wrapper position-relative mb-3">
-                <input autocomplete="off" type="text" class="form-control" id="type" placeholder="Type of Process Node"
+                <!-- <input autocomplete="off" type="text" class="form-control" id="type" placeholder="Type of Process Node"
                     formControlName="type"
                     [ngClass]="{'is-invalid':form.get('type').invalid && form.get('type').dirty}">
                 <ng-container *ngIf="form.get('type').dirty">
@@ -244,7 +260,11 @@
                     <span *ngIf="form.get('type').hasError('pattern')"
                         class="text-danger position-absolute dsi dsi-danger-circle" container="body"
                         ngbTooltip="Type can be only alphanumeric and can only contain spaces"></span>
-                </ng-container>
+                </ng-container> -->
+                <select class="form-control" name="type" id="type" formControlName="type">
+                    <option value="INPUT">Starter</option>
+                    <option value="PROCESS">Process</option>
+                </select>
             </div>
         </div>
         <div class="d-flex flex-column w-100">
@@ -253,7 +273,7 @@
                 <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
             </label>
             <div class="name-wrapper position-relative mb-3">
-                <input autocomplete="off" type="text" class="form-control" id="category"
+                <!-- <input autocomplete="off" type="text" class="form-control" id="category"
                     placeholder="Category of Process Node" formControlName="category"
                     (keyup.enter)="isClone ? triggerNodeClone() : triggerNodeCreate()"
                     [ngClass]="{'is-invalid':form.get('category').invalid && form.get('category').dirty}">
@@ -267,7 +287,11 @@
                     <span *ngIf="form.get('category').hasError('pattern')"
                         class="text-danger position-absolute dsi dsi-danger-circle" container="body"
                         ngbTooltip="Category can be only alphanumeric and can only contain spaces"></span>
-                </ng-container>
+                </ng-container> -->
+                <select class="form-control" name="category" id="category" formControlName="category">
+                    <option value="">---select---</option>
+                    <option *ngFor="let item of categoryList" [value]="item.value">{{item.label}}</option>
+                </select>
             </div>
         </div>
     </div>
