@@ -18,6 +18,7 @@ export class NodeMappingComponent implements OnInit {
   @Input() edit: any;
   @Input() currNode: any;
   @Input() inputNode: any;
+  @Input() source: string;
   @Output() close: EventEmitter<any>;
   allSources: Array<any>;
   allTargets: Array<any>;
@@ -38,23 +39,20 @@ export class NodeMappingComponent implements OnInit {
     this.allTargets = [];
     this.pathList = [];
     this.svgStyle = {};
+    this.source = 'outgoing';
   }
 
   ngOnInit(): void {
     let customTargetFields;
-    if (this.currNode.dataStructure && this.currNode.dataStructure.outgoing && this.currNode.dataStructure.outgoing.definition) {
-      customTargetFields = this.appService.cloneObject(this.currNode.dataStructure.outgoing.definition) || [];
+    if (this.currNode.dataStructure && this.currNode.dataStructure[this.source] && this.currNode.dataStructure[this.source].definition) {
+      customTargetFields = this.appService.cloneObject(this.currNode.dataStructure[this.source].definition) || [];
     }
-    this.allTargets = this.mappingService.flatten((this.currNode.dataStructure.outgoing.formatType || 'JSON'), customTargetFields);
+    this.allTargets = this.mappingService.flatten((this.currNode.dataStructure[this.source].formatType || 'JSON'), customTargetFields);
 
     this.nodeList = this.flowService.getNodesBefore(this.currNode);
     this.nodeList.forEach((node: any) => {
-      let incoming, outgoing;
+      let outgoing;
       if (node._id != this.currNode._id) {
-        // if (node.dataStructure.incoming && node.dataStructure.incoming.definition) {
-        //   incoming = this.appService.cloneObject(node.dataStructure.incoming.definition);
-        //   this.allSources = this.allSources.concat(this.flattenSource(node, incoming, 'body'));
-        // }
         if (node.dataStructure.outgoing && node.dataStructure.outgoing.definition) {
           outgoing = this.appService.cloneObject(node.dataStructure.outgoing.definition);
           this.allSources = this.allSources.concat(this.flattenSource(node, outgoing, 'responseBody'));

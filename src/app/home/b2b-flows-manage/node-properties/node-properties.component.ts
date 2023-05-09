@@ -245,4 +245,17 @@ export class NodePropertiesComponent implements OnInit {
     return true;
     // return this.nodeList[0]._id == this.currNode._id;
   }
+
+  get showInputSelector() {
+    return !this.isInputNode && this.currNode.type != 'ERROR';
+  }
+
+  get showOutputSelector() {
+    return this.currNode.type != 'ERROR'
+      && this.currNode?.type != 'DATASERVICE'
+      && this.currNode?.type != 'DEDUPE'
+      && this.currNode?.type != 'CONFLICT'
+      && this.currNode?.type != 'FILE_WRITE'
+      && this.currNode?.type != 'PLUGIN';
+  }
 }
