@@ -625,7 +625,7 @@ export class SchemaBuilderComponent implements
         const self = this;
         if (!self.isSchemaFree && self.form.get(['definition', 0, 'counter']).dirty && self.edit.id) {
             const payload = self.schemaStructurePipe.transform(self.form.value);
-            self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/idCount/${this.edit.id}`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
+            self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/${this.edit.id}/idCount`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
                 if (payload.definition.find(d => d.key === '_id').counter <= res) {
                     self.commonService.errorToast(
                         { status: 400 }, 'Invalid value for counter because the current counter value is  ' + res);
