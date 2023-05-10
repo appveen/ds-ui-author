@@ -47,7 +47,7 @@ export class NodeMappingComponent implements OnInit {
     if (this.currNode.dataStructure && this.currNode.dataStructure[this.source] && this.currNode.dataStructure[this.source].definition) {
       customTargetFields = this.appService.cloneObject(this.currNode.dataStructure[this.source].definition) || [];
     }
-    this.allTargets = this.mappingService.flatten((this.currNode.dataStructure[this.source].formatType || 'JSON'), customTargetFields);
+    this.allTargets = this.mappingService.flatten((this.currNode.dataStructure?.[this.source]?.formatType || 'JSON'), customTargetFields);
 
     this.nodeList = this.flowService.getNodesBefore(this.currNode);
     this.nodeList.forEach((node: any) => {

@@ -20,7 +20,7 @@
             <div class="source-list">
                 <ng-container *ngFor="let node of nodeList;let i=index">
                     <div *ngIf="node._id!=currNode._id" class="border mb-3 rounded p-2">
-                        <div>
+                        <!-- <div>
                             <div *ngIf="node.type=='FILE'"
                                 class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
                                 <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
@@ -106,7 +106,7 @@
                                 <span class="node-icon font-16 fw-400 dsi dsi-library mr-2"></span>
                                 <span class="font-13 fw-400 text-secondary">Plugin</span>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="font-14 fw-500 mb-2">{{node.name}}</div>
                         <odp-source-selector [nodeList]="nodeList" [index]="i"></odp-source-selector>
                     </div>

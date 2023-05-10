@@ -15,9 +15,10 @@
         right: 0px;
     }
 }
-.node-mapping-window{
-    right: -90vw;
-    width: 90vw;
+
+.node-mapping-window {
+    right: -60vw;
+    width: 60vw;
 }
 
 .node-agent-window {
@@ -28,6 +29,6 @@
     height: calc(100vh - 100px);
 }
 
-.z-0{
+.z-0 {
     z-index: 0;
 }
