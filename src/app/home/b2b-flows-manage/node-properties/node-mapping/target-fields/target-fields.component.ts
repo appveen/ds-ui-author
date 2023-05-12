@@ -88,4 +88,13 @@ export class TargetFieldsComponent implements OnInit {
     }
     return false;
   }
+
+  get sources() {
+    if (this.definition.source && this.definition.source.length > 0) {
+      const sources = _.uniq(this.definition.source.map(e => e.name));
+      return sources.join(', ');
+    }
+    return '';
+  }
+
 }
