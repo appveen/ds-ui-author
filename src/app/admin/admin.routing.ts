@@ -8,6 +8,7 @@ import { AgentsComponent } from './agents/agents.component';
 import { MetadataComponent } from './metadata/metadata.component';
 import { MapperFormulasComponent } from './metadata/mapper-formulas/mapper-formulas.component';
 import { CustomNodeComponent } from './metadata/custom-node/custom-node.component';
+import { NpmLibrariesComponent } from './metadata/npm-libraries/npm-libraries.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
           { path: '', pathMatch: 'full', redirectTo: 'mapper' },
           { path: 'mapper', component: MapperFormulasComponent },
           { path: 'node', component: CustomNodeComponent },
+          { path: 'npm', component: NpmLibrariesComponent },
         ]
       },
     ],

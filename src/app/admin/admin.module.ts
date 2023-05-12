@@ -45,6 +45,7 @@ import { MetadataComponent } from './metadata/metadata.component';
 import { MapperFormulasComponent } from './metadata/mapper-formulas/mapper-formulas.component';
 import { CodeEditorModule } from '../utils/code-editor/code-editor.module';
 import { CustomNodeComponent } from './metadata/custom-node/custom-node.component';
+import { NpmLibrariesComponent } from './metadata/npm-libraries/npm-libraries.component';
 
 @NgModule({
   imports: [
@@ -99,7 +100,8 @@ import { CustomNodeComponent } from './metadata/custom-node/custom-node.componen
     AgentsComponent,
     MetadataComponent,
     MapperFormulasComponent,
-    CustomNodeComponent
+    CustomNodeComponent,
+    NpmLibrariesComponent
   ],
 })
 export class AdminModule { }
