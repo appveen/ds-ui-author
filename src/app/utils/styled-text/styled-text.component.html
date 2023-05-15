@@ -1,5 +1,5 @@
 <div id="parent">
-  <div class="input-container">
+  <div class="input-container" [ngStyle]="{height: !useEditableDiv && '32px'}">
     <input #styledInputText [value]="value" (input)="onChange($event)" [ngbTypeahead]="ngbTypeahead"
       (scroll)="handleScroll($event)" [resultFormatter]="resultFormatter" [inputFormatter]="inputFormatter"
       (selectItem)="selectItem($event)" [disabled]="disabled" (paste)="onPaste.emit($event)"

@@ -62,3 +62,18 @@ path {
     stroke: $danger;
     stroke-width: 1;
 }
+
+.suggestion-list {
+    width: 400px;
+    max-width: 400px;
+    max-height: 150px;
+    overflow: auto;
+}
+
+.method-list {
+    width: 400px;
+}
+
+.method-drop {
+    margin: auto 0 auto auto;
+}

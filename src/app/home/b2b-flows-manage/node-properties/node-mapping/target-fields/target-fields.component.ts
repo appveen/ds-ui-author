@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter } from '@angular/core';
 import Fuse from 'fuse.js';
 import * as uuid from 'uuid/v4';
 import * as _ from 'lodash';
@@ -23,6 +23,11 @@ export class TargetFieldsComponent implements OnInit {
   selectedPathIndex: any;
   colors: Array<string>;
   toggleFormulaEditor: boolean;
+  suggestions: Array<any> = [];
+  insertText: EventEmitter<string> = new EventEmitter();
+
+
+
 
   constructor(private mappingService: MappingService,
     private flowService: B2bFlowService,
@@ -67,6 +72,8 @@ export class TargetFieldsComponent implements OnInit {
       }
       this.definition.formula = '';
     });
+
+    this.suggestions = this.flowService.getSuggestions(this.currNode)
   }
 
   selectField(event: MouseEvent) {
@@ -77,8 +84,9 @@ export class TargetFieldsComponent implements OnInit {
   }
 
   showFormulaEditor() {
-    this.toggleFormulaEditor = true;
+    this.toggleFormulaEditor = !this.toggleFormulaEditor;
   }
+
 
   get isSelected() {
     if (this.mappingService.selectedTargetNode
@@ -96,5 +104,10 @@ export class TargetFieldsComponent implements OnInit {
     }
     return '';
   }
+
+  tempDataChange(event) {
+    this.definition.formula = event;
+  }
+
 
 }

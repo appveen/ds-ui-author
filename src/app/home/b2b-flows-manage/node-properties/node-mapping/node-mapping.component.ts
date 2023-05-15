@@ -6,6 +6,7 @@ import { AppService } from 'src/app/utils/services/app.service';
 import { environment } from 'src/environments/environment';
 import { B2bFlowService } from '../../b2b-flow.service';
 import { MappingService } from './mapping.service';
+import { CommonService } from '../../../../utils/services/common.service';
 
 @Component({
   selector: 'odp-node-mapping',
@@ -27,9 +28,14 @@ export class NodeMappingComponent implements OnInit {
   svgStyle: any;
   nodeList: Array<any>;
   selectedPath: any;
+  fetchingFormulas: boolean;
+  insertText: EventEmitter<any> = new EventEmitter();
+  availableMethods: Array<any> = [];
+  showMethodList: boolean = false
   constructor(private appService: AppService,
     private mappingService: MappingService,
-    private flowService: B2bFlowService) {
+    private flowService: B2bFlowService,
+    private commonService: CommonService) {
     this.nodeList = [];
     this.close = new EventEmitter();
     this.edit = {
@@ -91,6 +97,7 @@ export class NodeMappingComponent implements OnInit {
       const mappingBox: HTMLElement = document.querySelectorAll('.mapping-box')[0] as HTMLElement;
       this.svgStyle = { 'height': mappingBox.scrollHeight + 'px' };
     }, 500);
+    this.fetchAllFormulas()
   }
 
   cancel() {
@@ -243,4 +250,53 @@ export class NodeMappingComponent implements OnInit {
       temp.source.splice(tempIndex, 1);
     }
   }
+
+
+  placeMethod(item: any) {
+    let value = `${item.name}(${item.params.map(e => e.name).join(', ')})`;
+    this.insertText.emit(value);
+  }
+
+
+
+  getDataTypeStyleClass(type: string) {
+    switch (type) {
+      case 'String':
+        return 'text-success';
+      case 'Number':
+        return 'text-warning';
+      case 'Boolean':
+        return 'text-info';
+      case 'Object':
+        return 'text-grey';
+      case 'Array':
+        return 'text-grey';
+      default:
+        return 'text-primary';
+    }
+  }
+
+
+  fetchAllFormulas() {
+    this.fetchingFormulas = true;
+    let options: any = {
+      count: 10,
+      page: 1,
+      noApp: true
+    };
+    // if (this.searchTerm) {
+    //   options.filter = {
+    //     name: `/${this.searchTerm}/`
+    //   };
+    // }
+    this.commonService.get('user', '/admin/metadata/mapper/formula', options).subscribe(res => {
+      this.availableMethods = res;
+      this.fetchingFormulas = false;
+    }, err => {
+      this.fetchingFormulas = false;
+      this.commonService.errorToast(err);
+    })
+  }
+
+
 }

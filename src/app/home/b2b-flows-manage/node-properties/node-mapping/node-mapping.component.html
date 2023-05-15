@@ -16,6 +16,39 @@
                 <span>Clear Mappings</span>
             </button>
         </div>
+
+        <div id="methods" class="method-list ml-3" *ngIf="availableMethods.length> 0">
+            <div class="border rounded d-flex">
+                <span class="text-muted form-text p-2">Available Methods</span>
+                <span class="dsi hover dsi-drop-down method-drop" (click)="showMethodList = !showMethodList"
+                    [class.fa-rotate-90]="showMethodList"></span>
+            </div>
+            <div class="suggestion-list border rounded" *ngIf="showMethodList">
+                <div class="list-group list-group-flush">
+                    <div *ngFor="let item of availableMethods"
+                        class="list-group-item font-12 d-flex align-items-center justify-content-start">
+                        <span class="dsi dsi-plus-circle hover text-dark mr-2" (click)="placeMethod(item)"></span>
+                        <div class="d-flex align-items-center">
+                            <span class="name text-accent fw-500">{{item.name}}</span>(
+                            <ng-container *ngFor="let p of item.params;let lp=last">
+                                <span class="text-success" *ngIf="p.type == 'String'">"{{p.name}}"</span>
+                                <span class="text-warning" *ngIf="p.type == 'Number'">{{p.name}}</span>
+                                <span class="text-info" *ngIf="p.type == 'Boolean'">{{p.name}}</span>
+                                <span class="text-grey" *ngIf="p.type == 'Object'">{{'{ '+p.name+' }'}}</span>
+                                <span class="text-grey" *ngIf="p.type == 'Array'">{{'[ '+p.name+' ]'}}</span>
+                                <span *ngIf="!lp">,&nbsp;</span>
+                            </ng-container>
+                            )&nbsp;:&nbsp;
+                            <span [ngClass]="getDataTypeStyleClass(item.returnType)">{{item.returnType}}</span>
+                        </div>
+                    </div>
+                    <!-- <div *ngIf="(availableMethods|commonFilter:'name':searchTerm).length==0"
+                    class="list-group-item d-flex align-items-center justify-content-between">
+                    <span class="text-muted">No Match Found</span>
+                </div> -->
+                </div>
+            </div>
+        </div>
         <div class="mapping-box d-flex align-items-stretch p-4">
             <div class="source-list">
                 <ng-container *ngFor="let node of nodeList;let i=index">
@@ -153,4 +186,5 @@
     <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary btn-min-width" (click)="done()">Done</button>
     </div>
+
 </div>

@@ -29,7 +29,7 @@ export class EditorDirective implements OnInit {
     }
     this.element = (this.ele.nativeElement as HTMLElement);
     this.element.innerText = this.data;
-    this.insertText.subscribe((text: string) => {
+    this.insertText?.subscribe((text: string) => {
       if (this.selectedObj && this.rangeObj) {
         this.rangeObj.deleteContents();
         this.rangeObj.insertNode(this.document.createTextNode(text));

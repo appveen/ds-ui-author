@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { CommonService } from '../../../../utils/services/common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class MappingService {
   deSelectPath: EventEmitter<any>;
   clearMappings: EventEmitter<any>;
   fuzzyMapping: EventEmitter<any>;
-  constructor() {
+  constructor(private commonService: CommonService) {
     this.reCreatePaths = new EventEmitter();
     this.deSelectPath = new EventEmitter();
     this.clearMappings = new EventEmitter();
@@ -159,4 +160,5 @@ export class MappingService {
         destX + " " + destY
     }
   }
+
 }
