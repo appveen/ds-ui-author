@@ -8,7 +8,7 @@
 </div>
 <div class="d-flex flex-column page-padding w-100 h-100 bg-light-gray" [formGroup]="form">
     <div class="pb-4 pt-2">
-        <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="edit">
+        <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="edit" [dataFormatPattern]="dataFormatPattern" (disableSave)="disableSave($event)">
             <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-white border mr-3"
                 id="cancelSchema">
                 <span class="text">Cancel</span>
