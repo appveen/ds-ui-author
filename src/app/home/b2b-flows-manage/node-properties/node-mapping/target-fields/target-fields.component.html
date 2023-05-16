@@ -20,14 +20,14 @@
         </div>
     </div>
 </div>
-<div id="formula" *ngIf="toggleFormulaEditor">
+<div id="formula" *ngIf="toggleVal">
     <div (keydown.delete)="$event.stopPropagation();">
         <odp-styled-text [value]="definition.formula" [useEditableDiv]="true" className="input-height"
-            (finalValue)="tempDataChange($event)" [suggestions]="suggestions">
+            (finalValue)="tempDataChange($event)" [suggestions]="suggestions" [insertText]="insertText">
         </odp-styled-text>
     </div>
 </div>
 
-<!-- 
-<odp-formula-editor *ngIf="toggleFormulaEditor" [currNode]="currNode" [field]="definition" [(data)]="definition.formula"
+
+<!-- <odp-formula-editor *ngIf="toggleFormulaEditor" [currNode]="currNode" [field]="definition" [(data)]="definition.formula"
     (close)="toggleFormulaEditor=false"></odp-formula-editor> -->

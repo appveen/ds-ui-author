@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import * as _ from 'lodash';
 import { Observable, OperatorFunction, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { MappingService } from '../../home/b2b-flows-manage/node-properties/node-mapping/mapping.service';
 
 
 
@@ -43,9 +44,11 @@ export class StyledTextComponent implements OnInit, OnChanges {
   oldData: any = '';
   left: any;
   top: any;
+  selectedObj: Selection;
+  rangeObj: Range;
 
 
-  constructor() {
+  constructor(private mappingService: MappingService) {
 
   }
 
@@ -54,6 +57,11 @@ export class StyledTextComponent implements OnInit, OnChanges {
     if (!this.value) {
       this.value = ''
     }
+    // this.mappingService.getValue().subscribe((text: any) => {
+    //   this.selectOption({
+    //     value: text
+    //   })
+    // });
     if (this.useEditableDiv) {
       // document.querySelector('#parent').setAttribute('class', this.className);
       document.querySelector('.input-container').setAttribute('class', document.querySelector('.input-container').getAttribute('class') + ' ' + this.className);

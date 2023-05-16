@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import Fuse from 'fuse.js';
 import * as uuid from 'uuid/v4';
 import * as _ from 'lodash';
@@ -19,12 +19,14 @@ export class TargetFieldsComponent implements OnInit {
   @Input() index: number;
   @Input() definition: any;
   @Input() allSources: Array<any>;
+  @Input() toggleValue: boolean;
+  @Output() toggleFn: EventEmitter<any> = new EventEmitter();
   pathList: Array<any>;
   selectedPathIndex: any;
   colors: Array<string>;
   toggleFormulaEditor: boolean;
   suggestions: Array<any> = [];
-  insertText: EventEmitter<string> = new EventEmitter();
+  @Input() insertText: EventEmitter<string> = new EventEmitter();
 
 
 
@@ -85,6 +87,10 @@ export class TargetFieldsComponent implements OnInit {
 
   showFormulaEditor() {
     this.toggleFormulaEditor = !this.toggleFormulaEditor;
+    this.toggleFn.emit({
+      index: this.index,
+      toggle: this.toggleFormulaEditor
+    });
   }
 
 
@@ -109,5 +115,8 @@ export class TargetFieldsComponent implements OnInit {
     this.definition.formula = event;
   }
 
+  get toggleVal() {
+    return this.toggleValue
+  }
 
 }

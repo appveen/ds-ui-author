@@ -17,8 +17,9 @@
 }
 
 .node-mapping-window {
-    right: -60vw;
-    width: 60vw;
+    right: -80vw;
+    max-width: 80vw;
+    width: auto;
 }
 
 .node-agent-window {

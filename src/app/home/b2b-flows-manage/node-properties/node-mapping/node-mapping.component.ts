@@ -32,6 +32,7 @@ export class NodeMappingComponent implements OnInit {
   insertText: EventEmitter<any> = new EventEmitter();
   availableMethods: Array<any> = [];
   showMethodList: boolean = false
+  toggleArray: Array<any> = [];
   constructor(private appService: AppService,
     private mappingService: MappingService,
     private flowService: B2bFlowService,
@@ -255,6 +256,7 @@ export class NodeMappingComponent implements OnInit {
   placeMethod(item: any) {
     let value = `${item.name}(${item.params.map(e => e.name).join(', ')})`;
     this.insertText.emit(value);
+    this.mappingService.triggerAdd(value)
   }
 
 
@@ -296,6 +298,19 @@ export class NodeMappingComponent implements OnInit {
       this.fetchingFormulas = false;
       this.commonService.errorToast(err);
     })
+  }
+
+  toggleFn(event) {
+    this.toggleArray[event.index] = event.toggle;
+    this.toggleArray.forEach((_, i) => {
+      if (i != event.index) {
+        this.toggleArray[i] = false;
+      }
+    })
+  }
+
+  get showToggleArray() {
+    return this.toggleArray.filter(e => e).length > 0
   }
 
 
