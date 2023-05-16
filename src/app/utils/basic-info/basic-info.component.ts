@@ -11,11 +11,13 @@ export class BasicInfoComponent implements OnInit {
   @Output() nameChange: EventEmitter<string>;
   @Input() description: string;
   @Output() descriptionChange: EventEmitter<string>;
+  @Output() disableSave: EventEmitter<string>;
   @Input() edit: any;
   @Input() hideLogo: boolean;
   @Input() nameCharLimit: number;
   @Input() descCharLimit: number;
   @Input() pattern;
+  @Input() dataFormatPattern;
   toggleEdit: boolean;
   message: string;
   nameMessage: string;
@@ -26,6 +28,7 @@ export class BasicInfoComponent implements OnInit {
   constructor() {
     this.nameChange = new EventEmitter();
     this.descriptionChange = new EventEmitter();
+    this.disableSave = new EventEmitter();
     this.edit = {
       status: false
     };
@@ -52,6 +55,15 @@ export class BasicInfoComponent implements OnInit {
     }
     this.name = val;
     this.nameChange.emit(val);
+    if(this.dataFormatPattern){
+      if(!this.dataFormatPattern.test(val)){
+        this.nameMessage = "Name can be only alphanumeric and can only contain spaces";
+        this.disableSave.emit(val);
+      } else {
+        this.nameMessage = null;
+        this.name = val;
+      }
+    }
   }
 
   onDescriptionChange(val: string) {

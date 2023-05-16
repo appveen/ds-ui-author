@@ -32,6 +32,7 @@ export class DataFormatManageComponent implements
     app: string;
     form: FormGroup;
     edit: any = {};
+    dataFormatPattern = /^[a-zA-Z]/;
     types: Array<any> = [
         { class: 'odp-group', value: 'Object', label: 'Group' },
         { class: 'odp-array', value: 'Array', label: 'Collection' }
@@ -58,6 +59,7 @@ export class DataFormatManageComponent implements
     deleteModal: any;
     showAdvance: boolean;
     showAdvanceSettingsWindow: boolean;
+    disableSaveBtn: boolean = true;
     sortableOnMove = (event: any) => {
         return !event.related.classList.contains('disabled');
     }
@@ -500,6 +502,12 @@ export class DataFormatManageComponent implements
             return location.protocol + '//' + arr.join(':') + '/api';
         } else {
             return location.protocol + '//' + url + '/api';
+        }
+    }
+
+    disableSave(val: string) {
+        if(val && val.length){
+            this.form.controls['name'].setErrors({'incorrect': true});
         }
     }
 
