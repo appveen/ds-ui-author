@@ -416,7 +416,7 @@
         source="incoming"></odp-node-mapping>
 </div>
 
-<div [ngClass]="{'show':toggle['codeBlock']}" class="node-mapping-window border-left position-fixed bg-white p-4">
+<div [ngClass]="{'show':toggle['codeBlock']}" class="node-coding-window border-left position-fixed bg-white p-4">
     <ng-container *ngIf="toggle['codeBlock']">
         <div class="d-flex flex-column">
             <odp-code-editor class="codeblock-editor" [edit]="edit" [(code)]="currNode.options.code"></odp-code-editor>
