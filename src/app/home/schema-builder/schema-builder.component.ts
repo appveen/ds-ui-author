@@ -201,7 +201,8 @@ export class SchemaBuilderComponent implements
             headers: [],
             enableSearchIndex: '',
             ingestionPoints: [],
-            connectors: connectorForm
+            connectors: connectorForm,
+            simpleDate: [],
         });
 
         self.versionConfig = {
@@ -386,7 +387,7 @@ export class SchemaBuilderComponent implements
     get stateModelIfEnabled() {
         const self = this;
         if (self.form.get(['stateModel', 'enabled']).value) {
-            this.schemaService.stateModel=self.form.get(['stateModel', 'attribute'])
+            this.schemaService.stateModel = self.form.get(['stateModel', 'attribute'])
             return self.form.get(['stateModel', 'attribute'])
         }
         else {
@@ -578,6 +579,7 @@ export class SchemaBuilderComponent implements
             delete payload.headers;
             delete payload.enableSearchIndex;
             delete payload.permanentDeleteData;
+            delete payload.simpleDate;
             delete payload.disableInsights;
         }
         if (!this.hasPermissionForTab('I')) {
@@ -651,7 +653,7 @@ export class SchemaBuilderComponent implements
             self.roleChange = false;
             self.ts.success('Saved ' + payload.name + ' and deployment process has started.');
             self.form.markAsPristine();
-            this.commonService.updateStatus(payload._id,'service')
+            this.commonService.updateStatus(payload._id, 'service')
             self.router.navigate(['/app/', self.commonService.app._id, 'sm']);
         },
             err => {
@@ -952,6 +954,7 @@ export class SchemaBuilderComponent implements
         const flag = self.form.get('name').dirty ||
             self.form.get('description').dirty ||
             self.form.get('permanentDeleteData').dirty ||
+            self.form.get('simpleDate').dirty ||
             self.form.get('disableInsights').dirty ||
             self.form.get('api').dirty ||
             self.form.get('tags').dirty ||
@@ -968,6 +971,7 @@ export class SchemaBuilderComponent implements
         const flag = self.form.get('name').invalid ||
             self.form.get('description').invalid ||
             self.form.get('permanentDeleteData').invalid ||
+            self.form.get('simpleDate').invalid ||
             self.form.get('disableInsights').invalid ||
             self.form.get('api').invalid ||
             self.form.get('tags').invalid ||
