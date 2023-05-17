@@ -1,12 +1,12 @@
-<div class="field-wrapper">
-    <div class="field-block d-flex align-items-center border rounded mb-1"
+<div class="">
+    <div class="target-field-block d-flex align-items-center"
         [ngStyle]="{'margin-left': definition.depth*10 +'px'}">
         <div class="field-anchor d-flex align-items-center justify-content-center border hover"
             [class.selected]="isSelected" [attr.data-path]="definition.properties.dataPath"
             [attr.data-id]="definition._id" (click)="selectField($event)"
             [ngStyle]="{'min-width': (definition.depth+1)*10+'px', 'margin-left' : (definition.depth+1) * -6 + 'px' }">
         </div>
-        <div class="function-holder d-flex align-items-center justify-content-center border-right hover underline"
+        <div class="function-holder d-flex align-items-center justify-content-center hover underline"
             (click)="showFormulaEditor()">
             <i class="text-success">fn()</i>
         </div>

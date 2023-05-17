@@ -31,7 +31,7 @@ export class NodeMappingComponent implements OnInit {
   fetchingFormulas: boolean;
   insertText: EventEmitter<any> = new EventEmitter();
   availableMethods: Array<any> = [];
-  showMethodList: boolean = false
+  showMethodList: boolean = true;
   toggleArray: Array<any> = [];
   constructor(private appService: AppService,
     private mappingService: MappingService,

@@ -18,10 +18,12 @@
         </div>
         <div class="d-flex">
             <div id="methods" class="method-list ml-3 mt-4 hide" *ngIf="showToggleArray">
-                <div class="border rounded d-flex">
-                    <span class="text-muted form-text p-2">Available Methods</span>
-                    <span class="dsi hover dsi-drop-down method-drop" (click)="showMethodList = !showMethodList"
-                        [class.fa-rotate-90]="showMethodList"></span>
+                <div class="border rounded d-flex align-items-center mb-2">
+                    <span class="text-secondary form-text p-2">Available Methods</span>
+                    <span *ngIf="!showMethodList" class="dsi hover dsi-drop-down fa-rotate-90  method-drop"
+                        (click)="showMethodList=!showMethodList"></span>
+                    <span *ngIf="showMethodList" class="dsi hover dsi-drop-down method-drop"
+                        (click)="showMethodList=!showMethodList"></span>
                 </div>
                 <div class="suggestion-list border rounded" *ngIf="showMethodList">
                     <div class="list-group list-group-flush">
@@ -162,8 +164,8 @@
 
                     </g>
                 </svg>
-                <div class="target-list">
-                    <div *ngFor="let item of allTargets;let i=index">
+                <div class="target-list border rounded">
+                    <div class="border-bottom" *ngFor="let item of allTargets;let i=index">
                         <odp-target-fields [allSources]="allSources" [definition]="item" [index]="i"
                             [currNode]="currNode" (toggleFn)="toggleFn($event)" [toggleValue]="toggleArray[i]"
                             [insertText]="insertText"></odp-target-fields>

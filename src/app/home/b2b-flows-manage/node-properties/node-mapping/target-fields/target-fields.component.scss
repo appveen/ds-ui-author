@@ -1,8 +1,9 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.field-block {
+.target-field-block {
     min-width: 348px;
+    height: 26px;
 
     .field-anchor {
         min-height: 12px;
@@ -25,8 +26,7 @@
     .function-holder,
     .attribute-type-holder,
     .attribute-name-holder {
-        // min-height: 48px;
-        max-height: 48px;
+        height: 26px;
         word-break: break-all;
     }
 
