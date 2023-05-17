@@ -57,11 +57,11 @@ export class StyledTextComponent implements OnInit, OnChanges {
     if (!this.value) {
       this.value = ''
     }
-    // this.mappingService.getValue().subscribe((text: any) => {
-    //   this.selectOption({
-    //     value: text
-    //   })
-    // });
+    this.mappingService.getValue().subscribe((text: any) => {
+      this.selectOption({
+        value: text
+      }, true)
+    });
     if (this.useEditableDiv) {
       // document.querySelector('#parent').setAttribute('class', this.className);
       document.querySelector('.input-container').setAttribute('class', document.querySelector('.input-container').getAttribute('class') + ' ' + this.className);
@@ -99,12 +99,12 @@ export class StyledTextComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.value && changes.value.currentValue) {
-      this.value = changes.value.currentValue;
-      if (this.styledDivText) {
-        this.styledDivText.nativeElement.innerText = this.value;
-      }
-    }
+    // if (changes.value && changes.value.currentValue) {
+    //   this.value = changes.value.currentValue;
+    //   if (this.styledDivText) {
+    //     this.styledDivText.nativeElement.textContent = this.value;
+    //   }
+    // }
   }
 
   onChange = (event, isDiv?) => {
@@ -141,13 +141,13 @@ export class StyledTextComponent implements OnInit, OnChanges {
   }
 
 
-  selectOption(event) {
+  selectOption(event, isFn = false) {
     // this.insertText.emit(event.value + '}}');
-    this.replaceValue(event.value)
+    this.replaceValue(event.value, isFn)
     this.searchTerm = '';
   }
 
-  replaceValue(value) {
+  replaceValue(value, isFn = false) {
 
     const regex1 = /{{(?!.*}})(.*)/g;
     const matches = this.value.match(regex1) || [];
@@ -157,7 +157,7 @@ export class StyledTextComponent implements OnInit, OnChanges {
     let index = this.value.search(mainReg);
     if (index >= 0) {
       const removedSearch = this.removeFromString(this.value, index, this.searchTerm.length);
-      const final = removedSearch.substring(0, index) + `{{${value}}}` + removedSearch.substring(index);
+      const final = removedSearch.substring(0, index) + isFn ? `${value}` : `{{${value}}}` + removedSearch.substring(index);
       this.styledDivText.nativeElement.innerText = final;
       this.value = final;
       this.finalValue.emit(this.value);

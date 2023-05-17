@@ -37,6 +37,7 @@ export class MappingService {
         this.selectedTargetNode.definition.formula = '';
       }
       this.selectedTargetNode.definition.formula += `{{${temp._id}}}`;
+      this.triggerAdd(this.selectedTargetNode.definition.formula)
       this.reCreatePaths.emit({ source: this.selectedSourceNode, target: this.selectedTargetNode });
       this.selectedSourceNode = null;
       this.selectedTargetNode = null;

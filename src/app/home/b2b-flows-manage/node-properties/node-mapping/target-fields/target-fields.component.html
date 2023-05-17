@@ -23,7 +23,7 @@
 <div id="formula" *ngIf="toggleVal">
     <div (keydown.delete)="$event.stopPropagation();">
         <odp-styled-text [value]="definition.formula" [useEditableDiv]="true" className="input-height"
-            (finalValue)="tempDataChange($event)" [suggestions]="suggestions" [insertText]="insertText">
+            (finalValue)="tempDataChange($event)" [suggestions]="suggestions">
         </odp-styled-text>
     </div>
 </div>
