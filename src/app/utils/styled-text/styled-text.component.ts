@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash';
 import { Observable, OperatorFunction, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { MappingService } from '../../home/b2b-flows-manage/node-properties/node-mapping/mapping.service';
 
 
 
@@ -11,7 +12,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
   styleUrls: ['styled-text.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class StyledTextComponent implements OnInit {
+export class StyledTextComponent implements OnInit, OnChanges {
   @Input() regex: RegExp = /({{\S+}})/g;
   @Output() finalValue: EventEmitter<any> = new EventEmitter();
 
@@ -43,9 +44,11 @@ export class StyledTextComponent implements OnInit {
   oldData: any = '';
   left: any;
   top: any;
+  selectedObj: Selection;
+  rangeObj: Range;
 
 
-  constructor() {
+  constructor(private mappingService: MappingService) {
 
   }
 
@@ -54,13 +57,18 @@ export class StyledTextComponent implements OnInit {
     if (!this.value) {
       this.value = ''
     }
+    this.mappingService.getValue().subscribe((text: any) => {
+      this.selectOption({
+        value: text
+      }, true)
+    });
     if (this.useEditableDiv) {
       // document.querySelector('#parent').setAttribute('class', this.className);
       document.querySelector('.input-container').setAttribute('class', document.querySelector('.input-container').getAttribute('class') + ' ' + this.className);
       document.querySelector('.input-container').setAttribute('style', 'background: transparent');
 
       const height = document.querySelector('.input-container').clientHeight
-      const width = document.querySelector('.input-container').clientWidth
+      const width = document.querySelector('.input-container').clientWidth - 10
 
       this.divStyle = {
         height: height + 'px !important',
@@ -73,8 +81,8 @@ export class StyledTextComponent implements OnInit {
         'white-space': 'pre-wrap',
         'max-height': height + 'px !important',
         overflow: 'auto',
-        'z-index':-1,
-        'margin': '0 0.2em 0 0.5rem',
+        'z-index': -1,
+        'margin': '0 0 0 10px',
         'position': 'absolute'
       }
       this.list = _.cloneDeep(this.suggestions)
@@ -82,10 +90,21 @@ export class StyledTextComponent implements OnInit {
     else {
       this.rendererStyle = {
         'margin-top': '0.3rem',
-        'padding': '0 0.5rem',
+        'padding': '0 10px',
         'position': 'relative'
       }
     }
+
+
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // if (changes.value && changes.value.currentValue) {
+    //   this.value = changes.value.currentValue;
+    //   if (this.styledDivText) {
+    //     this.styledDivText.nativeElement.textContent = this.value;
+    //   }
+    // }
   }
 
   onChange = (event, isDiv?) => {
@@ -122,13 +141,13 @@ export class StyledTextComponent implements OnInit {
   }
 
 
-  selectOption(event) {
+  selectOption(event, isFn = false) {
     // this.insertText.emit(event.value + '}}');
-    this.replaceValue(event.value)
+    this.replaceValue(event.value, isFn)
     this.searchTerm = '';
   }
 
-  replaceValue(value) {
+  replaceValue(value, isFn = false) {
 
     const regex1 = /{{(?!.*}})(.*)/g;
     const matches = this.value.match(regex1) || [];
@@ -138,7 +157,7 @@ export class StyledTextComponent implements OnInit {
     let index = this.value.search(mainReg);
     if (index >= 0) {
       const removedSearch = this.removeFromString(this.value, index, this.searchTerm.length);
-      const final = removedSearch.substring(0, index) + `{{${value}}}` + removedSearch.substring(index);
+      const final = removedSearch.substring(0, index) + isFn ? `${value}` : `{{${value}}}` + removedSearch.substring(index);
       this.styledDivText.nativeElement.innerText = final;
       this.value = final;
       this.finalValue.emit(this.value);

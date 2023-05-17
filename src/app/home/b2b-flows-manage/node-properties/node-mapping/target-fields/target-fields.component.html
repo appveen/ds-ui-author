@@ -1,18 +1,33 @@
 <div class="field-wrapper">
-    <div class="field-block d-flex align-items-center border rounded mb-1">
+    <div class="field-block d-flex align-items-center border rounded mb-1"
+        [ngStyle]="{'margin-left': definition.depth*10 +'px'}">
         <div class="field-anchor d-flex align-items-center justify-content-center border hover"
             [class.selected]="isSelected" [attr.data-path]="definition.properties.dataPath"
-            [attr.data-id]="definition._id" (click)="selectField($event)"></div>
+            [attr.data-id]="definition._id" (click)="selectField($event)"
+            [ngStyle]="{'min-width': (definition.depth+1)*10+'px', 'margin-left' : (definition.depth+1) * -6 + 'px' }">
+        </div>
         <div class="function-holder d-flex align-items-center justify-content-center border-right hover underline"
             (click)="showFormulaEditor()">
             <i class="text-success">fn()</i>
         </div>
         <div class="attribute-type-holder d-flex align-items-center justify-content-center">
-            <odp-field-type [field]="definition"></odp-field-type>
+            <odp-field-type [field]="definition" [onMapper]="true"></odp-field-type>
         </div>
         <div class="attribute-name-holder d-flex align-items-center text-wrap pr-2">{{definition.dataPath}}</div>
+        <div *ngIf="sources" class="attribute-name-holder d-flex align-items-center text-wrap pr-2 text-secondary">{{'('
+            + sources +
+            ')'}}
+        </div>
+    </div>
+</div>
+<div id="formula" *ngIf="toggleVal">
+    <div (keydown.delete)="$event.stopPropagation();">
+        <odp-styled-text [value]="definition.formula" [useEditableDiv]="true" className="input-height"
+            (finalValue)="tempDataChange($event)" [suggestions]="suggestions">
+        </odp-styled-text>
     </div>
 </div>
 
-<odp-formula-editor *ngIf="toggleFormulaEditor" [currNode]="currNode" [field]="definition" [(data)]="definition.formula"
-    (close)="toggleFormulaEditor=false"></odp-formula-editor>
+
+<!-- <odp-formula-editor *ngIf="toggleFormulaEditor" [currNode]="currNode" [field]="definition" [(data)]="definition.formula"
+    (close)="toggleFormulaEditor=false"></odp-formula-editor> -->

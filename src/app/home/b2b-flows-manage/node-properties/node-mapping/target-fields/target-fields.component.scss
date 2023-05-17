@@ -2,6 +2,10 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 .field-block {
+    min-width: 348px;
+    resize: horizontal;
+    overflow-x: auto;
+
     .field-anchor {
         min-height: 12px;
         max-height: 12px;
@@ -23,7 +27,7 @@
     .function-holder,
     .attribute-type-holder,
     .attribute-name-holder {
-        min-height: 48px;
+        // min-height: 48px;
         max-height: 48px;
         word-break: break-all;
     }
@@ -33,4 +37,10 @@
         min-width: 48px;
         max-width: 48px;
     }
+}
+
+.input-height {
+    min-height: 300px;
+    max-height: 300px;
+    word-break: break-all;
 }

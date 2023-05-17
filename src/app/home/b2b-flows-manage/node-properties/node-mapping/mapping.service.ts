@@ -1,4 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { CommonService } from '../../../../utils/services/common.service';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,7 @@ export class MappingService {
   deSelectPath: EventEmitter<any>;
   clearMappings: EventEmitter<any>;
   fuzzyMapping: EventEmitter<any>;
+  addMethod: Subject<any> = new Subject();
   constructor() {
     this.reCreatePaths = new EventEmitter();
     this.deSelectPath = new EventEmitter();
@@ -34,6 +37,7 @@ export class MappingService {
         this.selectedTargetNode.definition.formula = '';
       }
       this.selectedTargetNode.definition.formula += `{{${temp._id}}}`;
+      this.triggerAdd(this.selectedTargetNode.definition.formula)
       this.reCreatePaths.emit({ source: this.selectedSourceNode, target: this.selectedTargetNode });
       this.selectedSourceNode = null;
       this.selectedTargetNode = null;
@@ -159,4 +163,13 @@ export class MappingService {
         destX + " " + destY
     }
   }
+
+  triggerAdd(value) {
+    this.addMethod.next(value);
+  }
+
+  getValue() {
+    return this.addMethod.asObservable();
+  }
+
 }

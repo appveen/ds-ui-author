@@ -7,6 +7,8 @@
         max-height: calc(100vh - 204px);
         overflow-y: auto;
 
+        width: 60vw;
+
         .source-list {
             width: 300px;
         }
@@ -61,4 +63,23 @@ path {
     fill: #fff;
     stroke: $danger;
     stroke-width: 1;
+}
+
+.suggestion-list {
+    width: 300px;
+    max-width: 300px;
+    max-height: 300px;
+    overflow: auto;
+}
+
+.method-list {
+    width: 300px;
+}
+
+.method-drop {
+    margin: auto 0 auto auto;
+}
+
+.list-group-item {
+    padding: 0.75rem 0.5rem;
 }

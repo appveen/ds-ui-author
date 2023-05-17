@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import Fuse from 'fuse.js';
 import * as uuid from 'uuid/v4';
 import * as _ from 'lodash';
@@ -19,10 +19,17 @@ export class TargetFieldsComponent implements OnInit {
   @Input() index: number;
   @Input() definition: any;
   @Input() allSources: Array<any>;
+  @Input() toggleValue: boolean;
+  @Output() toggleFn: EventEmitter<any> = new EventEmitter();
   pathList: Array<any>;
   selectedPathIndex: any;
   colors: Array<string>;
   toggleFormulaEditor: boolean;
+  suggestions: Array<any> = [];
+  @Input() insertText: EventEmitter<string> = new EventEmitter();
+
+
+
 
   constructor(private mappingService: MappingService,
     private flowService: B2bFlowService,
@@ -67,6 +74,8 @@ export class TargetFieldsComponent implements OnInit {
       }
       this.definition.formula = '';
     });
+
+    this.suggestions = this.flowService.getSuggestions(this.currNode)
   }
 
   selectField(event: MouseEvent) {
@@ -77,8 +86,13 @@ export class TargetFieldsComponent implements OnInit {
   }
 
   showFormulaEditor() {
-    this.toggleFormulaEditor = true;
+    this.toggleFormulaEditor = !this.toggleFormulaEditor;
+    this.toggleFn.emit({
+      index: this.index,
+      toggle: this.toggleFormulaEditor
+    });
   }
+
 
   get isSelected() {
     if (this.mappingService.selectedTargetNode
@@ -88,4 +102,21 @@ export class TargetFieldsComponent implements OnInit {
     }
     return false;
   }
+
+  get sources() {
+    if (this.definition.source && this.definition.source.length > 0) {
+      const sources = _.uniq(this.definition.source.map(e => e.name));
+      return sources.join(', ');
+    }
+    return '';
+  }
+
+  tempDataChange(event) {
+    this.definition.formula = event;
+  }
+
+  get toggleVal() {
+    return this.toggleValue
+  }
+
 }

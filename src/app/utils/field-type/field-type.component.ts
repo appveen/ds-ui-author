@@ -12,6 +12,7 @@ export class FieldTypeComponent {
   @Input() field: any;
   @Input() label: boolean;
   @Input() basic: boolean;
+  @Input() onMapper: boolean = false;
   private types: Array<any>;
   constructor(private schemaService: SchemaBuilderService) {
     this.types = this.schemaService.getSchemaTypes();

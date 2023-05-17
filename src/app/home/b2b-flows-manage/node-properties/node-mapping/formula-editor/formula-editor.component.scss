@@ -12,8 +12,8 @@
 }
 
 .input-height {
-    min-height: calc(100vh - 352px);
-    max-height: calc(100vh - 352px);
+    min-height: 150px;
+    max-height: 150px;
     word-break: break-all;
     font-family: 'Courier New', Courier, monospace;
 }
@@ -24,6 +24,7 @@
     min-height: 200px;
     max-height: calc(100vh - 540px);
     overflow-y: auto;
+    background-color: white;
 }
 
 .methods-list {
