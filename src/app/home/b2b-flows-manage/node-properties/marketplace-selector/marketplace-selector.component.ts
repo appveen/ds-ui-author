@@ -14,15 +14,16 @@ export class PluginSelectorComponent implements OnInit {
   @Input() currNode: any;
   @Input() edit: any
   @Input() nodeList: Array<any>;
+  @Input() isInputNode: boolean;
   showLoader: boolean;
-  customNodeList: Array<any>;
+  pluginList: Array<any>;
   searchTerm: string;
   data: any;
   constructor(private commonService: CommonService,
     private flowService: B2bFlowService,
     private appService: AppService) {
     this.edit = { status: false };
-    this.customNodeList = [];
+    this.pluginList = [];
     this.nodeList = [];
   }
 
@@ -34,25 +35,32 @@ export class PluginSelectorComponent implements OnInit {
 
   loadInitial() {
     this.showLoader = true;
+    let filter = {};
+    if (this.isInputNode) {
+      filter = { type: 'INPUT' };
+    }
     this.commonService.get('partnerManager', '/admin/node', {
       sort: 'name',
+      filter: filter,
       count: 5,
       noApp: true
     }).subscribe((res) => {
       this.showLoader = false;
-      this.customNodeList = res;
+      this.pluginList = res;
       this.selectDefault();
     }, err => {
       this.showLoader = false;
-      this.customNodeList = [];
+      this.pluginList = [];
     });
   }
 
   searchService(searchTerm: string) {
+    let filter: any = { name: '/' + searchTerm + '/' };
+    if (this.isInputNode) {
+      filter.type = 'INPUT';
+    }
     const options: GetOptions = {
-      filter: {
-        name: '/' + searchTerm + '/'
-      },
+      filter: filter,
       count: 5,
       noApp: true
     };
@@ -60,23 +68,23 @@ export class PluginSelectorComponent implements OnInit {
     this.showLoader = true;
     this.commonService.get('partnerManager', '/admin/node', options).subscribe((res) => {
       this.showLoader = false;
-      this.customNodeList = res;
+      this.pluginList = res;
       this.selectDefault();
     }, err => {
       this.showLoader = false;
-      this.customNodeList = [];
+      this.pluginList = [];
     });
   }
 
   clearSearch() {
-    this.customNodeList = [];
+    this.pluginList = [];
     this.searchTerm = null;
     this.loadInitial();
   }
 
   selectDefault() {
     if (this.data) {
-      this.customNodeList.forEach(item => {
+      this.pluginList.forEach(item => {
         if (item._id == this.data._id) {
           item._selected = true;
         }
@@ -89,18 +97,18 @@ export class PluginSelectorComponent implements OnInit {
   }
 
   toggleItem(flag: boolean, item: any) {
-    this.customNodeList.forEach(df => {
+    this.pluginList.forEach(df => {
       df._selected = false;
     });
     item._selected = flag;
   }
 
   selectNode() {
-    this.data = this.customNodeList.find(e => e._selected);
+    this.data = this.pluginList.find(e => e._selected);
     if (!this.data.params) {
       this.data.params = [];
     }
-    this.currNode.options.node = this.data;
+    this.currNode.options.plugin = this.data;
     const oldId = this.currNode._id;
     const nodeName = this.data.name + ' ' + this.flowService.nodeIDCounter;
     const newId = _.snakeCase(nodeName);
@@ -120,7 +128,7 @@ export class PluginSelectorComponent implements OnInit {
   }
 
   get isNodeSelected() {
-    return this.customNodeList.some(e => e._selected);
+    return this.pluginList.some(e => e._selected);
   }
 
 }

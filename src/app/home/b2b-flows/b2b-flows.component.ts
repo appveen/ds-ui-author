@@ -46,6 +46,8 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   searchTerm: string;
   isClone: boolean = false;
   cloneData: any;
+  staterPluginList: Array<any>;
+  pluginFilter: string;
   constructor(public commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -80,12 +82,14 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       active: true,
       label: 'Data Pipes'
     }];
-    appService.invokeEvent.subscribe(res => {
+    this.appService.invokeEvent.subscribe(res => {
       this.getFlows();
-    })
+    });
+    this.staterPluginList = [];
   }
   ngOnInit() {
     this.getFlows();
+    this.getStaterPlugins();
     this.commonService.changeBreadcrumb(this.breadcrumbPaths);
     this.commonService.apiCalls.componentLoading = false;
     this.form.get('type').valueChanges.subscribe(val => {
@@ -223,6 +227,9 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     payload.nodes = [];
+    if (this.form.get('type').value === 'PLUGIN') {
+      payload.inputNode.options.plugin = this.selectedPlugin;
+    }
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
       this.showLazyLoader = false;
       this.form.reset({ type: 'API' });
@@ -295,6 +302,31 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     });
   }
 
+  getStaterPlugins() {
+    this.showLazyLoader = true;
+    this.flowList = [];
+    let filter: any = { type: 'INPUT' };
+    if (this.pluginFilter) {
+      filter.name = '/' + this.pluginFilter + '/';
+    }
+    this.commonService.get('partnerManager', `/Admin/node`, {
+      filter: filter,
+      noApp: true,
+      select: 'name type category'
+    }).subscribe((res: any) => {
+      this.showLazyLoader = false;
+      this.staterPluginList = res;
+    }, err => {
+      this.showLazyLoader = false;
+      console.log(err);
+      this.commonService.errorToast(err);
+    });
+  }
+
+  searchPlugin(searchTerm: string) {
+    this.pluginFilter = searchTerm;
+    this.getStaterPlugins();
+  }
 
   getStatusClass(srvc) {
     if (srvc.status.toLowerCase() === 'active') {
@@ -597,6 +629,13 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     this.showOptionsDropdown[i] = true;
   }
 
+  checkPlugin(item: any) {
+    this.staterPluginList.forEach(val => {
+      val._selected = false;
+    });
+    item._selected = true;
+  }
+
   private compare(a: any, b: any) {
     if (a > b) {
       return 1;
@@ -605,6 +644,17 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     } else {
       return 0;
     }
+  }
+
+  get invalidForm() {
+    if (this.form.invalid || (this.form.get('type').value === 'PLUGIN' && !this.selectedPlugin)) {
+      return true;
+    }
+    return false;
+  }
+
+  get selectedPlugin() {
+    return this.staterPluginList.find(e => e._selected);
   }
 
   get dropDownStyle() {

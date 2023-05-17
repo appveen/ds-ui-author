@@ -132,3 +132,8 @@
 .r-10 {
   right: 10px;
 }
+
+.plugins-list-wrapper {
+  overflow-y: auto;
+  max-height: 300px;
+}

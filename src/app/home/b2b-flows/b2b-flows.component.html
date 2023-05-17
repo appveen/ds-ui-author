@@ -203,12 +203,25 @@
                 </label>
             </div>
             <div *ngIf="form.get('type').value === 'PLUGIN'" class="form-group">
-                <input type="text" class="form-control" placeholder="Search Plugin">
+                <odp-search-box open="true" (enteredText)="searchPlugin($event)"></odp-search-box>
+                <div class="plugins-list-wrapper border rounded mt-3">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item" *ngIf="!staterPluginList || staterPluginList.length==0">
+                            No Plugins
+                        </div>
+                        <div class="list-group-item d-flex align-items-center" *ngFor="let item of staterPluginList"
+                            (click)="checkPlugin(item)">
+                            <odp-round-radio class="mr-3" [(checked)]="item._selected"></odp-round-radio>
+                            <span>{{item.name}}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
     <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
-        <button type="button" class="btn btn-min-width btn-primary w-100" id="newFlowModalYes" [disabled]="form.invalid"
+        <button type="button" class="btn btn-min-width btn-primary w-100" id="newFlowModalYes" [disabled]="invalidForm"
             (click)="isClone ? triggerFlowClone() : triggerFlowCreate()">Create</button>
     </div>
 </div>

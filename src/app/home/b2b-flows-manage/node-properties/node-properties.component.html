@@ -33,6 +33,7 @@
                 <option *ngIf="isInputNode" value="API">API Receiver</option>
                 <option *ngIf="isInputNode" value="TIMER">Timer</option>
                 <option value="FILE">File Agent</option>
+                <option value="PLUGIN">Plugin</option>
                 <option *ngIf="!isInputNode" value="API">API Invoke</option>
                 <option *ngIf="!isInputNode" value="MAPPING">Mapping</option>
                 <option *ngIf="!isInputNode" value="DEDUPE">De-Dupe</option>
@@ -44,7 +45,7 @@
                 <option *ngIf="!isInputNode" value="UNWIND">Change Root</option>
                 <option *ngIf="!isInputNode" value="DATASERVICE">Data Service</option>
                 <option *ngIf="!isInputNode" value="FUNCTION">Function</option>
-                <option *ngIf="!isInputNode" value="PLUGIN">Plugin</option>
+
                 <option *ngIf="!isInputNode" value="RESPONSE">Response</option>
             </select>
         </div>
@@ -122,7 +123,7 @@
                     (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
             </div>
         </ng-container>
-        <div class="form-group d-flex align-items-center">
+        <div *ngIf="currNode?.type!='TIMER' && currNode?.type!='PLUGIN'" class="form-group d-flex align-items-center">
             <odp-switch [edit]="edit" [(checked)]="currNode.options.uniqueTxnId"></odp-switch>
             <span class="ml-2">Unique Remote Txn ID</span>
         </div>
@@ -366,7 +367,7 @@
     </ng-container>
 
     <ng-container *ngIf="currNode?.type=='PLUGIN'">
-        <odp-marketplace-selector [edit]="edit" [nodeList]="nodeList" [currNode]="currNode">
+        <odp-marketplace-selector [isInputNode]="isInputNode" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode">
         </odp-marketplace-selector>
     </ng-container>
 

@@ -16,6 +16,7 @@ import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { B2bSettingsComponent } from './b2b-settings/b2b-settings.component';
+import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 
 const routes: Routes = [
   {
@@ -44,7 +45,8 @@ const routes: Routes = [
     CodeEditorModule,
     DateFormatModule,
     OnChangeModule,
-    AutoFocusModule
+    AutoFocusModule,
+    RoundRadioModule
   ],
   exports: [B2bFlowsComponent]
 })

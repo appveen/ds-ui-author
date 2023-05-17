@@ -255,7 +255,6 @@ export class NodePropertiesComponent implements OnInit {
       && this.currNode?.type != 'DATASERVICE'
       && this.currNode?.type != 'DEDUPE'
       && this.currNode?.type != 'CONFLICT'
-      && this.currNode?.type != 'FILE_WRITE'
-      && this.currNode?.type != 'PLUGIN';
+      && this.currNode?.type != 'FILE_WRITE';
   }
 }
