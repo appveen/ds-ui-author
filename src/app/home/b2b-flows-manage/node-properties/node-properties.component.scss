@@ -2,6 +2,7 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 .node-mapping-window,
+.node-coding-window,
 .node-agent-window {
     top: 0px;
     right: -800px;
@@ -21,6 +22,13 @@
     max-width: 80vw;
     width: auto;
 }
+
+.node-coding-window {
+    right: -80vw;
+    max-width: 80vw;
+    width: 80vw;
+}
+
 
 .node-agent-window {
     width: 360px;
