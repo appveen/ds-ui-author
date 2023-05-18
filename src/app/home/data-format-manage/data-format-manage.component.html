@@ -8,7 +8,8 @@
 </div>
 <div class="d-flex flex-column page-padding w-100 h-100 bg-light-gray" [formGroup]="form">
     <div class="pb-4 pt-2">
-        <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="edit" [dataFormatPattern]="dataFormatPattern" (disableSave)="disableSave($event)">
+        <odp-basic-info hideLogo="true" [(name)]="name" [(description)]="description" [edit]="edit"
+            [dataFormatPattern]="dataFormatPattern" (disableSave)="disableSave($event)">
             <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-white border mr-3"
                 id="cancelSchema">
                 <span class="text">Cancel</span>
@@ -35,13 +36,28 @@
         <div *ngIf="activeTab==0" class="d-flex flex-column w-100">
             <div class="d-flex w-100 builder">
                 <div class="d-flex flex-column w-100 builder-body">
-                    <div class="options d-flex justify-content-between align-items-center border-bottom px-3">
-                        <div>
+                    <div
+                        class="options d-flex justify-content-between align-items-center border-bottom px-3 position-relative">
+                        <div class="d-flex justify-content-start align-items-center">
                             <button type="button" class="btn text-primary ignore-outside d-flex align-items-center"
                                 (click)="showAdvanceSettingsWindow=true">
                                 Configure -
                                 <odp-format-type-badge [data]="selectedFormat"></odp-format-type-badge>
                             </button>
+                            <div class="d-flex align-items-center mb-0">
+                                <button *ngIf="!showTextarea" type="button" class="btn btn-link ignore-outside"
+                                    (click)="showTextarea='json'">
+                                    <span>From JSON</span>
+                                </button>
+                                <button *ngIf="showTextarea" type="button" class="btn btn-link ignore-outside"
+                                    (click)="showTextarea=null">
+                                    <span>Close</span>
+                                </button>
+                                <textarea *ngIf="showTextarea"
+                                    style="top: 32px;width: 300px;height: 100px;z-index: 2;left: 16px;"
+                                    class="form-control position-absolute" id="jsonTextarea" cols="30" rows="10"
+                                    odpAutoFocus (odpPasteJson)="onSchemaCreate($event)"></textarea>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-end align-items-center" *ngIf="edit.status">
                             <button type="button" class="btn text-primary pr-0" (click)="addField('after')"
@@ -127,35 +143,28 @@
 
 
 <div [ngClass]="{'show':showAdvanceSettingsWindow}" odpClickOutside (outside)="showAdvanceSettingsWindow=false"
-    class="advance-settings-window position-fixed p-4 d-flex flex-column align-items-center bg-white border-left">
+    class="advance-settings-window position-fixed p-4 d-flex flex-column align-items-center bg-white border-left"
+    [formGroup]="form">
     <div class="d-flex w-100 mb-4">
         <span class="font-20 text-dark fw-500">Configuration</span>
         <span class="dsi dsi-close mr-2 d-flex ml-auto align-items-center hover"
             (click)="showAdvanceSettingsWindow=false"></span>
     </div>
+    <div class="from-group position-relative w-100 mb-3">
+        <label for="dataType" class="font-13 text-secondary">Data Type</label>
+        <select id="dataType" class="form-control" formControlName="type">
+            <option value="Object">Object</option>
+            <option value="Array">Array</option>
+        </select>
+    </div>
     <div *ngIf="showAdvanceSettingsWindow" class="form-group">
-        <label class="font-14 text-dark">Type</label>
+        <label class="font-13 text-secondary">Format Type</label>
         <div class="d-flex flex-wrap position-relative">
             <div class="format-select-list-item d-flex align-items-center mr-3 mb-2" *ngFor="let format of formatList"
                 (click)="selectFormat(format);">
                 <odp-round-radio class="mr-2" [edit]="edit" [checked]="selectedFormat==format"></odp-round-radio>
                 <odp-format-type-badge [data]="format"></odp-format-type-badge>
             </div>
-            <!-- <button type="button" [ngClass]="{'border':edit.status,'border-0':!edit.status}"
-                class="format-select d-flex align-items-center justify-content-between bg-white rounded"
-                (click)="edit.status?toggleFormatSelector=!toggleFormatSelector:toggleFormatSelector=false">
-                <div class="d-flex align-items-center mr-2">
-                    <odp-format-type-badge [data]="selectedFormat"></odp-format-type-badge>
-                </div>
-                <span *ngIf="edit.status" class="fa text-accent"
-                    [ngClass]="{'fa-angle-up':toggleFormatSelector,'fa-angle-down':!toggleFormatSelector}"></span>
-            </button>
-            <div class="position-absolute format-select-list bg-white rounded border" *ngIf="toggleFormatSelector">
-                <button type="button" class="format-select-list-item d-flex align-items-center bg-white border-0"
-                    *ngFor="let format of formatList" (click)="selectFormat(format);toggleFormatSelector=false">
-                    <odp-format-type-badge [data]="format"></odp-format-type-badge>
-                </button>
-            </div> -->
         </div>
     </div>
     <div class="d-flex flex-column w-100">
@@ -163,7 +172,7 @@
             <div class="form-group" *ngIf="formatType && (formatType == 'DELIMITER' || 
                     formatType == 'CSV' ||
                     formatType == 'FLATFILE')">
-                <label class="font-14 text-dark">Line Separator</label>
+                <label class="font-13 text-secondary">Line Separator</label>
                 <select *ngIf="form.get('lineSeparator')" class="form-control" formControlName="lineSeparator">
                     <option value="\\r">CR</option>
                     <option value="\\n">LF</option>
@@ -171,13 +180,13 @@
                 </select>
             </div>
             <div class="form-group" *ngIf="formatType && formatType == 'DELIMITER'">
-                <label class="font-14 text-dark">Delimiter</label>
+                <label class="font-13 text-secondary">Delimiter</label>
                 <input *ngIf="form.get('character')" type="text" class="form-control" formControlName="character">
             </div>
             <div class="form-group d-flex align-items-center" *ngIf="formatType">
                 <!-- <odp-checkbox [edit]="edit" [(checked)]="strictValidation"></odp-checkbox> -->
 
-                <label class="font-14 text-dark mr-2 mb-0">
+                <label class="font-13 text-secondary mr-2 mb-0">
                     Strict Validation
                 </label>
                 <odp-switch [edit]="edit" [(checked)]="strictValidation"></odp-switch>
@@ -187,7 +196,7 @@
             <div class="form-group" *ngIf="formatType && (formatType == 'DELIMITER' || 
                 formatType == 'CSV' 
                 || formatType == 'FLATFILE')">
-                <label class="font-14 text-dark">Line Seperator</label>
+                <label class="font-13 text-secondary">Line Seperator</label>
                 <div class="p-2 extra-info" *ngIf="form.get('lineSeparator').value ==='\\\\r'">
                     CR</div>
                 <div class="p-2 extra-info" *ngIf="form.get('lineSeparator').value ==='\\\\n'">
@@ -195,12 +204,12 @@
                 <div class="p-2 extra-info" *ngIf="form.get('lineSeparator').value ==='\\\\r\\\\n'">CR+LF</div>
             </div>
             <div class="form-group" *ngIf="formatType && formatType == 'DELIMITER'">
-                <label class="font-14 text-dark">Delimiter</label>
+                <label class="font-13 text-secondary">Delimiter</label>
                 <div class="p-2 extra-info">{{form.get('character').value}}</div>
             </div>
             <div class="form-group d-flex align-items-center" *ngIf="formatType">
                 <!-- <odp-checkbox [edit]="edit" [checked]="strictValidation"></odp-checkbox> -->
-                <label class="font-14 text-dark mr-2 mb-0">Strict Validation</label>
+                <label class="font-13 text-secondary mr-2 mb-0">Strict Validation</label>
                 <odp-switch [edit]="edit" [checked]="strictValidation"></odp-switch>
             </div>
         </ng-container>
