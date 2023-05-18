@@ -38,6 +38,9 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
   formatList: Array<any>;
   cloneData: any;
   isClone: boolean;
+  dataType: string;
+  showTextarea: string;
+  definition: Array<any>;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -54,6 +57,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
       active: true,
       label: 'Data Formats'
     }];
+    this.definition = [];
 
     this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     this.openDeleteModal = new EventEmitter();
@@ -61,6 +65,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
       name: [null, [Validators.required, Validators.maxLength(40), Validators.pattern(/^[a-zA-Z]/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/^[a-zA-Z]/)]],
       strictValidation: [false],
+      type: ['Object', [Validators.required]],
       formatType: ['JSON', [Validators.required]],
       character: [',', [Validators.required]],
       excelType: ['xls', [Validators.required]],
@@ -91,7 +96,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
   }
 
   newDataFormat() {
-    this.form.reset({ formatType: 'JSON', character: ',', excelType: 'xls', lineSeparator: '\\\\n' });
+    this.form.reset({ type: 'Object', formatType: 'JSON', character: ',', excelType: 'xls', lineSeparator: '\\\\n' });
     this.showNewDataFormatWindow = true;
   }
 
@@ -101,7 +106,8 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     }
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
-    payload.definition = [];
+    payload.definition = this.definition;
+    payload.type = this.dataType;
     this.showLazyLoader = true;
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/dataFormat`, payload).subscribe(res => {
       this.ts.success('DataFormat Created.');
@@ -294,8 +300,14 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     return flag;
   }
 
-  navigate(dataFormat) {
+  navigate(dataFormat: any) {
     this.router.navigate(['/app/', this.app, 'dfm', dataFormat._id])
+  }
+
+  onSchemaCreate(schema: any) {
+    this.form.get('type').patchValue(schema.type);
+    this.definition = schema.definition;
+    this.showTextarea = null;
   }
 
   private compare(a: any, b: any) {

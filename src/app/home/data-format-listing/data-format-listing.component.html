@@ -44,6 +44,11 @@
             <span *ngIf="sortModel['formatType']==1" class="dsi dsi-drop-down"></span>
             <span *ngIf="sortModel['formatType']==-1" class="dsi dsi-drop-up"></span>
           </div>
+          <div (click)="applySort('type')" class="item-format-type text-left ml-4">
+            <span class="mr-2">Type</span>
+            <span *ngIf="sortModel['type']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['type']==-1" class="dsi dsi-drop-up"></span>
+          </div>
           <div class="item-actions">&nbsp;</div>
         </div>
       </div>
@@ -59,6 +64,9 @@
             </div>
             <div class="item-format-type text-left ml-4">
               <odp-format-type-badge [data]="dataFormat"></odp-format-type-badge>
+            </div>
+            <div class="item-format-type text-left ml-4">
+              <span>{{dataFormat.type}}</span>
             </div>
             <div class="item-actions d-flex align-items-center justify-content-end">
               <span id="lib-view" class="fw-600 font-13 hover mr-3"
@@ -125,13 +133,31 @@
           </ng-container>
         </div>
       </div>
-
-      <div class="d-flex flex-wrap mt-4">
-        <div class="format-select-list-item d-flex align-items-center mr-4 mb-2" *ngFor="let format of formatList"
-          (click)="selectFormat(format);">
-          <odp-round-radio class="mr-2" [edit]="{status:true}" [checked]="isFormatSelected(format)">
-          </odp-round-radio>
-          <odp-format-type-badge [data]="format"></odp-format-type-badge>
+      <div class="from-group position-relative">
+        <label for="dataType" class="font-13 text-secondary">Data Type
+          <button *ngIf="!showTextarea" type="button" class="btn btn-sm btn-link" (click)="showTextarea='json'">
+            <small>From JSON</small>
+          </button>
+          <button *ngIf="showTextarea" type="button" class="btn btn-sm btn-link" (click)="showTextarea=null">
+            <small>Close</small>
+          </button>
+          <textarea *ngIf="showTextarea" style="top: 45px;" class="form-control position-absolute" id="jsonTextarea"
+            cols="30" rows="10" odpAutoFocus (odpPasteJson)="onSchemaCreate($event)"></textarea>
+        </label>
+        <select id="dataType" class="form-control" formControlName="type">
+          <option value="Object">Object</option>
+          <option value="Array">Array</option>
+        </select>
+      </div>
+      <div class="form-group mt-3">
+        <label for="dataType" class="font-13 text-secondary">Format Type</label>
+        <div class="d-flex flex-wrap">
+          <div class="format-select-list-item d-flex align-items-center mr-4 mb-2" *ngFor="let format of formatList"
+            (click)="selectFormat(format);">
+            <odp-round-radio class="mr-2" [edit]="{status:true}" [checked]="isFormatSelected(format)">
+            </odp-round-radio>
+            <odp-format-type-badge [data]="format"></odp-format-type-badge>
+          </div>
         </div>
       </div>
     </ng-container>
