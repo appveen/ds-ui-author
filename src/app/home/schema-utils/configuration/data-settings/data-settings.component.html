@@ -29,6 +29,18 @@
                         (checkedChange)="onVersionChange($event)"></odp-switch>
                 </div>
             </div>
+            <div class="d-flex justify-content-between mt-4" *ngIf="canView('S')">
+                <div class="d-flex flex-column">
+                    <div class="font-14 fw-700 my-2">Simple Date</div>
+                    <!-- <div class="sub-heading font-14 fw-400">
+                        Keep a history of data when data is changed?
+                    </div> -->
+                </div>
+                <div class="switch-container d-flex align-items-center justify-content-center">
+                    <odp-switch [edit]="{status:edit.status && canEdit('S')}" [checked]="form.get('simpleDate').value"
+                        (checkedChange)="onDateChange($event)"></odp-switch>
+                </div>
+            </div>
             <div class="d-flex justify-content-between mt-4" *ngIf="retainDataHistory && canView('S')">
                 <div class="d-flex flex-column">
                     <div class="font-14 fw-700 my-2">Retain data by</div>
@@ -89,6 +101,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
     <div class="d-flex flex-column w-100 mt-4" *ngIf="isAdmin">
