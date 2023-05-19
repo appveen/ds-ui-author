@@ -46,11 +46,14 @@ export class PasteJsonDirective {
     } else {
       return Object.keys(json).map(i => {
         const temp: any = {};
+        if (json[i] == null) {
+          json[i] = 'String';
+        }
         temp.key = i;
         temp.properties = {
-          name: i === '_self' || _.startCase(i)
+          name: i === '_self' || i
         };
-        temp.type = _.capitalize(typeof json[i]);
+        temp.type = _.capitalize((typeof json[i] || 'string'));
         if (i.toLowerCase().split(' ').indexOf('date') > -1) {
           temp.type = 'Date';
         }
