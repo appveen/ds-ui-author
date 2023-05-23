@@ -52,6 +52,10 @@
                         class="ml-2 rounded-circle properties password d-flex justify-content-center align-items-center text-white fw-500 font-12"
                         *ngIf="(form.get('properties.password') && form.get('properties.password').value) || (checkSubType())"
                         ngbTooltip="Secure">S</span>
+                    <span
+                        class="ml-2 rounded-circle properties password d-flex justify-content-center align-items-center text-white fw-500 font-12"
+                        *ngIf="(form.get('properties.schemaFree') && form.get('properties.schemaFree').value) || (checkSubType())"
+                        ngbTooltip="Schema Less">SL</span>
                     <span class="ml-2 advanced-badge hover"
                         *ngIf="form.get('properties.pattern') && form.get('properties.pattern').value">
                         Regex

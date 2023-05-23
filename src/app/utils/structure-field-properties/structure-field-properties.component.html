@@ -102,6 +102,18 @@
               class="ml-2 rounded-circle properties password d-flex justify-content-center align-items-center text-white fw-500 font-12">S</span>
             <span class="ml-2 text-dark font-14 fw-300">Secure</span>
           </div>
+
+          <div class=" d-flex align-items-center pb-3" [ngClass]="{'hover':canEdit}"
+            *ngIf="formItem.get('properties.schemaFree')">
+            <odp-checkbox id="secureAttr" [edit]="{ status: canEdit }"
+              (checkedChange)="toggleCheck(formItem.get('properties.schemaFree'),'schemaFree')"
+              [checked]="formItem.get('properties.schemaFree').value"></odp-checkbox>
+            <span
+              class="ml-2 rounded-circle properties schema-free d-flex justify-content-center align-items-center text-dark fw-500 font-12">
+              <span class="dsi dsi-ban"></span>
+            </span>
+            <span class="ml-2 text-dark font-14 fw-300">Schema Free</span>
+          </div>
         </div>
         <div *ngIf="formItem.get('type').value=='Boolean' && !isDataFormat && !isLibrary ">
           <div class="w-100 text-secondary fw-300 mb-2">Default Value

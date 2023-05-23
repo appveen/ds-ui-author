@@ -20,7 +20,7 @@ export class SchemaBuilderService {
     selectedFieldId: string;
     typechanged: EventEmitter<any>;
     idFieldId: string;
-    stateModel:any;
+    stateModel: any;
     constructor(
         private fb: FormBuilder,
         private commonService: CommonService) {
@@ -170,6 +170,8 @@ export class SchemaBuilderService {
         }
         if (value.type === 'Object') {
             temp.removeControl('required');
+            temp.addControl('schemaFree', new FormControl(value.properties &&
+                value.properties.schemaFree ? value.properties.schemaFree : false, [Validators.required]));
         }
         if (value.type === 'Array') {
             temp.removeControl('required');

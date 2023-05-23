@@ -1,5 +1,5 @@
 import { Component, OnDestroy, Input, TemplateRef, ViewChild, AfterViewInit, AfterContentChecked } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { CommonService } from '../services/common.service';
@@ -40,7 +40,8 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
   }
   constructor(private schemaService: SchemaBuilderService,
     private commonService: CommonService,
-    private ts: ToastrService) {
+    private ts: ToastrService,
+    private fb: FormBuilder) {
     const self = this;
     self.sampleRegexValue = [];
     self.showDatePicker = false;
@@ -206,11 +207,21 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     (prop.get('default')).setErrors(errors);
   }
 
-  toggleCheck(prop) {
+  toggleCheck(prop: FormControl, key?: string) {
     const self = this;
     if (self.canEdit) {
       prop.patchValue(!prop.value);
       self.form.markAsDirty();
+    }
+    if (key && key == 'schemaFree') {
+      console.log(this.form);
+      if (prop.value) {
+        self.form.removeControl('definition');
+        // (this.form.get('definition') as FormArray).controls.splice(0);
+      } else {
+        const temp = self.schemaService.getDefinitionStructure({ _newField: true });
+        self.form.addControl('definition', self.fb.array([temp]));
+      }
     }
   }
 

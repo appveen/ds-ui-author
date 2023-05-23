@@ -32,6 +32,9 @@
     &.password {
       background: $dark;
     }
+    &.schema-free {
+      background: $warning;
+    }
   }
 
   .schemaProperties-header {
