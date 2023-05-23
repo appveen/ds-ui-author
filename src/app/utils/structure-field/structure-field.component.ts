@@ -102,7 +102,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             }));
         }
         if (!self.form.get('definition')) {
-            if (self.form.get('type').value === 'Object') {
+            if (self.form.get('type').value === 'Object' && !self.form.get('properties.schemaFree').value) {
                 self.selectType({ value: 'Object', label: 'Group' });
             }
         }
@@ -506,7 +506,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             }).map(e => e.trim());
         }
         const json = {};
-        if(def.length>1){
+        if (def.length > 1) {
             def.forEach(element => {
                 self.getJSON(element, json);
             });
