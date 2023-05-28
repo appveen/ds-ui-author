@@ -55,9 +55,12 @@ export class PluginSelectorComponent implements OnInit {
   }
 
   searchService(searchTerm: string) {
-    let filter: any = { name: '/' + searchTerm + '/' };
+    let filter: any = {};
     if (this.isInputNode) {
       filter.type = 'INPUT';
+    }
+    if (searchTerm && searchTerm.trim()) {
+      filter.name = '/' + searchTerm + '/';
     }
     const options: GetOptions = {
       filter: filter,
@@ -94,6 +97,7 @@ export class PluginSelectorComponent implements OnInit {
 
   searchNode(searchTerm: string) {
     this.searchTerm = searchTerm;
+    this.searchService(searchTerm)
   }
 
   toggleItem(flag: boolean, item: any) {
