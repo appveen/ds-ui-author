@@ -10,8 +10,11 @@ export class MongodbConnectorComponent implements OnInit {
   @Input() edit: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
+  toggle: any;
 
-  constructor() { }
+  constructor() {
+    this.toggle = {};
+  }
 
   ngOnInit(): void {
   }
