@@ -786,6 +786,7 @@ export class SchemaBuilderComponent implements
                 self.schemaService.initialState(res);
                 res.definition = self.schemaService.patchType(res.definition);
                 self.serviceObj = res;
+                self.schemaService.serviceObj = res;
                 self.commonService.serviceData = res;
                 if (self.editServiceId || self.cloneServiceId) {
                     self.enableEdit(true);

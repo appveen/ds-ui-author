@@ -21,7 +21,7 @@
     <ng-container
       *ngFor="let formItem of formList;let formIndex = index; let isLastFormItem = last; let isFirstFormItem = first"
       [formGroup]="formItem">
-      <div class="w-100" *ngIf="key !== '_self'">
+      <div class="w-100" *ngIf="key !== '_self' && displayKey()">
         <div class="w-100 mt-3" *ngIf="!isDataFormat">
           <div class="font-14 fw-300 text-dark mb-2">Key</div>
           <div>

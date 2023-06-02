@@ -143,7 +143,7 @@
     <div class="d-flex flex-column">
         <div *ngIf="form.get('key').errors.caseError" class="d-flex justify-content-start">
             <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
-            <span>Key can only be camelCase, snake_case or kebab-case</span>
+            <span>Key can only be camelCase, snake_case or kebab-case without special characters</span>
         </div>
         <div *ngIf="form.get('properties.name').touched && form.get('key').hasError('required') && !isInvalidKey"
             class="d-flex justify-content-start">

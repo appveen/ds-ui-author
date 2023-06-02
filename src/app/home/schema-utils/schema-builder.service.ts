@@ -21,6 +21,7 @@ export class SchemaBuilderService {
     typechanged: EventEmitter<any>;
     idFieldId: string;
     stateModel: any;
+    serviceObj: any;
     constructor(
         private fb: FormBuilder,
         private commonService: CommonService) {
@@ -282,6 +283,9 @@ export class SchemaBuilderService {
         if (value && value.properties) {
             options['properties'] = value.properties;
         }
+        if (tempForm.get('key').value) {
+            tempForm.get('key').markAsTouched()
+        }
 
         tempForm.addControl('properties', this.getPropertiesStructure(options));
         if (value && value.properties && value.properties.relatedTo) {
@@ -336,11 +340,14 @@ export class SchemaBuilderService {
             tempForm.addControl('definition', tempArr);
         }
         tempForm.get('properties.name').valueChanges.subscribe(val => {
-            if (!tempForm.get('key').touched && !tempForm.get('key').value) {
+            if (!tempForm.get('key').touched) {
                 tempForm.get('key').patchValue(val === '_self' ? '_self' : _.camelCase(val));
             }
 
         });
+        // tempForm.get('key').valueChanges.subscribe(val => {
+        //     tempForm.get('key').patchValue(val === '_self' ? '_self' : val);
+        // });
         if (value && value.disableType) {
             tempForm.addControl('_disableType', new FormControl(true));
         }
