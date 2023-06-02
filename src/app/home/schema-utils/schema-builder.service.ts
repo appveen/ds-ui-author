@@ -1,13 +1,13 @@
 import { EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, FormArray, AbstractControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { positiveNumber } from '../../home/custom-validators/positive-number-validator';
 import { maxLenValidator, minMax, minMaxLength, patternValidator } from '../../home/custom-validators/min-max-validator';
-import { CommonService } from '../../utils/services/common.service';
 
 import * as _ from 'lodash';
 import * as uuid from 'uuid/v1';
 import { FieldType } from 'src/app/utils/interfaces/fieldType';
+import { CommonService } from '../../utils/services/common.service';
 
 @Injectable()
 export class SchemaBuilderService {
@@ -275,7 +275,7 @@ export class SchemaBuilderService {
             _fieldId: [uuid()],
             _placeholder: ['Untitled Attribute'],
             type: [type, [Validators.required]],
-            key: [key ? key : null, [Validators.required]],
+            key: [key ? key : null, [Validators.required, this.checkForCase]],
             _newField: [value && value._newField === false ? value._newField : true]
         });
         const options = { type, key };
@@ -336,12 +336,42 @@ export class SchemaBuilderService {
             tempForm.addControl('definition', tempArr);
         }
         tempForm.get('properties.name').valueChanges.subscribe(val => {
-            tempForm.get('key').patchValue(val === '_self' ? '_self' : _.camelCase(val));
+            if (!tempForm.get('key').touched && !tempForm.get('key').value) {
+                tempForm.get('key').patchValue(val === '_self' ? '_self' : _.camelCase(val));
+            }
+
         });
         if (value && value.disableType) {
             tempForm.addControl('_disableType', new FormControl(true));
         }
         return tempForm;
+    }
+
+
+
+    checkForCase(control: AbstractControl) {
+
+        const isCamelCase = (value: string): boolean => {
+            const result = /^[a-z][a-zA-Z0-9]*$/.test(value);
+            return result;
+        }
+        const isSnakeCase = (value: string): boolean => {
+            const result = /^[a-z][a-z0-9_]*$/.test(value);
+            return result;
+        }
+        const isKebabCase = (value: string): boolean => {
+            const result = /^[a-z][a-z0-9-]*$/.test(value);
+            return result;
+        }
+
+        if (isCamelCase(control.value) || isSnakeCase(control.value) || isKebabCase(control.value) || !control.value) {
+            return null;
+        }
+        else {
+            return {
+                caseError: "Case issue"
+            }
+        }
     }
 
     generateStructure(definitions) {

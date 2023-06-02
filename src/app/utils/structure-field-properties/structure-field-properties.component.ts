@@ -315,6 +315,24 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     }
   }
 
+
+  get key() {
+    const self = this;
+    if (self.form && self.form.get('key')) {
+      return self.form.get('key').value;
+    } else {
+      return null;
+    }
+  }
+
+  // set key(value) {
+  //   const self = this;
+  //   if (self.form && self.form.get('key')) {
+  //     self.form.get('key').setValue(value);
+  //   }
+
+  // }
+
   get canDelete() {
     const self = this;
     if (self.form && self.form.get('type').value !== 'id') {
