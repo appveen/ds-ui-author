@@ -122,7 +122,7 @@ export class CommonService {
   ) {
     const self = this;
     self.commonSpinner = false;
-    self.timeInterval={};
+    self.timeInterval = {};
     self.apiCalls = {};
     self.permissions = [];
     self.appList = [];
@@ -1204,78 +1204,92 @@ export class CommonService {
     // });
   }
 
-  updateStatus(_id, type, operation?){
-    const self=this;
-    if(type=='flow' && !this.timeInterval[_id]){
-      this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/flow`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
-        if(res[0].status!='Pending'){
-          self.flow.status.emit(res)
-          clearInterval(this.timeInterval[_id])
-          delete this.timeInterval[_id]
-        }
-      })},10000)
+  updateStatus(_id, type, operation?) {
+    const self = this;
+    if (type == 'flow' && !this.timeInterval[_id]) {
+      this.timeInterval[_id] = setInterval(() => {
+        this.get('partnerManager', `/${this.app._id}/flow`, { filter: { "_id": _id }, select: "status" }).subscribe(res => {
+          if (res[0].status != 'Pending') {
+            self.flow.status.emit(res)
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          }
+        })
+      }, 10000)
     }
-    if(type=='service' && !this.timeInterval[_id]){
-      this.timeInterval[_id]=setInterval(()=>{this.get('serviceManager', `/${this.app._id}/service`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
-        if(operation=='start' && res[0].status!='Pending' && res[0].status!='Undeployed'){
-          self.entity.status.emit(res);
-          clearInterval(this.timeInterval[_id])
-          delete this.timeInterval[_id]
-        }else if(res[0].status!='Pending' && !operation){
-          self.entity.status.emit(res);
-          clearInterval(this.timeInterval[_id])
-          delete this.timeInterval[_id]
-        }
-      })},10000)
+    if (type == 'service' && !this.timeInterval[_id]) {
+      this.timeInterval[_id] = setInterval(() => {
+        this.get('serviceManager', `/${this.app._id}/service`, { filter: { "_id": _id }, select: "status" }).subscribe(res => {
+          if (operation == 'start' && res[0].status != 'Pending' && res[0].status != 'Undeployed') {
+            self.entity.status.emit(res);
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          } else if (res[0].status != 'Pending' && !operation) {
+            self.entity.status.emit(res);
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          }
+        })
+      }, 10000)
     }
-    if(type=='faas' && !this.timeInterval[_id]){
-      this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/faas`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
-        if(res[0].status!='Pending'){
-          self.faas.status.emit(res);
-          clearInterval(this.timeInterval[_id])
-          delete this.timeInterval[_id]
-        }
-      })},10000)
+    if (type == 'faas' && !this.timeInterval[_id]) {
+      this.timeInterval[_id] = setInterval(() => {
+        this.get('partnerManager', `/${this.app._id}/faas`, { filter: { "_id": _id }, select: "status" }).subscribe(res => {
+          if (res[0].status != 'Pending') {
+            self.faas.status.emit(res);
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          }
+        })
+      }, 10000)
     }
-    if(type=='bulkUpload' && !this.timeInterval[_id]){
-      this.timeInterval[_id]=setInterval(()=>{this.get('user', `/${this.app._id}/user/utils/bulkCreate/fileTransfers`, {filter:{"_id":_id},select:"status"}).subscribe(res=>{
-        if(res[0].status!='Pending'){
-          self.bulkUpload.status.emit(res);
-          clearInterval(this.timeInterval[_id])
-          delete this.timeInterval[_id]
-        }
-      })},10000)
+    if (type == 'bulkUpload' && !this.timeInterval[_id]) {
+      this.timeInterval[_id] = setInterval(() => {
+        this.get('user', `/${this.app._id}/user/utils/bulkCreate/fileTransfers`, { filter: { "_id": _id }, select: "status" }).subscribe(res => {
+          if (res[0].status != 'Pending') {
+            self.bulkUpload.status.emit(res);
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          }
+        })
+      }, 10000)
     }
   }
 
-  updateDelete(_id,type){
-    const self=this;
-    if(type=='flow'){
-      this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/flow`, {filter:{"_id":_id}}).subscribe(res=>{
-        if(!res.length){
-          self.flow.delete.emit(_id)
-          clearInterval(this.timeInterval[_id])
-          delete this.timeInterval[_id]
-        }
-      })},10000)
+  updateDelete(_id, type) {
+    const self = this;
+    if (type == 'flow') {
+      this.timeInterval[_id] = setInterval(() => {
+        this.get('partnerManager', `/${this.app._id}/flow`, { filter: { "_id": _id } }).subscribe(res => {
+          if (!res.length) {
+            self.flow.delete.emit(_id)
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          }
+        })
+      }, 10000)
     }
-    if(type=='service'){
-      this.timeInterval[_id]=setInterval(()=>{this.get('serviceManager', `/${this.app._id}/service`, {filter:{"_id":_id}}).subscribe(res=>{
-        if(!res.length){
-          self.entity.delete.emit(_id);
-          clearInterval(this.timeInterval[_id])
-          delete this.timeInterval[_id]
-        }
-      })},10000)
+    if (type == 'service') {
+      this.timeInterval[_id] = setInterval(() => {
+        this.get('serviceManager', `/${this.app._id}/service`, { filter: { "_id": _id } }).subscribe(res => {
+          if (!res.length) {
+            self.entity.delete.emit(_id);
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          }
+        })
+      }, 10000)
     }
-    if(type=='faas'){
-      this.timeInterval[_id]=setInterval(()=>{this.get('partnerManager', `/${this.app._id}/faas`, {filter:{"_id":_id}}).subscribe(res=>{
-        if(!res.length){
-          self.faas.delete.emit(_id);
-          clearInterval(this.timeInterval[_id])
-          delete this.timeInterval[_id]
-        }
-      })},10000)
+    if (type == 'faas') {
+      this.timeInterval[_id] = setInterval(() => {
+        this.get('partnerManager', `/${this.app._id}/faas`, { filter: { "_id": _id } }).subscribe(res => {
+          if (!res.length) {
+            self.faas.delete.emit(_id);
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          }
+        })
+      }, 10000)
     }
   }
 

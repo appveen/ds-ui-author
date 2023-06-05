@@ -21,8 +21,17 @@
     <ng-container
       *ngFor="let formItem of formList;let formIndex = index; let isLastFormItem = last; let isFirstFormItem = first"
       [formGroup]="formItem">
+      <div class="w-100" *ngIf="key !== '_self' && displayKey()">
+        <div class="w-100 mt-3" *ngIf="!isDataFormat">
+          <div class="font-14 fw-300 text-dark mb-2">Key</div>
+          <div>
+            <input *ngIf="edit.status" class="form-control" type="text" formControlName="key" id="key">
+            <span *ngIf="!edit.status">{{key}}</span>
+          </div>
+        </div>
+      </div>
       <div class="schemaProperties-body" formGroupName="properties">
-        <div class="w-100" *ngIf="formItem.get('key').value !== '_self'">
+        <div class="w-100 mt-3" *ngIf="formItem.get('key').value !== '_self'">
           <div class="font-14 fw-300 text-dark mb-2">Type</div>
           <div class="w-100 bg-white position-relative">
             <button type="button"
@@ -41,6 +50,7 @@
             </odp-field-type-selector>
           </div>
         </div>
+
 
         <div *ngIf="formItem.get('type').value=='Array'" class="w-100" [formGroup]="formList[formIndex+1]">
           <div class="font-14 fw-300 text-dark mb-2 mt-3">Collection of</div>

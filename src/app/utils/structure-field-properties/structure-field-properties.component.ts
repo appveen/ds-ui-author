@@ -5,6 +5,7 @@ import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.s
 import { CommonService } from '../services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { emptyEnum } from 'src/app/home/custom-validators/empty-enum-validator';
+import { AppService } from '../services/app.service';
 
 @Component({
   selector: 'odp-structure-field-properties',
@@ -41,7 +42,8 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
   constructor(private schemaService: SchemaBuilderService,
     private commonService: CommonService,
     private ts: ToastrService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private appService: AppService) {
     const self = this;
     self.sampleRegexValue = [];
     self.showDatePicker = false;
@@ -290,6 +292,13 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     this.formList[0].get('properties.default').patchValue(null);
   }
 
+  displayKey() {
+    const connectorsList = this.appService.connectorsList || [];
+    const serviceDataConnector = this.schemaService.serviceObj?.connectors?.data || {};
+    return connectorsList.find(ele => ele._id === serviceDataConnector._id)?.type !== 'MONGODB' || false;
+  }
+
+
   get labelError() {
     const self = this;
     if (self.form.get('properties.label') && self.form.get('properties.label').errors) {
@@ -314,6 +323,24 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       return null;
     }
   }
+
+
+  get key() {
+    const self = this;
+    if (self.form && self.form.get('key')) {
+      return self.form.get('key').value;
+    } else {
+      return null;
+    }
+  }
+
+  // set key(value) {
+  //   const self = this;
+  //   if (self.form && self.form.get('key')) {
+  //     self.form.get('key').setValue(value);
+  //   }
+
+  // }
 
   get canDelete() {
     const self = this;
