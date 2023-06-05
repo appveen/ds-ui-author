@@ -1,7 +1,25 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
 .dsi {
     top: 9px;
     right: 10px;
 }
+
 .dsi-check {
     right: 36px;
+}
+
+.input-field {
+    width: 100%;
+    border-radius: $border-radius;
+}
+
+.form-control {
+    max-width: 260px;
+    border: none;
+
+    &:focus {
+        box-shadow: none;
+    }
 }
