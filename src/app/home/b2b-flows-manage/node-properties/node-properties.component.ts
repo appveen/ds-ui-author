@@ -72,6 +72,8 @@ export class NodePropertiesComponent implements OnInit {
         ))
       }
     });
+
+    this.flowData.skipAuth = true;
   }
 
   enableEditing() {
@@ -245,6 +247,13 @@ export class NodePropertiesComponent implements OnInit {
     return true;
     // return this.nodeList[0]._id == this.currNode._id;
   }
+  get showDataMapping() {
+    if (this.flowData && this.currNode && this.prevNode) {
+      return !_.isEmpty(this.prevNode.dataStructure?.outgoing);
+    }
+    return false;
+    // return this.nodeList[0]._id == this.currNode._id;
+  }
 
   get showInputSelector() {
     return !this.isInputNode && this.currNode.type != 'ERROR';
@@ -255,6 +264,8 @@ export class NodePropertiesComponent implements OnInit {
       && this.currNode?.type != 'DATASERVICE'
       && this.currNode?.type != 'DEDUPE'
       && this.currNode?.type != 'CONFLICT'
-      && this.currNode?.type != 'FILE_WRITE';
+      && this.currNode?.type != 'FILE_WRITE'
+      && this.currNode?.type != 'TIMER'
+      && this.currNode?.type != 'RESPONSE';
   }
 }

@@ -64,7 +64,8 @@
                 [hideGeneric]="currNode?.type=='MAPPING'">
             </odp-data-structure-selector>
         </div>
-        <button type="button" class="btn btn-dark w-100 ignore-outside" (click)="toggle['mapping']=!toggle['mapping']">
+        <button type="button" class="btn btn-dark w-100 ignore-outside" (click)="toggle['mapping']=!toggle['mapping']"
+            *ngIf="showDataMapping">
             Data Mapping
         </button>
     </div>
@@ -197,14 +198,14 @@
             </div>
         </div>
     </ng-container>
-    <ng-container *ngIf="currNode.type=='MAPPING'">
+    <!-- <ng-container *ngIf="currNode.type=='MAPPING'">
         <div class="form-group">
             <button type="button" class="btn btn-dark w-100 ignore-outside"
                 (click)="toggle['mapping']=!toggle['mapping']">
                 Set Mapping
             </button>
         </div>
-    </ng-container>
+    </ng-container> -->
     <ng-container *ngIf="currNode.type=='DEDUPE'">
         <div class="form-group position-relative ">
             <label for="fields" class="d-flex align-items-center justify-content-between">
@@ -380,7 +381,7 @@
                 [hideGeneric]="currNode?.type=='MAPPING'">
             </odp-data-structure-selector>
         </div>
-        <button *ngIf="!showInputSelector" type="button" class="btn btn-dark w-100 ignore-outside"
+        <button *ngIf="showDataMapping" type="button" class="btn btn-dark w-100 ignore-outside"
             (click)="toggle['mapping']=!toggle['mapping']">
             Data Mapping
         </button>

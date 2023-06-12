@@ -433,9 +433,9 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  addNode(event: any, type: string) {
+  addNode(event: any, type: string, anotherInputNode: boolean = false) {
     this.contextMenuStyle = null;
-    const tempNode = this.flowService.getNodeObject(type, this.nodeList);
+    const tempNode = this.flowService.getNodeObject(type, this.nodeList, anotherInputNode);
     tempNode.coordinates = {};
     const ele: HTMLElement = document.querySelectorAll('.flow-designer-svg')[0] as HTMLElement;
     const rect = ele.getBoundingClientRect();
