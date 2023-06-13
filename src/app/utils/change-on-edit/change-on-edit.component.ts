@@ -1,4 +1,4 @@
-import { Component, forwardRef, ViewChild, Output, EventEmitter, Input } from '@angular/core';
+import { Component, forwardRef, ViewChild, Output, EventEmitter, Input, ElementRef} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -15,7 +15,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class ChangeOnEditComponent implements ControlValueAccessor {
 
-  @ViewChild('inputField') inputField: HTMLInputElement;
+  @ViewChild('inputField') inputField: ElementRef;
   value: any;
   onChange: Function;
   onTouched: Function;
@@ -23,12 +23,19 @@ export class ChangeOnEditComponent implements ControlValueAccessor {
   oldValue: any;
   editEnabled: boolean;
   @Input() errorMessage: string;
+  @Input() isTimeout: boolean;
   @Output() tempValue: EventEmitter<string>;
   constructor() {
     this.tempValue = new EventEmitter();
     this.errorMessage = '';
   }
 
+  ngAfterViewInit() {
+    if(this.isTimeout){
+      this.inputField.nativeElement.type = 'number';
+    }
+  }
+  
   writeValue(obj: any): void {
     this.value = obj;
     this.oldValue = obj;
@@ -44,8 +51,19 @@ export class ChangeOnEditComponent implements ControlValueAccessor {
   }
 
   onValueChange(data: string) {
-    this.value = data;
-    this.tempValue.emit(this.value);
+    if(this.isTimeout){
+      if (+data <= 60) {
+        this.errorMessage = "Timeout (sec) should be a number greater than 60";
+        this.value = data;
+      } else {
+        this.errorMessage = null;
+        this.value = data;
+        this.tempValue.emit(this.value);
+      }
+    } else {
+        this.value = data;
+        this.tempValue.emit(this.value);
+    }
   }
 
   save() {
@@ -58,6 +76,7 @@ export class ChangeOnEditComponent implements ControlValueAccessor {
   cancel() {
     this.value = this.oldValue;
     this.editEnabled = false;
+    this.errorMessage = null;
     this.tempValue.emit(this.value);
   }
 

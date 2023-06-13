@@ -111,7 +111,7 @@
             </div>
             <div class="form-group position-relative">
                 <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
-                <odp-change-on-edit id="requestTimeout" [(ngModel)]="currNode.options.timeout"
+                <odp-change-on-edit id="requestTimeout" [isTimeout]="true" [(ngModel)]="currNode.options.timeout"
                     (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
                 <!-- <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout"> -->
             </div>
