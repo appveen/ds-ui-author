@@ -128,8 +128,8 @@
             <odp-switch [edit]="edit" [(checked)]="currNode.options.uniqueTxnId"></odp-switch>
             <span class="ml-2">Unique Remote Txn ID</span>
         </div>
-        <div class="form-group d-flex align-items-center">
-            <odp-switch [edit]="edit" type="warning" [(checked)]="flowData.skipAuth"></odp-switch>
+        <div class="form-group d-flex align-items-center" *ngIf="currNode?.type!='TIMER'">
+            <odp-switch [edit]=" edit" type="warning" [(checked)]="flowData.skipAuth"></odp-switch>
             <span class="ml-2">Un-Authenticated</span>
         </div>
     </ng-container>
