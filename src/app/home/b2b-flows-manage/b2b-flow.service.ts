@@ -51,9 +51,9 @@ export class B2bFlowService {
 
   getNodeType(node: any, isInputNode?: boolean) {
     if (node.type == 'API' && isInputNode) {
-      if (node.options.contentType == 'multipart/form-data') {
+      if (node?.options?.contentType == 'multipart/form-data') {
         return 'API File Receiver';
-      } else if (node.options.contentType == 'application/xml') {
+      } else if (node?.options?.contentType == 'application/xml') {
         return 'API XML Receiver';
       } else {
         return 'API JSON Receiver';
@@ -152,15 +152,15 @@ export class B2bFlowService {
     return text;
   }
 
-  getNodeObject(type: string, nodeList: Array<any>) {
+  getNodeObject(type: string, nodeList: Array<any>, anotherInputNode: boolean = false) {
     if (this.nodeIDCounter == 0) {
       this.nodeIDCounter = this.nodeList.length;
     }
     this.nodeIDCounter++;
-    let defaultName = this.getNodeType({ type, contentType: 'application/json' }) + ' ' + this.nodeIDCounter;
+    let defaultName = this.getNodeType({ type, contentType: 'application/json' }, anotherInputNode) + ' ' + this.nodeIDCounter;
     while (nodeList.findIndex(e => e._id == _.snakeCase(defaultName)) > -1) {
       this.nodeIDCounter++;
-      defaultName = this.getNodeType({ type, contentType: 'application/json' }) + ' ' + this.nodeIDCounter;
+      defaultName = this.getNodeType({ type, contentType: 'application/json' }, anotherInputNode) + ' ' + this.nodeIDCounter;
     }
     const temp: any = {
       // _id: this.appService.getNodeID(allIds),
@@ -182,6 +182,7 @@ export class B2bFlowService {
       temp.options.update = true;
       temp.options.insert = true;
     }
+
     if (type == 'FOREACH' || type == 'REDUCE') {
       temp.options.startNode = null;
     }
