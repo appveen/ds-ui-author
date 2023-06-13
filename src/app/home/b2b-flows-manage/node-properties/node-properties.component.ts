@@ -25,6 +25,7 @@ export class NodePropertiesComponent implements OnInit {
   toggle: any;
   nodeNameErrorMessage: string;
   searchTerm: string;
+  path: string;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private flowService: B2bFlowService) {
@@ -74,6 +75,9 @@ export class NodePropertiesComponent implements OnInit {
     });
 
     this.flowData.skipAuth = true;
+    if (this.flowData?.inputNode?.type === 'FILE') {
+      this.flowData.inputNode.options['contentType'] = 'multipart/form-data'
+    }
   }
 
   enableEditing() {
@@ -235,6 +239,27 @@ export class NodePropertiesComponent implements OnInit {
     this.currNode.options.url = value;
   }
 
+  onPathAdd() {
+    const inputDirectories = this.currNode.options?.inputDirectories ? _.cloneDeep(this.currNode.options.inputDirectories) : [];
+    const pathObj = {
+      path: this.path,
+      watchSubDirecties: false
+    }
+    inputDirectories.push(pathObj);
+
+    this.path = '';
+    this.currNode.options['inputDirectories'] = inputDirectories;
+    this.changesDone.emit();
+  }
+
+  removePath(index) {
+    this.currNode.options['inputDirectories'].splice(index, 1);
+  }
+
+  toggleWatch(i) {
+    this.currNode.options['inputDirectories'][i].watchSubDirecties = !this.currNode.options['inputDirectories'][i].watchSubDirecties;
+  }
+
   get variableSuggestions() {
     return this.flowService.getSuggestions(this.currNode)
   }
@@ -257,6 +282,17 @@ export class NodePropertiesComponent implements OnInit {
 
   get showInputSelector() {
     return !this.isInputNode && this.currNode.type != 'ERROR';
+  }
+
+  get checkForFileOptions() {
+    if (this.currNode?.dataStructure?.outgoing?.formatType === 'EXCEL' || this.currNode?.dataStructure?.outgoing?.formatType === 'CSV') {
+      return true
+    }
+    else {
+      this.currNode.options['skipStartRows'] = null;
+      this.currNode.options['skipEndRows'] = null;
+      return false
+    }
   }
 
   get showOutputSelector() {

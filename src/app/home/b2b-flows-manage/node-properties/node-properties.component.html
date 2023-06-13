@@ -197,6 +197,53 @@
                 <div class="list-group-item p-2 text-muted">No Agents Selected</div>
             </div>
         </div>
+
+        <div class="form-group">
+            <div class="d-flex align-items-center justify-content-between">
+                <label class="font-14 fw-400 text-dark" for="agentSelector">Input Directory(s)</label>
+            </div>
+
+            <div class="form-group">
+                <div class="position-relative input-field border">
+                    <input id="path" type="text" class="form-control input-form" [(ngModel)]="path"
+                        (ngModelChange)="changesDone.emit()" (keydown.delete)="$event.stopPropagation();"
+                        (keydown.enter)="onPathAdd()" [disabled]="!edit.status" placeholder="Enter directory path">
+                    <span *ngIf="path" class="position-absolute hover dsi dsi-plus text-accent"
+                        (click)="onPathAdd()"></span>
+                </div>
+            </div>
+            <div *ngIf="currNode.options.inputDirectories && currNode.options.inputDirectories.length > 0"
+                class="list-group">
+                <div *ngFor="let directory of currNode.options.inputDirectories; let i = index"
+                    class="list-group-item d-flex align-items-center justify-content-between">
+                    <odp-round-radio [edit]="edit" [(checked)]="directory.watchSubDirectories"
+                        (checkedChange)="toggleWatch(i)"></odp-round-radio>
+                    <span class="ml-2 text-truncate">{{directory.path}}</span>
+                    <span class="dsi dsi-remove text-danger hover" (click)="removePath(i)"></span>
+                </div>
+            </div>
+            <div *ngIf="!currNode.options.inputDirectories || currNode.options.inputDirectories.length == 0"
+                class="list-group">
+                <div class="list-group-item p-2 text-muted">No Directories Added</div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="currNode?.type=='FILE' && checkForFileOptions">
+
+        <div class="form-group border rounded p-2 bg-light mb-3">
+            <label class="font-14 fw-400 text-dark mb-0">File Options</label>
+            <small class="form-text text-muted mb-2">Rows to skip</small>
+            <label class="font-14 fw-400 text-dark">Start Rows</label>
+            <input id="path" type="text" class="form-control mb-2" [(ngModel)]="currNode.options.skipStartRows"
+                (ngModelChange)="changesDone.emit()" (keydown.delete)="$event.stopPropagation();"
+                [disabled]="!edit.status">
+            <label class="font-14 fw-400 text-dark">End Rows</label>
+            <input id="path" type="text" class="form-control" [(ngModel)]="currNode.options.skipEndRows"
+                (ngModelChange)="changesDone.emit()" (keydown.delete)="$event.stopPropagation();"
+                [disabled]="!edit.status">
+
+        </div>
     </ng-container>
     <!-- <ng-container *ngIf="currNode.type=='MAPPING'">
         <div class="form-group">
@@ -386,6 +433,7 @@
             Data Mapping
         </button>
     </div>
+
 
     <div *ngIf="currNode?.type=='API' && !isInputNode" class="border rounded p-2 bg-light">
         <div class="border-bottom font-14 fw-500 mb-3 pb-1">Advanced Settings</div>
