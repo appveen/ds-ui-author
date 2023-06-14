@@ -58,7 +58,16 @@ export class UserGroupAppcenterFlowsComponent implements OnInit {
     return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/count`).pipe(switchMap((count: any) => {
       return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, {
         count: count,
-        sort: "-_metadata.lastUpdated"
+        sort: "-_metadata.lastUpdated",
+        ...(this.type === 'FLOW' ? {
+          filter: {
+            'inputNode.type': {
+              $not: {
+                $eq: 'FILE'
+              }
+            }
+          }
+        } : {})
       });
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
