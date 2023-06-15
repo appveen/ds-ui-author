@@ -677,13 +677,21 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
           if (typeof a[field] == 'number' || typeof b[field] == 'number') {
             return this.compare((a[field]), (b[field]));
           } else {
-            return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
+            if(field == 'inputNode.type'){
+              return this.compare(_.lowerCase(a.inputNode.type), _.lowerCase(b.inputNode.type));
+            } else {
+              return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
+            }
           }
         } else if (this.sortModel[field] == -1) {
           if (typeof a[field] == 'number' || typeof b[field] == 'number') {
             return this.compare((b[field]), (a[field]));
           } else {
-            return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
+            if(field == 'inputNode.type'){
+              return this.compare(_.lowerCase(b.inputNode.type), _.lowerCase(a.inputNode.type));
+            } else {
+              return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
+            }
           }
         } else {
           return 0;

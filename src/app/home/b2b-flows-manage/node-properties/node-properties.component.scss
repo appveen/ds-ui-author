@@ -42,3 +42,22 @@
 .z-0 {
     z-index: 0;
 }
+
+.dsi-plus {
+    top: 10px;
+    right: 10px
+}
+
+.input-field {
+    width: 100%;
+    border-radius: $border-radius;
+}
+
+.input-form {
+    max-width: 300px;
+    border: none;
+
+    &:focus {
+        box-shadow: none;
+    }
+}
