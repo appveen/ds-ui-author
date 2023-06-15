@@ -1,34 +1,15 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.configure-window {
-    top: 0px;
-    right: 0px;
-    z-index: 4;
-    width: 1000px;
-    height: 100vh;
-    overflow-y: auto;
-    transition: 0.2s;
+.suggestion-list-wrapper {
+    width: 240px;
 }
 
-.input-height {
-    min-height: 150px;
-    max-height: 150px;
-    word-break: break-all;
-    font-family: 'Courier New', Courier, monospace;
+.source-list-wrapper {
+    width: 140px;
 }
 
-.suggestion-list {
-    min-width: 500px;
-    max-width: 500px;
-    min-height: 200px;
-    max-height: calc(100vh - 540px);
-    overflow-y: auto;
-    background-color: white;
-}
-
-.methods-list {
-    min-width: 420px;
-    // max-width: 420px;
-    overflow-y: auto;
+.formula-canvas {
+    width: 300px;
+    min-height: 120px;
 }

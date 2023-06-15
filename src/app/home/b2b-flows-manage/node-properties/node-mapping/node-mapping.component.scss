@@ -2,29 +2,18 @@
 @import "src/assets/scss/bootstrap/_variables.scss";
 
 .mapping-container {
-    .mapping-box {
-        min-height: calc(100vh - 204px);
-        max-height: calc(100vh - 204px);
-        overflow-y: auto;
+    .source-list {
+        min-width: 300px;
+        max-width: 300px;
+    }
 
-        width: 60vw;
+    .mapping-paths {
+        min-width: 120px;
+        max-width: 120px;
+    }
 
-        .source-list {
-            min-width: 300px;
-            max-width: 300px;
-        }
-
-        .mapping-paths {
-            // min-width: calc(100% - 650px);
-            // max-width: calc(100% - 650px);
-            min-width: 140px;
-            max-width: 140px;
-        }
-
-        .target-list {
-            min-width: 348px;
-            max-width: 348px;
-        }
+    .target-list {
+        min-width: 400px;
     }
 }
 
@@ -88,4 +77,40 @@ path {
 
 .list-group-item {
     padding: 0.75rem 0.5rem;
+}
+
+
+
+
+
+.source-list {
+    .data-field {
+        &:hover {
+            cursor: pointer;
+            background: $accent;
+            color: $white;
+        }
+    }
+}
+
+
+.spacer {
+    height: 3px;
+}
+
+.function-wrapper {
+    top: 20px;
+    left: 12px;
+    z-index: 1;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.mark-disabled {
+    opacity: 0.75;
+    color: #ccc !important;
+}
+
+.toggle-btn {
+    min-width: 16px;
+    min-height: 16px;
 }

@@ -1,12 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as _ from 'lodash';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import * as _ from 'lodash';
+import Fuse from 'fuse.js';
 
 import { AppService } from 'src/app/utils/services/app.service';
 import { environment } from 'src/environments/environment';
 import { B2bFlowService } from '../../b2b-flow.service';
 import { MappingService } from './mapping.service';
 import { CommonService } from '../../../../utils/services/common.service';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'odp-node-mapping',
@@ -16,6 +18,7 @@ import { CommonService } from '../../../../utils/services/common.service';
 })
 export class NodeMappingComponent implements OnInit {
 
+  @ViewChild('arrayOptions') arrayOptions: TemplateRef<HTMLElement>;
   @Input() edit: any;
   @Input() currNode: any;
   @Input() inputNode: any;
@@ -32,7 +35,13 @@ export class NodeMappingComponent implements OnInit {
   insertText: EventEmitter<any> = new EventEmitter();
   availableMethods: Array<any> = [];
   showMethodList: boolean = true;
-  toggleArray: Array<any> = [];
+
+  customTargetFields: Array<any>;
+  dragItem: any;
+  arrayAction: string;
+  arrayOptionsRef: NgbModalRef;
+  targetExpandCollapseObjects: any;
+  sourceExpandCollapseObjects: any;
   constructor(private appService: AppService,
     private mappingService: MappingService,
     private flowService: B2bFlowService,
@@ -47,18 +56,26 @@ export class NodeMappingComponent implements OnInit {
     this.pathList = [];
     this.svgStyle = {};
     this.source = 'outgoing';
+    this.targetExpandCollapseObjects = {};
+    this.sourceExpandCollapseObjects = {};
   }
 
   ngOnInit(): void {
-    let customTargetFields;
     if (this.currNode.dataStructure && this.currNode.dataStructure[this.source] && this.currNode.dataStructure[this.source].definition) {
-      customTargetFields = this.appService.cloneObject(this.currNode.dataStructure[this.source].definition) || [];
+      this.customTargetFields = this.appService.cloneObject(this.currNode.dataStructure[this.source].definition) || [];
     }
-    this.allTargets = this.mappingService.flatten((this.currNode.dataStructure?.[this.source]?.formatType || 'JSON'), customTargetFields);
-
+    this.allTargets = this.mappingService.flatten((this.currNode.dataStructure?.[this.source]?.formatType || 'JSON'), this.customTargetFields);
+    this.allTargets.forEach(item => {
+      if (item.type == 'Object') {
+        this.targetExpandCollapseObjects[item.dataPath] = false;
+      }
+    })
     this.nodeList = this.flowService.getNodesBefore(this.currNode);
     this.nodeList.forEach((node: any) => {
       let outgoing;
+      if (node.dataStructure.outgoing.definition) {
+        node.definition = node.dataStructure.outgoing.definition;
+      }
       if (node._id != this.currNode._id) {
         if (node.dataStructure.outgoing && node.dataStructure.outgoing.definition) {
           outgoing = this.appService.cloneObject(node.dataStructure.outgoing.definition);
@@ -75,6 +92,9 @@ export class NodeMappingComponent implements OnInit {
         }
         if (temp && temp.formula) {
           item.formula = temp.formula;
+        }
+        if (temp && temp.formulaConfig) {
+          item.formulaConfig = temp.formulaConfig;
         }
       });
       setTimeout(() => {
@@ -127,14 +147,38 @@ export class NodeMappingComponent implements OnInit {
       temp._id = s._id;
       temp.type = s.type;
       temp.dataPath = s.dataPath;
+      temp.nodeId = s.nodeId;
       return temp;
     });
     temp.formula = item.formula;
+    temp.formulaConfig = item.formulaConfig;
     return temp;
   }
 
   doFuzzyMapping() {
-    this.mappingService.fuzzyMapping.emit(true);
+    // this.mappingService.fuzzyMapping.emit(true);
+    const options = {
+      includeScore: true,
+      isCaseSensitive: true,
+      useExtendedSearch: true,
+      minMatchCharLength: 5,
+      keys: ['dataPath']
+    };
+    this.allTargets.forEach(def => {
+      const fuse = new Fuse(this.allSources.filter(e => e.type != 'Object'), options);
+      let result = fuse.search(def.dataPath).filter(e => e.score < 0.3);
+      if (!def.source) {
+        def.source = [];
+      }
+      if (def.source.length == 0) {
+        result = result.sort((a, b) => a.score - b.score);
+        if (result.length > 0) {
+          def.source.push(result[0].item);
+          def.formula = `{{${result[0].item._id}}}`;
+          // this.mappingService.reCreatePaths.emit();
+        }
+      }
+    });
     setTimeout(() => {
       this.mappingService.reCreatePaths.emit();
     }, 200);
@@ -148,12 +192,34 @@ export class NodeMappingComponent implements OnInit {
   }
 
   renderPaths(source: any, target: any) {
-    const sourceId = source._id;
-    const targetId = target._id;
+    // const sourceId = source._id;
+    // const targetId = target._id;
+    const sourceIdSegs = source._id.split('.');
+    const targetIdSegs = target._id.split('.');
+    let sourceId = sourceIdSegs.join('.');
+    let targetId = targetIdSegs.join('.');
     const sourceNodeId = source.nodeId;
     const mappingPaths: HTMLElement = document.querySelectorAll('.mapping-paths')[0] as HTMLElement;
-    const sourceEle: HTMLElement = document.querySelectorAll(`[data-id='${sourceId}']`)[0] as HTMLElement;
-    const targetEle: HTMLElement = document.querySelectorAll(`[data-id='${targetId}']`)[0] as HTMLElement;
+    let sourceEle: HTMLElement = document.querySelectorAll(`[data-id='${sourceId}']`)[0] as HTMLElement;
+    let targetEle: HTMLElement = document.querySelectorAll(`[data-id='${targetId}']`)[0] as HTMLElement;
+    while (targetId && !targetEle) {
+      targetIdSegs.pop();
+      targetId = targetIdSegs.join('.');
+      if (targetId.endsWith('[#]')) {
+        targetId = targetId.replace('[#]', '');
+      }
+      targetEle = document.querySelectorAll(`[data-id='${targetId}']`)[0] as HTMLElement;
+    }
+
+    while (sourceId && !sourceEle) {
+      sourceIdSegs.pop();
+      sourceId = sourceIdSegs.join('.');
+      if (sourceId.endsWith('[#]')) {
+        sourceId = sourceId.replace('[#]', '');
+      }
+      sourceEle = document.querySelectorAll(`[data-id='${sourceId}']`)[0] as HTMLElement;
+    }
+
     const nodeEle: HTMLElement = document.querySelectorAll(`[data-id='${sourceNodeId}']`)[0] as HTMLElement;
     const pathRect = mappingPaths.getBoundingClientRect();
     const targetRect = targetEle.getBoundingClientRect();
@@ -165,14 +231,15 @@ export class NodeMappingComponent implements OnInit {
     }
     if (tempRect) {
       const sourceCoordinates = {
-        x: 7,
-        y: tempRect.top - pathRect.top + 6
+        x: 0,
+        y: tempRect.top - pathRect.top + 10
       };
       const targetCoordinates = {
         x: pathRect.width,
-        y: targetRect.top - pathRect.top + 6
+        y: targetRect.top - pathRect.top + 10
       };
-      let path = this.mappingService.generateLinkPath(sourceCoordinates.x, sourceCoordinates.y, targetCoordinates.x, targetCoordinates.y, 1.5);
+      // let path = this.mappingService.generateLinkPath(sourceCoordinates.x, sourceCoordinates.y, targetCoordinates.x, targetCoordinates.y, 1.5);
+      let path = `M ${sourceCoordinates.x} ${sourceCoordinates.y} L ${targetCoordinates.x} ${targetCoordinates.y};`
       this.pathList.push({ path, source: source._id, target: target._id });
     }
   }
@@ -183,20 +250,44 @@ export class NodeMappingComponent implements OnInit {
       if (definition && definition.length > 0) {
         definition.forEach((def, i) => {
           delete def._id;
-          let key = parentDef ? parentDef.dataPath + '.' + def.key : def.key;
-          let nameAsKey = parentDef ? parentDef.dataPath + '.' + def.properties.name : def.properties.name;
-          let name = parentDef ? parentDef.properties.name + '/' + def.properties.name : def.properties.name;
-          if (node.dataStructure.outgoing && node.dataStructure.outgoing.formatType == 'JSON') {
-            def._id = `${node._id}.${bodyKey}.${key}`;
+          if (def.key == 'true') {
+            def.key = '_self';
+          }
+          let key;
+          let nameAsKey;
+          let name;
+          // if (def.key == '_self') {
+          //   key = parentDef.dataPath + '[#]';
+          //   nameAsKey = parentDef.dataPath + '[#]';
+          //   name = parentDef.properties.name + '[#]';
+          // } else {
+          //   key = parentDef ? parentDef.dataPath + '.' + def.key : def.key;
+          //   nameAsKey = parentDef ? parentDef.dataPath + '.' + def.properties.name : def.properties.name;
+          //   name = parentDef ? parentDef.properties.name + '/' + def.properties.name : def.properties.name;
+          // }
+          if (parentDef) {
+            if (parentDef.type == 'Array') {
+              key = parentDef.dataPath + '[#].' + def.key;
+              nameAsKey = parentDef.dataPath + '[#].' + def.properties.name;
+              name = parentDef.properties.name + '[#]/' + def.properties.name;
+            } else {
+              key = parentDef.dataPath + '.' + def.key;
+              nameAsKey = parentDef.dataPath + '.' + def.properties.name;
+              name = parentDef.properties.name + '/' + def.properties.name;
+            }
           } else {
-            def._id = `${node._id}.${bodyKey}.${nameAsKey}`;
+            key = def.key;
+            nameAsKey = def.properties.name;
+            name = def.properties.name;
           }
           def.nodeId = node._id;
           def.properties.name = name;
           if (node.dataStructure.outgoing && node.dataStructure.outgoing.formatType == 'JSON') {
+            def._id = `${node._id}.${bodyKey}.${key}`;
             def.properties.dataPath = key;
             def.dataPath = key;
           } else {
+            def._id = `${node._id}.${bodyKey}.${nameAsKey}`;
             def.properties.dataPath = nameAsKey;
             def.dataPath = nameAsKey;
           }
@@ -300,18 +391,204 @@ export class NodeMappingComponent implements OnInit {
     })
   }
 
-  toggleFn(event) {
-    this.toggleArray[event.index] = event.toggle;
-    this.toggleArray.forEach((_, i) => {
-      if (i != event.index) {
-        this.toggleArray[i] = false;
+  onDragStart(event: DragEvent, def: any) {
+    event.dataTransfer.effectAllowed = 'copy';
+    event.dataTransfer.setData('text', def.dataPath);
+    this.dragItem = def;
+  }
+
+  onDragEnter(event: DragEvent, def: any) {
+    if (!def.disabled) {
+      def.over = true;
+    }
+  }
+
+  onDragOver(event: DragEvent, def: any) {
+    event.preventDefault();
+  }
+
+  onDragLeave(event: DragEvent, def: any) {
+    def.over = false;
+  }
+
+  onDrop(event: DragEvent, def: any) {
+    def.over = false;
+    event.dataTransfer.dropEffect = 'copy';
+    if (!this.dragItem) {
+      return;
+    }
+    if (def.disabled) {
+      return;
+    }
+    const options = {
+      includeScore: true,
+      isCaseSensitive: true,
+      useExtendedSearch: true,
+      minMatchCharLength: 5,
+      keys: ['dataPath']
+    };
+    const sourceCol = new Fuse(this.allSources, options);
+    // const targetCol = new Fuse(this.allTargets, options);
+
+    let sourcePath = this.dragItem._id.split('[#]')[0];
+    let targetPath = def.dataPath.split('[#]')[0];
+    if (this.dragItem.dataPath.indexOf('[#]') > -1 && def.dataPath.indexOf('[#]') > -1) {
+      let matchingSource = this.allSources.find(e => e._id == sourcePath);
+      let matchingTarget = this.allTargets.find(e => e.dataPath == targetPath);
+      this.arrayOptionsRef = this.commonService.modal(this.arrayOptions);
+      this.arrayOptionsRef.result.then((close) => {
+        if (close) {
+          if (this.arrayAction == 'forEach') {
+            matchingTarget.disabled = true;
+            matchingTarget.definition[0].definition.forEach((tarEle: any, ti: number) => {
+              if (!tarEle.source) {
+                tarEle.source = [];
+              }
+              let tarSeg = tarEle.dataPath.split('[#]')[1];
+              let temp = matchingSource.definition[0].definition.find(e => e.dataPath.endsWith(tarSeg));
+              console.log(temp);
+              if (temp) {
+                tarEle.source.push(temp);
+              } else if (tarEle._id == def._id) {
+                def.source.push(this.dragItem);
+              }
+            });
+          } else {
+            if (!matchingTarget.source) {
+              matchingTarget.source = [];
+            }
+            matchingTarget.source.push(matchingSource);
+            matchingTarget.definition[0].definition.forEach((tarEle: any, ti: number) => {
+              tarEle.hide = true;
+            });
+          }
+          this.mappingService.reCreatePaths.emit();
+        }
+        this.arrayAction = null;
+      }, (dismiss) => {
+        this.arrayAction = null;
+      });
+    } else {
+      if (!def.source) {
+        def.source = [];
       }
-    })
+      if (this.dragItem) {
+        def.source.push(this.dragItem);
+        this.mappingService.reCreatePaths.emit();
+        // def.formula = def.source.map(e => '{{' + e._id + '}}').join(' + ');
+      }
+      this.dragItem = null;
+    }
   }
 
-  get showToggleArray() {
-    return this.toggleArray.filter(e => e).length > 0
+  isMapped(def: any) {
+    if (def.source && def.source.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  isSourceMapped(def: any) {
+    let flag = false;
+    flag = this.allTargets.find(ele => {
+      return (ele.source || []).find(src => {
+        return src._id == def._id;
+      });
+    });
+    return flag;
+  }
+
+  isValidFunction(def: any) {
+    if (def.source && def.source.length > 1 && !def.formula && !def.formulaConfig) {
+      return false;
+    }
+    return true;
+  }
+
+  removeSource(def: any, source: any) {
+    let index = def.source.findIndex(src => src._id == source._id);
+    if (index > -1) {
+      def.source.splice(index, 1);
+      this.mappingService.reCreatePaths.emit();
+      this.allTargets.forEach(item => {
+        if (item.dataPath.startsWith(def.dataPath)) {
+          item.hide = false;
+        }
+        let targetPath = def.dataPath.split('[#]')[0];
+        let matchingTarget = this.allTargets.find(e => e.dataPath == targetPath);
+        if (matchingTarget) {
+          if (matchingTarget.definition[0] && matchingTarget.definition[0].definition.every(e => !e.source || e.source.length == 0)) {
+            matchingTarget.disabled = false;
+          }
+        }
+      });
+    }
+  }
+
+  onArrayOptionSelect(event: any, type: string) {
+    this.arrayAction = type;
+  }
+
+  showToggleBtn(def: any) {
+    if (def.type == 'Object') {
+      return true;
+    }
+    if (def.type == 'Array' && def.definition[0].type == 'Object') {
+      return true;
+    }
+    return false;
+  }
+
+  toggleTarget(def: any) {
+    this.targetExpandCollapseObjects[def.dataPath] = !this.targetExpandCollapseObjects[def.dataPath];
+    this.mappingService.reCreatePaths.emit();
+  }
+
+  isTargetItemCollapsed(def: any) {
+    let flag = false;
+    if (def.type == 'Object' || def.type == 'Array') {
+      return false;
+    }
+    let key = def.dataPath.split('[#].')[0];
+    flag = this.targetExpandCollapseObjects[key];
+    if (!flag) {
+      let segments = def.dataPath.split('.');
+      let temp = JSON.parse(JSON.stringify(segments));
+      segments.forEach((key) => {
+        temp.pop();
+        let p = temp.join('.');
+        if (!flag) {
+          flag = this.targetExpandCollapseObjects[p];
+        }
+      });
+    }
+    return flag;
   }
 
 
+  toggleSource(def: any) {
+    this.sourceExpandCollapseObjects[def._id] = !this.sourceExpandCollapseObjects[def._id];
+    this.mappingService.reCreatePaths.emit();
+  }
+
+  isSourceItemCollapsed(def: any) {
+    let flag = false;
+    if (def.type == 'Object' || def.type == 'Array') {
+      return false;
+    }
+    let key = def._id.split('[#].')[0];
+    flag = this.sourceExpandCollapseObjects[key];
+    if (!flag) {
+      let segments = def._id.split('.');
+      let temp = JSON.parse(JSON.stringify(segments));
+      segments.forEach((key) => {
+        temp.pop();
+        let p = temp.join('.');
+        if (!flag) {
+          flag = this.sourceExpandCollapseObjects[p];
+        }
+      });
+    }
+    return flag;
+  }
 }

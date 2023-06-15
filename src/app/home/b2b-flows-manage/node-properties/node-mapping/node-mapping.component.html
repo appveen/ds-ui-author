@@ -17,178 +17,173 @@
             </button>
         </div>
         <div class="d-flex">
-            <div id="methods" class="method-list ml-3 mt-4 hide" *ngIf="showToggleArray">
-                <div class="border rounded d-flex align-items-center mb-2">
-                    <span class="text-secondary form-text p-2">Available Methods</span>
-                    <span *ngIf="!showMethodList" class="dsi hover dsi-drop-down fa-rotate-90  method-drop"
-                        (click)="showMethodList=!showMethodList"></span>
-                    <span *ngIf="showMethodList" class="dsi hover dsi-drop-down method-drop"
-                        (click)="showMethodList=!showMethodList"></span>
-                </div>
-                <div class="suggestion-list border rounded" *ngIf="showMethodList">
-                    <div class="list-group list-group-flush">
-                        <div *ngFor="let item of availableMethods"
-                            class="list-group-item font-12 d-flex align-items-center justify-content-start">
-                            <span class="dsi dsi-plus-circle hover text-dark mr-2" (click)="placeMethod(item)"></span>
-                            <div class="d-flex align-items-center">
-                                <span class="name text-accent fw-500">{{item.name}}</span>(
-                                <ng-container *ngFor="let p of item.params;let lp=last">
-                                    <span class="text-success" *ngIf="p.type == 'String'">"{{p.name}}"</span>
-                                    <span class="text-warning" *ngIf="p.type == 'Number'">{{p.name}}</span>
-                                    <span class="text-info" *ngIf="p.type == 'Boolean'">{{p.name}}</span>
-                                    <span class="text-grey" *ngIf="p.type == 'Object'">{{'{ '+p.name+' }'}}</span>
-                                    <span class="text-grey" *ngIf="p.type == 'Array'">{{'[ '+p.name+' ]'}}</span>
-                                    <span *ngIf="!lp">,&nbsp;</span>
-                                </ng-container>
-                                )&nbsp;:&nbsp;
-                                <span [ngClass]="getDataTypeStyleClass(item.returnType)">{{item.returnType}}</span>
-                            </div>
+            <div class="source-list ml-3 border-right">
+                <!-- <div *ngFor="let node of nodeList" class="source-list-item mb-3">
+                    <span class="fw-600 font-14">{{node.name}}</span>
+                    <div class="source-field-list ml-3">
+                        <div *ngFor="let item of node.definition" class="source-field-list-item">
+                            <ng-container *ngTemplateOutlet="sourceField;context:{def:item}"></ng-container>
                         </div>
-                        <!-- <div *ngIf="(availableMethods|commonFilter:'name':searchTerm).length==0"
-                    class="list-group-item d-flex align-items-center justify-content-between">
-                    <span class="text-muted">No Match Found</span>
-                </div> -->
                     </div>
-                </div>
-            </div>
-            <div class="mapping-box d-flex align-items-stretch p-4">
-                <div class="source-list">
-                    <ng-container *ngFor="let node of nodeList;let i=index">
-                        <div *ngIf="node._id!=currNode._id" class="border mb-3 rounded p-2">
-                            <!-- <div>
-                            <div *ngIf="node.type=='FILE'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">File Agent</span>
+                </div> -->
+
+                <div class="source-list-item mb-3">
+                    <ng-container *ngFor="let def of allSources">
+                        <div *ngIf="!isSourceItemCollapsed(def)"
+                            class="data-field d-flex align-items-center justify-content-start" draggable="true"
+                            (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                            <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
+                            <div class="toggle-btn d-flex align-items-center justify-content-center">
+                                <span *ngIf="showToggleBtn(def)" class="dsi hover text-muted"
+                                    (click)="toggleSource(def)"
+                                    [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[def.dataPath],'dsi-minus':!sourceExpandCollapseObjects[def.dataPath]}"></span>
                             </div>
-                            <div *ngIf="node.type=='API' && node._id!=inputNode"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Invoke API</span>
+                            <div class="field-type mr-2">
+                                <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
                             </div>
-                            <div *ngIf="node.type=='API' && node._id==inputNode"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-api-reciever mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">API Json Receiver</span>
-                            </div>
-                            <div *ngIf="node.type=='CONNECTOR'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Connector</span>
-                            </div>
-                            <div *ngIf="node.type=='DATASERVICE'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Data Service</span>
-                            </div>
-                            <div *ngIf="node.type=='FUNCTION'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Function</span>
-                            </div>
-                            <div *ngIf="node.type=='DEDUPE'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover">
-                                <span class="node-icon font-16 fw-400 dsi dsi-copy mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">De-Dupe</span>
-                            </div>
-                            <div *ngIf="node.type=='CONFLICT'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover">
-                                <span class="node-icon font-16 fw-400 dsi dsi-insight mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Conflict</span>
-                            </div>
-                            <div *ngIf="node.type=='FOREACH'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover">
-                                <span class="node-icon font-16 fw-400 dsi dsi-refresh mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">For Each</span>
-                            </div>
-                            <div *ngIf="node.type=='REDUCE'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover">
-                                <span class="node-icon font-16 fw-400 dsi dsi-undo mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Reduce</span>
-                            </div>
-                            <div *ngIf="node.type=='MAPPING'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Mapping</span>
-                            </div>
-                            <div *ngIf="node.type=='CODEBLOCK'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-console mr-2 text-secondary"></span>
-                                <span class="font-13 fw-400 text-secondary">Code Block</span>
-                            </div>
-                            <div *ngIf="node.type=='UNWIND'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Change Root</span>
-                            </div>
-                            <div *ngIf="node.type=='RESPONSE'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Response</span>
-                            </div>
-                            <div *ngIf="node.type=='FILE_READ'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-file read mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">File Reader</span>
-                            </div>
-                            <div *ngIf="node.type=='FILE_WRITE'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover ">
-                                <span class="node-icon font-16 fw-400 dsi dsi-file write mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">File Writer</span>
-                            </div>
-                            <div *ngIf="node.type=='PLUGIN'"
-                                class="node-item border-bottom pb-2 mb-2 d-flex align-items-center hover">
-                                <span class="node-icon font-16 fw-400 dsi dsi-library mr-2"></span>
-                                <span class="font-13 fw-400 text-secondary">Plugin</span>
-                            </div>
-                        </div> -->
-                            <div class="font-14 fw-500 mb-2">{{node.name}}</div>
-                            <odp-source-selector [nodeList]="nodeList" [index]="i"></odp-source-selector>
+                            <div class="field-key">{{def.key}}</div>
+                            <div class="mapping-line flex-fill"
+                                [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
                         </div>
                     </ng-container>
                 </div>
-                <svg #svgCanvas class="mapping-paths" [ngStyle]="svgStyle" (click)="selectedPath=null;">
-                    <g *ngFor="let p of pathList;let i=index;">
-                        <path class="transparent-path no-outline" [attr.d]="p.path" (click)="selectPath($event,p,i)"
-                            [tabindex]="i" (keydown.delete)="deletePath($event,p,i)" />
-                        <path [class.selected]="isPathSelected(p)" [attr.d]="p.path" (click)="selectPath($event,p,i)"
-                            class="no-outline" [tabindex]="i" (keydown.delete)="deletePath($event,p,i)" />
-                        <g *ngIf="isPathSelected(p)" [ngStyle]="getDeleteIconStyle(p)">
-                            <rect x="0" y="0" width="18" height="18" rx="6" class="delete-rect"
-                                (click)="deletePath($event,p,i)" />
-                            <foreignObject x="0" y="3" width="18" height="18">
-                                <span xmlns="http://www.w3.org/1999/xhtml" (click)="deletePath($event,p,i)"
-                                    class="text-wrap d-flex justify-content-center text-center hover font-10 dsi dsi-trash text-danger"></span>
-                            </foreignObject>
-                        </g>
+            </div>
+            <svg #svgCanvas class="mapping-paths" [ngStyle]="svgStyle" (click)="selectedPath=null;">
+                <g *ngFor="let p of pathList;let i=index;">
+                    <path class="transparent-path no-outline" [attr.d]="p.path" (click)="selectPath($event,p,i)" />
+                    <path [class.selected]="isPathSelected(p)" [attr.d]="p.path" (click)="selectPath($event,p,i)"
+                        class="no-outline" />
+                </g>
+            </svg>
+            <div class="target-list border-left">
+                <div class="target-list-item mb-3">
+                    <span class="fw-600 font-14">{{currNode.name}}</span>
+                    <div class="target-field-list">
+                        <div *ngFor="let def of allTargets" class="target-field-list-item position-relative">
+                            <div *ngIf="!def.hide && !isTargetItemCollapsed(def)"
+                                class="data-field d-flex align-items-center justify-content-start"
+                                [ngClass]="{'bg-accent text-white':def.over,'mark-disabled':def.disabled}"
+                                (drop)="onDrop($event,def)" (dragover)="onDragOver($event,def)"
+                                (dragenter)="onDragEnter($event,def)" (dragleave)="onDragLeave($event,def)"
+                                [attr.data-id]="def._id">
+                                <div class="spacer" [ngClass]="{'border-accent border-top':isMapped(def)}"
+                                    [ngStyle]="{'width':((def.depth+1)*12)+'px'}"></div>
+                                <div class="toggle-btn d-flex align-items-center justify-content-center">
+                                    <span *ngIf="showToggleBtn(def)" class="dsi hover text-muted"
+                                        (click)="toggleTarget(def)"
+                                        [ngClass]="{'dsi-plus':targetExpandCollapseObjects[def.dataPath],'dsi-minus':!targetExpandCollapseObjects[def.dataPath]}"></span>
+                                </div>
+                                <div class="field-type mr-2">
+                                    <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+                                </div>
+                                <div class="field-key">{{def.key}}</div>
+                                <a href="#" (click)="$event.preventDefault();def._showFn=true">
+                                    <i class="hover mx-2"
+                                        [ngClass]="{'text-success':isValidFunction(def),'text-danger':!isValidFunction(def)}">f(x)</i>
+                                </a>
+                                <odp-formula-editor *ngIf="def._showFn"
+                                    class="function-wrapper position-absolute bg-white border rounded" [data]="def"
+                                    (close)="def._showFn=false"></odp-formula-editor>
+                                <!-- <div *ngIf="def._showFn"
+                                    class="function-wrapper position-absolute bg-white border rounded">
+                                    <div
+                                        class="function-header border-bottom d-flex align-items-center justify-content-between">
+                                        <span class="text-success ml-1 fw-500">Function</span>
+                                        <span class="hover dsi dsi-close text-danger"
+                                            (click)="def._showFn=false"></span>
+                                    </div>
+                                    <div class="editor" odpEditor (drop)="onDrop($event, def)">
 
-                    </g>
-                </svg>
-                <div class="target-list border rounded">
-                    <div class="border-bottom" *ngFor="let item of allTargets;let i=index">
-                        <odp-target-fields [allSources]="allSources" [definition]="item" [index]="i"
-                            [currNode]="currNode" (toggleFn)="toggleFn($event)" [toggleValue]="toggleArray[i]"
-                            [insertText]="insertText"></odp-target-fields>
+                                    </div>
+                                </div> -->
+                                <div class="mapped-sources d-flex ml-3 text-secondary font-12">
+                                    <div *ngFor="let source of def.source"
+                                        class="border rounded px-1 mr-1 d-flex align-items-center">
+                                        <span>{{source.key}}</span>
+                                        <span (click)="removeSource(def,source)"
+                                            class="dsi dsi-minus-circle text-danger hover ml-1 font-14"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div *ngFor="let item of customTargetFields" class="target-field-list-item">
+                            <ng-container *ngTemplateOutlet="targetField;context:{def:item}"></ng-container>
+                        </div> -->
                     </div>
                 </div>
             </div>
         </div>
-        <!-- <svg #svgCanvas class="mapping-svg w-100">
-            <g class="source-fields">
-                <g *ngFor="let item of allSources;let i=index">
-                    <g odp-source-fields [index]="i" [definition]="item"></g>
-                </g>
-            </g>
-            <g class="target-fields">
-                <g *ngFor="let item of allTargets;let i=index">
-                    <g odp-target-fields [allSources]="allSources" [allTargets]="allTargets" [index]="i"
-                        [definition]="item"></g>
-                </g>
-            </g>
-        </svg> -->
     </div>
     <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary btn-min-width" (click)="done()">Done</button>
     </div>
 
 </div>
+
+
+<ng-template #sourceField let-def="def">
+    <div class="data-field d-flex align-items-center justify-content-start" draggable="true"
+        (dragstart)="onDragStart($event,def)" [attr.data-id]="def.id">
+        <span class="field-type mr-2">
+            <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+        </span>
+        <span class="field-key">{{def.key}}</span>
+    </div>
+    <div *ngIf="def.type=='Object'" class="data-field-wrapper ml-3">
+        <ng-container *ngFor="let item of def.definition">
+            <ng-container *ngTemplateOutlet="sourceField;context:{def:item}"></ng-container>
+        </ng-container>
+    </div>
+    <div *ngIf="def.type=='Array'" class="data-field-wrapper ml-3">
+        <ng-container *ngFor="let item of def.definition">
+            <ng-container *ngTemplateOutlet="sourceField;context:{def:item}"></ng-container>
+        </ng-container>
+    </div>
+</ng-template>
+
+
+<ng-template #targetField let-def="def">
+    <div class="data-field d-flex align-items-center justify-content-start"
+        [ngClass]="{'bg-accent text-white':def.over}" (drop)="onDrop($event,def)" (dragover)="onDragOver($event,def)"
+        (dragenter)="onDragEnter($event,def)" (dragleave)="onDragLeave($event,def)" [attr.data-id]="def.id">
+        <span class="field-type mr-2">
+            <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+        </span>
+        <span class="field-key">{{def.key}}</span>
+    </div>
+    <div *ngIf="def.type=='Object'" class="data-field-wrapper ml-3">
+        <ng-container *ngFor="let item of def.definition">
+            <ng-container *ngTemplateOutlet="targetField;context:{def:item}"></ng-container>
+        </ng-container>
+    </div>
+    <div *ngIf="def.type=='Array'" class="data-field-wrapper ml-3">
+        <ng-container *ngFor="let item of def.definition">
+            <ng-container *ngTemplateOutlet="targetField;context:{def:item}"></ng-container>
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #arrayOptions let-close="close" let-dismiss="dismiss">
+    <div class="modal-header">
+        <div class="modal-title">
+            <h5>Select Array Options</h5>
+        </div>
+    </div>
+    <div class="modal-body">
+        <p>Select an option to map Array Data: </p>
+        <div class="form-group d-flex align-items-center">
+            <input #forEachEle class="mr-2" type="radio" name="arrayOption"
+                (change)="onArrayOptionSelect($event,'forEach')">
+            <label for="forEach" class="m-0" (click)="forEachEle.click()">For Each</label>
+        </div>
+        <div class="form-group d-flex align-items-center">
+            <input #replaceEle class="mr-2" type="radio" name="arrayOption"
+                (change)="onArrayOptionSelect($event,'replace')">
+            <label for="replace" class="m-0" (click)="replaceEle.click()">Replace</label>
+        </div>
+        <div class="d-flex align-items-center justify-content-end mt-4">
+            <button type="button" class="btn btn-dark mr-3" (click)="arrayOptionsRef.close(false)">Cancel</button>
+            <button type="button" class="btn btn-success" (click)="arrayOptionsRef.close(true)">Done</button>
+        </div>
+    </div>
+</ng-template>

@@ -49,18 +49,45 @@ export class MappingService {
     try {
       if (definition && definition.length > 0) {
         definition.forEach((item, i) => {
-          let key = parentDef ? parentDef.key + '.' + item.key : item.key;
-          let nameAsKey = parentDef ? parentDef.properties.name + '.' + item.properties.name : item.properties.name;
-          let name = parentDef ? parentDef.properties.name + '/' + item.properties.name : item.properties.name;
           delete item._id;
+          if (item.key == 'true') {
+            item.key = '_self';
+          }
+          let key;
+          let nameAsKey;
+          let name;
+          // if (item.key == '_self') {
+          //   key = parentDef.dataPath + '[#]';
+          //   nameAsKey = parentDef.dataPath + '[#]';
+          //   name = parentDef.properties.name + '[#]';
+          // } else {
+          //   key = parentDef ? parentDef.dataPath + '.' + item.key : item.key;
+          //   nameAsKey = parentDef ? parentDef.dataPath + '.' + item.properties.name : item.properties.name;
+          //   name = parentDef ? parentDef.properties.name + '/' + item.properties.name : item.properties.name;
+          // }
+          if (parentDef) {
+            if (parentDef.type == 'Array') {
+              key = parentDef.dataPath + '[#].' + item.key;
+              nameAsKey = parentDef.dataPath + '[#].' + item.properties.name;
+              name = parentDef.properties.name + '[#]/' + item.properties.name;
+            } else {
+              key = parentDef.dataPath + '.' + item.key;
+              nameAsKey = parentDef.dataPath + '.' + item.properties.name;
+              name = parentDef.properties.name + '/' + item.properties.name;
+            }
+          } else {
+            key = item.key;
+            nameAsKey = item.properties.name;
+            name = item.properties.name;
+          }
           item.properties.name = name;
-          item.name = name;
-          item.key = key;
           item.depth = parentDef ? parentDef.depth + 1 : 0;
           if (type == 'JSON') {
+            item._id = `${key}`;
             item.properties.dataPath = key;
             item.dataPath = key;
           } else {
+            item._id = `${nameAsKey}`;
             item.properties.dataPath = nameAsKey;
             item.dataPath = nameAsKey;
           }
@@ -160,7 +187,7 @@ export class MappingService {
         bottomX + " " + bottomY +
         " S " +
         cp[4][0] + " " + cp[4][1] + " " +
-        destX + " " + destY
+        destX + " " + destY;
     }
   }
 
