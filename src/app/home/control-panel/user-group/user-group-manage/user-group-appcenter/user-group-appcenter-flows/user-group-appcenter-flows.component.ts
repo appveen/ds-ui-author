@@ -63,7 +63,7 @@ export class UserGroupAppcenterFlowsComponent implements OnInit {
           filter: {
             'inputNode.type': {
               $not: {
-                $eq: 'FILE'
+                $eq: 'TIMER'
               }
             }
           }
