@@ -371,7 +371,7 @@ export class SchemaBuilderService {
             return result;
         }
 
-        if (isCamelCase(control.value) || isSnakeCase(control.value) || isKebabCase(control.value) || !control.value) {
+        if (isCamelCase(control.value) || isSnakeCase(control.value) || isKebabCase(control.value) || !control.value || control.value === '_self') {
             return null;
         }
         else {
