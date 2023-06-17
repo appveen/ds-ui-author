@@ -24,7 +24,7 @@
             (dragover)="$event.preventDefault();">
             <div class="d-flex align-items-start justify-content-start font-12 flex-wrap">
                 <ng-container *ngFor="let item of usedFormulas;let fni=index">
-                    <ng-container *ngTemplateOutlet="formula;context:{item}"></ng-container>
+                    <ng-container *ngTemplateOutlet="formula;context:{$implicit:item}"></ng-container>
                     <span class="dsi dsi-minus-circle text-danger hover ml-1 font-12"
                         (click)="removeUsedFn(item,fni)"></span>
                 </ng-container>
