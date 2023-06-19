@@ -120,9 +120,11 @@
               [checked]="formItem.get('properties.schemaFree').value"></odp-checkbox>
             <span
               class="ml-2 rounded-circle properties schema-free d-flex justify-content-center align-items-center text-dark fw-500 font-12">
-              <span class="dsi dsi-ban"></span>
+              <!-- <span class="dsi dsi-ban"></span> -->
+              <span class="font-9 text-white">SF</span>
             </span>
             <span class="ml-2 text-dark font-14 fw-300">Schema Free</span>
+            <span class="font-10 text-primary ml-1">(BETA)</span>
           </div>
         </div>
         <div *ngIf="formItem.get('type').value=='Boolean' && !isDataFormat && !isLibrary ">

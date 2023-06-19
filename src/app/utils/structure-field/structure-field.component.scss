@@ -46,6 +46,10 @@
     &.password {
       background: $dark;
     }
+
+    &.schema-free {
+      background: $secondary;
+    }
   }
 
   .icon {
