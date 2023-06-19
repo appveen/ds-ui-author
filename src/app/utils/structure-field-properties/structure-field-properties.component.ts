@@ -1,5 +1,5 @@
 import { Component, OnDestroy, Input, TemplateRef, ViewChild, AfterViewInit, AfterContentChecked } from '@angular/core';
-import { UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { CommonService } from '../services/common.service';
