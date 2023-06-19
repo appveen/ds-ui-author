@@ -108,6 +108,7 @@ export class AppsComponent implements OnInit, OnDestroy {
     data: true,
     integration: true,
     management: true,
+    processFlows: true,
   };
   breadcrumbPaths: any;
   constructor(
