@@ -43,6 +43,10 @@ export class UserGroupAuthorComponent implements OnInit {
       self.activeSubTab = 10;
     } else if (self.hasPermission('PVGIF') || self.hasPermission('PMGIF')) {
       self.activeSubTab = 11;
+    } else if (self.hasPermission('PVGPF') || self.hasPermission('PMGPF')) {
+      self.activeSubTab = 12;
+    } else if (self.hasPermission('PVGPFN') || self.hasPermission('PMGPFN')) {
+      self.activeSubTab = 13;
     }
   }
 
