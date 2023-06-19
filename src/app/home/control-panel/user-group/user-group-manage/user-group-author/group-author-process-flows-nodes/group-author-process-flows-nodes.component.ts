@@ -22,8 +22,8 @@ export class GroupAuthorProcessFlowsNodesComponent implements OnInit {
     this.roles = [];
     this.rolesChange = new EventEmitter();
     this.edit = { status: true };
-    this.managePermissions = ['PMPFN', 'PMPFNPD', 'PMPFNPS'];
-    this.viewPermissions = ['PVPFN'];
+    this.managePermissions = ['PMPN', 'PMPNPD', 'PMPNPS'];
+    this.viewPermissions = ['PVPN'];
   }
 
   ngOnInit() {
@@ -37,7 +37,7 @@ export class GroupAuthorProcessFlowsNodesComponent implements OnInit {
     return {
       id: type,
       app: this.commonService.app._id,
-      entity: 'PROCESS_FLOW_NODES',
+      entity: 'PN',
       type: 'author'
     };
   }
@@ -48,17 +48,17 @@ export class GroupAuthorProcessFlowsNodesComponent implements OnInit {
 
   changeAllPermissions(val: string) {
     if (val == 'manage') {
-      _.remove(this.roles, (item) => item.entity == 'PROCESS_FLOW_NODES')
+      _.remove(this.roles, (item) => item.entity == 'PN')
       this.managePermissions.forEach(item => {
         this.roles.push(this.getPermissionObject(item));
       });
     } else if (val == 'view') {
-      _.remove(this.roles, (item) => item.entity == 'PROCESS_FLOW_NODES')
+      _.remove(this.roles, (item) => item.entity == 'PN')
       this.viewPermissions.forEach(item => {
         this.roles.push(this.getPermissionObject(item));
       });
     } else if (val == 'blocked') {
-      _.remove(this.roles, (item) => item.entity == 'PROCESS_FLOW_NODES')
+      _.remove(this.roles, (item) => item.entity == 'PN')
     }
   }
 
@@ -76,9 +76,9 @@ export class GroupAuthorProcessFlowsNodesComponent implements OnInit {
   }
 
   get permissionType() {
-    if (this.roles.find(r => r.id === 'PMPFN' && r.entity === 'PROCESS_FLOW_NODES')) {
+    if (this.roles.find(r => r.id === 'PMPN' && r.entity === 'PN')) {
       return 'manage';
-    } else if (this.roles.find(r => r.id === 'PVPFN' && r.entity === 'PROCESS_FLOW_NODES')) {
+    } else if (this.roles.find(r => r.id === 'PVPN' && r.entity === 'PN')) {
       return 'view';
     } else {
       return 'blocked';
@@ -87,7 +87,7 @@ export class GroupAuthorProcessFlowsNodesComponent implements OnInit {
 
   get powerPermissionDeploy() {
     const manageIndex = this.roles.findIndex(r => (
-      r.id === 'PMPFNPD') && r.entity === 'PROCESS_FLOW_NODES');
+      r.id === 'PMPNPD') && r.entity === 'PN');
     if (manageIndex > -1) {
       return 'manage';
     }
@@ -96,7 +96,7 @@ export class GroupAuthorProcessFlowsNodesComponent implements OnInit {
 
   get powerPermissionsStartStop() {
     const manageIndex = this.roles.findIndex(r => (
-      r.id === 'PMPFNPS') && r.entity === 'PROCESS_FLOW_NODES');
+      r.id === 'PMPNPS') && r.entity === 'PN');
     if (manageIndex > -1) {
       return 'manage';
     }
@@ -104,15 +104,15 @@ export class GroupAuthorProcessFlowsNodesComponent implements OnInit {
   }
 
   set commonPermission(val: any) {
-    const blockedIndex = this.roles.findIndex(r => r.id === 'PNPFN' + val.type && r.entity === 'PROCESS_FLOW_NODES');
+    const blockedIndex = this.roles.findIndex(r => r.id === 'PNPN' + val.type && r.entity === 'PN');
     if (blockedIndex > -1) {
       this.roles.splice(blockedIndex, 1);
     }
-    const manageIndex = this.roles.findIndex(r => r.id === 'PMPFN' + val.type && r.entity === 'PROCESS_FLOW_NODES');
+    const manageIndex = this.roles.findIndex(r => r.id === 'PMPN' + val.type && r.entity === 'PN');
     if (manageIndex > -1) {
       this.roles.splice(manageIndex, 1);
     }
-    const viewIndex = this.roles.findIndex(r => r.id === 'PVPFN' + val.type && r.entity === 'PROCESS_FLOW_NODES');
+    const viewIndex = this.roles.findIndex(r => r.id === 'PVPN' + val.type && r.entity === 'PN');
     if (viewIndex > -1) {
       this.roles.splice(viewIndex, 1);
     }

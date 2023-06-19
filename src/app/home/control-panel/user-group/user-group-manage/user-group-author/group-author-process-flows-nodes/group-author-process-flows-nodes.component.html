@@ -25,18 +25,18 @@
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
           <odp-round-radio [edit]="edit" id="libraryBlocked" name="library" size="20"
             [checked]="permissionType=='blocked'"
-            (checkedChange)="commonPermission={id:'PNPFN',type:''}"></odp-round-radio>
+            (checkedChange)="commonPermission={id:'PNPN',type:''}"></odp-round-radio>
           <span class="text-dark ml-2">Blocked</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
           <odp-round-radio [edit]="edit" id="libraryView" name="library" size="20" [checked]="permissionType=='view'"
-            (checkedChange)="commonPermission={id:'PVPFN',type:''}"></odp-round-radio>
+            (checkedChange)="commonPermission={id:'PVPN',type:''}"></odp-round-radio>
           <span class="text-dark ml-2">View</span>
         </div>
         <div class="permission-btn-block d-flex align-items-center justify-content-end">
           <odp-round-radio [edit]="edit" id="libraryManage" name="library" size="20"
             [checked]="permissionType=='manage'"
-            (checkedChange)="commonPermission={id:'PMPFN',type:''}"></odp-round-radio>
+            (checkedChange)="commonPermission={id:'PMPN',type:''}"></odp-round-radio>
           <span class="text-dark ml-2">Manage</span>
         </div>
       </div>
