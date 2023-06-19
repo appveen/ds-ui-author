@@ -10,7 +10,7 @@ export class CommonFilterPipe implements PipeTransform {
     if (!value || value.length === 0 || !term || !field) {
       return value;
     }
-    const reg = new RegExp(term.toLowerCase());
+    const reg = new RegExp(term.toLowerCase(), 'gi');
     value.forEach(i => {
       if (i[field].toLowerCase().match(reg)) {
         res.push(i);

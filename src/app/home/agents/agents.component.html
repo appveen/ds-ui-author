@@ -12,7 +12,7 @@
         <div class="fw-600 font-22">Agents</div>
         <span class="d-flex align-items-center">
             <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
-            <button *ngIf="hasManagePermission('AGENT')" type="button"
+            <button *ngIf="hasCreatePermission('AGENT')" type="button"
                 class="btn btn-primary ml-3 d-flex align-items-center" (click)="newAgent()">
                 <span class="dsi dsi-plus mr-2"></span>
                 <span class="text">New Agent</span>
@@ -74,7 +74,7 @@
             <div *ngIf="!records || records.length==0" class="list-group-item">No Records Found</div>
             <ng-container *ngFor="let agent of records;let i=index">
                 <div *ngIf="hasPermissionForAgent(agent._id)" class="list-group-item">
-                    <div class="d-flex align-items-center justify-content-start h-100" [attr.title]="agent.name"
+                    <div class="d-flex align-items-center justify-content-start h-100 hover" [attr.title]="agent.name"
                         (dblclick)="navigate(agent)">
                         <div class="item-name text-truncate fw-500">{{agent.name}}</div>
                         <div class="item-password text-truncate" (click)="getAgentPassword(agent._id)">
@@ -89,39 +89,39 @@
                             'text-warning': agent.status === 'PENDING',
                             'text-danger': agent.status === 'STOPPED'
                           }">{{agent.status}}</span></div>
-                        <div class="item-last-invoked-at font-12">{{convertDate(agent._metadata.lastUpdated)}}</div>
+                        <div class="item-last-invoked-at font-12">{{convertDate(agent.lastInvokedAt)}}</div>
                         <!-- <div class="item-release">{{agent.release}}</div>
                         <div class="item-pending-files">{{agent.pendingFiles}}</div> -->
                         <div class="item-actions d-flex align-items-center justify-content-end">
                             <span id="agent-view" class="fw-600 font-13 hover mr-3"
                                 [routerLink]="['/app/',app,'agent',agent._id]">View</span>
                             <span id="agent-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
-                                (click)="showDropDown($event,i)"></span>
+                                *ngIf="canEditAgent(agent._id)" (click)="showDropDown($event,i)"></span>
                             <div *ngIf="showOptionsDropdown[i]"
                                 class="more-options bg-white rounded list-group position-fixed border"
                                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                                 (outside)="showOptionsDropdown[i]=false">
-                                <div id="agent-dowload" class="list-group-item list-group-item-action py-2 border-0"
+                                <div id="agent-dowload"
+                                    class="list-group-item list-group-item-action py-2 border-0 hover"
                                     (click)="openDownloadAgentWindow(agent);">
                                     Download
                                 </div>
-                                <div id="agent-edit" class="list-group-item list-group-item-action py-2 border-0"
-                                    *ngIf="canEditAgent(agent._id)" (click)="newAgent(agent)">
+                                <div id="agent-edit" class="list-group-item list-group-item-action py-2 border-0 hover"
+                                    *ngIf="canEditAgent(agent._id)" (click)="newAgent(agent, true)">
                                     Edit
                                 </div>
                                 <div id="agent-change-passowrd"
-                                    class="list-group-item list-group-item-action py-2 border-0"
+                                    class="list-group-item list-group-item-action py-2 border-0 hover"
                                     (click)="showPasswordSide = true; agentData=agent">
                                     Change Password
                                 </div>
-                                <div id="agent-clone" class="list-group-item list-group-item-action py-2 border-0"
-                                    *ngIf="canEditAgent(agent._id) && hasManagePermission('AGENT')"
-                                    (click)="cloneAgent(i)">
+                                <div id="agent-clone" class="list-group-item list-group-item-action py-2 border-0 hover"
+                                    *ngIf="hasCreatePermission('AGENT')" (click)="cloneAgent(agent)">
                                     Clone
                                 </div>
                                 <div id="agent-delete"
-                                    class="list-group-item list-group-item-action py-2 border-0 text-danger"
-                                    *ngIf="canEditAgent(agent._id)" (click)="deleteAgent(i);">
+                                    class="list-group-item list-group-item-action py-2 border-0 text-danger hover"
+                                    (click)="deleteAgent(i);">
                                     Delete
                                 </div>
                             </div>
@@ -141,7 +141,7 @@
     class="new-data-format-window position-fixed p-4 d-flex flex-column align-items-center bg-white border-left">
     <div class="d-flex align-items-center justify-content-between w-100">
         <span class="font-20 fw-600">{{agentData.isEdit?'Edit':'Create new'}} App Agent</span>
-        <button type="button" class="btn btn-link text-dark" (click)="showNewAgentWindow=false">
+        <button type="button" class="btn btn-link text-dark" (click)="showNewAgentWindow=false;isClone=false">
             <span class="dsi dsi-close"></span>
         </button>
     </div>
@@ -150,8 +150,7 @@
         <div *ngIf="showNewAgentWindow" class="position-relative agent-name-wrapper">
             <input #agentName="ngModel" autocomplete="off" type="text" class="form-control" [(ngModel)]="agentData.name"
                 [ngClass]="{'is-invalid':agentName.invalid && (agentName.dirty || agentName.touched)}" maxlength="24"
-                required [pattern]="'[a-z0-9A-Z\\s_-]+'" odpAutoFocus (keyup.enter)="triggerAgentCreate()"
-                [disabled]="agentData.isEdit">
+                required [pattern]="'[a-z0-9A-Z\\s_-]+'" odpAutoFocus (keyup.enter)="triggerAgentCreate()">
             <ng-container *ngIf="agentName.invalid && (agentName.dirty || agentName.touched)">
                 <span *ngIf="agentName?.errors?.required" class="dsi dsi-danger-circle text-danger position-absolute"
                     ngbTooltip="Name is required" container="body"></span>

@@ -8,11 +8,12 @@ import { Component, Input, OnInit } from '@angular/core';
 export class MysqlConnectorComponent implements OnInit {
 
   @Input() edit: any;
-  @Input() prevNode: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
-
-  constructor() { }
+  toggle: any;
+  constructor() {
+    this.toggle = {};
+  }
 
   ngOnInit(): void {
   }

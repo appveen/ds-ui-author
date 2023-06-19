@@ -5,6 +5,7 @@ import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.s
 import { CommonService } from '../services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { emptyEnum } from 'src/app/home/custom-validators/empty-enum-validator';
+import { AppService } from '../services/app.service';
 
 @Component({
   selector: 'odp-structure-field-properties',
@@ -40,7 +41,9 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
   }
   constructor(private schemaService: SchemaBuilderService,
     private commonService: CommonService,
-    private ts: ToastrService) {
+    private ts: ToastrService,
+    private fb: UntypedFormBuilder,
+    private appService: AppService) {
     const self = this;
     self.sampleRegexValue = [];
     self.showDatePicker = false;
@@ -206,11 +209,21 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     (prop.get('default')).setErrors(errors);
   }
 
-  toggleCheck(prop) {
+  toggleCheck(prop: UntypedFormControl, key?: string) {
     const self = this;
     if (self.canEdit) {
       prop.patchValue(!prop.value);
       self.form.markAsDirty();
+    }
+    if (key && key == 'schemaFree') {
+      console.log(this.form);
+      if (prop.value) {
+        self.form.removeControl('definition');
+        // (this.form.get('definition') as UntypedFormArray).controls.splice(0);
+      } else {
+        const temp = self.schemaService.getDefinitionStructure({ _newField: true });
+        self.form.addControl('definition', self.fb.array([temp]));
+      }
     }
   }
 
@@ -279,6 +292,13 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     this.formList[0].get('properties.default').patchValue(null);
   }
 
+  displayKey() {
+    const connectorsList = this.appService.connectorsList || [];
+    const serviceDataConnector = this.schemaService.serviceObj?.connectors?.data || {};
+    return connectorsList.find(ele => ele._id === serviceDataConnector._id)?.type !== 'MONGODB' || false;
+  }
+
+
   get labelError() {
     const self = this;
     if (self.form.get('properties.label') && self.form.get('properties.label').errors) {
@@ -303,6 +323,24 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       return null;
     }
   }
+
+
+  get key() {
+    const self = this;
+    if (self.form && self.form.get('key')) {
+      return self.form.get('key').value;
+    } else {
+      return null;
+    }
+  }
+
+  // set key(value) {
+  //   const self = this;
+  //   if (self.form && self.form.get('key')) {
+  //     self.form.get('key').setValue(value);
+  //   }
+
+  // }
 
   get canDelete() {
     const self = this;

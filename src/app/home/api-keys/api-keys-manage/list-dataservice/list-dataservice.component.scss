@@ -1,0 +1,21 @@
+.name {
+    min-width: 200px;
+    max-width: 200px;
+}
+
+.permissions-badge {
+    min-width: 28px;
+    min-height: 28px;
+}
+
+.permissions {
+    min-width: 160px;
+    max-width: 160px;
+
+    .icon {
+        min-width: 24px;
+        max-width: 24px;
+        min-height: 24px;
+        max-height: 24px;
+    }
+}

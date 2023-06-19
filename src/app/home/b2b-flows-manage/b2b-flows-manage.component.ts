@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,8 @@ import { B2bFlowService } from './b2b-flow.service';
 @Component({
   selector: 'odp-b2b-flows-manage',
   templateUrl: './b2b-flows-manage.component.html',
-  styleUrls: ['./b2b-flows-manage.component.scss']
+  styleUrls: ['./b2b-flows-manage.component.scss'],
+  providers: [B2bFlowService]
 })
 export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
@@ -44,6 +45,13 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   nodeList: Array<any>;
   changesDone: boolean = false;
   saved: boolean = false
+
+  contextMenuStyle: any;
+  isMouseDown: any;
+
+  showPathProperties: boolean;
+  selectedPath: any;
+
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -96,6 +104,19 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.showNodeProperties = false;
       }
     });
+    this.flowService.selectedPath.pipe(
+      tap(() => {
+        this.resetSelection();
+      }),
+      delay(5)
+    ).subscribe((data: any) => {
+      this.selectedPath = data;
+      if (data) {
+        this.showPathProperties = true;
+      } else {
+        this.showPathProperties = false;
+      }
+    });
     this.flowService.deleteNode.subscribe((data: any) => {
       this.openDeleteModal.emit({
         title: 'Delete Node?',
@@ -135,6 +156,8 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     this.showNodeProperties = false;
     this.selectedNode = null;
     this.newNodeDropdownPos = null;
+    this.showPathProperties = false;
+    this.selectedPath = null;
   }
 
   getFlow(id: string, draft?: boolean) {
@@ -155,6 +178,14 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       if (res.inputNode.dataStructure && res.inputNode.dataStructure.outgoing) {
         this.patchDataStructure(res.inputNode.dataStructure.outgoing, res.dataStructures);
       }
+      // if (!res.errorNode || _.isEmpty(res.errorNode)) {
+      //   let errorNode = this.flowService.getNodeObject('ERROR', this.nodeList);
+      //   errorNode.coordinates = {
+      //     x: 400,
+      //     y: 30
+      //   };
+      //   res.errorNode = errorNode;
+      // }
       res.nodes.forEach(item => {
         if (item.dataStructure && item.dataStructure.outgoing) {
           this.patchDataStructure(item.dataStructure.outgoing, res.dataStructures);
@@ -176,6 +207,27 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.flowData.nodes.forEach(item => {
           this.nodeList.push(item);
         });
+      }
+      if (this.flowData.errorNode) {
+        this.nodeList.push(this.flowData.errorNode);
+      }
+      this.nodeList.forEach((node, i) => {
+        if (!node.name) {
+          node.name = this.appService.toSnakeCase(this.flowService.getNodeType(node, i == 0));
+        }
+        if (!node.coordinates || !node.coordinates.x || !node.coordinates.y) {
+          node.coordinates = {
+            x: 20 + (i * 120),
+            y: 20 + (i * 72)
+          };
+        }
+      });
+      this.flowService.cleanPayload(this.nodeList);
+      this.flowService.nodeList = this.nodeList;
+      if (!environment.production) {
+        setTimeout(() => {
+          this.enableEditing()
+        }, 1000);
       }
     }, err => {
       this.apiCalls.getFlow = false;
@@ -214,6 +266,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     const dataStructures = {};
     this.flowData.app = this.commonService.app._id;
     const tempNodeList = JSON.parse(JSON.stringify(this.nodeList));
+    this.flowService.cleanPayload(tempNodeList);
     tempNodeList.forEach(item => {
       if (item.dataStructure && item.dataStructure.outgoing && item.dataStructure.outgoing._id) {
         dataStructures[item.dataStructure.outgoing._id] = JSON.parse(JSON.stringify(item.dataStructure.outgoing));
@@ -238,6 +291,11 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     });
     this.flowData.inputNode = tempNodeList[0];
     tempNodeList.splice(0, 1);
+    let errorIndex = tempNodeList.findIndex(e => e.type == 'ERROR');
+    if (errorIndex > -1) {
+      this.flowData.errorNode = tempNodeList[errorIndex];
+      tempNodeList.splice(errorIndex, 1);
+    }
     this.flowData.nodes = tempNodeList;
     this.flowData.dataStructures = dataStructures;
     if (!environment.production) {
@@ -308,6 +366,8 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.apiCalls.deploy = false;
         this.ts.success('Saved ' + this.flowData.name + ' and deployment process has started.');
         this.router.navigate(['/app', this.commonService.app._id, 'flow']);
+        this.commonService.updateStatus(this.edit.id, 'flow');
+        this.appService.getFlows();
       }, err => {
         this.apiCalls.deploy = false;
         this.commonService.errorToast(err);
@@ -356,7 +416,6 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       }
       this.flowData.nodes.splice(val.data.nodeIndex - 1, 1);
     }
-    console.log(val);
   }
 
   canDeactivate(): Promise<boolean> | boolean {
@@ -374,12 +433,133 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  addNode(event: any, type: string, anotherInputNode: boolean = false) {
+    this.contextMenuStyle = null;
+    const tempNode = this.flowService.getNodeObject(type, this.nodeList, anotherInputNode);
+    tempNode.coordinates = {};
+    const ele: HTMLElement = document.querySelectorAll('.flow-designer-svg')[0] as HTMLElement;
+    const rect = ele.getBoundingClientRect();
+    tempNode.coordinates.x = event.pageX - rect.left - 70;
+    tempNode.coordinates.y = event.pageY - rect.top - 18;
+    this.nodeList.push(tempNode);
+  }
+
+  addNodeToCanvas(type: string) {
+    const temp = this.nodeList[this.nodeList.length - 1];
+    const event = { pageX: temp.coordinates.x + 400, pageY: temp.coordinates.y + 200 };
+    this.addNode(event, type);
+  }
+
+  onRightClick(event: PointerEvent) {
+    event.preventDefault();
+    const clientHeight = (event.target as HTMLElement).clientHeight;
+    if (clientHeight > 330 && (event.clientY + 330) > clientHeight) {
+      this.contextMenuStyle = { top: (event.clientY - 330) + 'px', left: event.clientX + 'px' };
+    } else {
+      this.contextMenuStyle = { top: event.clientY + 'px', left: event.clientX + 'px' };
+    }
+  }
+
+  scroll() {
+    this.contextMenuStyle = null
+  }
+  closeProperties() {
+    this.showNodeProperties = false;
+    this.showPathProperties = false;
+    this.flowService.reCreatePaths.emit(null);
+    this.flowService.selectedNode.emit(null);
+  }
+
+
+  @HostListener('document:keydown', ['$event'])
+  onDeleteKey(event: any) {
+    if ((((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') && this.selectedNode) {
+      this.nodeList.forEach((node: any) => {
+        if (this.selectedNode.prevNode && node._id == this.selectedNode.prevNode._id) {
+          let tempIndex = node.onSuccess.findIndex(e => e._id == this.selectedNode.currNode._id);
+          node.onSuccess.splice(tempIndex, 1);
+        }
+      });
+      let index = this.nodeList.findIndex(e => e._id == this.selectedNode.currNode._id);
+      if (this.flowData.inputNode._id != this.selectedNode.currNode._id) {
+        this.nodeList.splice(index, 1);
+        this.flowService.reCreatePaths.emit(null);
+        this.flowService.selectedNode.emit(null);
+      }
+    }
+  }
+
+  // deleteNode(event) {
+  //   console.log("what is this")
+  //   if ((((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') && this.selectedNode) {
+  //     this.nodeList.forEach((node: any) => {
+  //       if (this.selectedNode.prevNode && node._id == this.selectedNode.prevNode._id) {
+  //         let tempIndex = node.onSuccess.findIndex(e => e._id == this.selectedNode.currNode._id);
+  //         node.onSuccess.splice(tempIndex, 1);
+  //       }
+  //     });
+  //     let index = this.nodeList.findIndex(e => e._id == this.selectedNode.currNode._id);
+  //     if (this.flowData.inputNode._id != this.selectedNode.currNode._id) {
+  //       this.nodeList.splice(index, 1);
+  //       this.flowService.reCreatePaths.emit(null);
+  //       this.flowService.selectedNode.emit(null);
+  //     }
+  //   }
+  // }
+
+
+  @HostListener('mousedown', ['$event'])
+  onMouseDown(event: any) {
+    this.isMouseDown = event;
+    event.stopPropagation();
+  }
+
+  @HostListener('document:mouseup', ['$event'])
+  onMouseUp(event: any) {
+    this.isMouseDown = null;
+    event.stopPropagation();
+    // this.flowService.anchorSelected = null;
+  }
+
+  @HostListener('mousemove', ['$event'])
+  onMouseMove(event: any) {
+    event.stopPropagation();
+    if (this.isMouseDown) {
+      let targetEle = (this.isMouseDown.target as HTMLElement);
+      let currNode = this.nodeList.find(e => e._id == targetEle.dataset.id);
+      if (currNode) {
+        const tempX = event.clientX - this.isMouseDown.clientX;
+        const tempY = event.clientY - this.isMouseDown.clientY;
+        this.isMouseDown = event;
+        currNode.coordinates.x += tempX;
+        currNode.coordinates.y += tempY;
+        this.flowService.reCreatePaths.emit();
+      }
+    }
+  }
+
+  get hasErrorNode() {
+    return this.flowService.nodeList.some(e => e.type == 'ERROR');
+  }
+
   get apiCallsPending() {
     return Object.values(this.apiCalls).some(e => e);
   }
 
   get isValidSchema() {
-    return true;
+    const fileNodes = this.nodeList.filter(node => node.type == 'FILE');
+    const checkAgent = (node) => {
+
+      return node?.options?.agents?.length > 0
+
+    }
+
+    if (fileNodes.length > 0) {
+      return fileNodes.every(checkAgent)
+    }
+    else {
+      return true
+    };
   }
 
   get namespace() {
@@ -397,11 +577,11 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   }
 
   get hasDeployPermission() {
-    return this.commonService.hasPermission('PMFPD')
+    return this.commonService.hasPermission('PMIFPD')
   }
 
   get hasManagePermission() {
-    return this.commonService.hasPermission('PMF')
+    return this.commonService.hasPermission('PMIF')
   }
 
 }

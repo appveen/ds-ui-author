@@ -1,4 +1,4 @@
-import { UntypedFormArray, FormControl } from "@angular/forms";
+import { UntypedFormArray, UntypedFormControl } from "@angular/forms";
 
 export function duplicateStepName(control: UntypedFormArray) {
     const arr = control.value;

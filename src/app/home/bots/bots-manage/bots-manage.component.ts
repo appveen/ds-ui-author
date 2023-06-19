@@ -523,7 +523,7 @@ export class BotsManageComponent implements OnInit, OnDestroy {
     self.additionalDetails = self.fb.group({
       extraInfo: self.fb.array([]),
     });
-    // (self.additionalDetails.get('extraInfo') as FormArray).clear();
+    // (self.additionalDetails.get('extraInfo') as UntypedFormArray).clear();
   }
 
   /** This method is used for displaying the modal window which

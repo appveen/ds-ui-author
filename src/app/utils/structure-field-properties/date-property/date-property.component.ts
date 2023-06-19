@@ -141,7 +141,7 @@ export class DatePropertyComponent implements OnInit, OnDestroy {
 
   removeFromList(control, index) {
     this.editStateListOfValues = null;
-    // const list = (this.form.get('properties')).get(control) as FormArray;
+    // const list = (this.form.get('properties')).get(control) as UntypedFormArray;
     const list = this.form.getRawValue()['properties'][control];
     const tempValue = list[index];
     this.deleteModal.title = 'Remove ' + list[index];

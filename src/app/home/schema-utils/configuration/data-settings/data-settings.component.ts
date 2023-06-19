@@ -19,6 +19,7 @@ export class DataSettingsComponent implements OnInit {
   retainDataHistory: boolean;
   defaultVersionValues: Array<any> = [null, '', '-1', '10', '25', '50', '100', '1 months', '3 months', '6 months', '1 years'];
   subscriptions: any = {};
+  simpleDate: boolean;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
@@ -43,6 +44,7 @@ export class DataSettingsComponent implements OnInit {
 
       }
     });
+    // this.simpleDate = this.form.get('simpleDate').value;
   }
 
   patchVersionValue(reset?) {
@@ -98,6 +100,10 @@ export class DataSettingsComponent implements OnInit {
       this.form.get('versionValidity.validityValue').patchValue(0);
     }
 
+  }
+
+  onDateChange(value) {
+    this.form.get('simpleDate').patchValue(value);
   }
 
   hasPermission(type: string, entity?: string) {

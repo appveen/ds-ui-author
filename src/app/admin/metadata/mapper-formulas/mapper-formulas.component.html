@@ -1,0 +1,158 @@
+<div class="p-3 d-flex align-items-start">
+    <div class="formula-list border rounded mr-3">
+        <div class="formula-list-header p-3 d-flex align-items-center justify-content-between">
+            <span class="font-16 fw-500">Formula List</span>
+            <button type="button" class="btn btn-link d-flex align-items-center justify-content-between"
+                (click)="openNewFormulaWindow()">
+                <span class="dsi dsi-plus-circle mr-2"></span>
+                <span>New</span>
+            </button>
+        </div>
+        <div class="list-group list-group-flush">
+            <div class="list-group-item list-group-item-action hover d-flex align-items-center justify-content-between"
+                [class.selected]="selectedFormula==item" *ngFor="let item of formulaList"
+                (click)="selectFormula(item)">
+                <span class="">{{item.name}}</span>
+                <span class="dsi dsi-trash text-danger hover" (click)="deleteFormula(item)"></span>
+            </div>
+        </div>
+    </div>
+    <div class="formula-config flex-fill border rounded p-3">
+        <ng-container *ngIf="!selectedFormula">
+            <p *ngIf="formulaList.length>0" class="text-muted">Please Select a Formula</p>
+            <p *ngIf="formulaList.length==0" class="text-muted">Please Create a Formula</p>
+        </ng-container>
+        <ng-container *ngIf="selectedFormula">
+            <div class="form-group">
+                <label for="name">Formula Name</label>
+                <input id="name" class="form-control" type="text" [(ngModel)]="selectedFormula.name" odpAutoFocus>
+            </div>
+            <div class="form-group">
+                <label for="returnType">Return Type</label>
+                <select id="returnType" class="form-control" [(ngModel)]="selectedFormula.returnType">
+                    <option value="String">String</option>
+                    <option value="Number">Number</option>
+                    <option value="Boolean">Boolean</option>
+                    <option value="Date">Date</option>
+                    <option value="Object">Object</option>
+                    <option value="Array">Array</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="forDataType">Applicable For Data type</label>
+                <select id="forDataType" class="form-control" [(ngModel)]="selectedFormula.forDataType">
+                    <option value="String">String</option>
+                    <option value="Number">Number</option>
+                    <option value="Boolean">Boolean</option>
+                    <option value="Date">Date</option>
+                    <option value="Object">Object</option>
+                    <option value="Array">Array</option>
+                </select>
+            </div>
+            <div class="form-group d-flex align-items-center justify-content-between">
+                <label for="params">Params</label>
+                <button type="button" class="btn btn-link d-flex align-items-center justify-content-between"
+                    (click)="selectedFormula.params.push({})">
+                    <span class="dsi dsi-plus-circle mr-2"></span>
+                    <span>Add</span>
+                </button>
+            </div>
+            <div class="ml-3 mb-3">
+                <table class="table table-sm table-bordered rounded">
+                    <tr class="bg-light text-secondary font-11">
+                        <th>Param Name</th>
+                        <th>Param Type</th>
+                        <th></th>
+                    </tr>
+                    <tr *ngIf="!selectedFormula.params || selectedFormula.params.length==0">
+                        <td colspan="3">No Params</td>
+                    </tr>
+                    <tr *ngFor="let param of selectedFormula.params;let i=index">
+                        <td>
+                            <input [attr.id]="'paramName_'+i" class="form-control border-0" type="text"
+                                [(ngModel)]="param.name" odpAutoFocus>
+                        </td>
+                        <td>
+                            <select [attr.id]="'paramType_'+i" class="form-control border-0" [(ngModel)]="param.type">
+                                <option value="String">String</option>
+                                <option value="Number">Number</option>
+                                <option value="Boolean">Boolean</option>
+                                <option value="Date">Date</option>
+                                <option value="Object">Object</option>
+                                <option value="Array">Array</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-link" (click)="selectedFormula.params.splice(i,1)">
+                                <span class="dsi dsi-trash text-danger"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="form-group">
+                <label for="code">Code</label>
+                <div class="editor-wrapper border rounded py-3">
+                    <odp-code-editor class="code-editor" [edit]="{status:true}" [(code)]="selectedFormula.code"></odp-code-editor>
+                </div>
+                <!-- <textarea id="code" class="form-control" rows="10" cols="30"
+                    [(ngModel)]="selectedFormula.code"></textarea> -->
+            </div>
+            <div class="form-group d-flex align-items-center justify-content-end">
+                <button type="button" class="btn btn-danger mr-3"
+                    (click)="deleteFormula(this.selectedFormula)">Delete</button>
+                <button type="button" class="btn btn-success" (click)="saveFormula()">Save</button>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<div *ngIf="toggleNewFormulaWindow" class="new-formula-window overlay position-fixed"></div>
+<div [ngClass]="{'show':toggleNewFormulaWindow}"
+    class="new-formula-window position-fixed p-4 d-flex flex-column bg-white border-left">
+    <div class="d-flex flex-column w-100">
+        <div class="d-flex align-items-center justify-content-between mb-5">
+            <span class="font-20 fw-600">New Formula</span>
+            <span class="dsi dsi-close text-muted hover" (click)="toggleNewFormulaWindow=false"></span>
+        </div>
+        <div class="d-flex flex-column w-100" [formGroup]="form">
+            <div *ngIf="toggleNewFormulaWindow" class="form-group">
+                <label for="name" class="">
+                    <span class="text">Name</span>
+                    <sup class="text-danger fa fa-asterik" ngbTooltip="Mandatory field"></sup>
+                </label>
+                <div class="name-wrapper position-relative">
+                    <input type="text" class="form-control" id="name" formControlName="name" placeholder="Give a name"
+                        odpAutoFocus [ngClass]="{
+              'is-invalid':
+                form.get('name').invalid &&
+                (form.get('name').dirty || form.get('name').touched)
+            }" />
+                    <ng-container *ngIf="
+              form.get('name').invalid &&
+              (form.get('name').dirty || form.get('name').touched)
+            ">
+                        <span *ngIf="form.get('name').hasError('required')"
+                            class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                            ngbTooltip="Name is required"></span>
+                        <span *ngIf="form.get('name').hasError('pattern')"
+                            class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                            ngbTooltip="Name can be only be alphanumeric and can contain underscore(_) dot(.)"></span>
+                        <span *ngIf="form.get('name').hasError('maxlength')"
+                            class="text-danger position-absolute dsi dsi-danger-circle" container="body"
+                            ngbTooltip="Name should be within 30 characters"></span>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-column mt-auto">
+        <button #createNewAppBtn type="button" class="btn btn-primary w-100" [disabled]="form.invalid"
+            (click)="triggerCreateFormula()">
+            <span class="fa fa-spinner fa-pulse mr-1" *ngIf="createFormulaLoader"></span>
+            Create
+        </button>
+    </div>
+</div>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

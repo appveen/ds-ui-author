@@ -66,7 +66,8 @@ export class SchemaStructurePipe implements PipeTransform {
                     || i === 'readonly'
                     || i === 'errorMessage'
                     || i === 'defaultTimezone'
-                    || i === 'supportedTimezones') {
+                    || i === 'supportedTimezones'
+                    || i === 'schemaFree') {
                     temp[i] = properties[i];
                 }
             }

@@ -8,11 +8,13 @@ import { Component, Input, OnInit } from '@angular/core';
 export class MongodbConnectorComponent implements OnInit {
 
   @Input() edit: any;
-  @Input() prevNode: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
+  toggle: any;
 
-  constructor() { }
+  constructor() {
+    this.toggle = {};
+  }
 
   ngOnInit(): void {
   }

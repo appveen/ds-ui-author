@@ -6,24 +6,28 @@
     <div class="text-secondary mt-2">Processing...</div>
   </div>
 </div>
-<div class="d-flex">
-  <div class="userList pt-5">
+<div class="d-flex border rounded mt-4 w-100">
+  <!-- <div class="userList pt-5">
     <button type="button" class="btn btn-secondary" (click)="backToUserList()">
       <span class="fa fa-angle-left mr-2"></span>
       <span class="text">Back to List</span>
     </button>
   </div>
-  <div class="separator-border"></div>
-  <div class="userDetails d-flex flex-column pl-4 pr-5 py-4">
-    <div class="userDetails-name d-flex justify-content-between mb-3">
-      <div class="d-flex">
+  <div class="separator-border"></div> -->
+  <div class="userDetails d-flex flex-column p-3 w-100">
+    <button type="button" class="btn btn-link align-self-start mb-3" (click)="backToUserList()">
+      <span class="fa fa-angle-left mr-2"></span>
+      <span class="text">Back</span>
+    </button>
+    <div class="userDetails-name d-flex justify-content-between mb-3 w-100">
+      <div class="d-flex align-items-center">
         <div class="userDetails-icon mr-1">
           <div
             class="photo rounded-circle d-flex flex-column justify-content-center align-items-center mr-3 text-white">
             <span class="far fa-user fa-2x text-secondary"></span>
           </div>
         </div>
-        <div class="d-flex-flex-column mt-3">
+        <div class="d-flex-flex-column">
           <div class="text-lg text-truncate user-name">
             <strong class="mr-1">{{user?.basicDetails?.name || 'N.A.'}}</strong>
             <span *ngIf="isThisUser()" class="text-accent">(You)</span>

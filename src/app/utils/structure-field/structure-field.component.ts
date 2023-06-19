@@ -102,7 +102,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             }));
         }
         if (!self.form.get('definition')) {
-            if (self.form.get('type').value === 'Object') {
+            if (self.form.get('type').value === 'Object' && !self.form.get('properties.schemaFree').value) {
                 self.selectType({ value: 'Object', label: 'Group' });
             }
         }
@@ -472,7 +472,7 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
     pasteOnField(e) {
         const self = this;
         // self.schemaService.selectedFieldId = null;
-        self.schemaService.activeProperty.emit(null);
+        // self.schemaService.activeProperty.emit(null);
         if (!self.all.get([self.index, '_id'])) {
             let val = e.clipboardData.getData('text/plain');
             try {
@@ -506,10 +506,12 @@ export class StructureFieldComponent implements OnInit, AfterContentInit, OnDest
             }).map(e => e.trim());
         }
         const json = {};
-        def.forEach(element => {
-            self.getJSON(element, json);
-        });
-        self.createSchema(json);
+        if (def.length > 1) {
+            def.forEach(element => {
+                self.getJSON(element, json);
+            });
+            self.createSchema(json);
+        }
     }
 
     getJSON(field, value) {

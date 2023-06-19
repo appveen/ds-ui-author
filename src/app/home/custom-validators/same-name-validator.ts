@@ -1,4 +1,4 @@
-import { UntypedFormArray, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 
 export function sameName(control: UntypedFormArray) {
     for (let i = 0; i < control.controls.length - 1; i++) {

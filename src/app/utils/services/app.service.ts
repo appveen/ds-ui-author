@@ -8,6 +8,7 @@ import * as momentTimeZone from 'moment-timezone';
 import { ipValidate } from '../validators/ip.validator';
 import { RoleModel } from 'src/app/home/schema-utils/manage-permissions/manage-permissions.component';
 import { NodeData } from '../integration-flow/integration-flow.model';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -20,6 +21,7 @@ export class AppService {
     cloneLibraryId: string;
     loginComponent: boolean;
     editUser: boolean;
+    code:any;
     toggleSideNav: EventEmitter<boolean>;
     detectPermissionChange: EventEmitter<boolean>;
     ldapUserPass: string;
@@ -37,7 +39,8 @@ export class AppService {
     updateCodeEditorState: EventEmitter<any>;
     connectorsList: Array<any>;
     storageTypes: Array<any>
-
+    cityNames: Array<string>;
+    invokeEvent = new Subject()
     constructor() {
         const self = this;
         self.toggleSideNav = new EventEmitter<boolean>();
@@ -47,6 +50,63 @@ export class AppService {
         self.setFocus = new EventEmitter<any>();
         this.formatTypeChange = new EventEmitter<any>();
         this.updateCodeEditorState = new EventEmitter<any>();
+        this.cityNames = [
+            "ALBANY",
+            "NEWARK",
+            "JERSEY",
+            "HAVANA",
+            "MEXICO",
+            "PANAMA",
+            "DUBLIN",
+            "OXFORD",
+            "LONDON",
+            "CALAIS",
+            "MONACO",
+            "MADRID",
+            "LISBON",
+            "MUNICH",
+            "BERLIN",
+            "VIENNA",
+            "PRAGUE",
+            "WARSAW",
+            "LARVIK",
+            "MOSCOW",
+            "ZURICH",
+            "GENEVA",
+            "LUGANO",
+            "VENICE",
+            "NAPLES",
+            "TIRANA",
+            "ATHENS",
+            "ANKARA",
+            "ALMATY",
+            "BANJUL",
+            "MALABO",
+            "SHIRAZ",
+            "TEHRAN",
+            "YANGON",
+            "SAIGON",
+            "TAIPEI",
+            "DARWIN",
+            "CAIRNS",
+            "HOBART",
+            "SYDNEY",
+            "LAHORE",
+            "KANPUR",
+            "MUMBAI",
+            "COCHIN",
+            "MYSORE",
+            "COONOR",
+            "RAJKOT",
+            "BARODA",
+            "BHOPAL",
+            "UJJAIN",
+            "JAIPUR",
+            "PANAJI",
+            "MADRAS",
+            "TRICHY",
+            "RAIPUR"
+        ];
     }
 
     flattenObject(obj, parent?) {
@@ -103,6 +163,10 @@ export class AppService {
 
     cloneObject(obj) {
         return JSON.parse(JSON.stringify(obj));
+    }
+
+    getFlows(){
+        this.invokeEvent.next()
     }
 
     rand(index: number) {
@@ -537,6 +601,12 @@ export class AppService {
         }
         return text;
     }
+    toSnakeCase(text: string) {
+        if (text) {
+            return _.snakeCase(text);
+        }
+        return text;
+    }
 
     getSortQuery(model: any): string {
         return Object.keys(model).map(key => model[key] === 'desc' ? '-' + key : key).join(',');
@@ -654,12 +724,29 @@ export class AppService {
         }
     }
 
-    getNodeID() {
-        let id = 'S';
-        for (let i = 0; i < 5; i++) {
-            const index = Math.floor((Math.random() * 1000) % 26);
-            id += String.fromCharCode(65 + index);
+    getNodeID(usedIds?: Array<string>) {
+        let counter = 0;
+        let id = _.sample(this.cityNames);
+        if (usedIds && usedIds.length > 0) {
+            let usedIndex = usedIds.indexOf(id);
+            while (usedIndex > -1) {
+                counter++;
+                if (counter < this.cityNames.length) {
+                    id = _.sample(this.cityNames);
+                    usedIndex = usedIds.indexOf(id);
+                } else {
+                    id = _.upperCase(this.randomID(6));
+                    usedIndex = -1;
+                }
+            }
+            return id;
         }
         return id;
+        // let id = 'N';
+        // for (let i = 0; i < 5; i++) {
+        //     const index = Math.floor((Math.random() * 1000) % 26);
+        //     id += String.fromCharCode(65 + index);
+        // }
+        // return id;
     }
 }

@@ -1,0 +1,144 @@
+<div>
+    <div class="d-flex align-items-center justify-content-between border-bottom">
+        <span class="fw-500 font-12 text-success ml-1">Function</span>
+        <div class="d-flex align-items-center">
+            <span class="dsi dsi-check text-success hover mr-2" (click)="done()"></span>
+            <span class="dsi dsi-close text-danger hover" (click)="cancel()"></span>
+        </div>
+    </div>
+    <div class="d-flex align-items-start">
+        <div class="source-list-wrapper">
+            <div class="source-list font-10">
+                <div *ngFor="let item of sourceList"
+                    class="border-bottom p-1 d-flex align-items-center justify-content-start" draggable="true"
+                    (drag)="onSourceDrag($event,item)">
+                    {{item.name}}
+                </div>
+                <div *ngIf="(availableMethods|commonFilter:'name':searchTerm).length==0"
+                    class="d-flex align-items-center justify-content-between">
+                    <span class="text-muted">No Match Found</span>
+                </div>
+            </div>
+        </div>
+        <div class="formula-canvas border-right border-left flex-wrap" (drop)="onDrop($event)"
+            (dragover)="$event.preventDefault();">
+            <div class="d-flex align-items-start justify-content-start font-12 flex-wrap">
+                <ng-container *ngFor="let item of usedFormulas;let fni=index">
+                    <ng-container *ngTemplateOutlet="formula;context:{$implicit:item}"></ng-container>
+                    <span class="dsi dsi-minus-circle text-danger hover ml-1 font-12"
+                        (click)="removeUsedFn(item,fni)"></span>
+                </ng-container>
+            </div>
+        </div>
+        <div class="suggestion-list-wrapper font-10">
+            <div class="border-bottom d-flex align-items-center justify-content-between">
+                <span class="text-muted p-1">Available Methods</span>
+                <input type="text" class="border mr-1" [(ngModel)]="searchTerm" placeholder="Search">
+            </div>
+            <div class="suggestion-list font-10">
+                <div *ngFor="let item of availableMethods"
+                    class="border-bottom p-1 d-flex align-items-center justify-content-start" draggable="true"
+                    (drag)="onFunctionDrag($event,item)">
+                    <div class="d-flex align-items-center">
+                        <span class="name text-accent fw-500">{{item.name}}</span>(
+                        <ng-container *ngFor="let p of item.params;let lp=last">
+                            <span class="text-success" *ngIf="p.type == 'String'">"{{p.name}}"</span>
+                            <span class="text-warning" *ngIf="p.type == 'Number'">{{p.name}}</span>
+                            <span class="text-info" *ngIf="p.type == 'Boolean'">{{p.name}}</span>
+                            <span class="text-grey" *ngIf="p.type == 'Object'">{{'{ '+p.name+' }'}}</span>
+                            <span class="text-grey" *ngIf="p.type == 'Array'">{{'[ '+p.name+' ]'}}</span>
+                            <span *ngIf="!lp">,&nbsp;</span>
+                        </ng-container>
+                        )&nbsp;:&nbsp;
+                        <span [ngClass]="getDataTypeStyleClass(item.returnType)">{{item.returnType}}</span>
+                    </div>
+                </div>
+                <div *ngIf="(availableMethods|commonFilter:'name':searchTerm).length==0"
+                    class="d-flex align-items-center justify-content-between">
+                    <span class="text-muted">No Match Found</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<ng-template #formula let-item="item">
+    <div class="d-flex align-items-center justify-content-start flex-wrap">
+        <div *ngIf="!(item.type && item.properties)" class="d-flex align-items-center flex-wrap">
+            <span class="name text-accent fw-500">{{item.name}}</span>(
+            <ng-container *ngFor="let p of item.params;let lp=last">
+                <ng-container *ngIf="!p.substituteVal && !p.substituteFn">
+                    <span (dragenter)="p.over=true" (dragleave)="p.over=false" (dragover)="$event.preventDefault();"
+                        (drop)="onParamDrop($event,item,p)" [class.bg-accent]="p.over" class="text-success"
+                        *ngIf="p.type == 'String'">
+                        "{{p.name}}"
+                    </span>
+                    <span (dragenter)="p.over=true" (dragleave)="p.over=false" (dragover)="$event.preventDefault();"
+                        (drop)="onParamDrop($event,item,p)" [class.bg-accent]="p.over" class="text-warning"
+                        *ngIf="p.type == 'Number'">
+                        {{p.name}}
+                    </span>
+                    <span (dragenter)="p.over=true" (dragleave)="p.over=false" (dragover)="$event.preventDefault();"
+                        (drop)="onParamDrop($event,item,p)" [class.bg-accent]="p.over" class="text-info"
+                        *ngIf="p.type == 'Boolean'">
+                        {{p.name}}
+                    </span>
+                    <span (dragenter)="p.over=true" (dragleave)="p.over=false" (dragover)="$event.preventDefault();"
+                        (drop)="onParamDrop($event,item,p)" [class.bg-accent]="p.over" class="text-grey"
+                        *ngIf="p.type == 'Object'">
+                        {{'{ '+p.name+' }'}}
+                    </span>
+                    <span (dragenter)="p.over=true" (dragleave)="p.over=false" (dragover)="$event.preventDefault();"
+                        (drop)="onParamDrop($event,item,p)" [class.bg-accent]="p.over" class="text-grey"
+                        *ngIf="p.type == 'Array'">
+                        {{'[ '+p.name+' ]'}}
+                    </span>
+                </ng-container>
+                <ng-container *ngIf="p.substituteFn">
+                    <ng-container *ngTemplateOutlet="formula;context:{item:p.substituteFn}"></ng-container>
+                    <span class="dsi dsi-close font-12 text-danger hover ml-1" (click)="p.substituteFn=null"></span>
+                </ng-container>
+                <ng-container *ngIf="p.substituteVal">
+                    <span class="text-success" *ngIf="p.type == 'String'">
+                        {{p.substituteVal.name}}
+                    </span>
+                    <span class="text-warning" *ngIf="p.type == 'Number'">
+                        {{p.substituteVal.name}}
+                    </span>
+                    <span class="text-info" *ngIf="p.type == 'Boolean'">
+                        {{p.substituteVal.name}}
+                    </span>
+                    <span class="text-grey" *ngIf="p.type == 'Object'">
+                        {{p.substituteVal.name}}
+                    </span>
+                    <span class="text-grey" *ngIf="p.type == 'Array'">
+                        {{p.substituteVal.name}}
+                    </span>
+                    <span class="dsi dsi-close font-12 text-danger hover ml-1" (click)="p.substituteVal=null"></span>
+                </ng-container>
+                <span *ngIf="!lp">,&nbsp;</span>
+            </ng-container>
+            )
+        </div>
+        <!-- <span class="dsi dsi-minus-circle text-danger hover ml-1 font-12" (click)="removeUsedFn(item,fni)"></span> -->
+        <ng-container *ngIf="item.type && item.properties">
+            <span class="text-success" *ngIf="item.type == 'String'">
+                {{item.name}}
+            </span>
+            <span class="text-warning" *ngIf="item.type == 'Number'">
+                {{item.name}}
+            </span>
+            <span class="text-info" *ngIf="item.type == 'Boolean'">
+                {{item.name}}
+            </span>
+            <span class="text-grey" *ngIf="item.type == 'Object'">
+                {{item.name}}
+            </span>
+            <span class="text-grey" *ngIf="item.type == 'Array'">
+                {{item.name}}
+            </span>
+        </ng-container>
+    </div>
+</ng-template>

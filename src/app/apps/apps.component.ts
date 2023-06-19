@@ -108,6 +108,7 @@ export class AppsComponent implements OnInit, OnDestroy {
     data: true,
     integration: true,
     management: true,
+    processFlows: true,
   };
   breadcrumbPaths: any;
   constructor(
@@ -195,9 +196,9 @@ export class AppsComponent implements OnInit, OnDestroy {
   init() {
     const self = this;
     self.isSuperAdmin = self.commonService.userDetails.isSuperAdmin;
-    if (environment.production) {
-      self.commonService.connectSocket();
-    }
+    // if (environment.production) {
+    //   self.commonService.connectSocket();
+    // }
   }
 
   loadApps() {
@@ -264,12 +265,11 @@ export class AppsComponent implements OnInit, OnDestroy {
     const self = this;
     self.showProfileOptions = false;
     self.commonService.app = app;
-    if (environment.production) {
-      self.commonService.disconnectSocket();
-      self.commonService.connectSocket();
-    }
+    // if (environment.production) {
+    //   self.commonService.disconnectSocket();
+    //   self.commonService.connectSocket();
+    // }
     self.showAppOptions = false;
-    self.commonService.getconnectors();
     self.router.navigate(['/app', app._id]);
   }
 
@@ -410,6 +410,16 @@ export class AppsComponent implements OnInit, OnDestroy {
     );
   }
 
+  get hasAPIKeyPermission() {
+    const self = this;
+    return (
+      self.commonService.hasPermissionStartsWith('PMU') ||
+      self.commonService.hasPermissionStartsWith('PVU') ||
+      self.commonService.hasPermissionStartsWith('PMB') ||
+      self.commonService.hasPermissionStartsWith('PVB')
+    );
+  }
+
   get hasDataFormatPermission() {
     const self = this;
     return (
@@ -444,6 +454,14 @@ export class AppsComponent implements OnInit, OnDestroy {
       self.commonService.hasPermission('PVISDS') ||
       self.commonService.hasPermission('PVISU') ||
       self.commonService.hasPermission('PVISG')
+    );
+  }
+
+  get hasFlowsPermission() {
+    const self = this;
+    return (
+      self.commonService.hasPermissionStartsWith('PMIF') ||
+      self.commonService.hasPermissionStartsWith('PVIF')
     );
   }
 

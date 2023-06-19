@@ -5,22 +5,28 @@
         [ngClass]="{'text-dark font-weight-bold': activeSubTab==0}">
         <span class="">Data Services</span>
       </div>
-      <!-- <div *ngIf="hasPermission('PVGCI') || hasPermission('PMGCI')" class="px-3 py-2 hover" (click)="activeSubTab=1"
+      <div *ngIf="hasPermission('PVGCI') || hasPermission('PMGCI')" class="px-3 py-2 hover" (click)="activeSubTab=1"
         [ngClass]="{'text-dark font-weight-bold': activeSubTab==1}">
         <span class="">Interactions</span>
       </div>
-      <div *ngIf="hasPermission('PVGCBM') || hasPermission('PMGCBM')" class="px-3 py-2 hover" (click)="activeSubTab=2"
+      <div *ngIf="hasPermission('PVGCIF') || hasPermission('PMGCIF')" class="px-3 py-2 hover" (click)="activeSubTab=2"
+        [ngClass]="{'text-dark font-weight-bold': activeSubTab==2}">
+        <span class="">Data Pipes</span>
+      </div>
+      <!-- <div *ngIf="hasPermission('PVGCBM') || hasPermission('PMGCBM')" class="px-3 py-2 hover" (click)="activeSubTab=2"
         [ngClass]="{'text-dark font-weight-bold': activeSubTab==2}">
         <span class="">Bookmarks</span>
       </div> -->
     </div>
   </div>
   <div class="px-3 w-100">
-    <odp-user-group-appcenter-services *ngIf="activeSubTab==0" [(roles)]="roles" class="w-100">
+    <odp-user-group-appcenter-services *ngIf="activeSubTab==0" [(roles)]="roles" [users]="users" class="w-100">
     </odp-user-group-appcenter-services>
-    <odp-user-group-appcenter-flows *ngIf="activeSubTab==1" [roles]="roles" class="w-100">
+    <odp-user-group-appcenter-flows *ngIf="activeSubTab==1" [roles]="roles" class="w-100" type="INTR">
     </odp-user-group-appcenter-flows>
-    <odp-user-group-appcenter-bokmark *ngIf="activeSubTab==2" [(roles)]="roles" class="w-100">
-    </odp-user-group-appcenter-bokmark>
+    <odp-user-group-appcenter-flows *ngIf="activeSubTab==2" [roles]="roles" class="w-100" type="FLOW">
+    </odp-user-group-appcenter-flows>
+    <!-- <odp-user-group-appcenter-bokmark *ngIf="activeSubTab==2" [(roles)]="roles" class="w-100">
+    </odp-user-group-appcenter-bokmark> -->
   </div>
 </div>

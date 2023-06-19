@@ -273,7 +273,7 @@ export class TextPropertyComponent implements OnDestroy {
   removeFromList(control, index) {
     const self = this;
     this.editStateListOfValues = null;
-    // const list = (self.form.get('properties')).get(control) as FormArray;
+    // const list = (self.form.get('properties')).get(control) as UntypedFormArray;
     const list = self.form.getRawValue()['properties'][control];
     const tempValue = list[index];
     self.deleteModal.title = 'Remove ' + list[index];

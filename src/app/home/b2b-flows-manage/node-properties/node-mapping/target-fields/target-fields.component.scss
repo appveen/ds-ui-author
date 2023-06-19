@@ -1,0 +1,44 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.target-field-block {
+    min-width: 348px;
+    height: 26px;
+
+    .field-anchor {
+        min-height: 12px;
+        max-height: 12px;
+        min-width: 12px;
+        max-width: 12px;
+        border-radius: 4px;
+        margin-left: -6px;
+        background: $white;
+
+        &:hover {
+            background: $secondary;
+        }
+
+        &.selected {
+            background: $accent;
+        }
+    }
+
+    .function-holder,
+    .attribute-type-holder,
+    .attribute-name-holder {
+        height: 26px;
+        word-break: break-all;
+    }
+
+    .function-holder,
+    .attribute-type-holder {
+        min-width: 48px;
+        max-width: 48px;
+    }
+}
+
+.input-height {
+    min-height: 300px;
+    max-height: 300px;
+    word-break: break-all;
+}

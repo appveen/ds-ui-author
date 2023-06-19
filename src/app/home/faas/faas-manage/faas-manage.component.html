@@ -2,25 +2,24 @@
     <div class="align-self-center text-center">
         <div class="spinner-border text-dark" role="status">
             <span class="sr-only">Processing...</span>
-          </div>
+        </div>
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
-<div class="d-flex flex-column w-100 h-100 px-4 bg-light-gray position-relative">
-    <div class="py-5">
+<div class="faas-manage-page d-flex flex-column w-100 h-100 page-padding bg-light-gray">
+    <div class="mb-3">
         <odp-basic-info hideLogo="true" [(name)]="faasData.name" [(description)]="faasData.description" [edit]="edit">
             <div class="d-flex justify-content-end align-items-center">
-                <button (click)="cancel()" type="button"
-                    class="edit-button btn btn-min-width btn-white border mr-3"
+                <button (click)="cancel()" type="button" class="edit-button btn btn-min-width btn-white border ml-3"
                     id="cancelNanoServiceBtn">
                     <span class="text">Cancel</span>
                 </button>
                 <button *ngIf="edit.id && !edit.status && hasManagePermission" (click)="enableEditing()" type="button"
-                    class="edit-button btn btn-min-width btn-primary mr-3" id="editNanoServiceBtn">
+                    class="edit-button btn btn-min-width btn-primary ml-3" id="editNanoServiceBtn">
                     <span *ngIf="!faasData?.draftVersion" class="text">Edit</span>
                     <span *ngIf="faasData?.draftVersion" class="text">Edit Draft</span>
                 </button>
-                <div class="btn-group mr-3" *ngIf="edit.status">
+                <div class="btn-group ml-3" *ngIf="edit.status">
                     <button class="btn btn-outline-primary btn-min-width" (click)="saveDummyCode();"
                         type="button">Save</button>
                     <div *ngIf="faasData?.draftVersion || faasData.status=='Draft'" ngbDropdown class="btn-group">
@@ -53,8 +52,7 @@
                     <span class="text">Console</span>
                 </button>
                 <!-- <span class="label font-weight-bold mr-2">Font&nbsp;Size&nbsp;:</span> -->
-                <select class="custom-select mr-3" name="fontSize" id="fontSize"
-                    [(ngModel)]="selectedFontSize">
+                <select class="custom-select mr-3" name="fontSize" id="fontSize" [(ngModel)]="selectedFontSize">
                     <option value="13">13</option>
                     <option value="14">14</option>
                     <option value="16">16</option>
@@ -167,7 +165,9 @@
             </button>
         </div>
         <p class="p-3" *ngIf="logs.length==0">No Logs</p>
-        <pre class="p-3" *ngFor="let log of logs"
-            class="text-white"><span [ngStyle]="{color:log.level.colour}">[{{log.startTime}}] [{{log.level.levelStr}}] </span> {{log.data.join(' ')}}</pre>
+        <div class="logs-wrapper p-3">
+            <pre class="p-3" *ngFor="let log of logs"
+                class="text-white"><span [ngStyle]="{color:log.level.colour}">[{{log.startTime}}] [{{log.level.levelStr}}] </span> {{log.data.join(' ')}}</pre>
+        </div>
     </div>
 </div>

@@ -1,0 +1,12 @@
+<div class="position-relative input-field border"
+    [ngStyle]="{'background-color': isDisabled || !editEnabled ? '#efefef' : 'white'}">
+    <input #inputField type="text" class="form-control" [disabled]="isDisabled || !editEnabled" [ngModel]="value"
+        (ngModelChange)="onValueChange($event)" [class.is-invalid]="errorMessage"
+        (keydown.delete)="$event.stopPropagation();">
+    <span *ngIf="editEnabled && !errorMessage" class="position-absolute hover dsi dsi-check text-success"
+        (click)="save()"></span>
+    <span *ngIf="editEnabled" class="position-absolute hover dsi dsi-close text-danger" (click)="cancel()"></span>
+    <span *ngIf="!editEnabled" class="position-absolute hover dsi dsi-edit text-info"
+        (click)="editEnabled=!editEnabled"></span>
+    <span class="font-10 text-danger">{{errorMessage}}</span>
+</div>

@@ -1,0 +1,15 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.suggestion-list-wrapper {
+    width: 240px;
+}
+
+.source-list-wrapper {
+    width: 140px;
+}
+
+.formula-canvas {
+    width: 300px;
+    min-height: 120px;
+}

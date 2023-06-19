@@ -52,6 +52,10 @@
                         class="ml-2 rounded-circle properties password d-flex justify-content-center align-items-center text-white fw-500 font-12"
                         *ngIf="(form.get('properties.password') && form.get('properties.password').value) || (checkSubType())"
                         ngbTooltip="Secure">S</span>
+                    <span
+                        class="ml-2 rounded-circle properties password d-flex justify-content-center align-items-center text-white fw-500 font-12"
+                        *ngIf="(form.get('properties.schemaFree') && form.get('properties.schemaFree').value) || (checkSubType())"
+                        ngbTooltip="Schema Less">SL</span>
                     <span class="ml-2 advanced-badge hover"
                         *ngIf="form.get('properties.pattern') && form.get('properties.pattern').value">
                         Regex
@@ -137,6 +141,10 @@
 
 <ng-template #validationError>
     <div class="d-flex flex-column">
+        <div *ngIf="form.get('key')?.errors?.caseError" class="d-flex justify-content-start">
+            <span class="fa fa-circle fa-xs pr-1 pt-1"></span>
+            <span>Key can only be camelCase, snake_case or kebab-case without special characters</span>
+        </div>
         <div *ngIf="form.get('properties.name').touched && form.get('key').hasError('required') && !isInvalidKey"
             class="d-flex justify-content-start">
             <span class="fa fa-circle fa-xs pr-1 pt-1"></span>

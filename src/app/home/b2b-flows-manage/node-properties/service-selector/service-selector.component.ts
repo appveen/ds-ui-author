@@ -19,7 +19,7 @@ export class ServiceSelectorComponent implements OnInit {
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.edit = {
-      status: true
+      status: false
     };
     this.serviceList = [];
     this.dataChange = new EventEmitter();
@@ -34,7 +34,7 @@ export class ServiceSelectorComponent implements OnInit {
     this.commonService.get('serviceManager', `/${this.commonService.app._id}/service`, {
       sort: 'name',
       select: 'name definition attributeCount status',
-      count: 10
+      count: 5
     }).subscribe((res) => {
       this.showLoader = false;
       this.serviceList = res;

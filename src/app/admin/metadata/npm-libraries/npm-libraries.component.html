@@ -1,0 +1,51 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="node-page w-100 page-padding">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h3>NPM Libraries</h3>
+        <div class="d-flex align-items-center">
+            <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+            <button id="createNode" type="button" class="add-new btn btn-primary ml-3 d-flex align-items-center"
+                (click)="newNode()" [disabled]="!hasWritePermission('NODE')">
+                <span class="dsi dsi-plus mr-2"></span>
+                <span class="text">New</span>
+            </button>
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>NPM Command</th>
+                <th>Require Syntax</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="!records || records.length==0">
+                <td colspan="4">No Records</td>
+            </tr>
+            <tr *ngFor="let item of records;let i=index">
+                <td><input type="text" class="form-control" [(ngModel)]="item.name"></td>
+                <td><input type="text" class="form-control" [(ngModel)]="item.command"></td>
+                <td><input type="text" class="form-control" [(ngModel)]="item.code"></td>
+                <td>
+                    <button type="button" class="btn btn-link" (click)="saveLibrary(item,i)">
+                        <span class="dsi dsi-save text-success"></span>
+                    </button>
+                    <button type="button" class="btn btn-link" (click)="removeLibrary(item,i)">
+                        <span class="dsi dsi-trash text-danger"></span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteModal($event)"></odp-delete-modal>

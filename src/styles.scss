@@ -773,8 +773,14 @@ $weights: 200,
     }
   }
 
-  .ag-row {
-    padding: 10px;
+  // .ag-row {
+  //   padding: 10px;
+  // }
+  .ag-row .ag-cell {
+    display: flex;
+    // justify-content: center;
+    /* align horizontal */
+    align-items: center;
   }
 
   .ag-layout-normal {
@@ -917,7 +923,8 @@ $weights: 200,
 }
 
 .node-options-item,
-.node-block {
+.node-block,
+.node-item {
   .dsi-api-reciever {
     color: #6C7584;
   }
@@ -947,15 +954,73 @@ $weights: 200,
     color: #FF7D4C;
   }
 
-  .dsi-mapping {
-    color: #FF4C82;
-  }
-
+  .dsi-mapping,
+  .dsi-object,
+  .dsi-insight,
   .dsi-expand {
     color: #FF4C82;
   }
 
   .dsi-response {
+    color: #2FC48F;
+  }
+}
+
+.node-icon {
+
+  &.dsi-api-reciever,
+  &.dsi-copy {
+    color: #6C7584;
+  }
+
+  &.dsi-invoke-api {
+    color: #00CCCB;
+  }
+
+  &.dsi-clock,
+  &.dsi-relation {
+    color: #2FC48F;
+  }
+
+  &.dsi-data-service,
+  &.dsi-refresh {
+    color: #A94CFF;
+  }
+
+  &.dsi-function,
+  &.dsi-nano-service,
+  &.dsi-undo {
+    color: #FFBB1A;
+  }
+
+  &.dsi-connector,
+  &.dsi-file {
+    color: #009BFF;
+  }
+
+  &.dsi-file.read {
+    color: #2FC48F;
+  }
+
+  &.dsi-file.write {
+    color: #FF4C82;
+  }
+
+  &.dsi-logs {
+    color: #FF7D4C;
+  }
+
+  &.dsi-mapping,
+  &.dsi-object,
+  &.dsi-insight {
+    color: #FF4C82;
+  }
+
+  &.dsi-expand {
+    color: #FF4C82;
+  }
+
+  &.dsi-response {
     color: #2FC48F;
   }
 }
@@ -981,11 +1046,11 @@ $weights: 200,
 
   .field-block {
     @if $n % 2==0 {
-      background: $white;
+      background: #f9f9f9;
     }
 
     @else {
-      background: $light;
+      background: $white;
     }
 
     @if ($n < 9) {
@@ -1008,4 +1073,23 @@ $weights: 200,
   left: 0;
 }
 
+.btn-link,
+a {
+  .dsi:before {
+    text-decoration: none;
+    display: inline-block;
+  }
+}
+
 @include altBox(1);
+
+
+[draggable="true"] {
+  /*
+ To prevent user selecting inside the drag source
+*/
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}

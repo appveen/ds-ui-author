@@ -44,13 +44,18 @@
             <span *ngIf="sortModel['formatType']==1" class="dsi dsi-drop-down"></span>
             <span *ngIf="sortModel['formatType']==-1" class="dsi dsi-drop-up"></span>
           </div>
+          <div (click)="applySort('type')" class="item-format-type text-left ml-4">
+            <span class="mr-2">Type</span>
+            <span *ngIf="sortModel['type']==1" class="dsi dsi-drop-down"></span>
+            <span *ngIf="sortModel['type']==-1" class="dsi dsi-drop-up"></span>
+          </div>
           <div class="item-actions">&nbsp;</div>
         </div>
       </div>
       <div *ngIf="!records || records.length==0" class="list-group-item">No Records Found</div>
       <ng-container *ngFor="let dataFormat of records;let i=index">
         <div *ngIf="hasPermissionForDataFormat(dataFormat._id)" class="list-group-item">
-          <div class="d-flex align-items-center justify-content-start h-100" [attr.title]="dataFormat.name"
+          <div class="d-flex align-items-center justify-content-start h-100 hover" [attr.title]="dataFormat.name"
             (dblclick)="navigate(dataFormat)">
             <div class="item-name text-dark fw-500">{{dataFormat.name}}</div>
             <div class="d-flex align-items-center sub-heading">
@@ -60,24 +65,27 @@
             <div class="item-format-type text-left ml-4">
               <odp-format-type-badge [data]="dataFormat"></odp-format-type-badge>
             </div>
+            <div class="item-format-type text-left ml-4">
+              <span>{{dataFormat.type}}</span>
+            </div>
             <div class="item-actions d-flex align-items-center justify-content-end">
               <span id="lib-view" class="fw-600 font-13 hover mr-3"
                 [routerLink]="['/app/',app,'dfm',dataFormat._id]">View</span>
               <span id="lib-more" class="dsi dsi-more-vertical hover mr-3 ignore-outside"
-                (click)="showDropDown($event,i)"></span>
+                *ngIf="canEditDataFormat(dataFormat._id)" (click)="showDropDown($event,i)"></span>
               <div *ngIf="showOptionsDropdown[i]" class="more-options bg-white rounded list-group position-fixed border"
                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                 (outside)="showOptionsDropdown[i]=false">
                 <div id="lib-edit" class="list-group-item list-group-item-action py-2 border-0"
-                  *ngIf="canEditDataFormat(dataFormat._id)" (click)="editDataFormat(i)">
+                  (click)="editDataFormat(i)">
                   Edit
                 </div>
                 <div id="lib-clone" class="list-group-item list-group-item-action py-2 border-0"
-                  *ngIf="canEditDataFormat(dataFormat._id) && hasManagePermission('DF')" (click)="cloneDataFormat(i)">
+                  *ngIf="hasManagePermission('DF')" (click)="cloneDataFormat(i)">
                   Clone
                 </div>
                 <div id="lib-delete" class="list-group-item list-group-item-action py-2 border-0 text-danger"
-                  *ngIf="canEditDataFormat(dataFormat._id)" (click)="deleteDataFormat(i);">
+                  (click)="deleteDataFormat(i);">
                   Delete
                 </div>
               </div>
@@ -98,8 +106,8 @@
   [formGroup]="form">
   <div class="d-flex flex-column w-100">
     <div class="d-flex align-items-center justify-content-between mb-3">
-      <span class="font-20 fw-600">New Data Format</span>
-      <span class="dsi dsi-close hover" (click)="showNewDataFormatWindow=false"></span>
+      <span class="font-20 fw-600">{{isClone? 'Clone':'New'}} Data Format</span>
+      <span class="dsi dsi-close hover" (click)="showNewDataFormatWindow=false;isClone=false;"></span>
     </div>
     <ng-container *ngIf="showNewDataFormatWindow">
       <div class="form-group">
@@ -108,35 +116,54 @@
           <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
         </label>
         <div class="name-wrapper position-relative">
-          <input newDataFormatName autocomplete="off" type="text" class="form-control" id="name" placeholder="Untitled DataFormat"
-            formControlName="name" odpAutoFocus (keyup.enter)="triggerDataFormatCreate()"
+          <input newDataFormatName autocomplete="off" type="text" class="form-control" id="name"
+            placeholder="Untitled DataFormat" formControlName="name" odpAutoFocus
+            (keyup.enter)="triggerDataFormatCreate()"
             [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
           <ng-container *ngIf="form.get('name').dirty">
             <span *ngIf="form.get('name').hasError('required')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute  dsi dsi-danger-circle" container="body"
               ngbTooltip="Name is required"></span>
             <span *ngIf="form.get('name').hasError('maxlength')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute  dsi dsi-danger-circle" container="body"
               ngbTooltip="Name should be within 40 characters"></span>
             <span *ngIf="form.get('name').hasError('pattern')"
-              class="text-danger position-absolute fa fa-exclamation-circle" container="body"
+              class="text-danger position-absolute  dsi dsi-danger-circle" container="body"
               ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
           </ng-container>
         </div>
       </div>
-
-      <div class="d-flex flex-wrap mt-4">
-        <div class="format-select-list-item d-flex align-items-center mr-4 mb-2" *ngFor="let format of formatList"
-          (click)="selectFormat(format);">
-          <odp-round-radio class="mr-2" [edit]="{status:true}" [checked]="isFormatSelected(format)">
-          </odp-round-radio>
-          <odp-format-type-badge [data]="format"></odp-format-type-badge>
+      <div class="from-group position-relative">
+        <label for="dataType" class="font-13 text-secondary">Data Type
+          <button *ngIf="!showTextarea" type="button" class="btn btn-sm btn-link" (click)="showTextarea='json'">
+            <small>From JSON</small>
+          </button>
+          <button *ngIf="showTextarea" type="button" class="btn btn-sm btn-link" (click)="showTextarea=null">
+            <small>Close</small>
+          </button>
+          <textarea *ngIf="showTextarea" style="top: 45px;" class="form-control position-absolute" id="jsonTextarea"
+            cols="30" rows="10" odpAutoFocus (odpPasteJson)="onSchemaCreate($event)"></textarea>
+        </label>
+        <select id="dataType" class="form-control" formControlName="type">
+          <option value="Object">Object</option>
+          <option value="Array">Array</option>
+        </select>
+      </div>
+      <div class="form-group mt-3">
+        <label for="dataType" class="font-13 text-secondary">Format Type</label>
+        <div class="d-flex flex-wrap">
+          <div class="format-select-list-item d-flex align-items-center mr-4 mb-2" *ngFor="let format of formatList"
+            (click)="selectFormat(format);">
+            <odp-round-radio class="mr-2" [edit]="{status:true}" [checked]="isFormatSelected(format)">
+            </odp-round-radio>
+            <odp-format-type-badge [data]="format"></odp-format-type-badge>
+          </div>
         </div>
       </div>
     </ng-container>
   </div>
   <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
     <button type="button" class="btn btn-primary w-100" id="newDataFormatModalYes" [disabled]="form.invalid"
-      (click)="triggerDataFormatCreate()">Create</button>
+      (click)="isClone? triggerDataFormatClone():triggerDataFormatCreate()">Create</button>
   </div>
 </div>

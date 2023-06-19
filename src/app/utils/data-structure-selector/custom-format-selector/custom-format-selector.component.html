@@ -9,7 +9,7 @@
                 <span class="dsi dsi-more-vertical-6 mr-3"></span>
                 <input type="text" class="form-control" [(ngModel)]="def.key"
                     (ngModelChange)="setFieldName($event, def)" (keyup.enter)="addField(i)" (paste)="onPaste($event,i)"
-                    odpAutoFocus>
+                    odpAutoFocus (keydown.delete)="$event.stopPropagation();">
             </div>
             <div>
                 <select class="form-control" [(ngModel)]="def.type">

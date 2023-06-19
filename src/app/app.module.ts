@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -75,8 +75,9 @@ import { AdminModule } from './admin/admin.module';
     DateFormatModule,
     AuthUsersModule,
     ClickOutsideModule,
-    AdminModule,
     ChangePasswordModule,
+    NgbTypeaheadModule,
+    AdminModule
   ],
   providers: [
     {
@@ -104,5 +105,5 @@ import { AdminModule } from './admin/admin.module';
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor() {}
+  constructor() { }
 }

@@ -32,6 +32,7 @@ export class DataFormatManageComponent implements
     app: string;
     form: UntypedFormGroup;
     edit: any = {};
+    dataFormatPattern = /^[a-zA-Z]/;
     types: Array<any> = [
         { class: 'odp-group', value: 'Object', label: 'Group' },
         { class: 'odp-array', value: 'Array', label: 'Collection' }
@@ -58,9 +59,12 @@ export class DataFormatManageComponent implements
     deleteModal: any;
     showAdvance: boolean;
     showAdvanceSettingsWindow: boolean;
+    disableSaveBtn: boolean = true;
     sortableOnMove = (event: any) => {
         return !event.related.classList.contains('disabled');
     }
+    showTextarea: string;
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -72,123 +76,117 @@ export class DataFormatManageComponent implements
         private globalSchemaStructurePipe: GlobalSchemaStructurePipe,
         private cdr: ChangeDetectorRef,
         private ngbToolTipConfig: NgbTooltipConfig) {
-        const self = this;
-        self.edit = {
+        this.edit = {
             status: false,
             id: null,
             view: false
         };
-        self.deleteModal = {};
-        self.form = self.fb.group({
+        this.deleteModal = {};
+        this.form = this.fb.group({
             name: [null, [Validators.required]],
             description: [null],
             type: ['Object', [Validators.required]],
             strictValidation: [false],
-            definition: self.fb.array([
-                self.schemaService.getDefinitionStructure()
+            definition: this.fb.array([
+                this.schemaService.getDefinitionStructure()
             ]),
             formatType: ['JSON', [Validators.required]],
             character: [',', [Validators.required]],
             excelType: ['xls', [Validators.required]],
             lineSeparator: ['\\\\n']
         });
-        self.breadcrumbPaths = [];
-        self.formatList = self.appService.getFormatTypeList();
-        self.activeTab = 0;
-        self.microflows = [];
+        this.breadcrumbPaths = [];
+        this.formatList = this.appService.getFormatTypeList();
+        this.activeTab = 0;
+        this.microflows = [];
     }
 
     ngOnInit() {
-        const self = this;
-        self.breadcrumbPaths.push({
+        this.breadcrumbPaths.push({
             active: false,
             label: 'Data Formats',
-            url: '/app/' + self.commonService.app._id + '/dfl'
+            url: '/app/' + this.commonService.app._id + '/dfl'
         });
         this.commonService.changeBreadcrumb(this.breadcrumbPaths)
-        self.commonService.activeComponent = this;
-        self.ngbToolTipConfig.container = 'body';
-        self.app = self.commonService.app._id;
-        self.commonService.apiCalls.componentLoading = false;
-        self.route.params.subscribe(params => {
+        this.commonService.activeComponent = this;
+        this.ngbToolTipConfig.container = 'body';
+        this.app = this.commonService.app._id;
+        this.commonService.apiCalls.componentLoading = false;
+        this.route.params.subscribe(params => {
             if (params.id) {
-                self.edit.id = params.id;
-                if (self.appService.editLibraryId) {
-                    self.appService.editLibraryId = null;
-                    self.edit.status = true;
+                this.edit.id = params.id;
+                if (this.appService.editLibraryId) {
+                    this.appService.editLibraryId = null;
+                    this.edit.status = true;
                 } else {
-                    self.edit.view = true;
-                    self.edit.status = false;
+                    this.edit.view = true;
+                    this.edit.status = false;
                 }
-                self.fillDetails();
+                this.fillDetails();
             } else {
-                self.breadcrumbPaths.push({
+                this.breadcrumbPaths.push({
                     active: true,
                     label: 'New Data Format'
                 });
                 this.commonService.changeBreadcrumb(this.breadcrumbPaths)
-                self.edit.status = true;
-                if (self.appService.clone) {
-                    self.fillDetails(self.appService.clone);
+                this.edit.status = true;
+                if (this.appService.clone) {
+                    this.fillDetails(this.appService.clone);
                 }
             }
         });
-        self.form.get('formatType').valueChanges.subscribe(val => {
+        this.form.get('formatType').valueChanges.subscribe(val => {
             if (val === 'CSV') {
-                self.removeGroups();
-                self.form.get('character').patchValue(',');
+                this.removeGroups();
+                this.form.get('character').patchValue(',');
             }
         });
-        self.form.get('lineSeparator').valueChanges.subscribe(val => {
+        this.form.get('lineSeparator').valueChanges.subscribe(val => {
             console.log(val);
         });
-        self.selectType({ class: 'odp-group', value: 'Object', label: 'Group' });
-        self.subscriptions['activeproperty'] = self.schemaService.activeProperty.subscribe(val => {
-            self.properties = val;
-            self.onfocus = true;
+        this.selectType({ class: 'odp-group', value: 'Object', label: 'Group' });
+        this.subscriptions['activeproperty'] = this.schemaService.activeProperty.subscribe(val => {
+            this.properties = val;
+            this.onfocus = true;
         });
-        self.subscriptions['sessionExpired'] = self.commonService.sessionExpired.subscribe(() => {
-            self.form.markAsPristine();
+        this.subscriptions['sessionExpired'] = this.commonService.sessionExpired.subscribe(() => {
+            this.form.markAsPristine();
         });
-        self.subscriptions['userLoggedOut'] = self.commonService.userLoggedOut.subscribe(res => {
-            self.form.markAsPristine();
+        this.subscriptions['userLoggedOut'] = this.commonService.userLoggedOut.subscribe(res => {
+            this.form.markAsPristine();
         });
     }
 
     get libNameErr() {
-        const self = this;
-        return (self.form.get('name').dirty && self.form.get('name').hasError('required') ||
-            self.form.get('name').dirty && self.form.get('name').hasError('length'));
+        return (this.form.get('name').dirty && this.form.get('name').hasError('required') ||
+            this.form.get('name').dirty && this.form.get('name').hasError('length'));
     }
 
     ngAfterViewInit() {
-        const self = this;
-        if (self.libName) {
-            self.libName.nativeElement.focus();
+        if (this.libName) {
+            this.libName.nativeElement.focus();
         }
     }
 
     ngOnDestroy() {
-        const self = this;
-        if (self.commonService.activeComponent) {
-            self.commonService.activeComponent = null;
+        if (this.commonService.activeComponent) {
+            this.commonService.activeComponent = null;
         }
-        Object.keys(self.subscriptions).forEach(e => {
-            self.subscriptions[e].unsubscribe();
+        Object.keys(this.subscriptions).forEach(e => {
+            this.subscriptions[e].unsubscribe();
         });
-        if (self.pageChangeModalTemplateRef) {
-            self.pageChangeModalTemplateRef.close();
+        if (this.pageChangeModalTemplateRef) {
+            this.pageChangeModalTemplateRef.close();
         }
-        if (self.deleteModalEleRef) {
-            self.deleteModalEleRef.close();
+        if (this.deleteModalEleRef) {
+            this.deleteModalEleRef.close();
         }
-        self.appService.clone = null;
-        self.appService.edit = null;
+        this.appService.clone = null;
+        this.appService.edit = null;
     }
 
     ngAfterContentChecked() {
-        const self = this;
-        self.cdr.detectChanges();
+        this.cdr.detectChanges();
     }
 
     resetForm() {
@@ -198,12 +196,11 @@ export class DataFormatManageComponent implements
     }
 
     fillDetails(id?) {
-        const self = this;
-        self.showLazyLoader = true;
-        self.subscriptions['fillDetails'] = self.commonService
-            .get('partnerManager', `/${this.commonService.app._id}/dataFormat/` + (id ? id : self.edit.id))
+        this.showLazyLoader = true;
+        this.subscriptions['fillDetails'] = this.commonService
+            .get('partnerManager', `/${this.commonService.app._id}/dataFormat/` + (id ? id : this.edit.id))
             .subscribe(res => {
-                self.showLazyLoader = false;
+                this.showLazyLoader = false;
                 let temp;
                 if (res.definition && res.definition.length > 0) {
                     temp = {
@@ -212,183 +209,194 @@ export class DataFormatManageComponent implements
                         strictValidation: res.strictValidation,
                         excelType: res.excelType
                     };
-                    self.form.patchValue(temp);
-                    self.form.get('type').patchValue('Object');
-                    temp.definition = self.schemaService.generateStructure(res.definition);
-                    (self.form.get('definition') as UntypedFormArray).controls.splice(0);
+                    this.form.patchValue(temp);
+                    this.form.get('type').patchValue('Object');
+                    temp.definition = this.schemaService.generateStructure(res.definition);
+                    (this.form.get('definition') as UntypedFormArray).controls.splice(0);
                     temp.definition.forEach((element, i) => {
-                        const tempDef = self.schemaService.getDefinitionStructure(temp.definition[i]);
+                        const tempDef = this.schemaService.getDefinitionStructure(temp.definition[i]);
                         if (temp.definition[i].properties && temp.definition[i].properties.name) {
                             tempDef.get('properties.name').patchValue(temp.definition[i].properties.name);
-                            self.onfocus = false;
+                            this.onfocus = false;
                         } else {
                             tempDef.get('properties.name').patchValue('_self');
-                            self.onfocus = false;
+                            this.onfocus = false;
                         }
-                        (self.form.get('definition') as UntypedFormArray).push(tempDef);
+                        (this.form.get('definition') as UntypedFormArray).push(tempDef);
                     });
                 } else {
                     temp = {
                         name: res.name,
                         description: res.description
                     };
-                    self.form.patchValue(temp);
+                    this.form.patchValue(temp);
                 }
                 if (id) {
-                    self.form.controls.name.reset();
+                    this.form.controls.name.reset();
                 }
                 if (res.formatType) {
-                    self.formatList.forEach(e => {
+                    this.formatList.forEach(e => {
                         e.selected = false;
                     });
                     if (res.formatType === 'EXCEL') {
-                        temp = self.formatList.find(e => e.formatType === res.formatType && e.excelType === res.excelType);
+                        temp = this.formatList.find(e => e.formatType === res.formatType && e.excelType === res.excelType);
 
                     } else {
-                        temp = self.formatList.find(e => e.formatType === res.formatType);
+                        temp = this.formatList.find(e => e.formatType === res.formatType);
                     }
                     if (temp) {
                         temp.selected = true;
                     }
-                    self.form.get('formatType').patchValue(res.formatType);
+                    this.form.get('formatType').patchValue(res.formatType);
                 }
                 if (res.character) {
-                    self.form.get('character').patchValue(res.character);
+                    this.form.get('character').patchValue(res.character);
                 }
                 if (res.lineSeparator) {
-                    self.form.get('lineSeparator').patchValue(res.lineSeparator);
+                    this.form.get('lineSeparator').patchValue(res.lineSeparator);
                 }
-                if (self.appService.clone) {
-                    const name = self.form.get('name').value;
-                    self.form.get('name').patchValue(name + ' Copy');
-                    self.form.get('description').patchValue(null);
+                if (this.appService.clone) {
+                    const name = this.form.get('name').value;
+                    this.form.get('name').patchValue(name + ' Copy');
+                    this.form.get('description').patchValue(null);
                 }
-                self.breadcrumbPaths.push({
+                this.breadcrumbPaths.push({
                     active: true,
-                    label: self.form.controls.name.value + (self.edit ? ' (Edit)' : '')
+                    label: this.form.controls.name.value + (this.edit ? ' (Edit)' : '')
                 });
                 this.commonService.changeBreadcrumb(this.breadcrumbPaths)
             }, err => {
-                self.showLazyLoader = true;
-                self.commonService.errorToast(err);
+                this.showLazyLoader = true;
+                this.commonService.errorToast(err);
             });
     }
 
     selectDataFormatType(event) {
-        const self = this;
         if (event.target.value === 'delimeter') {
-            self.showSubType = true;
-            self.dataFormatShow.character = true;
+            this.showSubType = true;
+            this.dataFormatShow.character = true;
         } else if (event.target.value === 'flatfile') {
-            self.showSubType = true;
-            self.dataFormatShow.character = false;
+            this.showSubType = true;
+            this.dataFormatShow.character = false;
         } else {
-            self.showSubType = false;
+            this.showSubType = false;
         }
     }
     clearSchema() {
-        const self = this;
-        self.deleteModal.title = 'Clear Data Format ';
-        self.deleteModal.message = 'Are you sure you want to clear ';
-        self.deleteModalEleRef = self.commonService.modal(self.deleteModalEle);
-        self.deleteModalEleRef.result.then((close) => {
+        this.deleteModal.title = 'Clear Data Format ';
+        this.deleteModal.message = 'Are you sure you want to clear ';
+        this.deleteModalEleRef = this.commonService.modal(this.deleteModalEle);
+        this.deleteModalEleRef.result.then((close) => {
             if (close) {
-                self.resetForm();
+                this.resetForm();
             }
         }, dismiss => { });
     }
 
+    onSchemaCreate(schema: any) {
+        this.form.get('type').patchValue(schema.type);
+        schema.definition = this.schemaService.generateStructure(schema.definition);
+        (this.form.get('definition') as UntypedFormArray).controls.splice(0);
+        schema.definition.forEach((element, i) => {
+            const tempDef = this.schemaService.getDefinitionStructure(schema.definition[i]);
+            if (schema.definition[i].properties && schema.definition[i].properties.name) {
+                tempDef.get('properties.name').patchValue(schema.definition[i].properties.name);
+                this.onfocus = false;
+            } else {
+                tempDef.get('properties.name').patchValue('_self');
+                this.onfocus = false;
+            }
+            (this.form.get('definition') as UntypedFormArray).push(tempDef);
+        });
+        this.showTextarea = null;
+    }
+
     cancel() {
-        const self = this;
-        self.deleteModal.title = 'Unsaved Changes';
-        self.deleteModal.message = 'Are you sure you want to cancel ';
-        if (self.form.dirty) {
-            self.deleteModalEleRef = self.commonService.modal(self.deleteModalEle);
-            self.deleteModalEleRef.result.then((close) => {
+        this.deleteModal.title = 'Unsaved Changes';
+        this.deleteModal.message = 'Are you sure you want to cancel ';
+        if (this.form.dirty) {
+            this.deleteModalEleRef = this.commonService.modal(this.deleteModalEle);
+            this.deleteModalEleRef.result.then((close) => {
                 if (close) {
-                    self.form.markAsPristine();
-                    if (self.edit.id) {
-                        if (self.edit.view && self.edit.status) {
-                            self.edit.status = false;
-                            self.fillDetails();
+                    this.form.markAsPristine();
+                    if (this.edit.id) {
+                        if (this.edit.view && this.edit.status) {
+                            this.edit.status = false;
+                            this.fillDetails();
                         } else {
-                            self.router.navigate(['/app/', self.commonService.app._id, 'dfl']);
+                            this.router.navigate(['/app/', this.commonService.app._id, 'dfl']);
                         }
                     } else {
-                        self.router.navigate(['/app/', self.commonService.app._id, 'dfl']);
+                        this.router.navigate(['/app/', this.commonService.app._id, 'dfl']);
                     }
                 }
             }, dismiss => { });
         } else {
-            if (self.edit.id) {
-                if (self.edit.view && self.edit.status) {
-                    self.edit.status = false;
+            if (this.edit.id) {
+                if (this.edit.view && this.edit.status) {
+                    this.edit.status = false;
                 } else {
-                    self.router.navigate(['/app/', self.commonService.app._id, 'dfl']);
+                    this.router.navigate(['/app/', this.commonService.app._id, 'dfl']);
                 }
             } else {
-                self.router.navigate(['/app/', self.commonService.app._id, 'dfl']);
+                this.router.navigate(['/app/', this.commonService.app._id, 'dfl']);
             }
         }
     }
     editSchema(index) {
-        const self = this;
-        self.edit.status = true;
+        this.edit.status = true;
     }
 
     saveSchema() {
-        const self = this;
         let response;
-        const value = self.form.getRawValue();
-        const payload = self.globalSchemaStructurePipe.transform(value, true);
-        self.appService.addKeyForDataStructure(payload.definition, 'normal');
-        self.commonService.commonSpinner = true;
-        payload.app = self.commonService.app._id;
-        payload.formatType = self.form.value.formatType;
-        payload.excelType = self.form.value.excelType;
-        payload.character = self.form.value.character;
-        payload.length = self.form.value.length;
-        payload.lineSeparator = self.form.value.lineSeparator;
-        payload.strictValidation = self.form.value.strictValidation;
-        if (self.edit.id) {
-            response = self.commonService.put('partnerManager', `/${this.commonService.app._id}/dataFormat/` + self.edit.id, payload);
+        const value = this.form.getRawValue();
+        const payload = this.globalSchemaStructurePipe.transform(value, true);
+        this.appService.addKeyForDataStructure(payload.definition, 'normal');
+        this.commonService.commonSpinner = true;
+        payload.app = this.commonService.app._id;
+        payload.formatType = this.form.value.formatType;
+        payload.excelType = this.selectedFormat.excelType;
+        payload.character = this.form.value.character;
+        payload.length = this.form.value.length;
+        payload.lineSeparator = this.form.value.lineSeparator;
+        payload.strictValidation = this.form.value.strictValidation;
+        if (this.edit.id) {
+            response = this.commonService.put('partnerManager', `/${this.commonService.app._id}/dataFormat/` + this.edit.id, payload);
         } else {
-            response = self.commonService.post('partnerManager', `/${this.commonService.app._id}/dataFormat`, payload);
+            response = this.commonService.post('partnerManager', `/${this.commonService.app._id}/dataFormat`, payload);
         }
-        self.subscriptions['globalschema'] = response.subscribe(res => {
-            self.commonService.commonSpinner = false;
+        this.subscriptions['globalschema'] = response.subscribe(res => {
+            this.commonService.commonSpinner = false;
 
-            self.ts.success('Data Format saved sucessfully');
-            self.form.markAsPristine();
-            if (self.edit.id) {
-                self.router.navigate(['/app/', self.commonService.app._id, 'dfl']);
+            this.ts.success('Data Format saved sucessfully');
+            this.form.markAsPristine();
+            if (this.edit.id) {
+                this.router.navigate(['/app/', this.commonService.app._id, 'dfl']);
             } else {
-                self.router.navigate(['/app/', self.commonService.app._id, 'dfl']);
+                this.router.navigate(['/app/', this.commonService.app._id, 'dfl']);
             }
         }, err => {
-            self.commonService.commonSpinner = false;
-            self.edit.status = true;
-            self.commonService.errorToast(err);
+            this.commonService.commonSpinner = false;
+            this.edit.status = true;
+            this.commonService.errorToast(err);
         });
     }
 
     addField(place?: string) {
-        const self = this;
         if (!place) {
-            const tempArr = self.form.get('definition') as UntypedFormArray;
-            const temp = self.schemaService.getDefinitionStructure({ _newField: true });
+            const tempArr = this.form.get('definition') as UntypedFormArray;
+            const temp = this.schemaService.getDefinitionStructure({ _newField: true });
             tempArr.push(temp);
         } else {
-            self.schemaService.addAttribute.emit(place);
+            this.schemaService.addAttribute.emit(place);
         }
     }
 
     selectType(type: any) {
-        const self = this;
-        self.selectedType = type.label;
-        self.selectedTypeClass = self._getClass(type.value);
-        self.form.controls.type.setValue(type.value);
-        self.form.removeControl('definition');
+        this.selectedType = type.label;
+        this.selectedTypeClass = this._getClass(type.value);
+        this.form.controls.type.setValue(type.value);
+        this.form.removeControl('definition');
         let key = null;
         if (type.value === 'Object') {
             key = null;
@@ -396,10 +404,10 @@ export class DataFormatManageComponent implements
             key = '_self';
         }
         if (type.value === 'Array' || type.value === 'Object') {
-            self.form.addControl('definition', self.fb.array([
-                self.schemaService.getDefinitionStructure({ key })
+            this.form.addControl('definition', this.fb.array([
+                this.schemaService.getDefinitionStructure({ key })
             ]));
-            self.form.controls.definition.setValidators([sameName]);
+            this.form.controls.definition.setValidators([sameName]);
         }
     }
 
@@ -420,11 +428,10 @@ export class DataFormatManageComponent implements
     }
 
     canDeactivate(): Promise<boolean> | boolean {
-        const self = this;
         if (this.changesDone) {
             return new Promise((resolve, reject) => {
-                self.pageChangeModalTemplateRef = this.commonService.modal(this.pageChangeModalTemplate);
-                self.pageChangeModalTemplateRef.result.then(close => {
+                this.pageChangeModalTemplateRef = this.commonService.modal(this.pageChangeModalTemplate);
+                this.pageChangeModalTemplateRef.result.then(close => {
                     resolve(close);
                 }, dismiss => {
                     resolve(false);
@@ -442,14 +449,13 @@ export class DataFormatManageComponent implements
     }
 
     canEditDataFormat(id: string) {
-        const self = this;
-        if (self.commonService.isAppAdmin || self.commonService.userDetails.isSuperAdmin) {
+        if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
             return true;
         } else {
-            const list = self.commonService.getEntityPermissions('DF_' + id);
+            const list = this.commonService.getEntityPermissions('DF_' + id);
             if (list.length > 0 && list.find(e => e.id === 'PMDF')) {
                 return true;
-            } else if (list.length === 0 && self.hasManagePermission('DF')) {
+            } else if (list.length === 0 && this.hasManagePermission('DF')) {
                 return true;
             } else {
                 return false;
@@ -459,8 +465,7 @@ export class DataFormatManageComponent implements
 
 
     hasManagePermission(entity: string) {
-        const self = this;
-        const retValue = self.commonService.hasPermission('PMDF', entity);
+        const retValue = this.commonService.hasPermission('PMDF', entity);
         return retValue;
     }
 
@@ -481,12 +486,11 @@ export class DataFormatManageComponent implements
     }
 
     copyToClipboard(type: string) {
-        const self = this;
         if (type === 'input') {
-            self.inputNode.nativeElement.select();
+            this.inputNode.nativeElement.select();
         } else {
-            if (self.outputNode && self.outputNode.nativeElement) {
-                self.outputNode.nativeElement.select();
+            if (this.outputNode && this.outputNode.nativeElement) {
+                this.outputNode.nativeElement.select();
             }
         }
         document.execCommand('copy');
@@ -503,63 +507,60 @@ export class DataFormatManageComponent implements
         }
     }
 
+    disableSave(val: string) {
+        if (val && val.length) {
+            this.form.controls['name'].setErrors({ 'incorrect': true });
+        }
+    }
+
     removeGroups() {
-        const self = this;
         const indexArr = [];
-        self.form.value.definition.forEach((ele, index) => {
+        this.form.value.definition.forEach((ele, index) => {
             if (ele.type === 'Object' || ele.type === 'Array') {
                 indexArr.push(index);
             }
         });
         indexArr.reverse().forEach(i => {
-            (self.form.get('definition') as UntypedFormArray).removeAt(i);
+            (this.form.get('definition') as UntypedFormArray).removeAt(i);
         });
     }
     get name() {
-        const self = this;
-        if (self.form.get('name')) {
-            return self.form.get('name').value;
+        if (this.form.get('name')) {
+            return this.form.get('name').value;
         }
         return null;
     }
     set name(val) {
-        const self = this;
-        self.form.get('name').patchValue(val);
-        self.form.get('name').markAsDirty();
+        this.form.get('name').patchValue(val);
+        this.form.get('name').markAsDirty();
     }
 
     get description() {
-        const self = this;
-        if (self.form.get('description')) {
-            return self.form.get('description').value;
+        if (this.form.get('description')) {
+            return this.form.get('description').value;
         }
         return null;
     }
     set description(val) {
-        const self = this;
-        self.form.get('description').patchValue(val);
-        self.form.get('description').markAsDirty();
+        this.form.get('description').patchValue(val);
+        this.form.get('description').markAsDirty();
     }
 
     get definitions() {
-        const self = this;
-        return (self.form.get('definition') as UntypedFormArray).controls;
+        return (this.form.get('definition') as UntypedFormArray).controls;
     }
 
     get changesDone() {
-        const self = this;
-        return self.form.dirty;
+        return this.form.dirty;
     }
 
     get isValidSchema() {
-        const self = this;
-        return self.form.valid && self.form.dirty;
+        return this.form.valid && this.form.dirty;
     }
 
     private _getClass(type) {
-        const self = this;
         try {
-            return self.types.filter((e, i, a) => {
+            return this.types.filter((e, i, a) => {
                 if (e.value === type) {
                     return e;
                 }
@@ -570,8 +571,7 @@ export class DataFormatManageComponent implements
     }
 
     get selectedFormat() {
-        const self = this;
-        return self.formatList.find(e => e.selected);
+        return this.formatList.find(e => e.selected);
     }
 
     get showAdvanceBtn() {
@@ -579,23 +579,19 @@ export class DataFormatManageComponent implements
     }
 
     set strictValidation(val) {
-        const self = this;
-        self.form.get('strictValidation').patchValue(val);
+        this.form.get('strictValidation').patchValue(val);
     }
 
     get strictValidation() {
-        const self = this;
-        return self.form.get('strictValidation').value;
+        return this.form.get('strictValidation').value;
     }
 
     get formatType() {
-        const self = this;
-        return self.form.get('formatType').value;
+        return this.form.get('formatType').value;
     }
 
     get editable() {
-        const self = this;
-        if (self.edit && self.edit.status) {
+        if (this.edit && this.edit.status) {
             return true;
         }
         return false;

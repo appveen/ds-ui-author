@@ -1,6 +1,13 @@
 <div class='p-4'>
 
-    <div class="fw-600 font-20 mb-3">State Model</div>
+    <div class="d-flex">
+        <div class="fw-600 font-20 mb-3">State Model</div>
+        <div class="ml-2" *ngIf="edit.status">
+            <odp-switch [edit]="{ status: true }" type="dark" (checkedChange)="toggleStateModelStatus()"
+                [(checked)]="stateModelStatus">
+            </odp-switch>
+        </div>
+    </div>
 
     <ng-container *ngIf="!isSchemaFree">
         <p class='text-secondary mb-4 state-model-desc'>
@@ -12,14 +19,13 @@
             <div class="d-flex align-items-center">
                 <div id="select-state-model" formGroupName="stateModel" odpClickOutside (outside)="searchTerm = '' "
                     class="position-relative">
-                    <input id="typeahead-basic" type="text" class="form-control"
-                        [attr.disabled]="!edit.status ? true : null" [ngbTypeahead]="search"
+                    <input [disabled]="!edit.status || !stateModelStatus" id="typeahead-basic" type="text" class="form-control" [ngbTypeahead]="search"
                         (focus)="focus$.next($any($event).target.value)" [resultTemplate]="rt"
                         [inputFormatter]="inputFormatter" (selectItem)="selectAttribute($event.item)"
                         placeholder="Choose existing attribute or create one..." #instance="ngbTypeahead" />
                 </div>
-                <button [disabled]="!edit.status" id="configureStateModel" class="btn btn-link"
-                    (click)="enableStateModel()">
+                <button [disabled]="!edit.status || !stateModelStatus" id="configureStateModel" class="btn btn-link"
+                    (click)="enableStateModel(); stateModelStatus = true">
                     Configure State Model
                 </button>
             </div>
@@ -48,7 +54,7 @@
                     <input [attr.disabled]="true" type="text" class="form-control" [value]="StateModelAttrName">
                 </div>
                 <div *ngIf="edit.status" class="mt-2">
-                    <span (click)="disableStateModel()" class="btn btn-link">
+                    <span (click)="deleteStateModel()" class="btn btn-link">
                         Delete State Model
                     </span>
                 </div>
@@ -79,10 +85,10 @@
 
                 <div class="mt-2">
                     <div class="row mb-2" [hidden]="allStates.length == 0">
-                        <div class="col-3">
+                        <div class="col-4">
                             <strong>State</strong>
                         </div>
-                        <div class="col-9">
+                        <div class="col-8">
                             <strong>Add Next State</strong>
                         </div>
                     </div>
@@ -90,7 +96,7 @@
                     <div class="state-model-config" [sortablejs]="stateModelData"
                         [sortablejsOptions]="{sort: !!edit && !!edit.status, filter: '.disabled', onMove: sortableOnMove, onUpdate: sortableOnUpdate }">
                         <div class="row align-items-center" *ngFor="let stateData of stateModelData; let i = index ">
-                            <div class="col-3" [ngClass]="{'mb-2': edit.status }">
+                            <div class="col-4" [ngClass]="{'mb-2': edit.status }">
                                 <div *ngIf="edit.status" class="d-inline-block">
                                     <i class="fa fa-bars text-muted hover mr-2 fs-16"></i>
                                 </div>
@@ -106,7 +112,7 @@
                                     (click)="deleteStates(stateData.state)">
                                 </div>
                             </div>
-                            <div class="col-9" [ngClass]="{'mb-2': !edit.status }">
+                            <div class="col-8" [ngClass]="{'mb-2': !edit.status }">
                                 <mat-form-field class="example-chip-list w-100" appearance="fill">
                                     <mat-chip-list #chipList aria-label="Next State selection"
                                         [disabled]="!edit.status">

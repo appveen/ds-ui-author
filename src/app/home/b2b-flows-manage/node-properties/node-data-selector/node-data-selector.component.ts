@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { B2bFlowService } from '../../b2b-flow.service';
 
 @Component({
   selector: 'odp-node-data-selector',
@@ -7,66 +9,107 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class NodeDataSelectorComponent implements OnInit {
 
-  @Input() value: string;
-  @Output() valueChange: EventEmitter<string>;
-  @Input() nodeList: Array<any>;
+  @Input() toggle: boolean;
+  @Output() toggleChange: EventEmitter<boolean>;
+  @Input() currNode: any;
+  @Input() number: boolean;
+  @Input() textarea: boolean;
+  @Input() value: any;
+  @Output() valueChange: EventEmitter<any>;
   @Input() edit: any;
-  toggleNodeSelector: boolean;
-  selectedNode: any;
-  nodeDataField: string;
-  tempValue: Array<string>;
-  tempDataKey: string;
-  constructor() {
+  configuredData: any;
+  availableHeaderKeys: Array<string>;
+  availableBodyKeys: Array<any>;
+  dataKey: string;
+  valueType: string;
+  insertText: EventEmitter<string>;
+  openSelector: boolean;
+  nodeList: Array<any>;
+  constructor(private flowService: B2bFlowService) {
     this.nodeList = [];
     this.edit = {
-      status: true
+      status: false
     };
+    this.toggleChange = new EventEmitter();
     this.valueChange = new EventEmitter();
-    this.tempValue = [];
+    this.configuredData = {};
+    this.availableHeaderKeys = ['authorization', 'content-type', 'token', 'ip', 'custom'];
+    this.availableBodyKeys = [];
+    this.valueType = 'dynamic';
+    this.dataKey = 'authorization';
+    this.insertText = new EventEmitter();
   }
 
   ngOnInit(): void {
-    console.log(this.nodeList);
+    this.nodeList = this.flowService.getNodesBefore(this.currNode);
+    if (this.value) {
+      this.configuredData = this.flowService.parseDynamicValue(this.value);
+      if (this.configuredData.customValue) {
+        this.valueType = 'custom';
+      } else {
+        this.valueType = 'dynamic';
+      }
+    }
   }
 
   onClick(event: any) {
     event.preventDefault();
-    this.toggleNodeSelector = !this.toggleNodeSelector;
+    this.toggle = !this.toggle;
   }
 
-  selectNode(item: any) {
-    this.selectedNode = item;
-    if (item) {
-      this.tempValue.push(`node['${this.selectedNode._id}']`);
-    } else {
-      this.tempValue.splice(0, 1);
+  toggleValueType(flag: boolean, type: string) {
+    this.configuredData = {};
+    if (flag) {
+      this.valueType = type;
     }
   }
-  selectNodeDataKey(dataKey: string) {
-    this.nodeDataField = dataKey;
-    if (dataKey) {
-      this.tempValue.push(dataKey);
+
+  onNodeSelect(node: any) {
+    if (node.dataStructure && node.dataStructure.outgoing && node.dataStructure.outgoing.definition) {
+      this.availableBodyKeys = node.dataStructure.outgoing.definition;
+      this.dataKey = 'dynamic';
     } else {
-      this.tempValue.splice(1, 1);
+      // this.availableBodyKeys = [{ properties: { name: 'Custom' } }];
+      this.dataKey = 'custom';
     }
   }
 
   saveData() {
-    this.value = '{{' + this.currentValue + '}}';
+    if (this.valueType == 'dynamic') {
+      this.value = '{{' + this.currentValue + '}}';
+    } else {
+      this.value = this.currentValue;
+    }
+    // this.value = '{{' + this.currentValue + '}}';
     this.valueChange.emit(this.value);
-    this.toggleNodeSelector = false;
+    this.toggle = false;
+    this.toggleChange.emit(this.toggle);
   }
   cancel() {
-    this.toggleNodeSelector = false;
-    this.selectedNode = null;
-    this.nodeDataField = null;
-    this.tempDataKey = null;
+    this.toggle = false;
+    this.toggleChange.emit(this.toggle);
+    this.configuredData = {};
+  }
+
+  stepBack() {
+    if (this.configuredData.dataKey) {
+      this.configuredData.dataKey = null;
+    } else if (this.configuredData.nodeKey) {
+      this.configuredData.nodeKey = null;
+    } else {
+      this.configuredData = {};
+    }
+  }
+
+  getNodeType(node: any) {
+    return this.flowService.getNodeType(node);
   }
 
   get currentValue() {
-    if (this.tempDataKey) {
-      return this.tempValue.join('.') + `['${this.tempDataKey}']`;
-    }
-    return this.tempValue.join('.');
+    return this.flowService.getDynamicValue(this.configuredData);
+  }
+
+  get userSelectedValue() {
+    return this.flowService.getDynamicLabel(this.configuredData, this.nodeList);
   }
 }

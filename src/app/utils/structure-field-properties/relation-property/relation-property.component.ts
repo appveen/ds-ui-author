@@ -335,6 +335,11 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
         return;
       }
     }
+
+    if (list.value?.find(val => val?.key === _value.key)) {
+      return;
+    }
+
     list.push(new UntypedFormControl(_value));
   }
   writeData(value) {
@@ -391,7 +396,6 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
 
   onSelectSearchField(selectedSearchField) {
     const self = this;
-    self.addToList('relatedViewFields', selectedSearchField);
     const service = self.services.find(e => e._id === self.properties.get('relatedTo').value);
     self.getDocuments(service);
   }

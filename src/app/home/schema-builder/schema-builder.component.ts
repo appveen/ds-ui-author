@@ -201,7 +201,8 @@ export class SchemaBuilderComponent implements
             headers: [],
             enableSearchIndex: '',
             ingestionPoints: [],
-            connectors: connectorForm
+            connectors: connectorForm,
+            simpleDate: [],
         });
 
         self.versionConfig = {
@@ -386,7 +387,7 @@ export class SchemaBuilderComponent implements
     get stateModelIfEnabled() {
         const self = this;
         if (self.form.get(['stateModel', 'enabled']).value) {
-            this.schemaService.stateModel=self.form.get(['stateModel', 'attribute'])
+            this.schemaService.stateModel = self.form.get(['stateModel', 'attribute'])
             return self.form.get(['stateModel', 'attribute'])
         }
         else {
@@ -578,6 +579,7 @@ export class SchemaBuilderComponent implements
             delete payload.headers;
             delete payload.enableSearchIndex;
             delete payload.permanentDeleteData;
+            delete payload.simpleDate;
             delete payload.disableInsights;
         }
         if (!this.hasPermissionForTab('I')) {
@@ -625,7 +627,7 @@ export class SchemaBuilderComponent implements
         const self = this;
         if (!self.isSchemaFree && self.form.get(['definition', 0, 'counter']).dirty && self.edit.id) {
             const payload = self.schemaStructurePipe.transform(self.form.value);
-            self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/idCount/${this.edit.id}`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
+            self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/utils/${this.edit.id}/idCount`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
                 if (payload.definition.find(d => d.key === '_id').counter <= res) {
                     self.commonService.errorToast(
                         { status: 400 }, 'Invalid value for counter because the current counter value is  ' + res);
@@ -651,6 +653,7 @@ export class SchemaBuilderComponent implements
             self.roleChange = false;
             self.ts.success('Saved ' + payload.name + ' and deployment process has started.');
             self.form.markAsPristine();
+            this.commonService.updateStatus(payload._id, 'service')
             self.router.navigate(['/app/', self.commonService.app._id, 'sm']);
         },
             err => {
@@ -783,6 +786,7 @@ export class SchemaBuilderComponent implements
                 self.schemaService.initialState(res);
                 res.definition = self.schemaService.patchType(res.definition);
                 self.serviceObj = res;
+                self.schemaService.serviceObj = res;
                 self.commonService.serviceData = res;
                 if (self.editServiceId || self.cloneServiceId) {
                     self.enableEdit(true);
@@ -951,6 +955,7 @@ export class SchemaBuilderComponent implements
         const flag = self.form.get('name').dirty ||
             self.form.get('description').dirty ||
             self.form.get('permanentDeleteData').dirty ||
+            self.form.get('simpleDate').dirty ||
             self.form.get('disableInsights').dirty ||
             self.form.get('api').dirty ||
             self.form.get('tags').dirty ||
@@ -967,6 +972,7 @@ export class SchemaBuilderComponent implements
         const flag = self.form.get('name').invalid ||
             self.form.get('description').invalid ||
             self.form.get('permanentDeleteData').invalid ||
+            self.form.get('simpleDate').invalid ||
             self.form.get('disableInsights').invalid ||
             self.form.get('api').invalid ||
             self.form.get('tags').invalid ||

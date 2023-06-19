@@ -14,6 +14,10 @@
     </div>
     <div class="d-flex align-items-center">
       <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+      <button type="button" id="data-management" class="btn btn-white d-flex align-items-center border ml-3"
+       [routerLink]="['settings']">
+      <span class="dsi dsi-settings text-secondary"></span>
+      </button>
       <button id="createFunction" type="button" class="add-new btn btn-primary ml-3 d-flex align-items-center"
         (click)="newFaas()" [disabled]="!hasWritePermission('FAAS')">
         <span class="dsi dsi-plus mr-2"></span>
@@ -119,7 +123,7 @@
                   View
                 </div>
                 <div class="list-group-item list-group-item-action py-2 border-0" *ngIf="canManageFaas(item._id)"
-                  (click)="cloneFunction(i)">
+                  (click)="cloneFunction(i);isClone=true">
                   Clone
                 </div>
                 <div class="list-group-item list-group-item-action py-2 border-0 text-danger" *ngIf="canManageFaas(item._id)"
@@ -139,7 +143,7 @@
     [ngClass]="{'show': showNewFaasWindow}" [formGroup]="form">
     <div class="d-flex align-items-center justify-content-between">
       <h5 class="m-0 font-20 fw-600">New Function</h5>
-      <button type="button" class="close" (click)="showNewFaasWindow=false">
+      <button type="button" class="close" (click)="showNewFaasWindow=false;isClone=false">
         <span>&times;</span>
       </button>
     </div>

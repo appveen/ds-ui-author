@@ -1,85 +1,162 @@
-.node-block-wrapper {
-    min-width: 218px;
-    .node-block {
-        min-width: 180px;
-        max-width: 180px;
-        min-height: 58px;
-        max-height: 58px;
-        overflow: hidden;
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
 
-        .delete-icon {
-            right: -100px;
-            z-index: 1;
-            transition: 0.2;
-        }
+rect {
+    fill: #fff;
+    stroke: #666;
+    stroke-width: 1;
+}
 
-        &:hover {
-            .delete-icon {
-                right: 10px;
-            }
-        }
+path {
+    fill: none;
+    stroke: #666;
+    stroke-width: 2;
+
+    &:hover {
+        cursor: pointer;
+        stroke-width: 3;
     }
 
-    .path-sm {
-        width: 64px;
-    }
-
-    .path-t {
-        margin-top: 20px;
-    }
-
-    .path {
-        width: 180px;
-    }
-
-    .path-v {
-        height: 20px;
-    }
-
-    .add-button {
-        min-height: 54px;
-        max-height: 54px;
-
-        &.align-items-start {
-            .border-left {
-                margin-left: 8px;
-            }
-        }
-
-        &.side {
-            min-height: 46px;
-            max-height: 46px;
-        }
-
-        .dsi {
-            font-size: 18px;
-        }
-
-        .border-bottom {
-            width: 18px;
-        }
-
-        .border-left {
-            height: 18px;
-
-            &.negetive {
-                height: 23px;
-                margin-top: -23px;
-            }
-        }
+    &.selected {
+        stroke: $accent;
+        stroke-width: 3;
     }
 }
 
-.node-options-dropdown {
-    width: 180px;
-    overflow-y: auto;
+.svg-path-transparent {
+    fill: none;
+    stroke: #666;
+    stroke-opacity: 0%;
+    stroke-width: 20;
 
-    .node-options-item {
-        height: 32px;
-
-        &:hover {
-            background: lighten($color: #000000, $amount: 20);
-        }
-
+    &:hover {
+        cursor: pointer;
+        stroke-width: 20; //increase the value to increase the hover area
     }
+}
+
+.svg-path-transparent:hover~path {
+    cursor: pointer;
+    stroke-width: 3;
+}
+
+text {
+    stroke-width: 0;
+    fill: $dark;
+    font-size: 12px;
+}
+
+text.path-text {
+    &.selected {
+        stroke-width: 0.75;
+        stroke: #000;
+    }
+}
+
+// text.node-name {
+//     stroke-width: 0;
+//     fill: $secondary;
+//     font-size: 11px;
+// }
+
+.active {
+    .rect {
+        fill: rgba($accent, 0.3);
+    }
+
+    // text:not(.node-name):not(.id-holder) {
+    //     stroke-width: 0.75 !important;
+    //     stroke: #333;
+    // }
+}
+
+
+.node-anchor {
+    fill: #fff;
+
+    &:hover {
+        fill: $secondary;
+    }
+
+    &.active {
+        fill: $accent;
+    }
+}
+
+.delete-icon {
+    fill: #cfcfcf;
+    stroke: #cccc;
+    stroke-width: 1;
+
+}
+
+
+rect.id-holder {
+    fill: #e0e0e0;
+    stroke: #e0e0e0;
+    stroke-width: 1;
+}
+
+text.id-holder {
+    stroke-width: 0;
+    fill: #666;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 500;
+    ;
+}
+
+rect.API.START {
+    fill: #6C7584;
+}
+
+rect.API {
+    fill: #00CCCB;
+}
+
+rect.TIMER {
+    fill: #2FC48F;
+}
+
+rect.DATASERVICE {
+    fill: #A94CFF;
+}
+
+rect.FUNCTION {
+    fill: #FFBB1A;
+}
+
+text.FUNCTION {
+    fill: $dark;
+}
+
+rect.CODEBLOCK {
+    fill: $secondary;
+}
+
+rect.CONNECTOR,
+rect.FILE {
+    fill: #009BFF;
+}
+
+rect.LOGS {
+    fill: #FF7D4C;
+}
+
+rect.MAPPING,
+rect.TRANSFORM,
+rect.PAYLOAD {
+    fill: #FF4C82;
+}
+
+rect.UNWIND {
+    fill: #FF4C82;
+}
+
+rect.RESPONSE {
+    fill: #2FC48F;
+}
+
+.no-outline {
+    outline: none;
 }

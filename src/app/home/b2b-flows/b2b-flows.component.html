@@ -14,6 +14,10 @@
         </div>
         <div class="d-flex align-items-center">
             <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+            <button type="button" id="data-management" class="btn btn-white d-flex align-items-center border ml-3"
+                [routerLink]="['settings']">
+                <span class="dsi dsi-settings text-secondary"></span>
+            </button>
             <button id="createFlow" type="button" class="add-new btn btn-primary ml-3 d-flex align-items-center"
                 (click)="newFlow()" [disabled]="!hasWritePermission('FLOW')">
                 <span class="dsi dsi-plus mr-2"></span>
@@ -25,7 +29,7 @@
         <div *ngIf="records.length==0" class="rounded-lg border bg-white p-4">
             <p class="m-0">No Records Found, <button type="button" class="btn btn-link px-1 py-0"
                     (click)="newFlow()">Click
-                    Here</button> to create a new Flow
+                    Here</button> to create a new Data Pipe
                 <span *ngIf="searchTerm">:&nbsp;<span class="fw-500">{{searchTerm}}</span></span>
             </p>
         </div>
@@ -64,14 +68,14 @@
                 </div>
             </div>
             <div class="list-group-item d-flex align-items-center justify-content-start hover"
-                *ngFor="let item of records;let i=index" (dblclick)="viewFlow(i)">
+                *ngFor="let item of records;let i=index" (dblclick)="viewFlow(item)">
                 <div class="item-name fw-500 d-flex align-items-center">
                     <span class="ml-2 pl-1 text-dark text-truncate" [ngbTooltip]="item.name"
                         placement="right">{{item.name}}</span>
                     <span class="ml-2 version sub-heading font-11 text-uppercase">(v{{(item.version||1)}})</span>
                     <span *ngIf="item.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
                 </div>
-                <div class="d-flex align-items-center" (dblclick)="viewFlow(i)">
+                <div class="d-flex align-items-center" (dblclick)="viewFlow(item)">
                     <div class="sub-heading item-status d-flex align-items-center">
                         <span class="text font-12 fw-400">{{item?.inputNode?.type}}</span>
                     </div>
@@ -95,13 +99,13 @@
                         <div class="actions d-flex justify-content-end hover align-items-center">
                             <ng-container *ngIf="item.status != 'Pending' && item.status != 'Maintenance' ">
                                 <span *ngIf="canDeployFlow(item)" id='deploy_{{i}}' class="text-primary mr-3"
-                                    (click)="deployFlow(i)">Deploy</span>
-                                <span class="fw-600 font-13 hover mr-3"
-                                    *ngIf="item.status == 'Undeployed' && canStartStopFlow(i)"
-                                    (click)="toggleFlowStatus(i)">Start</span>
-                                <span class="fw-600 font-13 hover mr-3"
-                                    *ngIf="item.status == 'Active' && canStartStopFlow(i)"
-                                    (click)="toggleFlowStatus(i)">Stop</span>
+                                    (click)="deployFlow(item)">Deploy</span>
+                                <!-- <span class="fw-600 font-13 hover mr-3"
+                                    *ngIf="item.status !== 'Active' && canStartStopFlow(i)"
+                                    (click)="toggleFlowStatus(i)">Start</span> -->
+                                <span class="fw-600 font-13 hover mr-3" *ngIf="canStartStopFlow(i)"
+                                    (click)="toggleFlowStatus(item)">{{item.status === 'Active' ? 'Stop' :
+                                    'Start'}}</span>
                                 <span class="dsi dsi-more-vertical hover mr-3 ignore-outside"
                                     (click)="showDropDown($event,i)"></span>
                             </ng-container>
@@ -110,23 +114,27 @@
                                 (mouseleave)="showOptionsDropdown[i]=false" [ngStyle]="dropDownStyle" odpClickOutside
                                 (outside)="showOptionsDropdown[i]=false">
                                 <div class="list-group-item list-group-item-action py-2 border-0"
-                                    *ngIf="canManageFlow(item._id)" (click)="editFlow(i)">
+                                    *ngIf="canManageFlow(item._id)" (click)="editFlow(item)">
                                     Edit
                                 </div>
                                 <div class="list-group-item list-group-item-action py-2 border-0"
-                                    *ngIf="canManageFlow(item._id)" (click)="viewFlow(i)">
+                                    *ngIf="canViewFlow(item._id)" (click)="viewFlow(item)">
                                     View
                                 </div>
                                 <div class="list-group-item list-group-item-action py-2 border-0"
-                                    *ngIf="canManageFlow(item._id)" (click)="cloneFlow(i)">
+                                    *ngIf="canManageFlow(item._id)" (click)="cloneFlow(item)">
                                     Clone
                                 </div>
+                                <button class="list-group-item list-group-item-action py-2 border-0"
+                                    *ngIf="item.draftVersion || item.status=='Draft' && canManageFlow(item._id)"
+                                    (click)="discardDraft(item._id)">Discard
+                                    Draft</button>
                                 <div class="list-group-item list-group-item-action py-2 border-0 text-danger"
                                     *ngIf="canManageFlow(item._id)" (click)="deleteFlow(i)">
                                     Delete
                                 </div>
                                 <div class="list-group-item list-group-item-action py-2 text-accent"
-                                    *ngIf="canManageFlow(item._id)" (click)="getYamls(i)">
+                                    *ngIf="canManageFlow(item._id)" (click)="getYamls(item)">
                                     Yamls
                                 </div>
                             </div>
@@ -142,7 +150,7 @@
 <div [ngClass]="{'show':showNewFlowWindow}"
     class="new-flow-window p-4 position-fixed border-left bg-white d-flex flex-column" [formGroup]="form">
     <div class="d-flex align-items-center justify-content-between mb-3">
-        <span class="font-22 fw-500">New Pipeline</span>
+        <span class="font-22 fw-500">New Data Pipe</span>
         <span class="dsi dsi-close hover" (click)="showNewFlowWindow=false;"></span>
     </div>
     <div *ngIf="showNewFlowWindow" class="d-flex flex-column w-100">
@@ -153,7 +161,7 @@
             </label>
             <div class="name-wrapper position-relative mb-3">
                 <input newFlowName autocomplete="off" type="text" class="form-control" id="name"
-                    placeholder="Untitled Flow" formControlName="name" odpAutoFocus
+                    placeholder="Untitled Data Pipe" formControlName="name" odpAutoFocus
                     (keyup.enter)="isClone ? triggerFlowClone() : triggerFlowCreate()"
                     [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
                 <ng-container *ngIf="form.get('name').dirty">
@@ -176,30 +184,44 @@
                 <label>
                     <input class="mr-3" type="radio" value="API" formControlName="type"
                         [checked]="form.get('type').value === 'API'">
-                    <span>API</span>
+                    <span>HTTP API Reciever</span>
                 </label>
                 <label>
                     <input class="mr-3" type="radio" value="FILE" formControlName="type"
                         [checked]="form.get('type').value === 'FILE'">
-                    <span>FILE</span>
+                    <span>Agent File Reciever</span>
                 </label>
                 <label>
                     <input class="mr-3" type="radio" value="TIMER" formControlName="type"
                         [checked]="form.get('type').value === 'TIMER'">
-                    <span>TIMER</span>
+                    <span>Timer</span>
+                </label>
+                <label>
+                    <input class="mr-3" type="radio" value="PLUGIN" formControlName="type"
+                        [checked]="form.get('type').value === 'PLUGIN'">
+                    <span>Plugin</span>
                 </label>
             </div>
-
-            <!-- <select class="form-control" id="name" formControlName="type">
-                <option value="API" selected>API</option>
-                <option value="FILE">FILE</option>
-                <option value="TIMER">TIMER</option>
-            </select> -->
+            <div *ngIf="form.get('type').value === 'PLUGIN'" class="form-group">
+                <odp-search-box open="true" (enteredText)="searchPlugin($event)"></odp-search-box>
+                <div class="plugins-list-wrapper border rounded mt-3">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item" *ngIf="!staterPluginList || staterPluginList.length==0">
+                            No Plugins
+                        </div>
+                        <div class="list-group-item d-flex align-items-center" *ngFor="let item of staterPluginList"
+                            (click)="checkPlugin(item)">
+                            <odp-round-radio class="mr-3" [(checked)]="item._selected"></odp-round-radio>
+                            <span>{{item.name}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
     <div class="d-flex align-self-end justify-content-end w-100 mt-auto">
-        <button type="button" class="btn btn-min-width btn-primary w-100" id="newFlowModalYes" [disabled]="form.invalid"
+        <button type="button" class="btn btn-min-width btn-primary w-100" id="newFlowModalYes" [disabled]="invalidForm"
             (click)="isClone ? triggerFlowClone() : triggerFlowCreate()">Create</button>
     </div>
 </div>
@@ -214,9 +236,9 @@
     <ng-container *ngIf="showYamlWindow">
         <div class="form-group">
             <label for="service">Service</label>
-            <div class="position-relative">
+            <div class="position-relative d-flex">
                 <pre class="form-control">{{selectedFlow.serviceYaml}}</pre>
-                <small class="form-text position-absolute">
+                <small class="form-text position-absolute r-10">
                     <span class="text-secondary hover" *ngIf="!copied['service']"
                         (click)="copyText(selectedFlow.serviceYaml,'service')">Copy</span>
                     <span class="text-accent" *ngIf="copied['service']">Copied!</span>
@@ -225,9 +247,9 @@
         </div>
         <div class="form-group">
             <label for="deployment">Deployment</label>
-            <div class="position-relative">
+            <div class="position-relative d-flex">
                 <pre class="form-control">{{selectedFlow.deploymentYaml}}</pre>
-                <small class="form-text position-absolute">
+                <small class="form-text position-absolute r-10">
                     <span class="text-secondary hover" *ngIf="!copied['deployment']"
                         (click)="copyText(selectedFlow.deploymentYaml,'deployment')">Copy</span>
                     <span class="text-accent" *ngIf="copied['deployment']">Copied!</span>

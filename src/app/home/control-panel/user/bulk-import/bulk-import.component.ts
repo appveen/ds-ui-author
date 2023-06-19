@@ -53,6 +53,12 @@ export class BulkImportComponent implements OnInit {
     this.commonService.get('user', `/${this.commonService.app._id}/user/utils/bulkCreate/fileTransfers`).subscribe(res => {
       this.showLazyLoader = false;
       this.taskList = res;
+      this.taskList.forEach(e=>{
+        console.log(e.status=='Pending')
+        if(e.status=='Pending'){
+          this.commonService.updateStatus(e._id,'bulkUpload');
+        }
+      })
     }, err => {
       this.showLazyLoader = false;
       console.error(err);

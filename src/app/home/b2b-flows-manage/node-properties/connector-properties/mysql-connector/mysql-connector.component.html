@@ -1,1 +1,8 @@
-<p>mysql-connector works!</p>
+<div class="form-group position-relative">
+    <label for="query" class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between">
+        SQL Query
+        <span class="dsi dsi-settings text-primary hover" (click)="toggle['query']=!toggle['query']"></span>
+    </label>
+    <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['query']" [textarea]="true" [currNode]="currNode"
+        [(value)]="currNode.options.query"></odp-node-data-selector>
+</div>

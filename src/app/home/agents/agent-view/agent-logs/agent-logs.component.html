@@ -1,0 +1,74 @@
+<div class="default-loader d-flex justify-content-center w-100 h-100" *ngIf="showLazyLoader">
+    <div class="align-self-center text-center">
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Processing...</span>
+        </div>
+        <div class="text-secondary mt-2">Processing...</div>
+    </div>
+</div>
+<div class="grid-container border rounded position-relative mt-3" (scroll)="loadMore($event)">
+    <div class="list-group list-group-flush">
+        <div class="list-group-item header py-0 bg-light text-uppercase font-11 fw-500 d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-start h-100">
+                <div (click)="applySort('Timestamp')" class="item-timestamp">
+                    <span class="mr-2">Timestamp</span>
+                    <span *ngIf="sortModel['timestamp']==1" class="dsi dsi-drop-down"></span>
+                    <span *ngIf="sortModel['timestamp']==-1" class="dsi dsi-drop-up"></span>
+                </div>
+                <div (click)="applySort('level')" class="item-level">
+                    <span class="mr-2">Level</span>
+                    <span *ngIf="sortModel['level']==1" class="dsi dsi-drop-down"></span>
+                    <span *ngIf="sortModel['level']==-1" class="dsi dsi-drop-up"></span>
+                </div>
+                <div (click)="applySort('message')" class="item-message">
+                    <span class="mr-2">Message</span>
+                    <span *ngIf="sortModel['message']==1" class="dsi dsi-drop-down"></span>
+                    <span *ngIf="sortModel['message']==-1" class="dsi dsi-drop-up"></span>
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item header py-0 font-11 fw-500 d-flex align-items-center filter">
+            <div class="d-flex align-items-center justify-content-start h-100">
+                <div class="item-timestamp">
+                </div>
+                <div class="item-level">
+                    <select class="form-control font-11" style="width: 60%; height: 30px"
+                        (ngModelChange)="filterLevel($event)" [(ngModel)]="selectedFilter">
+                        <option class="font-11" value="ALL">ALL</option>
+                        <option class="font-11" value="TRACE">TRACE</option>
+                        <option class="font-11" value="DEBUG">DEBUG</option>
+                        <option class="font-11" value="INFO">INFO</option>
+                        <option class="font-11" value="ERROR">ERROR</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="agentLogs.length > 0">
+            <ng-container  *ngFor="let agent of agentLogs;let i=index">
+                <div class="list-group-item">
+                    <div class="d-flex align-items-center justify-content-start h-100 list">
+                        <div class="item-timestamp text-truncate fw-500">{{agent?.timestamp &&
+                            convertDate(agent.timestamp )}}</div>
+                        <div class="item-level ">
+                            <span class="font-11 fw-500 status" [ngClass]="{
+                            'text-success': agent.logLevel === 'TRACE',
+                            'text-warning': agent.logLevel === 'DEBUG',
+                            'text-danger': agent.logLevel === 'ERROR',
+                            'text-info': agent.logLevel === 'INFO'
+                          }">{{agent.logLevel}}</span>
+                        </div>
+                        <div class="item-message text-secondary">{{agent.message}}</div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <div class="d-flex flex-column" *ngIf="agentLogs.length === 0 && !showLazyLoader">
+            <span class="no-logs">
+            </span>
+            <div class="d-flex flex-column mx-auto">
+                <span class="font-20 fw-600">No Logs Generated</span>
+                <span>Activate agent to generate logs</span>
+            </div>
+        </div>
+    </div>
+</div>

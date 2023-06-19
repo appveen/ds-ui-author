@@ -1,0 +1,48 @@
+<!-- <div class="dropdown" ngbDropdown>
+  <button class="btn btn-primary" id="dropdownMenuButton" ngbDropdownToggle (click)="toggleDropdown()">Dropdown</button>
+
+  <ng-container *ngTemplateOutlet="dropdownList; context: { $implicit: data, level: 0  }"></ng-container>
+
+</div>
+
+<ng-template #dropdownList let-data let-level>
+  <div class="dropdown-menu" [ngClass]="{show: isOpen}">
+    <div *ngFor="let item of data">
+      <a class="dropdown-item" *ngIf="!item.children" (click)="itemClick(item)">{{ item.name }}</a>
+      <div *ngIf="item.children" class="dropdown">
+        <a class="dropdown-item dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          {{ item.name }}
+        </a>
+        <odp-multi-level-submenu [data]="item.children" [level]="level + 1"></odp-multi-level-submenu>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+
+
+<!-- <button class="btn btn-primary" (click)="toggleDropdown()">Toggle Dropdown</button> -->
+
+<div class="dropdown">
+  <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> -->
+  <ng-container *ngTemplateOutlet="dropdownList; context: { $implicit: data, level: 0, toggle: isOpen}"></ng-container>
+  <!-- </div> -->
+</div>
+
+<ng-template #dropdownList let-data let-level="level" let-toggle="toggle">
+  <ul class="dropdown-menu" [class.show]="toggle" [ngClass]="{'dropdown-menu-right': toggle && level >= 1}"
+    placement="right">
+    <li *ngFor="let item of data">
+      <a class="dropdown-item" *ngIf="!item.children" (mouseover)="openMenu($event,item,level)"
+        (click)="itemClicked($event,item, level)">{{ item.name }}</a>
+      <div *ngIf="item.children" class="dropdown">
+        <a class="dropdown-item dropdown-toggle" role="button" id="dropdownMenuLink"
+          (mouseover)="openMenu($event,item,level)" (click)="itemClicked($event,item, level)">
+          {{ item.name }}
+        </a>
+        <ng-container
+          *ngTemplateOutlet="dropdownList; context: { $implicit: item.children, level: level + 1, toggle: item.isOpen }"></ng-container>
+      </div>
+    </li>
+  </ul>
+</ng-template>

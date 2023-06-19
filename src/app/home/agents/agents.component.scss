@@ -7,15 +7,8 @@
 }
 
 .grid-container {
-  height: calc(100vh - 214px);
-
-  .ag-grid-options {
-    height: 32px;
-  }
-
-  .ag-grid-container {
-    height: calc(100vh - 246px);
-  }
+  overflow-y: auto;
+  height: calc(100vh - 180px);
 }
 
 .agent-name-wrapper {

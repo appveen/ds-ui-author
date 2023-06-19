@@ -18,12 +18,6 @@ import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.mod
 import { FlowNodeComponent } from './flow-node/flow-node.component';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { B2bFlowService } from './b2b-flow.service';
-import { MappingIconComponent } from './icons/mapping-icon/mapping-icon.component';
-import { InvokeApiIconComponent } from './icons/invoke-api-icon/invoke-api-icon.component';
-import { ResponseIconComponent } from './icons/response-icon/response-icon.component';
-import { DataServiceIconComponent } from './icons/data-service-icon/data-service-icon.component';
-import { FunctionIconComponent } from './icons/function-icon/function-icon.component';
-import { ConnectorIconComponent } from './icons/connector-icon/connector-icon.component';
 import { NodePropertiesComponent } from './node-properties/node-properties.component';
 import { CheckboxModule } from 'src/app/utils/checkbox/checkbox.module';
 import { NodeMappingComponent } from './node-properties/node-mapping/node-mapping.component';
@@ -43,6 +37,27 @@ import { RouteGuard } from '../../utils/guards/route.guard';
 import { NodeDataSelectorComponent } from './node-properties/node-data-selector/node-data-selector.component';
 import { AddHeadersComponent } from './node-properties/add-headers/add-headers.component';
 import { MssqlConnectorComponent } from './node-properties/connector-properties/mssql-connector/mssql-connector.component';
+import { SourceFieldsComponent } from './node-properties/node-mapping/source-fields/source-fields.component';
+import { TargetFieldsComponent } from './node-properties/node-mapping/target-fields/target-fields.component';
+import { SourceSelectorComponent } from './node-properties/node-mapping/source-selector/source-selector.component';
+import { FormulaEditorComponent } from './node-properties/node-mapping/formula-editor/formula-editor.component';
+import { InputDataSelectorComponent } from './node-properties/input-data-selector/input-data-selector.component';
+import { OnHoverModule } from 'src/app/utils/on-hover/on-hover.module';
+import { PathPropertiesComponent } from './path-properties/path-properties.component';
+import { ColorPickerModule } from 'src/app/utils/color-picker/color-picker.module';
+import { PayloadCreatorModule } from 'src/app/utils/payload-creator/payload-creator.module';
+import { PathConditionCreatorComponent } from './path-properties/path-condition-creator/path-condition-creator.component';
+import { SwitchModule } from 'src/app/utils/switch/switch.module';
+import { ErrorNodeComponent } from './error-node/error-node.component';
+import { CommonFilterModule } from 'src/app/utils/pipes/common-filter/common-filter.module';
+import { MappingService } from './node-properties/node-mapping/mapping.service';
+import { StyledTextModule } from '../../utils/styled-text/styled-text.module';
+import { FieldTypeModule } from 'src/app/utils/field-type/field-type.module';
+import { ChangeOnEditModule } from 'src/app/utils/change-on-edit/change-on-edit.module';
+import { AutocompleteOnEditModule } from '../../utils/autocomplete-on-edit/autocomplete-on-edit.module';
+import { ChangeOnEditComponent } from '../../utils/change-on-edit/change-on-edit.component';
+import { PluginSelectorComponent } from './node-properties/marketplace-selector/marketplace-selector.component';
+import { EditorModule } from 'src/app/utils/editor/editor.module';
 
 const routes: Routes = [
   {
@@ -55,12 +70,6 @@ const routes: Routes = [
     B2bFlowsManageComponent,
     ViewBoxDirective,
     FlowNodeComponent,
-    MappingIconComponent,
-    InvokeApiIconComponent,
-    ResponseIconComponent,
-    DataServiceIconComponent,
-    FunctionIconComponent,
-    ConnectorIconComponent,
     NodePropertiesComponent,
     NodeMappingComponent,
     FunctionSelectorComponent,
@@ -75,7 +84,16 @@ const routes: Routes = [
     MongodbConnectorComponent,
     NodeDataSelectorComponent,
     AddHeadersComponent,
-    MssqlConnectorComponent
+    MssqlConnectorComponent,
+    SourceFieldsComponent,
+    TargetFieldsComponent,
+    SourceSelectorComponent,
+    FormulaEditorComponent,
+    InputDataSelectorComponent,
+    PathPropertiesComponent,
+    PathConditionCreatorComponent,
+    ErrorNodeComponent,
+    PluginSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -96,9 +114,19 @@ const routes: Routes = [
     AutoFocusModule,
     CheckboxModule,
     DataStructureSelectorModule,
-    RoundRadioModule
+    RoundRadioModule,
+    OnHoverModule,
+    ColorPickerModule,
+    PayloadCreatorModule,
+    SwitchModule,
+    CommonFilterModule,
+    StyledTextModule,
+    FieldTypeModule,
+    ChangeOnEditModule,
+    AutocompleteOnEditModule,
+    EditorModule
   ],
   exports: [B2bFlowsManageComponent],
-  providers: [B2bFlowService]
+  providers: [B2bFlowService, MappingService, ChangeOnEditComponent]
 })
 export class B2bFlowsManageModule { }

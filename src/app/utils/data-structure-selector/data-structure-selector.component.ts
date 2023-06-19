@@ -12,12 +12,14 @@ export class DataStructureSelectorComponent implements OnInit {
 
   @Input() edit: any;
   @Input() restrictToFormat: Array<string>;
+  @Input() hideGeneric: boolean;
   @Input() format: any;
   @Output() formatChange: EventEmitter<any>;
 
   showLoader: boolean;
   selectedType: string;
   showWindow: boolean;
+  tempFormat: any;
   constructor(
     private commonService: CommonService,
     private appService: AppService) {
@@ -27,6 +29,13 @@ export class DataStructureSelectorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.format) {
+      this.tempFormat = this.appService.cloneObject(this.format);
+    }
+    this.setSelectedType();
+  }
+
+  setSelectedType() {
     if (this.format && this.format._id && (this.format._id.startsWith('DF') || this.format._id.startsWith('SRVC'))) {
       this.selectedType = 'dataFormat';
     } else if (this.format && this.format._id) {
@@ -36,7 +45,6 @@ export class DataStructureSelectorComponent implements OnInit {
     }
   }
 
-
   onTypeChange(type: string) {
     if (this.selectedType === type) {
       return;
@@ -45,22 +53,18 @@ export class DataStructureSelectorComponent implements OnInit {
       this.showWindow = true;
     }
     this.selectedType = type;
-    this.format = null;
-    this.formatChange.emit(null);
+    this.tempFormat = null;
   }
 
   onFormatChange(data: any) {
-    this.format = data;
-    this.formatChange.emit(data);
+    this.tempFormat = data;
+    this.save();
+  }
+
+  save() {
     this.showWindow = false;
-  }
-
-  changeDataFormat() {
-    this.showWindow = true;
-  }
-
-  changeCustomFormat() {
-    this.showWindow = true;
+    this.format = this.tempFormat;
+    this.formatChange.emit(this.format);
   }
 
   closeWindow() {
@@ -68,5 +72,7 @@ export class DataStructureSelectorComponent implements OnInit {
     if (!this.format) {
       this.selectedType = 'generic';
     }
+    this.tempFormat = this.format;
+    this.setSelectedType();
   }
 }

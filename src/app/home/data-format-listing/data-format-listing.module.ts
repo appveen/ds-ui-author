@@ -11,6 +11,7 @@ import { DeleteModalModule } from 'src/app/utils/delete-modal/delete-modal.modul
 import { FormatTypeBadgeModule } from 'src/app/utils/format-type-badge/format-type-badge.module';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
 import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
+import { PasteJsonModule } from 'src/app/utils/paste-json/paste-json.module';
 
 const routes: Routes = [
   {
@@ -30,7 +31,8 @@ const routes: Routes = [
     DeleteModalModule,
     FormatTypeBadgeModule,
     AutoFocusModule,
-    RoundRadioModule
+    RoundRadioModule,
+    PasteJsonModule
   ],
   declarations: [DataFormatListingComponent]
 })

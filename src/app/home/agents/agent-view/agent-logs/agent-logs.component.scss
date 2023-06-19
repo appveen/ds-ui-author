@@ -1,0 +1,98 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+
+.grid-container {
+  max-height: calc(100vh - 300px);
+  overflow: auto;
+}
+
+.agent-name-wrapper {
+  .dsi-danger-circle {
+    top: 9px;
+    right: 6px;
+  }
+}
+
+.filter{
+  border-bottom: 2px solid rgba(0, 0, 0, 0.125);
+}
+
+.list{
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    height: 0.5em;
+    border-radius: 10px;
+    background-color: #efeeee;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: #b8b6b6;
+    border-radius: 10px;
+  }
+}
+
+.list-group-item {
+  overflow: hidden;
+
+  &.header {
+    min-height: 38px;
+    max-height: 38px;
+    color: #6C7584;
+  }
+
+  .item-timestamp {
+    min-width: 200px;
+    max-width: 200px;
+  }
+
+  .item-level {
+    min-width: 150px;
+    max-width: 150px;
+  }
+
+  .item-content {
+    min-width: 240px;
+    max-width: 240px;
+  }
+
+}
+
+.item-actions {
+  min-width: 200px;
+  max-width: 200px;
+  position: absolute;
+  right: 24px;
+  top: 204px;
+  z-index: 1;
+  transition: 0.2s;
+
+  .actions {
+
+    .dsi {
+      min-width: 24px;
+      max-width: 24px;
+      display: inline-block;
+      color: $sub-headings;
+    }
+
+    .dsi,
+    .api-icon {
+      &:hover {
+        color: $dark;
+      }
+    }
+  }
+}
+
+.no-logs {
+  min-height: 150px;
+  max-height: 150px;
+  min-width: 150px;
+  max-width: 150px;
+  background-repeat: no-repeat;
+  background-size: 150px;
+  background-position: center;
+  display: flex;
+  margin: 150px auto 20px auto;
+}

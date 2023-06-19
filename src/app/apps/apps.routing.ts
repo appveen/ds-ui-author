@@ -157,6 +157,27 @@ const routes: Routes = [
             (m) => m.ConnectorsManageModule
           ),
       },
+      {
+        path: 'api-keys',
+        loadChildren: () =>
+          import('../home/api-keys/api-keys.module').then(
+            (m) => m.ApiKeysModule
+          ),
+      },
+      {
+        path: 'node',
+        loadChildren: () =>
+          import('../home/nodes/nodes.module').then(
+            (m) => m.NodesModule
+          ),
+      },
+      {
+        path: 'processFlow',
+        loadChildren: () =>
+          import('../home/process-flows/process-flows.module').then(
+            (m) => m.ProcessFlowsModule
+          ),
+      },
     ],
   },
 ];

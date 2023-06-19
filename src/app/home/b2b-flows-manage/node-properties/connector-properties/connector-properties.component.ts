@@ -11,7 +11,6 @@ import * as _ from 'lodash';
 export class ConnectorPropertiesComponent implements OnInit {
 
   @Input() edit: any;
-  @Input() prevNode: any;
   @Input() currNode: any;
   @Input() nodeList: Array<any>;
   connectorList: Array<any>;
@@ -22,14 +21,15 @@ export class ConnectorPropertiesComponent implements OnInit {
   constructor(private commonService: CommonService,
     private appService: AppService) {
     this.edit = {
-      status: true
+      status: false
     };
     this.connectorList = [];
-    this.typeList = ['SFTP', 'MSSQL'];
+    this.subscriptions = {};
+    // this.typeList = ['SFTP', 'MSSQL'];
   }
   ngOnInit(): void {
-    // this.getAvailableConnectors();
-    this.loadInitial();
+    this.getAvailableConnectors();
+    // this.loadInitial();
   }
 
   getAvailableConnectors() {

@@ -1,9 +1,13 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
 .node-mapping-window,
+.node-coding-window,
 .node-agent-window {
     top: 0px;
     right: -800px;
     z-index: 3;
-    width: 800px;
+    min-width: 800px;
     height: 100vh;
     overflow-y: auto;
     transition: 0.2s;
@@ -13,10 +17,47 @@
     }
 }
 
+.node-mapping-window {
+    right: -80vw;
+    min-width: 80vw;
+    max-width: 80vw;
+    width: auto;
+}
+
+.node-coding-window {
+    right: -80vw;
+    min-width: 80vw;
+    max-width: 80vw;
+}
+
+
 .node-agent-window {
     width: 360px;
 }
 
 .codeblock-editor {
     height: calc(100vh - 100px);
+}
+
+.z-0 {
+    z-index: 0;
+}
+
+.dsi-plus {
+    top: 10px;
+    right: 10px
+}
+
+.input-field {
+    width: 100%;
+    border-radius: $border-radius;
+}
+
+.input-form {
+    max-width: 300px;
+    border: none;
+
+    &:focus {
+        box-shadow: none;
+    }
 }

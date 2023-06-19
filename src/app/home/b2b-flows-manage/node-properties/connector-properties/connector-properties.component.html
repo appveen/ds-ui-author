@@ -16,16 +16,24 @@
             </div>
         </div>
     </div>
-    <odp-sftp-connector *ngIf="selectedConnector.type=='SFTP'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-sftp-connector>
-    <odp-mssql-connector *ngIf="selectedConnector.type=='MSSQL'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-mssql-connector>
-    <odp-mysql-connector *ngIf="selectedConnector.type=='MYSQL'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-mysql-connector>
-    <odp-postgre-connector *ngIf="selectedConnector.type=='PG'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-postgre-connector>
-    <odp-kafka-connector *ngIf="selectedConnector.type=='KAFKA'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-kafka-connector>
-    <odp-mongodb-connector *ngIf="selectedConnector.type=='MONGODB'" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode" [prevNode]="prevNode"></odp-mongodb-connector>
+    <odp-sftp-connector *ngIf="selectedConnector.type=='SFTP'" [edit]="edit" [nodeList]="nodeList"
+        [currNode]="currNode"></odp-sftp-connector>
+    <odp-mssql-connector *ngIf="selectedConnector.type=='MSSQL'" [edit]="edit" [nodeList]="nodeList"
+        [currNode]="currNode"></odp-mssql-connector>
+    <odp-mysql-connector *ngIf="selectedConnector.type=='MYSQL'" [edit]="edit" [nodeList]="nodeList"
+        [currNode]="currNode"></odp-mysql-connector>
+    <odp-postgre-connector *ngIf="selectedConnector.type=='PG'" [edit]="edit" [nodeList]="nodeList"
+        [currNode]="currNode"></odp-postgre-connector>
+    <odp-kafka-connector *ngIf="selectedConnector.type=='KAFKA'" [edit]="edit" [nodeList]="nodeList"
+        [currNode]="currNode"></odp-kafka-connector>
+    <odp-mongodb-connector *ngIf="selectedConnector.type=='MONGODB'" [edit]="edit" [nodeList]="nodeList"
+        [currNode]="currNode"></odp-mongodb-connector>
 </ng-container>
 <div *ngIf="!selectedConnector" class="data-format-selector-wrapper">
+    <!-- <label class="text-dark font-14 fw-400">Connectors</label> -->
     <div>
-        <odp-search-box open="true" (enteredText)="searchConnector($event)" (reset)="clearSearch()"></odp-search-box>
+        <odp-search-box open="true" (enteredText)="searchConnector($event)" (reset)="clearSearch()"
+            (keydown.delete)="$event.stopPropagation();"></odp-search-box>
     </div>
     <div class="list-group my-3">
         <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
@@ -42,7 +50,7 @@
             No Connector found for the term: <span class="fw-500 text-dark">{{searchTerm}}</span>
         </div>
     </div>
-    <div class="d-flex align-items-center justify-content-end">
+    <div class="d-flex align-items-center justify-content-end mb-3">
         <button type="button" class="btn btn-primary w-100" [disabled]="!isConnectorSelected"
             (click)="selectConnector()">Select Connector</button>
     </div>

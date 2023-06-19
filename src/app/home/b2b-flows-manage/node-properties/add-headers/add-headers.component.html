@@ -1,43 +1,66 @@
 <div class="">
-    <div class="font-14 fw-300 text-dark">Custom Headers</div>
-    <button type="button" class="btn btn-link px-0 text-left" (click)="showHeadersWindow=true">
-        <span *ngIf="headerList.length==0">Configure</span>
-        <span *ngIf="headerList.length>0">Re-Configure ({{headerList.length}})</span>
-    </button>
+    <div class="font-14 fw-400 text-dark mb-2">Custom Headers</div>
+    <div class="header-item px-2 py-1 text-left d-flex align-items-center justify-content-between border rounded">
+        <span class="text-secondary" *ngIf="headerList.length==0">Configure</span>
+        <span class="text-dark" *ngIf="headerList.length>0">{{headerList.length}} Headers</span>
+        <div class="d-flex align-items-center justify-content-end">
+            <span *ngIf="headerList.length>0"
+                class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
+                (click)="clearHeaders()"></span>
+            <span class="icon dsi dsi-settings text-accent hover d-flex align-items-center justify-content-center"
+                (click)="showHeader()"></span>
+        </div>
+    </div>
 </div>
 
-<div *ngIf="showHeadersWindow" class="node-data-selector-wrapper p-4 bg-white position-fixed">
-    <div class="d-flex align-items-center justify-content-between">
+<div *ngIf="showHeadersWindow" class="headers-window p-4 bg-white position-fixed">
+    <div class="d-flex align-items-center justify-content-between mb-3">
         <h3 class="font-20 fw-600">Headers</h3>
-        <span class="dsi dsi-close hover" (click)="cancel()"></span>
+        <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center hover" (click)="toggleTextBox=!toggleTextBox">
+                <ng-container *ngIf="toggleTextBox">
+                    <span class="dsi dsi-array text-primary"></span>
+                    <span class="ml-2 font-12 fw-400">List</span>
+                </ng-container>
+                <ng-container *ngIf="!toggleTextBox">
+                    <span class="dsi dsi-object text-primary"></span>
+                    <span class="ml-2 font-12 fw-400">JSON</span>
+                </ng-container>
+            </div>
+            <span class="dsi dsi-close hover ml-3" (click)="cancel()"></span>
+        </div>
     </div>
     <div class="headers-list">
-        <div class="">
-            <button type="button" class="btn btn-link px-0 text-left d-flex align-items-center mt-3 mb-2"
-                (click)="addHeader()">
-                <span class="dsi dsi-plus-circle mr-2"></span>
-                <span class="">Add New</span>
-            </button>
-        </div>
-        <div *ngFor="let item of headerList;let i=index" class="d-flex align-items-center mb-2">
-            <div class="header-key mr-2 position-relative">
-                <input type="text" class="form-control" [(ngModel)]="item.key" placeholder="Header Key"
-                    (keyup.enter)="addHeader()" odpAutoFocus>
+        <ng-container *ngIf="toggleTextBox">
+            <textarea rows="10" cols="30" class="form-control" [ngModel]="sampleJSON | json"
+                (ngModelChange)="onTextDataChange($event)"></textarea>
+        </ng-container>
+        <ng-container *ngIf="!toggleTextBox">
+            <div *ngFor="let item of headerList;let i=index" class="d-flex align-items-stretch mb-2 border rounded">
+                <div class="header-key flex-fill position-relative">
+                    <input type="text" class="border-0 px-2 flex-fill h-100 w-100" [(ngModel)]="item.key"
+                        placeholder="Header Key" (keyup.enter)="addHeader(i)" (keydown.delete)="$event.stopPropagation();" odpAutoFocus>
+                </div>
+                <div class="header-value w-100 position-relative border-left">
+                    <odp-styled-text (finalValue)="onValueChange($event, item)" [value]="item.value" #typeAhead
+                        [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
+                        [searchTerm]="searchTerm" class="styled-wrapper" (onEnter)="addHeader(i)"
+                        placeholder="Header Value"></odp-styled-text>
+                    <!-- <input type="text" class="border-0 px-2 h-100 w-100" [(ngModel)]="item.value"
+                        placeholder="Header Value" (keyup.enter)="addHeader(i)"> -->
+                    <!-- <input type="text" class="border-0 px-2 h-100 w-100" [(ngModel)]="item.value"
+                        placeholder="Header Value" (keyup.enter)="addHeader(i)" (keydown.delete)="$event.stopPropagation();"> -->
+                </div>
+                <div class="header-action position-relative border-left d-flex align-items-center">
+                    <span class="icon d-flex align-items-center justify-content-center dsi dsi-minus-circle hover"
+                        (click)="removeHeader(i)"></span>
+                    <span class="icon d-flex align-items-center justify-content-center dsi dsi-plus-circle hover"
+                        (click)="addHeader(i)"></span>
+                </div>
             </div>
-            <div class="header-value mr-2 w-100 position-relative">
-                <input type="text" class="form-control dynamic-variable-addon" [(ngModel)]="item.value"
-                    placeholder="Header Value" (keyup.enter)="addHeader()">
-                <odp-node-data-selector class="node-data-selector" [edit]="edit" [nodeList]="nodeList"
-                    [(value)]="item.value">
-                </odp-node-data-selector>
-            </div>
-            <div class="header-action position-relative">
-                <button type="button" class="btn btn-link p-0" (click)="removeHeader(i)">
-                    <span class="dsi dsi-trash text-danger"></span>
-                </button>
-            </div>
-        </div>
-        <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center" (click)="save()">
+        </ng-container>
+        <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center"
+            (click)="save()">
             <span class="">Done</span>
         </button>
     </div>

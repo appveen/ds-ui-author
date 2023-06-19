@@ -1,6 +1,6 @@
 {
   "name": "data.stack-ui-author",
-  "version": "2.6.0",
+  "version": "2.6.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -27,7 +27,7 @@
     "ag-grid-community": "^25.3.0",
     "deepmerge": "^4.2.2",
     "faker": "^4.1.0",
-    "fuse.js": "^3.6.1",
+    "fuse.js": "^6.6.2",
     "jsdiff": "^1.1.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

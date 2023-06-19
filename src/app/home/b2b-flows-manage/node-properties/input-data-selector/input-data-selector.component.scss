@@ -1,0 +1,53 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.header-item {
+    overflow: hidden;
+    height: 36px;
+}
+
+.icon {
+    width: 32px;
+    height: 32px;
+}
+
+.overlay {
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: rgba($color: #000000, $alpha: 0.6);
+}
+
+.custom-window {
+    top: 0px;
+    right: -800px;
+    z-index: 3;
+    width: 360px;
+    height: 100vh;
+    overflow-y: auto;
+    transition: 0.2s;
+
+    &.more-width {
+        width: 800px;
+    }
+
+    &.show {
+        right: 0px;
+    }
+}
+
+.paste-window {
+    top: 0px;
+    right: -300px;
+    z-index: 3;
+    width: 300px;
+    height: 100vh;
+    overflow-y: auto;
+    transition: 0.2s;
+
+    &.show {
+        right: 0px;
+    }
+}

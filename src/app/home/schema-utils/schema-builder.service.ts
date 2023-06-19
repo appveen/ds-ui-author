@@ -1,13 +1,13 @@
 import { EventEmitter } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, UntypedFormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, UntypedFormArray, AbstractControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { positiveNumber } from '../../home/custom-validators/positive-number-validator';
 import { maxLenValidator, minMax, minMaxLength, patternValidator } from '../../home/custom-validators/min-max-validator';
-import { CommonService } from '../../utils/services/common.service';
 
 import * as _ from 'lodash';
 import * as uuid from 'uuid/v1';
 import { FieldType } from 'src/app/utils/interfaces/fieldType';
+import { CommonService } from '../../utils/services/common.service';
 
 @Injectable()
 export class SchemaBuilderService {
@@ -20,7 +20,8 @@ export class SchemaBuilderService {
     selectedFieldId: string;
     typechanged: EventEmitter<any>;
     idFieldId: string;
-    stateModel:any;
+    stateModel: any;
+    serviceObj: any;
     constructor(
         private fb: UntypedFormBuilder,
         private commonService: CommonService) {
@@ -165,11 +166,13 @@ export class SchemaBuilderService {
                 }
             }
             temp.addControl('supportedTimezones', new UntypedFormArray(arr));
-            // temp.addControl('min', new FormControl(value.properties && value.properties.min ? value.properties.min : null));
-            // temp.addControl('max', new FormControl(value.properties && value.properties.max ? value.properties.max : null));
+            // temp.addControl('min', new UntypedFormControl(value.properties && value.properties.min ? value.properties.min : null));
+            // temp.addControl('max', new UntypedFormControl(value.properties && value.properties.max ? value.properties.max : null));
         }
         if (value.type === 'Object') {
             temp.removeControl('required');
+            temp.addControl('schemaFree', new UntypedFormControl(value.properties &&
+                value.properties.schemaFree ? value.properties.schemaFree : false, [Validators.required]));
         }
         if (value.type === 'Array') {
             temp.removeControl('required');
@@ -273,12 +276,15 @@ export class SchemaBuilderService {
             _fieldId: [uuid()],
             _placeholder: ['Untitled Attribute'],
             type: [type, [Validators.required]],
-            key: [key ? key : null, [Validators.required]],
+            key: [key ? key : null, [Validators.required, this.checkForCase]],
             _newField: [value && value._newField === false ? value._newField : true]
         });
         const options = { type, key };
         if (value && value.properties) {
             options['properties'] = value.properties;
+        }
+        if (tempForm.get('key').value) {
+            tempForm.get('key').markAsTouched()
         }
 
         tempForm.addControl('properties', this.getPropertiesStructure(options));
@@ -334,12 +340,45 @@ export class SchemaBuilderService {
             tempForm.addControl('definition', tempArr);
         }
         tempForm.get('properties.name').valueChanges.subscribe(val => {
-            tempForm.get('key').patchValue(val === '_self' ? '_self' : _.camelCase(val));
+            if (!tempForm.get('key').touched) {
+                tempForm.get('key').patchValue(val === '_self' ? '_self' : _.camelCase(val));
+            }
+
         });
+        // tempForm.get('key').valueChanges.subscribe(val => {
+        //     tempForm.get('key').patchValue(val === '_self' ? '_self' : val);
+        // });
         if (value && value.disableType) {
             tempForm.addControl('_disableType', new UntypedFormControl(true));
         }
         return tempForm;
+    }
+
+
+
+    checkForCase(control: AbstractControl) {
+
+        const isCamelCase = (value: string): boolean => {
+            const result = /^[a-z][a-zA-Z0-9]*$/.test(value);
+            return result;
+        }
+        const isSnakeCase = (value: string): boolean => {
+            const result = /^[a-z][a-z0-9_]*$/.test(value);
+            return result;
+        }
+        const isKebabCase = (value: string): boolean => {
+            const result = /^[a-z][a-z0-9-]*$/.test(value);
+            return result;
+        }
+
+        if (isCamelCase(control.value) || isSnakeCase(control.value) || isKebabCase(control.value) || !control.value || control.value === '_self') {
+            return null;
+        }
+        else {
+            return {
+                caseError: "Case issue"
+            }
+        }
     }
 
     generateStructure(definitions) {

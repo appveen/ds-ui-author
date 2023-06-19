@@ -48,6 +48,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     resetPasswordForm: UntypedFormGroup;
     showPassword: any;
     showPasswordSide: boolean = false;
+    isClone: boolean=false;
     constructor(
         public commonService: CommonService,
         private appService: AppService,
@@ -85,6 +86,12 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        if (this.agentDetailsModalRef) {
+            this.agentDetailsModalRef.close();
+        }
+        if(this.downloadAgentModalRef){
+            this.downloadAgentModalRef.close(false)
+        }
         Object.keys(this.subscriptions).forEach(key => {
             if (this.subscriptions[key]) {
                 this.subscriptions[key].unsubscribe();
@@ -103,7 +110,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
 
-    newAgent(agent?) {
+    newAgent(agent?, isEdit = false) {
         this.agentData = {
             app: this.commonService.app._id,
             type: 'APPAGENT',
@@ -112,8 +119,14 @@ export class AgentsComponent implements OnInit, OnDestroy {
             retainFileOnError: true
         };
         if (agent) {
-            this.agentData.name = agent.name
-            this.agentData.isEdit = true
+            if (isEdit) {
+                this.agentData._id = agent._id
+            }
+            this.agentData.name = isEdit ? agent.name : agent.name + ' Copy',
+            this.agentData.encryptFile = agent.encryptFile,
+            this.agentData.retainFileOnSuccess = agent.retainFileOnSuccess,
+            this.agentData.retainFileOnError = agent.retainFileOnError,
+            this.agentData.isEdit = isEdit;
         }
         this.showNewAgentWindow = true;
     }
@@ -131,16 +144,25 @@ export class AgentsComponent implements OnInit, OnDestroy {
                 if (res) {
                     this.ts.success('Agent Saved Sucessfully');
                     this.showNewAgentWindow = false;
+                    this.showLazyLoader = false;
+                    this.getAgentList();
                 }
 
             }, err => {
                 this.commonService.errorToast(err);
                 this.showNewAgentWindow = false;
+                this.showLazyLoader = false;
             });
         }
         else {
             this.commonService.post('partnerManager', `/${this.commonService.app._id}/agent`, this.agentData).subscribe(res => {
                 this.showLazyLoader = false;
+                if(this.isClone){
+                    this.ts.success('Agent Cloned.')
+                    this.isClone=false
+                }else{
+                    this.ts.success('Agent has been created.')
+                }
                 this.getAgentList();
             }, err => {
                 this.showLazyLoader = false;
@@ -149,23 +171,24 @@ export class AgentsComponent implements OnInit, OnDestroy {
         }
     }
 
-    cloneAgent(_index) {
-        this.appService.cloneLibraryId = this.agentList[_index]._id;
-        this.router.navigate(['/app/', this.app, 'agent', this.appService.cloneLibraryId]);
+    cloneAgent(agent) {
+        this.isClone=true;
+        this.newAgent(agent)
     }
 
     deleteAgent(_index) {
         this.alertModal.statusChange = false;
         this.alertModal.title = 'Delete Agent';
         this.alertModal.message = 'Are you sure you want to delete <span class="text-delete font-weight-bold">'
-            + this.agentList[_index].name + '</span> Agent?';
+            + this.records[_index].name + '</span> Agent?';
+            console.log(this.records[_index])
         this.alertModal.index = _index;
         this.openDeleteModal.emit(this.alertModal);
     }
 
     closeDeleteModal(data) {
         if (data) {
-            this.subscriptions['deleteAgent'] = this.commonService.delete('partnerManager', `/${this.commonService.app._id}/agent/` + this.agentData._id, this.agentData).subscribe(res => {
+            this.subscriptions['deleteAgent'] = this.commonService.delete('partnerManager', `/${this.commonService.app._id}/agent/` + this.records[data.index]._id, this.records[data.index]).subscribe(res => {
                 if (res) {
                     this.ts.success('Agent Deleted Sucessfully');
                     this.getAgentList();
@@ -182,8 +205,8 @@ export class AgentsComponent implements OnInit, OnDestroy {
         return text ? this.appService.toCapitalize(text) : null;
     }
 
-    hasManagePermission(entity: string) {
-        return this.commonService.hasPermission('PMA', entity);
+    hasCreatePermission(entity: string){
+        return this.commonService.hasPermission('PMABC', entity);
     }
 
     hasViewPermission(entity: string) {
@@ -298,7 +321,7 @@ export class AgentsComponent implements OnInit, OnDestroy {
     copyPassword(password) {
         const self = this;
         self.appService.copyToClipboard(password);
-        self.ts.success('Id copied successfully');
+        self.ts.success('Password copied successfully');
     }
 
 
@@ -337,6 +360,9 @@ export class AgentsComponent implements OnInit, OnDestroy {
     }
 
     convertDate(dateString) {
+        if(!dateString){
+            return 'N.A'
+        }
         const date = new Date(dateString);
         return moment(date).format('DD-MMM\'YY, hh:mm:ss A')
     }

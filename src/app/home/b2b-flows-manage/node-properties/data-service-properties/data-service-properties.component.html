@@ -1,18 +1,28 @@
 <div class="form-group">
     <label class="text-secondary" for="serviceSelector">
-        {{currNode?.options?.dataService ? 'Selected' : 'Select'}} Data Service
+        {{isDataServiceSelected ? 'Selected' : 'Select'}} Data Service
     </label>
-    <div *ngIf="currNode?.options?.dataService"
-        class="border rounded p-2 d-flex align-items-center justify-content-between">
+    <div *ngIf="isDataServiceSelected" class="border rounded p-2 d-flex align-items-center justify-content-between">
         <span>{{currNode?.options?.dataService?.name}}</span>
         <span class="dsi dsi-remove text-danger hover" (click)="currNode.options.dataService=null"></span>
     </div>
-    <odp-service-selector *ngIf="!currNode?.options?.dataService" [edit]="edit" [(data)]="currNode.options.dataService"
+    <odp-service-selector *ngIf="!isDataServiceSelected" [edit]="edit" [(data)]="currNode.options.dataService"
         (dataChange)="selectDataService($event)">
     </odp-service-selector>
 </div>
-<ng-container *ngIf="currNode?.options?.dataService">
+<ng-container *ngIf="isDataServiceSelected">
     <div class="d-flex flex-column">
+        <div class="form-group position-relative">
+            <label for="authorization" class="d-flex align-items-center justify-content-between">
+                <span>Authorization Token</span>
+                <span class="dsi dsi-settings text-primary hover" (click)="toggle['token']=!toggle['token']"></span>
+            </label>
+            <!-- <input id="authorization" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.authorization"> -->
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['token']" [currNode]="currNode"
+                [(value)]="currNode.options.authorization">
+            </odp-node-data-selector>
+        </div>
         <div class="form-group position-relative d-flex align-items-center">
             <odp-checkbox [edit]="edit" [(checked)]="currNode.options.get"
                 (checkedChange)="setDataServiceOperation('get',$event)"></odp-checkbox>
@@ -36,57 +46,112 @@
     </div>
     <ng-container *ngIf="currNode.options.get">
         <div class="form-group position-relative ">
-            <label for="select">Select</label>
-            <input id="select" type="text" class="form-control dynamic-variable-addon" [(ngModel)]="currNode.options.select">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList"
+            <label for="select" class="d-flex align-items-center justify-content-between">
+                Select
+                <span class="dsi dsi-settings text-primary hover" (click)="toggle['select']=!toggle['select']"></span>
+            </label>
+            <!-- <input id="select" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.select"> -->
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['select']" [currNode]="currNode"
                 [(value)]="currNode.options.select">
             </odp-node-data-selector>
             <small class="form-text text-muted">Provide Comma Separated Fields</small>
         </div>
         <div class="form-group position-relative ">
-            <label for="count">Count</label>
-            <input id="count" type="number" class="form-control dynamic-variable-addon" [(ngModel)]="currNode.options.count">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.count">
+            <label for="count" class="d-flex align-items-center justify-content-between">
+                Count
+                <span class="dsi dsi-settings text-primary hover" (click)="toggle['count']=!toggle['count']"></span>
+            </label>
+            <!-- <input id="count" type="number" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.count"> -->
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['count']" [currNode]="currNode" [number]="true"
+                [(value)]="currNode.options.count">
             </odp-node-data-selector>
         </div>
         <div class="form-group position-relative ">
-            <label for="sort">Sort</label>
-            <input id="sort" type="text" class="form-control dynamic-variable-addon" [(ngModel)]="currNode.options.sort">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.sort">
+            <label for="page" class="d-flex align-items-center justify-content-between">
+                Page
+                <span class="dsi dsi-settings text-primary hover" (click)="toggle['page']=!toggle['page']"></span>
+            </label>
+            <!-- <input id="page" type="number" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.page"> -->
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['page']" [currNode]="currNode" [number]="true"
+                [(value)]="currNode.options.page">
             </odp-node-data-selector>
-            <small class="form-text text-muted">Provide Comma Separated Fields<br><i>(prefix: "-" for descending
-                    order)</i></small>
+        </div>
+        <div class="form-group position-relative ">
+            <label for="sort" class="d-flex align-items-center justify-content-between">
+                Sort
+                <span class="dsi dsi-settings text-primary hover" (click)="toggle['sort']=!toggle['sort']"></span>
+            </label>
+            <!-- <input id="sort" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.sort"> -->
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['sort']" [currNode]="currNode"
+                [(value)]="currNode.options.sort">
+            </odp-node-data-selector>
+            <small class="form-text text-muted">Provide Comma Separated Fields<br>
+                <i>(prefix: "-" for descending order)</i>
+            </small>
 
         </div>
         <div class="form-group position-relative ">
-            <label for="filter">Filter</label>
-            <textarea id="filter" class="form-control dynamic-variable-addon" [(ngModel)]="currNode.options.filter"></textarea>
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.filter">
-            </odp-node-data-selector>
+            <label for="filter" class="d-flex align-items-center justify-content-between">
+                Filter
+                <!-- <span class="dsi dsi-settings text-primary hover" (click)="toggle['filter']=!toggle['filter']"></span> -->
+            </label>
+            <textarea id="filter" class="form-control" [(ngModel)]="currNode.options.filter" (keydown.delete)="$event.stopPropagation()"></textarea>
+            <!-- <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['filter']" [textarea]="true" [nodeList]="nodeList"
+                [(value)]="currNode.options.filter">
+            </odp-node-data-selector> -->
         </div>
     </ng-container>
     <ng-container *ngIf="currNode.options.delete">
         <div class="form-group position-relative ">
-            <label for="docId">ID</label>
-            <input id="docId" type="text" class="form-control dynamic-variable-addon" [(ngModel)]="currNode.options.documentId">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.documentId">
+            <label for="docId" class="d-flex align-items-center justify-content-between">
+                ID
+                <span class="dsi dsi-settings text-primary hover" (click)="toggle['id']=!toggle['id']"></span>
+            </label>
+            <!-- <input id="docId" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.documentId"> -->
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['id']" [currNode]="currNode"
+                [(value)]="currNode.options.documentId">
             </odp-node-data-selector>
         </div>
     </ng-container>
     <ng-container *ngIf="currNode.options.update">
         <div class="form-group position-relative ">
-            <label for="fields">Update Based on Fields</label>
-            <input id="fields" type="text" class="form-control dynamic-variable-addon" [(ngModel)]="currNode.options.fields">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.fields">
+            <label for="fields" class="d-flex align-items-center justify-content-between">
+                Update Based on Fields
+                <span class="dsi dsi-settings text-primary hover" (click)="toggle['fields']=!toggle['fields']"></span>
+            </label>
+            <!-- <input id="fields" type="text" class="form-control dynamic-variable-addon"
+                [(ngModel)]="currNode.options.fields"> -->
+            <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['fields']" [currNode]="currNode"
+                [(value)]="currNode.options.fields">
             </odp-node-data-selector>
         </div>
     </ng-container>
     <ng-container *ngIf="currNode.options.update || currNode.options.insert">
-        <div class="form-group position-relative ">
-            <label for="fields">Body</label>
-            <input id="fields" type="text" class="form-control dynamic-variable-addon" [(ngModel)]="currNode.options.body">
-            <odp-node-data-selector class="node-data-selector" [nodeList]="nodeList" [(value)]="currNode.options.body">
-            </odp-node-data-selector>
+        <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark mb-0" for="nodeBody">Body</label>
+            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
+                [currNode]="currNode">
+            </odp-input-data-selector>
         </div>
     </ng-container>
+    <div class="border rounded p-3">
+        <div class="border-bottom font-14 fw-500 mb-3 pb-1">Advanced Settings</div>
+        <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
+            <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout" (keydown.delete)="$event.stopPropagation();">
+        </div>
+        <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark" for="retryCount">Retry Count</label>
+            <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count" (keydown.delete)="$event.stopPropagation();">
+        </div>
+        <div class="form-group position-relative mb-0">
+            <label class="font-14 fw-400 text-dark" for="retryInterval">Retry Interval (sec)</label>
+            <input id="retryInterval" class="form-control" type="number" [(ngModel)]="currNode.options.retry.interval" (keydown.delete)="$event.stopPropagation();">
+        </div>
+    </div>
 </ng-container>

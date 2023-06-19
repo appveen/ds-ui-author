@@ -24,6 +24,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   @Input() selectOnEnter: boolean;
   @Input() tooltipDir: string;
   @Input() open: boolean;
+  @Input() fullWidth: boolean;
   @Output() enteredText: EventEmitter<string>;
   @Output() enteredPressed: EventEmitter<any>;
   @Output() reset: EventEmitter<string>;
@@ -99,6 +100,6 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     if (this.tooltipDir) {
       return this.tooltipDir;
     }
-    return 'right';
+    return 'left';
   }
 }

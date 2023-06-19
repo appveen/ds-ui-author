@@ -1,0 +1,25 @@
+<div class="p-3">
+    <div class="content">
+        <div class="tab-list d-flex align-items-center border rounded">
+            <div [ngClass]="{'active fw-500':activeTab==0}" class="tab-list-item hover px-3 py-2"
+                (click)="activeTab=0;">
+                Data Service
+            </div>
+            <div [ngClass]="{'active fw-500':activeTab==1}" class="tab-list-item hover px-3 py-2"
+                (click)="activeTab=1;">
+                Functions
+            </div>
+            <div [ngClass]="{'active fw-500':activeTab==2}" class="tab-list-item hover px-3 py-2"
+                (click)="activeTab=2;">
+                Flows
+            </div>
+        </div>
+        <div class="tab-container mt-3 rounded border position-relative">
+            <odp-list-dataservice *ngIf="activeTab==0" [(data)]="agentDetails"
+                (dataChange)="onDataChange($event)"></odp-list-dataservice>
+            <odp-list-function *ngIf="activeTab==1" [(data)]="agentDetails"
+                (dataChange)="onDataChange($event)"></odp-list-function>
+            <odp-list-flow *ngIf="activeTab==2" [(data)]="agentDetails" (dataChange)="onDataChange($event)"></odp-list-flow>
+        </div>
+    </div>
+</div>

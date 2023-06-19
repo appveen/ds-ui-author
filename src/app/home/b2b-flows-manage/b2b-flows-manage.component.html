@@ -6,8 +6,8 @@
         <div class="text-secondary mt-2">Processing...</div>
     </div>
 </div>
-<div class="flow-manage-page d-flex flex-column w-100 bg-light-gray page-padding">
-    <div class="mb-3">
+<div class="flow-manage-page d-flex flex-column w-100 bg-light-gray">
+    <div class="p-3">
         <odp-basic-info hideLogo="true" [(name)]="flowData.name" [(description)]="flowData.description" [edit]="edit">
             <div class="d-flex justify-content-end align-items-center">
                 <button (click)="cancel()" type="button"
@@ -45,19 +45,33 @@
         </odp-basic-info>
     </div>
     <div class="border rounded bg-white">
-        <div class="url-info d-flex align-items-center p-3 border-bottom">
-            <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
-            <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
-        </div>
-        <div class="flow-designer p-4">
-            <div class="flow-designer-canvas" *ngIf="flowData?.inputNode" odp-flow-node [currNode]="flowData.inputNode" [(nodeList)]="nodeList"
-                (nodeListChange)="changesDone = true">
+        <div class="url-info d-flex align-items-center justify-content-between p-3 border-bottom">
+            <div class="d-flex align-items-center">
+                <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
+                <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
             </div>
-            <div [ngClass]="{'show':showNodeProperties}" class="node-properties border-left position-fixed bg-white">
-                <odp-node-properties *ngIf="showNodeProperties" [nodeList]="nodeList" [currNode]="selectedNode.currNode"
-                    [prevNode]="selectedNode.prevNode" (close)="showNodeProperties=false"
+            <div class="fw-500 font-12 text-secondary">Right Click on the canvas for Node Options</div>
+        </div>
+        <div class="flow-designer d-flex">
+            <div class="flow-designer-svg-wrapper" (scroll)="scroll()" tabIndex="0">
+                <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
+                    <g *ngFor="let node of nodeList;let i=index">
+                        <g odp-flow-node *ngIf="node.type!='ERROR'" [currNode]="node" [index]="i" [nodeList]="nodeList">
+                        </g>
+                        <g odp-error-node *ngIf="node.type=='ERROR'" [node]="node" [nodeList]="nodeList"></g>
+                    </g>
+                </svg>
+            </div>
+            <div [ngClass]="{'show':showNodeProperties || showPathProperties}"
+                class="node-properties border-left border-top position-fixed bg-white">
+                <odp-node-properties *ngIf="showNodeProperties" [edit]="edit" [flowData]="flowData"
+                    [nodeList]="nodeList" [currNode]="selectedNode.currNode" (close)="showNodeProperties=false"
                     (changesDone)="changesDone = true">
                 </odp-node-properties>
+                <odp-path-properties *ngIf="showPathProperties" [edit]="edit" [flowData]="flowData"
+                    [nodeList]="nodeList" [path]="selectedPath" (close)="showPathProperties=false"
+                    (changesDone)="changesDone = true">
+                </odp-path-properties>
             </div>
         </div>
     </div>
@@ -65,20 +79,6 @@
 
 
 <odp-delete-modal [open]="openDeleteModal" (close)="closeDeleteNodeModal($event)"></odp-delete-modal>
-
-<!-- <ng-template #deleteModalTemplate>
-    <div class="modal-body p-4">
-        <div class="d-flex align-items-center justify-content-between w-100">
-            <span class="font-20 fw-600">{{deleteModal.title}}</span>
-            <span class="fa fa-times text-secondary hover" (click)="deleteModalTemplateRef.close(false)"></span>
-        </div>
-        <p class="text-secondary text-center my-5">{{deleteModal.message}}</p>
-        <div class="d-flex align-items-center justify-content-end">
-            <button type="button" class="btn btn-min-width btn-danger" (click)="deleteModalTemplateRef.close(true)"
-                id="sbDeleteModalYes">Yes</button>
-        </div>
-    </div>
-</ng-template> -->
 
 <ng-template #pageChangeModalTemplate>
     <div class="modal-body p-4">
@@ -95,3 +95,137 @@
         </div>
     </div>
 </ng-template>
+
+
+<div *ngIf="contextMenuStyle" class="available-nodes-dropdown bg-white position-fixed border rounded"
+    [ngStyle]="contextMenuStyle" odpClickOutside (outside)="contextMenuStyle=null">
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
+            <span class="font-13 fw-400">File</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border" style="top: 0px;">
+            <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
+                <span class="font-13 fw-400">File Agent</span>
+            </div>
+            <!-- <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE_READ')">
+                <span class="node-icon font-16 fw-400 dsi read dsi-file mr-2"></span>
+                <span class="font-13 fw-400">File Reader</span>
+            </div>
+            <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'FILE_WRITE')">
+                <span class="node-icon font-16 fw-400 dsi write dsi-file mr-2"></span>
+                <span class="font-13 fw-400">File Writer</span>
+            </div> -->
+        </div>
+    </div>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
+            <span class="font-13 fw-400">API</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border" style="top: 31px;">
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'API')">
+                <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
+                <span class="font-13 fw-400">Invoke API</span>
+            </div>
+            <!-- <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'API', true)">
+                <span class="node-icon font-16 fw-400 dsi dsi-api-reciever mr-2"></span>
+                <span class="font-13 fw-400">API Receiver</span>
+            </div> -->
+            <div class="node-item px-3 py-2 d-flex align-items-center hover" (click)="addNode($event,'RESPONSE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-response mr-2"></span>
+                <span class="font-13 fw-400">Response</span>
+            </div>
+        </div>
+    </div>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-function alt mr-2"></span>
+            <span class="font-13 fw-400">Process</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border" style="top: 63px;">
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'CONNECTOR')">
+                <span class="node-icon font-16 fw-400 dsi dsi-connector mr-2"></span>
+                <span class="font-13 fw-400">Connector</span>
+            </div>
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'DATASERVICE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-data-service mr-2"></span>
+                <span class="font-13 fw-400">Data Service</span>
+            </div>
+            <div class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover" (click)="addNode($event,'FUNCTION')">
+                <span class="node-icon font-16 fw-400 dsi dsi-function mr-2"></span>
+                <span class="font-13 fw-400">Function</span>
+            </div>
+        </div>
+    </div>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
+            <span class="font-13 fw-400">Transform</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border" style="top: 95px;">
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'MAPPING')">
+                <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
+                <span class="font-13 fw-400">Mapping</span>
+            </div>
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'DEDUPE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-copy mr-2"></span>
+                <span class="font-13 fw-400">De-Dupe</span>
+            </div>
+            <!-- <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'CONFLICT')">
+                <span class="node-icon font-16 fw-400 dsi dsi-insight mr-2"></span>
+                <span class="font-13 fw-400">Conflict</span>
+            </div> -->
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'CODEBLOCK')">
+                <span class="node-icon font-16 fw-400 dsi dsi-console mr-2 text-secondary"></span>
+                <span class="font-13 fw-400">Code Block</span>
+            </div>
+            <div class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover" (click)="addNode($event,'UNWIND')">
+                <span class="node-icon font-16 fw-400 dsi dsi-expand mr-2"></span>
+                <span class="font-13 fw-400">Change Root</span>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-relation mr-2"></span>
+            <span class="font-13 fw-400">Loop</span>
+        </div>
+        <span class="node-icon font-16 fw-400 dsi dsi-drop-up fa-rotate-90 text-secondary"></span>
+        <div class="node-list-item bg-white rounded border" style="top: 127px;">
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'FOREACH')">
+                <span class="node-icon font-16 fw-400 dsi dsi-refresh mr-2"></span>
+                <span class="font-13 fw-400">For Each</span>
+            </div>
+            <div class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'REDUCE')">
+                <span class="node-icon font-16 fw-400 dsi dsi-undo mr-2"></span>
+                <span class="font-13 fw-400">Reduce</span>
+            </div>
+        </div>
+    </div> -->
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+        (click)="addNode($event,'PLUGIN')">
+        <span class="node-icon font-16 fw-400 dsi dsi-library text-info mr-2"></span>
+        <span class="font-13 fw-400">Plugin</span>
+    </div>
+    <div *ngIf="!hasErrorNode" class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover"
+        (click)="addNode($event,'ERROR')">
+        <span class="node-icon font-16 fw-400 dsi dsi-danger-circle text-danger mr-2"></span>
+        <span class="font-13 fw-400">Global Error</span>
+    </div>
+</div>

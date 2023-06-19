@@ -22,9 +22,9 @@
         </button> -->
       </div>
       <div *ngIf="isSuperAdmin" (click)="loadAdminPage()"
-        class="admin-settings bg-light rounded d-flex flex-column justify-content-center align-items-center mr-3 pt-1 hover"
+        class="admin-settings d-flex flex-column justify-content-center align-items-center mr-3 pt-1 hover"
         ngbTooltip="Admin Panel" placement="bottom">
-        <span class="dsi dsi-admin"></span>
+        <span class="dsi dsi-agent font-22"></span>
         <!-- <odp-admin-console-icon size="28"></odp-admin-console-icon> -->
       </div>
       <!-- <div [@userProfileIcon]="showProfileOptions"
@@ -73,66 +73,35 @@
           <span class="app-version">v{{ version }}</span>
         </div>
       </div>
-      <!-- <div [@userProfile] class="profile position-absolute bg-white border border-border" *ngIf="showProfileOptions"
-        odpClickOutside [ignore]="['.profile-icon', '.fa-user']" (outside)="showProfileOptions = false">
-        <div class="profile-container position-relative d-flex align-items-center h-100 w-100">
-          <div
-            class="user-icon d-flex align-items-center justify-content-center position-absolute rounded-circle bg-light border border-border">
-            <span class="far fa-user fa-lg text-secondary"></span>
-          </div>
-          <div
-            class="profile-thumbnail d-flex align-items-center justify-content-center rounded-circle bg-light border border-border mx-4">
-            <span class="far fa-user fa-2x text-secondary"></span>
-          </div>
-          <div class="profile-data d-flex flex-column">
-            <h4 class="profile-data-name font-weight-bold">{{ name }}</h4>
-            <div class="profile-data-more d-flex align-items-center">
-              <div class="text-secondary profile-data-more-item pr-3 username-holder text-truncate">
-                {{ username }}
-              </div>
-              <div class="profile-data-more-item px-1" *ngIf="authType && authType === 'local'">
-                <button type="button" class="btn btn-link btn-sm" (click)="toggleChangePassword = true">
-                  Change Password
-                </button>
-              </div>
-              <div class="profile-data-more-item px-1">
-                <button type="button" class="btn btn-link btn-sm" (click)="logout()" id="logout">
-                  Logout
-                </button>
-              </div>
-            </div>
-          </div>
-          <small class="position-absolute text-border app-version">v{{ version }}</small>
-          <small class="last-login text-muted">Last Login:
-            {{
-            lastLogin | dateFormat: 'DD-MMM-YYYY, hh:mm:ss A, z':'Etc/Zulu'
-            }}</small>
-        </div>
-      </div> -->
-      <!-- <div class="menu hover rounded-circle bg-light border border-border d-flex align-items-center justify-content-center"
-        ngbTooltip="Switch App" placement="bottom" (click)="showAppOptions=!showAppOptions">
-        <odp-app-switcher-icon color="aaa" size="28"></odp-app-switcher-icon>
-      </div> -->
     </div>
   </div>
   <div class="d-flex align-items-center px-4 fw-600 font-22 py-3">
     Super Admin
   </div>
-    <div class="d-flex align-items-center px-4 fw-400 item hover">
-      <span #adminActive="routerLinkActive" routerLinkActive="active" routerLink="apps" class="text">
-        Applications</span>
-    <span class="d-flex align-items-center px-4 fw-400 item hover"
-      *ngIf="isSuperAdmin">
+  <div class="d-flex align-items-center px-4 fw-400 item hover">
+    <span #adminActive="routerLinkActive" routerLinkActive="active" routerLink="apps" class="text">
+      Applications
+    </span>
+    <span class="d-flex align-items-center px-4 fw-400 item hover" *ngIf="isSuperAdmin">
       <span routerLinkActive="active" routerLink="users" class="text">Users</span>
     </span>
-    </div>
-    <!-- <div #agentActive="routerLinkActive" class="d-flex align-items-center px-3 item hover" routerLinkActive="active"
+    <span class="d-flex align-items-center px-4 fw-400 item hover" *ngIf="isSuperAdmin">
+      <span routerLinkActive="active" routerLink="metadata/mapper" class="text">Mapper Formulas</span>
+    </span>
+    <span class="d-flex align-items-center px-4 fw-400 item hover" *ngIf="isSuperAdmin">
+      <span routerLinkActive="active" routerLink="metadata/node" class="text">Plugins</span>
+    </span>
+    <span class="d-flex align-items-center px-4 fw-400 item hover" *ngIf="isSuperAdmin">
+      <span routerLinkActive="active" routerLink="metadata/npm" class="text">NPM Libraries</span>
+    </span>
+  </div>
+  <!-- <div #agentActive="routerLinkActive" class="d-flex align-items-center px-3 item hover" routerLinkActive="active"
       routerLink="integration">
       <span class="odp-flows"></span>
       <span class="text mt-1 ml-2">Integration</span>
     </div> -->
   <div class="d-flex w-100 h-100">
-    <div class="d-flex flex-column body w-100">
+    <div class="d-flex flex-column w-100">
       <router-outlet></router-outlet>
     </div>
   </div>
