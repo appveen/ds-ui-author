@@ -16,34 +16,34 @@
                 <span>Clear Mappings</span>
             </button>
         </div>
-        <div class="d-flex">
+        <div class="d-flex border-top">
             <div class="source-list ml-3 border-right">
-                <!-- <div *ngFor="let node of nodeList" class="source-list-item mb-3">
-                    <span class="fw-600 font-14">{{node.name}}</span>
-                    <div class="source-field-list ml-3">
-                        <div *ngFor="let item of node.definition" class="source-field-list-item">
-                            <ng-container *ngTemplateOutlet="sourceField;context:{def:item}"></ng-container>
-                        </div>
-                    </div>
-                </div> -->
-
                 <div class="source-list-item mb-3">
-                    <ng-container *ngFor="let def of allSources">
-                        <div *ngIf="!isSourceItemCollapsed(def)"
-                            class="data-field d-flex align-items-center justify-content-start" draggable="true"
-                            (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
-                            <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
-                            <div class="toggle-btn d-flex align-items-center justify-content-center">
-                                <span *ngIf="showToggleBtn(def)" class="dsi hover text-muted"
-                                    (click)="toggleSource(def)"
-                                    [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[def.dataPath],'dsi-minus':!sourceExpandCollapseObjects[def.dataPath]}"></span>
-                            </div>
-                            <div class="field-type mr-2">
-                                <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
-                            </div>
-                            <div class="field-key">{{def.key}}</div>
-                            <div class="mapping-line flex-fill"
-                                [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
+                    <ng-container *ngFor="let node of nodeList">
+                        <div class="d-flex align-items-center">
+                            <span class="dsi hover text-muted" (click)="toggleSource(node)"
+                                [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[node._id],'dsi-minus':!sourceExpandCollapseObjects[node._id]}"></span>
+                            <div class="p-2 fw-600 text-primary ml-2">{{node.name}}</div>
+                        </div>
+                        <div *ngIf="!sourceExpandCollapseObjects[node._id]">
+                            <ng-container *ngFor="let def of allSources">
+                                <div *ngIf="!isSourceItemCollapsed(def) && def.nodeId == node._id"
+                                    class="data-field d-flex align-items-center justify-content-start" draggable="true"
+                                    (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                                    <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
+                                    <div class="toggle-btn d-flex align-items-center justify-content-center">
+                                        <span *ngIf="showToggleBtn(def)" class="dsi hover text-muted"
+                                            (click)="toggleSource(def)"
+                                            [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[def.dataPath],'dsi-minus':!sourceExpandCollapseObjects[def.dataPath]}"></span>
+                                    </div>
+                                    <div class="field-type mr-2">
+                                        <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+                                    </div>
+                                    <div class="field-key">{{def.key}}</div>
+                                    <div class="mapping-line flex-fill"
+                                        [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
+                                </div>
+                            </ng-container>
                         </div>
                     </ng-container>
                 </div>
@@ -57,7 +57,7 @@
             </svg>
             <div class="target-list border-left">
                 <div class="target-list-item mb-3">
-                    <span class="fw-600 font-14">{{currNode.name}}</span>
+                    <span class="fw-600 text-primary font-14 p-2">{{currNode.name}}</span>
                     <div class="target-field-list">
                         <div *ngFor="let def of allTargets" class="target-field-list-item position-relative">
                             <div *ngIf="!def.hide && !isTargetItemCollapsed(def)"
@@ -84,18 +84,6 @@
                                 <odp-formula-editor *ngIf="def._showFn"
                                     class="function-wrapper position-absolute bg-white border rounded" [data]="def"
                                     (close)="def._showFn=false"></odp-formula-editor>
-                                <!-- <div *ngIf="def._showFn"
-                                    class="function-wrapper position-absolute bg-white border rounded">
-                                    <div
-                                        class="function-header border-bottom d-flex align-items-center justify-content-between">
-                                        <span class="text-success ml-1 fw-500">Function</span>
-                                        <span class="hover dsi dsi-close text-danger"
-                                            (click)="def._showFn=false"></span>
-                                    </div>
-                                    <div class="editor" odpEditor (drop)="onDrop($event, def)">
-
-                                    </div>
-                                </div> -->
                                 <div class="mapped-sources d-flex ml-3 text-secondary font-12">
                                     <div *ngFor="let source of def.source"
                                         class="border rounded px-1 mr-1 d-flex align-items-center">
@@ -106,9 +94,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div *ngFor="let item of customTargetFields" class="target-field-list-item">
-                            <ng-container *ngTemplateOutlet="targetField;context:{def:item}"></ng-container>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -117,73 +102,4 @@
     <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary btn-min-width" (click)="done()">Done</button>
     </div>
-
 </div>
-
-
-<ng-template #sourceField let-def="def">
-    <div class="data-field d-flex align-items-center justify-content-start" draggable="true"
-        (dragstart)="onDragStart($event,def)" [attr.data-id]="def.id">
-        <span class="field-type mr-2">
-            <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
-        </span>
-        <span class="field-key">{{def.key}}</span>
-    </div>
-    <div *ngIf="def.type=='Object'" class="data-field-wrapper ml-3">
-        <ng-container *ngFor="let item of def.definition">
-            <ng-container *ngTemplateOutlet="sourceField;context:{def:item}"></ng-container>
-        </ng-container>
-    </div>
-    <div *ngIf="def.type=='Array'" class="data-field-wrapper ml-3">
-        <ng-container *ngFor="let item of def.definition">
-            <ng-container *ngTemplateOutlet="sourceField;context:{def:item}"></ng-container>
-        </ng-container>
-    </div>
-</ng-template>
-
-
-<ng-template #targetField let-def="def">
-    <div class="data-field d-flex align-items-center justify-content-start"
-        [ngClass]="{'bg-accent text-white':def.over}" (drop)="onDrop($event,def)" (dragover)="onDragOver($event,def)"
-        (dragenter)="onDragEnter($event,def)" (dragleave)="onDragLeave($event,def)" [attr.data-id]="def.id">
-        <span class="field-type mr-2">
-            <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
-        </span>
-        <span class="field-key">{{def.key}}</span>
-    </div>
-    <div *ngIf="def.type=='Object'" class="data-field-wrapper ml-3">
-        <ng-container *ngFor="let item of def.definition">
-            <ng-container *ngTemplateOutlet="targetField;context:{def:item}"></ng-container>
-        </ng-container>
-    </div>
-    <div *ngIf="def.type=='Array'" class="data-field-wrapper ml-3">
-        <ng-container *ngFor="let item of def.definition">
-            <ng-container *ngTemplateOutlet="targetField;context:{def:item}"></ng-container>
-        </ng-container>
-    </div>
-</ng-template>
-
-<ng-template #arrayOptions let-close="close" let-dismiss="dismiss">
-    <div class="modal-header">
-        <div class="modal-title">
-            <h5>Select Array Options</h5>
-        </div>
-    </div>
-    <div class="modal-body">
-        <p>Select an option to map Array Data: </p>
-        <div class="form-group d-flex align-items-center">
-            <input #forEachEle class="mr-2" type="radio" name="arrayOption"
-                (change)="onArrayOptionSelect($event,'forEach')">
-            <label for="forEach" class="m-0" (click)="forEachEle.click()">For Each</label>
-        </div>
-        <div class="form-group d-flex align-items-center">
-            <input #replaceEle class="mr-2" type="radio" name="arrayOption"
-                (change)="onArrayOptionSelect($event,'replace')">
-            <label for="replace" class="m-0" (click)="replaceEle.click()">Replace</label>
-        </div>
-        <div class="d-flex align-items-center justify-content-end mt-4">
-            <button type="button" class="btn btn-dark mr-3" (click)="arrayOptionsRef.close(false)">Cancel</button>
-            <button type="button" class="btn btn-success" (click)="arrayOptionsRef.close(true)">Done</button>
-        </div>
-    </div>
-</ng-template>

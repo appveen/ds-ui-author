@@ -114,6 +114,13 @@ export class NodeMappingComponent implements OnInit {
         });
       }
     });
+    this.mappingService.clearMappings.subscribe(()=>{
+      this.allTargets.forEach((target: any) => {
+        if(target.source && target.source.length>0){
+          target.source.splice(0);
+        }
+      });
+    });
     setTimeout(() => {
       const mappingBox: HTMLElement = document.querySelectorAll('.mapping-box')[0] as HTMLElement;
       this.svgStyle = { 'height': mappingBox.scrollHeight + 'px' };
