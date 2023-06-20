@@ -19,7 +19,7 @@
                 <span class="dsi dsi-settings text-secondary"></span>
             </button>
             <button id="createNode" type="button" class="add-new btn btn-primary ml-3 d-flex align-items-center"
-                (click)="newNode()" [disabled]="!hasWritePermission('FLOW')">
+                (click)="newNode()" [disabled]="!hasWritePermission('PN')">
                 <span class="dsi dsi-plus mr-2"></span>
                 <span class="text">New</span>
             </button>
@@ -146,11 +146,11 @@
     </div>
 </div>
 
-<!-- <div *ngIf="showNewNodeWindow" class="overlay position-fixed"></div>
+<div *ngIf="showNewNodeWindow" class="overlay position-fixed"></div>
 <div [ngClass]="{'show':showNewNodeWindow}"
     class="new-node-window p-4 position-fixed border-left bg-white d-flex flex-column" [formGroup]="form">
     <div class="d-flex align-items-center justify-content-between mb-3">
-        <span class="font-22 fw-500">New Data Pipe</span>
+        <span class="font-22 fw-500">New Node</span>
         <span class="dsi dsi-close hover" (click)="showNewNodeWindow=false;"></span>
     </div>
     <div *ngIf="showNewNodeWindow" class="d-flex flex-column w-100">
@@ -161,8 +161,8 @@
             </label>
             <div class="name-wrapper position-relative mb-3">
                 <input newNodeName autocomplete="off" type="text" class="form-control" id="name"
-                    placeholder="Untitled Data Pipe" formControlName="name" odpAutoFocus
-                    (keyup.enter)="isClone ? triggerNodeClone() : triggerNodeCreate()"
+                    placeholder="Untitled Node" formControlName="name" odpAutoFocus
+                  
                     [ngClass]="{'is-invalid':form.get('name').invalid && form.get('name').dirty}">
                 <ng-container *ngIf="form.get('name').dirty">
                     <span *ngIf="form.get('name').hasError('required')"
@@ -177,32 +177,32 @@
                 </ng-container>
             </div>
             <label for="name" class="font-13 text-secondary">
-                <span class="text">Input Node</span>
+                <span class="text">Node Type</span>
                 <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
             </label>
             <div class="d-flex flex-column">
                 <label>
-                    <input class="mr-3" type="radio" value="API" formControlName="type"
-                        [checked]="form.get('type').value === 'API'">
-                    <span>HTTP API Reciever</span>
+                    <input class="mr-3" type="radio" value="SYSTEM" formControlName="type"
+                        [checked]="form.get('type').value === 'SYSTEM'">
+                    <span>System Task</span>
                 </label>
                 <label>
-                    <input class="mr-3" type="radio" value="FILE" formControlName="type"
-                        [checked]="form.get('type').value === 'FILE'">
-                    <span>Agent File Reciever</span>
+                    <input class="mr-3" type="radio" value="USER" formControlName="type"
+                        [checked]="form.get('type').value === 'USER'">
+                    <span>User Task</span>
                 </label>
                 <label>
-                    <input class="mr-3" type="radio" value="TIMER" formControlName="type"
-                        [checked]="form.get('type').value === 'TIMER'">
-                    <span>Timer</span>
+                    <input class="mr-3" type="radio" value="EVENT" formControlName="type"
+                        [checked]="form.get('type').value === 'EVENT'">
+                    <span>Event Trigger</span>
                 </label>
-                <label>
+                <!-- <label>
                     <input class="mr-3" type="radio" value="PLUGIN" formControlName="type"
                         [checked]="form.get('type').value === 'PLUGIN'">
                     <span>Plugin</span>
-                </label>
+                </label> -->
             </div>
-            <div *ngIf="form.get('type').value === 'PLUGIN'" class="form-group">
+            <!-- <div *ngIf="form.get('type').value === 'PLUGIN'" class="form-group">
                 <odp-search-box open="true" (enteredText)="searchPlugin($event)"></odp-search-box>
                 <div class="plugins-list-wrapper border rounded mt-3">
                     <div class="list-group list-group-flush">
@@ -216,7 +216,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
     </div>
@@ -227,7 +227,7 @@
 </div>
 
 
-<div [ngClass]="{'show':showYamlWindow}" class="yaml-window position-fixed p-4 border-left bg-white">
+<!-- <div [ngClass]="{'show':showYamlWindow}" class="yaml-window position-fixed p-4 border-left bg-white">
     <div class="d-flex align-items-center justify-content-between w-100 mb-5">
         <span class="font-20 fw-600">Yamls</span>
         <span class="dsi dsi-close hover" (click)="closeYamlWindow()"></span>
@@ -257,7 +257,7 @@
             </div>
         </div>
     </ng-container>
-</div> -->
+</div>  -->
 
 
 <!-- <div *ngIf="showYamlWindow" class="overlay">

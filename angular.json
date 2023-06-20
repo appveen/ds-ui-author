@@ -76,6 +76,10 @@
                   "maximumError": "40mb"
                 }
               ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true
             }
           }
         },
@@ -88,6 +92,9 @@
           "configurations": {
             "production": {
               "browserTarget": "odp-ui-author:build:production"
+            },
+            "development": {
+              "browserTarget": "odp-ui-author:build:development"
             }
           }
         },

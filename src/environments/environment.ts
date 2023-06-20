@@ -14,6 +14,7 @@ export const environment = {
     log: '/api/a',
     b2b: '/api/a/route',
     mon: '/api/a/mon',
-    agent: 'b2b/bm'
+    agent: 'b2b/bm',
+    config: '/api/a/cm',
   }
 };
