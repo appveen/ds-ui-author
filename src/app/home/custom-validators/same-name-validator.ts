@@ -1,6 +1,6 @@
-import { FormArray, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 
-export function sameName(control: FormArray) {
+export function sameName(control: UntypedFormArray) {
     for (let i = 0; i < control.controls.length - 1; i++) {
         const idControl = control.controls.find(c => c.get('key').value === '_id');
         const sameNameErr = control.controls.find(

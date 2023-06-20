@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { HttpEventType } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -39,7 +39,7 @@ export class UserBulkUploadComponent implements OnInit {
   timer;
   showLazyLoader: boolean;
   tableLoader: boolean;
-  fileMappingFrom: FormGroup;
+  fileMappingFrom: UntypedFormGroup;
   parseObj;
   uploadObj;
   ripple;
@@ -52,7 +52,7 @@ export class UserBulkUploadComponent implements OnInit {
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
   ) {
     const self = this;
     self.apiConfig = {

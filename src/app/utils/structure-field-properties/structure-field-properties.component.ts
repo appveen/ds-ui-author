@@ -1,5 +1,5 @@
 import { Component, OnDestroy, Input, TemplateRef, ViewChild, AfterViewInit, AfterContentChecked } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { SchemaBuilderService } from 'src/app/home/schema-utils/schema-builder.service';
 import { CommonService } from '../services/common.service';
@@ -24,10 +24,10 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
   showDatePicker: boolean;
   showLazyLoader: boolean;
   sampleRegexValue: Array<any> = [];
-  formList: Array<FormGroup>;
+  formList: Array<UntypedFormGroup>;
   showDataTypes: any;
   _dateFrom: Date;
-  form: FormGroup;
+  form: UntypedFormGroup;
   showCommonFields: boolean;
   private subscriptions: any;
   public get dateFrom(): Date {
@@ -42,7 +42,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
   constructor(private schemaService: SchemaBuilderService,
     private commonService: CommonService,
     private ts: ToastrService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private appService: AppService) {
     const self = this;
     self.sampleRegexValue = [];
@@ -115,10 +115,10 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       let subType = self.form.get(['definition', 0]);
       if (subType) {
         while (subType.get('type').value === 'Array') {
-          self.formList.push(subType as FormGroup);
+          self.formList.push(subType as UntypedFormGroup);
           subType = subType.get(['definition', 0]);
         }
-        self.formList.push(subType as FormGroup);
+        self.formList.push(subType as UntypedFormGroup);
       }
     }
     if (this.formatType === 'FLATFILE') {
@@ -209,7 +209,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
     (prop.get('default')).setErrors(errors);
   }
 
-  toggleCheck(prop: FormControl, key?: string) {
+  toggleCheck(prop: UntypedFormControl, key?: string) {
     const self = this;
     if (self.canEdit) {
       prop.patchValue(!prop.value);
@@ -219,7 +219,7 @@ export class StructureFieldPropertiesComponent implements OnDestroy, AfterViewIn
       console.log(this.form);
       if (prop.value) {
         self.form.removeControl('definition');
-        // (this.form.get('definition') as FormArray).controls.splice(0);
+        // (this.form.get('definition') as UntypedFormArray).controls.splice(0);
       } else {
         const temp = self.schemaService.getDefinitionStructure({ _newField: true });
         self.form.addControl('definition', self.fb.array([temp]));

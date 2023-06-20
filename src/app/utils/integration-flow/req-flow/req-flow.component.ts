@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { NodeData, FlowData } from '../integration-flow.model';
 import { IntegrationFlowService } from '../integration-flow.service';
 
@@ -11,7 +11,7 @@ import { IntegrationFlowService } from '../integration-flow.service';
 export class ReqFlowComponent implements OnInit {
 
   @Input() edit: any;
-  @Input() partner: FormGroup;
+  @Input() partner: UntypedFormGroup;
   @Input() flowData: FlowData;
   @Input() nodeList: Array<NodeData>;
   @Output() nodeListChange: EventEmitter<Array<NodeData>>;

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { map, catchError } from 'rxjs/operators';
 
@@ -21,7 +21,7 @@ export class SoapBlockComponent implements OnInit {
   @Input() node: NodeData;
   @Input() nodeList: Array<NodeData>;
   @Input() index: number;
-  @Input() partner: FormGroup;
+  @Input() partner: UntypedFormGroup;
   selectWSDLOperationTemplateRef: NgbModalRef;
   showLazyLoader: boolean;
   wsdlOperations: any;

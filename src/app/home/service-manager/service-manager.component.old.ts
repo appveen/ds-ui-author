@@ -6,7 +6,7 @@ import {
   EventEmitter,
   TemplateRef,
 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -29,7 +29,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   @ViewChild('alertModalTemplate', { static: false })
   alertModalTemplate: TemplateRef<HTMLElement>;
   app: string;
-  serviceSearchForm: FormGroup;
+  serviceSearchForm: UntypedFormGroup;
   serviceList: Array<any> = [];
   service: GetOptions;
   alertModal: {
@@ -46,8 +46,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
   showAddButton: boolean;
   breadcrumbPaths: Array<Breadcrumb>;
   openDeleteModal: EventEmitter<any>;
-  form: FormGroup;
-  cloneForm: FormGroup;
+  form: UntypedFormGroup;
+  cloneForm: UntypedFormGroup;
   alertModalTemplateRef: NgbModalRef;
   cloneData: any;
   easterEggEnabled: boolean;
@@ -64,7 +64,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     public commonService: CommonService,
     private appService: AppService,
     private router: Router,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private ts: ToastrService
   ) {
     this.serviceSearchForm = this.fb.group({

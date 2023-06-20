@@ -1,6 +1,6 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
-export function minMax(group: FormGroup) {
+export function minMax(group: UntypedFormGroup) {
     const min = group.get('min');
     const max = group.get('max');
     if (!min || !max || (!min.value && min.value !== 0) || (!max.value && max.value !== 0)) {
@@ -12,7 +12,7 @@ export function minMax(group: FormGroup) {
     return null;
 }
 
-export function minMaxLength(group: FormGroup) {
+export function minMaxLength(group: UntypedFormGroup) {
     const minlength = group.get('minlength');
     const maxlength = group.get('maxlength');
     if (!minlength || !maxlength || !minlength.value || !maxlength.value) {
@@ -24,7 +24,7 @@ export function minMaxLength(group: FormGroup) {
     return null;
 }
 
-export function patternValidator(control: FormControl) {
+export function patternValidator(control: UntypedFormControl) {
     if (!control || !control.value) {
         return null;
     }
@@ -36,7 +36,7 @@ export function patternValidator(control: FormControl) {
     }
 }
 
-export function restrictSpecialChars(control: FormControl): { [key: string]: boolean } | null {
+export function restrictSpecialChars(control: UntypedFormControl): { [key: string]: boolean } | null {
     if (control.value && control.value.toString().match(/^[a-zA-Z0-9-_]+$/)) {
         return null;
     } else {
@@ -45,7 +45,7 @@ export function restrictSpecialChars(control: FormControl): { [key: string]: boo
 }
 
 export function maxLenValidator(len: number) {
-    return (fcControl: FormControl) => {
+    return (fcControl: UntypedFormControl) => {
         if (fcControl.value && fcControl.value.toString().length > len) {
             return { length: true };
         }

@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Breadcrumb } from '../../../utils/interfaces/breadcrumb';
 import * as _ from 'lodash'
 import * as moment from 'moment';
@@ -35,7 +35,7 @@ export class AgentViewComponent implements OnInit {
   showSettingsDropdown: boolean = false;
   showPasswordSide: boolean = false;
   showPassword: boolean = false;
-  resetPasswordForm: FormGroup;
+  resetPasswordForm: UntypedFormGroup;
   showEditAgentWindow: boolean = false;
   alertModal: {
     statusChange?: boolean;
@@ -48,7 +48,7 @@ export class AgentViewComponent implements OnInit {
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private ts: ToastrService) {
     this.agentPasswordModel = {

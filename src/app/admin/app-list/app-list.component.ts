@@ -14,7 +14,7 @@ import {
   stagger,
   group,
 } from '@angular/animations';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -89,7 +89,7 @@ export class AppListComponent implements OnInit, OnDestroy {
     appIndex?: string;
   };
   showLazyLoader: boolean;
-  form: FormGroup;
+  form: UntypedFormGroup;
   timezones: Array<any>;
   userDetails: UserDetails;
   isSuperadmin: boolean;
@@ -102,7 +102,7 @@ export class AppListComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private appService: AppService,
     private router: Router,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private ts: ToastrService,
     private commonPipe:CommonFilterPipe,
     private appFilter: FilterPipe

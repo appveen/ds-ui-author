@@ -11,7 +11,7 @@ import {
     AfterViewInit,
     TemplateRef
 } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, UntypedFormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -59,7 +59,7 @@ export class SchemaBuilderComponent implements
     schemaToggleTemplateRef: NgbModalRef;
     toggleTemplateRef: NgbModalRef;
     app: string;
-    form: FormGroup;
+    form: UntypedFormGroup;
     showLazyLoader: boolean;
     cloneServiceId: string;
     editServiceId: string;
@@ -101,7 +101,7 @@ export class SchemaBuilderComponent implements
         }
     }
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private router: Router,
         private schemaService: SchemaBuilderService,
         private commonService: CommonService,
@@ -461,19 +461,19 @@ export class SchemaBuilderComponent implements
         });
 
         // reset personalize 
-        (self.form.get('wizard.steps') as FormArray).clear();
-        (self.form.get('wizard.usedFields') as FormArray).clear();
+        (self.form.get('wizard.steps') as UntypedFormArray).clear();
+        (self.form.get('wizard.usedFields') as UntypedFormArray).clear();
         self.form.get('wizard.selectedStep').patchValue([0]);
 
         // remove all attributes 
-        (self.form.controls.definition as FormArray).clear();
+        (self.form.controls.definition as UntypedFormArray).clear();
 
         // reset maker checker 
-        (self.form.get('workflowConfig.makerCheckers') as FormArray).clear()
+        (self.form.get('workflowConfig.makerCheckers') as UntypedFormArray).clear()
         self.form.get('workflowConfig.enabled').patchValue(false);
 
         // reset workflow hooks
-        (self.form.get(['workflowHooks', 'postHooks']) as FormGroup).reset({
+        (self.form.get(['workflowHooks', 'postHooks']) as UntypedFormGroup).reset({
             submit: [],
             rework: [],
             discard: [],
@@ -490,7 +490,7 @@ export class SchemaBuilderComponent implements
 
         const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
         tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
-        (self.form.controls.definition as FormArray).push(self.fb.group({
+        (self.form.controls.definition as UntypedFormArray).push(self.fb.group({
             key: ['_id'],
             type: ['id'],
             prefix: [null],
@@ -669,7 +669,7 @@ export class SchemaBuilderComponent implements
         if (place && self.schemaService.selectedFieldId) {
             self.schemaService.addAttribute.emit(place);
         } else {
-            const tempArr = self.form.controls.definition as FormArray;
+            const tempArr = self.form.controls.definition as UntypedFormArray;
             const temp = self.schemaService.getDefinitionStructure({ _newField: true });
             tempArr.push(temp);
 
@@ -685,11 +685,11 @@ export class SchemaBuilderComponent implements
         self.deleteModalTemplateRef = self.commonService.modal(self.deleteModalTemplate);
         self.deleteModalTemplateRef.result.then((close) => {
             if (close) {
-                (self.form.controls.definition as FormArray).clear();
+                (self.form.controls.definition as UntypedFormArray).clear();
                 const tempDef = JSON.parse(JSON.stringify(self.serviceObj));
                 tempDef.definition = self.schemaService.generateStructure(tempDef.definition);
 
-                (self.form.controls.definition as FormArray).push(self.fb.group({
+                (self.form.controls.definition as UntypedFormArray).push(self.fb.group({
                     key: ['_id'],
                     type: ['id'],
                     prefix: [null],
@@ -778,7 +778,7 @@ export class SchemaBuilderComponent implements
 
     fillDetails(id) {
         const self = this;
-        (self.form.get('definition') as FormArray).clear();
+        (self.form.get('definition') as UntypedFormArray).clear();
         self.edit.loading = true;
         self.subscriptions['getservice'] = self.commonService.get('serviceManager', `/${this.commonService.app._id}/service/` + id + '?draft=true', { filter: { app: this.commonService.app._id } })
             .subscribe(res => {
@@ -807,7 +807,7 @@ export class SchemaBuilderComponent implements
                 self.fillMakerChecker(res);
 
                 if (!self.form.get(['definition', 0])) {
-                    (self.form.get(['definition']) as FormArray).push(self.fb.group({
+                    (self.form.get(['definition']) as UntypedFormArray).push(self.fb.group({
                         key: ['_id'],
                         type: ['id'],
                         prefix: [null],
@@ -824,15 +824,15 @@ export class SchemaBuilderComponent implements
                 temp.definition.filter(def => def.key !== '_id').forEach(def => {
                     const tempDef = self.schemaService.getDefinitionStructure(self.appService.cloneObject(def));
                     tempDef.get('properties.name').patchValue(def.properties.name);
-                    (self.form.get('definition') as FormArray).push(tempDef);
+                    (self.form.get('definition') as UntypedFormArray).push(tempDef);
                 });
 
                 temp.tags.forEach(tag => {
-                    (self.form.get('tags') as FormArray).push(new FormControl(tag));
+                    (self.form.get('tags') as UntypedFormArray).push(new UntypedFormControl(tag));
                 });
                 if (res.wizard && res.wizard.length > 0) {
                     res.wizard.forEach((step, i) => {
-                        (self.form.get('wizard.steps') as FormArray).push(self.fb.group({
+                        (self.form.get('wizard.steps') as UntypedFormArray).push(self.fb.group({
                             name: [null, [Validators.required, maxLenValidator(40)]],
                             fields: self.fb.array([]),
                             actions: self.fb.array([])
@@ -846,15 +846,15 @@ export class SchemaBuilderComponent implements
                                 type: [action.type],
                                 hookId: [action.hookId]
                             });
-                            (((self.form.get('wizard.steps') as FormArray)
-                                .at(+i) as FormGroup).get('actions') as FormArray).push(actionHookForm);
+                            (((self.form.get('wizard.steps') as UntypedFormArray)
+                                .at(+i) as UntypedFormGroup).get('actions') as UntypedFormArray).push(actionHookForm);
                         }
                         for (const field of step.fields) {
-                            (self.form.get('definition') as FormArray).controls.forEach(e => {
+                            (self.form.get('definition') as UntypedFormArray).controls.forEach(e => {
                                 if (!e.get('_id')) {
                                     if (e.value.key === field) {
-                                        (self.form.get('wizard.usedFields') as FormArray).push(e);
-                                        (self.form.get(['wizard', 'steps', +i, 'fields']) as FormArray).push(e);
+                                        (self.form.get('wizard.usedFields') as UntypedFormArray).push(e);
+                                        (self.form.get(['wizard', 'steps', +i, 'fields']) as UntypedFormArray).push(e);
 
                                     }
                                 } else {
@@ -866,8 +866,8 @@ export class SchemaBuilderComponent implements
                                                 readonly: e.value._id.properties.readonly,
                                             }
                                         });
-                                        (self.form.get('wizard.usedFields') as FormArray).push(temp2);
-                                        (self.form.get(['wizard', 'steps', +i, 'fields']) as FormArray).push(temp2);
+                                        (self.form.get('wizard.usedFields') as UntypedFormArray).push(temp2);
+                                        (self.form.get(['wizard', 'steps', +i, 'fields']) as UntypedFormArray).push(temp2);
 
                                     }
                                 }
@@ -902,12 +902,12 @@ export class SchemaBuilderComponent implements
         const self = this;
         if (res.workflowConfig && res.workflowConfig.makerCheckers.length > 0) {
             res.workflowConfig.makerCheckers.forEach(makerChecker => {
-                let makerCheckerFormArray = (self.form.get(['workflowConfig', 'makerCheckers']) as FormArray);
+                let makerCheckerFormArray = (self.form.get(['workflowConfig', 'makerCheckers']) as UntypedFormArray);
                 let makerCheckerFormGrp = self.fb.group({
                     steps: self.fb.array([])
                 });
                 makerChecker.steps.forEach(step => {
-                    (makerCheckerFormGrp.get('steps') as FormArray).push(self.fb.group({
+                    (makerCheckerFormGrp.get('steps') as UntypedFormArray).push(self.fb.group({
                         id: [step.id],
                         name: step.name,
                         approvals: step.approvals
@@ -986,12 +986,12 @@ export class SchemaBuilderComponent implements
 
     get changesDoneInDesign() {
         const self = this;
-        return (self.form.get('definition') as FormArray).dirty;
+        return (self.form.get('definition') as UntypedFormArray).dirty;
     }
 
     get errorInDesign() {
         const self = this;
-        const arr = (self.form.get('definition') as FormArray).controls.filter(c => c.get('_id') ? false : true).map(c => c.invalid);
+        const arr = (self.form.get('definition') as UntypedFormArray).controls.filter(c => c.get('_id') ? false : true).map(c => c.invalid);
         if (arr.length > 0) {
             return Math.max.apply(null, arr);
         }
@@ -1062,7 +1062,7 @@ export class SchemaBuilderComponent implements
         if (!self.form.valid) {
             return false;
         }
-        if (!self.isSchemaFree && (self.form.get('definition') as FormArray).length < 2) {
+        if (!self.isSchemaFree && (self.form.get('definition') as UntypedFormArray).length < 2) {
             return false;
         }
         if (self.errorInRoles) {
@@ -1079,7 +1079,7 @@ export class SchemaBuilderComponent implements
         if (!this.isSchemaFree && this.form.hasError('invalidDynamicFilter')) {
             return false;
         }
-        if (!this.isSchemaFree && (this.form.get('definition') as FormArray).length < 2) {
+        if (!this.isSchemaFree && (this.form.get('definition') as UntypedFormArray).length < 2) {
             return false;
         }
         return true;
@@ -1087,7 +1087,7 @@ export class SchemaBuilderComponent implements
 
     get definitions() {
         const self = this;
-        return (self.form.get('definition') as FormArray).controls;
+        return (self.form.get('definition') as UntypedFormArray).controls;
     }
 
     hasSameNameError(definition: any[]) {
@@ -1097,7 +1097,7 @@ export class SchemaBuilderComponent implements
                 if (item.hasError('sameName')) {
                     flag = true;
                 } else if (item.get('definition')) {
-                    flag = this.hasSameNameError((item.get('definition') as FormArray).controls);
+                    flag = this.hasSameNameError((item.get('definition') as UntypedFormArray).controls);
                 }
             });
         }

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
@@ -20,7 +20,7 @@ export class IntegrationFlowComponent implements OnInit, OnDestroy {
   @Output() toggleMicroflowChange: EventEmitter<boolean>;
   @Input() id: any;
   @Output() idChange: EventEmitter<any>;
-  @Input() partner: FormGroup;
+  @Input() partner: UntypedFormGroup;
   edit: any;
   reqNodeList: Array<NodeData>;
   resNodeList: Array<NodeData>;

@@ -1,5 +1,5 @@
 import { Component, ViewChild, Input, TemplateRef, OnDestroy, AfterViewChecked } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, FormArray, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormArray, AbstractControl } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { CommonService } from '../../services/common.service';
@@ -11,8 +11,8 @@ import { CommonService } from '../../services/common.service';
 })
 export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
   @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
-  @Input() mainForm: FormGroup;
-  @Input() form: FormGroup;
+  @Input() mainForm: UntypedFormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   @Input() isLibrary: boolean;
   @Input() isDataFormat: boolean;
@@ -23,7 +23,7 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
   editStateListOfValues: number = null;
 
   constructor(private commonService: CommonService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder) {
     const self = this;
     self.edit = {};
     self.deleteModal = {};
@@ -67,9 +67,9 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
       let temp: any = enums[event.oldIndex];
       enums[event.oldIndex] = enums[event.newIndex];
       enums[event.newIndex] = temp;
-      (self.form.get(['properties', 'enum']) as FormArray).clear();
+      (self.form.get(['properties', 'enum']) as UntypedFormArray).clear();
       for (let state of enums) {
-        (self.form.get(['properties', 'enum']) as FormArray).push(new FormControl(state));
+        (self.form.get(['properties', 'enum']) as UntypedFormArray).push(new UntypedFormControl(state));
       }
     }
 
@@ -106,7 +106,7 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
   }
 
   setError(type, prop: AbstractControl) {
-    let errors = ((prop as FormGroup).get('default')).errors;
+    let errors = ((prop as UntypedFormGroup).get('default')).errors;
     if (!errors) {
       errors = {};
     }
@@ -159,7 +159,7 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
       self.deleteModalTemplateRef = self.commonService.modal(self.deleteModalTemplate);
       self.deleteModalTemplateRef.result.then(close => {
         if (close) {
-          const properties = self.form.get('properties') as FormGroup;
+          const properties = self.form.get('properties') as UntypedFormGroup;
           properties.removeControl(control);
           properties.addControl(control, self.fb.array([]));
           if (properties.get('default').value) {
@@ -168,7 +168,7 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
         }
       }, dismiss => { });
     } else {
-      const properties = self.form.get('properties') as FormGroup;
+      const properties = self.form.get('properties') as UntypedFormGroup;
       properties.removeControl(control);
       properties.addControl(control, self.fb.array([]));
     }
@@ -219,12 +219,12 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
     if ((!value || !value.toString().trim()) && (typeof value !== 'number')) {
       return;
     }
-    let list: FormArray = self.form.get('properties').get(control) as FormArray;
+    let list: UntypedFormArray = self.form.get('properties').get(control) as UntypedFormArray;
     self.form.get('properties._listInput').patchValue(null);
     if (!list.value) {
-      (self.form.get('properties') as FormGroup).removeControl(control);
-      (self.form.get('properties') as FormGroup).addControl(control, self.fb.array([]));
-      list = (self.form.get('properties') as FormGroup).get(control) as FormArray;
+      (self.form.get('properties') as UntypedFormGroup).removeControl(control);
+      (self.form.get('properties') as UntypedFormGroup).addControl(control, self.fb.array([]));
+      list = (self.form.get('properties') as UntypedFormGroup).get(control) as UntypedFormArray;
     }
     if (list.value.length > 0) {
       if (list.value.indexOf(value) > -1) {
@@ -242,7 +242,7 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
       statesDict[value] = [];
       self.mainForm.get(['stateModel', 'states']).patchValue(statesDict);
     }
-    list.push(new FormControl(value));
+    list.push(new UntypedFormControl(value));
   }
 
   removeFromList(control, index, prop: AbstractControl) {
@@ -262,7 +262,7 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
       if (close) {
         let state = self.form.get(['properties', 'enum']).value[index];
 
-        ((self.form.get('properties')).get(control) as FormArray).removeAt(index);
+        ((self.form.get('properties')).get(control) as UntypedFormArray).removeAt(index);
         if (prop.get('default')?.value && tempValue === prop.get('default')?.value) {
           prop.get('default').patchValue('');
         }
@@ -310,15 +310,15 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
   }
   validateNumbDefaultValue(value, prop) {
     if (prop.get('min').value && value !== null && value !== undefined && (value < prop.get('min').value)) {
-      ((prop as FormGroup).get('default')).setErrors({ min: true });
+      ((prop as UntypedFormGroup).get('default')).setErrors({ min: true });
     } else if (prop.get('max').value && value !== null && value !== undefined && (value > prop.get('max').value)) {
-      ((prop as FormGroup).get('default')).setErrors({ max: true });
+      ((prop as UntypedFormGroup).get('default')).setErrors({ max: true });
     } else if (prop.get('precision').value != null || prop.get('precision').value !== undefined) {
       const isDotPresent = (prop.get('default').value + '').split('.').length > 1;
       if (isDotPresent) {
         const precision = (prop.get('default').value + '').split('.')[1].length;
         if (precision > prop.get('precision').value) {
-          ((prop as FormGroup).get('default')).setErrors({ precision: true });
+          ((prop as UntypedFormGroup).get('default')).setErrors({ precision: true });
         }
       }
     }
@@ -337,7 +337,7 @@ export class NumberPropertyComponent implements AfterViewChecked, OnDestroy {
   get enumList() {
     const self = this;
     if (self.form.get('properties.enum')) {
-      return (self.form.get('properties.enum') as FormArray).controls;
+      return (self.form.get('properties.enum') as UntypedFormArray).controls;
     } else {
       return [];
     }

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, OnDestroy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
@@ -11,12 +11,12 @@ import { GetOptions, CommonService } from '../../services/common.service';
   styleUrls: ['./library-property.component.scss']
 })
 export class LibraryPropertyComponent implements OnInit, OnDestroy {
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   @Input() isLibrary: boolean;
   @Input() isDataFormat: boolean;
   @Input() type;
-  properties: FormGroup;
+  properties: UntypedFormGroup;
   libraries: Array<any>;
   documents: Array<any>;
   openDeleteModal: EventEmitter<any>;
@@ -29,7 +29,7 @@ export class LibraryPropertyComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const self = this;
-    self.properties = self.form.get('properties') as FormGroup;
+    self.properties = self.form.get('properties') as UntypedFormGroup;
     self.getLibraries();
     self.getLibraryName();
   }

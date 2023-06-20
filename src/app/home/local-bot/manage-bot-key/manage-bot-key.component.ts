@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -28,7 +28,7 @@ export class ManageBotKeyComponent implements OnInit {
   openDeleteBotKeyModal: EventEmitter<any>;
   editKeyModalRef: NgbModalRef
   showLazyLoader: boolean;
-  keyForm: FormGroup
+  keyForm: UntypedFormGroup
   gridOptions: GridOptions;
   frameworkComponents: any;
   filterModel: any;
@@ -38,7 +38,7 @@ export class ManageBotKeyComponent implements OnInit {
   action: any;
   data: any;
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public commonService: CommonService,
     private appService: AppService,
     private ts: ToastrService

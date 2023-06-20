@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
-import { FormGroup, FormArray, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormArray, Validators, UntypedFormBuilder } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { CommonService } from 'src/app/utils/services/common.service';
@@ -15,7 +15,7 @@ export class WizardsComponent implements OnInit, OnDestroy {
 
 
     @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
     @Input() edit: any;
     deleteModalTemplateRef: NgbModalRef;
     deleteModal: DeleteModalConfig;
@@ -24,7 +24,7 @@ export class WizardsComponent implements OnInit, OnDestroy {
     showStepsWindow: boolean;
     constructor(
         private commonService: CommonService,
-        private fb: FormBuilder) {
+        private fb: UntypedFormBuilder) {
         this.subscriptions = {};
         this.activeTab = 1;
         this.deleteModal = {
@@ -51,8 +51,8 @@ export class WizardsComponent implements OnInit, OnDestroy {
 
     addStep() {
         this.showStepsWindow = true;
-        const i = (this.form.get('wizard.steps') as FormArray).controls.length - 1;
-        (this.form.get('wizard.steps') as FormArray).insert(i + 1, this.fb.group({
+        const i = (this.form.get('wizard.steps') as UntypedFormArray).controls.length - 1;
+        (this.form.get('wizard.steps') as UntypedFormArray).insert(i + 1, this.fb.group({
             name: [null, [Validators.required, maxLenValidator(40)]],
             fields: this.fb.array([]),
             actions: this.fb.array([])
@@ -65,7 +65,7 @@ export class WizardsComponent implements OnInit, OnDestroy {
 
     removeStep() {
         const selectedStep = this.form.get('wizard.selectedStep').value;
-        if ((this.form.get('wizard.steps') as FormArray).controls.length === 0) {
+        if ((this.form.get('wizard.steps') as UntypedFormArray).controls.length === 0) {
             return;
         }
         this.deleteModal.title = 'Delete Step';
@@ -73,13 +73,13 @@ export class WizardsComponent implements OnInit, OnDestroy {
         this.deleteModalTemplateRef = this.commonService.modal(this.deleteModalTemplate);
         this.deleteModalTemplateRef.result.then((close) => {
             if (close) {
-                const temp = (this.form.get(['wizard', 'steps', selectedStep]) as FormGroup);
+                const temp = (this.form.get(['wizard', 'steps', selectedStep]) as UntypedFormGroup);
                 if (temp) {
-                    (temp.get('fields') as FormArray).controls.forEach((control, i) => {
-                        this.removeFromUsed((temp.get('fields') as FormArray).at(+i));
+                    (temp.get('fields') as UntypedFormArray).controls.forEach((control, i) => {
+                        this.removeFromUsed((temp.get('fields') as UntypedFormArray).at(+i));
                     });
                 }
-                (this.form.get('wizard.steps') as FormArray).removeAt(selectedStep);
+                (this.form.get('wizard.steps') as UntypedFormArray).removeAt(selectedStep);
                 this.form.get('wizard').markAsDirty();
                 this.form.markAsDirty();
                 if (selectedStep !== 0) {
@@ -92,7 +92,7 @@ export class WizardsComponent implements OnInit, OnDestroy {
     }
 
     removeStepAt(index: number) {
-        if ((this.form.get('wizard.steps') as FormArray).controls.length === 0) {
+        if ((this.form.get('wizard.steps') as UntypedFormArray).controls.length === 0) {
             return;
         }
         this.deleteModal.title = 'Delete Step';
@@ -100,11 +100,11 @@ export class WizardsComponent implements OnInit, OnDestroy {
         this.deleteModalTemplateRef = this.commonService.modal(this.deleteModalTemplate);
         this.deleteModalTemplateRef.result.then((close) => {
             if (close) {
-                const formArray = (this.form.get(['wizard', 'steps']) as FormArray);
+                const formArray = (this.form.get(['wizard', 'steps']) as UntypedFormArray);
                 const temp = formArray.at(index);
                 if (temp) {
-                    (temp.get('fields') as FormArray).controls.forEach((control, i) => {
-                        this.removeFromUsed((temp.get('fields') as FormArray).at(+i));
+                    (temp.get('fields') as UntypedFormArray).controls.forEach((control, i) => {
+                        this.removeFromUsed((temp.get('fields') as UntypedFormArray).at(+i));
                     });
                 }
                 if (formArray && formArray.length > 0) {
@@ -119,12 +119,12 @@ export class WizardsComponent implements OnInit, OnDestroy {
 
     removeHook(hookName, idx) {
         const selectedStep = this.form.get('wizard.selectedStep').value;
-        if ((this.form.get('wizard.steps') as FormArray).controls.length === 0) {
+        if ((this.form.get('wizard.steps') as UntypedFormArray).controls.length === 0) {
             return;
         }
         this.deleteModal.title = 'Delete hook';
         this.deleteModal.message = 'Are you sure you want to delete hook ' + hookName + ' ?';
-        const formArr = this.form.get(['wizard', 'steps', selectedStep, 'actions']) as FormArray;
+        const formArr = this.form.get(['wizard', 'steps', selectedStep, 'actions']) as UntypedFormArray;
 
         this.deleteModalTemplateRef = this.commonService.modal(this.deleteModalTemplate);
         this.deleteModalTemplateRef.result.then((close) => {
@@ -136,13 +136,13 @@ export class WizardsComponent implements OnInit, OnDestroy {
     }
 
     removeFromUsed(field) {
-        const i = (this.form.get('wizard.usedFields') as FormArray).controls.findIndex(e => {
+        const i = (this.form.get('wizard.usedFields') as UntypedFormArray).controls.findIndex(e => {
             if (e.value.key === field.value.key) {
                 return true;
             }
         });
         if (i > -1) {
-            (this.form.get('wizard.usedFields') as FormArray).removeAt(i);
+            (this.form.get('wizard.usedFields') as UntypedFormArray).removeAt(i);
         }
     }
 
@@ -154,7 +154,7 @@ export class WizardsComponent implements OnInit, OnDestroy {
     }
 
     get steps() {
-        return (this.form.get('wizard.steps') as FormArray).controls;
+        return (this.form.get('wizard.steps') as UntypedFormArray).controls;
     }
 
     get selectedStepIndex() {

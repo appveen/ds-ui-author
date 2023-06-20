@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, EventEmitter, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
@@ -22,7 +22,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
 
   @ViewChild('alertModalTemplate', { static: false }) alertModalTemplate: TemplateRef<HTMLElement>;
   alertModalTemplateRef: NgbModalRef;
-  form: FormGroup;
+  form: UntypedFormGroup;
   apiConfig: GetOptions;
   flowList: Array<any>;
   alertModal: {
@@ -52,7 +52,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private commonFilter: CommonFilterPipe) {
     this.subscriptions = {};
     this.form = this.fb.group({

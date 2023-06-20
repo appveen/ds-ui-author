@@ -11,14 +11,14 @@ import { ICellRendererParams } from 'ag-grid-community';
     ></i>
     {{ text }}
   </div>`,
-  styles: ['.icons{font-size: 10px; margin-right: 5px};'],
+  styles: ['.icons{font-size: 10px; margin-right: 5px}'],
 })
 export class UserGridAppsRendererComponent implements AgRendererComponent {
   params: any;
   text: String;
   color: String;
   active: boolean = false;
-  constructor() {}
+  constructor() { }
 
   refresh(): boolean {
     return false;

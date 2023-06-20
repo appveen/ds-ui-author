@@ -1,5 +1,5 @@
 import { Component, ViewChild, TemplateRef, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 
@@ -26,7 +26,7 @@ export class FormatSelectorComponent implements OnDestroy {
     dataList: Array<any>;
     searchTerm: string;
     selectedType: string;
-    form: FormGroup;
+    form: UntypedFormGroup;
     showDataStructure: boolean;
     showLoader: boolean;
     subscription: Subscription;
@@ -34,7 +34,7 @@ export class FormatSelectorComponent implements OnDestroy {
     constructor(
         private commonService: CommonService,
         private appService: AppService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private schemaService: SchemaBuilderService,
         private schemaStructurePipe: SchemaStructurePipe) {
 
@@ -195,8 +195,8 @@ export class FormatSelectorComponent implements OnDestroy {
 
     clearSchema() {
         const self = this;
-        (self.form.get('definition') as FormArray).controls.splice(0);
-        (self.form.get('definition') as FormArray).push(self.schemaService.getDefinitionStructure());
+        (self.form.get('definition') as UntypedFormArray).controls.splice(0);
+        (self.form.get('definition') as UntypedFormArray).push(self.schemaService.getDefinitionStructure());
     }
 
     showFormat(format: string) {
@@ -241,6 +241,6 @@ export class FormatSelectorComponent implements OnDestroy {
 
     get definitions() {
         const self = this;
-        return (self.form.get('definition') as FormArray).controls;
+        return (self.form.get('definition') as UntypedFormArray).controls;
     }
 }

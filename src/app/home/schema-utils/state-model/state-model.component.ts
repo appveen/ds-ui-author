@@ -7,9 +7,9 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { AppService } from 'src/app/utils/services/app.service';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
@@ -41,7 +41,7 @@ export class StateModelComponent implements OnInit {
 
   sourceDefinition: any;
   searchTerm: string;
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   newState: any;
 
@@ -49,7 +49,7 @@ export class StateModelComponent implements OnInit {
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  stateCtrl = new FormControl();
+  stateCtrl = new UntypedFormControl();
   stateModelData: any;
   deleteModal: DeleteModalConfig;
   newListAttrType: any;
@@ -64,7 +64,7 @@ export class StateModelComponent implements OnInit {
     private schemaService: SchemaBuilderService,
     private commonService: CommonService,
     private ts: ToastrService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {
     const self = this;
     self.deleteModal = {
@@ -80,7 +80,7 @@ export class StateModelComponent implements OnInit {
 
   ngOnInit(): void {
     const self = this;
-    let definitions = (self.form.get('definition') as FormArray).controls;
+    let definitions = (self.form.get('definition') as UntypedFormArray).controls;
     self.sourceDefinition = self.appService.patchDataKey(
       self.fb.array(definitions).value
     );
@@ -182,7 +182,7 @@ export class StateModelComponent implements OnInit {
   // get attribute type of state model Number/String
   get stateModelAttributeType() {
     const self = this;
-    let definition = (self.form.get('definition') as FormArray).value;
+    let definition = (self.form.get('definition') as UntypedFormArray).value;
     if (self.stateModelAttrIndex > -1) {
       return definition[self.stateModelAttrIndex].type;
     }
@@ -190,7 +190,7 @@ export class StateModelComponent implements OnInit {
 
   get stateModelAttrIndex() {
     const self = this;
-    let definition = (self.form.get('definition') as FormArray).value;
+    let definition = (self.form.get('definition') as UntypedFormArray).value;
     return definition.findIndex(
       (data) => data.key === self.stateModelAttribute
     );
@@ -204,7 +204,7 @@ export class StateModelComponent implements OnInit {
 
   get StateModelAttrName() {
     const self = this;
-    let definition = (self.form.get('definition') as FormArray).value;
+    let definition = (self.form.get('definition') as UntypedFormArray).value;
     if (self.stateModelAttrIndex > -1) {
       return definition[self.stateModelAttrIndex].properties.name;
     }
@@ -215,7 +215,7 @@ export class StateModelComponent implements OnInit {
   addNewListOfValues() {
     const self = this;
     const attrName = self.form.get(['stateModel', 'attribute']).value;
-    const tempArr = self.form.controls.definition as FormArray;
+    const tempArr = self.form.controls.definition as UntypedFormArray;
     const temp = self.schemaService.getDefinitionStructure({ _newField: true });
     const attrCamelCase = self.appService.toCamelCase(attrName);
     self.form.get(['stateModel', 'attribute']).patchValue(attrCamelCase);
@@ -419,8 +419,8 @@ export class StateModelComponent implements OnInit {
           self.stateModelAttrIndex,
           'properties',
           'enum',
-        ]) as FormArray
-      ).push(new FormControl(newState));
+        ]) as UntypedFormArray
+      ).push(new UntypedFormControl(newState));
       const statesDict = self.form.get(['stateModel', 'states']).value;
       statesDict[newState] = [];
       self.form.get(['stateModel', 'states']).patchValue(statesDict);
@@ -524,7 +524,7 @@ export class StateModelComponent implements OnInit {
           self.stateModelAttrIndex,
           'properties',
           'enum',
-        ]) as FormArray
+        ]) as UntypedFormArray
       ).clear();
 
       for (let state of remainingStates) {
@@ -534,8 +534,8 @@ export class StateModelComponent implements OnInit {
             self.stateModelAttrIndex,
             'properties',
             'enum',
-          ]) as FormArray
-        ).push(new FormControl(state));
+          ]) as UntypedFormArray
+        ).push(new UntypedFormControl(state));
       }
     }
 
@@ -603,7 +603,7 @@ export class StateModelComponent implements OnInit {
         self.stateModelAttrIndex,
         'properties',
         'enum',
-      ]) as FormArray
+      ]) as UntypedFormArray
     ).clear();
 
     for (let state of allStates) {
@@ -613,8 +613,8 @@ export class StateModelComponent implements OnInit {
           self.stateModelAttrIndex,
           'properties',
           'enum',
-        ]) as FormArray
-      ).push(new FormControl(state));
+        ]) as UntypedFormArray
+      ).push(new UntypedFormControl(state));
     }
   };
 

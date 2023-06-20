@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as uuid from 'uuid/v1';
@@ -14,12 +14,12 @@ import { SchemaBuilderService } from '../../schema-builder.service';
 })
 export class StepActionsComponent implements OnInit {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
 
   openDeleteModal: EventEmitter<any>;
   showNewActionWindow: boolean;
-  actionHookForm: FormGroup;
+  actionHookForm: UntypedFormGroup;
   triggeredHookValidation: boolean;
   verifyUrl: {
     status: boolean;
@@ -31,7 +31,7 @@ export class StepActionsComponent implements OnInit {
   constructor(private schemaService: SchemaBuilderService,
     private commonService: CommonService,
     private ts: ToastrService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder) {
     this.actionHookForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(40)]],
       url: [null, [Validators.required, Validators.pattern(/^http(s)?:(.*)\/?(.*)/)]],
@@ -70,7 +70,7 @@ export class StepActionsComponent implements OnInit {
 
   openNewActionWindow(hook?: any) {
     this.showNewActionWindow = true;
-    const step = (this.form.get(['wizard', 'steps', this.selectedStepIndex]) as FormGroup);
+    const step = (this.form.get(['wizard', 'steps', this.selectedStepIndex]) as UntypedFormGroup);
     if (step && !step.value.name) {
       this.ts.warning('Action hook cannot be added to an empty step');
       return;
@@ -86,10 +86,10 @@ export class StepActionsComponent implements OnInit {
       const hId = this.actionHookForm.get('hookId').value;
       const actionInStep = this.form.get(['wizard', 'steps', this.selectedStepIndex, 'actions']).value;
       if (actionInStep.findIndex(e => e.hookId === hId) !== -1) {
-        (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'actions']) as FormArray)
+        (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'actions']) as UntypedFormArray)
           .removeAt(actionInStep.findIndex(e => e.hookId === hId));
       }
-      (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'actions']) as FormArray).push(this.actionHookForm);
+      (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'actions']) as UntypedFormArray).push(this.actionHookForm);
       this.form.markAsDirty();
     }
     this.resetHookForm();
@@ -134,7 +134,7 @@ export class StepActionsComponent implements OnInit {
       return;
     } else {
       this.resetHookForm(hook);
-      (this.form.get(['wizard', 'steps', selectedStep, 'actions']) as FormArray).push(this.actionHookForm);
+      (this.form.get(['wizard', 'steps', selectedStep, 'actions']) as UntypedFormArray).push(this.actionHookForm);
       this.form.get('wizard').markAsDirty();
       this.form.markAsDirty();
       // this.ts.success(hook.name + ' is added successfully');
@@ -148,7 +148,7 @@ export class StepActionsComponent implements OnInit {
     const actionInStep = (this.form.get(['wizard', 'steps', selectedStep, 'actions'])).value;
     const index = actionInStep.findIndex(e => e.hookId === hId);
     if (index > -1) {
-      (this.form.get(['wizard', 'steps', selectedStep, 'actions']) as FormArray).removeAt(index);
+      (this.form.get(['wizard', 'steps', selectedStep, 'actions']) as UntypedFormArray).removeAt(index);
     }
   }
 
@@ -165,12 +165,12 @@ export class StepActionsComponent implements OnInit {
 
   closeDeleteModal(data) {
     if (data) {
-      const steps = this.form.get(['wizard', 'steps']) as FormArray;
+      const steps = this.form.get(['wizard', 'steps']) as UntypedFormArray;
       steps.controls.forEach(step => {
         const actionInStep = step.get(['actions']).value;
         const actionIndex = actionInStep.findIndex(e => e.hookId === data.hook.hookId);
         if (actionIndex > -1) {
-          (step.get(['actions']) as FormArray).removeAt(actionIndex);
+          (step.get(['actions']) as UntypedFormArray).removeAt(actionIndex);
         }
       });
     }
@@ -185,11 +185,11 @@ export class StepActionsComponent implements OnInit {
   }
 
   get definitions() {
-    return (this.form.get('definition') as FormArray).controls;
+    return (this.form.get('definition') as UntypedFormArray).controls;
   }
 
   get steps() {
-    return (this.form.get('wizard.steps') as FormArray).controls;
+    return (this.form.get('wizard.steps') as UntypedFormArray).controls;
   }
 
   get hookNameErr() {
@@ -224,7 +224,7 @@ export class StepActionsComponent implements OnInit {
   }
 
   get selectedStepActions() {
-    const temp = (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'actions']) as FormArray).value;
+    const temp = (this.form.get(['wizard', 'steps', this.selectedStepIndex, 'actions']) as UntypedFormArray).value;
     return temp ? temp : [];
   }
 }

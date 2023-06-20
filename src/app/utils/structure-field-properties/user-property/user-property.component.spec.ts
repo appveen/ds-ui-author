@@ -10,7 +10,7 @@ import { FilterDefinitionModule } from '../../pipes/filter-definition/filter-def
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToastrModule } from 'ngx-toastr';
-import { ReactiveFormsModule, FormsModule, FormGroup, FormControl, FormArray } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, UntypedFormGroup, UntypedFormControl, UntypedFormArray } from '@angular/forms';
 import { DeleteModalComponent } from '../../delete-modal/delete-modal.component';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -47,13 +47,13 @@ describe('UserPropertyComponent', () => {
     commonService = TestBed.get(CommonService);
     commonService.app = {}
 
-    component.form = new FormGroup({
-      name: new FormControl(),
-      properties: new FormGroup({
-        name: new FormControl(),
-        default: new FormControl(),
-        _listInput: new FormControl(),
-        relatedViewFields: new FormArray([])
+    component.form = new UntypedFormGroup({
+      name: new UntypedFormControl(),
+      properties: new UntypedFormGroup({
+        name: new UntypedFormControl(),
+        default: new UntypedFormControl(),
+        _listInput: new UntypedFormControl(),
+        relatedViewFields: new UntypedFormArray([])
       })
     })
     component.edit = {

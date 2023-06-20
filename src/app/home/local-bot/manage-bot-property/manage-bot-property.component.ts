@@ -7,7 +7,7 @@ import {
   EventEmitter,
   Output,
 } from '@angular/core';
-import { FormGroup, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormArray, UntypedFormBuilder } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
 import { GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
@@ -35,7 +35,7 @@ export class ManageBotPropertyComponent implements OnInit {
   private _selecteBot;
   openDeleteModal: EventEmitter<any>;
   showLazyLoader: boolean;
-  editAttributeForm: FormGroup;
+  editAttributeForm: UntypedFormGroup;
   gridOptions: GridOptions;
   frameworkComponents: any;
   filterModel: any;
@@ -68,7 +68,7 @@ export class ManageBotPropertyComponent implements OnInit {
     self.userAttributeList = arr;
     this.data = arr;
   }
-  additionalDetails: FormGroup;
+  additionalDetails: UntypedFormGroup;
   toggleFieldTypeSelector: any;
   newAttributeModalRef: NgbModalRef;
   editAttributeModalRef: NgbModalRef;
@@ -78,7 +78,7 @@ export class ManageBotPropertyComponent implements OnInit {
 
   constructor(
     private ts: ToastrService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private appService: AppService,
     public commonService: CommonService
   ) {
@@ -136,7 +136,7 @@ export class ManageBotPropertyComponent implements OnInit {
   }
   removeField(index) {
     const self = this;
-    (self.additionalDetails.get('extraInfo') as FormArray).removeAt(index);
+    (self.additionalDetails.get('extraInfo') as UntypedFormArray).removeAt(index);
   }
   private resetAdditionDetailForm() {
     const self = this;

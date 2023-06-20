@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 import { NodeData, EditConfig, ActivateProperties } from '../../integration-flow.model';
 import { IntegrationFlowService } from '../../integration-flow.service';
@@ -15,7 +15,7 @@ export class SecurityBlockComponent implements OnInit {
   @Input() node: NodeData;
   @Input() nodeList: Array<NodeData>;
   @Input() index: number;
-  @Input() partner: FormGroup;
+  @Input() partner: UntypedFormGroup;
   deleteIPModal: EventEmitter<any>;
   constructor(private flowService: IntegrationFlowService) {
     const self = this;

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AppService } from 'src/app/utils/services/app.service';
 
 @Component({
@@ -9,16 +9,16 @@ import { AppService } from 'src/app/utils/services/app.service';
 })
 export class DataIngestionComponent implements OnInit {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
-  ingestionForm: FormGroup;
+  ingestionForm: UntypedFormGroup;
   toggleNewEndpintWindow: boolean;
   toggleIncomingFieldsWindow: boolean;
   toggleFormulaWindow: boolean;
   selectedEndpoint: any;
   selectedField: any;
   definition: Array<any>;
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     private appService: AppService) {
     this.edit = {
       status: false

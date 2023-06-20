@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, UntypedFormBuilder, UntypedFormArray } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as RandExp from 'randexp';
 
@@ -13,8 +13,8 @@ import { CommonService } from '../../services/common.service';
 export class TextPropertyComponent implements OnDestroy {
 
   @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
-  @Input() mainForm: FormGroup;
-  @Input() form: FormGroup;
+  @Input() mainForm: UntypedFormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   @Input() isLibrary: boolean;
   @Input() isDataFormat: boolean;
@@ -26,7 +26,7 @@ export class TextPropertyComponent implements OnDestroy {
   editStateListOfValues: number = null;
 
   constructor(private commonService: CommonService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder) {
     const self = this;
     self.edit = {};
     self.sampleRegexValue = [];
@@ -62,9 +62,9 @@ export class TextPropertyComponent implements OnDestroy {
       let temp: any = enums[event.oldIndex];
       enums[event.oldIndex] = enums[event.newIndex];
       enums[event.newIndex] = temp;
-      (self.form.get(['properties', 'enum']) as FormArray).clear();
+      (self.form.get(['properties', 'enum']) as UntypedFormArray).clear();
       for (let state of enums) {
-        (self.form.get(['properties', 'enum']) as FormArray).push(new FormControl(state));
+        (self.form.get(['properties', 'enum']) as UntypedFormArray).push(new UntypedFormControl(state));
       }
     }
 
@@ -184,7 +184,7 @@ export class TextPropertyComponent implements OnDestroy {
       self.deleteModalTemplateRef = self.commonService.modal(self.deleteModalTemplate);
       self.deleteModalTemplateRef.result.then(close => {
         if (close) {
-          const properties = self.form.get('properties') as FormGroup;
+          const properties = self.form.get('properties') as UntypedFormGroup;
           properties.removeControl(control);
           properties.addControl(control, self.fb.array([]));
           if (properties.get('default').value) {
@@ -193,7 +193,7 @@ export class TextPropertyComponent implements OnDestroy {
         }
       }, dismiss => { });
     } else {
-      const properties = self.form.get('properties') as FormGroup;
+      const properties = self.form.get('properties') as UntypedFormGroup;
       properties.removeControl(control);
       properties.addControl(control, self.fb.array([]));
     }
@@ -244,12 +244,12 @@ export class TextPropertyComponent implements OnDestroy {
     if ((!value || !value.toString().trim()) && (typeof value !== 'number')) {
       return;
     }
-    let list: FormArray = (self.form.get('properties')).get(control) as FormArray;
+    let list: UntypedFormArray = (self.form.get('properties')).get(control) as UntypedFormArray;
     self.form.get('properties._listInput').patchValue(null);
     if (!list.value) {
-      (self.form.get('properties') as FormGroup).removeControl(control);
-      (self.form.get('properties') as FormGroup).addControl(control, self.fb.array([]));
-      list = (self.form.get('properties')).get(control) as FormArray;
+      (self.form.get('properties') as UntypedFormGroup).removeControl(control);
+      (self.form.get('properties') as UntypedFormGroup).addControl(control, self.fb.array([]));
+      list = (self.form.get('properties')).get(control) as UntypedFormArray;
     }
     if (list.value.length > 0) {
       if (list.value.indexOf(value) > -1) {
@@ -267,13 +267,13 @@ export class TextPropertyComponent implements OnDestroy {
       statesDict[value] = [];
       self.mainForm.get(['stateModel', 'states']).patchValue(statesDict);
     }
-    list.push(new FormControl(value));
+    list.push(new UntypedFormControl(value));
   }
 
   removeFromList(control, index) {
     const self = this;
     this.editStateListOfValues = null;
-    // const list = (self.form.get('properties')).get(control) as FormArray;
+    // const list = (self.form.get('properties')).get(control) as UntypedFormArray;
     const list = self.form.getRawValue()['properties'][control];
     const tempValue = list[index];
     self.deleteModal.title = 'Remove ' + list[index];
@@ -287,10 +287,10 @@ export class TextPropertyComponent implements OnDestroy {
     self.deleteModalTemplateRef.result.then(close => {
       if (close) {
         let state = self.form.get(['properties', 'enum']).value[index];
-        ((self.form.get('properties')).get(control) as FormArray).removeAt(index);
-        if ((self.form.get('properties') as FormGroup).get('default').value
-          && tempValue === (self.form.get('properties') as FormGroup).get('default').value) {
-          (self.form.get('properties') as FormGroup).get('default').patchValue('');
+        ((self.form.get('properties')).get(control) as UntypedFormArray).removeAt(index);
+        if ((self.form.get('properties') as UntypedFormGroup).get('default').value
+          && tempValue === (self.form.get('properties') as UntypedFormGroup).get('default').value) {
+          (self.form.get('properties') as UntypedFormGroup).get('default').patchValue('');
         }
         if (self.checkStateModel()) {
           self.deleteStateModelState(index, state);
@@ -341,7 +341,7 @@ export class TextPropertyComponent implements OnDestroy {
   get hasTokensList() {
     const self = this;
     if (self.form.get('properties.hasTokens')) {
-      return (self.form.get('properties.hasTokens') as FormArray).controls;
+      return (self.form.get('properties.hasTokens') as UntypedFormArray).controls;
     } else {
       return [];
     }
@@ -350,7 +350,7 @@ export class TextPropertyComponent implements OnDestroy {
   get enumList() {
     const self = this;
     if (self.form.get('properties.enum')) {
-      return (self.form.get('properties.enum') as FormArray).controls;
+      return (self.form.get('properties.enum') as UntypedFormArray).controls;
     } else {
       return [];
     }
