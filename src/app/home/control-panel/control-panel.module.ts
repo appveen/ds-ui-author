@@ -76,6 +76,8 @@ import { UserGroupUsersComponent } from './user-group/user-group-manage/user-gro
 import { UserGroupMembersSearchComponent } from './user-group/user-group-manage/user-group-members/user-group-members-search/user-group-members-search.component';
 import { GroupAuthorConnectorsComponent } from './user-group/user-group-manage/user-group-author/group-author-connectors/group-author-connectors.component';
 import { GroupAuthorFlowsComponent } from './user-group/user-group-manage/user-group-author/group-author-flows/group-author-flows.component';
+import { GroupAuthorProcessFlowsComponent } from './user-group/user-group-manage/user-group-author/group-author-process-flows/group-author-process-flows.component';
+import { GroupAuthorProcessFlowsNodesComponent } from './user-group/user-group-manage/user-group-author/group-author-process-flows-nodes/group-author-process-flows-nodes.component';
 
 @NgModule({
   imports: [
@@ -147,6 +149,8 @@ import { GroupAuthorFlowsComponent } from './user-group/user-group-manage/user-g
     GroupAuthorLibraryComponent,
     GroupAuthorFunctionsComponent,
     GroupAuthorFlowsComponent,
+    GroupAuthorProcessFlowsComponent,
+    GroupAuthorProcessFlowsNodesComponent,
     GroupAuthorPartnersComponent,
     GroupAuthorNanoServicesComponent,
     GroupAuthorBookmarksComponent,
