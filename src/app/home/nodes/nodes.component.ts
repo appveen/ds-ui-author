@@ -1,11 +1,12 @@
 import { Component, EventEmitter, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import * as _ from 'lodash'
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'odp-nodes',
@@ -20,7 +21,7 @@ export class NodesComponent implements OnInit {
   nodeList: any;
   @ViewChild('alertModalTemplate', { static: false }) alertModalTemplate: TemplateRef<HTMLElement>;
   alertModalTemplateRef: NgbModalRef;
-  form: UntypedFormGroup;
+  form: UntypedFormGroup = new UntypedFormGroup({});
   apiConfig: GetOptions;
   alertModal: {
     statusChange?: boolean;
@@ -31,9 +32,9 @@ export class NodesComponent implements OnInit {
   searchTerm: string;
   ts: any;
   records: any = [];
-  cloneData: null;
+  cloneData: boolean = false;
   isClone: boolean;
-  openDeleteModal: EventEmitter<any>;
+  openDeleteModal: EventEmitter<any> = new EventEmitter<any>();
   subscriptions: any;
   sortModel: any;
   copied: any;
@@ -42,27 +43,136 @@ export class NodesComponent implements OnInit {
 
 
 
-  constructor(private commonService: CommonService, private appService: AppService,   private router: Router) {
+  constructor(private commonService: CommonService, private appService: AppService,   private router: Router,  private fb: UntypedFormBuilder,) {
     this.breadcrumbPaths = [{
       active: true,
       label: 'Nodes'
     }];
+
+    this.subscriptions = {};
+    this.form = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
+      description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
+      type: ['SYSTEM', [Validators.required]],
+      inputNode: []
+    });
+    this.apiConfig = {
+      page: 1,
+      count: 30
+    };
+    this.nodeList = [];
+    this.alertModal = {
+      statusChange: false,
+      title: '',
+      message: '',
+      index: -1,
+    };
+    this.openDeleteModal = new EventEmitter();
+    this.copied = {};
+    this.showLazyLoader = true;
+    this.sortModel = {};
+    this.appService.invokeEvent.subscribe(res => {
+       this.getNodes();
+    });
    }
 
   ngOnInit(): void {
     this.commonService.changeBreadcrumb(this.breadcrumbPaths);
+    this.getNodes();
   
   }
 
   newNode() {
-    this.form.reset({ inputNode: { type: 'API' } });
+    this.form.reset({  type: 'SYSTEM' });
     this.showNewNodeWindow = true;
+  }
+
+  getNodes() {
+    this.showLazyLoader = true;
+    this.nodeList = [];
+    return this.commonService.get('config', `/${this.commonService.app._id}/processflow/utils/count`).pipe(switchMap((count: any) => {
+      return this.commonService.get('config', `/${this.commonService.app._id}/processflow/node`, {
+        count: count,
+      });
+    })).subscribe((res: any) => {
+      this.showLazyLoader = false;
+      // res.forEach(item => {
+      //   item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/pipes/${this.app}` + item.inputNode.options.path;
+      //   // this.flowList.push(item);
+      // });
+      this.nodeList = res;
+      this.nodeList.forEach(e => {
+        if (e.status == 'Pending') {
+          this.commonService.updateStatus(e._id, 'node');
+        }
+      })
+    }, err => {
+      this.showLazyLoader = false;
+      console.log(err);
+      this.commonService.errorToast(err);
+    });
+  }
+
+  triggerNodeCreate() {
+    if (this.form.invalid) {
+      return;
+    }
+    this.showLazyLoader = true;
+    this.showNewNodeWindow = false;
+    const payload = this.form.value;
+    // payload['category'] = this.form.get('type').value;
+    payload.app = this.commonService.app._id;
+    payload.nodes = [];
+    this.commonService.post('config', `/${this.commonService.app._id}/processflow/node/`, payload).subscribe(res => {
+      this.showLazyLoader = false;
+      this.form.reset({ type: 'SYSTEM' });
+      this.ts.success('Node has been created.');
+      this.appService.edit = res._id;
+      this.router.navigate(['/app/', this.commonService.app._id, 'node', res._id]);
+    }, err => {
+      this.showLazyLoader = false;
+      this.form.reset({ type: 'SYSTEM' });
+      this.commonService.errorToast(err);
+    });
+  }
+
+  triggerNodeClone() {
+    if (this.form.invalid) {
+      return;
+    }
+    this.showLazyLoader = true;
+    this.showNewNodeWindow = false;
+    // const payload = _.cloneDeep(this.form.value);
+    // payload['dataStructures'] = this.cloneData.dataStructures || [];
+    // payload['nodes'] = this.cloneData.nodes || [];
+    // payload.app = this.commonService.app._id;
+    const keyArray = ['deploymentName', '_id', '_metadata', 'lastInvoked', 'status', 'version', 'url'];
+    // keyArray.forEach(key => {
+    //   delete this.cloneData[key];
+    // });
+    const val = this.form.get('name').value
+    // this.cloneData.name = val;
+    // this.cloneData.inputNode = { ...this.cloneData.inputNode, ...this.form.get('inputNode').value };
+    // this.cloneData.inputNode.options.path = val ? '/' + _.camelCase(val) : null;
+    this.commonService.post('config', `/${this.commonService.app._id}/node`, this.cloneData).subscribe(res => {
+      this.showLazyLoader = false;
+      this.isClone = false;
+      this.form.reset({ type: 'SYSTEM' });
+      this.ts.success('Node has been cloned.');
+      this.appService.edit = res._id;
+      this.router.navigate(['/app/', this.commonService.app._id, 'node', res._id]);
+    }, err => {
+      this.showLazyLoader = false;
+      this.form.reset({ type: 'SYSTEM' });
+      this.isClone = false;
+      this.commonService.errorToast(err);
+    });
   }
 
 
   discardDraft(id: string) {
-    const flow = this.nodeList.find((e) => e._id === id);
-    const flowIndex = this.nodeList.findIndex((e) => e._id === id);
+    const node = this.nodeList.find((e) => e._id === id);
+    const nodeIndex = this.nodeList.findIndex((e) => e._id === id);
     this.alertModal = {
       title: 'Discard Draft',
       message: 'Are you sure you want to discard draft version?',
@@ -76,30 +186,30 @@ export class NodesComponent implements OnInit {
       (close) => {
         if (close) {
           let request;
-          if (flow.status === 'Draft') {
+          if (node.status === 'Draft') {
             request = this.commonService.put(
-              'partnerManager',
-              `/${this.commonService.app._id}/flow/utils/` + id
+              'config',
+              `/${this.commonService.app._id}/processflow/node/` + id
             );
           } else {
             request = this.commonService.put(
-              'partnerManager',
-              `/${this.commonService.app._id}/flow/utils/${id}/draftDelete`
+              'config',
+              `/${this.commonService.app._id}/processflow/node/${id}/draftDelete`
             );
           }
           request.subscribe(
             (res) => {
               this.ts.success('Draft Deleted.');
-              if (flow.status !== 'Draft') {
+              if (node.status !== 'Draft') {
                 this.router.navigate([
                   '/app/',
                   this.commonService.app._id,
-                  'flow',
+                  'node',
                   id,
                 ]);
               } else {
-                if (flowIndex > -1) {
-                  this.nodeList.splice(flowIndex, 1);
+                if (nodeIndex > -1) {
+                  this.nodeList.splice(nodeIndex, 1);
                 }
               }
             },
@@ -115,19 +225,19 @@ export class NodesComponent implements OnInit {
 
   editNode(item: any) {
     this.appService.edit = item._id;
-    this.router.navigate(['/app/', this.commonService.app._id, 'flow', this.appService.edit,
+    this.router.navigate(['/app/', this.commonService.app._id, 'node', this.appService.edit,
     ]);
   }
 
   viewNode(item: any) {
-    this.router.navigate(['/app', this.commonService.app._id, 'flow', item._id]);
+    this.router.navigate(['/app', this.commonService.app._id, 'node', item._id]);
   }
 
   deleteNode(index: number) {
     this.alertModal.statusChange = false;
     this.alertModal.title = 'Delete Node?';
     this.alertModal.message =
-      'Are you sure you want to delete this flow? This action will delete : ' + this.records[index].name;
+      'Are you sure you want to delete this node? This action will delete : ' + this.records[index].name;
     this.alertModal.index = index;
     this.openDeleteModal.emit(this.alertModal);
   }
@@ -138,7 +248,7 @@ export class NodesComponent implements OnInit {
     this.isClone = true;
     const temp = item;
     this.form.get('name').patchValue(temp.name + ' Copy');
-    this.form.get('type').patchValue(temp.inputNode.type);
+    this.form.get('type').patchValue(temp.category);
     this.form.get('inputNode').patchValue(temp.inputNode);
     this.cloneData = _.cloneDeep(temp);
     console.log(temp)
@@ -157,13 +267,6 @@ export class NodesComponent implements OnInit {
     throw new Error('Method not implemented.');
   }
 
-  // get invalidForm() {
-  //   if (this.form.invalid || (this.form.get('type').value === 'PLUGIN' && !this.selectedPlugin)) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
   // get selectedPlugin() {
   //   return this.staterPluginList.find(e => e._selected);
   // }
@@ -171,7 +274,7 @@ export class NodesComponent implements OnInit {
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
       return true;
     } else {
-      return this.hasPermission('PMIF');
+      return this.hasPermission('PMPN');
     }
   }
 
@@ -179,24 +282,24 @@ export class NodesComponent implements OnInit {
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
       return true;
     } else {
-      return this.hasPermission('PVIF');
+      return this.hasPermission('PVPN');
     }
   }
 
   closeDeleteModal(data) {
     if (data) {
       const url =
-        `/${this.commonService.app._id}/flow/` +
+        `/${this.commonService.app._id}/node/` +
         this.records[data.index]._id;
       this.showLazyLoader = true;
       this.subscriptions['deleteservice'] = this.commonService
-        .delete('partnerManager', url)
+        .delete('config', url)
         .subscribe(
           (d) => {
             this.showLazyLoader = false;
             this.ts.info(d.message ? d.message : 'Deleting Node...');
             this.records[data.index].status = 'Pending';
-            this.commonService.updateDelete(this.records[data.index]._id, 'flow')
+            this.commonService.updateDelete(this.records[data.index]._id, 'node')
           },
           (err) => {
             this.showLazyLoader = false;
@@ -240,11 +343,11 @@ export class NodesComponent implements OnInit {
   //   }, 2000);
   // }
 
-  copyUrl(flow: any) {
-    this.copied[flow._id] = true;
-    this.appService.copyToClipboard(flow.url);
+  copyUrl(node: any) {
+    this.copied[node._id] = true;
+    this.appService.copyToClipboard(node.url);
     setTimeout(() => {
-      this.copied[flow._id] = false;
+      this.copied[node._id] = false;
     }, 2000);
   }
 
@@ -261,14 +364,14 @@ export class NodesComponent implements OnInit {
 
 
   canDeleteNode(id: string) {
-    return this.hasPermission('PMIF');
+    return this.hasPermission('PMPN');
   }
 
   hasPermission(type: string, entity?: string) {
     return this.commonService.hasPermission(type, entity);
   }
   hasWritePermission(entity: string) {
-    return this.commonService.hasPermission('PMIF', entity);
+    return this.commonService.hasPermission('PMPN', entity);
   }
   get dropDownStyle() {
     let top = (this.selectedItemEvent.clientY + 10);
@@ -279,6 +382,13 @@ export class NodesComponent implements OnInit {
       top: top + 'px',
       right: '50px'
     };
+  }
+
+  get invalidForm() {
+    if (this.form.invalid) {
+      return true;
+    }
+    return false;
   }
 
 
