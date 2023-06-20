@@ -58,6 +58,7 @@ import { AutocompleteOnEditModule } from '../../utils/autocomplete-on-edit/autoc
 import { ChangeOnEditComponent } from '../../utils/change-on-edit/change-on-edit.component';
 import { PluginSelectorComponent } from './node-properties/marketplace-selector/marketplace-selector.component';
 import { EditorModule } from 'src/app/utils/editor/editor.module';
+import { B2bPathService } from './b2b-path.service';
 
 const routes: Routes = [
   {
@@ -127,6 +128,6 @@ const routes: Routes = [
     EditorModule
   ],
   exports: [B2bFlowsManageComponent],
-  providers: [B2bFlowService, MappingService, ChangeOnEditComponent]
+  providers: [B2bFlowService, MappingService, ChangeOnEditComponent, B2bPathService]
 })
 export class B2bFlowsManageModule { }
