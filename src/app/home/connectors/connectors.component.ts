@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
@@ -29,7 +29,7 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
   subscriptions: any = {};
   breadcrumbPaths: Array<Breadcrumb>;
   openDeleteModal: EventEmitter<any>;
-  form: FormGroup;
+  form: UntypedFormGroup;
   showNewConnectorWindow: boolean;
   showOptionsDropdown: any;
   selectedItemEvent: any
@@ -41,7 +41,7 @@ export class ConnectorsComponent implements OnInit, OnDestroy {
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private ts: ToastrService,
     private commonPipe: CommonFilterPipe) {
     this.alertModal = {

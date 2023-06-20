@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -20,7 +20,7 @@ export class NodesComponent implements OnInit {
   nodeList: any;
   @ViewChild('alertModalTemplate', { static: false }) alertModalTemplate: TemplateRef<HTMLElement>;
   alertModalTemplateRef: NgbModalRef;
-  form: FormGroup;
+  form: UntypedFormGroup;
   apiConfig: GetOptions;
   alertModal: {
     statusChange?: boolean;

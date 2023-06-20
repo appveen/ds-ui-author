@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, OnDestroy, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
@@ -15,10 +15,10 @@ import { App } from 'src/app/utils/interfaces/app';
 
 export class AppComponent implements OnInit, OnDestroy {
 
-    searchForm: FormGroup;
+    searchForm: UntypedFormGroup;
     appList: Array<App>;
     appConfig: GetOptions = {};
-    appForm: FormGroup;
+    appForm: UntypedFormGroup;
     operation: string;
     subscriptions: any = {};
     alert: {
@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
             $event.returnValue = 'Are you sure?';
         }
     }
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private commonService: CommonService,
         private ts: ToastrService,
         private ngbConf: NgbTooltipConfig) {

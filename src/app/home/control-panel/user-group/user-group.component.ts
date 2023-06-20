@@ -5,7 +5,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { Group } from 'src/app/utils/interfaces/group';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 
 @Component({
     selector: 'odp-user-group',
@@ -21,13 +21,13 @@ export class UserGroupComponent implements OnInit, OnDestroy {
     newGroup: Group;
     filterGroupText = '';
     totalRecords: number;
-    form: FormGroup;
+    form: UntypedFormGroup;
     showNewGroupWindow: boolean;
     breadcrumbPaths: Array<Breadcrumb>;
 
     constructor(private commonService: CommonService,
         private router: Router,
-        private fb: FormBuilder) {
+        private fb: UntypedFormBuilder) {
         this.subscriptions = {};
         this.breadcrumbPaths = [];
         this.groupList = [];

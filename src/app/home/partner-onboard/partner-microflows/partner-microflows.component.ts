@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input, ViewChild, TemplateRef, OnDestroy, ElementRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
@@ -21,14 +21,14 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
     @ViewChild('apiType', { static: false }) apiType: ElementRef;
     @ViewChild('fileType', { static: false }) fileType: ElementRef;
     @ViewChild('alertModalTemplate', { static: false }) alertModalTemplate: TemplateRef<HTMLElement>;
-    @Input() partner: FormGroup;
+    @Input() partner: UntypedFormGroup;
     @Output() openMicroflow: EventEmitter<any>;
     @Input() edit: any;
     newIntegrationFlowData: any;
     toggleNewIntegrationFlow: boolean;
     alertModalTemplateRef: NgbModalRef;
     alertModalData: any;
-    form: FormGroup;
+    form: UntypedFormGroup;
     flowOptions: any;
     searchTerm: string;
     modalData: any;
@@ -47,7 +47,7 @@ export class PartnerMicroflowsComponent implements OnInit, OnDestroy {
         private appService: AppService,
         private flowService: IntegrationFlowService,
         private ts: ToastrService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private orderBy: OrderByPipe) {
         const self = this;
         self.openMicroflow = new EventEmitter();

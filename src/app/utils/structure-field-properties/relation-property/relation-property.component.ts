@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, EventEmitter, AfterViewInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -12,13 +12,13 @@ import { CommonService, GetOptions } from '../../services/common.service';
   styleUrls: ['./relation-property.component.scss']
 })
 export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   @Input() isLibrary: boolean;
   @Input() isDataFormat: boolean;
   @Input() type;
   @ViewChild('defaultEle', { static: false }) defaultEle: NgbTypeahead;
-  properties: FormGroup;
+  properties: UntypedFormGroup;
   definition: Array<any>;
   services: Array<any>;
   documents: Array<any>;
@@ -35,7 +35,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     type: string;
   };
   attributeList: Array<any>;
-  constructor(private commonService: CommonService, private fb: FormBuilder) {
+  constructor(private commonService: CommonService, private fb: UntypedFormBuilder) {
     const self = this;
     self.subscriptions = {};
     self.definition = [];
@@ -56,11 +56,11 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
 
   ngOnInit() {
     const self = this;
-    self.properties = self.form.get('properties') as FormGroup;
+    self.properties = self.form.get('properties') as UntypedFormGroup;
     self.getServices();
     self.getDefinition();
     if (!self.properties.get('_default')) {
-      self.properties.addControl('_default', new FormControl());
+      self.properties.addControl('_default', new UntypedFormControl());
     }
   }
 
@@ -284,7 +284,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
         self.properties.removeControl('relatedViewFields');
         self.properties.addControl('relatedViewFields', self.fb.array([]));
       } else {
-        const temp = self.properties.get('relatedViewFields') as FormArray;
+        const temp = self.properties.get('relatedViewFields') as UntypedFormArray;
         temp.removeAt(data.index);
       }
     }
@@ -323,12 +323,12 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
     if ((!_value || !_value.toString().trim()) && typeof _value !== 'number') {
       return;
     }
-    let list: FormArray = <FormArray>self.properties.get(control);
+    let list: UntypedFormArray = <UntypedFormArray>self.properties.get(control);
     self.properties.get('_listInput').patchValue(null);
     if (!list.value) {
       self.properties.removeControl(control);
       self.properties.addControl(control, self.fb.array([]));
-      list = <FormArray>self.properties.get(control);
+      list = <UntypedFormArray>self.properties.get(control);
     }
     if (list.value.length > 0) {
       if (list.value.indexOf(_value) > -1) {
@@ -340,7 +340,7 @@ export class RelationPropertyComponent implements OnInit, OnDestroy, AfterViewIn
       return;
     }
 
-    list.push(new FormControl(_value));
+    list.push(new UntypedFormControl(_value));
   }
   writeData(value) {
     const self = this;

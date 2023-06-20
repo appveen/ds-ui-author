@@ -11,7 +11,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
@@ -39,7 +39,7 @@ export class GlobalSchemasComponent implements
     deleteModalEleRef: NgbModalRef;
     pageChangeModalTemplateRef: NgbModalRef;
     app: string;
-    form: FormGroup;
+    form: UntypedFormGroup;
     edit: any = {};
     types: Array<any> = [
         { class: 'odp-group', value: 'Object', label: 'Group' },
@@ -73,7 +73,7 @@ export class GlobalSchemasComponent implements
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private commonService: CommonService,
         private appService: AppService,
         private schemaAttributesPipe: SchemaAttributesPipe,
@@ -187,8 +187,8 @@ export class GlobalSchemasComponent implements
 
     resetForm() {
         const self = this;
-        (self.form.get('definition') as FormArray).controls.splice(0);
-        (self.form.get('definition') as FormArray).push(self.schemaService.getDefinitionStructure());
+        (self.form.get('definition') as UntypedFormArray).controls.splice(0);
+        (self.form.get('definition') as UntypedFormArray).push(self.schemaService.getDefinitionStructure());
     }
 
     selectDataFormatType(event) {
@@ -284,7 +284,7 @@ export class GlobalSchemasComponent implements
     addField(place?: string) {
         const self = this;
         if (!place) {
-            const tempArr = self.form.get('definition') as FormArray;
+            const tempArr = self.form.get('definition') as UntypedFormArray;
             const temp = self.schemaService.getDefinitionStructure({ _newField: true });
             tempArr.push(temp);
         } else {
@@ -359,7 +359,7 @@ export class GlobalSchemasComponent implements
                     typeCtrl.setValue(temp.definition[0].type);
                     typeCtrl.updateValueAndValidity();
                 }
-                (self.form.get('definition') as FormArray).controls.splice(0);
+                (self.form.get('definition') as UntypedFormArray).controls.splice(0);
                 temp.definition.forEach((element, i) => {
                     const tempDef = self.schemaService.getDefinitionStructure(temp.definition[i]);
                     if (temp.definition[i].properties && temp.definition[i].properties.name) {
@@ -369,10 +369,10 @@ export class GlobalSchemasComponent implements
                         tempDef.get('properties.name').patchValue('_self');
                         self.onfocus = false;
                     }
-                    (self.form.get('definition') as FormArray).push(tempDef);
+                    (self.form.get('definition') as UntypedFormArray).push(tempDef);
                 });
                 if (temp.definition && temp.definition.length === 0) {
-                    (self.form.get('definition') as FormArray).push(self.schemaService.getDefinitionStructure({ key: null }));
+                    (self.form.get('definition') as UntypedFormArray).push(self.schemaService.getDefinitionStructure({ key: null }));
                 }
                 if (id && self.edit.view && self.edit.status) {
                     const libname = self.form.get('name').value;
@@ -429,7 +429,7 @@ export class GlobalSchemasComponent implements
 
     get definitions() {
         const self = this;
-        return (self.form.get('definition') as FormArray).controls;
+        return (self.form.get('definition') as UntypedFormArray).controls;
     }
 
     get changesDone() {

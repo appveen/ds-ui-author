@@ -1,8 +1,8 @@
-import { FormGroup, AsyncValidatorFn, FormControl } from '@angular/forms';
+import { UntypedFormGroup, AsyncValidatorFn, UntypedFormControl } from '@angular/forms';
 import { CommonService } from 'src/app/utils/services/common.service';
 
 
-export function counterPaddingValidator(group: FormGroup) {
+export function counterPaddingValidator(group: UntypedFormGroup) {
     const counterLength = group.get('counter').value;
     const paddingValue = group.get('padding').value;
     if (counterLength && paddingValue && counterLength.toString().length > paddingValue
@@ -15,7 +15,7 @@ export function counterPaddingValidator(group: FormGroup) {
 }
 
 export function counterValidator(commonService: CommonService, id: string): AsyncValidatorFn {
-    return (control: FormControl) => {
+    return (control: UntypedFormControl) => {
         return new Promise((resolve, reject) => {
             const counterLength = control.value;
             if (counterLength !== null && control.dirty && id) {

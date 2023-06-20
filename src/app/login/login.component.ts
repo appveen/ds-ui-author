@@ -8,7 +8,7 @@ import {
   ElementRef,
   TemplateRef,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -30,7 +30,7 @@ export class LoginComponent
   @ViewChild('usernameControl', { static: false }) usernameControl: ElementRef;
   message: string;
   loader = false;
-  form: FormGroup;
+  form: UntypedFormGroup;
   errorMessage: string;
   isErrorMessage: boolean;
   version: string;
@@ -42,7 +42,7 @@ export class LoginComponent
   authType: string;
   azureLoginLoader: boolean;
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private commonService: CommonService,
     private appService: AppService,
     private sessionService: SessionService,

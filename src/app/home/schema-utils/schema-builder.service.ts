@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, FormArray, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, UntypedFormArray, AbstractControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { positiveNumber } from '../../home/custom-validators/positive-number-validator';
 import { maxLenValidator, minMax, minMaxLength, patternValidator } from '../../home/custom-validators/min-max-validator';
@@ -13,7 +13,7 @@ import { CommonService } from '../../utils/services/common.service';
 export class SchemaBuilderService {
 
     activeField: EventEmitter<string>;
-    activeProperty: EventEmitter<FormGroup>;
+    activeProperty: EventEmitter<UntypedFormGroup>;
     addAttribute: EventEmitter<any>;
     cloneAttribute: EventEmitter<any>;
     deleteField: EventEmitter<any>;
@@ -23,7 +23,7 @@ export class SchemaBuilderService {
     stateModel: any;
     serviceObj: any;
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private commonService: CommonService) {
         const self = this;
         self.activeProperty = new EventEmitter();
@@ -34,9 +34,9 @@ export class SchemaBuilderService {
         self.typechanged = new EventEmitter();
     }
 
-    getPropertiesStructure(value?: any): FormGroup {
+    getPropertiesStructure(value?: any): UntypedFormGroup {
         const self = this;
-        const temp: FormGroup = self.fb.group({
+        const temp: UntypedFormGroup = self.fb.group({
             _type: [value.type],
             label: [value.properties && value.properties.label ? value.properties.label : null, [maxLenValidator(40)]],
             readonly: [value.properties && value.properties.readonly ? value.properties.readonly : false],
@@ -52,27 +52,27 @@ export class SchemaBuilderService {
 
         });
         if (value.properties && value.properties.enum && value.properties.enum.length) {
-            temp.addControl('_detailedType', new FormControl('enum'));
+            temp.addControl('_detailedType', new UntypedFormControl('enum'));
         } else if (value.properties && value.properties.richText) {
-            temp.addControl('_detailedType', new FormControl('rich'));
+            temp.addControl('_detailedType', new UntypedFormControl('rich'));
         } else if (value.properties && value.properties.longText) {
-            temp.addControl('_detailedType', new FormControl('long'));
+            temp.addControl('_detailedType', new UntypedFormControl('long'));
         } else if (value.properties && value.properties.password) {
-            temp.addControl('_detailedType', new FormControl('password'));
+            temp.addControl('_detailedType', new UntypedFormControl('password'));
         } else if (value.properties && value.properties.email) {
-            temp.addControl('_detailedType', new FormControl('email'));
+            temp.addControl('_detailedType', new UntypedFormControl('email'));
         } else if (value.properties && value.properties.currency && value.properties._detailedType !== '') {
-            temp.addControl('_detailedType', new FormControl('currency'));
+            temp.addControl('_detailedType', new UntypedFormControl('currency'));
         } else if (value.properties && value.properties.natural) {
-            temp.addControl('_detailedType', new FormControl('natural'));
+            temp.addControl('_detailedType', new UntypedFormControl('natural'));
         } else if (value.properties && value.properties.relatedTo) {
-            temp.addControl('_detailedType', new FormControl(''));
+            temp.addControl('_detailedType', new UntypedFormControl(''));
             value.type = 'Relation';
         } else if (value.properties && value.properties.schema) {
-            temp.addControl('_detailedType', new FormControl(''));
+            temp.addControl('_detailedType', new UntypedFormControl(''));
             value.type = 'Global';
         } else {
-            temp.addControl('_detailedType', new FormControl(''));
+            temp.addControl('_detailedType', new UntypedFormControl(''));
         }
         if (value.type === 'String'
             || value.type === 'Number'
@@ -81,7 +81,7 @@ export class SchemaBuilderService {
             || value.type === 'Date'
             || value.type === 'User'
         ) {
-            temp.addControl('default', new FormControl(value.properties
+            temp.addControl('default', new UntypedFormControl(value.properties
                 && (value.properties.default !== null || value.properties.default !== undefined) ? value.properties.default : null));
         }
         if (value.type === 'String'
@@ -93,103 +93,103 @@ export class SchemaBuilderService {
             || value.type === 'File'
             || value.type === 'Boolean'
         ) {
-            temp.addControl('createOnly', new FormControl(value.properties
+            temp.addControl('createOnly', new UntypedFormControl(value.properties
                 && value.properties.createOnly ? value.properties.createOnly : false));
         }
         if (value.type === 'String'
             || value.type === 'Number'
             || value.type === 'Relation'
             || value.type === 'User') {
-            temp.addControl('unique', new FormControl(value.properties
+            temp.addControl('unique', new UntypedFormControl(value.properties
                 && value.properties.unique ? value.properties.unique : false));
         }
         if (value.type === 'String' || value.type === 'Number') {
-            temp.addControl('_listInput', new FormControl(null));
+            temp.addControl('_listInput', new UntypedFormControl(null));
             const arr = [];
             if (value.properties && value.properties.enum) {
                 for (const i of value.properties.enum) {
-                    arr.push(new FormControl(i));
+                    arr.push(new UntypedFormControl(i));
                 }
             }
-            temp.addControl('enum', new FormArray(arr));
+            temp.addControl('enum', new UntypedFormArray(arr));
         }
         if (value.type === 'String') {
-            temp.addControl('minlength', new FormControl(value.properties
+            temp.addControl('minlength', new UntypedFormControl(value.properties
                 && value.properties.minlength ? value.properties.minlength : null, [positiveNumber]));
-            temp.addControl('maxlength', new FormControl(value.properties
+            temp.addControl('maxlength', new UntypedFormControl(value.properties
                 && value.properties.maxlength ? value.properties.maxlength : null, [positiveNumber]));
-            temp.addControl('pattern', new FormControl(value.properties
+            temp.addControl('pattern', new UntypedFormControl(value.properties
                 && value.properties.pattern ? value.properties.pattern : null, [patternValidator]));
-            temp.addControl('email', new FormControl(value.properties
+            temp.addControl('email', new UntypedFormControl(value.properties
                 && value.properties.email ? value.properties.email : false));
-            temp.addControl('password', new FormControl(value.properties
+            temp.addControl('password', new UntypedFormControl(value.properties
                 && value.properties.password ? value.properties.password : false));
-            temp.addControl('longText', new FormControl(value.properties
+            temp.addControl('longText', new UntypedFormControl(value.properties
                 && value.properties.longText ? value.properties.longText : false));
-            temp.addControl('richText', new FormControl(value.properties
+            temp.addControl('richText', new UntypedFormControl(value.properties
                 && value.properties.richText ? value.properties.richText : false));
-            temp.addControl('fieldLength', new FormControl(value.properties
+            temp.addControl('fieldLength', new UntypedFormControl(value.properties
                 && value.properties.fieldLength ? value.properties.fieldLength : null));
             const arr = [];
             if (value.properties && value.properties.hasTokens) {
                 for (const i of value.properties.hasTokens) {
-                    arr.push(new FormControl(i));
+                    arr.push(new UntypedFormControl(i));
                 }
             }
-            temp.addControl('hasTokens', new FormArray(arr));
+            temp.addControl('hasTokens', new UntypedFormArray(arr));
         }
         if (value.type === 'Number') {
-            temp.addControl('min', new FormControl(value.properties
+            temp.addControl('min', new UntypedFormControl(value.properties
                 ? value.properties.min : null));
-            temp.addControl('max', new FormControl(value.properties
+            temp.addControl('max', new UntypedFormControl(value.properties
                 ? value.properties.max : null));
-            temp.addControl('currency', new FormControl(value.properties
+            temp.addControl('currency', new UntypedFormControl(value.properties
                 && value.properties.currency ? value.properties.currency : 'INR'));
-            temp.addControl('natural', new FormControl(value.properties
+            temp.addControl('natural', new UntypedFormControl(value.properties
                 && value.properties.natural ? value.properties.natural : false));
-            temp.addControl('fieldLength', new FormControl(value.properties
+            temp.addControl('fieldLength', new UntypedFormControl(value.properties
                 && value.properties.fieldLength ? value.properties.fieldLength : null));
-            temp.addControl('precision', new FormControl(value.properties
+            temp.addControl('precision', new UntypedFormControl(value.properties
                 && value.properties.precision !== undefined ? value.properties.precision : 2));
         }
         if (value.type === 'Date') {
-            temp.addControl('dateType', new FormControl(value.properties
+            temp.addControl('dateType', new UntypedFormControl(value.properties
                 && value.properties.dateType ? value.properties.dateType : 'date'));
-            temp.addControl('defaultTimezone', new FormControl(value.properties
+            temp.addControl('defaultTimezone', new UntypedFormControl(value.properties
                 && value.properties.defaultTimezone ? value.properties.defaultTimezone :
                 (this.commonService.app.defaultTimezone || this.commonService.userDetails.defaultTimezone)));
-            temp.addControl('_listInput', new FormControl(null));
+            temp.addControl('_listInput', new UntypedFormControl(null));
             const arr = [];
             if (value.properties && value.properties.supportedTimezones) {
                 for (const i of value.properties.supportedTimezones) {
-                    arr.push(new FormControl(i));
+                    arr.push(new UntypedFormControl(i));
                 }
             }
-            temp.addControl('supportedTimezones', new FormArray(arr));
-            // temp.addControl('min', new FormControl(value.properties && value.properties.min ? value.properties.min : null));
-            // temp.addControl('max', new FormControl(value.properties && value.properties.max ? value.properties.max : null));
+            temp.addControl('supportedTimezones', new UntypedFormArray(arr));
+            // temp.addControl('min', new UntypedFormControl(value.properties && value.properties.min ? value.properties.min : null));
+            // temp.addControl('max', new UntypedFormControl(value.properties && value.properties.max ? value.properties.max : null));
         }
         if (value.type === 'Object') {
             temp.removeControl('required');
-            temp.addControl('schemaFree', new FormControl(value.properties &&
+            temp.addControl('schemaFree', new UntypedFormControl(value.properties &&
                 value.properties.schemaFree ? value.properties.schemaFree : false, [Validators.required]));
         }
         if (value.type === 'Array') {
             temp.removeControl('required');
-            temp.addControl('maxlength', new FormControl(value.properties
+            temp.addControl('maxlength', new UntypedFormControl(value.properties
                 && value.properties.maxlength ? value.properties.maxlength : null, [positiveNumber]));
         }
         if (value.type === 'Relation') {
             temp.get('_type').patchValue('Relation');
-            temp.addControl('deleteAction', new FormControl(value.properties &&
+            temp.addControl('deleteAction', new UntypedFormControl(value.properties &&
                 value.properties.deleteAction ? value.properties.deleteAction : 'restrict', [Validators.required]));
-            temp.addControl('relatedTo', new FormControl(value.properties &&
+            temp.addControl('relatedTo', new UntypedFormControl(value.properties &&
                 value.properties.relatedTo ? value.properties.relatedTo : '', [Validators.required]));
-            temp.addControl('relatedToName', new FormControl(value.properties &&
+            temp.addControl('relatedToName', new UntypedFormControl(value.properties &&
                 value.properties.relatedToName ? value.properties.relatedToName : ''));
-            temp.addControl('relatedSearchField', new FormControl(value.properties &&
+            temp.addControl('relatedSearchField', new UntypedFormControl(value.properties &&
                 value.properties.relatedSearchField ? value.properties.relatedSearchField : '', [Validators.required]));
-            temp.addControl('_listInput', new FormControl(null));
+            temp.addControl('_listInput', new UntypedFormControl(null));
             const arr = [];
             if (value.properties && value.properties.relatedViewFields) {
                 self.commonService
@@ -198,35 +198,35 @@ export class SchemaBuilderService {
                         temp.get('relatedToName').patchValue(res.name);
                     }, err => { });
                 for (const i of value.properties.relatedViewFields) {
-                    arr.push(new FormControl(i));
+                    arr.push(new UntypedFormControl(i));
                 }
             }
-            temp.addControl('relatedViewFields', new FormArray(arr));
+            temp.addControl('relatedViewFields', new UntypedFormArray(arr));
         }
 
         if (value.type === 'User') {
             temp.get('_type').patchValue('User');
-            temp.addControl('deleteAction', new FormControl(value.properties &&
+            temp.addControl('deleteAction', new UntypedFormControl(value.properties &&
                 value.properties.deleteAction ? value.properties.deleteAction : 'restrict', [Validators.required]));
-            temp.addControl('relatedSearchField', new FormControl(value.properties &&
+            temp.addControl('relatedSearchField', new UntypedFormControl(value.properties &&
                 value.properties.relatedSearchField ? value.properties.relatedSearchField : '_id', [Validators.required]));
-            temp.addControl('_listInput', new FormControl(null));
+            temp.addControl('_listInput', new UntypedFormControl(null));
 
             const arr = [];
             if (value.properties && value.properties.relatedViewFields) {
                 for (const i of value.properties.relatedViewFields) {
-                    arr.push(new FormControl(i));
+                    arr.push(new UntypedFormControl(i));
                 }
             }
-            temp.addControl('relatedViewFields', new FormArray(arr));
+            temp.addControl('relatedViewFields', new UntypedFormArray(arr));
         }
 
         if (value.type === 'Global') {
             temp.removeControl('required');
             temp.get('_type').patchValue('Global');
-            temp.addControl('schema', new FormControl(value.properties
+            temp.addControl('schema', new UntypedFormControl(value.properties
                 && value.properties.schema ? value.properties.schema : '', [Validators.required]));
-            temp.addControl('schemaName', new FormControl(value.properties
+            temp.addControl('schemaName', new UntypedFormControl(value.properties
                 && value.properties.schemaName ? value.properties.schemaName : ''));
             if (value.properties && value.properties.schema) {
                 const apiOptions = {
@@ -245,13 +245,13 @@ export class SchemaBuilderService {
             }
         }
         if (value.type === 'Geojson') {
-            temp.addControl('geoType', new FormControl(value.properties
+            temp.addControl('geoType', new UntypedFormControl(value.properties
                 && value.properties.geoType ? value.properties.geoType : 'point'));
         }
         if (value.type === 'File') {
-            temp.addControl('fileType', new FormControl(value.properties
+            temp.addControl('fileType', new UntypedFormControl(value.properties
                 && value.properties.fileType ? value.properties.fileType : 'All'));
-            temp.addControl('password', new FormControl(value.properties
+            temp.addControl('password', new UntypedFormControl(value.properties
                 && value.properties.password ? value.properties.password : false));
             // temp.removeControl('required');
         }
@@ -269,10 +269,10 @@ export class SchemaBuilderService {
     }
 
 
-    getDefinitionStructure(value?: any, _isGrpParentArray?: boolean): FormGroup {
+    getDefinitionStructure(value?: any, _isGrpParentArray?: boolean): UntypedFormGroup {
         const key = value && value.key ? value.key : '';
         const type = value && value.type ? value.type : 'String';
-        const tempForm: FormGroup = this.fb.group({
+        const tempForm: UntypedFormGroup = this.fb.group({
             _fieldId: [uuid()],
             _placeholder: ['Untitled Attribute'],
             type: [type, [Validators.required]],
@@ -349,7 +349,7 @@ export class SchemaBuilderService {
         //     tempForm.get('key').patchValue(val === '_self' ? '_self' : val);
         // });
         if (value && value.disableType) {
-            tempForm.addControl('_disableType', new FormControl(true));
+            tempForm.addControl('_disableType', new UntypedFormControl(true));
         }
         return tempForm;
     }
@@ -576,7 +576,7 @@ export class SchemaBuilderService {
 }
 
 export function enumCheck(type: string): ValidatorFn {
-    return (control: FormControl) => {
+    return (control: UntypedFormControl) => {
         if (control.value) {
             if (Array.isArray(control.value)) {
                 return null;

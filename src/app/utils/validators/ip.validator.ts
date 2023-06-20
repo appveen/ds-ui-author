@@ -1,6 +1,6 @@
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
-export function ipValidate(control: FormControl) {
+export function ipValidate(control: UntypedFormControl) {
     const temp = control.value;
     if (temp) {
         try {

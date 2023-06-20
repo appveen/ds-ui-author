@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/utils/services/common.service';
 
@@ -10,17 +10,17 @@ import { CommonService } from 'src/app/utils/services/common.service';
 })
 export class PartnerSecretsComponent implements OnInit, OnDestroy {
 
-    @Input() partner: FormGroup;
+    @Input() partner: UntypedFormGroup;
     @Input() edit: any;
     @ViewChild('addSecretModal', { static: false }) addSecretModal: NgbModalRef;
     addSecretModalRef: NgbModalRef;
     data: any;
-    form: FormGroup;
+    form: UntypedFormGroup;
     searchTerm: string;
     openDeleteModal: EventEmitter<any>;
     alertModal: any;
     constructor(private commonService: CommonService,
-        private fb: FormBuilder) {
+        private fb: UntypedFormBuilder) {
         const self = this;
         self.form = self.fb.group({
             name: [null, [Validators.required]],

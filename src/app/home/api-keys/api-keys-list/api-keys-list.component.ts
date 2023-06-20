@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -15,7 +15,7 @@ export class ApiKeysListComponent implements OnInit {
 
   showNewKeyWindow: boolean;
   showLazyLoader: boolean;
-  keyForm: FormGroup;
+  keyForm: UntypedFormGroup;
   keyList: Array<any>;
   selectedKey: any;
   searchTerm: string;
@@ -23,7 +23,7 @@ export class ApiKeysListComponent implements OnInit {
   subscriptions: any;
   showKeyDetails: boolean;
   copied: boolean;
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     private commonService: CommonService,
     private appService: AppService,
     private apiKeyService: ApiKeysService,

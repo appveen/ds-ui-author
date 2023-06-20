@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, EventEmitter } from '@angular/core';
-import { FormGroup, FormArray, FormControl, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormArray, UntypedFormControl, UntypedFormBuilder } from '@angular/forms';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -15,12 +15,12 @@ import { AppService } from '../../services/app.service';
 })
 export class UserPropertyComponent implements OnInit {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   @Input() isLibrary: boolean;
   @Input() isDataFormat: boolean;
   @ViewChild('defaultEle', { static: false }) defaultEle: NgbTypeahead;
-  properties: FormGroup;
+  properties: UntypedFormGroup;
   openDeleteModal: EventEmitter<any>;
   attributeList: Array<any>;
   documents: Array<any>;
@@ -32,7 +32,7 @@ export class UserPropertyComponent implements OnInit {
   };
   private subscriptions: any;
   private documentAPI: string;
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     private commonService: CommonService,
     private appService: AppService) {
     const self = this;
@@ -71,11 +71,11 @@ export class UserPropertyComponent implements OnInit {
   ngOnInit() {
     const self = this;
     if (self.form) {
-      self.properties = self.form.get('properties') as FormGroup;
+      self.properties = self.form.get('properties') as UntypedFormGroup;
     }
     self.getDocuments();
     if (!self.properties.get('_default')) {
-      self.properties.addControl('_default', new FormControl());
+      self.properties.addControl('_default', new UntypedFormControl());
     }
   }
 
@@ -115,7 +115,7 @@ export class UserPropertyComponent implements OnInit {
     if ((!value || !value.toString().trim())) {
       return;
     }
-    let list: FormArray = self.properties.get(control) as FormArray;
+    let list: UntypedFormArray = self.properties.get(control) as UntypedFormArray;
     self.properties.get('_listInput').patchValue(null);
 
     if (list.value.length > 0) {
@@ -123,7 +123,7 @@ export class UserPropertyComponent implements OnInit {
         return;
       }
     }
-    list.push(new FormControl(value));
+    list.push(new UntypedFormControl(value));
   }
 
   clearViewFields() {
@@ -201,7 +201,7 @@ export class UserPropertyComponent implements OnInit {
         self.properties.removeControl('relatedViewFields');
         self.properties.addControl('relatedViewFields', self.fb.array([]));
       } else {
-        const temp = (self.properties.get('relatedViewFields') as FormArray);
+        const temp = (self.properties.get('relatedViewFields') as UntypedFormArray);
         temp.removeAt(data.index);
       }
     }

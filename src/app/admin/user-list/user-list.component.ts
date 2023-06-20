@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, TemplateRef, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ToastrService } from 'ngx-toastr';
@@ -25,7 +25,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     @ViewChild('searchUserInput', { static: false }) searchUserInput: ElementRef;
     @ViewChild('deleteSelectedModal', { static: false }) deleteSelectedModal: TemplateRef<HTMLElement>;
     deleteSelectedModalRef: NgbModalRef;
-    userForm: FormGroup;
+    userForm: UntypedFormGroup;
     appList = [];
     showLazyLoader: boolean;
     showSpinner: boolean;
@@ -61,7 +61,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     showNewUserWindow: boolean;
     constructor(
         private commonService: CommonService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private ngbToolTipConfig: NgbTooltipConfig,
         private appService: AppService,
         private ts: ToastrService

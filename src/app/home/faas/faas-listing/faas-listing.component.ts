@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import * as _ from 'lodash';
@@ -20,7 +20,7 @@ import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 export class FaasListingComponent implements OnInit, OnDestroy {
 
   @ViewChild('alertModalTemplate', { static: false }) alertModalTemplate: TemplateRef<HTMLElement>;
-  form: FormGroup;
+  form: UntypedFormGroup;
   apiConfig: GetOptions;
   subscriptions: any;
   totalCount: number;
@@ -49,7 +49,7 @@ export class FaasListingComponent implements OnInit, OnDestroy {
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private commonFilter: CommonFilterPipe) {
     this.subscriptions = {};
     this.form = this.fb.group({

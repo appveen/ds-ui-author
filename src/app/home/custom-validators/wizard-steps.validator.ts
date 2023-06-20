@@ -1,6 +1,6 @@
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
-export function wizardSteps(control: FormControl) {
+export function wizardSteps(control: UntypedFormControl) {
     const steps = control.value;
     const ifEmptySteps = steps.findIndex(data => data.fields.length == 0)
 

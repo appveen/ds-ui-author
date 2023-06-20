@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { CommonFilterPipe } from 'src/app/utils/pipes/common-filter/common-filte
 })
 export class CustomNodeComponent implements OnInit {
 
-  form: FormGroup;
+  form: UntypedFormGroup;
   apiConfig: GetOptions;
   customNodeList: Array<any>;
   alertModal: {
@@ -45,7 +45,7 @@ export class CustomNodeComponent implements OnInit {
     private appService: AppService,
     private router: Router,
     private ts: ToastrService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private commonFilter: CommonFilterPipe) {
     this.subscriptions = {};
     this.form = this.fb.group({

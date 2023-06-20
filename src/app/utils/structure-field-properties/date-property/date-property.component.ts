@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, TemplateRef } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AppService } from '../../services/app.service';
 import { CommonService } from '../../services/common.service';
@@ -12,7 +12,7 @@ import { CommonService } from '../../services/common.service';
 export class DatePropertyComponent implements OnInit, OnDestroy {
 
   @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   @Input() isLibrary: boolean;
   @Input() isDataFormat: boolean;
@@ -25,7 +25,7 @@ export class DatePropertyComponent implements OnInit, OnDestroy {
   timezones: Array<string>;
   constructor(private commonService: CommonService,
     private appService: AppService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder) {
     this.edit = {};
     this.sampleRegexValue = [];
     this.deleteModal = {};
@@ -65,7 +65,7 @@ export class DatePropertyComponent implements OnInit, OnDestroy {
       this.deleteModalTemplateRef = this.commonService.modal(this.deleteModalTemplate);
       this.deleteModalTemplateRef.result.then(close => {
         if (close) {
-          const properties = this.form.get('properties') as FormGroup;
+          const properties = this.form.get('properties') as UntypedFormGroup;
           properties.removeControl(control);
           properties.addControl(control, this.fb.array([]));
           if (properties.get('default').value) {
@@ -74,7 +74,7 @@ export class DatePropertyComponent implements OnInit, OnDestroy {
         }
       }, dismiss => { });
     } else {
-      const properties = this.form.get('properties') as FormGroup;
+      const properties = this.form.get('properties') as UntypedFormGroup;
       properties.removeControl(control);
       properties.addControl(control, this.fb.array([]));
     }
@@ -123,25 +123,25 @@ export class DatePropertyComponent implements OnInit, OnDestroy {
     if ((!value || !value.toString().trim()) && (typeof value !== 'number')) {
       return;
     }
-    let list: FormArray = (this.form.get('properties')).get(control) as FormArray;
+    let list: UntypedFormArray = (this.form.get('properties')).get(control) as UntypedFormArray;
     this.form.get('properties._listInput').setValue(null);
     if (!list.value) {
-      (this.form.get('properties') as FormGroup).removeControl(control);
-      (this.form.get('properties') as FormGroup).addControl(control, this.fb.array([]));
-      list = (this.form.get('properties')).get(control) as FormArray;
+      (this.form.get('properties') as UntypedFormGroup).removeControl(control);
+      (this.form.get('properties') as UntypedFormGroup).addControl(control, this.fb.array([]));
+      list = (this.form.get('properties')).get(control) as UntypedFormArray;
     }
     if (list.value.length > 0) {
       if (list.value.indexOf(value) > -1) {
         return;
       }
     }
-    list.push(new FormControl(value));
+    list.push(new UntypedFormControl(value));
   }
 
 
   removeFromList(control, index) {
     this.editStateListOfValues = null;
-    // const list = (this.form.get('properties')).get(control) as FormArray;
+    // const list = (this.form.get('properties')).get(control) as UntypedFormArray;
     const list = this.form.getRawValue()['properties'][control];
     const tempValue = list[index];
     this.deleteModal.title = 'Remove ' + list[index];
@@ -154,10 +154,10 @@ export class DatePropertyComponent implements OnInit, OnDestroy {
     this.deleteModalTemplateRef = this.commonService.modal(this.deleteModalTemplate);
     this.deleteModalTemplateRef.result.then(close => {
       if (close) {
-        ((this.form.get('properties')).get(control) as FormArray).removeAt(index);
-        if ((this.form.get('properties') as FormGroup).get('default').value
-          && tempValue === (this.form.get('properties') as FormGroup).get('default').value) {
-          (this.form.get('properties') as FormGroup).get('default').patchValue('');
+        ((this.form.get('properties')).get(control) as UntypedFormArray).removeAt(index);
+        if ((this.form.get('properties') as UntypedFormGroup).get('default').value
+          && tempValue === (this.form.get('properties') as UntypedFormGroup).get('default').value) {
+          (this.form.get('properties') as UntypedFormGroup).get('default').patchValue('');
         }
       }
     }, dismiss => { });
@@ -169,7 +169,7 @@ export class DatePropertyComponent implements OnInit, OnDestroy {
 
   get supportedTimezonesList() {
     if (this.form.get('properties.supportedTimezones')) {
-      return (this.form.get('properties.supportedTimezones') as FormArray).controls;
+      return (this.form.get('properties.supportedTimezones') as UntypedFormArray).controls;
     } else {
       return [];
     }

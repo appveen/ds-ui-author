@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, OnDestroy, TemplateRef } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 import { NgbTooltip, NgbTooltipConfig, NgbModalRef, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/utils/services/common.service';
 import * as _ from 'lodash';
@@ -20,11 +20,11 @@ export class IntegrationComponent implements OnInit, OnDestroy {
 
     @ViewChild('deleteModalTemplate', { static: false }) deleteModalTemplate: TemplateRef<HTMLElement>;
     @ViewChild('tooltip', { static: false }) tooltip: NgbTooltip;
-    @Input() form: FormGroup;
+    @Input() form: UntypedFormGroup;
     @Input() edit: any;
     deleteModalTemplateRef: NgbModalRef;
     deleteModal: DeleteModalConfig;
-    hookForm: FormGroup;
+    hookForm: UntypedFormGroup;
     previewHookFormat: boolean;
     hooks: {
         hookTitle?: string,
@@ -46,7 +46,7 @@ export class IntegrationComponent implements OnInit, OnDestroy {
     showHookWindow: boolean;
     constructor(
         private commonService: CommonService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private ngbToolTipConfig: NgbTooltipConfig,
         private appService: AppService) {
         this.deleteModal = {

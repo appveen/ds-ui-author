@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild, TemplateRef, OnDestroy, EventEmitter } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { noop } from 'rxjs';
@@ -39,10 +39,10 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     @ViewChild('resetPasswordModel', { static: false }) resetPasswordModel: TemplateRef<HTMLElement>;
     private _user;
     // @Input('user') user: any;
-    userBasicDetail: FormGroup;
-    userCreds: FormGroup;
+    userBasicDetail: UntypedFormGroup;
+    userCreds: UntypedFormGroup;
     resetPwd: boolean;
-    userAttributeForm: FormGroup;
+    userAttributeForm: UntypedFormGroup;
     manageAttributeModalRef: NgbModalRef;
     userAttributeList: Array<any>;
     isUserAttrEdit: boolean;
@@ -79,7 +79,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     userCredentialsModelRef: NgbModalRef;
     basicDetailsModelRef: NgbModalRef;
     resetPasswordModelRef: NgbModalRef;
-    resetPasswordForm: FormGroup;
+    resetPasswordForm: UntypedFormGroup;
     openDeleteModal: EventEmitter<any>;
     alertModal: {
         statusChange?: boolean;
@@ -91,7 +91,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     toggleFieldTypeSelector: boolean;
     types: Array<any>;
     showPassword: any;
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private ts: ToastrService,
         private appService: AppService,
         private commonService: CommonService) {

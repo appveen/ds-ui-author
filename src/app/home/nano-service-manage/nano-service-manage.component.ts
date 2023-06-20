@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild, OnDestroy, HostListener, ElementRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { CanComponentDeactivate } from 'src/app/utils/guards/route.guard';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -27,7 +27,7 @@ export class NanoServiceManageComponent implements OnInit, OnDestroy, CanCompone
     keyValModalTemplateRef: NgbModalRef;
     dataChangeModalTemplateRef: NgbModalRef;
     app: string;
-    form: FormGroup;
+    form: UntypedFormGroup;
     edit: any;
     breadcrumbPaths: Array<Breadcrumb>;
     subscriptions: any;
@@ -50,7 +50,7 @@ export class NanoServiceManageComponent implements OnInit, OnDestroy, CanCompone
         private appService: AppService,
         private route: ActivatedRoute,
         private router: Router,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private orderBy: OrderByPipe,
         private ts: ToastrService) {
         const self = this;

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { switchMap } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -28,7 +28,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
   subscriptions: any = {};
   breadcrumbPaths: Array<Breadcrumb>;
   openDeleteModal: EventEmitter<any>;
-  form: FormGroup;
+  form: UntypedFormGroup;
   showNewDataFormatWindow: boolean;
   showOptionsDropdown: any;
   selectedItemEvent: any
@@ -44,7 +44,7 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private ts: ToastrService,
     private commonPipe: CommonFilterPipe) {
     this.alertModal = {

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -12,7 +12,7 @@ import { CommonService } from 'src/app/utils/services/common.service';
 })
 export class CommonSettingsComponent implements OnInit {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   removedTags: Array<any>;
   headerData: any;
@@ -57,13 +57,13 @@ export class CommonSettingsComponent implements OnInit {
       this.removedTags.splice(_index, 1);
     }
     if (_field.value && _field.value.trim()) {
-      (<FormArray>this.form.controls.tags).push(new FormControl(_field.value));
+      (<UntypedFormArray>this.form.controls.tags).push(new UntypedFormControl(_field.value));
     }
     _field.value = null;
   }
   removeTag(_index) {
-    this.removedTags.push((<FormArray>this.form.controls.tags).at(_index));
-    (<FormArray>this.form.controls.tags).removeAt(_index);
+    this.removedTags.push((<UntypedFormArray>this.form.controls.tags).at(_index));
+    (<UntypedFormArray>this.form.controls.tags).removeAt(_index);
   }
 
   openHeadersModal(data?: any) {
@@ -120,11 +120,11 @@ export class CommonSettingsComponent implements OnInit {
 
 
   get definitions() {
-    return (<FormArray>this.form.get('definition')).controls;
+    return (<UntypedFormArray>this.form.get('definition')).controls;
   }
 
   get tags() {
-    return (<FormArray>this.form.get('tags')).controls;
+    return (<UntypedFormArray>this.form.get('tags')).controls;
   }
 
   get headers() {

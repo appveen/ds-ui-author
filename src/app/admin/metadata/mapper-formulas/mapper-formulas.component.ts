@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
 import { CommonService } from 'src/app/utils/services/common.service';
@@ -11,13 +11,13 @@ import { CommonService } from 'src/app/utils/services/common.service';
 })
 export class MapperFormulasComponent implements OnInit {
 
-  form: FormGroup;
+  form: UntypedFormGroup;
   formulaList: Array<any>;
   selectedFormula: any;
   toggleNewFormulaWindow: boolean;
   createFormulaLoader: boolean;
   openDeleteModal: EventEmitter<any>;
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     private commonService: CommonService,
     private ts: ToastrService) {
     this.formulaList = [];

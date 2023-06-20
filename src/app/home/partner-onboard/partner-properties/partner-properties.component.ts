@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/utils/services/common.service';
-import { FormGroup, FormArray, NgModel, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormArray, NgModel, UntypedFormBuilder, Validators } from '@angular/forms';
 import { AppService } from 'src/app/utils/services/app.service';
 
 @Component({
@@ -11,15 +11,15 @@ import { AppService } from 'src/app/utils/services/app.service';
 })
 export class PartnerPropertiesComponent implements OnInit {
 
-  @Input() partner: FormGroup;
+  @Input() partner: UntypedFormGroup;
   @Input() edit: any;
   @ViewChild('keyValModalTemplate', { static: false }) keyValModalTemplate: TemplateRef<HTMLElement>;
   keyValModalTemplateRef: NgbModalRef;
   data: any;
-  form: FormGroup;
+  form: UntypedFormGroup;
   constructor(private commonService: CommonService,
     private appService: AppService,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder) {
     const self = this;
     self.data = {};
   
@@ -244,9 +244,9 @@ export class PartnerPropertiesComponent implements OnInit {
     return Boolean(self.partner.get('agentTrustedIP.enabled').value);
   }
 
-  get ipList(): FormArray {
+  get ipList(): UntypedFormArray {
     const self = this;
-    return self.partner.get('agentTrustedIP.list') as FormArray;
+    return self.partner.get('agentTrustedIP.list') as UntypedFormArray;
   }
 
   get keyValueList() {

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,7 @@ import { CommonService } from 'src/app/utils/services/common.service';
 export class ResetServiceComponent implements OnInit {
 
   @ViewChild('purgeModalTemplate', { static: false }) purgeModalTemplate: TemplateRef<HTMLElement>;
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() edit: any;
   confirmServiceName: string;
   purgeModalTemplateRef: NgbModalRef;

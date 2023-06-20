@@ -1,7 +1,7 @@
 import {
     Component, OnInit, AfterViewInit, AfterContentChecked, OnDestroy, ViewChild, ElementRef, HostListener, ChangeDetectorRef, TemplateRef
 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { NgbTooltipConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -30,7 +30,7 @@ export class DataFormatManageComponent implements
     deleteModalEleRef: NgbModalRef;
     pageChangeModalTemplateRef: NgbModalRef;
     app: string;
-    form: FormGroup;
+    form: UntypedFormGroup;
     edit: any = {};
     dataFormatPattern = /^[a-zA-Z]/;
     types: Array<any> = [
@@ -68,7 +68,7 @@ export class DataFormatManageComponent implements
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private commonService: CommonService,
         private appService: AppService,
         private schemaService: SchemaBuilderService,
@@ -190,8 +190,9 @@ export class DataFormatManageComponent implements
     }
 
     resetForm() {
-        (this.form.get('definition') as FormArray).controls.splice(0);
-        (this.form.get('definition') as FormArray).push(this.schemaService.getDefinitionStructure());
+        const self = this;
+        (self.form.get('definition') as UntypedFormArray).controls.splice(0);
+        (self.form.get('definition') as UntypedFormArray).push(self.schemaService.getDefinitionStructure());
     }
 
     fillDetails(id?) {
@@ -211,7 +212,7 @@ export class DataFormatManageComponent implements
                     this.form.patchValue(temp);
                     this.form.get('type').patchValue('Object');
                     temp.definition = this.schemaService.generateStructure(res.definition);
-                    (this.form.get('definition') as FormArray).controls.splice(0);
+                    (this.form.get('definition') as UntypedFormArray).controls.splice(0);
                     temp.definition.forEach((element, i) => {
                         const tempDef = this.schemaService.getDefinitionStructure(temp.definition[i]);
                         if (temp.definition[i].properties && temp.definition[i].properties.name) {
@@ -221,7 +222,7 @@ export class DataFormatManageComponent implements
                             tempDef.get('properties.name').patchValue('_self');
                             this.onfocus = false;
                         }
-                        (this.form.get('definition') as FormArray).push(tempDef);
+                        (this.form.get('definition') as UntypedFormArray).push(tempDef);
                     });
                 } else {
                     temp = {
@@ -295,7 +296,7 @@ export class DataFormatManageComponent implements
     onSchemaCreate(schema: any) {
         this.form.get('type').patchValue(schema.type);
         schema.definition = this.schemaService.generateStructure(schema.definition);
-        (this.form.get('definition') as FormArray).controls.splice(0);
+        (this.form.get('definition') as UntypedFormArray).controls.splice(0);
         schema.definition.forEach((element, i) => {
             const tempDef = this.schemaService.getDefinitionStructure(schema.definition[i]);
             if (schema.definition[i].properties && schema.definition[i].properties.name) {
@@ -305,7 +306,7 @@ export class DataFormatManageComponent implements
                 tempDef.get('properties.name').patchValue('_self');
                 this.onfocus = false;
             }
-            (this.form.get('definition') as FormArray).push(tempDef);
+            (this.form.get('definition') as UntypedFormArray).push(tempDef);
         });
         this.showTextarea = null;
     }
@@ -383,7 +384,7 @@ export class DataFormatManageComponent implements
 
     addField(place?: string) {
         if (!place) {
-            const tempArr = this.form.get('definition') as FormArray;
+            const tempArr = this.form.get('definition') as UntypedFormArray;
             const temp = this.schemaService.getDefinitionStructure({ _newField: true });
             tempArr.push(temp);
         } else {
@@ -520,7 +521,7 @@ export class DataFormatManageComponent implements
             }
         });
         indexArr.reverse().forEach(i => {
-            (this.form.get('definition') as FormArray).removeAt(i);
+            (this.form.get('definition') as UntypedFormArray).removeAt(i);
         });
     }
     get name() {
@@ -546,7 +547,7 @@ export class DataFormatManageComponent implements
     }
 
     get definitions() {
-        return (this.form.get('definition') as FormArray).controls;
+        return (this.form.get('definition') as UntypedFormArray).controls;
     }
 
     get changesDone() {
