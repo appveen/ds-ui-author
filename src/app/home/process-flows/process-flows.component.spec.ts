@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { B2bFlowsComponent } from './process-flows.component';
+import { ProcessFlowsComponent } from './process-flows.component';
 
-describe('B2bFlowsComponent', () => {
-  let component: B2bFlowsComponent;
-  let fixture: ComponentFixture<B2bFlowsComponent>;
+describe('ProcessFlowsComponent', () => {
+  let component: ProcessFlowsComponent;
+  let fixture: ComponentFixture<ProcessFlowsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ B2bFlowsComponent ]
+      declarations: [ ProcessFlowsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(B2bFlowsComponent);
+    fixture = TestBed.createComponent(ProcessFlowsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
