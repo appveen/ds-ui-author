@@ -404,14 +404,14 @@
                 [(value)]="currNode.options.headers">
             </odp-add-headers>
         </div>
-        <!-- <div *ngIf="currNode.options.contentType=='application/json'" class="form-group position-relative">
+        <div *ngIf="currNode.options.contentType=='application/json'" class="form-group position-relative">
             <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeBody">
                 Body
             </label>
             <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
                 [currNode]="currNode">
             </odp-input-data-selector>
-        </div> -->
+        </div>
     </ng-container>
 
     <ng-container *ngIf="currNode?.type=='PLUGIN'">
