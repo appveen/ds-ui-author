@@ -359,19 +359,24 @@ export class SchemaBuilderService {
     checkForCase(control: AbstractControl) {
 
         const isCamelCase = (value: string): boolean => {
-            const result = /^[a-z][a-zA-Z0-9]*$/.test(value);
+            const result = /^[a-zA-Z][a-zA-Z0-9]*$/.test(value);
             return result;
         }
         const isSnakeCase = (value: string): boolean => {
-            const result = /^[a-z][a-z0-9_]*$/.test(value);
+            const result = /^[a-zA-Z][a-zA-Z0-9_.]*$/.test(value);
             return result;
         }
         const isKebabCase = (value: string): boolean => {
-            const result = /^[a-z][a-z0-9-]*$/.test(value);
+            const result = /^[a-zA-Z][a-zA-Z0-9-]*$/.test(value);
             return result;
         }
 
-        if (isCamelCase(control.value) || isSnakeCase(control.value) || isKebabCase(control.value) || !control.value || control.value === '_self') {
+        const isValidCase = (value: string): boolean => {
+            const result = /^[a-zA-Z][a-zA-Z0-9-_.]*$/.test(value);
+            return result;
+        }
+
+        if (isValidCase(control.value) || !control.value || control.value === '_self') {
             return null;
         }
         else {

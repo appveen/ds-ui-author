@@ -34,9 +34,9 @@
                 </div>
             </odp-basic-info>
         </div>
-        <div class="d-flex flex-column px-4 pb-4">
-            <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-4">
-              <odp-system-node [edit]="edit" [options]="options" [dataStructure]="dataStructure"></odp-system-node>
+        <div class="d-flex flex-column px-4 pb-4" >
+            <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-4" [ngSwitch]="nodeType">
+              <odp-system-node [edit]="edit" [options]="options" [dataStructure]="dataStructure" *ngSwitchDefault></odp-system-node>
             </div>
            
         </div>

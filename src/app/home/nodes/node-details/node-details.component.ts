@@ -42,6 +42,8 @@ export class NodeDetailsComponent {
   dataStructure: any = {}; 
   toggle: any;
   showDataMapping: boolean = false;
+
+  nodeType: string = 'SYSTEM';
   constructor(private commonService: CommonService,
     private appService: AppService,
     private router: Router,
