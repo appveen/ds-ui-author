@@ -172,6 +172,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'node/:id',
+        loadChildren: () =>
+          import('../home/nodes/node-details/node-details.module').then(
+            (m) => m.NodeDetailsModule
+          ),
+      },
+      {
         path: 'processFlow',
         loadChildren: () =>
           import('../home/process-flows/process-flows.module').then(
