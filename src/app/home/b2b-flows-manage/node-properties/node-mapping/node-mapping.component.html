@@ -103,3 +103,28 @@
         <button type="button" class="btn btn-primary btn-min-width" (click)="done()">Done</button>
     </div>
 </div>
+
+<ng-template #arrayOptions let-close="close" let-dismiss="dismiss">
+    <div class="modal-header">
+        <div class="modal-title">
+            <h5>Select Array Options</h5>
+        </div>
+    </div>
+    <div class="modal-body">
+        <p>Select an option to map Array Data: </p>
+        <div class="form-group d-flex align-items-center">
+            <input #forEachEle class="mr-2" type="radio" name="arrayOption"
+                (change)="onArrayOptionSelect($event,'forEach')">
+            <label for="forEach" class="m-0" (click)="forEachEle.click()">For Each</label>
+        </div>
+        <div class="form-group d-flex align-items-center">
+            <input #replaceEle class="mr-2" type="radio" name="arrayOption"
+                (change)="onArrayOptionSelect($event,'replace')">
+            <label for="replace" class="m-0" (click)="replaceEle.click()">Replace</label>
+        </div>
+        <div class="d-flex align-items-center justify-content-end mt-4">
+            <button type="button" class="btn btn-dark mr-3" (click)="arrayOptionsRef.close(false)">Cancel</button>
+            <button type="button" class="btn btn-success" (click)="arrayOptionsRef.close(true)">Done</button>
+        </div>
+    </div>
+</ng-template>
