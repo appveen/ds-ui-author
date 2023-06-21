@@ -90,8 +90,8 @@ export class NodesComponent implements OnInit {
   getNodes() {
     this.showLazyLoader = true;
     this.nodeList = [];
-    return this.commonService.get('config', `/${this.commonService.app._id}/processflow/utils/count`).pipe(switchMap((count: any) => {
-      return this.commonService.get('config', `/${this.commonService.app._id}/processflow/node`, {
+    return this.commonService.get('config', `/${this.commonService.app._id}/processnode/utils/count`).pipe(switchMap((count: any) => {
+      return this.commonService.get('config', `/${this.commonService.app._id}/processnode`, {
         count: count,
       });
     })).subscribe((res: any) => {
@@ -101,11 +101,11 @@ export class NodesComponent implements OnInit {
       //   // this.flowList.push(item);
       // });
       this.nodeList = res;
-      this.nodeList.forEach(e => {
-        if (e.status == 'Pending') {
-          this.commonService.updateStatus(e._id, 'node');
-        }
-      })
+      // this.nodeList.forEach(e => {
+      //   if (e.status == 'Pending') {
+      //     this.commonService.updateStatus(e._id, 'node');
+      //   }
+      // })
     }, err => {
       this.showLazyLoader = false;
       console.log(err);
@@ -123,7 +123,7 @@ export class NodesComponent implements OnInit {
     // payload['category'] = this.form.get('type').value;
     payload.app = this.commonService.app._id;
     payload.nodes = [];
-    this.commonService.post('config', `/${this.commonService.app._id}/processflow/node/`, payload).subscribe(res => {
+    this.commonService.post('config', `/${this.commonService.app._id}/processnode`, payload).subscribe(res => {
       this.showLazyLoader = false;
       this.form.reset({ type: 'SYSTEM' });
       this.ts.success('Node has been created.');
@@ -170,58 +170,58 @@ export class NodesComponent implements OnInit {
   }
 
 
-  discardDraft(id: string) {
-    const node = this.nodeList.find((e) => e._id === id);
-    const nodeIndex = this.nodeList.findIndex((e) => e._id === id);
-    this.alertModal = {
-      title: 'Discard Draft',
-      message: 'Are you sure you want to discard draft version?',
-      index: 1,
-    };
-    this.alertModalTemplateRef = this.commonService.modal(
-      this.alertModalTemplate,
-      { size: 'bm' }
-    );
-    this.alertModalTemplateRef.result.then(
-      (close) => {
-        if (close) {
-          let request;
-          if (node.status === 'Draft') {
-            request = this.commonService.put(
-              'config',
-              `/${this.commonService.app._id}/processflow/node/` + id
-            );
-          } else {
-            request = this.commonService.put(
-              'config',
-              `/${this.commonService.app._id}/processflow/node/${id}/draftDelete`
-            );
-          }
-          request.subscribe(
-            (res) => {
-              this.ts.success('Draft Deleted.');
-              if (node.status !== 'Draft') {
-                this.router.navigate([
-                  '/app/',
-                  this.commonService.app._id,
-                  'node',
-                  id,
-                ]);
-              } else {
-                if (nodeIndex > -1) {
-                  this.nodeList.splice(nodeIndex, 1);
-                }
-              }
-            },
-            (err) => {
-              this.commonService.errorToast(err);
-            }
-          );
-        }
-      },
-      (dismiss) => { }
-    );
-  }
+  // discardDraft(id: string) {
+  //   const node = this.nodeList.find((e) => e._id === id);
+  //   const nodeIndex = this.nodeList.findIndex((e) => e._id === id);
+  //   this.alertModal = {
+  //     title: 'Discard Draft',
+  //     message: 'Are you sure you want to discard draft version?',
+  //     index: 1,
+  //   };
+  //   this.alertModalTemplateRef = this.commonService.modal(
+  //     this.alertModalTemplate,
+  //     { size: 'bm' }
+  //   );
+  //   this.alertModalTemplateRef.result.then(
+  //     (close) => {
+  //       if (close) {
+  //         let request;
+  //         if (node.status === 'Draft') {
+  //           request = this.commonService.put(
+  //             'config',
+  //             `/${this.commonService.app._id}/processnode/` + id
+  //           );
+  //         } else {
+  //           request = this.commonService.put(
+  //             'config',
+  //             `/${this.commonService.app._id}/processnode/${id}/draftDelete`
+  //           );
+  //         }
+  //         request.subscribe(
+  //           (res) => {
+  //             this.ts.success('Draft Deleted.');
+  //             if (node.status !== 'Draft') {
+  //               this.router.navigate([
+  //                 '/app/',
+  //                 this.commonService.app._id,
+  //                 'node',
+  //                 id,
+  //               ]);
+  //             } else {
+  //               if (nodeIndex > -1) {
+  //                 this.nodeList.splice(nodeIndex, 1);
+  //               }
+  //             }
+  //           },
+  //           (err) => {
+  //             this.commonService.errorToast(err);
+  //           }
+  //         );
+  //       }
+  //     },
+  //     (dismiss) => { }
+  //   );
+  // }
 
   editNode(item: any) {
     this.appService.edit = item._id;
