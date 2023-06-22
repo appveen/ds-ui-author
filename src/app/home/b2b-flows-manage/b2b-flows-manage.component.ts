@@ -221,6 +221,8 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
             y: 20 + (i * 72)
           };
         }
+        node.coordinates.x = Math.floor(node.coordinates.x / 20) * 20;
+        node.coordinates.y = Math.floor(node.coordinates.y / 20) * 20;
       });
       this.flowService.cleanPayload(this.nodeList);
       this.flowService.nodeList = this.nodeList;
@@ -516,6 +518,15 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   @HostListener('document:mouseup', ['$event'])
   onMouseUp(event: any) {
+    if (this.isMouseDown) {
+      let targetEle = (this.isMouseDown.target as HTMLElement);
+      let currNode = this.nodeList.find(e => e._id == targetEle.dataset.id);
+      if (currNode) {
+        currNode.coordinates.x = Math.floor(currNode.coordinates.x / 20) * 20;
+        currNode.coordinates.y = Math.floor(currNode.coordinates.y / 20) * 20;
+        this.flowService.reCreatePaths.emit();
+      }
+    }
     this.isMouseDown = null;
     event.stopPropagation();
     // this.flowService.anchorSelected = null;
