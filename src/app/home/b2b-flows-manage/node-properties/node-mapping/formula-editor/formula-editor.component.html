@@ -14,10 +14,6 @@
                     (drag)="onSourceDrag($event,item)">
                     {{item.name}}
                 </div>
-                <div *ngIf="(availableMethods|commonFilter:'name':searchTerm).length==0"
-                    class="d-flex align-items-center justify-content-between">
-                    <span class="text-muted">No Match Found</span>
-                </div>
             </div>
         </div>
         <div class="formula-canvas border-right border-left flex-wrap" (drop)="onDrop($event)"

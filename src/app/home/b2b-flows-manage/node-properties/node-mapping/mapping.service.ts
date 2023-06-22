@@ -53,56 +53,17 @@ export class MappingService {
           if (item.key == 'true') {
             item.key = '_self';
           }
-          let key;
-          let nameAsKey;
-          let name;
-          // if (item.key == '_self') {
-          //   key = parentDef.dataPath + '[#]';
-          //   nameAsKey = parentDef.dataPath + '[#]';
-          //   name = parentDef.properties.name + '[#]';
-          // } else {
-          //   key = parentDef ? parentDef.dataPath + '.' + item.key : item.key;
-          //   nameAsKey = parentDef ? parentDef.dataPath + '.' + item.properties.name : item.properties.name;
-          //   name = parentDef ? parentDef.properties.name + '/' + item.properties.name : item.properties.name;
-          // }
-          if (parentDef) {
-            if (parentDef.type == 'Array') {
-              key = parentDef.dataPath + '[#].' + item.key;
-              nameAsKey = parentDef.dataPath + '[#].' + item.properties.name;
-              name = parentDef.properties.name + '[#]/' + item.properties.name;
-            } else {
-              key = parentDef.dataPath + '.' + item.key;
-              nameAsKey = parentDef.dataPath + '.' + item.properties.name;
-              name = parentDef.properties.name + '/' + item.properties.name;
-            }
-          } else {
-            key = item.key;
-            nameAsKey = item.properties.name;
-            name = item.properties.name;
-          }
-          item.properties.name = name;
           item.depth = parentDef ? parentDef.depth + 1 : 0;
-          if (type == 'JSON') {
-            item._id = `${key}`;
-            item.properties.dataPath = key;
-            item.dataPath = key;
-          } else {
-            item._id = `${nameAsKey}`;
-            item.properties.dataPath = nameAsKey;
-            item.dataPath = nameAsKey;
-          }
+          item._id = item.properties.dataPath;
+          item.name = item.properties.name;
+          item.dataPath = item.properties.dataPath;
+          list.push(item);
           if (item.type == 'Array') {
             if (item.definition[0].type == 'Object') {
-              list.push(item);
               list = list.concat(this.flatten(type, item.definition[0].definition, item));
-            } else {
-              list.push(item);
             }
           } else if (item.type == 'Object') {
-            list.push(item);
             list = list.concat(this.flatten(type, item.definition, item));
-          } else {
-            list.push(item);
           }
         });
       };

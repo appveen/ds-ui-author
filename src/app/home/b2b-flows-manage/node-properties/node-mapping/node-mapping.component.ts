@@ -121,10 +121,6 @@ export class NodeMappingComponent implements OnInit {
         }
       });
     });
-    setTimeout(() => {
-      const mappingBox: HTMLElement = document.querySelectorAll('.mapping-box')[0] as HTMLElement;
-      this.svgStyle = { 'height': mappingBox.scrollHeight + 'px' };
-    }, 500);
     this.fetchAllFormulas()
   }
 
@@ -145,9 +141,10 @@ export class NodeMappingComponent implements OnInit {
   convertToMapping(item: any) {
     const temp: any = {};
     temp.target = {
+      _id: item._id,
       type: item.type,
       dataPath: item.dataPath,
-      _id: item._id
+      dataPathSegs: item.properties.dataPathSegs
     };
     temp.source = (item.source || []).map((s) => {
       let temp: any = {};
@@ -155,6 +152,7 @@ export class NodeMappingComponent implements OnInit {
       temp.type = s.type;
       temp.dataPath = s.dataPath;
       temp.nodeId = s.nodeId;
+      temp.dataPathSegs = s.properties.dataPathSegs;
       return temp;
     });
     temp.formula = item.formula;
@@ -255,7 +253,6 @@ export class NodeMappingComponent implements OnInit {
         x: pathRect.width,
         y: targetRect.top - pathRect.top + 10
       };
-      // let path = this.mappingService.generateLinkPath(sourceCoordinates.x, sourceCoordinates.y, targetCoordinates.x, targetCoordinates.y, 1.5);
       let path = `M ${sourceCoordinates.x} ${sourceCoordinates.y} L ${targetCoordinates.x} ${targetCoordinates.y};`
       this.pathList.push({ path, source: source._id, target: target._id });
     }
@@ -270,64 +267,18 @@ export class NodeMappingComponent implements OnInit {
           if (def.key == 'true') {
             def.key = '_self';
           }
-          let key;
-          let nameAsKey;
-          let name;
-          let pathArray = parentDef ? parentDef.pathArray : [];
-          // if (def.key == '_self') {
-          //   key = parentDef.dataPath + '[#]';
-          //   nameAsKey = parentDef.dataPath + '[#]';
-          //   name = parentDef.properties.name + '[#]';
-          // } else {
-          //   key = parentDef ? parentDef.dataPath + '.' + def.key : def.key;
-          //   nameAsKey = parentDef ? parentDef.dataPath + '.' + def.properties.name : def.properties.name;
-          //   name = parentDef ? parentDef.properties.name + '/' + def.properties.name : def.properties.name;
-          // }
-          if (parentDef) {
-            if (parentDef.type == 'Array') {
-              key = parentDef.dataPath + '[#].' + def.key;
-              nameAsKey = parentDef.dataPath + '[#].' + def.properties.name;
-              name = parentDef.properties.name + '[#]/' + def.properties.name;
-              pathArray.push('[#]');
-              pathArray.push(def.key);
-            } else {
-              key = parentDef.dataPath + '.' + def.key;
-              nameAsKey = parentDef.dataPath + '.' + def.properties.name;
-              name = parentDef.properties.name + '/' + def.properties.name;
-              pathArray.push(def.key);
-            }
-          } else {
-            key = def.key;
-            nameAsKey = def.properties.name;
-            name = def.properties.name;
-            pathArray.push(def.key);
-          }
           def.nodeId = node._id;
-          def.properties.name = name;
-          def.pathArray = pathArray;
-          if (node.dataStructure.outgoing && node.dataStructure.outgoing.formatType == 'JSON') {
-            def._id = `${node._id}.${bodyKey}.${key}`;
-            def.properties.dataPath = key;
-            def.dataPath = key;
-          } else {
-            def._id = `${node._id}.${bodyKey}.${nameAsKey}`;
-            def.properties.dataPath = nameAsKey;
-            def.dataPath = nameAsKey;
-          }
-          def.name = name;
+          def._id = `${node._id}.${bodyKey}.${def.properties.dataPath}`;
+          def.dataPath = def.properties.dataPath
+          def.name = def.properties.name
           def.depth = parentDef ? parentDef.depth + 1 : 0;
+          list.push(def);
           if (def.type == 'Array') {
             if (def.definition[0].type == 'Object') {
-              list.push(def);
               list = list.concat(this.flattenSource(node, def.definition[0].definition, bodyKey, def));
-            } else {
-              list.push(def);
             }
           } else if (def.type == 'Object') {
-            list.push(def);
             list = list.concat(this.flattenSource(node, def.definition, bodyKey, def));
-          } else {
-            list.push(def);
           }
         });
       };
@@ -504,7 +455,7 @@ export class NodeMappingComponent implements OnInit {
         let targetPath = def.dataPath.split('[#]')[0];
         let matchingTarget = this.allTargets.find(e => e.dataPath == targetPath);
         if (matchingTarget) {
-          if (matchingTarget.definition[0] && matchingTarget.definition[0].definition.every(e => !e.source || e.source.length == 0)) {
+          if (matchingTarget.definition && matchingTarget.definition[0] && matchingTarget.definition[0].definition.every(e => !e.source || e.source.length == 0)) {
             matchingTarget.disabled = false;
           }
         }

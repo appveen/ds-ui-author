@@ -343,7 +343,6 @@ export class SchemaBuilderService {
             if (!tempForm.get('key').touched) {
                 tempForm.get('key').patchValue(val === '_self' ? '_self' : _.camelCase(val));
             }
-
         });
         // tempForm.get('key').valueChanges.subscribe(val => {
         //     tempForm.get('key').patchValue(val === '_self' ? '_self' : val);
