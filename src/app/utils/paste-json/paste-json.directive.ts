@@ -40,9 +40,9 @@ export class PasteJsonDirective {
     });
   }
 
-  createDefinition(json: any) {
+  createDefinition(json: any, parent?: any) {
     if (Array.isArray(json)) {
-      return this.createDefinition({ _self: json[0] });
+      return this.createDefinition({ _self: json[0] }, parent);
     } else {
       return Object.keys(json).map(i => {
         const temp: any = {};
@@ -53,6 +53,19 @@ export class PasteJsonDirective {
         temp.properties = {
           name: i === '_self' || i
         };
+        if (parent) {
+          temp.properties.dataPathSegs = JSON.parse(JSON.stringify(parent.properties.dataPathSegs));
+          if (i == '_self') {
+            temp.properties.dataPath = parent.properties.dataPath + '[#]';
+            temp.properties.dataPathSegs.push('[#]');
+          } else {
+            temp.properties.dataPath = parent.properties.dataPath + '.' + i;
+            temp.properties.dataPathSegs.push(i);
+          }
+        } else {
+          temp.properties.dataPath = i;
+          temp.properties.dataPathSegs = [i];
+        }
         temp.type = _.capitalize((typeof json[i] || 'string'));
         if (i.toLowerCase().split(' ').indexOf('date') > -1) {
           temp.type = 'Date';
@@ -64,11 +77,10 @@ export class PasteJsonDirective {
         if (typeof json[i] === 'object') {
           if (Array.isArray(json[i])) {
             temp.type = 'Array';
-            temp.definition = this.createDefinition(json[i]);
           } else {
             temp.type = 'Object';
-            temp.definition = this.createDefinition(json[i]);
           }
+          temp.definition = this.createDefinition(json[i], temp);
         }
         return temp;
       });

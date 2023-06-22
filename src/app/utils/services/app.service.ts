@@ -21,7 +21,7 @@ export class AppService {
     cloneLibraryId: string;
     loginComponent: boolean;
     editUser: boolean;
-    code:any;
+    code: any;
     toggleSideNav: EventEmitter<boolean>;
     detectPermissionChange: EventEmitter<boolean>;
     ldapUserPass: string;
@@ -165,7 +165,7 @@ export class AppService {
         return JSON.parse(JSON.stringify(obj));
     }
 
-    getFlows(){
+    getFlows() {
         this.invokeEvent.next()
     }
 
@@ -492,26 +492,37 @@ export class AppService {
         ];
     }
 
-    addKeyForDataStructure(definition: any, type: string, parent?: string) {
+    addKeyForDataStructure(definition: any, type: string, parent?: any) {
         if (definition) {
             definition.forEach(def => {
+                let key;
                 if (!def.properties) {
-                    def.properties = {};
+                    def.properties = {
+                        dataPathSegs: []
+                    };
                 }
                 if (type === 'camelCase') {
-                    def.properties.dataKey = def.key;
+                    key = def.key;
                 } else {
-                    def.properties.dataKey = def.properties.name;
+                    key = def.properties.name;
                 }
-                if (def.type === 'Array') {
-                    def.properties.dataKey = def.properties.dataKey + '[#]';
+                if (parent) {
+                    def.properties.dataPathSegs = JSON.parse(JSON.stringify(parent.properties.dataPathSegs));
+                    if (key == '_self') {
+                        def.properties.dataPath = parent.properties.dataPath + '[#]';
+                        def.properties.dataPathSegs.push('[#]');
+                    } else {
+                        def.properties.dataPath = parent.properties.dataPath + '.' + key;
+                        def.properties.dataPathSegs.push(key);
+                    }
+                } else {
+                    def.properties.dataPath = key;
+                    def.properties.dataPathSegs = [key];
                 }
-                def.properties.dataPath = parent ?
-                    (parent + '.' + def.properties.dataKey) : def.properties.dataKey;
                 if (def.type === 'Object') {
-                    this.addKeyForDataStructure(def.definition, type, def.properties.dataPath);
-                } else if (def.type === 'Array' && def.definition[0].type === 'Object') {
-                    this.addKeyForDataStructure(def.definition[0].definition, type, def.properties.dataPath);
+                    this.addKeyForDataStructure(def.definition, type, def);
+                } else if (def.type === 'Array') {
+                    this.addKeyForDataStructure(def.definition, type, def);
                 }
             });
         }
