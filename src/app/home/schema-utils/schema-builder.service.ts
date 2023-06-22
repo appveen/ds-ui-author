@@ -372,7 +372,7 @@ export class SchemaBuilderService {
         }
 
         const isValidCase = (value: string): boolean => {
-            const result = /^[a-zA-Z][a-zA-Z0-9-_.]*$/.test(value);
+            const result = /[^?\[\]\{\}\(\)\"*&%$<>\/;:]/.test(value);
             return result;
         }
 

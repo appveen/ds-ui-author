@@ -45,7 +45,7 @@ const routes: Routes = [
     PasswordFieldModule,
     ChangeOnEditModule,
     DataStructureSelectorModule,
-    B2bFlowsManageModule
+    // B2bFlowsManageModule
   ]
 })
 export class NodeDetailsModule { }

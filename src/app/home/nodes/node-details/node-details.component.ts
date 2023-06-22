@@ -1,4 +1,4 @@
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as _  from 'lodash';
@@ -12,7 +12,7 @@ import { GetOptions, CommonService } from 'src/app/utils/services/common.service
   templateUrl: './node-details.component.html',
   styleUrls: ['./node-details.component.scss']
 })
-export class NodeDetailsComponent {
+export class NodeDetailsComponent implements OnInit{
   @ViewChild('pageChangeModalTemplate', { static: false }) pageChangeModalTemplate;
   subscriptions: any = {};
   activeTab: number;
@@ -22,8 +22,8 @@ export class NodeDetailsComponent {
   breadcrumbPaths: Array<Breadcrumb>;
   alertModalRef: NgbModalRef;
   pageChangeModalTemplateRef: NgbModalRef;
-  updatedGrpName: string;
-  updatedGrpDesc: string;
+  // updatedGrpName: string;
+  // updatedGrpDesc: string;
   openDeleteModal: EventEmitter<any>;
   alertModal: {
     statusChange?: boolean;
@@ -31,15 +31,24 @@ export class NodeDetailsComponent {
     message: string;
     _id: string;
   };
-  allUsers: Array<any>;
   node: any;
   oldData: any;
   edit: any;
-  availableNodes: Array<any>;
+  // availableNodes: Array<any>;
   isDeleted: boolean = false;
-  options: any = {}
+  options: any = {
+    method: 'GET',
+    path: '',
+    contentType: 'application/json',
+    timeout: '',
+    retryCount: '',
+    retryInterval: '',
+  }
   changesDone: EventEmitter<any> = new EventEmitter<any>();
-  dataStructure: any = {}; 
+  dataStructure: any = {
+    incoming: {},
+    outgoing: {}
+  }; 
   toggle: any;
   showDataMapping: boolean = false;
 
@@ -52,8 +61,8 @@ export class NodeDetailsComponent {
     this.apiConfig = {};
     this.alertModalData = {};
     this.breadcrumbPaths = [];
-    this.updatedGrpName = '';
-    this.updatedGrpDesc = '';
+    // this.updatedGrpName = '';
+    // this.updatedGrpDesc = '';
     this.openDeleteModal = new EventEmitter();
     this.alertModal = {
       statusChange: false,
@@ -67,14 +76,14 @@ export class NodeDetailsComponent {
     this.node = {
       values: {}
     };
-    this.availableNodes = [];
+    // this.availableNodes = [];
   }
 
   ngOnInit() {
     this.breadcrumbPaths.push({
       active: false,
       label: 'Nodes',
-      url: '/app/' + this.commonService.app._id + '/node'
+      url: '/app/' + this.commonService.app._id + '/processNode'
     });
     this.commonService.changeBreadcrumb(this.breadcrumbPaths)
     // this.getAvailableNodes();
@@ -84,30 +93,30 @@ export class NodeDetailsComponent {
           this.edit.status = true;
           this.appService.editLibraryId = null;
         }
-        // this.getNode(param.id);
+        this.getNode(param.id);
       }
     });
   }
 
-  getAvailableNodes() {
-    this.showLazyLoader = true;
-    this.subscriptions['getAvailableNodes'] = this.commonService.get('config', `/${this.commonService.app._id}/node/utils/availableNodes`).subscribe(res => {
-      this.showLazyLoader = false;
-      console.log(res);
-      this.availableNodes = res;
-    }, err => {
-      this.activeTab = 0;
-      this.showLazyLoader = false;
-      this.commonService.errorToast(err, 'Unable to fetch user groups, please try again later');
-    });
-  }
+  // getAvailableNodes() {
+  //   this.showLazyLoader = true;
+  //   this.subscriptions['getAvailableNodes'] = this.commonService.get('config', `/${this.commonService.app._id}/node/utils/availableNodes`).subscribe(res => {
+  //     this.showLazyLoader = false;
+  //     console.log(res);
+  //     this.availableNodes = res;
+  //   }, err => {
+  //     this.activeTab = 0;
+  //     this.showLazyLoader = false;
+  //     this.commonService.errorToast(err, 'Unable to fetch user groups, please try again later');
+  //   });
+  // }
 
   getNode(id: string) {
     this.showLazyLoader = true;
     this.apiConfig.filter = {
       app: this.commonService.app._id
     };
-    this.subscriptions['getNode'] = this.commonService.get('config', `/${this.commonService.app._id}/node/` + id, this.apiConfig).subscribe(res => {
+    this.subscriptions['getNode'] = this.commonService.get('config', `/${this.commonService.app._id}/processnode/` + id, this.apiConfig).subscribe(res => {
       this.showLazyLoader = false;
       if (!res.values || _.isEmpty(res.values)) {
         res.values = {};
@@ -145,7 +154,7 @@ export class NodeDetailsComponent {
   }
 
   saveNode() {
-    const payload = this.appService.cloneObject(this.node);
+    const payload = _.cloneDeep(this.node);
     delete payload?.options
     let response;
     // if (_.isEmpty(payload.values)) {
@@ -158,31 +167,27 @@ export class NodeDetailsComponent {
     }
     this.showLazyLoader = true;
     if (this.node._id) {
-      response = this.commonService.put('config', `/${this.commonService.app._id}/node/` + this.node._id, payload);
+      response = this.commonService.put('config', `/${this.commonService.app._id}/processnode/` + this.node._id, payload);
     } else {
-      response = this.commonService.post('config', `/${this.commonService.app._id}/node/`, payload);
+      response = this.commonService.post('config', `/${this.commonService.app._id}/processnode/`, payload);
     }
     this.subscriptions['saveNode'] = response.subscribe(res => {
       if (!res.values || _.isEmpty(res.values)) {
         res.values = {};
       }
-      this.updatedGrpName = res.name;
-      this.updatedGrpDesc = res.description;
+      // this.updatedGrpName = res.name;
+      // this.updatedGrpDesc = res.description;
       this.showLazyLoader = false;
       this.ts.success('Node saved successfully');
       this.node = res;
-      this.oldData = this.appService.cloneObject(this.node);
-      this.router.navigate(['/app', this.commonService.app._id, 'con']);
+      this.oldData = _.cloneDeep(this.node);
+      this.router.navigate(['/app', this.commonService.app._id, 'processNode']);
     }, err => {
       this.showLazyLoader = false;
       this.commonService.errorToast(err);
     });
   }
 
-
-  onFormatChange(event, _){
-
-  }
   deleteNode() {
     this.alertModal.statusChange = false;
     this.alertModal.title = 'Delete Node';
@@ -195,12 +200,12 @@ export class NodeDetailsComponent {
   closeDeleteModal(data) {
     if (data) {
       this.isDeleted = true
-      const url = `/${this.commonService.app._id}/node/${data._id}`
+      const url = `/${this.commonService.app._id}/processnode/${data._id}`
       this.showLazyLoader = true;
       this.subscriptions['deleteNode'] = this.commonService.delete('config', url).subscribe(d => {
         this.showLazyLoader = false;
         this.ts.success('Node deleted sucessfully');
-        this.router.navigate(['/app', this.commonService.app._id, 'con']);
+        this.router.navigate(['/app', this.commonService.app._id, 'processNode']);
       }, err => {
         this.showLazyLoader = false;
         this.commonService.errorToast(err, 'Unable to delete, please try again later');
@@ -273,22 +278,22 @@ export class NodeDetailsComponent {
       delete payload.description;
     }
 
-    this.subscriptions['saveNode'] = this.commonService.post('config', `/${this.commonService.app._id}/node/utils/test`, payload).subscribe(res => {
-      this.ts.success(res.message);
-    }, err => {
+    // this.subscriptions['saveNode'] = this.commonService.post('config', `/${this.commonService.app._id}/node/utils/test`, payload).subscribe(res => {
+    //   this.ts.success(res.message);
+    // }, err => {
 
-      this.commonService.errorToast(err);
-    });
+    //   this.commonService.errorToast(err);
+    // });
   }
 
   get canEditGroup() {
-    if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin || this.hasPermissionStartsWith('PMCON')) {
+    if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin || this.hasPermissionStartsWith('PMPN')) {
       return true;
     } else {
-      const list = this.commonService.getEntityPermissions('CON');
-      if (list.length === 0 && this.hasPermission('PMCONBU', 'CON')) {
+      const list = this.commonService.getEntityPermissions('PN');
+      if (list.length === 0 && this.hasPermission('PMPN', 'PN')) {
         return true;
-      } else if (list.length > 0 && list.find(e => e.id === 'PMCONBU')) {
+      } else if (list.length > 0 && list.find(e => e.id === 'PMPN')) {
         return true;
       } else {
         return false;
@@ -297,7 +302,7 @@ export class NodeDetailsComponent {
   }
 
   get editBasicDetails() {
-    if (this.commonService.hasPermission('PMCONBU')) {
+    if (this.commonService.hasPermission('PMPN')) {
       return true;
     }
     return false;

@@ -24,7 +24,7 @@ import { ParamSelectorComponent } from './param-selector/param-selector.componen
         FormulaEditorComponent,
         ParamSelectorComponent
     ],
-    exports: [FormulaBuilderComponent],
+    exports: [FormulaBuilderComponent, FormulaEditorComponent],
     providers: [FormulaBuilderService]
 })
 export class FormulaBuilderModule { }

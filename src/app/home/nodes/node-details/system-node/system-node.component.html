@@ -29,6 +29,19 @@
         <odp-change-on-edit id="requestTimeout" [isTimeout]="true" [(ngModel)]="options['timeout']"
             (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
     </div>
+    <div class="form-group position-relative">
+        <label class="font-14 fw-400 text-dark" for="retryCount">Retry Count</label>
+        <odp-change-on-edit id="retryCount" [(ngModel)]="options['retryCount']"
+            (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+        <!-- <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count"> -->
+    </div>
+    <div class="form-group position-relative">
+        <label class="font-14 fw-400 text-dark" for="retryInterval">Retry Interval (sec)</label>
+        <odp-change-on-edit id="retryInterval" [(ngModel)]="options['retryInterval']"
+            (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+        <!-- <input id="retryInterval" class="form-control" type="number"
+            [(ngModel)]="currNode.options.retry.interval"> -->
+    </div>
 
     <div class="border rounded p-2 bg-light mb-3">
         <div class="form-group">
@@ -44,9 +57,24 @@
             Data Mapping
         </button>
     </div>
-    <div [ngClass]="{'show':toggle['mapping']}" class="node-mapping-window border-left position-fixed bg-white p-4">
+
+    <div class="border rounded p-2 bg-light mb-3">
+        <div class="form-group">
+            <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure</label>
+            <small class="form-text text-muted mb-3">Set the data structure that this node will return</small>
+            <odp-data-structure-selector id="outputDataStructure" class="d-flex" [edit]="edit"
+                [format]="dataStructure?.outgoing" (formatChange)="onFormatChange($event,'outgoing')"
+                [hideGeneric]="false">
+            </odp-data-structure-selector>
+        </div>
+        <button *ngIf="showDataMapping" type="button" class="btn btn-dark w-100 ignore-outside"
+            (click)="toggle['mapping']=!toggle['mapping']">
+            Data Mapping
+        </button>
+    </div>
+    <!-- <div [ngClass]="{'show':toggle['mapping']}" class="node-mapping-window border-left position-fixed bg-white p-4">
         <odp-node-mapping *ngIf="toggle['mapping']" [edit]="edit" [currNode]=""
              (close)="toggle['mapping']=false"
             source="incoming"></odp-node-mapping>
-    </div>
+    </div> -->
 </ng-container>
