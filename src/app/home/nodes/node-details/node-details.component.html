@@ -12,17 +12,15 @@
             <odp-basic-info hideLogo="true" [(name)]="node.name" [(description)]="node.description"
                 [hideLogo]="true" [edit]="edit">
                 <div class="d-flex align-items-end align-self-start">
-                    <button *ngIf="hasPermission('PMCONBD') && edit.status" type="button"
+                    <button *ngIf="hasPermission('PMPN') && edit.status" type="button"
                         class="btn btn-white border mr-3" (click)="deleteNode()">
                         <span class="dsi dsi-trash"></span>
                     </button>
-                    <button class="btn btn-outline-primary btn-min-width mr-3" (click)="testConnection()">
-                        <span>Test</span>
-                    </button>
+                   
                     <button class="btn btn-white border btn-min-width mr-3" routerLink="../">
                         <span>Cancel</span>
                     </button>
-                    <ng-container *ngIf="hasPermissionStartsWith('PMCON')">
+                    <ng-container *ngIf="hasPermissionStartsWith('PMPN')">
                         <button *ngIf="!edit.status" class="btn btn-primary btn-min-width" (click)="edit.status=true"
                             [disabled]="node.name === 'Default DB Node' || node.name === 'Default File Node'">
                             <span>Edit</span>

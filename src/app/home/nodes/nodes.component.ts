@@ -39,6 +39,7 @@ export class NodesComponent implements OnInit {
   sortModel: any;
   copied: any;
   breadcrumbPaths: Array<Breadcrumb>;
+  showOptionsDropdown:any = {};
 
 
 
@@ -128,7 +129,7 @@ export class NodesComponent implements OnInit {
       this.form.reset({ type: 'SYSTEM' });
       this.ts.success('Node has been created.');
       this.appService.edit = res._id;
-      this.router.navigate(['/app/', this.commonService.app._id, 'node', res._id]);
+      this.router.navigate(['/app/', this.commonService.app._id, 'processNode', res._id]);
     }, err => {
       this.showLazyLoader = false;
       this.form.reset({ type: 'SYSTEM' });
@@ -154,13 +155,13 @@ export class NodesComponent implements OnInit {
     // this.cloneData.name = val;
     // this.cloneData.inputNode = { ...this.cloneData.inputNode, ...this.form.get('inputNode').value };
     // this.cloneData.inputNode.options.path = val ? '/' + _.camelCase(val) : null;
-    this.commonService.post('config', `/${this.commonService.app._id}/node`, this.cloneData).subscribe(res => {
+    this.commonService.post('config', `/${this.commonService.app._id}/processnode`, this.cloneData).subscribe(res => {
       this.showLazyLoader = false;
       this.isClone = false;
       this.form.reset({ type: 'SYSTEM' });
       this.ts.success('Node has been cloned.');
       this.appService.edit = res._id;
-      this.router.navigate(['/app/', this.commonService.app._id, 'node', res._id]);
+      this.router.navigate(['/app/', this.commonService.app._id, 'processNode', res._id]);
     }, err => {
       this.showLazyLoader = false;
       this.form.reset({ type: 'SYSTEM' });
@@ -225,12 +226,11 @@ export class NodesComponent implements OnInit {
 
   editNode(item: any) {
     this.appService.edit = item._id;
-    this.router.navigate(['/app/', this.commonService.app._id, 'node', this.appService.edit,
-    ]);
+    this.router.navigate(['/app/', this.commonService.app._id, 'processNode', this.appService.edit]);
   }
 
   viewNode(item: any) {
-    this.router.navigate(['/app', this.commonService.app._id, 'node', item._id]);
+    this.router.navigate(['/app', this.commonService.app._id, 'processNode', item._id]);
   }
 
   deleteNode(index: number) {
@@ -248,7 +248,7 @@ export class NodesComponent implements OnInit {
     this.isClone = true;
     const temp = item;
     this.form.get('name').patchValue(temp.name + ' Copy');
-    this.form.get('type').patchValue(temp.category);
+    this.form.get('type').patchValue(temp.type);
     this.form.get('inputNode').patchValue(temp.inputNode);
     this.cloneData = _.cloneDeep(temp);
     console.log(temp)
@@ -263,9 +263,7 @@ export class NodesComponent implements OnInit {
     this.selectedLibrary = this.nodeList[i];
     this.showOptionsDropdown[i] = true;
   }
-  showOptionsDropdown(showOptionsDropdown: any) {
-    throw new Error('Method not implemented.');
-  }
+
 
   // get selectedPlugin() {
   //   return this.staterPluginList.find(e => e._selected);

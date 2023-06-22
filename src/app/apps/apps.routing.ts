@@ -155,7 +155,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('../home/connectors-manage/connectors-manage.module').then(
             (m) => m.ConnectorsManageModule
-          ),
+          )
       },
       {
         path: 'api-keys',
@@ -165,18 +165,18 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'node',
+        path: 'processNode',
         loadChildren: () =>
           import('../home/nodes/nodes.module').then(
             (m) => m.NodesModule
-          ),
+          )
       },
       {
-        path: 'node/:id',
+        path: 'processNode/:id',
         loadChildren: () =>
-          import('../home/nodes/node-details/node-details.module').then(
-            (m) => m.NodeDetailsModule
-          ),
+        import('../home/nodes/node-details/node-details.module').then(
+          (m) => m.NodeDetailsModule
+          )
       },
       {
         path: 'processFlow',

@@ -285,7 +285,7 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   get checkForFileOptions() {
-    if (this.currNode?.dataStructure?.outgoing?.formatType === 'EXCEL' || this.currNode?.dataStructure?.outgoing?.formatType === 'CSV') {
+    if (this.currNode?.dataStructure?.outgoing?.formatType === 'EXCEL' || this.currNode?.dataStructure?.outgoing?.formatType === 'CSV' || this.currNode?.dataStructure?.outgoing?.formatType === 'DELIMITER') {
       return true
     }
     else {
