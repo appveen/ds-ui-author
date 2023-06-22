@@ -114,9 +114,9 @@ export class NodeMappingComponent implements OnInit {
         });
       }
     });
-    this.mappingService.clearMappings.subscribe(()=>{
+    this.mappingService.clearMappings.subscribe(() => {
       this.allTargets.forEach((target: any) => {
-        if(target.source && target.source.length>0){
+        if (target.source && target.source.length > 0) {
           target.source.splice(0);
         }
       });
@@ -171,18 +171,28 @@ export class NodeMappingComponent implements OnInit {
       minMatchCharLength: 5,
       keys: ['dataPath']
     };
-    this.allTargets.forEach(def => {
-      const fuse = new Fuse(this.allSources.filter(e => e.type != 'Object'), options);
-      let result = fuse.search(def.dataPath).filter(e => e.score < 0.3);
+    this.allTargets.forEach((def: any) => {
+      let temp = this.allSources.find(e => (e.dataPath == def.dataPath) || (_.toLower(_.camelCase(e.dataPath)) == _.toLower(_.camelCase(def.dataPath))));
       if (!def.source) {
         def.source = [];
       }
-      if (def.source.length == 0) {
-        result = result.sort((a, b) => a.score - b.score);
-        if (result.length > 0) {
-          def.source.push(result[0].item);
-          def.formula = `{{${result[0].item._id}}}`;
-          // this.mappingService.reCreatePaths.emit();
+      if (temp && def.type != 'Array' && temp.dataPath.indexOf('[#]') == -1) {
+        def.source.push(temp);
+      }
+    });
+    this.allTargets.forEach((def: any) => {
+      if (def.type !== 'Array' && def.dataPath.indexOf('[#]') == -1) {
+        const fuse = new Fuse(this.allSources.filter(e => e.type != 'Object'), options);
+        let result = fuse.search(def.dataPath).filter(e => e.score < 0.3);
+        if (!def.source) {
+          def.source = [];
+        }
+        if (def.source.length == 0) {
+          result = result.sort((a, b) => a.score - b.score);
+          if (result.length > 0) {
+            def.source.push(result[0].item);
+            // this.mappingService.reCreatePaths.emit();
+          }
         }
       }
     });
@@ -263,6 +273,7 @@ export class NodeMappingComponent implements OnInit {
           let key;
           let nameAsKey;
           let name;
+          let pathArray = parentDef ? parentDef.pathArray : [];
           // if (def.key == '_self') {
           //   key = parentDef.dataPath + '[#]';
           //   nameAsKey = parentDef.dataPath + '[#]';
@@ -277,18 +288,23 @@ export class NodeMappingComponent implements OnInit {
               key = parentDef.dataPath + '[#].' + def.key;
               nameAsKey = parentDef.dataPath + '[#].' + def.properties.name;
               name = parentDef.properties.name + '[#]/' + def.properties.name;
+              pathArray.push('[#]');
+              pathArray.push(def.key);
             } else {
               key = parentDef.dataPath + '.' + def.key;
               nameAsKey = parentDef.dataPath + '.' + def.properties.name;
               name = parentDef.properties.name + '/' + def.properties.name;
+              pathArray.push(def.key);
             }
           } else {
             key = def.key;
             nameAsKey = def.properties.name;
             name = def.properties.name;
+            pathArray.push(def.key);
           }
           def.nodeId = node._id;
           def.properties.name = name;
+          def.pathArray = pathArray;
           if (node.dataStructure.outgoing && node.dataStructure.outgoing.formatType == 'JSON') {
             def._id = `${node._id}.${bodyKey}.${key}`;
             def.properties.dataPath = key;
@@ -427,65 +443,29 @@ export class NodeMappingComponent implements OnInit {
     if (def.disabled) {
       return;
     }
-    const options = {
-      includeScore: true,
-      isCaseSensitive: true,
-      useExtendedSearch: true,
-      minMatchCharLength: 5,
-      keys: ['dataPath']
-    };
-    const sourceCol = new Fuse(this.allSources, options);
-    // const targetCol = new Fuse(this.allTargets, options);
 
-    let sourcePath = this.dragItem._id.split('[#]')[0];
-    let targetPath = def.dataPath.split('[#]')[0];
-    if (this.dragItem.dataPath.indexOf('[#]') > -1 && def.dataPath.indexOf('[#]') > -1) {
-      let matchingSource = this.allSources.find(e => e._id == sourcePath);
-      let matchingTarget = this.allTargets.find(e => e.dataPath == targetPath);
-      this.arrayOptionsRef = this.commonService.modal(this.arrayOptions);
-      this.arrayOptionsRef.result.then((close) => {
-        if (close) {
-          if (this.arrayAction == 'forEach') {
-            matchingTarget.disabled = true;
-            matchingTarget.definition[0].definition.forEach((tarEle: any, ti: number) => {
-              if (!tarEle.source) {
-                tarEle.source = [];
-              }
-              let tarSeg = tarEle.dataPath.split('[#]')[1];
-              let temp = matchingSource.definition[0].definition.find(e => e.dataPath.endsWith(tarSeg));
-              console.log(temp);
-              if (temp) {
-                tarEle.source.push(temp);
-              } else if (tarEle._id == def._id) {
-                def.source.push(this.dragItem);
-              }
-            });
-          } else {
-            if (!matchingTarget.source) {
-              matchingTarget.source = [];
-            }
-            matchingTarget.source.push(matchingSource);
-            matchingTarget.definition[0].definition.forEach((tarEle: any, ti: number) => {
-              tarEle.hide = true;
-            });
-          }
-          this.mappingService.reCreatePaths.emit();
-        }
-        this.arrayAction = null;
-      }, (dismiss) => {
-        this.arrayAction = null;
-      });
-    } else {
-      if (!def.source) {
-        def.source = [];
+    if (def.type == 'Array') {
+      let allTargets = this.allTargets.filter(e => e.dataPath.startsWith(def.dataPath) && e.dataPath != def.dataPath);
+      if (allTargets && allTargets.length > 0) {
+        allTargets.forEach(e => {
+          e.hide = true;
+        });
       }
-      if (this.dragItem) {
-        def.source.push(this.dragItem);
-        this.mappingService.reCreatePaths.emit();
-        // def.formula = def.source.map(e => '{{' + e._id + '}}').join(' + ');
+    } else if (def.dataPath.indexOf('[#]') > -1) {
+      let path = def.dataPath.split('[#].')[0];
+      let temp = this.allTargets.find(e => e.dataPath == path);
+      if (temp) {
+        temp.disabled = true;
       }
-      this.dragItem = null;
     }
+    if (!def.source) {
+      def.source = [];
+    }
+    if (this.dragItem) {
+      def.source.push(this.dragItem);
+      this.mappingService.reCreatePaths.emit();
+    }
+    this.dragItem = null;
   }
 
   isMapped(def: any) {
