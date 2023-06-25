@@ -16,8 +16,9 @@ import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 import { ChangeOnEditModule } from 'src/app/utils/change-on-edit/change-on-edit.module';
 import { DataStructureSelectorModule } from 'src/app/utils/data-structure-selector/data-structure-selector.module';
-import { B2bFlowsManageModule } from '../../b2b-flows-manage/b2b-flows-manage.module';
 import { SystemNodeComponent } from './system-node/system-node.component';
+import { UserNodeComponent } from './user-node/user-node.component';
+import { EventNodeComponent } from './event-node/event-node.component';
 
 
 const routes: Routes = [
@@ -26,7 +27,9 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     NodeDetailsComponent,
-    SystemNodeComponent
+    SystemNodeComponent,
+    UserNodeComponent,
+    EventNodeComponent
   ],
   imports: [
     CommonModule,
