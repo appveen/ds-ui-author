@@ -15,11 +15,14 @@ export class UserNodeComponent {
   isDeleted: boolean = false;
   changesDone: EventEmitter<any> = new EventEmitter<any>();
   @Input() dataStructure: any = {}; 
-  toggle: any;
+  toggle: any = {
+    permissions: false
+  };
   showDataMapping: boolean = false;
 
   constructor() {}
   onFormatChange(event, type){
+    this.dataStructure['incoming'] = event;
     // if (!environment.production) {
     //   console.log(data, type);
     // }

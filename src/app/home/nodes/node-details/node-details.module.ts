@@ -19,6 +19,7 @@ import { DataStructureSelectorModule } from 'src/app/utils/data-structure-select
 import { SystemNodeComponent } from './system-node/system-node.component';
 import { UserNodeComponent } from './user-node/user-node.component';
 import { EventNodeComponent } from './event-node/event-node.component';
+import { SchemaPermissionModule } from 'src/app/utils/schema-permission/schema-permission.module';
 
 
 const routes: Routes = [
@@ -48,7 +49,6 @@ const routes: Routes = [
     PasswordFieldModule,
     ChangeOnEditModule,
     DataStructureSelectorModule,
-    // B2bFlowsManageModule
-  ]
+    SchemaPermissionModule  ]
 })
 export class NodeDetailsModule { }

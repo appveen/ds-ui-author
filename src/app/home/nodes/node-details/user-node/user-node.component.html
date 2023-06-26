@@ -1,64 +1,21 @@
 <ng-container>
-    <div class="form-group">
-        <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
-        <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="options['method']"
-            (ngModelChange)="changesDone.emit()">
-            <option value="POST" selected>POST</option>
-            <option value="GET">GET</option>
-            <option value="PUT">PUT</option>
-            <option value="DELETE">DELETE</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label class="font-14 fw-400 text-dark" for="nodeEndpoint">API Endpoint</label>
-        <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="options['path']"
-            (ngModelChange)="changesDone.emit()"
-            (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
-    </div>
-    <div class="form-group">
-        <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
-        <select id="nodeContentType" class="form-control" [(ngModel)]="options['contentType']"
-            (ngModelChange)="changesDone.emit()">
-            <option value="application/json" selected>application/json</option>
-            <option value="application/xml">application/xml</option>
-            <option value="multipart/form-data">multipart/form-data</option>
-        </select>
-    </div>
-    <div class="form-group position-relative">
-        <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
-        <odp-change-on-edit id="requestTimeout" [isTimeout]="true" [(ngModel)]="options['timeout']"
-            (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
-    </div>
-    <div class="form-group position-relative">
-        <label class="font-14 fw-400 text-dark" for="retryCount">Retry Count</label>
-        <odp-change-on-edit id="retryCount" [(ngModel)]="options['retryCount']"
-            (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
-        <!-- <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count"> -->
-    </div>
-    <div class="form-group position-relative">
-        <label class="font-14 fw-400 text-dark" for="retryInterval">Retry Interval (sec)</label>
-        <odp-change-on-edit id="retryInterval" [(ngModel)]="options['retryInterval']"
-            (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
-        <!-- <input id="retryInterval" class="form-control" type="number"
-            [(ngModel)]="currNode.options.retry.interval"> -->
-    </div>
 
     <div class="border rounded p-2 bg-light mb-3">
         <div class="form-group">
-            <label class="font-14 fw-400 text-dark mb-0" for="inputDataStructure">Input Data Structure</label>
-            <small class="form-text text-muted mb-3">Set the data structure that this node will accept</small>
+            <label class="font-14 fw-400 text-dark mb-0" for="inputDataStructure">Schema</label>
+            <small class="form-text text-muted mb-3">Set the schema that this node will accept</small>
             <odp-data-structure-selector id="inputDataStructure" class="d-flex" [edit]="edit"
                 [format]="dataStructure?.incoming" (formatChange)="onFormatChange($event,'incoming')"
                 [hideGeneric]="false">
             </odp-data-structure-selector>
         </div>
-        <button type="button" class="btn btn-dark w-100 ignore-outside" (click)="toggle['mapping']=!toggle['mapping']"
-            *ngIf="showDataMapping">
-            Data Mapping
+        <button type="button" class="btn btn-dark ignore-outside" (click)="toggle['permissions']=!toggle['permissions']"
+            *ngIf="dataStructure?.incoming">
+            Schema Permissions
         </button>
     </div>
 
-    <div class="border rounded p-2 bg-light mb-3">
+    <!-- <div class="border rounded p-2 bg-light mb-3">
         <div class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure</label>
             <small class="form-text text-muted mb-3">Set the data structure that this node will return</small>
@@ -71,5 +28,16 @@
             (click)="toggle['mapping']=!toggle['mapping']">
             Data Mapping
         </button>
+    </div> -->
+
+
+    <div class="form-group position-relative">
+        <label class="font-14 fw-400 text-dark" for="requestTimeout">Inactivity timeout (sec)</label>
+        <odp-change-on-edit id="requestTimeout" [isTimeout]="true" [(ngModel)]="options['timeout']"
+            (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+    </div>
+
+    <div *ngIf="toggle['permissions']">
+        <odp-schema-permission [schema]="dataStructure.incoming" class="d-flex" (close)="toggle['permissions'] = false"></odp-schema-permission>
     </div>
 </ng-container>

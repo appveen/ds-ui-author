@@ -7,6 +7,7 @@ import { CommonService, GetOptions } from 'src/app/utils/services/common.service
 import * as _ from 'lodash'
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { switchMap } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'odp-nodes',
@@ -30,7 +31,6 @@ export class NodesComponent implements OnInit {
     index: number;
   };
   searchTerm: string;
-  ts: any;
   records: any = [];
   cloneData: boolean = false;
   isClone: boolean;
@@ -44,7 +44,11 @@ export class NodesComponent implements OnInit {
 
 
 
-  constructor(private commonService: CommonService, private appService: AppService,   private router: Router,  private fb: UntypedFormBuilder,) {
+  constructor(private commonService: CommonService, 
+    private appService: AppService,  
+     private router: Router,  
+     private fb: UntypedFormBuilder, 
+     private ts: ToastrService) {
     this.breadcrumbPaths = [{
       active: true,
       label: 'Nodes'
@@ -237,7 +241,7 @@ export class NodesComponent implements OnInit {
     this.alertModal.statusChange = false;
     this.alertModal.title = 'Delete Node?';
     this.alertModal.message =
-      'Are you sure you want to delete this node? This action will delete : ' + this.records[index].name;
+      'Are you sure you want to delete this node? This action will delete : ' + this.nodeList[index].name;
     this.alertModal.index = index;
     this.openDeleteModal.emit(this.alertModal);
   }
@@ -287,8 +291,8 @@ export class NodesComponent implements OnInit {
   closeDeleteModal(data) {
     if (data) {
       const url =
-        `/${this.commonService.app._id}/node/` +
-        this.records[data.index]._id;
+        `/${this.commonService.app._id}/processnode/` +
+        this.nodeList[data.index]._id;
       this.showLazyLoader = true;
       this.subscriptions['deleteservice'] = this.commonService
         .delete('config', url)
@@ -296,8 +300,9 @@ export class NodesComponent implements OnInit {
           (d) => {
             this.showLazyLoader = false;
             this.ts.info(d.message ? d.message : 'Deleting Node...');
-            this.records[data.index].status = 'Pending';
-            this.commonService.updateDelete(this.records[data.index]._id, 'node')
+            // this.nodeList[data.index].status = 'Pending';
+            this.commonService.updateDelete(this.nodeList[data.index]._id, 'processnode')
+            this.getNodes();
           },
           (err) => {
             this.showLazyLoader = false;

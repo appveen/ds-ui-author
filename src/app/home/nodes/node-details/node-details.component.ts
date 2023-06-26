@@ -122,6 +122,7 @@ export class NodeDetailsComponent implements OnInit{
         res.values = {};
       }
       this.node = res;
+      this.nodeType = res.type;
       this.oldData = this.appService.cloneObject(res);
       this.breadcrumbPaths.push({
         active: true,

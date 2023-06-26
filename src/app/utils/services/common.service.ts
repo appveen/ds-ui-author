@@ -1291,6 +1291,17 @@ export class CommonService {
         })
       }, 10000)
     }
+    if (type == 'processnode') {
+      this.timeInterval[_id] = setInterval(() => {
+        this.get('config', `/${this.app._id}/processnode`, { filter: { "_id": _id } }).subscribe(res => {
+          if (!res.length) {
+            self.entity.delete.emit(_id);
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          }
+        })
+      }, 10000)
+    }
   }
 
   // connectSocket() {
