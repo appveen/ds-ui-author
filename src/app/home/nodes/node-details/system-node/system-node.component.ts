@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'odp-system-node',
@@ -6,36 +6,44 @@ import { Component, EventEmitter, Input, OnInit } from '@angular/core';
   styleUrls: ['./system-node.component.scss']
 })
 export class SystemNodeComponent implements OnInit {
-  @Input() options: any;
+  api: any = {
+    method: 'GET',
+    path: '',
+    contentType: 'application/json',
+    timeout: '',
+    retryCount: '',
+    retryInteval: '',
+  }
 
   @Input() edit: any;
+  @Input() nodeDetails: any = {};
   availableNodes: Array<any>;
   isDeleted: boolean = false;
   changesDone: EventEmitter<any> = new EventEmitter<any>();
-  @Input() dataStructure: any = {}; 
+  dataStructure: any = {}; 
+  @Output() onChangeData: EventEmitter<any> = new EventEmitter<any>();
   toggle: any;
   showDataMapping: boolean = false;
 
   constructor() {}
 
   ngOnInit(): void {
+    this.dataStructure = this.nodeDetails.dataStructure;
+    this.api = this.nodeDetails.api;
       
   }
-  onFormatChange(event, type){
-    // if (!environment.production) {
-    //   console.log(data, type);
-    // }
-    // if (!this.dataStructure) {
-    //   this.dataStructure = {};
-    // }
+  onFormatChange(data, type){
+    if (!this.dataStructure) {
+      this.dataStructure = {};
+    }
 
-    // if (type == 'incoming') {
-    //   this.dataStructure.incoming = data;
-    // }
+    if (type == 'incoming') {
+      this.dataStructure.incoming = data;
+    }
 
-    // if (type == 'outgoing') {
-    //   this.dataStructure.outgoing = data;
-    // }
+    if (type == 'outgoing') {
+      this.dataStructure.outgoing = data;
+    }
 
     // this.mappings = [];
     // (this.onSuccess || []).forEach(item => {
@@ -45,6 +53,12 @@ export class SystemNodeComponent implements OnInit {
     //   }
     // })
     this.changesDone.emit();
+    this.onChangeData.emit(this.nodeDetails)
     // this.flowService.dataStructureSelected.emit({ currNode: this.currNode, type });
+  }
+
+  onChange(event){
+    this.onChangeData.emit(this.nodeDetails)
+    this.changesDone.emit();
   }
 }
