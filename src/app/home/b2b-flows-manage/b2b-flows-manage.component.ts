@@ -51,6 +51,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   showPathProperties: boolean;
   selectedPath: any;
+  isProcessFlow: boolean = false;
 
   constructor(private commonService: CommonService,
     private appService: AppService,
@@ -81,6 +82,9 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.route.data.subscribe(data => {
+      this.isProcessFlow = data.isProcessFlow;
+    })
     this.flowService.showAddNodeDropdown.pipe(
       tap(() => {
         this.resetSelection();
@@ -162,12 +166,13 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   getFlow(id: string, draft?: boolean) {
     this.apiCalls.getFlow = true;
-    let path = `/${this.commonService.app._id}/flow/${id}`;
+    let path = `/${this.commonService.app._id}/${this.isProcessFlow ? 'processflow' : 'flow'}/${id}`;
     if (draft) {
       path += '?draft=true';
     }
     this.showCodeEditor = false;
-    this.subscriptions['getFlow'] = this.commonService.get('partnerManager', path).subscribe(res => {
+    const component = this.isProcessFlow ? 'config' : 'partnerManager'
+    this.subscriptions['getFlow'] = this.commonService.get(component, path).subscribe(res => {
       this.breadcrumbPaths.push({
         active: true,
         label: res.name + ' (Edit)'

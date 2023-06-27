@@ -176,7 +176,7 @@
                         ngbTooltip="Name can be only alphanumeric and can only contain spaces"></span>
                 </ng-container>
             </div>
-            <label for="name" class="font-13 text-secondary">
+            <!-- <label for="name" class="font-13 text-secondary">
                 <span class="text">Input Node</span>
                 <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
             </label>
@@ -201,8 +201,8 @@
                         [checked]="form.get('type').value === 'PLUGIN'">
                     <span>Plugin</span>
                 </label>
-            </div>
-            <div *ngIf="form.get('type').value === 'PLUGIN'" class="form-group">
+            </div> -->
+            <!-- <div *ngIf="form.get('type').value === 'PLUGIN'" class="form-group">
                 <odp-search-box open="true" (enteredText)="searchPlugin($event)"></odp-search-box>
                 <div class="plugins-list-wrapper border rounded mt-3">
                     <div class="list-group list-group-flush">
@@ -216,7 +216,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
     </div>

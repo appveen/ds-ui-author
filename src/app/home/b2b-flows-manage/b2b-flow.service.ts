@@ -45,7 +45,11 @@ export class B2bFlowService {
       RESPONSE: 'Response',
       ERROR: 'Global Error',
       FILE_READ: 'File Reader',
-      FILE_WRITE: 'File Writer'
+      FILE_WRITE: 'File Writer',
+      SYSTEM: 'System Task',
+      USER: 'User Task',
+      EVENT: 'Event Trigger',
+      DECISION: 'Decision',
     };
     this.nodeList = [];
     this.nodeIDCounter = 0;
@@ -62,6 +66,8 @@ export class B2bFlowService {
       }
     } else if (node.type == 'API' && !isInputNode) {
       return 'Invoke API';
+    }else if (node.type=== 'PROCESS'){
+      return 'Starter Node';
     } else if (this.nodeLabelMap[node.type]) {
       return this.nodeLabelMap[node.type];
     } else {
