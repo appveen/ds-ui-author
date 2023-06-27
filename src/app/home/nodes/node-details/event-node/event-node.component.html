@@ -1,7 +1,7 @@
 <ng-container>
     <div class="form-group">
         <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
-        <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="options['method']"
+        <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="api['method']"
             (ngModelChange)="changesDone.emit()">
             <option value="POST" selected>POST</option>
             <option value="GET">GET</option>
@@ -11,13 +11,13 @@
     </div>
     <div class="form-group">
         <label class="font-14 fw-400 text-dark" for="nodeEndpoint">API Endpoint</label>
-        <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="options['path']"
+        <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="api['path']"
             (ngModelChange)="changesDone.emit()"
             (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
     </div>
     <div class="form-group">
         <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
-        <select id="nodeContentType" class="form-control" [(ngModel)]="options['contentType']"
+        <select id="nodeContentType" class="form-control" [(ngModel)]="api['contentType']"
             (ngModelChange)="changesDone.emit()">
             <option value="application/json" selected>application/json</option>
             <option value="application/xml">application/xml</option>
@@ -26,21 +26,21 @@
     </div>
     <div class="form-group position-relative">
         <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
-        <odp-change-on-edit id="requestTimeout" [isTimeout]="true" [(ngModel)]="options['timeout']"
+        <odp-change-on-edit id="requestTimeout" [isTimeout]="true" [(ngModel)]="api['timeout']"
             (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
     </div>
     <div class="form-group position-relative">
         <label class="font-14 fw-400 text-dark" for="retryCount">Retry Count</label>
-        <odp-change-on-edit id="retryCount" [(ngModel)]="options['retryCount']"
+        <odp-change-on-edit id="retryCount" [(ngModel)]="api['retryCount']"
             (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
-        <!-- <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count"> -->
+        <!-- <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.api.retry.count"> -->
     </div>
     <div class="form-group position-relative">
         <label class="font-14 fw-400 text-dark" for="retryInterval">Retry Interval (sec)</label>
-        <odp-change-on-edit id="retryInterval" [(ngModel)]="options['retryInterval']"
+        <odp-change-on-edit id="retryInterval" [(ngModel)]="api['retryInterval']"
             (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
         <!-- <input id="retryInterval" class="form-control" type="number"
-            [(ngModel)]="currNode.options.retry.interval"> -->
+            [(ngModel)]="currNode.api.retry.interval"> -->
     </div>
 
     <div class="border rounded p-2 bg-light mb-3">

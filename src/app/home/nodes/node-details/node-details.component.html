@@ -36,7 +36,7 @@
             <div class="d-flex flex-column w-100 h-100 bg-white rounded border p-4" >
                 <odp-user-node [edit]="edit" [options]="api" [dataStructure]="dataStructure" *ngIf="nodeType === 'USER'"></odp-user-node>
 
-                <odp-event-node [edit]="edit" [options]="api" [dataStructure]="dataStructure" *ngIf="nodeType === 'EVENT'"></odp-event-node>
+                <odp-event-node [edit]="edit" [nodeDetails]="node" *ngIf="nodeType === 'EVENT  && node.name'" (onChangeData)="onChangeData($event)"></odp-event-node>
 
               <odp-system-node [edit]="edit" [nodeDetails]="node" *ngIf="nodeType === 'SYSTEM' && node.name" (onChangeData)="onChangeData($event)"></odp-system-node>
             </div>

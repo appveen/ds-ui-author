@@ -11,13 +11,13 @@
     </div>
     <div class="form-group">
         <label class="font-14 fw-400 text-dark" for="nodeEndpoint">API Endpoint</label>
-        <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="api['path']"
+        <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="api['path']" 
             (ngModelChange)="onChange($event)"
             (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
     </div>
     <div class="form-group">
         <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
-        <select id="nodeContentType" class="form-control" [(ngModel)]="api['contentType']"
+        <select id="nodeContentType" class="form-control" [(ngModel)]="api['contentType']" [disabled]="!edit.status"
             (ngModelChange)="onChange($event)">
             <option value="application/json" selected>application/json</option>
             <option value="application/xml">application/xml</option>
