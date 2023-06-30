@@ -49,7 +49,7 @@ export class B2bFlowService {
       SYSTEM: 'System Task',
       USER: 'User Task',
       EVENT: 'Event Trigger',
-      DECISION: 'Decision',
+      DECISION: 'Decision'
     };
     this.nodeList = [];
     this.nodeIDCounter = 0;
@@ -66,7 +66,7 @@ export class B2bFlowService {
       }
     } else if (node.type == 'API' && !isInputNode) {
       return 'Invoke API';
-    }else if (node.type=== 'PROCESS'){
+    } else if (node.type === 'PROCESS') {
       return 'Starter Node';
     } else if (this.nodeLabelMap[node.type]) {
       return this.nodeLabelMap[node.type];

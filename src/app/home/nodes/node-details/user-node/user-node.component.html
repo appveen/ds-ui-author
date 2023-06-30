@@ -38,6 +38,7 @@
     </div>
 
     <div *ngIf="toggle['permissions']">
-        <odp-schema-permission [schema]="dataStructure.incoming" class="d-flex" (close)="toggle['permissions'] = false"></odp-schema-permission>
+        <odp-schema-permission [schema]="dataStructure.incoming" class="d-flex"
+            (close)="toggle['permissions'] = false"></odp-schema-permission>
     </div>
 </ng-container>

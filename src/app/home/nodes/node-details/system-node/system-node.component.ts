@@ -8,11 +8,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class SystemNodeComponent implements OnInit {
   api: any = {
     method: 'GET',
-    path: '',
+    endpoint: '',
     contentType: 'application/json',
     timeout: '',
     retryCount: '',
     retryInteval: '',
+    type: '',
+    headers: {}
   }
 
   @Input() edit: any;
@@ -20,19 +22,19 @@ export class SystemNodeComponent implements OnInit {
   availableNodes: Array<any>;
   isDeleted: boolean = false;
   changesDone: EventEmitter<any> = new EventEmitter<any>();
-  dataStructure: any = {}; 
+  dataStructure: any = {};
   @Output() onChangeData: EventEmitter<any> = new EventEmitter<any>();
   toggle: any;
   showDataMapping: boolean = false;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.dataStructure = this.nodeDetails.dataStructure;
     this.api = this.nodeDetails.api;
-      
+
   }
-  onFormatChange(data, type){
+  onFormatChange(data, type) {
     if (!this.dataStructure) {
       this.dataStructure = {};
     }
@@ -57,7 +59,7 @@ export class SystemNodeComponent implements OnInit {
     // this.flowService.dataStructureSelected.emit({ currNode: this.currNode, type });
   }
 
-  onChange(event){
+  onChange(event) {
     this.onChangeData.emit(this.nodeDetails)
     this.changesDone.emit();
   }
