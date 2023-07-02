@@ -504,7 +504,7 @@ export class AppService {
                 if (type === 'camelCase') {
                     key = def.key;
                 } else {
-                    key = def.properties.name;
+                    key = def.key == '_self' ? '_self' : def.properties.name;
                 }
                 if (parent) {
                     def.properties.dataPathSegs = JSON.parse(JSON.stringify(parent.properties.dataPathSegs));
