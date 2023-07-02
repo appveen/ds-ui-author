@@ -281,7 +281,20 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   get showInputSelector() {
-    return !this.isInputNode && this.currNode.type != 'ERROR';
+    if (this.isInputNode) {
+      return false;
+    }
+    if (this.currNode.type == 'ERROR') {
+      return false;
+    }
+    if (this.currNode.type == 'CONVERT_JSON_JSON'
+      || this.currNode.type == 'CONVERT_JSON_XML'
+      || this.currNode.type == 'CONVERT_XML_JSON'
+      || this.currNode.type == 'CONVERT_JSON_CSV'
+      || this.currNode.type == 'CONVERT_CSV_JSON') {
+      return false;
+    }
+    return true;
   }
 
   get checkForFileOptions() {
@@ -298,10 +311,16 @@ export class NodePropertiesComponent implements OnInit {
   get showOutputSelector() {
     return this.currNode.type != 'ERROR'
       && this.currNode?.type != 'DATASERVICE'
+      && this.currNode?.type != 'MAPPING'
       && this.currNode?.type != 'DEDUPE'
       && this.currNode?.type != 'CONFLICT'
       && this.currNode?.type != 'FILE_WRITE'
       && this.currNode?.type != 'TIMER'
-      && this.currNode?.type != 'RESPONSE';
+      && this.currNode?.type != 'RESPONSE'
+      && this.currNode.type != 'CONVERT_JSON_JSON'
+      && this.currNode.type != 'CONVERT_JSON_XML'
+      && this.currNode.type != 'CONVERT_XML_JSON'
+      && this.currNode.type != 'CONVERT_JSON_CSV'
+      && this.currNode.type != 'CONVERT_CSV_JSON';
   }
 }

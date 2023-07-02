@@ -131,9 +131,18 @@
     min-width: 140px;
     max-width: 140px;
 
+    .node-text-icon {
+      min-width: 32px;
+      max-width: 32px;
+      min-height: 32px;
+      max-height: 32px;
+      line-height: 32px;
+      text-align: center;
+    }
+
     .node-list-item {
-      min-width: 140px;
-      max-width: 140px;
+      min-width: 200px;
+      max-width: 200px;
       position: absolute;
       left: 140px;
       display: none;
@@ -142,8 +151,8 @@
       .node-item {
         min-height: 32px;
         max-height: 32px;
-        min-width: 140px;
-        max-width: 140px;
+        min-width: 200px;
+        max-width: 200px;
       }
     }
 

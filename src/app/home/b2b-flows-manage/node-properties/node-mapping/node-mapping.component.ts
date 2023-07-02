@@ -118,6 +118,7 @@ export class NodeMappingComponent implements OnInit {
       this.allTargets.forEach((target: any) => {
         if (target.source && target.source.length > 0) {
           target.source.splice(0);
+          this.markAttributesDisabled(target);
         }
       });
     });
@@ -448,19 +449,23 @@ export class NodeMappingComponent implements OnInit {
     if (index > -1) {
       def.source.splice(index, 1);
       this.mappingService.reCreatePaths.emit();
-      this.allTargets.forEach(item => {
-        if (item.dataPath.startsWith(def.dataPath)) {
-          item.hide = false;
-        }
-        let targetPath = def.dataPath.split('[#]')[0];
-        let matchingTarget = this.allTargets.find(e => e.dataPath == targetPath);
-        if (matchingTarget) {
-          if (matchingTarget.definition && matchingTarget.definition[0] && matchingTarget.definition[0].definition.every(e => !e.source || e.source.length == 0)) {
-            matchingTarget.disabled = false;
-          }
-        }
-      });
+      this.markAttributesDisabled(def);
     }
+  }
+
+  markAttributesDisabled(def: any) {
+    this.allTargets.forEach(item => {
+      if (item.dataPath.startsWith(def.dataPath)) {
+        item.hide = false;
+      }
+      let targetPath = def.dataPath.split('[#]')[0];
+      let matchingTarget = this.allTargets.find(e => e.dataPath == targetPath);
+      if (matchingTarget) {
+        if (matchingTarget.definition && matchingTarget.definition[0] && matchingTarget.definition[0].definition.every(e => !e.source || e.source.length == 0)) {
+          matchingTarget.disabled = false;
+        }
+      }
+    });
   }
 
   onArrayOptionSelect(event: any, type: string) {

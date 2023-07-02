@@ -29,6 +29,8 @@ export class B2bFlowService {
     this.dataStructureSelected = new EventEmitter();
     this.nodeLabelMap = {
       FILE: 'File Agent',
+      API_XML: 'Invoke API XML',
+      API_MULTIPART: 'API Multipart Upload',
       TIMER: 'Timer',
       CODEBLOCK: 'Code Block',
       CONNECTOR: 'Connector',
@@ -45,7 +47,16 @@ export class B2bFlowService {
       RESPONSE: 'Response',
       ERROR: 'Global Error',
       FILE_READ: 'File Reader',
-      FILE_WRITE: 'File Writer'
+      FILE_WRITE: 'File Writer',
+      DECISION: 'Decision',
+      PARSE_JSON: "Parse JSON",
+      PARSE_XML: "Parse XML",
+      PARSE_CSV: "Parse CSV",
+      CONVERT_JSON_JSON: "Convert JSON to JSON",
+      CONVERT_JSON_XML: "Convert JSON to XML",
+      CONVERT_XML_JSON: "Convert XML to JSON",
+      CONVERT_JSON_CSV: "Convert JSON to CSV",
+      CONVERT_CSV_JSON: "Convert CSV to JSON"
     };
     this.nodeList = [];
     this.nodeIDCounter = 0;
@@ -188,6 +199,7 @@ export class B2bFlowService {
     if (type == 'FOREACH' || type == 'REDUCE') {
       temp.options.startNode = null;
     }
+
     if (type == 'CODEBLOCK') {
       const tempCode = [];
       tempCode.push('//use logger for logging');

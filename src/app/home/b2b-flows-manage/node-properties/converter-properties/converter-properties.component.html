@@ -1,0 +1,104 @@
+<div class="">
+    <button type="button" class="btn btn-dark" (click)="openMapper()">
+        <span class="dsi dsi-mapping mr-2"></span>
+        <span>Convert</span>
+    </button>
+</div>
+
+<div [class.show]="showConverterWindow" class="converter-window position-fixed bg-white border-left">
+    <ng-container *ngIf="showConverterWindow">
+        <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+            <div>
+                <span class="font-20 fw-600">Converter</span>
+            </div>
+            <div>
+                <button type="button" class="btn btn-link" (click)="showConverterWindow=false">
+                    <span class="dsi dsi-close hover"></span>
+                </button>
+            </div>
+        </div>
+        <div class="mapping-wrapper d-flex">
+            <div class="source format-selector">
+                <div class="border rounded mt-3 ml-3">
+                    <div class="bg-light border-bottom p-2 d-flex align-items-center justify-content-between">
+                        <span class="font-18 fw-500">Source</span>
+                        <div class="d-flex align-items-center" *ngIf="sourceFormat">
+                            <span class="font-12 fw-500 text-accent mr-2">{{sourceFormat.name}}</span>
+                            <span class="dsi dsi-trash font-14 fw-500 text-danger hover"
+                                (click)="sourceFormat=null"></span>
+                        </div>
+                    </div>
+                    <odp-format-selector *ngIf="!sourceFormat" [(format)]="!sourceFormat"></odp-format-selector>
+                    <div class="source-list" *ngIf="sourceFormat">
+                        <ng-container *ngFor="let def of allSources">
+                            <div class="data-field d-flex align-items-center justify-content-start pl-2"
+                                draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                                <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
+                                <div class="field-type mr-2">
+                                    <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+                                </div>
+                                <div class="field-key">{{def.key}}</div>
+                                <div class="mapping-line flex-fill"
+                                    [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <svg #svgCanvas class="mapping-paths flex-fill">
+                <g *ngFor="let p of pathList;let i=index;">
+                    <path class="transparent-path no-outline" [attr.d]="p.path" />
+                    <path [attr.d]="p.path" class="no-outline" />
+                </g>
+            </svg>
+            <div class="target format-selector">
+                <div class="border rounded mt-3 mr-3">
+                    <div class="bg-light border-bottom p-2 d-flex align-items-center justify-content-between">
+                        <span class="font-18 fw-500">Target</span>
+                        <div class="d-flex align-items-center" *ngIf="targetFormat">
+                            <span class="font-12 fw-500 text-accent mr-2">{{targetFormat.name}}</span>
+                            <span class="dsi dsi-trash font-14 fw-500 text-danger hover"
+                                (click)="targetFormat=null"></span>
+                        </div>
+                    </div>
+                    <odp-format-selector *ngIf="!targetFormat" [(format)]="targetFormat"></odp-format-selector>
+                    <div *ngIf="targetFormat" class="target-field-list">
+                        <div *ngFor="let def of allTargets" class="target-field-list-item position-relative">
+                            <div class="data-field d-flex align-items-center justify-content-start"
+                                [ngClass]="{'bg-accent text-white':def.over,'mark-disabled':def.disabled}"
+                                (drop)="onDrop($event,def)" (dragover)="onDragOver($event,def)"
+                                (dragenter)="onDragEnter($event,def)" (dragleave)="onDragLeave($event,def)"
+                                [attr.data-id]="def._id">
+                                <div class="spacer" [ngClass]="{'border-accent border-top':isMapped(def)}"
+                                    [ngStyle]="{'width':((def.depth+1)*12)+'px'}"></div>
+                                <div class="field-type mr-2">
+                                    <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+                                </div>
+                                <div class="field-key">{{def.key}}</div>
+                                <!-- <a href="#" (click)="$event.preventDefault();def._showFn=true">
+                                    <i class="hover mx-2"
+                                        [ngClass]="{'text-success':isValidFunction(def),'text-danger':!isValidFunction(def)}">f(x)</i>
+                                </a> -->
+                                <odp-formula-editor *ngIf="def._showFn"
+                                    class="function-wrapper position-absolute bg-white border rounded" [data]="def"
+                                    (close)="def._showFn=false"></odp-formula-editor>
+                                <div class="mapped-sources d-flex ml-3 text-secondary font-12">
+                                    <div *ngFor="let source of def.source"
+                                        class="border rounded px-1 mr-1 d-flex align-items-center">
+                                        <span>{{source.key}}</span>
+                                        <span (click)="removeSource(def,source)"
+                                            class="dsi dsi-minus-circle text-danger hover ml-1 font-14"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-end p-3">
+            <button type="button" class="btn-min-width btn btn-dark mr-3" (click)="cancel()">Cancel</button>
+            <button type="button" class="btn-min-width btn btn-primary" (click)="done()">Done</button>
+        </div>
+    </ng-container>
+</div>
