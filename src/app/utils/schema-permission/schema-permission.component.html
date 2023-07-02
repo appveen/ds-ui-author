@@ -1,0 +1,107 @@
+<!-- <div class="selector-options d-flex align-items-center">
+    <div class="d-flex flex-column rounded border bg-white">
+        <div *ngIf="format && format._id" class="selected-format-name d-flex align-items-center border-bottom">
+            <span class="label px-2 py-1 text-secondary font-12 fw-500 border-right">Name</span>
+            <span class="value px-2 py-1 text-primary fw-400 text-truncate">{{format.name}}</span>
+        </div>
+        <div class="selected-format-type d-flex align-items-center">
+            <span class="label px-2 py-1 text-secondary font-12 fw-500 border-right">Type</span>
+            <span *ngIf="format && format._id" class="value px-2 py-1 text-dark fw-400 font-13">{{format.formatType ||
+                'JSON'}}</span>
+            <span *ngIf="!format || !format._id"
+                class="value px-2 py-1 text-dark fw-400 font-13 text-truncate">Generic</span>
+        </div>
+    </div>
+    <button type="button" class="btn btn-link d-flex align-items-center" (click)="showWindow=!showWindow">
+        <span class="dsi dsi-settings"></span>
+    </button>
+</div> -->
+
+<div class="data-structure-window p-4 position-fixed bg-white border-left show more-width">
+    <ng-container>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <span class="font-22 fw-600">Schema Permissions</span>
+            <button type="button" class="btn btn-link" (click)="closeWindow()">
+                <span class="dsi dsi-close text-dark"></span>
+            </button>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+
+        <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: defintion }"></ng-container>
+        <ng-template #recursiveTemplate let-data>
+         <div class="d-flex flex-column w-100">
+            <div *ngFor="let obj of data" class="pt-2 pl-2 mb-2 bg-light rounded ml-2">
+               <div class="d-flex w-100 mb-2 px-2"  *ngIf="obj.key !== '_self'">
+                <span class="mx-2">{{obj.key}}</span>
+                <odp-field-type [field]="obj" [label]="false"></odp-field-type>
+                <div class="d-flex ml-auto">
+                  <div class="d-flex align-items-center ml-2">
+                      <odp-round-radio [edit]="edit" [checked]="obj.permission === 'none'"
+                        (checkedChange)="obj.permission = 'none'" >
+                      </odp-round-radio>
+                      <span class="ml-2">None</span>
+                  </div>
+                  <div class="d-flex align-items-center ml-2">
+                      <odp-round-radio [edit]="edit" [checked]="obj.permission === 'view'"
+                        (checkedChange)="obj.permission = 'view'" >
+                      </odp-round-radio>
+                      <span class="ml-2">View</span>
+                  </div>
+                  <div class="d-flex align-items-center ml-2">
+                      <odp-round-radio [edit]="edit" [checked]="obj.permission === 'edit'"
+                        (checkedChange)="obj.permission = 'edit'" >
+                      </odp-round-radio>
+                      <span class="ml-2">Edit</span>
+                  </div>
+                </div>
+             </div>
+             <ng-container *ngTemplateOutlet="recursiveTemplate; context:{$implicit: obj['definition']}"></ng-container>
+               </div>
+         </div>
+        </ng-template>
+            <!-- <div class="d-flex align-items-center">
+                <odp-round-radio [edit]="edit" [checked]="selectedType == 'generic'"
+                    (checkedChange)="onTypeChange('generic')">
+                </odp-round-radio>
+                <span class="ml-2">Generic</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <odp-round-radio [edit]="edit" [checked]="selectedType == 'dataFormat'"
+                    (checkedChange)="onTypeChange('dataFormat')">
+                </odp-round-radio>
+                <span class="ml-2">Data Format</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <odp-round-radio [edit]="edit" [checked]="selectedType == 'customFormat'"
+                    (checkedChange)="onTypeChange('customFormat')">
+                </odp-round-radio>
+                <span class="ml-2">Custom</span>
+            </div> -->
+        </div>
+        <!-- <ng-container *ngIf="selectedType=='generic'">
+            <div class="d-flex align-items-center justify-content-between my-4">
+                <p>A Generic Data Structure can accept data with no strict structure.</p>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="button" class="btn btn-primary w-100" (click)="save()">Done</button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="selectedType=='dataFormat'">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <span class="font-20 fw-500">Select Format</span>
+            </div>
+            <odp-data-format-selector [edit]="edit" [(format)]="tempFormat" (formatChange)="onFormatChange($event)">
+            </odp-data-format-selector>
+        </ng-container>
+        <ng-container *ngIf="selectedType=='customFormat'">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <span class="font-20 fw-500">Create Custom Format</span>
+                <button type="button" class="btn btn-link" (click)="closeWindow()">
+                    <span class="dsi dsi-close text-dark"></span>
+                </button>
+            </div>
+            <odp-custom-format-selector [edit]="edit" [(format)]="tempFormat" (formatChange)="onFormatChange($event)">
+            </odp-custom-format-selector>
+        </ng-container> -->
+    </ng-container>
+</div>

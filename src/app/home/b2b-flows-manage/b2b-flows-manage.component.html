@@ -99,7 +99,33 @@
 
 <div *ngIf="contextMenuStyle" class="available-nodes-dropdown bg-white position-fixed border rounded"
     [ngStyle]="contextMenuStyle" odpClickOutside (outside)="contextMenuStyle=null">
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+   <div *ngIf="isProcessFlow">
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" (click)="addNode($event,'SYSTEM')">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
+            <span class="font-13 fw-400">System Task</span>
+        </div>
+    </div>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" (click)="addNode($event,'USER')">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
+            <span class="font-13 fw-400">User Task</span>
+        </div>
+    </div>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" (click)="addNode($event,'EVENT')">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
+            <span class="font-13 fw-400">Event Trigger</span>
+        </div>
+    </div>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" (click)="addNode($event,'DECISION')">
+        <div class="d-flex align-items-center">
+            <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
+            <span class="font-13 fw-400">Decision</span>
+        </div>
+    </div>
+   </div>
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover"  *ngIf="!isProcessFlow">
         <div class="d-flex align-items-center">
             <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
             <span class="font-13 fw-400">File</span>
@@ -122,7 +148,7 @@
             </div> -->
         </div>
     </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" *ngIf="!isProcessFlow">
         <div class="d-flex align-items-center">
             <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
             <span class="font-13 fw-400">API</span>
@@ -155,7 +181,7 @@
             </div>
         </div>
     </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" *ngIf="!isProcessFlow">
         <div class="d-flex align-items-center">
             <span class="node-icon font-16 fw-400 dsi dsi-function alt mr-2"></span>
             <span class="font-13 fw-400">Process</span>
@@ -178,7 +204,7 @@
             </div>
         </div>
     </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" *ngIf="!isProcessFlow">
         <div class="d-flex align-items-center">
             <span class="node-icon font-16 fw-400 dsi dsi-join mr-2"></span>
             <span class="font-13 fw-400">Transform</span>
@@ -294,13 +320,15 @@
         <span class="font-13 fw-400">Decision</span>
     </div> -->
     <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
-        (click)="addNode($event,'PLUGIN')">
+        (click)="addNode($event,'PLUGIN')" *ngIf="!isProcessFlow">
         <span class="node-icon font-16 fw-400 dsi dsi-api-doc text-info mr-2"></span>
         <span class="font-13 fw-400">Plugin</span>
     </div>
-    <div *ngIf="!hasErrorNode" class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover"
+    <div *ngIf="!hasErrorNode && !isProcessFlow" class="node-item pl-3 pr-2 py-2 d-flex align-items-center hover"
         (click)="addNode($event,'ERROR')">
         <span class="node-icon font-16 fw-400 dsi dsi-danger-circle text-danger mr-2"></span>
         <span class="font-13 fw-400">Global Error</span>
     </div>
+
+    
 </div>

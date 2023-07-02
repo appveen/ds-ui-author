@@ -48,7 +48,6 @@ export class B2bFlowService {
       ERROR: 'Global Error',
       FILE_READ: 'File Reader',
       FILE_WRITE: 'File Writer',
-      DECISION: 'Decision',
       PARSE_JSON: "Parse JSON",
       PARSE_XML: "Parse XML",
       PARSE_CSV: "Parse CSV",
@@ -56,7 +55,11 @@ export class B2bFlowService {
       CONVERT_JSON_XML: "Convert JSON to XML",
       CONVERT_XML_JSON: "Convert XML to JSON",
       CONVERT_JSON_CSV: "Convert JSON to CSV",
-      CONVERT_CSV_JSON: "Convert CSV to JSON"
+      CONVERT_CSV_JSON: "Convert CSV to JSON",
+      SYSTEM: 'System Task',
+      USER: 'User Task',
+      EVENT: 'Event Trigger',
+      DECISION: 'Decision',
     };
     this.nodeList = [];
     this.nodeIDCounter = 0;
@@ -73,6 +76,8 @@ export class B2bFlowService {
       }
     } else if (node.type == 'API' && !isInputNode) {
       return 'Invoke API';
+    } else if (node.type === 'PROCESS') {
+      return 'Starter Node';
     } else if (this.nodeLabelMap[node.type]) {
       return this.nodeLabelMap[node.type];
     } else {

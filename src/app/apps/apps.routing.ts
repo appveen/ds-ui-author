@@ -185,6 +185,14 @@ const routes: Routes = [
             (m) => m.ProcessFlowsModule
           ),
       },
+      {
+        path: 'processFlow/:id',
+        loadChildren: () =>
+        import('../home/b2b-flows-manage/b2b-flows-manage.module').then(
+          (m) => m.B2bFlowsManageModule
+        ),
+        data: { isProcessFlow: true }
+      },
     ],
   },
 ];

@@ -31,12 +31,12 @@ export class NodeDetailsComponent implements OnInit{
     message: string;
     _id: string;
   };
-  node: any;
+  node: any = {};
   oldData: any;
   edit: any;
   // availableNodes: Array<any>;
   isDeleted: boolean = false;
-  options: any = {
+  api: any = {
     method: 'GET',
     path: '',
     contentType: 'application/json',
@@ -122,6 +122,7 @@ export class NodeDetailsComponent implements OnInit{
         res.values = {};
       }
       this.node = res;
+      this.nodeType = res.type;
       this.oldData = this.appService.cloneObject(res);
       this.breadcrumbPaths.push({
         active: true,
@@ -155,11 +156,10 @@ export class NodeDetailsComponent implements OnInit{
 
   saveNode() {
     const payload = _.cloneDeep(this.node);
-    delete payload?.options
+    // payload['api'] = this.api;
+    // payload['dataStructure'] = this.dataStructure;
     let response;
-    // if (_.isEmpty(payload.values)) {
-    //   delete payload.values
-    // }
+   
     payload.app = this.commonService.app._id;
     if (!this.canEditGroup) {
       delete payload.name;
@@ -246,6 +246,10 @@ export class NodeDetailsComponent implements OnInit{
       });
     }
     return true;
+  }
+
+  onChangeData(event){
+    this.node = event
   }
 
   setValue(field: string, value: string) {

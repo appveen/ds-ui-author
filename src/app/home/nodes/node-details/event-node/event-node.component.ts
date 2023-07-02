@@ -1,29 +1,29 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'odp-system-node',
-  templateUrl: './system-node.component.html',
-  styleUrls: ['./system-node.component.scss']
+  selector: 'odp-event-node',
+  templateUrl: './event-node.component.html',
+  styleUrls: ['./event-node.component.scss']
 })
-export class SystemNodeComponent implements OnInit {
-  api: any = {
+export class EventNodeComponent {
+ api: any = {
     method: 'GET',
     path: '',
     contentType: 'application/json',
     timeout: '',
     retryCount: '',
     retryInteval: '',
-  }
+  };
 
   @Input() edit: any;
-  @Input() nodeDetails: any = {};
   availableNodes: Array<any>;
   isDeleted: boolean = false;
   changesDone: EventEmitter<any> = new EventEmitter<any>();
-  dataStructure: any = {}; 
-  @Output() onChangeData: EventEmitter<any> = new EventEmitter<any>();
+  @Input() nodeDetails: any = {}; 
   toggle: any;
   showDataMapping: boolean = false;
+  @Output() onChangeData: EventEmitter<any> = new EventEmitter<any>();
+  dataStructure: any;
 
   constructor() {}
 

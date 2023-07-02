@@ -63,6 +63,9 @@ text.path-text {
     .rect {
         fill: rgba($accent, 0.3);
     }
+    .ellipse{
+        fill: rgba($accent, 0.3);
+    }
 
     // text:not(.node-name):not(.id-holder) {
     //     stroke-width: 0.75 !important;

@@ -58,7 +58,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/\w+/)]],
       description: [null, [Validators.maxLength(240), Validators.pattern(/\w+/)]],
-      type: ['API', [Validators.required]],
+      type: ['PROCESS'],
       inputNode: []
     });
     this.apiConfig = {
@@ -80,7 +80,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     this.selectedFlow = {};
     this.breadcrumbPaths = [{
       active: true,
-      label: 'Flows'
+      label: 'Process Flows'
     }];
     this.appService.invokeEvent.subscribe(res => {
       this.getFlows();
@@ -89,21 +89,13 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.getFlows();
-    this.getStaterPlugins();
+    // this.getStaterPlugins();
     this.commonService.changeBreadcrumb(this.breadcrumbPaths);
     this.commonService.apiCalls.componentLoading = false;
     this.form.get('type').valueChanges.subscribe(val => {
       const name = this.form.get('name').value;
-      let nodeId = '';
-      if (val == 'API') {
-        nodeId = 'api_json_receiver';
-      } else if (val == 'FILE') {
-        nodeId = 'file_agent_reciever';
-      } else if (val == 'TIMER') {
-        nodeId = 'init_timer';
-      } else {
-        nodeId = 'init_plugin';
-      }
+      let nodeId = 'PROCESS';
+     
       this.form.get('inputNode').patchValue({
         _id: nodeId,
         name: nodeId,
@@ -120,7 +112,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
         const type = this.form.get('type').value;
         if (!inputNode) {
           inputNode = {
-            type: type ? type : 'API',
+            type: 'PROCESS',
             name: val
           };
         }
@@ -161,7 +153,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
   }
 
   newFlow() {
-    this.form.reset({ inputNode: { type: 'API' } });
+    this.form.reset({ inputNode: { type: 'PROCESS' } });
     this.showNewFlowWindow = true;
   }
 
@@ -183,13 +175,13 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
           let request;
           if (flow.status === 'Draft') {
             request = this.commonService.put(
-              'partnerManager',
-              `/${this.commonService.app._id}/flow/utils/` + id
+              'config',
+              `/${this.commonService.app._id}/processflow/utils/` + id
             );
           } else {
             request = this.commonService.put(
-              'partnerManager',
-              `/${this.commonService.app._id}/flow/utils/${id}/draftDelete`
+              'config',
+              `/${this.commonService.app._id}/processflow/utils/${id}/draftDelete`
             );
           }
           request.subscribe(
@@ -199,7 +191,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
                 this.router.navigate([
                   '/app/',
                   this.commonService.app._id,
-                  'flow',
+                  'processFlow',
                   id,
                 ]);
               } else {
@@ -230,15 +222,15 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     if (this.form.get('type').value === 'PLUGIN') {
       payload.inputNode.options.plugin = this.selectedPlugin;
     }
-    this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
+    this.commonService.post('config', `/${this.commonService.app._id}/processflow`, payload).subscribe(res => {
       this.showLazyLoader = false;
-      this.form.reset({ type: 'API' });
+      this.form.reset({ type: 'PROCESS' });
       this.ts.success('Data Pipe has been created.');
       this.appService.edit = res._id;
-      this.router.navigate(['/app/', this.commonService.app._id, 'flow', res._id]);
+      this.router.navigate(['/app/', this.commonService.app._id, 'processFlow', res._id]);
     }, err => {
       this.showLazyLoader = false;
-      this.form.reset({ type: 'API' });
+      this.form.reset({ type: 'PROCESS' });
       this.commonService.errorToast(err);
     });
   }
@@ -261,16 +253,16 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     this.cloneData.name = val;
     this.cloneData.inputNode = { ...this.cloneData.inputNode, ...this.form.get('inputNode').value };
     this.cloneData.inputNode.options.path = val ? '/' + _.camelCase(val) : null;
-    this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, this.cloneData).subscribe(res => {
+    this.commonService.post('config', `/${this.commonService.app._id}/processflow`, this.cloneData).subscribe(res => {
       this.showLazyLoader = false;
       this.isClone = false;
-      this.form.reset({ type: 'API' });
+      this.form.reset({ type: 'PROCESS' });
       this.ts.success('Data Pipe has been cloned.');
       this.appService.edit = res._id;
-      this.router.navigate(['/app/', this.commonService.app._id, 'flow', res._id]);
+      this.router.navigate(['/app/', this.commonService.app._id, 'processFlow', res._id]);
     }, err => {
       this.showLazyLoader = false;
-      this.form.reset({ type: 'API' });
+      this.form.reset({ type: 'PROCESS' });
       this.isClone = false;
       this.commonService.errorToast(err);
     });
@@ -279,8 +271,8 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
   getFlows() {
     this.showLazyLoader = true;
     this.flowList = [];
-    return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/count`).pipe(switchMap((count: any) => {
-      return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, {
+    return this.commonService.get('config', `/${this.commonService.app._id}/processflow/utils/count`).pipe(switchMap((count: any) => {
+      return this.commonService.get('config', `/${this.commonService.app._id}/processflow`, {
         count: count,
       });
     })).subscribe((res: any) => {
@@ -302,31 +294,31 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     });
   }
 
-  getStaterPlugins() {
-    this.showLazyLoader = true;
-    this.flowList = [];
-    let filter: any = { type: 'INPUT' };
-    if (this.pluginFilter) {
-      filter.name = '/' + this.pluginFilter + '/';
-    }
-    this.commonService.get('partnerManager', `/Admin/node`, {
-      filter: filter,
-      noApp: true,
-      select: 'name type category'
-    }).subscribe((res: any) => {
-      this.showLazyLoader = false;
-      this.staterPluginList = res;
-    }, err => {
-      this.showLazyLoader = false;
-      console.log(err);
-      this.commonService.errorToast(err);
-    });
-  }
+  // getStaterPlugins() {
+  //   this.showLazyLoader = true;
+  //   this.flowList = [];
+  //   let filter: any = { type: 'INPUT' };
+  //   if (this.pluginFilter) {
+  //     filter.name = '/' + this.pluginFilter + '/';
+  //   }
+  //   this.commonService.get('config', `/Admin/node`, {
+  //     filter: filter,
+  //     noApp: true,
+  //     select: 'name type category'
+  //   }).subscribe((res: any) => {
+  //     this.showLazyLoader = false;
+  //     this.staterPluginList = res;
+  //   }, err => {
+  //     this.showLazyLoader = false;
+  //     console.log(err);
+  //     this.commonService.errorToast(err);
+  //   });
+  // }
 
-  searchPlugin(searchTerm: string) {
-    this.pluginFilter = searchTerm;
-    this.getStaterPlugins();
-  }
+  // searchPlugin(searchTerm: string) {
+  //   this.pluginFilter = searchTerm;
+  //   this.getStaterPlugins();
+  // }
 
   getStatusClass(srvc) {
     if (srvc.status.toLowerCase() === 'active') {
@@ -438,11 +430,11 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
       (close) => {
         if (close) {
           const url =
-            `/${this.commonService.app._id}/flow/utils/` +
+            `/${this.commonService.app._id}/processflow/utils/` +
             item._id +
             '/deploy';
           this.subscriptions['updateservice'] = this.commonService
-            .put('partnerManager', url, { app: this.commonService.app._id })
+            .put('config', url, { app: this.commonService.app._id })
             .subscribe(
               (d) => {
                 this.ts.info('Deploying data pipe...');
@@ -478,17 +470,17 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
       (close) => {
         if (close) {
           let url =
-            `/${this.commonService.app._id}/flow/utils/` +
+            `/${this.commonService.app._id}/processflow/utils/` +
             item._id +
             '/start';
           if (item.status === 'Active') {
             url =
-              `/${this.commonService.app._id}/flow/utils/` +
+              `/${this.commonService.app._id}/processflow/utils/` +
               item._id +
               '/stop';
           }
           this.subscriptions['updateservice'] = this.commonService
-            .put('partnerManager', url, { app: this.commonService.app._id })
+            .put('config', url, { app: this.commonService.app._id })
             .subscribe(
               (d) => {
                 if (item.status === 'Active') {
@@ -512,11 +504,11 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
   closeDeleteModal(data) {
     if (data) {
       const url =
-        `/${this.commonService.app._id}/flow/` +
+        `/${this.commonService.app._id}/processflow/` +
         this.records[data.index]._id;
       this.showLazyLoader = true;
       this.subscriptions['deleteservice'] = this.commonService
-        .delete('partnerManager', url)
+        .delete('config', url)
         .subscribe(
           (d) => {
             this.showLazyLoader = false;
@@ -537,12 +529,12 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
 
   editFlow(item: any) {
     this.appService.edit = item._id;
-    this.router.navigate(['/app/', this.commonService.app._id, 'flow', this.appService.edit,
+    this.router.navigate(['/app/', this.commonService.app._id, 'processFlow', this.appService.edit,
     ]);
   }
 
   viewFlow(item: any) {
-    this.router.navigate(['/app', this.commonService.app._id, 'flow', item._id]);
+    this.router.navigate(['/app', this.commonService.app._id, 'processFlow', item._id]);
   }
 
   deleteFlow(index: number) {
@@ -575,7 +567,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
   getYamls(item: any) {
     this.selectedFlow = item;
     if (!this.selectedFlow.serviceYaml || !this.selectedFlow.deploymentYaml) {
-      this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/${item._id}/yamls`, {})
+      this.commonService.get('config', `/${this.commonService.app._id}/processflow/utils/${item._id}/yamls`, {})
         .subscribe(data => {
           this.selectedFlow.serviceYaml = data.service;
           this.selectedFlow.deploymentYaml = data.deployment;
