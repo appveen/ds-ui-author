@@ -19,7 +19,7 @@
                 <span class="dsi dsi-settings text-secondary"></span>
             </button>
             <button id="createFlow" type="button" class="add-new btn btn-primary ml-3 d-flex align-items-center"
-                (click)="newFlow()" [disabled]="!hasWritePermission('FLOW')">
+                (click)="newFlow()" [disabled]="!hasWritePermission('PF')">
                 <span class="dsi dsi-plus mr-2"></span>
                 <span class="text">New</span>
             </button>
@@ -41,11 +41,11 @@
                     <span *ngIf="sortModel['name']==1" class="dsi dsi-drop-down"></span>
                     <span *ngIf="sortModel['name']==-1" class="dsi dsi-drop-up"></span>
                 </div>
-                <div (click)="applySort('inputNode.type')" class="hover d-flex align-items-center item-status">
+                <!-- <div (click)="applySort('inputNode.type')" class="hover d-flex align-items-center item-status">
                     <span class="mr-2">Input Type</span>
                     <span *ngIf="sortModel['inputNode.type']==1" class="dsi dsi-drop-down"></span>
                     <span *ngIf="sortModel['inputNode.type']==-1" class="dsi dsi-drop-up"></span>
-                </div>
+                </div> -->
                 <div class="d-flex align-items-center">
                     <div (click)="applySort('url')" class="hover d-flex align-items-center item-url">
                         <span class="mr-2">URL</span>
@@ -76,9 +76,9 @@
                     <span *ngIf="item.draftVersion" class="ml-2 draft sub-heading font-11 text-uppercase">(Draft)</span>
                 </div>
                 <div class="d-flex align-items-center" (dblclick)="viewFlow(item)">
-                    <div class="sub-heading item-status d-flex align-items-center">
+                    <!-- <div class="sub-heading item-status d-flex align-items-center">
                         <span class="text font-12 fw-400">{{item?.inputNode?.type}}</span>
-                    </div>
+                    </div> -->
                     <div class="sub-heading item-url pr-3 d-flex align-items-center">
                         <span *ngIf="copied[item._id]" class="text-accent mr-2">Copied!</span>
                         <span *ngIf="!copied[item._id]" class="dsi dsi-copy text-accent mr-2 hover"

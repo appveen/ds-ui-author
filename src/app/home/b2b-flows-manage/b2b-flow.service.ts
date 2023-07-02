@@ -59,7 +59,7 @@ export class B2bFlowService {
       SYSTEM: 'System Task',
       USER: 'User Task',
       EVENT: 'Event Trigger',
-      DECISION: 'Decision',
+      DECISION: 'Decision'
     };
     this.nodeList = [];
     this.nodeIDCounter = 0;

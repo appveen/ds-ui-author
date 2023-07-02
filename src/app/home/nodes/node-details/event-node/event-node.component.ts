@@ -6,7 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./event-node.component.scss']
 })
 export class EventNodeComponent {
- api: any = {
+  api: any = {
     method: 'GET',
     path: '',
     contentType: 'application/json',
@@ -19,20 +19,20 @@ export class EventNodeComponent {
   availableNodes: Array<any>;
   isDeleted: boolean = false;
   changesDone: EventEmitter<any> = new EventEmitter<any>();
-  @Input() nodeDetails: any = {}; 
+  @Input() nodeDetails: any = {};
   toggle: any;
   showDataMapping: boolean = false;
   @Output() onChangeData: EventEmitter<any> = new EventEmitter<any>();
   dataStructure: any;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.dataStructure = this.nodeDetails.dataStructure;
     this.api = this.nodeDetails.api;
-      
+
   }
-  onFormatChange(data, type){
+  onFormatChange(data, type) {
     if (!this.dataStructure) {
       this.dataStructure = {};
     }
@@ -57,7 +57,7 @@ export class EventNodeComponent {
     // this.flowService.dataStructureSelected.emit({ currNode: this.currNode, type });
   }
 
-  onChange(event){
+  onChange(event) {
     this.onChangeData.emit(this.nodeDetails)
     this.changesDone.emit();
   }
