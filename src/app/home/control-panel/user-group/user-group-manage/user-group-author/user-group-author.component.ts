@@ -27,27 +27,28 @@ export class UserGroupAuthorComponent implements OnInit {
       self.activeSubTab = 2;
     } else if (self.hasPermission('PVGACON') || self.hasPermission('PMGACON')) {
       self.activeSubTab = 3;
-    } else if (self.hasPermission('PVGADF') || self.hasPermission('PMGADF')) {
+    } else if (self.hasPermission('PVGIF') || self.hasPermission('PMGIF')) {
       self.activeSubTab = 4;
-    } else if (self.hasPermission('PVGANS') || self.hasPermission('PMGANS')) {
+    } else if (self.hasPermission('PVGADF') || self.hasPermission('PMGADF')) {
       self.activeSubTab = 5;
     } else if (self.hasPermission('PVGAA') || self.hasPermission('PMGAA')) {
       self.activeSubTab = 6;
-    } else if (self.hasPermission('PVGABM') || self.hasPermission('PMGABM')) {
-      self.activeSubTab = 7;
-    } else if (self.hasPermission('PVGAU') || self.hasPermission('PMGAU')) {
-      self.activeSubTab = 8;
-    } else if (self.hasPermission('PVGAB') || self.hasPermission('PMGAB')) {
-      self.activeSubTab = 9;
-    } else if (self.hasPermission('PVGAG') || self.hasPermission('PMGAG')) {
-      self.activeSubTab = 10;
-    } else if (self.hasPermission('PVGIF') || self.hasPermission('PMGIF')) {
-      self.activeSubTab = 11;
-    } else if (self.hasPermission('PVGPF') || self.hasPermission('PMGPF')) {
-      self.activeSubTab = 12;
     } else if (self.hasPermission('PVGPN') || self.hasPermission('PMGPN')) {
-      self.activeSubTab = 13;
+      self.activeSubTab = 7;
+    } else if (self.hasPermission('PVGPF') || self.hasPermission('PMGPF')) {
+      self.activeSubTab = 8;
+    } else if (self.hasPermission('PVGAU') || self.hasPermission('PMGAU')) {
+      self.activeSubTab = 9;
+    } else if (self.hasPermission('PVGAB') || self.hasPermission('PMGAB')) {
+      self.activeSubTab = 10;
+    } else if (self.hasPermission('PVGAG') || self.hasPermission('PMGAG')) {
+      self.activeSubTab = 11;
     }
+    // else if (self.hasPermission('PVGANS') || self.hasPermission('PMGANS')) {
+    //   self.activeSubTab = 5;
+    // } else if (self.hasPermission('PVGABM') || self.hasPermission('PMGABM')) {
+    //   self.activeSubTab = 7;
+    // }
   }
 
   onChange(value) {

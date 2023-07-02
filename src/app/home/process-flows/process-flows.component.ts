@@ -95,7 +95,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     this.form.get('type').valueChanges.subscribe(val => {
       const name = this.form.get('name').value;
       let nodeId = 'PROCESS';
-     
+
       this.form.get('inputNode').patchValue({
         _id: nodeId,
         name: nodeId,
@@ -174,9 +174,9 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
         if (close) {
           let request;
           if (flow.status === 'Draft') {
-            request = this.commonService.put(
+            request = this.commonService.delete(
               'config',
-              `/${this.commonService.app._id}/processflow/utils/` + id
+              `/${this.commonService.app._id}/processflow/` + id
             );
           } else {
             request = this.commonService.put(
@@ -278,13 +278,13 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     })).subscribe((res: any) => {
       this.showLazyLoader = false;
       res.forEach(item => {
-        item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/pipes/${this.app}` + item.inputNode.options.path;
+        item.url = 'https://' + this.commonService.userDetails.fqdn + `/process/flows/${this.app}` + item.inputNode.options.path;
         // this.flowList.push(item);
       });
       this.flowList = res;
       this.flowList.forEach(e => {
         if (e.status == 'Pending') {
-          this.commonService.updateStatus(e._id, 'flow');
+          this.commonService.updateStatus(e._id, 'processFlow');
         }
       })
     }, err => {
@@ -344,12 +344,11 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
   }
 
 
-
   canManageFlow(id: string) {
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
       return true;
     } else {
-      return this.hasPermission('PMIF');
+      return this.hasPermission('PMPF');
     }
   }
 
@@ -357,13 +356,13 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     if (this.commonService.isAppAdmin || this.commonService.userDetails.isSuperAdmin) {
       return true;
     } else {
-      return this.hasPermission('PVIF');
+      return this.hasPermission('PVPF');
     }
   }
 
 
   canDeleteFlow(id: string) {
-    return this.hasPermission('PMIF');
+    return this.hasPermission('PMPF');
   }
 
   canDeployFlow(flow) {
@@ -383,7 +382,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     ) {
       return false;
     } else {
-      return this.commonService.hasPermission('PMIFPD', 'FLOW');
+      return this.commonService.hasPermission('PMPFPD', 'PF');
     }
   }
 
@@ -398,7 +397,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     ) {
       return true;
     } else {
-      return this.commonService.hasPermission('PMIFPS', 'FLOW');
+      return this.commonService.hasPermission('PMPFPS', 'PF');
     }
   }
 
@@ -406,7 +405,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     return this.commonService.hasPermission(type, entity);
   }
   hasWritePermission(entity: string) {
-    return this.commonService.hasPermission('PMIF', entity);
+    return this.commonService.hasPermission('PMPF', entity);
   }
 
   deployFlow(item: any) {
@@ -439,7 +438,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
               (d) => {
                 this.ts.info('Deploying data pipe...');
                 item.status = 'Pending';
-                this.commonService.updateStatus(item._id, 'flow');
+                this.commonService.updateStatus(item._id, 'processFlow');
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -489,7 +488,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
                   this.ts.info('Starting data pipe...');
                 }
                 item.status = 'Pending';
-                this.commonService.updateStatus(item._id, 'flow');
+                this.commonService.updateStatus(item._id, 'processFlow');
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -514,7 +513,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
             this.showLazyLoader = false;
             this.ts.info(d.message ? d.message : 'Deleting Data Pipe...');
             this.records[data.index].status = 'Pending';
-            this.commonService.updateDelete(this.records[data.index]._id, 'flow')
+            this.commonService.updateDelete(this.records[data.index]._id, 'processFlow')
           },
           (err) => {
             this.showLazyLoader = false;
@@ -669,7 +668,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
           if (typeof a[field] == 'number' || typeof b[field] == 'number') {
             return this.compare((a[field]), (b[field]));
           } else {
-            if(field == 'inputNode.type'){
+            if (field == 'inputNode.type') {
               return this.compare(_.lowerCase(a.inputNode.type), _.lowerCase(b.inputNode.type));
             } else {
               return this.compare(_.lowerCase(a[field]), _.lowerCase(b[field]));
@@ -679,7 +678,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
           if (typeof a[field] == 'number' || typeof b[field] == 'number') {
             return this.compare((b[field]), (a[field]));
           } else {
-            if(field == 'inputNode.type'){
+            if (field == 'inputNode.type') {
               return this.compare(_.lowerCase(b.inputNode.type), _.lowerCase(a.inputNode.type));
             } else {
               return this.compare(_.lowerCase(b[field]), _.lowerCase(a[field]));
@@ -701,7 +700,3 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     return this.commonService.app._id;
   }
 }
-
-
-
-

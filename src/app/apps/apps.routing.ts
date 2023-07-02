@@ -174,8 +174,8 @@ const routes: Routes = [
       {
         path: 'processNode/:id',
         loadChildren: () =>
-        import('../home/nodes/node-details/node-details.module').then(
-          (m) => m.NodeDetailsModule
+          import('../home/nodes/node-details/node-details.module').then(
+            (m) => m.NodeDetailsModule
           )
       },
       {
@@ -188,11 +188,11 @@ const routes: Routes = [
       {
         path: 'processFlow/:id',
         loadChildren: () =>
-        import('../home/b2b-flows-manage/b2b-flows-manage.module').then(
-          (m) => m.B2bFlowsManageModule
-        ),
+          import('../home/b2b-flows-manage/b2b-flows-manage.module').then(
+            (m) => m.B2bFlowsManageModule
+          ),
         data: { isProcessFlow: true }
-      },
+      }
     ],
   },
 ];

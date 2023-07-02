@@ -49,6 +49,7 @@ const routes: Routes = [
     PasswordFieldModule,
     ChangeOnEditModule,
     DataStructureSelectorModule,
-    SchemaPermissionModule  ]
+    SchemaPermissionModule
+  ]
 })
 export class NodeDetailsModule { }

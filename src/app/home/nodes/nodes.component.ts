@@ -39,16 +39,16 @@ export class NodesComponent implements OnInit {
   sortModel: any;
   copied: any;
   breadcrumbPaths: Array<Breadcrumb>;
-  showOptionsDropdown:any = {};
+  showOptionsDropdown: any = {};
 
 
 
 
-  constructor(private commonService: CommonService, 
-    private appService: AppService,  
-     private router: Router,  
-     private fb: UntypedFormBuilder, 
-     private ts: ToastrService) {
+  constructor(private commonService: CommonService,
+    private appService: AppService,
+    private router: Router,
+    private fb: UntypedFormBuilder,
+    private ts: ToastrService) {
     this.breadcrumbPaths = [{
       active: true,
       label: 'Nodes'
@@ -77,18 +77,18 @@ export class NodesComponent implements OnInit {
     this.showLazyLoader = true;
     this.sortModel = {};
     this.appService.invokeEvent.subscribe(res => {
-       this.getNodes();
+      this.getNodes();
     });
-   }
+  }
 
   ngOnInit(): void {
     this.commonService.changeBreadcrumb(this.breadcrumbPaths);
     this.getNodes();
-  
+
   }
 
   newNode() {
-    this.form.reset({  type: 'SYSTEM' });
+    this.form.reset({ type: 'SYSTEM' });
     this.showNewNodeWindow = true;
   }
 
