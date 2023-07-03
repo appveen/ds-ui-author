@@ -38,7 +38,7 @@ export class B2bSettingsComponent implements OnInit {
 
   getManagementDetails() {
     const self = this;
-    self.commonService.get('partnerManager', `/${this.commonService.app._id}/flow/utils/status/count`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
+    self.commonService.get('config', `/${this.commonService.app._id}/processflow/utils/status/count`, { filter: { app: this.commonService.app._id } }).subscribe(res => {
       self.serviceStatus = res;
     }, (err) => {
       self.ts.warning(err.error.message);
@@ -61,7 +61,7 @@ export class B2bSettingsComponent implements OnInit {
   updateServicesState(value) {
     const self = this;
     let endpoint = value == 'Start' ? 'startAll' : 'stopAll'
-    self.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/utils/${endpoint}`, { app: this.commonService.app._id }).subscribe(res => {
+    self.commonService.put('config', `/${this.commonService.app._id}/processflow/utils/${endpoint}`, { app: this.commonService.app._id }).subscribe(res => {
       self.ts.info(`${value} all process initiated !`)
       self.getManagementDetails();
     })

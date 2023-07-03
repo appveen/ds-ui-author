@@ -51,7 +51,7 @@ export class PasteJsonDirective {
         }
         temp.key = i;
         temp.properties = {
-          name: i === '_self' || i
+          name: i == '_self' ? '_self' : i
         };
         if (parent) {
           temp.properties.dataPathSegs = JSON.parse(JSON.stringify(parent.properties.dataPathSegs));

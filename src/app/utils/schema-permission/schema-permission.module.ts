@@ -5,13 +5,12 @@ import { RoundRadioModule } from '../round-radio/round-radio.module';
 import { FieldTypeModule } from '../field-type/field-type.module';
 
 
-
 @NgModule({
   declarations: [
     SchemaPermissionComponent
   ],
   imports: [
-    CommonModule,  RoundRadioModule,FieldTypeModule
+    CommonModule, RoundRadioModule, FieldTypeModule
   ],
   exports: [SchemaPermissionComponent]
 })

@@ -34,7 +34,11 @@
                 <option *ngIf="isInputNode" value="TIMER">Timer</option>
                 <option value="FILE">File Agent</option>
                 <option value="PLUGIN">Plugin</option>
-                <option *ngIf="!isInputNode" value="API">API Invoke</option>
+                <option *ngIf="!isInputNode" value="FILE_READ">File Read</option>
+                <option *ngIf="!isInputNode" value="FILE_WRITE">File Write</option>
+                <option *ngIf="!isInputNode" value="API">Invoke API JSON</option>
+                <option *ngIf="!isInputNode" value="API_XML">Invoke API XML</option>
+                <option *ngIf="!isInputNode" value="API_MULTIPART">API Multipart Upload</option>
                 <option *ngIf="!isInputNode" value="MAPPING">Mapping</option>
                 <option *ngIf="!isInputNode" value="DEDUPE">De-Dupe</option>
                 <!-- <option *ngIf="!isInputNode" value="CONFLICT">Conflict</option> -->
@@ -45,12 +49,17 @@
                 <option *ngIf="!isInputNode" value="UNWIND">Change Root</option>
                 <option *ngIf="!isInputNode" value="DATASERVICE">Data Service</option>
                 <option *ngIf="!isInputNode" value="FUNCTION">Function</option>
+                <option *ngIf="!isInputNode" value="RESPONSE">Response</option>
+                <option *ngIf="!isInputNode" value="CONVERT_JSON_JSON">Convert JSON to JSON</option>
+                <option *ngIf="!isInputNode" value="CONVERT_JSON_XML">Convert JSON to XML</option>
+                <option *ngIf="!isInputNode" value="CONVERT_XML_JSON">Convert XML to JSON</option>
+                <option *ngIf="!isInputNode" value="CONVERT_JSON_CSV">Convert JSON to CSV</option>
+                <option *ngIf="!isInputNode" value="CONVERT_CSV_JSON">Convert CSV to JSON</option>
                 <option *ngIf="processFlowNode" value="SYSTEM">System Task</option>
                 <option *ngIf="processFlowNode" value="USER">User Task</option>
                 <option *ngIf="processFlowNode" value="DECISION">Decision</option>
                 <option *ngIf="processFlowNode"  value="EVENT">Event Trigger</option>
 
-                <option *ngIf="!isInputNode" value="RESPONSE">Response</option>
             </select>
         </div>
     </div>
@@ -68,9 +77,10 @@
                 [hideGeneric]="currNode?.type=='MAPPING'">
             </odp-data-structure-selector>
         </div>
-        <button type="button" class="btn btn-dark w-100 ignore-outside" (click)="toggle['mapping']=!toggle['mapping']"
-            *ngIf="showDataMapping">
-            Data Mapping
+        <button type="button" class="btn btn-dark ignore-outside d-flex align-items-center"
+            (click)="toggle['mapping']=!toggle['mapping']" *ngIf="showDataMapping">
+            <span class="dsi dsi-mapping mr-2"></span>
+            <span>Data Mapping</span>
         </button>
     </div>
     <!-- <div *ngIf="showOutputSelector" class="border rounded p-2 bg-light mb-3">
@@ -144,9 +154,6 @@
                 URL
             </label>
             <div class="position-relative z-0">
-                <!-- <odp-styled-text (finalValue)="onValueChange($event)" [value]="currNode.options.url" #typeAhead
-                    [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
-                    [searchTerm]="searchTerm" class="styled-wrapper"></odp-styled-text> -->
                 <odp-autocomplete-on-edit #typeAhead [(ngModel)]="currNode.options.url"
                     (ngModelChange)="onValueChange($event)" [currNode]="currNode"
                     class="styled-wrapper"></odp-autocomplete-on-edit>
@@ -164,23 +171,69 @@
         </div>
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
-            <select id="nodeContentType" class="form-control" disabled>
-                <option value="application/json" selected>application/json</option>
-                <option value="application/xml">application/xml</option>
-                <option value="multipart/form-data">multipart/form-data</option>
-            </select>
+            <div class="form-control form-control-readonly">application/json</div>
         </div>
         <div class="form-group">
             <odp-add-headers [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
                 [(value)]="currNode.options.headers">
             </odp-add-headers>
         </div>
-        <!-- <div class="form-group position-relative">
-            <label class="font-14 fw-400 text-dark mb-0" for="nodeBody">Body</label>
-            <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body"
-                [currNode]="currNode">
-            </odp-input-data-selector>
-        </div> -->
+    </ng-container>
+    <ng-container *ngIf="currNode?.type=='API_XML' && !isInputNode">
+        <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeUrl">
+                URL
+            </label>
+            <div class="position-relative z-0">
+                <odp-autocomplete-on-edit #typeAhead [(ngModel)]="currNode.options.url"
+                    (ngModelChange)="onValueChange($event)" [currNode]="currNode"
+                    class="styled-wrapper"></odp-autocomplete-on-edit>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
+            <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
+                (ngModelChange)="changesDone.emit()">
+                <option value="POST" selected>POST</option>
+                <option value="GET">GET</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+        </div>
+        <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
+            <div class="form-control form-control-readonly">application/xml</div>
+        </div>
+        <div class="form-group">
+            <odp-add-headers [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
+                [(value)]="currNode.options.headers">
+            </odp-add-headers>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="currNode?.type=='API_MULTIPART' && !isInputNode">
+        <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeUrl">
+                URL
+            </label>
+            <div class="position-relative z-0">
+                <odp-autocomplete-on-edit #typeAhead [(ngModel)]="currNode.options.url"
+                    (ngModelChange)="onValueChange($event)" [currNode]="currNode"
+                    class="styled-wrapper"></odp-autocomplete-on-edit>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
+            <div class="form-control form-control-readonly">{{currNode.options.method}}</div>
+        </div>
+        <div class="form-group position-relative">
+            <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
+            <div class="form-control form-control-readonly">multipart/form-data</div>
+        </div>
+        <div class="form-group">
+            <odp-add-headers [edit]="edit" [nodeList]="nodeList" [currNode]="currNode"
+                [(value)]="currNode.options.headers">
+            </odp-add-headers>
+        </div>
     </ng-container>
     <ng-container *ngIf="currNode?.type=='FILE'">
         <div class="form-group">
@@ -201,7 +254,6 @@
                 <div class="list-group-item p-2 text-muted">No Agents Selected</div>
             </div>
         </div>
-
         <div class="form-group">
             <div class="d-flex align-items-center justify-content-between">
                 <label class="font-14 fw-400 text-dark" for="agentSelector">Input Directory(s)</label>
@@ -232,9 +284,7 @@
             </div>
         </div>
     </ng-container>
-
     <ng-container *ngIf="currNode?.type=='FILE' && checkForFileOptions">
-
         <div class="form-group border rounded p-2 bg-light mb-3">
             <label class="font-14 fw-400 text-dark mb-0">File Options</label>
             <small class="form-text text-muted mb-2">Rows to skip</small>
@@ -249,14 +299,6 @@
 
         </div>
     </ng-container>
-    <!-- <ng-container *ngIf="currNode.type=='MAPPING'">
-        <div class="form-group">
-            <button type="button" class="btn btn-dark w-100 ignore-outside"
-                (click)="toggle['mapping']=!toggle['mapping']">
-                Set Mapping
-            </button>
-        </div>
-    </ng-container> -->
     <ng-container *ngIf="currNode.type=='DEDUPE'">
         <div class="form-group position-relative ">
             <label for="fields" class="d-flex align-items-center justify-content-between">
@@ -417,12 +459,19 @@
             </odp-input-data-selector>
         </div>
     </ng-container>
-
     <ng-container *ngIf="currNode?.type=='PLUGIN'">
         <odp-marketplace-selector [isInputNode]="isInputNode" [edit]="edit" [nodeList]="nodeList" [currNode]="currNode">
         </odp-marketplace-selector>
     </ng-container>
 
+
+    <ng-container *ngIf="currNode.type == 'CONVERT_JSON_JSON'
+    || currNode.type == 'CONVERT_JSON_XML'
+    || currNode.type == 'CONVERT_XML_JSON'
+    || currNode.type == 'CONVERT_JSON_CSV'
+    || currNode.type == 'CONVERT_CSV_JSON'">
+        <odp-converter-properties [(data)]="currNode"></odp-converter-properties>
+    </ng-container>
 
     <ng-container *ngIf="processFlowNode">
        <div class="mb-4">
@@ -433,10 +482,8 @@
        </div>
     </ng-container>
 
-    
-
     <div *ngIf="showOutputSelector && !processFlowNode" class="border rounded p-2 bg-light mb-3">
-        <div class="form-group">
+           <div class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure</label>
             <small class="form-text text-muted mb-3">Set the data structure that this node will return</small>
             <odp-data-structure-selector id="outputDataStructure" class="d-flex" [edit]="edit"
@@ -444,13 +491,12 @@
                 [hideGeneric]="currNode?.type=='MAPPING'">
             </odp-data-structure-selector>
         </div>
-        <button *ngIf="showDataMapping" type="button" class="btn btn-dark w-100 ignore-outside"
+        <!-- <button *ngIf="showDataMapping" type="button" class="btn btn-dark w-100 ignore-outside"
             (click)="toggle['mapping']=!toggle['mapping']">
-            Data Mapping
-        </button>
+            <span class="dsi dsi-mapping mr-2"></span>
+            <span>Data Mapping</span>
+        </button> -->
     </div>
-
-
     <div *ngIf="currNode?.type=='API' && !isInputNode" class="border rounded p-2 bg-light">
         <div class="border-bottom font-14 fw-500 mb-3 pb-1">Advanced Settings</div>
         <div class="form-group position-relative">

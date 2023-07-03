@@ -27,38 +27,39 @@
         </div>
         <div class="d-flex align-items-center justify-content-between mb-4">
 
-        <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: defintion }"></ng-container>
-        <ng-template #recursiveTemplate let-data>
-         <div class="d-flex flex-column w-100">
-            <div *ngFor="let obj of data" class="pt-2 pl-2 mb-2 bg-light rounded ml-2">
-               <div class="d-flex w-100 mb-2 px-2"  *ngIf="obj.key !== '_self'">
-                <span class="mx-2">{{obj.key}}</span>
-                <odp-field-type [field]="obj" [label]="false"></odp-field-type>
-                <div class="d-flex ml-auto">
-                  <div class="d-flex align-items-center ml-2">
-                      <odp-round-radio [edit]="edit" [checked]="obj.permission === 'none'"
-                        (checkedChange)="obj.permission = 'none'" >
-                      </odp-round-radio>
-                      <span class="ml-2">None</span>
-                  </div>
-                  <div class="d-flex align-items-center ml-2">
-                      <odp-round-radio [edit]="edit" [checked]="obj.permission === 'view'"
-                        (checkedChange)="obj.permission = 'view'" >
-                      </odp-round-radio>
-                      <span class="ml-2">View</span>
-                  </div>
-                  <div class="d-flex align-items-center ml-2">
-                      <odp-round-radio [edit]="edit" [checked]="obj.permission === 'edit'"
-                        (checkedChange)="obj.permission = 'edit'" >
-                      </odp-round-radio>
-                      <span class="ml-2">Edit</span>
-                  </div>
+            <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: defintion }"></ng-container>
+            <ng-template #recursiveTemplate let-data>
+                <div class="d-flex flex-column w-100">
+                    <div *ngFor="let obj of data" class="pt-2 pl-2 mb-2 bg-light rounded ml-2">
+                        <div class="d-flex w-100 mb-2 px-2" *ngIf="obj.key !== '_self'">
+                            <span class="mx-2">{{obj.key}}</span>
+                            <odp-field-type [field]="obj" [label]="false"></odp-field-type>
+                            <div class="d-flex ml-auto">
+                                <div class="d-flex align-items-center ml-2">
+                                    <odp-round-radio [edit]="edit" [checked]="obj.permission === 'none'"
+                                        (checkedChange)="obj.permission = 'none'">
+                                    </odp-round-radio>
+                                    <span class="ml-2">None</span>
+                                </div>
+                                <div class="d-flex align-items-center ml-2">
+                                    <odp-round-radio [edit]="edit" [checked]="obj.permission === 'view'"
+                                        (checkedChange)="obj.permission = 'view'">
+                                    </odp-round-radio>
+                                    <span class="ml-2">View</span>
+                                </div>
+                                <div class="d-flex align-items-center ml-2">
+                                    <odp-round-radio [edit]="edit" [checked]="obj.permission === 'edit'"
+                                        (checkedChange)="obj.permission = 'edit'">
+                                    </odp-round-radio>
+                                    <span class="ml-2">Edit</span>
+                                </div>
+                            </div>
+                        </div>
+                        <ng-container
+                            *ngTemplateOutlet="recursiveTemplate; context:{$implicit: obj['definition']}"></ng-container>
+                    </div>
                 </div>
-             </div>
-             <ng-container *ngTemplateOutlet="recursiveTemplate; context:{$implicit: obj['definition']}"></ng-container>
-               </div>
-         </div>
-        </ng-template>
+            </ng-template>
             <!-- <div class="d-flex align-items-center">
                 <odp-round-radio [edit]="edit" [checked]="selectedType == 'generic'"
                     (checkedChange)="onTypeChange('generic')">

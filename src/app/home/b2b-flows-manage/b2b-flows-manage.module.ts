@@ -59,6 +59,8 @@ import { ChangeOnEditComponent } from '../../utils/change-on-edit/change-on-edit
 import { PluginSelectorComponent } from './node-properties/marketplace-selector/marketplace-selector.component';
 import { EditorModule } from 'src/app/utils/editor/editor.module';
 import { B2bPathService } from './b2b-path.service';
+import { ConverterPropertiesComponent } from './node-properties/converter-properties/converter-properties.component';
+import { FormatSelectorComponent } from './node-properties/converter-properties/format-selector/format-selector.component';
 
 const routes: Routes = [
   {
@@ -94,7 +96,9 @@ const routes: Routes = [
     PathPropertiesComponent,
     PathConditionCreatorComponent,
     ErrorNodeComponent,
-    PluginSelectorComponent
+    PluginSelectorComponent,
+    ConverterPropertiesComponent,
+    FormatSelectorComponent
   ],
   imports: [
     CommonModule,

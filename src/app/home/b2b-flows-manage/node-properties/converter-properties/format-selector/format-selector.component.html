@@ -1,0 +1,23 @@
+<div class="">
+    <odp-search-box [fullWidth]="true" [open]="true" (reset)="clearSearch()"
+        (enteredText)="searchFormat($event)"></odp-search-box>
+    <div class="list-group list-group-flush">
+        <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+            *ngFor="let item of formatList" (click)="toggleItem(!item._selected,item)">
+            <div class="list-item-format-name d-flex align-items-center flex-fill">
+                <odp-round-radio [edit]="{status:true}" [checked]="item._selected">
+                </odp-round-radio>
+                <span class="ml-3">{{item.name}}</span>
+            </div>
+            <span class="list-item-attribute-count text-right">{{item.attributeCount}}</span>
+            <span class="list-item-format-type text-right">{{item.formatType}}</span>
+        </div>
+        <div *ngIf="!formatList || formatList.length == 0"
+            class="list-group-item d-flex align-items-center justify-content-between text-secondary">
+            No Data Format found for the term: <span class="fw-500 text-dark">{{searchTerm}}</span>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center border-top">
+        <button type="button" class="btn btn-dark m-3" (click)="selectFormat()">Select Format</button>
+    </div>
+</div>

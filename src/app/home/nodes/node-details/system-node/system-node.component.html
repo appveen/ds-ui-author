@@ -1,8 +1,15 @@
 <ng-container>
     <div class="form-group">
-        <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
-        <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="api['method']"
+        <label class="font-14 fw-400 text-dark" for="nodeType">API Type</label>
+        <select id="nodeType" class="form-control" [(ngModel)]="api['type']" [disabled]="!edit.status"
             (ngModelChange)="onChange($event)">
+            <option value="External" selected>External</option>
+            <option value="DataPipe">DataPipe</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
+        <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="api['method']" (ngModelChange)="onChange($event)">
             <option value="POST" selected>POST</option>
             <option value="GET">GET</option>
             <option value="PUT">PUT</option>
@@ -11,8 +18,7 @@
     </div>
     <div class="form-group">
         <label class="font-14 fw-400 text-dark" for="nodeEndpoint">API Endpoint</label>
-        <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="api['path']" 
-            (ngModelChange)="onChange($event)"
+        <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="api['endpoint']" (ngModelChange)="onChange($event)"
             (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
     </div>
     <div class="form-group">
@@ -23,6 +29,11 @@
             <option value="application/xml">application/xml</option>
             <option value="multipart/form-data">multipart/form-data</option>
         </select>
+    </div>
+    <div class="form-group">
+        <label class="font-14 fw-400 text-dark" for="nodeHeaders">Headers</label>
+        <odp-change-on-edit id="nodeHeaders" [(ngModel)]="api['headers']"
+            (ngModelChange)="onChange($event)"></odp-change-on-edit>
     </div>
     <div class="form-group position-relative">
         <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>

@@ -65,7 +65,7 @@
         <div class="icon-block-group text-secondary border-top border-border pt-3">
           <span *ngIf="showSideNav" class="nav-active d-flex align-items-center">
             <span>INTEGRATION</span>
-            <span class="text-uppercase ml-2 text-primary font-10">(beta)</span>
+            <!-- <span class="text-uppercase ml-2 text-primary font-10">(beta)</span> -->
           </span>
           <div *ngIf="showSideNav" class="dsi padding" [ngClass]="{
               'dsi-drop-down': openPanel['integration'],
@@ -149,6 +149,7 @@
         <div class="icon-block-group text-secondary border-top border-border pt-3">
           <span *ngIf="showSideNav" class="nav-active d-flex align-items-center">
             <span>PROCESS FLOWS</span>
+            <span class="text-uppercase ml-2 text-primary font-10">(beta)</span>
           </span>
           <div *ngIf="showSideNav" class="dsi padding" [ngClass]="{
               'dsi-drop-down': openPanel['processFlows'],
@@ -299,7 +300,7 @@
                   'fw-600 nav-active': apiKeyRoute.isActive,
                   'nav-inactive': !apiKeyRoute.isActive
                 }">API Keys
-                <span class="text-uppercase ml-2 text-primary font-10">(beta)</span>
+                <!-- <span class="text-uppercase ml-2 text-primary font-10">(beta)</span> -->
               </span>
             </div>
           </div>

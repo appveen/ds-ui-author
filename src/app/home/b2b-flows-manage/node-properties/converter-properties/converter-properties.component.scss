@@ -1,0 +1,77 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.converter-window {
+    top: 0;
+    right: -80vw;
+    min-width: 80vw;
+    max-width: 80vw;
+    transition: 0.2;
+    z-index: 2;
+    height: 100vh;
+    overflow-y: auto;
+
+    &.show {
+        right: 0px;
+    }
+
+    .format-selector {
+        min-width: 480px;
+        max-width: 480px;
+    }
+}
+
+.spacer {
+    height: 3px;
+}
+
+.source-list {
+    .data-field {
+        &:hover {
+            cursor: pointer;
+            background: $accent;
+            color: $white;
+        }
+    }
+}
+
+path {
+    stroke: #ccc;
+    stroke-width: 2;
+    fill: none;
+
+    &:hover {
+        cursor: pointer;
+        stroke-width: 4;
+    }
+
+    &.selected {
+        stroke: $accent;
+        stroke-width: 3;
+    }
+}
+
+.no-outline {
+    outline: none !important;
+}
+
+.transparent-path {
+    stroke: transparent;
+    stroke-width: 4;
+    fill: none;
+
+    &:hover {
+        cursor: pointer;
+        stroke-width: 20;
+    }
+}
+
+.svg-path-transparent:hover~path {
+    cursor: pointer;
+    stroke-width: 4;
+}
+
+.mark-disabled {
+    opacity: 0.75;
+    color: #ccc !important;
+}

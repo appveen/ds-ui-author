@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import * as _  from 'lodash';
+import * as _ from 'lodash';
 import { ToastrService } from 'ngx-toastr';
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
 import { AppService } from 'src/app/utils/services/app.service';
@@ -12,7 +12,7 @@ import { GetOptions, CommonService } from 'src/app/utils/services/common.service
   templateUrl: './node-details.component.html',
   styleUrls: ['./node-details.component.scss']
 })
-export class NodeDetailsComponent implements OnInit{
+export class NodeDetailsComponent implements OnInit {
   @ViewChild('pageChangeModalTemplate', { static: false }) pageChangeModalTemplate;
   subscriptions: any = {};
   activeTab: number;
@@ -38,17 +38,19 @@ export class NodeDetailsComponent implements OnInit{
   isDeleted: boolean = false;
   api: any = {
     method: 'GET',
-    path: '',
+    endpoint: '',
     contentType: 'application/json',
     timeout: '',
     retryCount: '',
     retryInterval: '',
+    type: '',
+    headers: {}
   }
   changesDone: EventEmitter<any> = new EventEmitter<any>();
   dataStructure: any = {
     incoming: {},
     outgoing: {}
-  }; 
+  };
   toggle: any;
   showDataMapping: boolean = false;
 
@@ -156,10 +158,11 @@ export class NodeDetailsComponent implements OnInit{
 
   saveNode() {
     const payload = _.cloneDeep(this.node);
+    // delete payload?.options
     // payload['api'] = this.api;
     // payload['dataStructure'] = this.dataStructure;
     let response;
-   
+
     payload.app = this.commonService.app._id;
     if (!this.canEditGroup) {
       delete payload.name;
@@ -248,7 +251,7 @@ export class NodeDetailsComponent implements OnInit{
     return true;
   }
 
-  onChangeData(event){
+  onChangeData(event) {
     this.node = event
   }
 
@@ -312,4 +315,3 @@ export class NodeDetailsComponent implements OnInit{
     return false;
   }
 }
-
