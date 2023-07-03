@@ -26,6 +26,7 @@ export class NodePropertiesComponent implements OnInit {
   nodeNameErrorMessage: string;
   searchTerm: string;
   path: string;
+  @Input() processNodeList: any = [];
   constructor(private commonService: CommonService,
     private appService: AppService,
     private flowService: B2bFlowService) {
@@ -303,5 +304,17 @@ export class NodePropertiesComponent implements OnInit {
       && this.currNode?.type != 'FILE_WRITE'
       && this.currNode?.type != 'TIMER'
       && this.currNode?.type != 'RESPONSE';
+  }
+
+  get processFlowNode(){
+    return this.currNode?.type === 'SYSTEM'
+    || this.currNode?.type === 'USER'
+    || this.currNode?.type === 'DECISION'
+    || this.currNode?.type === 'EVENT'
+    
+  }
+
+  nodesFromType(type){
+    return this.processNodeList.filter(node => node.type === type)
   }
 }

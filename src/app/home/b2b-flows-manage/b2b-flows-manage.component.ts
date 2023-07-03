@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef, Event
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { delay, tap } from 'rxjs/operators';
+import { delay, switchMap, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
@@ -52,6 +52,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   showPathProperties: boolean;
   selectedPath: any;
   isProcessFlow: boolean = false;
+  processNodeList: any = [];
 
   constructor(private commonService: CommonService,
     private appService: AppService,
@@ -84,6 +85,10 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.isProcessFlow = data.isProcessFlow;
+      if(this.isProcessFlow)
+      {
+        this.getProcessNodes();
+      }
     })
     this.flowService.showAddNodeDropdown.pipe(
       tap(() => {
@@ -153,6 +158,31 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     if (this.pageChangeModalTemplateRef) {
       this.pageChangeModalTemplateRef.close(false);
     }
+  }
+
+  getProcessNodes(){
+    this.nodeList = [];
+    return this.commonService.get('config', `/${this.commonService.app._id}/processnode/utils/count`).pipe(switchMap((count: any) => {
+      return this.commonService.get('config', `/${this.commonService.app._id}/processnode`, {
+        count: count,
+      });
+    })).subscribe((res: any) => {
+    
+      // res.forEach(item => {
+      //   item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/pipes/${this.app}` + item.inputNode.options.path;
+      //   // this.flowList.push(item);
+      // });
+      this.processNodeList = res;
+      // this.nodeList.forEach(e => {
+      //   if (e.status == 'Pending') {
+      //     this.commonService.updateStatus(e._id, 'node');
+      //   }
+      // })
+    }, err => {
+      
+      console.log(err);
+      this.commonService.errorToast(err);
+    });
   }
 
   resetSelection() {

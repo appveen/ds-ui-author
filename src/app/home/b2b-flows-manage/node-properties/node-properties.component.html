@@ -26,10 +26,10 @@
                 (ngModelChange)="changesDone.emit()" (tempValue)="checkNameForUnique($event)"
                 [errorMessage]="nodeNameErrorMessage" (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
         </div>
-        <div class="form-group" *ngIf="currNode?.type!='ERROR'">
+        <div class="form-group" *ngIf="currNode?.type!='ERROR' || processFlowNode">
             <label class="font-14 fw-400 text-dark" for="nodeType">Node Type</label>
             <select id="nodeType" class="form-control" [(ngModel)]="currNode.type"
-                (ngModelChange)="onTypeChange($event); changesDone.emit()">
+                (ngModelChange)="onTypeChange($event); changesDone.emit()" [disabled]="processFlowNode">
                 <option *ngIf="isInputNode" value="API">API Receiver</option>
                 <option *ngIf="isInputNode" value="TIMER">Timer</option>
                 <option value="FILE">File Agent</option>
@@ -45,6 +45,10 @@
                 <option *ngIf="!isInputNode" value="UNWIND">Change Root</option>
                 <option *ngIf="!isInputNode" value="DATASERVICE">Data Service</option>
                 <option *ngIf="!isInputNode" value="FUNCTION">Function</option>
+                <option *ngIf="processFlowNode" value="SYSTEM">System Task</option>
+                <option *ngIf="processFlowNode" value="USER">User Task</option>
+                <option *ngIf="processFlowNode" value="DECISION">Decision</option>
+                <option *ngIf="processFlowNode"  value="EVENT">Event Trigger</option>
 
                 <option *ngIf="!isInputNode" value="RESPONSE">Response</option>
             </select>
@@ -55,7 +59,7 @@
         <odp-input-data-selector class="d-flex" [edit]="edit" [(data)]="currNode.options.body" [nodeList]="nodeList" [currNode]="currNode">
         </odp-input-data-selector>
     </div> -->
-    <div *ngIf="showInputSelector" class="border rounded p-2 bg-light mb-3">
+    <div *ngIf="showInputSelector && !processFlowNode" class="border rounded p-2 bg-light mb-3">
         <div class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="inputDataStructure">Input Data Structure</label>
             <small class="form-text text-muted mb-3">Set the data structure that this node will accept</small>
@@ -419,7 +423,19 @@
         </odp-marketplace-selector>
     </ng-container>
 
-    <div *ngIf="showOutputSelector" class="border rounded p-2 bg-light mb-3">
+
+    <ng-container *ngIf="processFlowNode">
+       <div class="mb-4">
+        <label class="font-14 fw-400 text-dark" for="nodeType">Choose System Task node</label>
+        <select id="systemNode" class="form-control">
+            <option value="API" *ngFor="let node of nodesFromType('SYSTEM')">{{node.name}}</option>
+        </select>
+       </div>
+    </ng-container>
+
+    
+
+    <div *ngIf="showOutputSelector && !processFlowNode" class="border rounded p-2 bg-light mb-3">
         <div class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure</label>
             <small class="form-text text-muted mb-3">Set the data structure that this node will return</small>
@@ -486,3 +502,16 @@
     <odp-agent-selector *ngIf="toggle['agentSelector']" [edit]="edit"
         (dataChange)="selectAgent($event)"></odp-agent-selector>
 </div>
+
+
+<!-- <div [ngClass]="{'show':toggle['systemTask']}" class="node-agent-window border-left position-fixed bg-white p-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <span class="fw-500 font-20">System Tasks</span>
+        <span (click)="toggle['agentSelector']=false" class="dsi dsi-close text-dark"></span>
+    </div>
+    <hr>
+    <label class="font-14 fw-400 text-dark" for="nodeType">Choose System Task node</label>
+    <select id="systemNode" class="form-control">
+        <option value="API" *ngFor="let node of nodesFromType('SYSTEM')">node</option>
+    </select>
+</div>̦ -->

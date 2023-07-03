@@ -66,7 +66,7 @@
                 class="node-properties border-left border-top position-fixed bg-white">
                 <odp-node-properties *ngIf="showNodeProperties" [edit]="edit" [flowData]="flowData"
                     [nodeList]="nodeList" [currNode]="selectedNode.currNode" (close)="showNodeProperties=false"
-                    (changesDone)="changesDone = true">
+                    (changesDone)="changesDone = true" [processNodeList]="processNodeList">
                 </odp-node-properties>
                 <odp-path-properties *ngIf="showPathProperties" [edit]="edit" [flowData]="flowData"
                     [nodeList]="nodeList" [path]="selectedPath" (close)="showPathProperties=false"
