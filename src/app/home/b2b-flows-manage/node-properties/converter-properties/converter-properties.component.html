@@ -21,14 +21,17 @@
             <div class="source format-selector">
                 <div class="border rounded mt-3 ml-3">
                     <div class="bg-light border-bottom p-2 d-flex align-items-center justify-content-between">
-                        <span class="font-18 fw-500">Source</span>
+                        <span class="font-18 fw-500">Source </span>
                         <div class="d-flex align-items-center" *ngIf="sourceFormat">
-                            <span class="font-12 fw-500 text-accent mr-2">{{sourceFormat.name}}</span>
+                            <span class="font-12 fw-500 text-accent mr-2">{{sourceNode.name}}</span>
+                            <!-- <span class="font-16 fw-500 text-dark mx-2">:</span>
+                            <span class="font-12 fw-500 text-accent mr-2">{{sourceFormat.name}}</span> -->
                             <span class="dsi dsi-trash font-14 fw-500 text-danger hover"
                                 (click)="sourceFormat=null"></span>
                         </div>
                     </div>
-                    <odp-format-selector *ngIf="!sourceFormat" [(format)]="!sourceFormat"></odp-format-selector>
+                    <odp-source-selector *ngIf="!sourceFormat" [currNode]="data"
+                        [(source)]="sourceNode"></odp-source-selector>
                     <div class="source-list" *ngIf="sourceFormat">
                         <ng-container *ngFor="let def of allSources">
                             <div class="data-field d-flex align-items-center justify-content-start pl-2"
@@ -51,7 +54,7 @@
                     <path [attr.d]="p.path" class="no-outline" />
                 </g>
             </svg>
-            <div class="target format-selector">
+            <div class="target format-selector flex-fill">
                 <div class="border rounded mt-3 mr-3">
                     <div class="bg-light border-bottom p-2 d-flex align-items-center justify-content-between">
                         <span class="font-18 fw-500">Target</span>
@@ -75,10 +78,10 @@
                                     <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
                                 </div>
                                 <div class="field-key">{{def.key}}</div>
-                                <!-- <a href="#" (click)="$event.preventDefault();def._showFn=true">
+                                <a href="#" (click)="$event.preventDefault();def._showFn=true">
                                     <i class="hover mx-2"
                                         [ngClass]="{'text-success':isValidFunction(def),'text-danger':!isValidFunction(def)}">f(x)</i>
-                                </a> -->
+                                </a>
                                 <odp-formula-editor *ngIf="def._showFn"
                                     class="function-wrapper position-absolute bg-white border rounded" [data]="def"
                                     (close)="def._showFn=false"></odp-formula-editor>

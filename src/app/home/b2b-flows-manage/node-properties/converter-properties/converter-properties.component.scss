@@ -16,8 +16,20 @@
     }
 
     .format-selector {
-        min-width: 480px;
-        max-width: 480px;
+        &.source {
+            min-width: 300px;
+            max-width: 300px;
+        }
+
+        // &.target {
+        //     min-width: 800px;
+        //     max-width: 800px;
+        // }
+    }
+
+    .mapping-paths {
+        min-width: 120px;
+        max-width: 120px;
     }
 }
 
@@ -33,6 +45,10 @@
             color: $white;
         }
     }
+}
+
+.function-wrapper {
+    z-index: 2;
 }
 
 path {

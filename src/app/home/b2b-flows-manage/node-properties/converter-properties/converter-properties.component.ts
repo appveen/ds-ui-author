@@ -4,6 +4,8 @@ import * as _ from 'lodash';
 import { CommonService } from 'src/app/utils/services/common.service';
 import { debounceTime } from 'rxjs/operators';
 import { AppService } from 'src/app/utils/services/app.service';
+import { B2bFlowService } from '../../b2b-flow.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'odp-converter-properties',
@@ -21,7 +23,8 @@ export class ConverterPropertiesComponent implements OnInit {
   pathList: Array<any>;
   reCreatePaths: EventEmitter<any>;
   constructor(private commonService: CommonService,
-    private appService: AppService) {
+    private appService: AppService,
+    private flowService: B2bFlowService) {
     this.allSources = [];
     this.allTargets = [];
     this.pathList = [];
@@ -64,7 +67,11 @@ export class ConverterPropertiesComponent implements OnInit {
   done() {
     let mappings = this.allTargets.map(item => this.convertToMapping(item));
     this.data.mappings = mappings;
+    if (!environment.production) {
+      console.log(mappings);
+    }
     this.close.emit(false);
+    this.showConverterWindow = false;
   }
 
   cancel() {
@@ -154,8 +161,9 @@ export class ConverterPropertiesComponent implements OnInit {
             def.key = '_self';
           }
           def._id = `${def.properties.dataPath}`;
-          def.dataPath = def.properties.dataPath
-          def.name = def.properties.name
+          def.dataPath = def.properties.dataPath;
+          def.dataPathSegs = def.properties.dataPathSegs;
+          def.name = def.properties.name;
           def.depth = parentDef ? parentDef.depth + 1 : 0;
           list.push(def);
           if (def.type == 'Array') {
@@ -262,6 +270,25 @@ export class ConverterPropertiesComponent implements OnInit {
         }
       });
     }
+  }
+
+  isValidFunction(def: any) {
+    if (def.source && def.source.length > 1 && !def.formula && !def.formulaConfig) {
+      return false;
+    }
+    return true;
+  }
+
+  get sourceNode() {
+    return this.data.options.source;
+  }
+
+  set sourceNode(val: any) {
+    this.data.options.source = {
+      _id: val._id,
+      name: val.name,
+    };
+    this.sourceFormat = this.appService.cloneObject(val.dataStructure.outgoing);
   }
 
   get sourceFormat() {
