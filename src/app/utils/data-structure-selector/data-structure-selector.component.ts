@@ -57,6 +57,9 @@ export class DataStructureSelectorComponent implements OnInit {
   }
 
   onFormatChange(data: any) {
+    if (data && !data.dataType) {
+      data.dataType = 'Object';
+    }
     this.tempFormat = data;
     this.save();
   }

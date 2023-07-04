@@ -19,13 +19,24 @@
     }
 }
 
-.selected-format-name,
-.selected-format-type {
+.selected-format-name {
     .label {
         width: 80px;
     }
+
     .value {
         width: 180px;
+        text-overflow: ellipsis;
+    }
+}
+
+.selected-format-type {
+    .label {
+        width: 120px;
+    }
+
+    .value {
+        width: 140px;
         text-overflow: ellipsis;
     }
 }

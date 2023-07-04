@@ -1,15 +1,24 @@
 <div class="selector-options d-flex align-items-center">
-    <div class="d-flex flex-column rounded border bg-white">
-        <div *ngIf="format && format._id" class="selected-format-name d-flex align-items-center border-bottom">
-            <span class="label px-2 py-1 text-secondary font-12 fw-500 border-right">Name</span>
+    <div class="d-flex flex-column bg-white">
+        <div *ngIf="format && format._id" class="selected-format-name d-flex align-items-center">
+            <span class="label px-2 py-1 text-secondary font-12 fw-500">Name</span>
             <span class="value px-2 py-1 text-primary fw-400 text-truncate">{{format.name}}</span>
         </div>
         <div class="selected-format-type d-flex align-items-center">
-            <span class="label px-2 py-1 text-secondary font-12 fw-500 border-right">Type</span>
-            <span *ngIf="format && format._id" class="value px-2 py-1 text-dark fw-400 font-13">{{format.formatType ||
-                'JSON'}}</span>
+            <span class="label px-2 py-1 text-secondary font-12 fw-500">Format Type</span>
+            <span *ngIf="format && format._id" class="value px-2 py-1 text-dark fw-400 font-13">
+                {{format.formatType || 'JSON'}}</span>
             <span *ngIf="!format || !format._id"
                 class="value px-2 py-1 text-dark fw-400 font-13 text-truncate">Generic</span>
+        </div>
+        <div *ngIf="format && format._id" class="selected-format-type d-flex align-items-center">
+            <span class="label px-2 py-1 text-secondary font-12 fw-500">Data Type</span>
+            <span *ngIf="format && format._id" class="value px-2 py-1 text-dark fw-400 font-13">
+                <select name="" id="" [(ngModel)]="format.dataType">
+                    <option value="Object">Object</option>
+                    <option value="Array">Array</option>
+                </select>
+            </span>
         </div>
     </div>
     <button type="button" class="btn btn-link d-flex align-items-center" (click)="showWindow=!showWindow">
