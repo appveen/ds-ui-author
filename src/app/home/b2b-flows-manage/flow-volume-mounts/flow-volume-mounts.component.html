@@ -5,7 +5,7 @@
     </div>
     <div class="grid border rounded w-100">
         <div class="grid-row head d-flex align-items-center border-bottom bg-light">
-            <div class="grid-cell border-right">Name</div>
+            <div class="grid-cell border-right name">Name</div>
             <div class="grid-cell border-right">Host Path</div>
             <div class="grid-cell border-right">Flow Path</div>
             <div class="grid-cell d-flex align-items-center justify-content-end">
@@ -17,7 +17,7 @@
         <div class="grid-body">
             <div class="grid-row d-flex align-items-center border-bottom"
                 *ngFor="let item of volumeMounts;let index=index">
-                <div class="grid-cell border-right">{{item.name}}</div>
+                <div class="grid-cell border-right name">{{item.name}}</div>
                 <div class="grid-cell border-right">{{item.hostPath}}</div>
                 <div class="grid-cell border-right">{{item.containerPath}}</div>
                 <div class="grid-cell d-flex align-items-center justify-content-end">

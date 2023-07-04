@@ -14,6 +14,11 @@
             min-height: 32px;
             max-height: 32px;
             padding: 5px;
+
+            &.name {
+                min-width: 220px;
+                max-width: 220px;
+            }
         }
     }
 

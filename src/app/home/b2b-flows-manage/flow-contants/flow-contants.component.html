@@ -5,7 +5,7 @@
     </div>
     <div class="grid border rounded w-100">
         <div class="grid-row head d-flex align-items-center border-bottom bg-light">
-            <div class="grid-cell border-right">Key</div>
+            <div class="grid-cell border-right name">Key</div>
             <div class="grid-cell border-right">Type</div>
             <div class="grid-cell border-right">Value</div>
             <div class="grid-cell d-flex align-items-center justify-content-end">
@@ -17,7 +17,7 @@
         <div class="grid-body">
             <div class="grid-row d-flex align-items-center border-bottom"
                 *ngFor="let item of constantList;let index=index">
-                <div class="grid-cell border-right">{{item.key}}</div>
+                <div class="grid-cell border-right name">{{item.key}}</div>
                 <div class="grid-cell border-right">{{item.dataType}}</div>
                 <div class="grid-cell border-right">{{item.value}}</div>
                 <div class="grid-cell d-flex align-items-center justify-content-end">

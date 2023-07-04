@@ -41,6 +41,7 @@
                             <span class="text-success" *ngIf="p.type == 'String'">"{{p.name}}"</span>
                             <span class="text-warning" *ngIf="p.type == 'Number'">{{p.name}}</span>
                             <span class="text-info" *ngIf="p.type == 'Boolean'">{{p.name}}</span>
+                            <span class="text-primary" *ngIf="p.type == 'Date'">{{p.name}}</span>
                             <span class="text-grey" *ngIf="p.type == 'Object'">{{'{ '+p.name+' }'}}</span>
                             <span class="text-grey" *ngIf="p.type == 'Array'">{{'[ '+p.name+' ]'}}</span>
                             <span *ngIf="!lp">,&nbsp;</span>
@@ -81,6 +82,11 @@
                         {{p.name}}
                     </span>
                     <span (dragenter)="p.over=true" (dragleave)="p.over=false" (dragover)="$event.preventDefault();"
+                        (drop)="onParamDrop($event,item,p)" [class.bg-accent]="p.over" class="text-primary"
+                        *ngIf="p.type == 'Date'">
+                        {{p.name}}
+                    </span>
+                    <span (dragenter)="p.over=true" (dragleave)="p.over=false" (dragover)="$event.preventDefault();"
                         (drop)="onParamDrop($event,item,p)" [class.bg-accent]="p.over" class="text-grey"
                         *ngIf="p.type == 'Object'">
                         {{'{ '+p.name+' }'}}
@@ -105,6 +111,9 @@
                     <span class="text-info" *ngIf="p.type == 'Boolean'">
                         {{p.substituteVal.name}}
                     </span>
+                    <span class="text-primary" *ngIf="p.type == 'Date'">
+                        {{p.substituteVal.name}}
+                    </span>
                     <span class="text-grey" *ngIf="p.type == 'Object'">
                         {{p.substituteVal.name}}
                     </span>
@@ -126,6 +135,9 @@
                 {{item.name}}
             </span>
             <span class="text-info" *ngIf="item.type == 'Boolean'">
+                {{item.name}}
+            </span>
+            <span class="text-primary" *ngIf="item.type == 'Date'">
                 {{item.name}}
             </span>
             <span class="text-grey" *ngIf="item.type == 'Object'">
