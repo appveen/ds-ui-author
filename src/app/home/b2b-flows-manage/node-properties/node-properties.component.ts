@@ -274,7 +274,8 @@ export class NodePropertiesComponent implements OnInit {
   }
   get showDataMapping() {
     if (this.flowData && this.currNode && this.prevNode) {
-      return !_.isEmpty(this.prevNode.dataStructure?.outgoing);
+      // return !_.isEmpty(this.prevNode.dataStructure?.outgoing);
+      return true;
     }
     return false;
     // return this.nodeList[0]._id == this.currNode._id;
@@ -285,6 +286,9 @@ export class NodePropertiesComponent implements OnInit {
       return false;
     }
     if (this.currNode.type == 'ERROR') {
+      return false;
+    }
+    if (this.currNode.type == 'DATASERVICE') {
       return false;
     }
     if (this.currNode.type == 'CONVERT_JSON_JSON'

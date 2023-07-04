@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AppService } from 'src/app/utils/services/app.service';
 
 @Component({
   selector: 'odp-data-service-properties',
@@ -12,7 +13,7 @@ export class DataServicePropertiesComponent implements OnInit {
   @Input() nodeList: Array<any>;
   prevNode: any;
   toggle: any;
-  constructor() {
+  constructor(private appService: AppService) {
     this.edit = { status: false };
     this.toggle = {};
   }
@@ -57,7 +58,8 @@ export class DataServicePropertiesComponent implements OnInit {
   }
 
   selectDataService(data: any) {
-    this.currNode.dataStructure.outgoing = data;
+    this.currNode.dataStructure.incoming = this.appService.cloneObject(data);
+    this.currNode.dataStructure.outgoing = this.appService.cloneObject(data);
   }
 
   setDataServiceOperation(type: string, val: any) {

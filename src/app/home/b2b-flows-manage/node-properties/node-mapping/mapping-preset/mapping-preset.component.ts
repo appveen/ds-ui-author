@@ -102,7 +102,7 @@ export class MappingPresetComponent implements OnInit {
 
     let commonSourceDefinitions = this.getStringArrayAsDefinition(this.nodeSourceAttributes);
     this.nodeList.forEach((node: any) => {
-      if (node.dataStructure.outgoing.definition) {
+      if (node.dataStructure.outgoing && node.dataStructure.outgoing.definition) {
         node.definition = node.dataStructure.outgoing.definition;
       }
       if (node._id != this.currNode._id) {

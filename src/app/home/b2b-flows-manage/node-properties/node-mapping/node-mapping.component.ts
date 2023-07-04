@@ -112,7 +112,7 @@ export class NodeMappingComponent implements OnInit {
     });
     this.nodeList.forEach((node: any) => {
       let outgoing;
-      if (node.dataStructure.outgoing.definition) {
+      if (node.dataStructure.outgoing && node.dataStructure.outgoing.definition) {
         node.definition = node.dataStructure.outgoing.definition;
       }
       if (node._id != this.currNode._id) {

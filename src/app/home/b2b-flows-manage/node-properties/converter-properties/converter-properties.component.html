@@ -24,7 +24,7 @@
                         <div class="bg-light border-bottom p-2 d-flex align-items-center justify-content-between">
                             <span class="font-18 fw-500">Constants</span>
                         </div>
-                        <div class="source-list">
+                        <div class="source-list font-12">
                             <ng-container *ngFor="let def of allConstants">
                                 <div class="data-field d-flex align-items-center justify-content-start pl-2"
                                     draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
@@ -32,7 +32,7 @@
                                     <div class="field-type mr-2">
                                         <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
                                     </div>
-                                    <div class="field-key">
+                                    <div class="field-key text-truncate">
                                         <span class="mr-1">{{def.key}}</span>
                                         <span class="text-muted" *ngIf="def.dataType=='String'">
                                             <i>('{{def.value}}')</i>
@@ -70,7 +70,7 @@
                                     <div class="field-type mr-2">
                                         <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
                                     </div>
-                                    <div class="field-key">{{def.key}}</div>
+                                    <div class="field-key text-truncate">{{def.key}}</div>
                                     <div class="mapping-line flex-fill"
                                         [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
                                 </div>
@@ -108,7 +108,7 @@
                                 <div class="field-type mr-2">
                                     <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
                                 </div>
-                                <div class="field-key">{{def.key}}</div>
+                                <div class="field-key text-truncate">{{def.key}}</div>
                                 <a href="#" (click)="$event.preventDefault();def._showFn=true">
                                     <i class="hover mx-2"
                                         [ngClass]="{'text-success':isValidFunction(def),'text-danger':!isValidFunction(def)}">f(x)</i>

@@ -78,6 +78,11 @@
             <span>Data Mapping</span>
         </button>
     </div>
+    <button type="button" class="btn btn-dark ignore-outside d-flex align-items-center mb-3"
+        (click)="toggle['mapping']=!toggle['mapping']" *ngIf="currNode.type=='DATASERVICE' && currNode.dataStructure?.incoming">
+        <span class="dsi dsi-mapping mr-2"></span>
+        <span>Data Mapping</span>
+    </button>
     <!-- <div *ngIf="showOutputSelector" class="border rounded p-2 bg-light mb-3">
         <div class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure</label>

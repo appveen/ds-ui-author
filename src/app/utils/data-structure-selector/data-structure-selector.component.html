@@ -1,5 +1,5 @@
 <div class="selector-options d-flex align-items-center">
-    <div class="d-flex flex-column bg-white">
+    <div class="d-flex flex-column bg-white rounded">
         <div *ngIf="format && format._id" class="selected-format-name d-flex align-items-center">
             <span class="label px-2 py-1 text-secondary font-12 fw-500">Name</span>
             <span class="value px-2 py-1 text-primary fw-400 text-truncate">{{format.name}}</span>
@@ -11,7 +11,7 @@
             <span *ngIf="!format || !format._id"
                 class="value px-2 py-1 text-dark fw-400 font-13 text-truncate">Generic</span>
         </div>
-        <div *ngIf="format && format._id" class="selected-format-type d-flex align-items-center">
+        <!-- <div *ngIf="format && format._id" class="selected-format-type d-flex align-items-center">
             <span class="label px-2 py-1 text-secondary font-12 fw-500">Data Type</span>
             <span *ngIf="format && format._id" class="value px-2 py-1 text-dark fw-400 font-13">
                 <select name="" id="" [(ngModel)]="format.dataType">
@@ -19,7 +19,7 @@
                     <option value="Array">Array</option>
                 </select>
             </span>
-        </div>
+        </div> -->
     </div>
     <button type="button" class="btn btn-link d-flex align-items-center" (click)="showWindow=!showWindow">
         <span class="dsi dsi-settings"></span>
