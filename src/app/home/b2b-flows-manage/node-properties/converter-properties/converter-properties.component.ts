@@ -14,19 +14,23 @@ import { environment } from 'src/environments/environment';
 })
 export class ConverterPropertiesComponent implements OnInit {
 
+  @Input() flowData: any;
   @Input() data: any;
   @Output() close: EventEmitter<any>;
   showConverterWindow: boolean;
   dragItem: any;
   allSources: Array<any>;
   allTargets: Array<any>;
+  allConstants: Array<any>;
   pathList: Array<any>;
   reCreatePaths: EventEmitter<any>;
+  tempMappings: any;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private flowService: B2bFlowService) {
     this.allSources = [];
     this.allTargets = [];
+    this.allConstants = [];
     this.pathList = [];
     this.reCreatePaths = new EventEmitter();
     this.close = new EventEmitter();
@@ -38,6 +42,47 @@ export class ConverterPropertiesComponent implements OnInit {
     }
     if (this.data.dataStructure.outgoing && this.data.dataStructure.outgoing.definition) {
       this.allTargets = this.flatten(this.appService.cloneObject(this.data.dataStructure.outgoing.definition));
+    }
+    let temp = this.appService.cloneObject(this.flowData.constants);
+    temp.map((item) => {
+      delete item._id;
+      if (item.key == 'true') {
+        item.key = '_self';
+      }
+      item.type = item.dataType;
+      item._id = `CONSTANTS.${item.key}`;
+      item.dataPath = 'CONSTANTS.' + item.key;
+      item.dataPathSegs = ['CONSTANTS', item.key];
+      item.name = item.key;
+      item.isConstant = true;
+      item.properties = {
+        dataPath: item.dataPath,
+        dataPathSegs: item.dataPathSegs,
+        name: item.key
+      };
+      item.depth = 0;
+      this.allConstants.push(item);
+    });
+    if (this.data.mappings && this.data.mappings.length > 0) {
+      this.tempMappings = this.appService.cloneObject(this.data.mappings);
+      this.allTargets.forEach((item: any) => {
+        let temp = this.tempMappings.find((e: any) => e.target.dataPath == item.dataPath);
+        if (temp && temp.source && temp.source.length > 0) {
+          item.source = (temp.source || []).map((source: any) => {
+            let t = this.allSources.find((src: any) => src._id == source._id);
+            if (!t) {
+              t = this.allConstants.find((src: any) => src._id == source._id);
+            }
+            return t;
+          }).filter(e => e);
+        }
+        if (temp && temp.formula) {
+          item.formula = temp.formula;
+        }
+        if (temp && temp.formulaConfig) {
+          item.formulaConfig = temp.formulaConfig;
+        }
+      });
     }
     this.reCreatePaths.pipe(debounceTime(200)).subscribe((data: any) => {
       if (data) {
@@ -55,13 +100,14 @@ export class ConverterPropertiesComponent implements OnInit {
 
   openMapper() {
     this.showConverterWindow = true;
-    if (this.data.dataStructure.incoming && this.data.dataStructure.incoming.definition) {
-      this.allSources = this.flatten(this.appService.cloneObject(this.data.dataStructure.incoming.definition));
-    }
-    if (this.data.dataStructure.outgoing && this.data.dataStructure.outgoing.definition) {
-      this.allTargets = this.flatten(this.appService.cloneObject(this.data.dataStructure.outgoing.definition));
-    }
+    // if (this.data.dataStructure.incoming && this.data.dataStructure.incoming.definition) {
+    //   this.allSources = this.flatten(this.appService.cloneObject(this.data.dataStructure.incoming.definition));
+    // }
+    // if (this.data.dataStructure.outgoing && this.data.dataStructure.outgoing.definition) {
+    //   this.allTargets = this.flatten(this.appService.cloneObject(this.data.dataStructure.outgoing.definition));
+    // }
     this.pathList = [];
+    this.reCreatePaths.emit(null);
   }
 
   done() {
@@ -85,7 +131,8 @@ export class ConverterPropertiesComponent implements OnInit {
       _id: item._id,
       type: item.type,
       dataPath: item.dataPath,
-      dataPathSegs: item.properties.dataPathSegs
+      dataPathSegs: item.properties.dataPathSegs,
+      isConstant: item.isConstant
     };
     temp.source = (item.source || []).map((s) => {
       let temp: any = {};
@@ -93,6 +140,7 @@ export class ConverterPropertiesComponent implements OnInit {
       temp.type = s.type;
       temp.dataPath = s.dataPath;
       temp.nodeId = s.nodeId;
+      temp.isConstant = s.isConstant;
       temp.dataPathSegs = s.properties.dataPathSegs;
       return temp;
     });

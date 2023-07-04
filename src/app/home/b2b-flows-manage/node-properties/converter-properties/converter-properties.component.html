@@ -18,33 +18,64 @@
             </div>
         </div>
         <div class="mapping-wrapper d-flex">
-            <div class="source format-selector">
-                <div class="border rounded mt-3 ml-3">
-                    <div class="bg-light border-bottom p-2 d-flex align-items-center justify-content-between">
-                        <span class="font-18 fw-500">Source </span>
-                        <div class="d-flex align-items-center" *ngIf="sourceFormat">
-                            <span class="font-12 fw-500 text-accent mr-2">{{sourceNode.name}}</span>
-                            <!-- <span class="font-16 fw-500 text-dark mx-2">:</span>
-                            <span class="font-12 fw-500 text-accent mr-2">{{sourceFormat.name}}</span> -->
-                            <span class="dsi dsi-trash font-14 fw-500 text-danger hover"
-                                (click)="sourceFormat=null"></span>
+            <div>
+                <div class="source format-selector">
+                    <div class="border rounded mt-3 ml-3">
+                        <div class="bg-light border-bottom p-2 d-flex align-items-center justify-content-between">
+                            <span class="font-18 fw-500">Constants</span>
+                        </div>
+                        <div class="source-list">
+                            <ng-container *ngFor="let def of allConstants">
+                                <div class="data-field d-flex align-items-center justify-content-start pl-2"
+                                    draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                                    <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
+                                    <div class="field-type mr-2">
+                                        <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+                                    </div>
+                                    <div class="field-key">
+                                        <span class="mr-1">{{def.key}}</span>
+                                        <span class="text-muted" *ngIf="def.dataType=='String'">
+                                            <i>('{{def.value}}')</i>
+                                        </span>
+                                        <span class="text-muted" *ngIf="def.dataType!='String'">
+                                            <i>({{def.value}})</i>
+                                        </span>
+                                    </div>
+                                    <div class="mapping-line flex-fill"
+                                        [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
+                                </div>
+                            </ng-container>
                         </div>
                     </div>
-                    <odp-source-selector *ngIf="!sourceFormat" [currNode]="data"
-                        [(source)]="sourceNode"></odp-source-selector>
-                    <div class="source-list" *ngIf="sourceFormat">
-                        <ng-container *ngFor="let def of allSources">
-                            <div class="data-field d-flex align-items-center justify-content-start pl-2"
-                                draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
-                                <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
-                                <div class="field-type mr-2">
-                                    <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
-                                </div>
-                                <div class="field-key">{{def.key}}</div>
-                                <div class="mapping-line flex-fill"
-                                    [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
+                </div>
+                <div class="source format-selector">
+                    <div class="border rounded mt-3 ml-3">
+                        <div class="bg-light border-bottom p-2 d-flex align-items-center justify-content-between">
+                            <span class="font-18 fw-500">Source</span>
+                            <div class="d-flex align-items-center" *ngIf="sourceFormat">
+                                <span class="font-12 fw-500 text-accent mr-2">{{sourceNode.name}}</span>
+                                <!-- <span class="font-16 fw-500 text-dark mx-2">:</span>
+                                <span class="font-12 fw-500 text-accent mr-2">{{sourceFormat.name}}</span> -->
+                                <span class="dsi dsi-trash font-14 fw-500 text-danger hover"
+                                    (click)="sourceFormat=null"></span>
                             </div>
-                        </ng-container>
+                        </div>
+                        <odp-source-selector *ngIf="!sourceFormat" [currNode]="data"
+                            [(source)]="sourceNode"></odp-source-selector>
+                        <div class="source-list" *ngIf="sourceFormat">
+                            <ng-container *ngFor="let def of allSources">
+                                <div class="data-field d-flex align-items-center justify-content-start pl-2"
+                                    draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                                    <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
+                                    <div class="field-type mr-2">
+                                        <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+                                    </div>
+                                    <div class="field-key">{{def.key}}</div>
+                                    <div class="mapping-line flex-fill"
+                                        [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
+                                </div>
+                            </ng-container>
+                        </div>
                     </div>
                 </div>
             </div>

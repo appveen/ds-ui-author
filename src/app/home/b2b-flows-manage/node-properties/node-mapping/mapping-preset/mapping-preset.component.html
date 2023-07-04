@@ -1,0 +1,69 @@
+<div class="d-flex border-top">
+    <div class="source-list ml-3 border-right">
+        <div class="source-list-item mb-3">
+            <ng-container *ngFor="let node of nodeList">
+                <div class="d-flex align-items-center">
+                    <div class="py-2 fw-600 text-primary">{{node.name}}</div>
+                </div>
+                <div>
+                    <ng-container *ngFor="let def of allSources">
+                        <div *ngIf="def.nodeId == node._id"
+                            class="data-field d-flex align-items-center justify-content-start" draggable="true"
+                            (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                            <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
+                            <div class="field-type mr-2">
+                                <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+                            </div>
+                            <div class="field-key">{{def.key}}</div>
+                            <div class="mapping-line flex-fill"
+                                [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <svg #svgCanvas class="mapping-paths" (click)="selectedPath=null;">
+        <g *ngFor="let p of pathList;let i=index;">
+            <path class="transparent-path no-outline" [attr.d]="p.path" (click)="selectPath($event,p,i)" />
+            <path [class.selected]="isPathSelected(p)" [attr.d]="p.path" (click)="selectPath($event,p,i)"
+                class="no-outline" />
+        </g>
+    </svg>
+    <div class="target-list border-left">
+        <div class="target-list-item mb-3">
+            <span class="fw-600 text-primary font-14 p-2">{{currNode.name}}</span>
+            <div class="target-field-list">
+                <div *ngFor="let def of allTargets" class="target-field-list-item position-relative">
+                    <div *ngIf="!def.hide" class="data-field d-flex align-items-center justify-content-start"
+                        [ngClass]="{'bg-accent text-white':def.over,'mark-disabled':def.disabled}"
+                        (drop)="onDrop($event,def)" (dragover)="onDragOver($event,def)"
+                        (dragenter)="onDragEnter($event,def)" (dragleave)="onDragLeave($event,def)"
+                        [attr.data-id]="def._id">
+                        <div class="spacer" [ngClass]="{'border-accent border-top':isMapped(def)}"
+                            [ngStyle]="{'width':((def.depth+1)*12)+'px'}"></div>
+                        <div class="field-type mr-2">
+                            <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+                        </div>
+                        <div class="field-key">{{def.key}}</div>
+                        <a href="#" (click)="$event.preventDefault();def._showFn=true">
+                            <i class="hover mx-2"
+                                [ngClass]="{'text-success':isValidFunction(def),'text-danger':!isValidFunction(def)}">f(x)</i>
+                        </a>
+                        <odp-formula-editor *ngIf="def._showFn"
+                            class="function-wrapper position-absolute bg-white border rounded" [data]="def"
+                            (close)="def._showFn=false"></odp-formula-editor>
+                        <div class="mapped-sources d-flex ml-3 text-secondary font-12">
+                            <div *ngFor="let source of def.source"
+                                class="border rounded px-1 mr-1 d-flex align-items-center">
+                                <span>{{source.key}}</span>
+                                <span (click)="removeSource(def,source)"
+                                    class="dsi dsi-minus-circle text-danger hover ml-1 font-14"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

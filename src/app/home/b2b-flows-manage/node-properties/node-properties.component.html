@@ -464,7 +464,7 @@
     || currNode.type == 'CONVERT_XML_JSON'
     || currNode.type == 'CONVERT_JSON_CSV'
     || currNode.type == 'CONVERT_CSV_JSON'">
-        <odp-converter-properties [(data)]="currNode"></odp-converter-properties>
+        <odp-converter-properties [flowData]="flowData" [(data)]="currNode"></odp-converter-properties>
     </ng-container>
 
     <div *ngIf="showOutputSelector" class="border rounded p-2 bg-light mb-3">
@@ -507,7 +507,7 @@
 </div>
 
 <div [ngClass]="{'show':toggle['mapping']}" class="node-mapping-window border-left position-fixed bg-white p-4">
-    <odp-node-mapping *ngIf="toggle['mapping']" [edit]="edit" [currNode]="currNode"
+    <odp-node-mapping *ngIf="toggle['mapping']" [edit]="edit" [flowData]="flowData" [currNode]="currNode"
         [inputNode]="this.flowData.inputNode._id" (close)="toggle['mapping']=false"
         source="incoming"></odp-node-mapping>
 </div>

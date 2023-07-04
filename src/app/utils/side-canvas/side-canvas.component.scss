@@ -1,0 +1,30 @@
+.overlay {
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: rgba($color: #000000, $alpha: 0.6);
+}
+
+.side-canvas {
+    // top: 88px;
+    // height: calc(100vh - 88px);
+    top: 0;
+    height: 100vh;
+    width: 360px;
+    right: -360px;
+    z-index: 2;
+    overflow-y: auto;
+    transition: 0.2s;
+
+    &.wide {
+        right: -1000px;
+        width: 1000px;
+    }
+
+    &.show {
+        right: 0px;
+    }
+
+}

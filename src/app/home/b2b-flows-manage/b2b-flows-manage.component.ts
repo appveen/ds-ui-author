@@ -52,7 +52,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   showPathProperties: boolean;
   selectedPath: any;
   isProcessFlow: boolean = false;
-
+  activeTab: number;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -79,6 +79,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     this.logs = [];
     this.openDeleteModal = new EventEmitter();
     this.nodeList = [];
+    this.activeTab = 0;
   }
 
   ngOnInit(): void {

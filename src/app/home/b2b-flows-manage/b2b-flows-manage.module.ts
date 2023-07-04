@@ -59,6 +59,10 @@ import { B2bPathService } from './b2b-path.service';
 import { ConverterPropertiesComponent } from './node-properties/converter-properties/converter-properties.component';
 import { FormatSelectorComponent } from './node-properties/converter-properties/format-selector/format-selector.component';
 import { SourceSelectorComponent } from './node-properties/converter-properties/source-selector/source-selector.component';
+import { FlowContantsComponent } from './flow-contants/flow-contants.component';
+import { FlowVolumeMountsComponent } from './flow-volume-mounts/flow-volume-mounts.component';
+import { SideCanvasModule } from 'src/app/utils/side-canvas/side-canvas.module';
+import { MappingPresetComponent } from './node-properties/node-mapping/mapping-preset/mapping-preset.component';
 
 const routes: Routes = [
   {
@@ -94,7 +98,10 @@ const routes: Routes = [
     PluginSelectorComponent,
     ConverterPropertiesComponent,
     FormatSelectorComponent,
-    SourceSelectorComponent
+    SourceSelectorComponent,
+    FlowContantsComponent,
+    FlowVolumeMountsComponent,
+    MappingPresetComponent
   ],
   imports: [
     CommonModule,
@@ -125,7 +132,8 @@ const routes: Routes = [
     FieldTypeModule,
     ChangeOnEditModule,
     AutocompleteOnEditModule,
-    EditorModule
+    EditorModule,
+    SideCanvasModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService, MappingService, ChangeOnEditComponent, B2bPathService]

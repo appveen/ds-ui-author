@@ -169,3 +169,19 @@
 .dsi-function.alt {
   color: #A94CFF;
 }
+
+
+.tab-list-item {
+  &:not(:last-child) {
+    border-right: 1px solid $border;
+  }
+
+  &.active {
+    color: $accent;
+    font-weight: 500;
+  }
+}
+
+.spacer-lock {
+  min-width: 260px;
+}

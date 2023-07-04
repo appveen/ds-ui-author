@@ -6,24 +6,38 @@
         </button>
     </div>
     <div class="mapping-container my-3 border rounded">
-        <div class="d-flex align-items-center justify-content-end">
-            <button type="button" class="btn btn-link d-flex align-items-center" (click)="doFuzzyMapping()">
-                <span class="dsi dsi-mapping mr-2"></span>
-                <span>Fuzzy Mappings</span>
-            </button>
-            <button type="button" class="btn btn-link d-flex align-items-center" (click)="doClearMapping()">
-                <span class="dsi dsi-ban mr-2"></span>
-                <span>Clear Mappings</span>
-            </button>
+        <div class="mapping-options d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-start px-3">
+                <div class="d-flex align-items-center justify-content-start mr-3">
+                    <odp-round-radio class="mr-2" [edit]="edit" [checked]="mappingType=='custom'"
+                        (checkedChange)="mappingType='custom';configureMappingData();"></odp-round-radio>
+                    <span>Data Mapping</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-start">
+                    <odp-round-radio class="mr-2" [edit]="edit" [checked]="mappingType=='preset'"
+                        (checkedChange)="mappingType='preset'"></odp-round-radio>
+                    <span>Data From Source</span>
+                </div>
+            </div>
+            <div *ngIf="mappingType=='custom'" class="d-flex align-items-center justify-content-end">
+                <button type="button" class="btn btn-link d-flex align-items-center" (click)="doFuzzyMapping()">
+                    <span class="dsi dsi-mapping mr-2"></span>
+                    <span>Fuzzy Mappings</span>
+                </button>
+                <button type="button" class="btn btn-link d-flex align-items-center" (click)="doClearMapping()">
+                    <span class="dsi dsi-ban mr-2"></span>
+                    <span>Clear Mappings</span>
+                </button>
+            </div>
         </div>
-        <div class="d-flex border-top">
+        <div *ngIf="mappingType=='custom'" class="d-flex border-top">
             <div class="source-list ml-3 border-right">
                 <div class="source-list-item mb-3">
                     <ng-container *ngFor="let node of nodeList">
                         <div class="d-flex align-items-center">
                             <span class="dsi hover text-muted" (click)="toggleSource(node)"
                                 [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[node._id],'dsi-minus':!sourceExpandCollapseObjects[node._id]}"></span>
-                            <div class="p-2 fw-600 text-primary ml-2">{{node.name}}</div>
+                            <div class="py-2 fw-600 text-primary">{{node.name}}</div>
                         </div>
                         <div *ngIf="!sourceExpandCollapseObjects[node._id]">
                             <ng-container *ngFor="let def of allSources">
@@ -48,7 +62,7 @@
                     </ng-container>
                 </div>
             </div>
-            <svg #svgCanvas class="mapping-paths" [ngStyle]="svgStyle" (click)="selectedPath=null;">
+            <svg #svgCanvas class="mapping-paths" (click)="selectedPath=null;">
                 <g *ngFor="let p of pathList;let i=index;">
                     <path class="transparent-path no-outline" [attr.d]="p.path" (click)="selectPath($event,p,i)" />
                     <path [class.selected]="isPathSelected(p)" [attr.d]="p.path" (click)="selectPath($event,p,i)"
@@ -98,33 +112,10 @@
                 </div>
             </div>
         </div>
+        <odp-mapping-preset *ngIf="mappingType=='preset'" [edit]="edit" [flowData]="flowData" [currNode]="currNode"
+            [(allSources)]="allSources" [(allTargets)]="allTargets"></odp-mapping-preset>
     </div>
     <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary btn-min-width" (click)="done()">Done</button>
     </div>
 </div>
-
-<ng-template #arrayOptions let-close="close" let-dismiss="dismiss">
-    <div class="modal-header">
-        <div class="modal-title">
-            <h5>Select Array Options</h5>
-        </div>
-    </div>
-    <div class="modal-body">
-        <p>Select an option to map Array Data: </p>
-        <div class="form-group d-flex align-items-center">
-            <input #forEachEle class="mr-2" type="radio" name="arrayOption"
-                (change)="onArrayOptionSelect($event,'forEach')">
-            <label for="forEach" class="m-0" (click)="forEachEle.click()">For Each</label>
-        </div>
-        <div class="form-group d-flex align-items-center">
-            <input #replaceEle class="mr-2" type="radio" name="arrayOption"
-                (change)="onArrayOptionSelect($event,'replace')">
-            <label for="replace" class="m-0" (click)="replaceEle.click()">Replace</label>
-        </div>
-        <div class="d-flex align-items-center justify-content-end mt-4">
-            <button type="button" class="btn btn-dark mr-3" (click)="arrayOptionsRef.close(false)">Cancel</button>
-            <button type="button" class="btn btn-success" (click)="arrayOptionsRef.close(true)">Done</button>
-        </div>
-    </div>
-</ng-template>

@@ -50,9 +50,17 @@
                 <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
                 <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
             </div>
-            <div class="fw-500 font-12 text-secondary">Right Click on the canvas for Node Options</div>
+            <div class="tab-list d-flex align-items-center">
+                <div class="tab-list-item p-2 hover" [class.active]="activeTab==0" (click)="activeTab=0">Design</div>
+                <div class="tab-list-item p-2 hover" [class.active]="activeTab==1" (click)="activeTab=1">Options</div>
+                <!-- <div class="tab-list-item p-2 hover" [class.active]="activeTab==2" (click)="activeTab=2">Volume Mounts</div> -->
+            </div>
+            <div class="spacer-lock">
+                <span *ngIf="activeTab==0" class="fw-500 font-12 text-secondary">Right Click on the canvas for Node
+                    Options</span>
+            </div>
         </div>
-        <div class="flow-designer d-flex">
+        <div *ngIf="activeTab==0" class="flow-designer d-flex">
             <div class="flow-designer-svg-wrapper" (scroll)="scroll()" tabIndex="0">
                 <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
                     <g *ngFor="let node of nodeList;let i=index">
@@ -74,6 +82,19 @@
                 </odp-path-properties>
             </div>
         </div>
+        <div *ngIf="activeTab==1" class="flow-designer d-flex">
+            <div class="row w-100">
+                <div class="border-right col">
+                    <odp-flow-contants [data]="flowData" [nodeList]="nodeList"></odp-flow-contants>
+                </div>
+                <div class="col">
+                    <odp-flow-volume-mounts [data]="flowData" [nodeList]="nodeList"></odp-flow-volume-mounts>
+                </div>
+            </div>
+        </div>
+        <!-- <div *ngIf="activeTab==2" class="flow-designer d-flex">
+            <odp-flow-volume-mounts [data]="flowData" [nodeList]="nodeList"></odp-flow-volume-mounts>
+        </div> -->
     </div>
 </div>
 
