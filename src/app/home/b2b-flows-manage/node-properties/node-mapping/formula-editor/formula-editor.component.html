@@ -28,8 +28,8 @@
         </div>
         <div class="suggestion-list-wrapper font-10">
             <div class="border-bottom d-flex align-items-center justify-content-between">
-                <span class="text-muted p-1">Available Methods</span>
-                <input type="text" class="border mr-1" [(ngModel)]="searchTerm" placeholder="Search">
+                <!-- <span class="text-muted p-1">Methods</span> -->
+                <input type="text" class="border mx-1" [(ngModel)]="searchTerm" placeholder="Search Methods">
             </div>
             <div class="suggestion-list font-10">
                 <div *ngFor="let item of availableMethods"
@@ -45,8 +45,7 @@
                             <span class="text-grey" *ngIf="p.type == 'Array'">{{'[ '+p.name+' ]'}}</span>
                             <span *ngIf="!lp">,&nbsp;</span>
                         </ng-container>
-                        )&nbsp;:&nbsp;
-                        <span [ngClass]="getDataTypeStyleClass(item.returnType)">{{item.returnType}}</span>
+                        )
                     </div>
                 </div>
                 <div *ngIf="(availableMethods|commonFilter:'name':searchTerm).length==0"

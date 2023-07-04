@@ -52,6 +52,16 @@ export class FormulaEditorComponent implements OnInit {
     }
     this.commonService.get('user', '/admin/metadata/mapper/formula', options).subscribe(res => {
       this.availableMethods = res;
+      this.availableMethods.forEach(item => {
+        if (!item.params) {
+          item.params = [];
+        }
+        item.params.forEach(p => {
+          if (!p.type) {
+            p.type = 'String';
+          }
+        });
+      });
       this.fetchingFormulas = false;
     }, err => {
       this.fetchingFormulas = false;
@@ -66,7 +76,11 @@ export class FormulaEditorComponent implements OnInit {
 
   done() {
     this.close.emit(false);
-    this.data.formulaConfig = this.usedFormulas;
+    if (this.usedFormulas.length > 0) {
+      this.data.formulaConfig = this.usedFormulas;
+    } else {
+      this.data.formulaConfig = null;
+    }
     this.dataChange.emit(this.data);
   }
 
