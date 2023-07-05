@@ -48,7 +48,7 @@
                                     <div class="toggle-btn d-flex align-items-center justify-content-center">
                                         <span *ngIf="showToggleBtn(def)" class="dsi hover text-muted"
                                             (click)="toggleSource(def)"
-                                            [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[def.dataPath],'dsi-minus':!sourceExpandCollapseObjects[def.dataPath]}"></span>
+                                            [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[def._id],'dsi-minus':!sourceExpandCollapseObjects[def._id]}"></span>
                                     </div>
                                     <div class="field-type mr-2">
                                         <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
