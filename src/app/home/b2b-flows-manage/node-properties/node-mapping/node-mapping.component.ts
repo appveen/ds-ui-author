@@ -191,7 +191,7 @@ export class NodeMappingComponent implements OnInit {
       if (!def.source) {
         def.source = [];
       }
-      if (temp && def.type != 'Array' && temp.dataPath.indexOf('[#]') == -1) {
+      if (temp && def.type != 'Array' && temp.dataPath.indexOf('[#]') == -1 && def.source.length == 0) {
         def.source.push(temp);
       }
     });
