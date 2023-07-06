@@ -40,6 +40,9 @@ export class ConverterPropertiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (_.isEmpty(this.data.dataStructure.outgoing)) {
+      this.data.dataStructure.outgoing = null;
+    }
     if (this.data.dataStructure.incoming && this.data.dataStructure.incoming.definition) {
       this.allSources = this.flatten(this.appService.cloneObject(this.data.dataStructure.incoming.definition));
     }

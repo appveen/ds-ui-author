@@ -57,6 +57,10 @@
                                         [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
                                 </div>
                             </ng-container>
+                            <div *ngIf="!allConstants || allConstants.length==0"
+                                class="p-2 font-12 fw-500 text-secondary">
+                                No Constants Found
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,6 +91,10 @@
                                         [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
                                 </div>
                             </ng-container>
+                            <div *ngIf="!allSources || allSources.length==0" class="p-2 font-12 fw-500 text-secondary">
+                                <span>No Output Format Selected</span><br>
+                                <span class="text-muted font-10">If you have selected output format please remove and select the source again.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
