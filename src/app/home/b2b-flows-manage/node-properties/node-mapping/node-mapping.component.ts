@@ -231,15 +231,15 @@ export class NodeMappingComponent implements OnInit {
     let targetId = targetIdSegs.join('.');
     const sourceNodeId = source.nodeId;
     const mappingPaths: HTMLElement = document.querySelectorAll('.mapping-paths')[0] as HTMLElement;
-    let sourceEle: HTMLElement = document.querySelectorAll(`[data-id='${sourceId}']`)[0] as HTMLElement;
-    let targetEle: HTMLElement = document.querySelectorAll(`[data-id='${targetId}']`)[0] as HTMLElement;
+    let sourceEle: HTMLElement = document.querySelectorAll(`.source-list [data-id='${sourceId}']`)[0] as HTMLElement;
+    let targetEle: HTMLElement = document.querySelectorAll(`.target-list [data-id='${targetId}']`)[0] as HTMLElement;
     while (targetId && !targetEle) {
       targetIdSegs.pop();
       targetId = targetIdSegs.join('.');
       if (targetId.endsWith('[#]')) {
         targetId = targetId.replace('[#]', '');
       }
-      targetEle = document.querySelectorAll(`[data-id='${targetId}']`)[0] as HTMLElement;
+      targetEle = document.querySelectorAll(`.target-list [data-id='${targetId}']`)[0] as HTMLElement;
     }
 
     while (sourceId && !sourceEle) {
@@ -248,10 +248,10 @@ export class NodeMappingComponent implements OnInit {
       if (sourceId.endsWith('[#]')) {
         sourceId = sourceId.replace('[#]', '');
       }
-      sourceEle = document.querySelectorAll(`[data-id='${sourceId}']`)[0] as HTMLElement;
+      sourceEle = document.querySelectorAll(`.source-list [data-id='${sourceId}']`)[0] as HTMLElement;
     }
 
-    const nodeEle: HTMLElement = document.querySelectorAll(`[data-id='${sourceNodeId}']`)[0] as HTMLElement;
+    const nodeEle: HTMLElement = document.querySelectorAll(`.source-list [data-id='${sourceNodeId}']`)[0] as HTMLElement;
     const pathRect = mappingPaths.getBoundingClientRect();
     const targetRect = targetEle.getBoundingClientRect();
     let tempRect;
