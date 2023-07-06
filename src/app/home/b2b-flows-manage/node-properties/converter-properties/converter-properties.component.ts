@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as _ from 'lodash';
+import Fuse from 'fuse.js';
 
 import { CommonService } from 'src/app/utils/services/common.service';
 import { debounceTime } from 'rxjs/operators';
@@ -24,6 +25,7 @@ export class ConverterPropertiesComponent implements OnInit {
   allConstants: Array<any>;
   pathList: Array<any>;
   reCreatePaths: EventEmitter<any>;
+  clearMappings: EventEmitter<any>;
   tempMappings: any;
   constructor(private commonService: CommonService,
     private appService: AppService,
@@ -33,6 +35,7 @@ export class ConverterPropertiesComponent implements OnInit {
     this.allConstants = [];
     this.pathList = [];
     this.reCreatePaths = new EventEmitter();
+    this.clearMappings = new EventEmitter();
     this.close = new EventEmitter();
   }
 
@@ -96,16 +99,17 @@ export class ConverterPropertiesComponent implements OnInit {
         });
       }
     });
+    this.clearMappings.subscribe(() => {
+      this.allTargets.forEach((target: any) => {
+        if (target.source && target.source.length > 0) {
+          target.source.splice(0);
+        }
+      });
+    });
   }
 
   openMapper() {
     this.showConverterWindow = true;
-    // if (this.data.dataStructure.incoming && this.data.dataStructure.incoming.definition) {
-    //   this.allSources = this.flatten(this.appService.cloneObject(this.data.dataStructure.incoming.definition));
-    // }
-    // if (this.data.dataStructure.outgoing && this.data.dataStructure.outgoing.definition) {
-    //   this.allTargets = this.flatten(this.appService.cloneObject(this.data.dataStructure.outgoing.definition));
-    // }
     this.pathList = [];
     this.reCreatePaths.emit(null);
   }
@@ -325,6 +329,50 @@ export class ConverterPropertiesComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  doFuzzyMapping() {
+    const options = {
+      includeScore: true,
+      isCaseSensitive: false,
+      useExtendedSearch: true,
+      minMatchCharLength: 4,
+      keys: ['dataPath']
+    };
+    this.allTargets.forEach((def: any) => {
+      let temp = this.allSources.find(e => (e.dataPath == def.dataPath) || (_.toLower(_.camelCase(e.dataPath)) == _.toLower(_.camelCase(def.dataPath))));
+      if (!def.source) {
+        def.source = [];
+      }
+      if (temp && def.type != 'Array' && temp.dataPath.indexOf('[#]') == -1 && def.source.length == 0) {
+        def.source.push(temp);
+      }
+    });
+    this.allTargets.forEach((def: any) => {
+      if (def.type !== 'Array' && def.dataPath.indexOf('[#]') == -1) {
+        const fuse = new Fuse(this.allSources.filter(e => e.type != 'Object'), options);
+        let result = fuse.search(def.dataPath).filter(e => e.score < 0.3);
+        if (!def.source) {
+          def.source = [];
+        }
+        if (def.source.length == 0) {
+          result = result.sort((a, b) => a.score - b.score);
+          if (result.length > 0) {
+            def.source.push(result[0].item);
+          }
+        }
+      }
+    });
+    setTimeout(() => {
+      this.reCreatePaths.emit();
+    }, 200);
+  }
+
+  doClearMapping() {
+    this.clearMappings.emit(true);
+    setTimeout(() => {
+      this.reCreatePaths.emit();
+    }, 200);
   }
 
   get sourceNode() {

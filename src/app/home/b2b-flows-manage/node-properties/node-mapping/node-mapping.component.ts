@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { debounceTime } from 'rxjs/operators';
 import * as _ from 'lodash';
 import Fuse from 'fuse.js';
 
@@ -181,9 +180,9 @@ export class NodeMappingComponent implements OnInit {
     // this.mappingService.fuzzyMapping.emit(true);
     const options = {
       includeScore: true,
-      isCaseSensitive: true,
+      isCaseSensitive: false,
       useExtendedSearch: true,
-      minMatchCharLength: 5,
+      minMatchCharLength: 4,
       keys: ['dataPath']
     };
     this.allTargets.forEach((def: any) => {
