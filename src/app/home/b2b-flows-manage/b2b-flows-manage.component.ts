@@ -54,6 +54,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   isProcessFlow: boolean = false;
   processNodeList: any = [];
 
+  activeTab: number;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private route: ActivatedRoute,
@@ -80,6 +81,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     this.logs = [];
     this.openDeleteModal = new EventEmitter();
     this.nodeList = [];
+    this.activeTab = 0;
   }
 
   ngOnInit(): void {
@@ -261,11 +263,11 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       });
       this.flowService.cleanPayload(this.nodeList);
       this.flowService.nodeList = this.nodeList;
-      if (!environment.production) {
-        setTimeout(() => {
-          this.enableEditing()
-        }, 1000);
-      }
+      // if (!environment.production) {
+      //   setTimeout(() => {
+      //     this.enableEditing()
+      //   }, 1000);
+      // }
     }, err => {
       this.apiCalls.getFlow = false;
       this.commonService.errorToast(err);

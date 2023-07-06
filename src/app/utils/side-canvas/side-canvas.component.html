@@ -1,0 +1,6 @@
+<div *ngIf="toggle" class="overlay position-fixed"></div>
+<div [ngClass]="{'show':toggle,'wide':wide}" class="side-canvas position-fixed bg-white border-left">
+    <ng-container *ngIf="toggle">
+        <ng-content></ng-content>
+    </ng-container>
+</div>

@@ -57,6 +57,7 @@ export class MappingService {
           item._id = item.properties.dataPath;
           item.name = item.properties.name;
           item.dataPath = item.properties.dataPath;
+          item.dataPathSegs = item.properties.dataPathSegs;
           list.push(item);
           if (item.type == 'Array') {
             if (item.definition[0].type == 'Object') {

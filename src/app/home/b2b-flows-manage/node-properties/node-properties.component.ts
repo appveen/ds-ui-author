@@ -275,7 +275,8 @@ export class NodePropertiesComponent implements OnInit {
   }
   get showDataMapping() {
     if (this.flowData && this.currNode && this.prevNode) {
-      return !_.isEmpty(this.prevNode.dataStructure?.outgoing);
+      // return !_.isEmpty(this.prevNode.dataStructure?.outgoing);
+      return true;
     }
     return false;
     // return this.nodeList[0]._id == this.currNode._id;
@@ -286,6 +287,9 @@ export class NodePropertiesComponent implements OnInit {
       return false;
     }
     if (this.currNode.type == 'ERROR') {
+      return false;
+    }
+    if (this.currNode.type == 'DATASERVICE') {
       return false;
     }
     if (this.currNode.type == 'CONVERT_JSON_JSON'
@@ -299,14 +303,23 @@ export class NodePropertiesComponent implements OnInit {
   }
 
   get checkForFileOptions() {
-    if (this.currNode?.dataStructure?.outgoing?.formatType === 'EXCEL' || this.currNode?.dataStructure?.outgoing?.formatType === 'CSV' || this.currNode?.dataStructure?.outgoing?.formatType === 'DELIMITER') {
-      return true
+    let flag = false;
+    if (this.currNode.type == 'FILE') {
+      flag = true;
+    } else if (this.currNode.type == 'API' && this.currNode.options.contentType == 'multipart/form-data') {
+      flag = true;
     }
-    else {
-      this.currNode.options['skipStartRows'] = null;
-      this.currNode.options['skipEndRows'] = null;
-      return false
+    if (flag && (this.currNode?.dataStructure?.outgoing?.formatType === 'EXCEL'
+      || this.currNode?.dataStructure?.outgoing?.formatType === 'CSV'
+      || this.currNode?.dataStructure?.outgoing?.formatType === 'DELIMITER')) {
+      flag = true;
+    } else {
+      this.currNode.options['skipLines'] = null;
+      this.currNode.options['skipRows'] = null;
+      this.currNode.options['maxRows'] = null;
+      flag = false
     }
+    return flag;
   }
 
   get showOutputSelector() {

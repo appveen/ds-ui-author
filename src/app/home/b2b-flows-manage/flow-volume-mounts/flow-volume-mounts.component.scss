@@ -1,0 +1,29 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.grid {
+    .grid-row {
+        &.head {
+            font-weight: 500px;
+            color: $secondary;
+        }
+
+        .grid-cell {
+            min-width: 120px;
+            max-width: 120px;
+            min-height: 32px;
+            max-height: 32px;
+            padding: 5px;
+            &.name {
+                min-width: 220px;
+                max-width: 220px;
+            }
+        }
+    }
+
+    .grid-body {
+        overflow-y: auto;
+        max-height: 300px;
+    }
+
+}

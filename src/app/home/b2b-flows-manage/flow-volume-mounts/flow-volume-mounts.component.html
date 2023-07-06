@@ -1,0 +1,64 @@
+<div class="w-100 p-3">
+    <div class="p-3 border-bottom mb-3">
+        <h3>Volume Mounts</h3>
+        <p class="font-12 text-muted">Create Volume Mounts and use inside the flow to read/write files.</p>
+    </div>
+    <div class="grid border rounded w-100">
+        <div class="grid-row head d-flex align-items-center border-bottom bg-light">
+            <div class="grid-cell border-right name">Name</div>
+            <div class="grid-cell border-right">Host Path</div>
+            <div class="grid-cell border-right">Flow Path</div>
+            <div class="grid-cell d-flex align-items-center justify-content-end">
+                <span class="hover" (click)="addConstant()">
+                    <span class="dsi dsi-plus-circle text-primary"></span>
+                </span>
+            </div>
+        </div>
+        <div class="grid-body">
+            <div class="grid-row d-flex align-items-center border-bottom"
+                *ngFor="let item of volumeMounts;let index=index">
+                <div class="grid-cell border-right name">{{item.name}}</div>
+                <div class="grid-cell border-right">{{item.hostPath}}</div>
+                <div class="grid-cell border-right">{{item.containerPath}}</div>
+                <div class="grid-cell d-flex align-items-center justify-content-end">
+                    <span class="hover mr-2" (click)="editConstant(index)">
+                        <span class="dsi dsi-edit text-accent"></span>
+                    </span>
+                    <span class="hover" (click)="deleteConstant(index)">
+                        <span class="dsi dsi-trash text-danger"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="grid-row" *ngIf="!volumeMounts || volumeMounts.length==0">
+                <div class="grid-cell">No Records</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<odp-side-canvas [(toggle)]="toggleVariableForm">
+    <div *ngIf="toggleVariableForm" class="p-3">
+        <div class="font-22 fw-600 mb-3">
+            <span *ngIf="selectedIndex==-1">New Volume Mount</span>
+            <span *ngIf="selectedIndex>-1">Edit Volume Mount</span>
+        </div>
+        <div class="">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" [(ngModel)]="form.name" required>
+            </div>
+            <div class="form-group">
+                <label for="hostPath">Data Type</label>
+                <input id="hostPath" type="text" class="form-control" [(ngModel)]="form.hostPath" required>
+            </div>
+            <div class="form-group">
+                <label for="containerPath">Flow Path</label>
+                <input id="containerPath" type="text" class="form-control" [(ngModel)]="form.containerPath">
+            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-dark mr-3" (click)="cancel()">Cancel</button>
+            <button type="button" class="btn btn-min-width btn-primary" (click)="saveData()">Save</button>
+        </div>
+    </div>
+</odp-side-canvas>

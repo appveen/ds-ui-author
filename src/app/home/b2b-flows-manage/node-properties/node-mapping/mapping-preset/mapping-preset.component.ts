@@ -1,61 +1,61 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 import * as _ from 'lodash';
 import Fuse from 'fuse.js';
 
 import { AppService } from 'src/app/utils/services/app.service';
 import { environment } from 'src/environments/environment';
-import { B2bFlowService } from '../../b2b-flow.service';
-import { MappingService } from './mapping.service';
-import { CommonService } from '../../../../utils/services/common.service';
+import { B2bFlowService } from '../../../b2b-flow.service';
+import { MappingService } from './../mapping.service';
+import { CommonService } from '../../../../../utils/services/common.service';
 
 @Component({
-  selector: 'odp-node-mapping',
-  templateUrl: './node-mapping.component.html',
-  styleUrls: ['./node-mapping.component.scss'],
-  providers: [MappingService]
+  selector: 'odp-mapping-preset',
+  templateUrl: './mapping-preset.component.html',
+  styleUrls: ['./mapping-preset.component.scss']
 })
-export class NodeMappingComponent implements OnInit {
+export class MappingPresetComponent implements OnInit {
 
-  @ViewChild('arrayOptions') arrayOptions: TemplateRef<HTMLElement>;
   @Input() edit: any;
   @Input() flowData: any;
   @Input() currNode: any;
-  @Input() inputNode: any;
-  @Input() source: string;
+  @Input() allSources: any;
+  @Output() allSourcesChange: EventEmitter<any>;
+  @Input() allTargets: any;
+  @Output() allTargetsChange: EventEmitter<any>;
   @Output() close: EventEmitter<any>;
-  allSources: Array<any>;
-  allTargets: Array<any>;
+  // allSources: Array<any>;
+  // allTargets: Array<any>;
   tempMappings: Array<any>;
   pathList: Array<any>;
   nodeList: Array<any>;
   selectedPath: any;
   dragItem: any;
-  targetExpandCollapseObjects: any;
-  sourceExpandCollapseObjects: any;
+  nodeSourceAttributes: Array<string>;
+  nodeTargetAttributes: Array<string>;
   constructor(private appService: AppService,
     private mappingService: MappingService,
     private flowService: B2bFlowService,
     private commonService: CommonService) {
     this.nodeList = [];
     this.close = new EventEmitter();
+    this.allSourcesChange = new EventEmitter();
+    this.allTargetsChange = new EventEmitter();
     this.edit = {
       status: false
     };
     this.allSources = [];
     this.allTargets = [];
     this.pathList = [];
-    this.source = 'outgoing';
-    this.targetExpandCollapseObjects = {};
-    this.sourceExpandCollapseObjects = {};
+    this.nodeSourceAttributes = ['headers', 'requestBody', 'responseBody', 'fileContent', 'xmlContent'];
+    this.nodeTargetAttributes = ['headers', 'body', 'fileContent', 'xmlContent'];
   }
 
   ngOnInit(): void {
-    if (!this.mappingType) {
-      this.mappingType = 'custom';
-    }
+    this.allSources = [];
+    this.allTargets = [];
     this.nodeList = this.flowService.getNodesBefore(this.currNode);
-    this.configureMappingData();
+    this.configureAttributes();
     if (this.currNode.mappings && this.currNode.mappings.length > 0) {
       this.tempMappings = this.appService.cloneObject(this.currNode.mappings);
       this.allTargets.forEach((item: any) => {
@@ -91,36 +91,39 @@ export class NodeMappingComponent implements OnInit {
       this.allTargets.forEach((target: any) => {
         if (target.source && target.source.length > 0) {
           target.source.splice(0);
-          this.markAttributesDisabled(target);
         }
       });
     });
   }
 
-  configureMappingData() {
-    this.pathList = [];
-    let temp = [];
-    if (this.currNode.dataStructure && this.currNode.dataStructure[this.source] && this.currNode.dataStructure[this.source].definition) {
-      temp = this.appService.cloneObject(this.currNode.dataStructure[this.source].definition) || [];
-    }
-    this.allTargets = this.mappingService.flatten((this.currNode.dataStructure?.[this.source]?.formatType || 'JSON'), temp);
-    this.allTargets.forEach(item => {
-      if (item.type == 'Object') {
-        this.targetExpandCollapseObjects[item.dataPath] = false;
-      }
-    });
+  configureAttributes() {
+    let commonTargetDefinitions = this.getStringArrayAsDefinition(this.nodeTargetAttributes);
+    this.allTargets = this.mappingService.flatten('JSON', this.appService.cloneObject(commonTargetDefinitions));
+
+    let commonSourceDefinitions = this.getStringArrayAsDefinition(this.nodeSourceAttributes);
     this.nodeList.forEach((node: any) => {
-      let outgoing;
       if (node.dataStructure.outgoing && node.dataStructure.outgoing.definition) {
         node.definition = node.dataStructure.outgoing.definition;
       }
       if (node._id != this.currNode._id) {
-        if (node.dataStructure.outgoing && node.dataStructure.outgoing.definition) {
-          outgoing = this.appService.cloneObject(node.dataStructure.outgoing.definition);
-          this.allSources = this.allSources.concat(this.flattenSource(node, outgoing, 'responseBody'));
-        }
+        commonSourceDefinitions.forEach((item: any) => {
+          let def = this.appService.cloneObject(item);
+          delete def._id;
+          if (def.key == 'true') {
+            def.key = '_self';
+          }
+          def.nodeId = node._id;
+          def._id = `${node._id}.${def.properties.dataPath}`;
+          def.dataPath = def.properties.dataPath;
+          def.dataPathSegs = def.properties.dataPathSegs;
+          def.name = def.properties.name;
+          def.depth = 0;
+          this.allSources.push(def);
+        });
       }
     });
+    this.allSourcesChange.emit(this.allSources);
+    this.allTargetsChange.emit(this.allTargets);
   }
 
   getStringArrayAsDefinition(arr: Array<string>) {
@@ -180,9 +183,9 @@ export class NodeMappingComponent implements OnInit {
     // this.mappingService.fuzzyMapping.emit(true);
     const options = {
       includeScore: true,
-      isCaseSensitive: false,
+      isCaseSensitive: true,
       useExtendedSearch: true,
-      minMatchCharLength: 4,
+      minMatchCharLength: 5,
       keys: ['dataPath']
     };
     this.allTargets.forEach((def: any) => {
@@ -190,7 +193,7 @@ export class NodeMappingComponent implements OnInit {
       if (!def.source) {
         def.source = [];
       }
-      if (temp && def.type != 'Array' && temp.dataPath.indexOf('[#]') == -1 && def.source.length == 0) {
+      if (temp && def.type != 'Array' && temp.dataPath.indexOf('[#]') == -1) {
         def.source.push(temp);
       }
     });
@@ -231,15 +234,15 @@ export class NodeMappingComponent implements OnInit {
     let targetId = targetIdSegs.join('.');
     const sourceNodeId = source.nodeId;
     const mappingPaths: HTMLElement = document.querySelectorAll('.mapping-paths')[0] as HTMLElement;
-    let sourceEle: HTMLElement = document.querySelectorAll(`.source-list [data-id='${sourceId}']`)[0] as HTMLElement;
-    let targetEle: HTMLElement = document.querySelectorAll(`.target-list [data-id='${targetId}']`)[0] as HTMLElement;
+    let sourceEle: HTMLElement = document.querySelectorAll(`[data-id='${sourceId}']`)[0] as HTMLElement;
+    let targetEle: HTMLElement = document.querySelectorAll(`[data-id='${targetId}']`)[0] as HTMLElement;
     while (targetId && !targetEle) {
       targetIdSegs.pop();
       targetId = targetIdSegs.join('.');
       if (targetId.endsWith('[#]')) {
         targetId = targetId.replace('[#]', '');
       }
-      targetEle = document.querySelectorAll(`.target-list [data-id='${targetId}']`)[0] as HTMLElement;
+      targetEle = document.querySelectorAll(`[data-id='${targetId}']`)[0] as HTMLElement;
     }
 
     while (sourceId && !sourceEle) {
@@ -248,10 +251,10 @@ export class NodeMappingComponent implements OnInit {
       if (sourceId.endsWith('[#]')) {
         sourceId = sourceId.replace('[#]', '');
       }
-      sourceEle = document.querySelectorAll(`.source-list [data-id='${sourceId}']`)[0] as HTMLElement;
+      sourceEle = document.querySelectorAll(`[data-id='${sourceId}']`)[0] as HTMLElement;
     }
 
-    const nodeEle: HTMLElement = document.querySelectorAll(`.source-list [data-id='${sourceNodeId}']`)[0] as HTMLElement;
+    const nodeEle: HTMLElement = document.querySelectorAll(`[data-id='${sourceNodeId}']`)[0] as HTMLElement;
     const pathRect = mappingPaths.getBoundingClientRect();
     const targetRect = targetEle.getBoundingClientRect();
     let tempRect;
@@ -434,23 +437,7 @@ export class NodeMappingComponent implements OnInit {
     if (index > -1) {
       def.source.splice(index, 1);
       this.mappingService.reCreatePaths.emit();
-      this.markAttributesDisabled(def);
     }
-  }
-
-  markAttributesDisabled(def: any) {
-    this.allTargets.forEach(item => {
-      if (item.dataPath.startsWith(def.dataPath)) {
-        item.hide = false;
-      }
-      let targetPath = def.dataPath.split('[#]')[0];
-      let matchingTarget = this.allTargets.find(e => e.dataPath == targetPath);
-      if (matchingTarget) {
-        if (matchingTarget.definition && matchingTarget.definition[0] && matchingTarget.definition[0].definition.every(e => !e.source || e.source.length == 0)) {
-          matchingTarget.disabled = false;
-        }
-      }
-    });
   }
 
   showToggleBtn(def: any) {
@@ -461,66 +448,5 @@ export class NodeMappingComponent implements OnInit {
       return true;
     }
     return false;
-  }
-
-  toggleTarget(def: any) {
-    this.targetExpandCollapseObjects[def.dataPath] = !this.targetExpandCollapseObjects[def.dataPath];
-    this.mappingService.reCreatePaths.emit();
-  }
-
-  isTargetItemCollapsed(def: any) {
-    let flag = false;
-    if (def.type == 'Object' || def.type == 'Array') {
-      return false;
-    }
-    let key = def.dataPath.split('[#].')[0];
-    flag = this.targetExpandCollapseObjects[key];
-    if (!flag) {
-      let segments = def.dataPath.split('.');
-      let temp = JSON.parse(JSON.stringify(segments));
-      segments.forEach((key) => {
-        temp.pop();
-        let p = temp.join('.');
-        if (!flag) {
-          flag = this.targetExpandCollapseObjects[p];
-        }
-      });
-    }
-    return flag;
-  }
-
-
-  toggleSource(def: any) {
-    this.sourceExpandCollapseObjects[def._id] = !this.sourceExpandCollapseObjects[def._id];
-    this.mappingService.reCreatePaths.emit();
-  }
-
-  isSourceItemCollapsed(def: any) {
-    let flag = false;
-    if (def.type == 'Object' || def.type == 'Array') {
-      return false;
-    }
-    let key = def._id.split('[#].')[0];
-    flag = this.sourceExpandCollapseObjects[key];
-    if (!flag) {
-      let segments = def._id.split('.');
-      let temp = JSON.parse(JSON.stringify(segments));
-      segments.forEach((key) => {
-        temp.pop();
-        let p = temp.join('.');
-        if (!flag) {
-          flag = this.sourceExpandCollapseObjects[p];
-        }
-      });
-    }
-    return flag;
-  }
-
-  get mappingType() {
-    return this.currNode.mappingType;
-  }
-
-  set mappingType(val: string) {
-    this.currNode.mappingType = val;
   }
 }

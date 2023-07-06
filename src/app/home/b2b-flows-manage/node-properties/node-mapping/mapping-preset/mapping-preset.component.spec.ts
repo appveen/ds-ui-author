@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SourceFieldsComponent } from './source-fields.component';
+import { MappingPresetComponent } from './mapping-preset.component';
 
-describe('SourceFieldsComponent', () => {
-  let component: SourceFieldsComponent;
-  let fixture: ComponentFixture<SourceFieldsComponent>;
+describe('MappingPresetComponent', () => {
+  let component: MappingPresetComponent;
+  let fixture: ComponentFixture<MappingPresetComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SourceFieldsComponent ]
+      declarations: [ MappingPresetComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SourceFieldsComponent);
+    fixture = TestBed.createComponent(MappingPresetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -83,6 +83,11 @@
             <span>Data Mapping</span>
         </button>
     </div>
+    <button type="button" class="btn btn-dark ignore-outside d-flex align-items-center mb-3"
+        (click)="toggle['mapping']=!toggle['mapping']" *ngIf="currNode.type=='DATASERVICE' && currNode.dataStructure?.incoming">
+        <span class="dsi dsi-mapping mr-2"></span>
+        <span>Data Mapping</span>
+    </button>
     <!-- <div *ngIf="showOutputSelector" class="border rounded p-2 bg-light mb-3">
         <div class="form-group">
             <label class="font-14 fw-400 text-dark mb-0" for="outputDataStructure">Output Data Structure</label>
@@ -284,19 +289,29 @@
             </div>
         </div>
     </ng-container>
-    <ng-container *ngIf="currNode?.type=='FILE' && checkForFileOptions">
+    <ng-container *ngIf="checkForFileOptions">
         <div class="form-group border rounded p-2 bg-light mb-3">
-            <label class="font-14 fw-400 text-dark mb-0">File Options</label>
-            <small class="form-text text-muted mb-2">Rows to skip</small>
-            <label class="font-14 fw-400 text-dark">Start Rows</label>
-            <input id="path" type="text" class="form-control mb-2" [(ngModel)]="currNode.options.skipStartRows"
-                (ngModelChange)="changesDone.emit()" (keydown.delete)="$event.stopPropagation();"
-                [disabled]="!edit.status">
-            <label class="font-14 fw-400 text-dark">End Rows</label>
-            <input id="path" type="text" class="form-control" [(ngModel)]="currNode.options.skipEndRows"
-                (ngModelChange)="changesDone.emit()" (keydown.delete)="$event.stopPropagation();"
-                [disabled]="!edit.status">
-
+            <label class="font-14 fw-500 text-dark mb-0 mb-3">File Options</label>
+            <br>
+            <!-- <small class="form-text text-muted mb-2">Rows to skip</small> -->
+            <div class="form-group">
+                <label for="skipRows" class="font-14 fw-400 text-dark">Rows to Skip</label>
+                <input id="skipRows" type="number" class="form-control mb-2" [(ngModel)]="currNode.options.skipRows"
+                    (ngModelChange)="changesDone.emit()" (keydown.delete)="$event.stopPropagation();"
+                    [disabled]="!edit.status">
+            </div>
+            <div class="form-group">
+                <label for="skipLines" class="font-14 fw-400 text-dark">Lines to Skip</label>
+                <input id="skipLines" type="number" class="form-control" [(ngModel)]="currNode.options.skipLines"
+                    (ngModelChange)="changesDone.emit()" (keydown.delete)="$event.stopPropagation();"
+                    [disabled]="!edit.status">
+            </div>
+            <div class="form-group">
+                <label for="maxRows" class="font-14 fw-400 text-dark">Max Rows</label>
+                <input id="maxRows" type="number" class="form-control" [(ngModel)]="currNode.options.maxRows"
+                    (ngModelChange)="changesDone.emit()" (keydown.delete)="$event.stopPropagation();"
+                    [disabled]="!edit.status">
+            </div>
         </div>
     </ng-container>
     <ng-container *ngIf="currNode.type=='DEDUPE'">
@@ -470,7 +485,7 @@
     || currNode.type == 'CONVERT_XML_JSON'
     || currNode.type == 'CONVERT_JSON_CSV'
     || currNode.type == 'CONVERT_CSV_JSON'">
-        <odp-converter-properties [(data)]="currNode"></odp-converter-properties>
+        <odp-converter-properties [flowData]="flowData" [(data)]="currNode"></odp-converter-properties>
     </ng-container>
 
     <ng-container *ngIf="processFlowNode">
@@ -522,7 +537,7 @@
 </div>
 
 <div [ngClass]="{'show':toggle['mapping']}" class="node-mapping-window border-left position-fixed bg-white p-4">
-    <odp-node-mapping *ngIf="toggle['mapping']" [edit]="edit" [currNode]="currNode"
+    <odp-node-mapping *ngIf="toggle['mapping']" [edit]="edit" [flowData]="flowData" [currNode]="currNode"
         [inputNode]="this.flowData.inputNode._id" (close)="toggle['mapping']=false"
         source="incoming"></odp-node-mapping>
 </div>

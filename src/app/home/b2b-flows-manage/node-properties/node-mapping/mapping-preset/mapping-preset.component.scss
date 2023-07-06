@@ -1,25 +1,23 @@
 @import "src/assets/scss/bootstrap/_functions.scss";
 @import "src/assets/scss/bootstrap/_variables.scss";
 
-.mapping-container {
-    .mapping-options {
-        min-height: 40px;
-        max-height: 40px;
-    }
+.mapping-options {
+    min-height: 40px;
+    max-height: 40px;
+}
 
-    .source-list {
-        min-width: 300px;
-        max-width: 300px;
-    }
+.source-list {
+    min-width: 300px;
+    max-width: 300px;
+}
 
-    .mapping-paths {
-        min-width: 120px;
-        max-width: 120px;
-    }
+.mapping-paths {
+    min-width: 120px;
+    max-width: 120px;
+}
 
-    .target-list {
-        min-width: 400px;
-    }
+.target-list {
+    min-width: 400px;
 }
 
 path {

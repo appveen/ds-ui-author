@@ -50,9 +50,17 @@
                 <span class="label text-dark font-weight-bold mr-2">API Endpoint&nbsp;:</span>
                 <span class="url text-accent">{{flowData?.inputNode?.options?.path || 'N.A.'}}</span>
             </div>
-            <div class="fw-500 font-12 text-secondary">Right Click on the canvas for Node Options</div>
+            <div class="tab-list d-flex align-items-center">
+                <div class="tab-list-item p-2 hover" [class.active]="activeTab==0" (click)="activeTab=0">Design</div>
+                <div class="tab-list-item p-2 hover" [class.active]="activeTab==1" (click)="activeTab=1">Options</div>
+                <!-- <div class="tab-list-item p-2 hover" [class.active]="activeTab==2" (click)="activeTab=2">Volume Mounts</div> -->
+            </div>
+            <div class="spacer-lock">
+                <span *ngIf="activeTab==0" class="fw-500 font-12 text-secondary">Right Click on the canvas for Node
+                    Options</span>
+            </div>
         </div>
-        <div class="flow-designer d-flex">
+        <div *ngIf="activeTab==0" class="flow-designer d-flex">
             <div class="flow-designer-svg-wrapper" (scroll)="scroll()" tabIndex="0">
                 <svg class="flow-designer-svg bg-light" odpViewBox (contextmenu)="onRightClick($event)">
                     <g *ngFor="let node of nodeList;let i=index">
@@ -74,6 +82,19 @@
                 </odp-path-properties>
             </div>
         </div>
+        <div *ngIf="activeTab==1" class="flow-designer d-flex">
+            <div class="row w-100">
+                <div class="border-right col">
+                    <odp-flow-contants [data]="flowData" [nodeList]="nodeList"></odp-flow-contants>
+                </div>
+                <div class="col">
+                    <odp-flow-volume-mounts [data]="flowData" [nodeList]="nodeList"></odp-flow-volume-mounts>
+                </div>
+            </div>
+        </div>
+        <!-- <div *ngIf="activeTab==2" class="flow-designer d-flex">
+            <odp-flow-volume-mounts [data]="flowData" [nodeList]="nodeList"></odp-flow-volume-mounts>
+        </div> -->
     </div>
 </div>
 
@@ -99,33 +120,38 @@
 
 <div *ngIf="contextMenuStyle" class="available-nodes-dropdown bg-white position-fixed border rounded"
     [ngStyle]="contextMenuStyle" odpClickOutside (outside)="contextMenuStyle=null">
-   <div *ngIf="isProcessFlow">
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" (click)="addNode($event,'SYSTEM')">
-        <div class="d-flex align-items-center">
-            <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
-            <span class="font-13 fw-400">System Task</span>
+    <div *ngIf="isProcessFlow">
+        <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover"
+            (click)="addNode($event,'SYSTEM')">
+            <div class="d-flex align-items-center">
+                <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
+                <span class="font-13 fw-400">System Task</span>
+            </div>
+        </div>
+        <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover"
+            (click)="addNode($event,'USER')">
+            <div class="d-flex align-items-center">
+                <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
+                <span class="font-13 fw-400">User Task</span>
+            </div>
+        </div>
+        <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover"
+            (click)="addNode($event,'EVENT')">
+            <div class="d-flex align-items-center">
+                <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
+                <span class="font-13 fw-400">Event Trigger</span>
+            </div>
+        </div>
+        <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover"
+            (click)="addNode($event,'DECISION')">
+            <div class="d-flex align-items-center">
+                <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
+                <span class="font-13 fw-400">Decision</span>
+            </div>
         </div>
     </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" (click)="addNode($event,'USER')">
-        <div class="d-flex align-items-center">
-            <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
-            <span class="font-13 fw-400">User Task</span>
-        </div>
-    </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" (click)="addNode($event,'EVENT')">
-        <div class="d-flex align-items-center">
-            <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
-            <span class="font-13 fw-400">Event Trigger</span>
-        </div>
-    </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" (click)="addNode($event,'DECISION')">
-        <div class="d-flex align-items-center">
-            <span class="node-icon font-16 fw-400 dsi dsi-flow mr-2"></span>
-            <span class="font-13 fw-400">Decision</span>
-        </div>
-    </div>
-   </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover"  *ngIf="!isProcessFlow">
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover"
+        *ngIf="!isProcessFlow">
         <div class="d-flex align-items-center">
             <span class="node-icon font-16 fw-400 dsi dsi-file mr-2"></span>
             <span class="font-13 fw-400">File</span>
@@ -148,7 +174,8 @@
             </div> -->
         </div>
     </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" *ngIf="!isProcessFlow">
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover"
+        *ngIf="!isProcessFlow">
         <div class="d-flex align-items-center">
             <span class="node-icon font-16 fw-400 dsi dsi-invoke-api mr-2"></span>
             <span class="font-13 fw-400">API</span>
@@ -181,7 +208,8 @@
             </div>
         </div>
     </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" *ngIf="!isProcessFlow">
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover"
+        *ngIf="!isProcessFlow">
         <div class="d-flex align-items-center">
             <span class="node-icon font-16 fw-400 dsi dsi-function alt mr-2"></span>
             <span class="font-13 fw-400">Process</span>
@@ -204,7 +232,8 @@
             </div>
         </div>
     </div>
-    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover" *ngIf="!isProcessFlow">
+    <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover"
+        *ngIf="!isProcessFlow">
         <div class="d-flex align-items-center">
             <span class="node-icon font-16 fw-400 dsi dsi-join mr-2"></span>
             <span class="font-13 fw-400">Transform</span>
@@ -215,6 +244,11 @@
                 (click)="addNode($event,'MAPPING')">
                 <span class="node-icon font-16 fw-400 dsi dsi-mapping mr-2"></span>
                 <span class="font-13 fw-400">Mapping</span>
+            </div>
+            <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
+                (click)="addNode($event,'CONVERT_JSON_JSON')">
+                <span class="node-icon font-16 fw-400 dsi dsi-refresh text-secondary mr-2"></span>
+                <span class="font-13 fw-400">Converter</span>
             </div>
             <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center hover"
                 (click)="addNode($event,'DEDUPE')">
@@ -330,5 +364,5 @@
         <span class="font-13 fw-400">Global Error</span>
     </div>
 
-    
+
 </div>

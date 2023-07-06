@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TargetFieldsComponent } from './target-fields.component';
+import { SideCanvasComponent } from './side-canvas.component';
 
-describe('TargetFieldsComponent', () => {
-  let component: TargetFieldsComponent;
-  let fixture: ComponentFixture<TargetFieldsComponent>;
+describe('SideCanvasComponent', () => {
+  let component: SideCanvasComponent;
+  let fixture: ComponentFixture<SideCanvasComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TargetFieldsComponent ]
+      declarations: [ SideCanvasComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TargetFieldsComponent);
+    fixture = TestBed.createComponent(SideCanvasComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

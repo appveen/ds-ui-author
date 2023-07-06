@@ -1,0 +1,70 @@
+<div class="w-100 p-3">
+    <div class="p-3 border-bottom mb-3">
+        <h3>Constants</h3>
+        <p class="font-12 text-muted">Create constants and use inside the flow</p>
+    </div>
+    <div class="grid border rounded w-100">
+        <div class="grid-row head d-flex align-items-center border-bottom bg-light">
+            <div class="grid-cell border-right name">Key</div>
+            <div class="grid-cell border-right">Type</div>
+            <div class="grid-cell border-right">Value</div>
+            <div class="grid-cell d-flex align-items-center justify-content-end">
+                <span class="hover" (click)="addConstant()">
+                    <span class="dsi dsi-plus-circle text-primary"></span>
+                </span>
+            </div>
+        </div>
+        <div class="grid-body">
+            <div class="grid-row d-flex align-items-center border-bottom"
+                *ngFor="let item of constantList;let index=index">
+                <div class="grid-cell border-right name">{{item.key}}</div>
+                <div class="grid-cell border-right">{{item.dataType}}</div>
+                <div class="grid-cell border-right">{{item.value}}</div>
+                <div class="grid-cell d-flex align-items-center justify-content-end">
+                    <span class="hover mr-2" (click)="editConstant(index)">
+                        <span class="dsi dsi-edit text-accent"></span>
+                    </span>
+                    <span class="hover" (click)="deleteConstant(index)">
+                        <span class="dsi dsi-trash text-danger"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="grid-row" *ngIf="!constantList || constantList.length==0">
+                <div class="grid-cell">No Records</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<odp-side-canvas [(toggle)]="toggleVariableForm">
+    <div *ngIf="toggleVariableForm" class="p-3">
+        <div class="font-22 fw-600 mb-3">
+            <span *ngIf="selectedIndex==-1">New Constant</span>
+            <span *ngIf="selectedIndex>-1">Edit Constant</span>
+        </div>
+        <div class="">
+            <div class="form-group">
+                <label for="key">Key</label>
+                <input type="text" class="form-control" [(ngModel)]="form.key" (blur)="onKeyBlur()" required>
+            </div>
+            <div class="form-group">
+                <label for="dataType">Data Type</label>
+                <select id="dataType" class="form-control" [(ngModel)]="form.dataType" required>
+                    <option value="String">String</option>
+                    <option value="Number">Number</option>
+                    <option value="Boolean">Boolean</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="value">Value</label>
+                <input *ngIf="form.dataType=='String'" id="value" type="text" class="form-control" [(ngModel)]="form.value">
+                <input *ngIf="form.dataType=='Number'" id="value" type="number" class="form-control" [(ngModel)]="form.value">
+                <input *ngIf="form.dataType=='Boolean'" id="value" type="checkbox" class="form-control" [(ngModel)]="form.value">
+            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-min-width btn-dark mr-3" (click)="cancel()">Cancel</button>
+            <button type="button" class="btn btn-min-width btn-primary" (click)="saveData()">Save</button>
+        </div>
+    </div>
+</odp-side-canvas>

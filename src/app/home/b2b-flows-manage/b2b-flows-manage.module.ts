@@ -37,9 +37,6 @@ import { RouteGuard } from '../../utils/guards/route.guard';
 import { NodeDataSelectorComponent } from './node-properties/node-data-selector/node-data-selector.component';
 import { AddHeadersComponent } from './node-properties/add-headers/add-headers.component';
 import { MssqlConnectorComponent } from './node-properties/connector-properties/mssql-connector/mssql-connector.component';
-import { SourceFieldsComponent } from './node-properties/node-mapping/source-fields/source-fields.component';
-import { TargetFieldsComponent } from './node-properties/node-mapping/target-fields/target-fields.component';
-import { SourceSelectorComponent } from './node-properties/node-mapping/source-selector/source-selector.component';
 import { FormulaEditorComponent } from './node-properties/node-mapping/formula-editor/formula-editor.component';
 import { InputDataSelectorComponent } from './node-properties/input-data-selector/input-data-selector.component';
 import { OnHoverModule } from 'src/app/utils/on-hover/on-hover.module';
@@ -61,6 +58,11 @@ import { EditorModule } from 'src/app/utils/editor/editor.module';
 import { B2bPathService } from './b2b-path.service';
 import { ConverterPropertiesComponent } from './node-properties/converter-properties/converter-properties.component';
 import { FormatSelectorComponent } from './node-properties/converter-properties/format-selector/format-selector.component';
+import { SourceSelectorComponent } from './node-properties/converter-properties/source-selector/source-selector.component';
+import { FlowContantsComponent } from './flow-contants/flow-contants.component';
+import { FlowVolumeMountsComponent } from './flow-volume-mounts/flow-volume-mounts.component';
+import { SideCanvasModule } from 'src/app/utils/side-canvas/side-canvas.module';
+import { MappingPresetComponent } from './node-properties/node-mapping/mapping-preset/mapping-preset.component';
 
 const routes: Routes = [
   {
@@ -88,9 +90,6 @@ const routes: Routes = [
     NodeDataSelectorComponent,
     AddHeadersComponent,
     MssqlConnectorComponent,
-    SourceFieldsComponent,
-    TargetFieldsComponent,
-    SourceSelectorComponent,
     FormulaEditorComponent,
     InputDataSelectorComponent,
     PathPropertiesComponent,
@@ -98,7 +97,11 @@ const routes: Routes = [
     ErrorNodeComponent,
     PluginSelectorComponent,
     ConverterPropertiesComponent,
-    FormatSelectorComponent
+    FormatSelectorComponent,
+    SourceSelectorComponent,
+    FlowContantsComponent,
+    FlowVolumeMountsComponent,
+    MappingPresetComponent
   ],
   imports: [
     CommonModule,
@@ -129,7 +132,8 @@ const routes: Routes = [
     FieldTypeModule,
     ChangeOnEditModule,
     AutocompleteOnEditModule,
-    EditorModule
+    EditorModule,
+    SideCanvasModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService, MappingService, ChangeOnEditComponent, B2bPathService]
