@@ -53,7 +53,7 @@
                                     <div class="field-type mr-2">
                                         <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
                                     </div>
-                                    <div class="field-key">{{def.key}}</div>
+                                    <div class="field-key">{{def.name}}</div>
                                     <div class="mapping-line flex-fill"
                                         [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
                                 </div>
@@ -90,7 +90,7 @@
                                 <div class="field-type mr-2">
                                     <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
                                 </div>
-                                <div class="field-key">{{def.key}}</div>
+                                <div class="field-key">{{def.name}}</div>
                                 <a href="#" (click)="$event.preventDefault();def._showFn=true">
                                     <i class="hover mx-2"
                                         [ngClass]="{'text-success':isValidFunction(def),'text-danger':!isValidFunction(def)}">f(x)</i>
@@ -101,7 +101,7 @@
                                 <div class="mapped-sources d-flex ml-3 text-secondary font-12">
                                     <div *ngFor="let source of def.source"
                                         class="border rounded px-1 mr-1 d-flex align-items-center">
-                                        <span>{{source.key}}</span>
+                                        <span>{{source.name}}</span>
                                         <span (click)="removeSource(def,source)"
                                             class="dsi dsi-minus-circle text-danger hover ml-1 font-14"></span>
                                     </div>

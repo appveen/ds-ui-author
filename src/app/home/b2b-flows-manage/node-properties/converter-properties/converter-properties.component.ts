@@ -378,6 +378,19 @@ export class ConverterPropertiesComponent implements OnInit {
     }, 200);
   }
 
+  removeSourceNode() {
+    this.allSources = [];
+    this.clearMappings.emit(true);
+    setTimeout(() => {
+      this.reCreatePaths.emit();
+    }, 200);
+  }
+
+  removeTarget() {
+    this.allTargets = [];
+    this.pathList.splice(0);
+  }
+
   get sourceNode() {
     return this.data.options.source;
   }
