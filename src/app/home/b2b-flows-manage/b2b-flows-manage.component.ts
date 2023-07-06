@@ -283,7 +283,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   discardDraft() {
     const path = `/${this.commonService.app._id}/flow/utils/${this.edit.id}/draftDelete`;
     this.apiCalls.discardDraft = true;
-    this.subscriptions['discardDraft'] = this.commonService.put('partnerManager', path, {}).subscribe(res => {
+    this.subscriptions['discardDraft'] = this.commonService.put(this.isProcessFlow ? 'config' : 'partnerManager', path, {}).subscribe(res => {
       this.apiCalls.discardDraft = false;
       this.getFlow(this.flowData._id);
     }, err => {
@@ -352,9 +352,9 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       this.flowData.status = 'RUNNING';
     }
     if (this.edit.id) {
-      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, payload);
+      request = this.commonService.put(this.isProcessFlow ? 'config' : 'partnerManager', `/${this.commonService.app._id}/${this.isProcessFlow ? 'processflow' : 'flow'}/${this.edit.id}`, payload);
     } else {
-      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload);
+      request = this.commonService.post(this.isProcessFlow ? 'config' : 'partnerManager', `/${this.commonService.app._id}/${this.isProcessFlow ? 'processflow' : 'flow'}`, payload);
     }
     this.subscriptions['save'] = request.subscribe((res: any) => {
       this.apiCalls.save = false;
@@ -362,10 +362,10 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       if (deploy) {
         this.apiCalls.deploy = false;
         this.ts.success('Saved ' + payload.name + ' and deployment process has started.');
-        this.router.navigate(['/app', this.commonService.app._id, 'flow']);
+        this.router.navigate(['/app', this.commonService.app._id, this.isProcessFlow ? 'processFlow' : 'flow']);
       } else {
         this.ts.success('Saved ' + payload.name + '.');
-        this.router.navigate(['/app', this.commonService.app._id, 'flow']);
+        this.router.navigate(['/app', this.commonService.app._id, this.isProcessFlow ? 'processFlow' : 'flow']);
       }
     }, (err: any) => {
       this.apiCalls.save = false;
@@ -376,12 +376,15 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   save(deploy?: boolean) {
     const payload = this.getPayload();
     let request;
+    if(this.isProcessFlow){
+      deploy = false
+    }
     this.apiCalls.save = true;
     this.saved = true
     if (this.edit.id) {
-      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, payload);
+      request = this.commonService.put(this.isProcessFlow ? 'config' : 'partnerManager', `/${this.commonService.app._id}/${this.isProcessFlow ? 'processflow' : 'flow'}/${this.edit.id}`, payload);
     } else {
-      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload);
+      request = this.commonService.post(this.isProcessFlow ? 'config' : 'partnerManager', `/${this.commonService.app._id}/${this.isProcessFlow ? 'processflow' : 'flow'}`, payload);
     }
     this.subscriptions['save'] = request.subscribe(res => {
       this.apiCalls.save = false;
@@ -390,7 +393,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
         this.deploy();
       } else {
         this.ts.success('Saved ' + payload.name + '.');
-        this.router.navigate(['/app', this.commonService.app._id, 'flow']);
+        this.router.navigate(['/app', this.commonService.app._id, this.isProcessFlow ? 'processFlow' : 'flow']);
       }
     }, err => {
       this.apiCalls.save = false;
@@ -401,10 +404,10 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   deploy() {
     if (this.edit.id) {
       this.apiCalls.deploy = true;
-      this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/utils/${this.edit.id}/deploy`, { app: this.commonService.app._id }).subscribe(res => {
+      this.commonService.put(this.isProcessFlow ? 'config' : 'partnerManager', `/${this.commonService.app._id}/flow/utils/${this.edit.id}/deploy`, { app: this.commonService.app._id }).subscribe(res => {
         this.apiCalls.deploy = false;
         this.ts.success('Saved ' + this.flowData.name + ' and deployment process has started.');
-        this.router.navigate(['/app', this.commonService.app._id, 'flow']);
+        this.router.navigate(['/app', this.commonService.app._id, this.isProcessFlow ? 'processFlow' : 'flow']);
         this.commonService.updateStatus(this.edit.id, 'flow');
         this.appService.getFlows();
       }, err => {
@@ -416,7 +419,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   cancel() {
     if (!this.edit.status || this.edit.editClicked || !this.edit.id) {
-      this.router.navigate(['/app', this.commonService.app._id, 'flow']);
+      this.router.navigate(['/app', this.commonService.app._id, this.isProcessFlow ? 'processFlow' : 'flow']);
     } else {
       if (!this.edit.editClicked) {
         this.edit.status = false;
@@ -427,7 +430,7 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   testRun() {
     this.apiCalls.testRun = true;
-    this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/utils/${this.edit.id}/test`, {
+    this.commonService.put(this.isProcessFlow ? 'config' : 'partnerManager', `/${this.commonService.app._id}/flow/utils/${this.edit.id}/test`, {
       code: this.flowData.code,
       port: this.flowData.port
     }).subscribe(res => {

@@ -346,6 +346,16 @@ export class NodePropertiesComponent implements OnInit {
     
   }
 
+  get dropDownLabel(){
+    const obj = {
+      'SYSTEM': 'System Task',
+      'USER': 'User Task',
+      'EVENT': 'Event Trigger',
+    }
+
+    return obj[this.currNode?.type]
+  }
+
   nodesFromType(type){
     return this.processNodeList.filter(node => node.type === type)
   }

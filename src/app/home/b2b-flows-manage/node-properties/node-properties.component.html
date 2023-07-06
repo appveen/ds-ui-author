@@ -490,9 +490,9 @@
 
     <ng-container *ngIf="processFlowNode">
        <div class="mb-4">
-        <label class="font-14 fw-400 text-dark" for="nodeType">Choose System Task node</label>
-        <select id="systemNode" class="form-control">
-            <option value="API" *ngFor="let node of nodesFromType('SYSTEM')">{{node.name}}</option>
+        <label class="font-14 fw-400 text-dark" for="node">Choose {{dropDownLabel}} node</label>
+        <select id="systemNode" class="form-control" [(ngModel)]="currNode.selectedNode" (ngModelChange)="changesDone.emit()" [disabled]="!edit.status">
+            <option [value]="node._id" *ngFor="let node of nodesFromType(currNode.type)">{{node.name}}</option>
         </select>
        </div>
     </ng-container>
