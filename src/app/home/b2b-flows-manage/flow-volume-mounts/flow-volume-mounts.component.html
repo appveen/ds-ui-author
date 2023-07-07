@@ -45,10 +45,11 @@
         <div class="">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" [(ngModel)]="form.name" required>
+                <input type="text" [class.is-invalid]="nameError" class="form-control" [(ngModel)]="form.name" (blur)="onKeyBlur()" required>
+                <span *ngIf="nameError" class="form-text text-danger">Duplicate Name</span>
             </div>
             <div class="form-group">
-                <label for="hostPath">Data Type</label>
+                <label for="hostPath">Host Path</label>
                 <input id="hostPath" type="text" class="form-control" [(ngModel)]="form.hostPath" required>
             </div>
             <div class="form-group">
@@ -58,7 +59,7 @@
         </div>
         <div class="d-flex align-items-center justify-content-end">
             <button type="button" class="btn btn-min-width btn-dark mr-3" (click)="cancel()">Cancel</button>
-            <button type="button" class="btn btn-min-width btn-primary" (click)="saveData()">Save</button>
+            <button type="button" class="btn btn-min-width btn-primary" (click)="saveData()" [disabled]="nameError">Save</button>
         </div>
     </div>
 </odp-side-canvas>

@@ -45,7 +45,8 @@
         <div class="">
             <div class="form-group">
                 <label for="key">Key</label>
-                <input type="text" class="form-control" [(ngModel)]="form.key" (blur)="onKeyBlur()" required>
+                <input type="text" [class.is-invalid]="keyError" class="form-control" [(ngModel)]="form.key" (blur)="onKeyBlur()" required>
+                <span *ngIf="keyError" class="form-text text-danger">Duplicate Key</span>
             </div>
             <div class="form-group">
                 <label for="dataType">Data Type</label>
@@ -64,7 +65,7 @@
         </div>
         <div class="d-flex align-items-center justify-content-end">
             <button type="button" class="btn btn-min-width btn-dark mr-3" (click)="cancel()">Cancel</button>
-            <button type="button" class="btn btn-min-width btn-primary" (click)="saveData()">Save</button>
+            <button type="button" class="btn btn-min-width btn-primary" (click)="saveData()" [disabled]="keyError">Save</button>
         </div>
     </div>
 </odp-side-canvas>
