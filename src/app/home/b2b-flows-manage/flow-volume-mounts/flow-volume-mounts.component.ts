@@ -61,7 +61,7 @@ export class FlowVolumeMountsComponent implements OnInit {
 
   onKeyBlur() {
     if (this.form.name) {
-      this.form.name = _.toUpper(_.snakeCase(this.form.name));
+      this.form.name = _.toLower(_.kebabCase(this.form.name));
     }
   }
 
