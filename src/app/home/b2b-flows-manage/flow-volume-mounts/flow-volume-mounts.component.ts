@@ -29,18 +29,23 @@ export class FlowVolumeMountsComponent implements OnInit {
     }
   }
 
-  addConstant() {
+  addVolumeMount() {
     this.toggleVariableForm = true;
-    this.form = {};
+    this.form = {
+      mountType: 'HOSTPATH'
+    };
   }
 
-  editConstant(index: number) {
+  editVolumeMount(index: number) {
     this.selectedIndex = index;
     this.form = this.appService.cloneObject(this.volumeMounts[index]);
+    if (!this.form.mountType) {
+      this.form.mountType = 'HOSTPATH';
+    }
     this.toggleVariableForm = true;
   }
 
-  deleteConstant(index: number) {
+  deleteVolumeMount(index: number) {
     this.volumeMounts.splice(index, 1)
   }
 
