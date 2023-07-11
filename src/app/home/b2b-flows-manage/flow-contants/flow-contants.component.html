@@ -7,8 +7,8 @@
         <div class="grid-row head d-flex align-items-center border-bottom bg-light">
             <div class="grid-cell border-right name">Key</div>
             <div class="grid-cell border-right">Type</div>
-            <div class="grid-cell border-right">Value</div>
-            <div class="grid-cell d-flex align-items-center justify-content-end">
+            <div class="grid-cell border-right value">Value</div>
+            <div class="grid-cell d-flex align-items-center justify-content-end flex-fill">
                 <span class="hover" (click)="addConstant()">
                     <span class="dsi dsi-plus-circle text-primary"></span>
                 </span>
@@ -19,8 +19,8 @@
                 *ngFor="let item of constantList;let index=index">
                 <div class="grid-cell border-right name">{{item.key}}</div>
                 <div class="grid-cell border-right">{{item.dataType}}</div>
-                <div class="grid-cell border-right">{{item.value}}</div>
-                <div class="grid-cell d-flex align-items-center justify-content-end">
+                <div class="grid-cell border-right value text-truncate">{{item.value}}</div>
+                <div class="grid-cell d-flex align-items-center justify-content-end flex-fill">
                     <span class="hover mr-2" (click)="editConstant(index)">
                         <span class="dsi dsi-edit text-accent"></span>
                     </span>
