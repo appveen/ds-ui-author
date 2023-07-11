@@ -73,4 +73,16 @@ export class FlowContantsComponent implements OnInit {
   set constantList(val: any) {
     this.data.constants = val;
   }
+
+  get keyError() {
+    if (this.form && this.form.key) {
+      let tempIndex = this.constantList.findIndex(e => e.key == this.form.key);
+      if (this.selectedIndex > -1 && tempIndex > -1 && tempIndex != this.selectedIndex) {
+        return true;
+      } else if (this.selectedIndex == -1 && tempIndex > -1) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

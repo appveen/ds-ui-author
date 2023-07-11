@@ -16,7 +16,7 @@ export class FlowVolumeMountsComponent implements OnInit {
 
   toggleVariableForm: boolean;
   form: any;
-  selectedIndex: number
+  selectedIndex: number;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private flowService: B2bFlowService) {
@@ -29,18 +29,23 @@ export class FlowVolumeMountsComponent implements OnInit {
     }
   }
 
-  addConstant() {
+  addVolumeMount() {
     this.toggleVariableForm = true;
-    this.form = {};
+    this.form = {
+      mountType: 'HOSTPATH'
+    };
   }
 
-  editConstant(index: number) {
+  editVolumeMount(index: number) {
     this.selectedIndex = index;
     this.form = this.appService.cloneObject(this.volumeMounts[index]);
+    if (!this.form.mountType) {
+      this.form.mountType = 'HOSTPATH';
+    }
     this.toggleVariableForm = true;
   }
 
-  deleteConstant(index: number) {
+  deleteVolumeMount(index: number) {
     this.volumeMounts.splice(index, 1)
   }
 
@@ -59,11 +64,29 @@ export class FlowVolumeMountsComponent implements OnInit {
     this.toggleVariableForm = false;
   }
 
+  onKeyBlur() {
+    if (this.form.name) {
+      this.form.name = _.toLower(_.kebabCase(this.form.name));
+    }
+  }
+
   get volumeMounts() {
     return this.data.volumeMounts;
   }
 
   set volumeMounts(val: any) {
     this.data.volumeMounts = val;
+  }
+
+  get nameError() {
+    if (this.form && this.form.name) {
+      let tempIndex = this.volumeMounts.findIndex(e => e.name == this.form.name);
+      if (this.selectedIndex > -1 && tempIndex > -1 && tempIndex != this.selectedIndex) {
+        return true;
+      } else if (this.selectedIndex == -1 && tempIndex > -1) {
+        return true;
+      }
+    }
+    return false;
   }
 }

@@ -1,5 +1,5 @@
 <div>
-  <div class="input-container" [ngClass]="{'disabled-input': !editEnabled}">
+  <div class="input-container" [ngClass]="{'disabled-input': !editEnabled,'bg-white':editEnabled}">
     <input #styledInputText [(ngModel)]="value" (ngModelChange)="onValueChange()" (input)="onValueChange($event)"
       [ngbTypeahead]="ngbTypeahead || search" (scroll)="handleScroll($event)"
       [resultFormatter]="resultFormatter || formatter" [inputFormatter]="inputFormatter || formatter"
