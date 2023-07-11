@@ -58,7 +58,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="hostPath">Host Path</label>
+                <label for="hostPath">{{form.mountType=='HOSTPATH' ? 'Host Path' : 'Claim Name'}}</label>
                 <input id="hostPath" type="text" class="form-control" [(ngModel)]="form.hostPath" required>
             </div>
             <div class="form-group">
