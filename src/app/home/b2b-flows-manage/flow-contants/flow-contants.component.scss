@@ -3,11 +3,6 @@
 
 .grid {
     .grid-row {
-        &.head {
-            font-weight: 500px;
-            color: $secondary;
-        }
-
         .grid-cell {
             min-height: 32px;
             max-height: 32px;
@@ -26,6 +21,18 @@
             &.value {
                 min-width: 200px;
                 max-width: 200px;
+            }
+        }
+
+        &.head {
+            font-weight: 500;
+            color: $secondary;
+            text-transform: uppercase;
+            font-size: 12px;
+
+            .grid-cell {
+                min-height: 24px !important;
+                max-height: 24px !important;
             }
         }
     }

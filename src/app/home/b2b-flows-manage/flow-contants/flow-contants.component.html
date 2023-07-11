@@ -15,11 +15,12 @@
             </div>
         </div>
         <div class="grid-body">
-            <div class="grid-row d-flex align-items-center border-bottom"
-                *ngFor="let item of constantList;let index=index">
+            <div class="grid-row d-flex align-items-center border-bottom" [class.border-bottom]="!last"
+                *ngFor="let item of constantList;let index=index;let last=last;">
                 <div class="grid-cell border-right name">{{item.key}}</div>
                 <div class="grid-cell border-right">{{item.dataType}}</div>
-                <div class="grid-cell border-right value text-truncate">{{item.value}}</div>
+                <div *ngIf="item.dataType=='String'" class="grid-cell border-right value text-truncate">"{{item.value}}"</div>
+                <div *ngIf="item.dataType!='String'" class="grid-cell border-right value text-truncate">{{item.value}}</div>
                 <div class="grid-cell d-flex align-items-center justify-content-end flex-fill">
                     <span class="hover mr-2" (click)="editConstant(index)">
                         <span class="dsi dsi-edit text-accent"></span>

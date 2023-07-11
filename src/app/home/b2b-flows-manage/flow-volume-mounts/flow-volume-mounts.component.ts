@@ -17,16 +17,32 @@ export class FlowVolumeMountsComponent implements OnInit {
   toggleVariableForm: boolean;
   form: any;
   selectedIndex: number;
+  mountTypeList: Array<any>;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private flowService: B2bFlowService) {
     this.selectedIndex = -1;
+    this.mountTypeList = [
+      {
+        label: 'Host Path',
+        value: 'HOSTPATH'
+      },
+      {
+        label: 'Persistant Volume Claim',
+        value: 'PVC'
+      }
+    ]
   }
 
   ngOnInit(): void {
     if (!this.data.volumeMounts) {
       this.data.volumeMounts = [];
     }
+    this.data.volumeMounts.forEach(item => {
+      if (!item.mountType) {
+        item.mountType = 'HOSTPATH';
+      }
+    });
   }
 
   addVolumeMount() {
@@ -68,6 +84,14 @@ export class FlowVolumeMountsComponent implements OnInit {
     if (this.form.name) {
       this.form.name = _.toLower(_.kebabCase(this.form.name));
     }
+  }
+
+  getMountTypeLabel(item: any) {
+    let temp = this.mountTypeList.find(e => e.value == item.mountType);
+    if (temp) {
+      return temp.label;
+    }
+    return this.mountTypeList[0].label;
   }
 
   get volumeMounts() {
