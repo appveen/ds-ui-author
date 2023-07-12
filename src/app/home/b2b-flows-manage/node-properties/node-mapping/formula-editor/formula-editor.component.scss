@@ -3,6 +3,11 @@
 
 .suggestion-list-wrapper {
     width: 200px;
+    overflow-y: auto;
+    .suggestion-list {
+        overflow-y: auto;
+        max-height: 120px;
+    }
 }
 
 .source-list-wrapper {
@@ -11,6 +16,6 @@
 
 .formula-canvas {
     width: 300px;
-    min-height: 120px;
+    min-height: 140px;
     overflow: auto;
 }

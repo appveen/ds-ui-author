@@ -26,6 +26,7 @@ export class NodeMappingComponent implements OnInit {
   @Output() close: EventEmitter<any>;
   allSources: Array<any>;
   allTargets: Array<any>;
+  allConstants: Array<any>;
   tempMappings: Array<any>;
   pathList: Array<any>;
   nodeList: Array<any>;
@@ -44,6 +45,7 @@ export class NodeMappingComponent implements OnInit {
     };
     this.allSources = [];
     this.allTargets = [];
+    this.allConstants = [];
     this.pathList = [];
     this.source = 'outgoing';
     this.targetExpandCollapseObjects = {};
@@ -108,6 +110,26 @@ export class NodeMappingComponent implements OnInit {
       if (item.type == 'Object') {
         this.targetExpandCollapseObjects[item.dataPath] = false;
       }
+    });
+    let tempConstants = this.appService.cloneObject(this.flowData.constants);
+    tempConstants.map((item) => {
+      delete item._id;
+      if (item.key == 'true') {
+        item.key = '_self';
+      }
+      item.type = item.dataType;
+      item._id = `CONSTANTS.${item.key}`;
+      item.dataPath = 'CONSTANTS.' + item.key;
+      item.dataPathSegs = ['CONSTANTS', item.key];
+      item.name = item.key;
+      item.isConstant = true;
+      item.properties = {
+        dataPath: item.dataPath,
+        dataPathSegs: item.dataPathSegs,
+        name: item.key
+      };
+      item.depth = 0;
+      this.allConstants.push(item);
     });
     this.nodeList.forEach((node: any) => {
       let outgoing;

@@ -31,35 +31,70 @@
             </div>
         </div>
         <div *ngIf="mappingType=='custom'" class="d-flex border-top">
-            <div class="source-list ml-3 border-right">
-                <div class="source-list-item mb-3">
-                    <ng-container *ngFor="let node of nodeList">
-                        <div class="d-flex align-items-center">
-                            <span class="dsi hover text-muted" (click)="toggleSource(node)"
-                                [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[node._id],'dsi-minus':!sourceExpandCollapseObjects[node._id]}"></span>
-                            <div class="py-2 fw-600 text-primary">{{node.name}}</div>
+            <div>
+                <div class="source format-selector">
+                    <div class="border-right ml-3">
+                        <div class="p-2 d-flex align-items-center justify-content-between">
+                            <span class="font-14 fw-600 text-primary text-uppercase">Constants</span>
                         </div>
-                        <div *ngIf="!sourceExpandCollapseObjects[node._id]">
-                            <ng-container *ngFor="let def of allSources">
-                                <div *ngIf="!isSourceItemCollapsed(def) && def.nodeId == node._id"
-                                    class="data-field d-flex align-items-center justify-content-start" draggable="true"
-                                    (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                        <div class="source-list font-12">
+                            <ng-container *ngFor="let def of allConstants">
+                                <div class="data-field d-flex align-items-center justify-content-start pl-2"
+                                    draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
                                     <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
-                                    <div class="toggle-btn d-flex align-items-center justify-content-center">
-                                        <span *ngIf="showToggleBtn(def)" class="dsi hover text-muted"
-                                            (click)="toggleSource(def)"
-                                            [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[def._id],'dsi-minus':!sourceExpandCollapseObjects[def._id]}"></span>
-                                    </div>
                                     <div class="field-type mr-2">
                                         <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
                                     </div>
-                                    <div class="field-key">{{def.name}}</div>
+                                    <div class="field-key text-truncate">
+                                        <span class="mr-1">{{def.key}}</span>
+                                        <span class="text-muted" *ngIf="def.dataType=='String'">
+                                            <i>('{{def.value}}')</i>
+                                        </span>
+                                        <span class="text-muted" *ngIf="def.dataType!='String'">
+                                            <i>({{def.value}})</i>
+                                        </span>
+                                    </div>
                                     <div class="mapping-line flex-fill"
                                         [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
                                 </div>
                             </ng-container>
+                            <div *ngIf="!allConstants || allConstants.length==0"
+                                class="px-2 font-12 fw-500 text-secondary">
+                                No Constants Found
+                            </div>
                         </div>
-                    </ng-container>
+                    </div>
+                </div>
+                <div class="source-list ml-3 border-right">
+                    <div class="source-list-item mb-3">
+                        <ng-container *ngFor="let node of nodeList">
+                            <div class="d-flex align-items-center">
+                                <span class="dsi hover text-muted" (click)="toggleSource(node)"
+                                    [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[node._id],'dsi-minus':!sourceExpandCollapseObjects[node._id]}"></span>
+                                <div class="py-2 fw-600 text-primary">{{node.name}}</div>
+                            </div>
+                            <div *ngIf="!sourceExpandCollapseObjects[node._id]">
+                                <ng-container *ngFor="let def of allSources">
+                                    <div *ngIf="!isSourceItemCollapsed(def) && def.nodeId == node._id"
+                                        class="data-field d-flex align-items-center justify-content-start"
+                                        draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                                        <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
+                                        <div class="toggle-btn d-flex align-items-center justify-content-center">
+                                            <span *ngIf="showToggleBtn(def)" class="dsi hover text-muted"
+                                                (click)="toggleSource(def)"
+                                                [ngClass]="{'dsi-plus':sourceExpandCollapseObjects[def._id],'dsi-minus':!sourceExpandCollapseObjects[def._id]}"></span>
+                                        </div>
+                                        <div class="field-type mr-2">
+                                            <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
+                                        </div>
+                                        <div class="field-key">{{def.name}}</div>
+                                        <div class="mapping-line flex-fill"
+                                            [ngClass]="{'border-accent border-top':isSourceMapped(def)}"></div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
                 </div>
             </div>
             <svg #svgCanvas class="mapping-paths" (click)="selectedPath=null;">
