@@ -63,6 +63,7 @@ import { FlowContantsComponent } from './flow-contants/flow-contants.component';
 import { FlowVolumeMountsComponent } from './flow-volume-mounts/flow-volume-mounts.component';
 import { SideCanvasModule } from 'src/app/utils/side-canvas/side-canvas.module';
 import { MappingPresetComponent } from './node-properties/node-mapping/mapping-preset/mapping-preset.component';
+import { FileRwPropertiesComponent } from './node-properties/file-rw-properties/file-rw-properties.component';
 
 const routes: Routes = [
   {
@@ -101,7 +102,8 @@ const routes: Routes = [
     SourceSelectorComponent,
     FlowContantsComponent,
     FlowVolumeMountsComponent,
-    MappingPresetComponent
+    MappingPresetComponent,
+    FileRwPropertiesComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,109 @@
+<div *ngIf="currNode.type=='FILE_WRITE'">
+    <div class="form-group p-2 border rounded bg-light">
+        <label for="volumeMount" class="font-14 fw-400 text-dark">Volume Mount</label>
+        <div *ngIf="!currNode?.options?.volumeMount" class="data-format-selector-wrapper">
+            <div class="list-group my-3">
+                <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                    *ngFor="let item of volumeMountList" (click)="toggleItem(!item._selected,item)">
+                    <div class="d-flex align-items-center">
+                        <odp-round-radio [edit]="edit" [checked]="item._selected">
+                        </odp-round-radio>
+                        <span class="ml-3">{{item.name}}</span>
+                    </div>
+                </div>
+                <div *ngIf="!volumeMountList || volumeMountList.length == 0"
+                    class="list-group-item d-flex align-items-center justify-content-between text-secondary">
+                    No Volume Mount found for
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="button" class="btn btn-primary w-100" [disabled]="!isVolumeMountSelected"
+                    (click)="selectVolumeMount()">Select Volume Mount</button>
+            </div>
+        </div>
+        <div *ngIf="currNode?.options?.volumeMount">
+            <div class="p-2 border rounded d-flex align-items-center justify-content-between bg-white">
+                <span>{{currNode?.options?.volumeMount?.name}}</span>
+                <span class="hover dsi dsi-trash text-danger"></span>
+            </div>
+            <div class="keyval-group ml-2 d-flex align-items-center mt-2 font-12">
+                <span class="key fw-500 text-secondary">Host Path</span>
+                <span class="value">{{currNode?.options?.volumeMount?.hostPath}}</span>
+            </div>
+            <div class="keyval-group ml-2 d-flex align-items-center mt-2 font-12">
+                <span class="key fw-500 text-secondary">Flow Path</span>
+                <span class="value">{{currNode?.options?.volumeMount?.containerPath}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group p-2 border rounded bg-light">
+        <label for="fileName" class="font-14 fw-400 text-dark">File Name</label>
+        <odp-autocomplete-on-edit #typeAhead [(ngModel)]="currNode.options.url" [currNode]="currNode"
+            class="styled-wrapper"></odp-autocomplete-on-edit>
+    </div>
+</div>
+
+
+<div *ngIf="currNode.type=='FILE_READ'">
+    <div class="form-group p-2 border rounded bg-light">
+        <label for="volumeMount" class="font-14 fw-400 text-dark">Volume Mount</label>
+        <div *ngIf="!currNode?.options?.volumeMount" class="data-format-selector-wrapper">
+            <div class="list-group my-3">
+                <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between hover"
+                    *ngFor="let item of volumeMountList" (click)="toggleItem(!item._selected,item)">
+                    <div class="d-flex align-items-center">
+                        <odp-round-radio [edit]="edit" [checked]="item._selected">
+                        </odp-round-radio>
+                        <span class="ml-3">{{item.name}}</span>
+                    </div>
+                </div>
+                <div *ngIf="!volumeMountList || volumeMountList.length == 0"
+                    class="list-group-item d-flex align-items-center justify-content-between text-secondary">
+                    No Volume Mount found for
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="button" class="btn btn-primary w-100" [disabled]="!isVolumeMountSelected"
+                    (click)="selectVolumeMount()">Select Volume Mount</button>
+            </div>
+        </div>
+        <div *ngIf="currNode?.options?.volumeMount">
+            <div class="p-2 border rounded d-flex align-items-center justify-content-between bg-white">
+                <span>{{currNode?.options?.volumeMount?.name}}</span>
+                <span class="hover dsi dsi-trash text-danger"></span>
+            </div>
+            <div class="keyval-group ml-2 d-flex align-items-center mt-2 font-12">
+                <span class="key fw-500 text-secondary">Host Path</span>
+                <span class="value">{{currNode?.options?.volumeMount?.hostPath}}</span>
+            </div>
+            <div class="keyval-group ml-2 d-flex align-items-center mt-2 font-12">
+                <span class="key fw-500 text-secondary">Flow Path</span>
+                <span class="value">{{currNode?.options?.volumeMount?.containerPath}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group p-2 border rounded bg-light">
+        <label for="fileName" class="font-14 fw-400 text-dark">File Name</label>
+        <odp-autocomplete-on-edit #typeAhead [(ngModel)]="currNode.options.url" [currNode]="currNode"
+            class="styled-wrapper"></odp-autocomplete-on-edit>
+    </div>
+    <div *ngIf="fileType=='CSV' || fileType=='DELIMITER'" class="form-group border rounded p-2 bg-light mb-3">
+        <label class="font-14 fw-500 text-dark mb-0 mb-3">File Options</label>
+        <br>
+        <div class="form-group">
+            <label for="skipRows" class="font-14 fw-400 text-dark">Rows to Skip</label>
+            <input id="skipRows" type="number" class="form-control mb-2" [(ngModel)]="currNode.options.skipRows"
+                [disabled]="!edit.status">
+        </div>
+        <div class="form-group">
+            <label for="skipLines" class="font-14 fw-400 text-dark">Lines to Skip</label>
+            <input id="skipLines" type="number" class="form-control" [(ngModel)]="currNode.options.skipLines"
+                [disabled]="!edit.status">
+        </div>
+        <div class="form-group">
+            <label for="maxRows" class="font-14 fw-400 text-dark">Max Rows</label>
+            <input id="maxRows" type="number" class="form-control" [(ngModel)]="currNode.options.maxRows"
+                [disabled]="!edit.status">
+        </div>
+    </div>
+</div>
