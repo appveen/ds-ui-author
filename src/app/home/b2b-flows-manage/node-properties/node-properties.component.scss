@@ -61,3 +61,12 @@
         box-shadow: none;
     }
 }
+
+
+.tab-list {
+    .tab-item {
+        min-height: 32px;
+        max-height: 32px;
+        line-height: 32px;
+    }
+}
