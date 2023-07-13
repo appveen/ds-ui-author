@@ -1,0 +1,187 @@
+@import "src/assets/scss/bootstrap/_functions.scss";
+@import "src/assets/scss/bootstrap/_variables.scss";
+
+.flow-manage-page {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.available-nodes {
+  min-width: 200px;
+  max-width: 200px;
+  min-height: calc(100vh - 144px);
+  max-height: calc(100vh - 144px);
+  overflow-y: auto;
+
+  .node-item {
+    min-height: 48px;
+    max-height: 48px;
+
+    .node-icon {
+      min-width: 48px;
+      max-width: 48px;
+      min-height: 48px;
+      max-height: 48px;
+      line-height: 48px;
+      text-align: center;
+    }
+
+    &:hover {
+      background: $white;
+    }
+  }
+}
+
+.flow-manage-page {
+  // height: calc(100vh - 60px);
+
+  .flow-designer {
+    // max-height: calc(100vh - 220px);
+    max-height: calc(100vh - 144px);
+    // overflow: auto;
+    background: rgba($light, 0.4);
+  }
+
+  .flow-designer-canvas {
+    height: 200vh;
+    overflow: auto;
+  }
+}
+
+.name-wrapper {
+  .dsi {
+    top: 9px;
+    right: 9px;
+  }
+}
+
+.overlay {
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: rgba($color: #000000, $alpha: 0.6);
+}
+
+
+.node-options-dropdown {
+  width: 180px;
+  overflow-y: auto;
+
+  .node-options-item {
+    height: 32px;
+
+    &:hover {
+      background: lighten($color: #000000, $amount: 20);
+    }
+
+  }
+}
+
+.node-properties {
+  // top: 142px;
+  top: 88px;
+  right: -360px;
+  z-index: 2;
+  width: 360px;
+  // height: calc(100vh - 142px);
+  height: calc(100vh - 88px);
+  overflow-y: auto;
+  transition: 0.2s;
+
+  &.show {
+    right: 0px;
+  }
+}
+
+.flow-designer-svg-wrapper {
+  width: 100%;
+  min-height: calc(100vh - 144px);
+  max-height: calc(100vh - 144px);
+  overflow: auto;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.flow-designer-svg {
+
+  width: 200vw;
+  height: 200vh;
+
+  rect {
+    fill: #efefef;
+    stroke: #666;
+    stroke-width: 1;
+  }
+}
+
+.available-nodes-dropdown {
+  z-index: 3;
+
+  .node-item {
+    min-height: 32px;
+    max-height: 32px;
+    min-width: 140px;
+    max-width: 140px;
+
+    .node-text-icon {
+      min-width: 32px;
+      max-width: 32px;
+      min-height: 32px;
+      max-height: 32px;
+      line-height: 32px;
+      text-align: center;
+    }
+
+    .node-list-item {
+      min-width: 200px;
+      max-width: 200px;
+      position: absolute;
+      left: 140px;
+      display: none;
+      overflow: hidden;
+
+      .node-item {
+        min-height: 32px;
+        max-height: 32px;
+        min-width: 200px;
+        max-width: 200px;
+      }
+    }
+
+    &:hover {
+      background: $light;
+
+      .node-list-item {
+        display: block;
+      }
+    }
+  }
+}
+
+.dsi-function.alt {
+  color: #A94CFF;
+}
+
+
+.tab-list-item {
+  &:not(:last-child) {
+    border-right: 1px solid $border;
+  }
+
+  &.active {
+    color: $accent;
+    font-weight: 500;
+  }
+}
+
+.spacer-lock {
+  min-width: 260px;
+}

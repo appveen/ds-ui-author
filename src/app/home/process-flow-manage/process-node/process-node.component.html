@@ -1,0 +1,140 @@
+<svg>
+    <g class="node-block" [style]="'transform: translate('+currNode.coordinates.x+'px,'+ currNode.coordinates.y+'px)'"
+        class="hover no-outline " [attr.data-id]="currNode._id" [tabIndex]="index" (keydown.delete)="deletePath()" *ngIf="nodeType !== 'Decision'">
+        <g [class.active]="isSelected" [attr.data-id]="currNode._id">
+            <rect x="0" y="-18" width="140" height="24" rx="4" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" class="id-holder" />
+            <text x="10" y="-5" text-anchor="start" (click)="openProperties($event)" [attr.data-id]="currNode._id"
+                class="id-holder">{{nodeType}}</text>
+            <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" />
+            <rect x="0" y="0" width="140" height="36" rx="6" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" class="rect" />
+            <foreignObject width="100" height="32" x="30" y="2" [attr.data-id]="currNode._id"
+                (click)="openProperties($event)">
+                <div xmlns="http://www.w3.org/1999/xhtml" [attr.data-id]="currNode._id"
+                    class="d-flex align-items-center justify-content-center h-100">
+                    <span xmlns="http://www.w3.org/1999/xhtml" [attr.data-id]="currNode._id" [class.fw-600]="isSelected"
+                        class="text-wrap d-flex justify-content-center text-center font-10">
+                        {{currNode.name}}
+                    </span>
+                </div>
+            </foreignObject>
+        </g>
+        <rect *ngIf="index>0" class="node-anchor start" [class.active]="isActive('start')" [attr.data-id]="currNode._id"
+            x="-6" y="12" width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
+        <rect class="node-anchor end" [class.active]="isActive('end')" [attr.data-id]="currNode._id" x="134" y="12"
+            width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
+        <foreignObject width="18" height="18" x="10" y="9" [attr.data-id]="currNode._id">
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='API' && isInputNode"
+                class="node-icon font-18 fw-500 dsi dsi-api-reciever" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='API' && !isInputNode"
+                class="node-icon font-18 fw-500 dsi dsi-invoke-api" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='API_XML' && !isInputNode"
+                class="node-icon font-18 fw-500 dsi dsi-invoke-api" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='API_MULTIPART' && !isInputNode"
+                class="node-icon font-18 fw-500 dsi dsi-invoke-api" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE'"
+                class="node-icon font-18 fw-500 dsi dsi-file" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE_READ'"
+                class="node-icon font-18 fw-500 dsi dsi-file" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE_WRITE'"
+                class="node-icon font-18 fw-500 dsi dsi-file" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='TIMER'"
+                class="node-icon font-18 fw-500 dsi dsi-clock" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CODEBLOCK'"
+                class="node-icon font-18 fw-500 dsi dsi-console text-secondary" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONNECTOR'"
+                class="node-icon font-18 fw-500 dsi dsi-connector" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='DATASERVICE'"
+                class="node-icon font-18 fw-500 dsi dsi-data-service" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FUNCTION'"
+                class="node-icon font-18 fw-500 dsi dsi-function" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='MAPPING'"
+                class="node-icon font-18 fw-500 dsi dsi-mapping" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='DEDUPE'"
+                class="node-icon font-18 fw-500 dsi dsi-copy" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONFLICT'"
+                class="node-icon font-18 fw-500 dsi dsi-insight" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FOREACH'"
+                class="node-icon font-18 fw-500 dsi dsi-refresh" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='REDUCE'"
+                class="node-icon font-18 fw-500 dsi dsi-undo" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='UNWIND'"
+                class="node-icon font-18 fw-500 dsi dsi-expand" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='PLUGIN'"
+                class="node-icon font-18 fw-500 dsi dsi-library" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='RESPONSE'"
+                class="node-icon font-18 fw-500 dsi dsi-response" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE_READ'"
+                class="node-icon font-18 fw-500 dsi dsi-file read" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='FILE_WRITE'"
+                class="node-icon font-18 fw-500 dsi dsi-file write" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONVERT_JSON_JSON'"
+                class="node-icon font-18 fw-500 dsi dsi-refresh text-secondary" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONVERT_JSON_XML'"
+                class="node-icon font-18 fw-500 dsi dsi-refresh text-accent" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONVERT_XML_JSON'"
+                class="node-icon font-18 fw-500 dsi dsi-refresh text-primary" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONVERT_JSON_CSV'"
+                class="node-icon font-18 fw-500 dsi dsi-refresh text-success" [attr.data-id]="currNode._id"></span>
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONVERT_CSV_JSON'"
+                class="node-icon font-18 fw-500 dsi dsi-refresh text-dark" [attr.data-id]="currNode._id"></span>
+        </foreignObject>
+    </g>
+    <g class="node-block" [style]="'transform: translate('+currNode.coordinates.x+'px,'+ currNode.coordinates.y+'px)'"
+        class="hover no-outline " [attr.data-id]="currNode._id" [tabIndex]="index" (keydown.delete)="deletePath()" *ngIf="nodeType === 'Decision'">
+        <g [class.active]="isSelected" [attr.data-id]="currNode._id">
+            <!-- <rect x="0" y="-18" width="140" height="24" rx="4" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" class="id-holder" />
+            <text x="10" y="-5" text-anchor="start" (click)="openProperties($event)" [attr.data-id]="currNode._id"
+                class="id-holder">{{nodeType}}</text> -->
+            <rect x="-60" y="0" width="100" height="100" rx="6" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" transform="rotate(45)" />
+            <rect x="-60" y="0" width="100" height="100" rx="6" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" class="rect" transform="rotate(45)" /> 
+            <foreignObject width="100" height="32" x="30" y="2" [attr.data-id]="currNode._id"
+                (click)="openProperties($event)">
+                <div xmlns="http://www.w3.org/1999/xhtml" [attr.data-id]="currNode._id"
+                    class="d-flex align-items-center justify-content-center h-100">
+                    <span xmlns="http://www.w3.org/1999/xhtml" [attr.data-id]="currNode._id" [class.fw-600]="isSelected"
+                        class="text-wrap d-flex justify-content-center text-center font-10">
+                        {{currNode.name}}
+                    </span>
+                </div>
+            </foreignObject>
+        </g>
+        <rect *ngIf="index>0" class="node-anchor start" [class.active]="isActive('start')" [attr.data-id]="currNode._id"
+            x="-120" y="24" width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
+        <rect class="node-anchor end" [class.active]="isActive('end')" [attr.data-id]="currNode._id" x="-48" y="-50"
+            width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
+            <rect class="node-anchor end" [class.active]="isActive('end')" [attr.data-id]="currNode._id" x="-48" y="90"
+            width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
+        <!-- <foreignObject width="18" height="18" x="10" y="9" [attr.data-id]="currNode._id">
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONVERT_CSV_JSON'"
+                class="node-icon font-18 fw-500 dsi dsi-refresh text-dark" [attr.data-id]="currNode._id"></span>
+        </foreignObject> -->
+    </g>
+    <g *ngFor="let p of successPaths;let i=index">
+        <path [attr.d]="p.path" class="svg-path svg-path-transparent ignore-outside"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='success'"
+            (click)="selectPath($event,i,p,'success')" />
+        <path [attr.d]="p.path" class="svg-path ignore-outside"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='success'"
+            (click)="selectPath($event,i,p,'success')" [style]="'stroke:#'+p.color" />
+        <text x="0" y="0" class="path-text" [style]="getPathTextStyle(p)" text-anchor="middle"
+            [attr.data-id]="currNode._id"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='success'">{{p.name}}</text>
+    </g>
+    <g *ngFor="let p of errorPaths;let i=index">
+        <path [attr.d]="p.path" class="svg-path svg-path-transparent ignore-outside"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='error'"
+            (click)="selectPath($event,i,p,'error')" />
+        <path [attr.d]="p.path" class="svg-path ignore-outside"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='error'"
+            (click)="selectPath($event,i,p,'error')" [style]="'stroke:#'+p.color" />
+        <text x="0" y="0" class="path-text" [style]="getPathTextStyle(p)" text-anchor="middle"
+            [attr.data-id]="currNode._id"
+            [class.selected]="isSelectedPath && selectedPathIndex == i && selectedPathType=='error'">{{p.name}}</text>
+    </g>
+</svg>

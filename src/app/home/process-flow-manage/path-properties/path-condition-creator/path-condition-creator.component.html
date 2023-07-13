@@ -1,0 +1,54 @@
+<div class="mt-3 w-100">
+    <div class="header-item px-2 py-1 text-left d-flex align-items-center justify-content-between border rounded">
+        <span class="text-secondary" *ngIf="!value">Configure</span>
+        <!-- <div class="d-flex flex-wrap align-items-center">
+            <span class="segments mr-1 fw-600 hover" [ngClass]="{
+                'font-18 text-secondary': isLogicalOperator(item),
+                'text-accent': !isLogicalOperator(item) && item.label!=item.value,
+                'text-success': !isLogicalOperator(item) && item.label==item.value}"
+                *ngFor="let item of segments;let i=index;let l=last">{{item.label}}</span>
+        </div> -->
+        <!-- <span class="text-dark" *ngIf="value">Re-Configure</span> -->
+        <span class="text-break mr-1 fw-600 hover">{{value}}</span>
+        <div class="d-flex align-items-center justify-content-end">
+            <span *ngIf="value"
+                class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
+                (click)="unsetValue()"></span>
+            <span class="icon dsi dsi-settings text-accent hover d-flex align-items-center justify-content-center"
+                (click)="showConditionWindow=!showConditionWindow"></span>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="showConditionWindow" class="condition-window p-4 bg-white position-fixed border-left">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h3 class="font-20 fw-600">Condition</h3>
+        <span class="dsi dsi-close hover" (click)="cancel()"></span>
+    </div>
+    <div class="headers-list">
+        <!-- <div class="form-control d-flex align-items-center flex-wrap">
+            <ng-container *ngFor="let item of segments;let i=index;let l=last">
+                <span class="segments mr-1 fw-600 hover" [ngClass]="{
+                        'bg-accent text-white': selectedSegmentIndex==i,
+                        'font-18 text-secondary':selectedSegmentIndex!=i &&isLogicalOperator(item),
+                        'text-accent':selectedSegmentIndex!=i && !isLogicalOperator(item) && item.label!=item.value,
+                        'text-success':selectedSegmentIndex!=i && !isLogicalOperator(item) && item.label==item.value}"
+                    (click)="selectSegment(i)">{{item.label}}</span>
+                <input type="text" class="inline-input border-0" [(ngModel)]="tempValue"
+                    [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
+                    (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)" odpAutoFocus>
+            </ng-container>
+            <input #typeAhead="ngbTypeahead" container="body" type="text" class="border-0" [(ngModel)]="tempValue"
+                [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter"
+                (selectItem)="selectItem($event)" (keyup.enter)="createSegment($event)" odpAutoFocus>
+
+        </div> -->
+        <odp-styled-text (finalValue)="changeLabel($event)" [value]="value" #typeAhead [ngbTypeahead]="search"
+            [resultFormatter]="formatter" [inputFormatter]="formatter" [searchTerm]="searchTerm"></odp-styled-text>
+        <button type="button" class="btn btn-primary d-flex align-items-center mt-4 w-100 justify-content-center"
+            (click)="save()">
+            <span class="">Done</span>
+        </button>
+    </div>
+</div>
