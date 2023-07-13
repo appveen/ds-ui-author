@@ -27,6 +27,7 @@ export class NodePropertiesComponent implements OnInit {
   searchTerm: string;
   path: string;
   @Input() processNodeList: any = [];
+  activeTab: number;
   constructor(private commonService: CommonService,
     private appService: AppService,
     private flowService: B2bFlowService) {
@@ -34,6 +35,7 @@ export class NodePropertiesComponent implements OnInit {
     this.close = new EventEmitter();
     this.changesDone = new EventEmitter();
     this.toggle = {};
+    this.activeTab = 0;
   }
 
   ngOnInit(): void {
@@ -55,6 +57,9 @@ export class NodePropertiesComponent implements OnInit {
     }
     if (this.currNode && !this.currNode.options.retry) {
       this.currNode.options.retry = {};
+    }
+    if(this.currNode && !this.currNode.options.conditionType){
+      this.currNode.options.conditionType = 'ifElse';
     }
     const options: GetOptions = {
       filter: {

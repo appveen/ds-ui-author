@@ -3,15 +3,12 @@
 
 .grid {
     .grid-row {
-        &.head {
-            font-weight: 500px;
-            color: $secondary;
-        }
 
         .grid-cell {
             min-height: 32px;
             max-height: 32px;
             padding: 5px;
+            font-size: 13px;
         }
 
         .grid-cell:not(.flex-fill) {
@@ -19,13 +16,25 @@
             max-width: 120px;
 
             &.name {
-                min-width: 200px;
-                max-width: 200px;
+                min-width: 160px;
+                max-width: 160px;
             }
 
             &.mount-type {
-                min-width: 100px;
-                max-width: 100px;
+                min-width: 166px;
+                max-width: 166px;
+            }
+        }
+
+        &.head {
+            font-weight: 500;
+            color: $secondary;
+            text-transform: uppercase;
+            
+            .grid-cell {
+                min-height: 24px !important;
+                max-height: 24px !important;
+                font-size: 11px !important;
             }
         }
     }

@@ -1,6 +1,6 @@
 <svg>
     <g class="node-block" [style]="'transform: translate('+currNode.coordinates.x+'px,'+ currNode.coordinates.y+'px)'"
-        class="hover no-outline " [attr.data-id]="currNode._id" [tabIndex]="index" (keydown.delete)="deletePath()">
+        class="hover no-outline " [attr.data-id]="currNode._id" [tabIndex]="index" (keydown.delete)="deletePath()" *ngIf="nodeType !== 'Decision'">
         <g [class.active]="isSelected" [attr.data-id]="currNode._id">
             <rect x="0" y="-18" width="140" height="24" rx="4" (click)="openProperties($event)"
                 [attr.data-id]="currNode._id" class="id-holder" />
@@ -81,6 +81,39 @@
             <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONVERT_CSV_JSON'"
                 class="node-icon font-18 fw-500 dsi dsi-refresh text-dark" [attr.data-id]="currNode._id"></span>
         </foreignObject>
+    </g>
+    <g class="node-block" [style]="'transform: translate('+currNode.coordinates.x+'px,'+ currNode.coordinates.y+'px)'"
+        class="hover no-outline " [attr.data-id]="currNode._id" [tabIndex]="index" (keydown.delete)="deletePath()" *ngIf="nodeType === 'Decision'">
+        <g [class.active]="isSelected" [attr.data-id]="currNode._id">
+            <!-- <rect x="0" y="-18" width="140" height="24" rx="4" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" class="id-holder" />
+            <text x="10" y="-5" text-anchor="start" (click)="openProperties($event)" [attr.data-id]="currNode._id"
+                class="id-holder">{{nodeType}}</text> -->
+            <rect x="-60" y="0" width="100" height="100" rx="6" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" transform="rotate(45)" />
+            <rect x="-60" y="0" width="100" height="100" rx="6" (click)="openProperties($event)"
+                [attr.data-id]="currNode._id" class="rect" transform="rotate(45)" /> 
+            <foreignObject width="100" height="32" x="30" y="2" [attr.data-id]="currNode._id"
+                (click)="openProperties($event)">
+                <div xmlns="http://www.w3.org/1999/xhtml" [attr.data-id]="currNode._id"
+                    class="d-flex align-items-center justify-content-center h-100">
+                    <span xmlns="http://www.w3.org/1999/xhtml" [attr.data-id]="currNode._id" [class.fw-600]="isSelected"
+                        class="text-wrap d-flex justify-content-center text-center font-10">
+                        {{currNode.name}}
+                    </span>
+                </div>
+            </foreignObject>
+        </g>
+        <rect *ngIf="index>0" class="node-anchor start" [class.active]="isActive('start')" [attr.data-id]="currNode._id"
+            x="-120" y="24" width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
+        <rect class="node-anchor end" [class.active]="isActive('end')" [attr.data-id]="currNode._id" x="-48" y="-50"
+            width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
+            <rect class="node-anchor end" [class.active]="isActive('end')" [attr.data-id]="currNode._id" x="-48" y="90"
+            width="12" height="12" rx="6" (click)="onAnchorClick($event)" />
+        <!-- <foreignObject width="18" height="18" x="10" y="9" [attr.data-id]="currNode._id">
+            <span xmlns="http://www.w3.org/1999/xhtml" *ngIf="currNode.type=='CONVERT_CSV_JSON'"
+                class="node-icon font-18 fw-500 dsi dsi-refresh text-dark" [attr.data-id]="currNode._id"></span>
+        </foreignObject> -->
     </g>
     <g *ngFor="let p of successPaths;let i=index">
         <path [attr.d]="p.path" class="svg-path svg-path-transparent ignore-outside"

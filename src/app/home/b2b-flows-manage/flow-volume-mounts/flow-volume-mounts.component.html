@@ -16,10 +16,10 @@
             </div>
         </div>
         <div class="grid-body">
-            <div class="grid-row d-flex align-items-center border-bottom"
-                *ngFor="let item of volumeMounts;let index=index">
+            <div class="grid-row d-flex align-items-center" [class.border-bottom]="!last"
+                *ngFor="let item of volumeMounts;let index=index;let last=last;">
                 <div class="grid-cell border-right name">{{item.name}}</div>
-                <div class="grid-cell border-right mount-type">{{item.mountType}}</div>
+                <div class="grid-cell border-right mount-type">{{getMountTypeLabel(item)}}</div>
                 <div class="grid-cell border-right text-truncate">{{item.hostPath}}</div>
                 <div class="grid-cell border-right text-truncate">{{item.containerPath}}</div>
                 <div class="grid-cell d-flex align-items-center justify-content-end flex-fill">
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="grid-row" *ngIf="!volumeMounts || volumeMounts.length==0">
-                <div class="grid-cell">No Records</div>
+                <div class="grid-cell flex-fill">No Records</div>
             </div>
         </div>
     </div>
@@ -47,18 +47,18 @@
         <div class="">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input id="name" type="text" [class.is-invalid]="nameError" class="form-control" [(ngModel)]="form.name" (blur)="onKeyBlur()" required>
+                <input id="name" type="text" [class.is-invalid]="nameError" class="form-control" [(ngModel)]="form.name"
+                    (blur)="onKeyBlur()" required>
                 <span *ngIf="nameError" class="form-text text-danger">Duplicate Name</span>
             </div>
             <div class="form-group">
                 <label for="mountType">Mount Type</label>
                 <select id="mountType" class="form-control" [(ngModel)]="form.mountType">
-                    <option value="HOSTPATH">Host Path</option>
-                    <option value="PVC">Persistant Volume Claim</option>
+                    <option *ngFor="let item of mountTypeList" [value]="item.value">{{item.label}}</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="hostPath">Host Path</label>
+                <label for="hostPath">{{form.mountType=='HOSTPATH' ? 'Host Path' : 'Claim Name'}}</label>
                 <input id="hostPath" type="text" class="form-control" [(ngModel)]="form.hostPath" required>
             </div>
             <div class="form-group">
@@ -68,7 +68,8 @@
         </div>
         <div class="d-flex align-items-center justify-content-end">
             <button type="button" class="btn btn-min-width btn-dark mr-3" (click)="cancel()">Cancel</button>
-            <button type="button" class="btn btn-min-width btn-primary" (click)="saveData()" [disabled]="nameError">Save</button>
+            <button type="button" class="btn btn-min-width btn-primary" (click)="saveData()"
+                [disabled]="nameError">Save</button>
         </div>
     </div>
 </odp-side-canvas>
