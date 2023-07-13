@@ -179,17 +179,17 @@ const routes: Routes = [
           )
       },
       {
-        path: 'processFlow',
+        path: 'processflow',
         loadChildren: () =>
           import('../home/process-flows/process-flows.module').then(
             (m) => m.ProcessFlowsModule
           ),
       },
       {
-        path: 'processFlow/:id',
+        path: 'processflow/:id',
         loadChildren: () =>
-          import('../home/b2b-flows-manage/b2b-flows-manage.module').then(
-            (m) => m.B2bFlowsManageModule
+          import('../home/process-flow-manage/process-flow-manage.module').then(
+            (m) => m.ProcessFlowManageModule
           ),
         data: { isProcessFlow: true }
       }

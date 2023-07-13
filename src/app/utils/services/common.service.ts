@@ -79,6 +79,11 @@ export class CommonService {
     status: EventEmitter<any>;
     delete: EventEmitter<any>;
   };
+  processflow: {
+    new: EventEmitter<any>;
+    status: EventEmitter<any>;
+    delete: EventEmitter<any>;
+  };
   faas: {
     new: EventEmitter<any>;
     status: EventEmitter<any>;
@@ -1254,6 +1259,17 @@ export class CommonService {
         })
       }, 10000)
     }
+    if (type == 'processflow') {
+      this.timeInterval[_id] = setInterval(() => {
+        this.get('config', `/${this.app._id}/processflow`, { filter: { "_id": _id } }).subscribe(res => {
+          if (!res.length) {
+            self.processflow.status.emit(_id)
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          }
+        })
+      }, 10000)
+    }
   }
 
   updateDelete(_id, type) {
@@ -1296,6 +1312,17 @@ export class CommonService {
         this.get('config', `/${this.app._id}/processnode`, { filter: { "_id": _id } }).subscribe(res => {
           if (!res.length) {
             self.entity.delete.emit(_id);
+            clearInterval(this.timeInterval[_id])
+            delete this.timeInterval[_id]
+          }
+        })
+      }, 10000)
+    }
+    if (type == 'processflow') {
+      this.timeInterval[_id] = setInterval(() => {
+        this.get('config', `/${this.app._id}/processflow`, { filter: { "_id": _id } }).subscribe(res => {
+          if (!res.length) {
+            self.processflow.delete.emit(_id)
             clearInterval(this.timeInterval[_id])
             delete this.timeInterval[_id]
           }

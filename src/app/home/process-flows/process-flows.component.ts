@@ -24,7 +24,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
   alertModalTemplateRef: NgbModalRef;
   form: UntypedFormGroup;
   apiConfig: GetOptions;
-  flowList: Array<any>;
+  processflowList: Array<any>;
   alertModal: {
     statusChange?: boolean;
     title: string;
@@ -65,7 +65,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
       page: 1,
       count: 30
     };
-    this.flowList = [];
+    this.processflowList = [];
     this.alertModal = {
       statusChange: false,
       title: '',
@@ -92,9 +92,10 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     // this.getStaterPlugins();
     this.commonService.changeBreadcrumb(this.breadcrumbPaths);
     this.commonService.apiCalls.componentLoading = false;
+    let nodeId = 'starter_node';
     this.form.get('type').valueChanges.subscribe(val => {
       const name = this.form.get('name').value;
-      let nodeId = 'PROCESS';
+     
 
       this.form.get('inputNode').patchValue({
         _id: nodeId,
@@ -112,6 +113,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
         const type = this.form.get('type').value;
         if (!inputNode) {
           inputNode = {
+            _id: nodeId,
             type: 'PROCESS',
             name: val
           };
@@ -127,16 +129,16 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
       this.getFlows()
     });
-    this.subscriptions['flow.delete'] = this.commonService.flow.delete.subscribe(data => {
+    this.subscriptions['processflow.delete'] = this.commonService.processflow.delete.subscribe(data => {
       this.getFlows()
     });
-    this.subscriptions['flow.status'] = this.commonService.flow.status.subscribe(data => {
-      const index = this.flowList.findIndex(e => e._id === data[0]._id);
+    this.subscriptions['processflow.status'] = this.commonService.processflow.status.subscribe(data => {
+      const index = this.processflowList.findIndex(e => e._id === data[0]._id);
       if (index !== -1) {
-        this.flowList[index].status = data[0].status;
+        this.processflowList[index].status = data[0].status;
       }
     });
-    this.subscriptions['flow.new'] = this.commonService.flow.new.subscribe(data => {
+    this.subscriptions['processflow.new'] = this.commonService.processflow.new.subscribe(data => {
       this.getFlows()
     });
     // interval(10000).subscribe(() => {
@@ -153,13 +155,13 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
   }
 
   newFlow() {
-    this.form.reset({ inputNode: { type: 'PROCESS' } });
+    this.form.reset({ inputNode: { type: 'PROCESS', _id: 'starter_node' } });
     this.showNewFlowWindow = true;
   }
 
   discardDraft(id: string) {
-    const flow = this.flowList.find((e) => e._id === id);
-    const flowIndex = this.flowList.findIndex((e) => e._id === id);
+    const processflow = this.processflowList.find((e) => e._id === id);
+    const flowIndex = this.processflowList.findIndex((e) => e._id === id);
     this.alertModal = {
       title: 'Discard Draft',
       message: 'Are you sure you want to discard draft version?',
@@ -173,7 +175,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
       (close) => {
         if (close) {
           let request;
-          if (flow.status === 'Draft') {
+          if (processflow.status === 'Draft') {
             request = this.commonService.delete(
               'config',
               `/${this.commonService.app._id}/processflow/` + id
@@ -187,16 +189,16 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
           request.subscribe(
             (res) => {
               this.ts.success('Draft Deleted.');
-              if (flow.status !== 'Draft') {
+              if (processflow.status !== 'Draft') {
                 this.router.navigate([
                   '/app/',
                   this.commonService.app._id,
-                  'processFlow',
+                  'processflow',
                   id,
                 ]);
               } else {
                 if (flowIndex > -1) {
-                  this.flowList.splice(flowIndex, 1);
+                  this.processflowList.splice(flowIndex, 1);
                 }
               }
             },
@@ -219,15 +221,15 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     payload.nodes = [];
-    if (this.form.get('type').value === 'PLUGIN') {
-      payload.inputNode.options.plugin = this.selectedPlugin;
-    }
+    // if (this.form.get('type').value === 'PLUGIN') {
+    //   payload.inputNode.options.plugin = this.selectedPlugin;
+    // }
     this.commonService.post('config', `/${this.commonService.app._id}/processflow`, payload).subscribe(res => {
       this.showLazyLoader = false;
       this.form.reset({ type: 'PROCESS' });
       this.ts.success('Data Pipe has been created.');
       this.appService.edit = res._id;
-      this.router.navigate(['/app/', this.commonService.app._id, 'processFlow', res._id]);
+      this.router.navigate(['/app/', this.commonService.app._id, 'processflow', res._id]);
     }, err => {
       this.showLazyLoader = false;
       this.form.reset({ type: 'PROCESS' });
@@ -259,7 +261,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
       this.form.reset({ type: 'PROCESS' });
       this.ts.success('Data Pipe has been cloned.');
       this.appService.edit = res._id;
-      this.router.navigate(['/app/', this.commonService.app._id, 'processFlow', res._id]);
+      this.router.navigate(['/app/', this.commonService.app._id, 'processflow', res._id]);
     }, err => {
       this.showLazyLoader = false;
       this.form.reset({ type: 'PROCESS' });
@@ -270,7 +272,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
 
   getFlows() {
     this.showLazyLoader = true;
-    this.flowList = [];
+    this.processflowList = [];
     return this.commonService.get('config', `/${this.commonService.app._id}/processflow/utils/count`).pipe(switchMap((count: any) => {
       return this.commonService.get('config', `/${this.commonService.app._id}/processflow`, {
         count: count,
@@ -279,12 +281,12 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
       this.showLazyLoader = false;
       res.forEach(item => {
         item.url = 'https://' + this.commonService.userDetails.fqdn + `/process/flows/${this.app}` + item.inputNode.options.path;
-        // this.flowList.push(item);
+        // this.processflowList.push(item);
       });
-      this.flowList = res;
-      this.flowList.forEach(e => {
+      this.processflowList = res;
+      this.processflowList.forEach(e => {
         if (e.status == 'Pending') {
-          this.commonService.updateStatus(e._id, 'processFlow');
+          this.commonService.updateStatus(e._id, 'processflow');
         }
       })
     }, err => {
@@ -296,7 +298,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
 
   // getStaterPlugins() {
   //   this.showLazyLoader = true;
-  //   this.flowList = [];
+  //   this.processflowList = [];
   //   let filter: any = { type: 'INPUT' };
   //   if (this.pluginFilter) {
   //     filter.name = '/' + this.pluginFilter + '/';
@@ -365,8 +367,8 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     return this.hasPermission('PMPF');
   }
 
-  canDeployFlow(flow) {
-    if (!flow.draftVersion) {
+  canDeployFlow(processflow) {
+    if (!processflow.draftVersion) {
       return false;
     }
     if (this.commonService.userDetails.isSuperAdmin) {
@@ -378,7 +380,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
       return true;
     } else if (
       this.commonService.userDetails.verifyDeploymentUser &&
-      this.commonService.userDetails._id === flow._metadata.lastUpdatedBy
+      this.commonService.userDetails._id === processflow._metadata.lastUpdatedBy
     ) {
       return false;
     } else {
@@ -387,7 +389,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
   }
 
   canStartStopFlow(id: string) {
-    const temp = this.flowList.find((e) => e._id === id);
+    const temp = this.processflowList.find((e) => e._id === id);
     if (temp && temp.status !== 'Stopped' && temp.status !== 'Active') {
       return false;
     }
@@ -438,7 +440,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
               (d) => {
                 this.ts.info('Deploying data pipe...');
                 item.status = 'Pending';
-                this.commonService.updateStatus(item._id, 'processFlow');
+                this.commonService.updateStatus(item._id, 'processflow');
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -488,7 +490,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
                   this.ts.info('Starting data pipe...');
                 }
                 item.status = 'Pending';
-                this.commonService.updateStatus(item._id, 'processFlow');
+                this.commonService.updateStatus(item._id, 'processflow');
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -513,7 +515,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
             this.showLazyLoader = false;
             this.ts.info(d.message ? d.message : 'Deleting Data Pipe...');
             this.records[data.index].status = 'Pending';
-            this.commonService.updateDelete(this.records[data.index]._id, 'processFlow')
+            this.commonService.updateDelete(this.records[data.index]._id, 'processflow')
           },
           (err) => {
             this.showLazyLoader = false;
@@ -528,12 +530,12 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
 
   editFlow(item: any) {
     this.appService.edit = item._id;
-    this.router.navigate(['/app/', this.commonService.app._id, 'processFlow', this.appService.edit,
+    this.router.navigate(['/app/', this.commonService.app._id, 'processflow', this.appService.edit,
     ]);
   }
 
   viewFlow(item: any) {
-    this.router.navigate(['/app', this.commonService.app._id, 'processFlow', item._id]);
+    this.router.navigate(['/app', this.commonService.app._id, 'processflow', item._id]);
   }
 
   deleteFlow(index: number) {
@@ -592,11 +594,11 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     }, 2000);
   }
 
-  copyUrl(flow: any) {
-    this.copied[flow._id] = true;
-    this.appService.copyToClipboard(flow.url);
+  copyUrl(processflow: any) {
+    this.copied[processflow._id] = true;
+    this.appService.copyToClipboard(processflow.url);
     setTimeout(() => {
-      this.copied[flow._id] = false;
+      this.copied[processflow._id] = false;
     }, 2000);
   }
 
@@ -616,7 +618,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     Object.keys(this.showOptionsDropdown).forEach(key => {
       this.showOptionsDropdown[key] = false;
     })
-    this.selectedLibrary = this.flowList[i];
+    this.selectedLibrary = this.processflowList[i];
     this.showOptionsDropdown[i] = true;
   }
 
@@ -660,7 +662,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
   }
 
   get records() {
-    let records = this.commonFilter.transform(this.flowList, 'name', this.searchTerm);
+    let records = this.commonFilter.transform(this.processflowList, 'name', this.searchTerm);
     const field = Object.keys(this.sortModel)[0];
     if (field) {
       records = records.sort((a, b) => {
