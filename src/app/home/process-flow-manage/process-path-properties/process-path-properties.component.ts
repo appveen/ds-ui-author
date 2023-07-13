@@ -5,11 +5,11 @@ import { environment } from 'src/environments/environment';
 import { B2bFlowService } from '../../b2b-flows-manage/b2b-flow.service';
 
 @Component({
-  selector: 'odp-path-properties',
-  templateUrl: './path-properties.component.html',
-  styleUrls: ['./path-properties.component.scss']
+  selector: 'odp-process-path-properties',
+  templateUrl: './process-path-properties.component.html',
+  styleUrls: ['./process-path-properties.component.scss']
 })
-export class PathPropertiesComponent implements OnInit {
+export class ProcessPathPropertiesComponent implements OnInit {
 
   @Input() edit: any;
   @Input() path: any;

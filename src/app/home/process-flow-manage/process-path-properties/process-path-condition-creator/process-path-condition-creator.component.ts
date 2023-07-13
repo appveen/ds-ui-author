@@ -6,11 +6,11 @@ import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { B2bFlowService } from 'src/app/home/b2b-flows-manage/b2b-flow.service';
 
 @Component({
-  selector: 'odp-path-condition-creator',
-  templateUrl: './path-condition-creator.component.html',
-  styleUrls: ['./path-condition-creator.component.scss']
+  selector: 'odp-process-path-condition-creator',
+  templateUrl: './process-path-condition-creator.component.html',
+  styleUrls: ['./process-path-condition-creator.component.scss']
 })
-export class PathConditionCreatorComponent implements OnInit {
+export class ProcessPathConditionCreatorComponent implements OnInit {
 
   @ViewChild('typeAhead') typeAhead: NgbTypeahead;
   @Input() nodeList: Array<any>;

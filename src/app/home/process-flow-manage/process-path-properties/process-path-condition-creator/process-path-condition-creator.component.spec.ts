@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PathConditionCreatorComponent } from './path-condition-creator.component';
+import { ProcessPathConditionCreatorComponent } from './process-path-condition-creator.component';
 
 describe('PathConditionCreatorComponent', () => {
-  let component: PathConditionCreatorComponent;
-  let fixture: ComponentFixture<PathConditionCreatorComponent>;
+  let component: ProcessPathConditionCreatorComponent;
+  let fixture: ComponentFixture<ProcessPathConditionCreatorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PathConditionCreatorComponent ]
+      declarations: [ ProcessPathConditionCreatorComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PathConditionCreatorComponent);
+    fixture = TestBed.createComponent(ProcessPathConditionCreatorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

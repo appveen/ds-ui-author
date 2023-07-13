@@ -76,10 +76,10 @@
                     [nodeList]="nodeList" [currNode]="selectedNode.currNode" (close)="showNodeProperties=false"
                     (changesDone)="changesDone = true" [processNodeList]="processNodeList">
                 </odp-process-node-properties>
-                <odp-path-properties *ngIf="showPathProperties" [edit]="edit" [flowData]="flowData"
+                <odp-process-path-properties *ngIf="showPathProperties" [edit]="edit" [flowData]="flowData"
                     [nodeList]="nodeList" [path]="selectedPath" (close)="showPathProperties=false"
                     (changesDone)="changesDone = true">
-                </odp-path-properties>
+                </odp-process-path-properties>
             </div>
         </div>
         <!-- <div *ngIf="activeTab==1" class="flow-designer d-flex"> 
