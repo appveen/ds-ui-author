@@ -4,16 +4,16 @@ import * as _ from 'lodash';
 import { AppService } from 'src/app/utils/services/app.service';
 import { CommonService, GetOptions } from 'src/app/utils/services/common.service';
 import { environment } from 'src/environments/environment';
-import { B2bFlowService } from '../b2b-flow.service';
 import { OperatorFunction, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { B2bFlowService } from '../../b2b-flows-manage/b2b-flow.service';
 
 @Component({
-  selector: 'odp-node-properties',
-  templateUrl: './node-properties.component.html',
-  styleUrls: ['./node-properties.component.scss'],
+  selector: 'odp-process-node-properties',
+  templateUrl: './process-node-properties.component.html',
+  styleUrls: ['./process-node-properties.component.scss'],
 })
-export class NodePropertiesComponent implements OnInit {
+export class ProcessNodePropertiesComponent implements OnInit {
 
   @Input() edit: any;
   @Input() flowData: any;

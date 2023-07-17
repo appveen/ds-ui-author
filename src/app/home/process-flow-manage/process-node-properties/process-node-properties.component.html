@@ -1,0 +1,124 @@
+<div>
+    <div class="d-flex align-items-center justify-content-between px-4 pt-2 pb-4 mt-4 border-bottom">
+        <div class="d-flex flex-column align-items-start">
+            <span class="font-20 fw-600">{{currNode.name ? currNode.name : 'Properties'}}</span>
+            <span class="rounded p-1 bg-light font-10 mt-1 border">{{currNode?._id}}</span>
+        </div>
+        <div class="d-flex">
+            <button *ngIf="!edit.status" type="button" class="btn btn-link" (click)="enableEditing()">
+                <span class="dsi dsi-edit text-info"></span>
+            </button>
+            <button *ngIf="!isInputNode" type="button" class="btn btn-link" (click)="deleteNode()">
+                <span class="dsi dsi-trash text-danger"></span>
+            </button>
+            <button type="button" class="btn btn-link" (click)="cancel()">
+                <span class="dsi dsi-close"></span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- <div class="tab-list d-flex align-items-start">
+    <div class="tab-item w-50 d-flex align-items-start justify-content-center font-12 text-uppercase fw-500 hover border-right"
+        [ngClass]="{'text-secondary border-bottom bg-light':activeTab!=0,'text-accent':activeTab==0}"
+        (click)="activeTab=0">Config</div>
+    <div class="tab-item w-50 d-flex align-items-start justify-content-center font-12 text-uppercase fw-500 hover"
+        [ngClass]="{'text-secondary border-bottom bg-light':activeTab!=1,'text-accent':activeTab==1}"
+        (click)="activeTab=1">Branch</div>
+</div> -->
+<div>
+    <div *ngIf="activeTab==0" class="p-3">
+        <div class="border rounded p-2 bg-light mb-3">
+            <div class="form-group">
+                <label class="font-14 fw-400 text-dark" for="nodeName">Node Name</label>
+                <odp-change-on-edit id="nodeName" [(ngModel)]="currNode.name" (ngModelChange)="nodeNameChanged($event)"
+                    (ngModelChange)="changesDone.emit()" (tempValue)="checkNameForUnique($event)"
+                    [errorMessage]="nodeNameErrorMessage"
+                    (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
+            </div>
+            <div class="form-group" *ngIf="currNode?.type!='PROCESS'">
+                <label class="font-14 fw-400 text-dark" for="nodeType">Node Type</label>
+                <select id="nodeType" class="form-control" [(ngModel)]="currNode.type"
+                    (ngModelChange)="onTypeChange($event); changesDone.emit()" disabled>
+                    <option  value="SYSTEM">System Task</option>
+                    <option  value="USER">User Task</option>
+                    <option  value="DECISION">Decision</option>
+                    <option   value="EVENT">Event Trigger</option>
+                </select>
+            </div>
+        </div>
+       
+    
+       
+        <ng-container *ngIf="isInputNode">
+            <ng-container *ngIf="currNode?.type=='PROCESS'">
+                <div class="form-group">
+                    <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
+                    <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
+                        (ngModelChange)="changesDone.emit()">
+                        <option value="POST" selected>POST</option>
+                        <option value="GET">GET</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="font-14 fw-400 text-dark" for="nodeEndpoint">API Endpoint</label>
+                    <odp-change-on-edit id="nodeEndpoint" [(ngModel)]="currNode.options.path"
+                        (ngModelChange)="changesDone.emit()"
+                        (keydown.delete)="$event.stopPropagation();"></odp-change-on-edit>
+                </div>
+                <div class="form-group">
+                    <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
+                    <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
+                        (ngModelChange)="changesDone.emit()">
+                        <option value="application/json" selected>application/json</option>
+                        <option value="application/xml">application/xml</option>
+                        <option value="multipart/form-data">multipart/form-data</option>
+                    </select>
+                </div>
+                <div class="form-group position-relative">
+                    <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
+                    <odp-change-on-edit id="requestTimeout" [isTimeout]="true" [(ngModel)]="currNode.options.timeout"
+                        (ngModelChange)="changesDone.emit()"></odp-change-on-edit>
+                    <!-- <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout"> -->
+                </div>
+            </ng-container>
+          
+        </ng-container>
+        <!-- <hr> -->
+     
+       
+      
+       
+      
+       
+
+        <ng-container *ngIf="processFlowNode">
+            <div class="mb-4">
+             <label class="font-14 fw-400 text-dark" for="node">Choose {{dropDownLabel}} node</label>
+             <select id="systemNode" class="form-control" [(ngModel)]="currNode.selectedNode" (ngModelChange)="changesDone.emit()" [disabled]="!edit.status">
+                 <option [value]="node._id" *ngFor="let node of nodesFromType(currNode.type)">{{node.name}}</option>
+             </select>
+            </div>
+         </ng-container>
+
+        
+      
+    </div>
+ 
+</div>
+
+
+
+
+<!-- <div [ngClass]="{'show':toggle['systemTask']}" class="node-agent-window border-left position-fixed bg-white p-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <span class="fw-500 font-20">System Tasks</span>
+        <span (click)="toggle['agentSelector']=false" class="dsi dsi-close text-dark"></span>
+    </div>
+    <hr>
+    <label class="font-14 fw-400 text-dark" for="nodeType">Choose System Task node</label>
+    <select id="systemNode" class="form-control">
+        <option value="API" *ngFor="let node of nodesFromType('SYSTEM')">node</option>
+    </select>
+</div>̦ -->

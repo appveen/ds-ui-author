@@ -15,20 +15,20 @@ import { CodeEditorModule } from 'src/app/utils/code-editor/code-editor.module';
 import { DateFormatModule } from 'src/app/utils/date-format/date-format.module';
 import { OnChangeModule } from 'src/app/utils/directives/on-change/on-change.module';
 import { AutoFocusModule } from 'src/app/utils/directives/auto-focus/auto-focus.module';
-import { B2bSettingsComponent } from './b2b-settings/b2b-settings.component';
+// import { B2bSettingsComponent } from './b2b-settings/b2b-settings.component';
 import { RoundRadioModule } from 'src/app/utils/round-radio/round-radio.module';
 
 const routes: Routes = [
   {
     path: '', component: ProcessFlowsComponent
   },
-  {
-    path: 'settings', component:B2bSettingsComponent
-  }
+  // {
+  //   path: 'settings', component:B2bSettingsComponent
+  // }
 ];
 
 @NgModule({
-  declarations: [ProcessFlowsComponent, B2bSettingsComponent],
+  declarations: [ProcessFlowsComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -46,7 +46,8 @@ const routes: Routes = [
     DateFormatModule,
     OnChangeModule,
     AutoFocusModule,
-    RoundRadioModule
+    RoundRadioModule,
+    SearchBoxModule
   ],
   exports: [ProcessFlowsComponent]
 })

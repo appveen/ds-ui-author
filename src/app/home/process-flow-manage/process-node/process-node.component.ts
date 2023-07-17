@@ -1,12 +1,12 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { B2bFlowService } from '../b2b-flow.service';
+import { B2bFlowService } from '../../b2b-flows-manage/b2b-flow.service';
 
 @Component({
-  selector: '[odp-flow-node]',
-  templateUrl: './flow-node.component.html',
-  styleUrls: ['./flow-node.component.scss']
+  selector: '[odp-process-node]',
+  templateUrl: './process-node.component.html',
+  styleUrls: ['./process-node.component.scss']
 })
-export class FlowNodeComponent implements OnInit {
+export class ProcessFlowNodeComponent implements OnInit {
 
   @Input() index: number;
   @Input() prevNode: any;
