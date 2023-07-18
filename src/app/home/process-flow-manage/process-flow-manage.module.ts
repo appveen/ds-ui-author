@@ -30,11 +30,11 @@ import { SideCanvasModule } from 'src/app/utils/side-canvas/side-canvas.module';
 import { StyledTextModule } from 'src/app/utils/styled-text/styled-text.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 
-import { ViewBoxDirective } from '../b2b-flows-manage/view-box.directive';
 import { ProcessFlowNodeComponent } from './process-node/process-node.component';
 import { ProcessNodePropertiesComponent } from './process-node-properties/process-node-properties.component';
 import { ProcessPathConditionCreatorComponent } from './process-path-properties/process-path-condition-creator/process-path-condition-creator.component';
 import { ProcessPathPropertiesComponent } from './process-path-properties/process-path-properties.component';
+import { ViewBoxModule } from 'src/app/utils/view-box/view-box.module';
 
 
 const routes: Routes = [
@@ -51,7 +51,7 @@ const routes: Routes = [
     ProcessNodePropertiesComponent,
     ProcessPathConditionCreatorComponent,
     ProcessPathPropertiesComponent,
-    ViewBoxDirective
+    
   ],
   imports: [
     CommonModule,
@@ -83,7 +83,8 @@ const routes: Routes = [
     ChangeOnEditModule,
     AutocompleteOnEditModule,
     EditorModule,
-    SideCanvasModule
+    SideCanvasModule,
+    ViewBoxModule
   ]
 })
 export class ProcessFlowManageModule { }

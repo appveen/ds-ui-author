@@ -129,16 +129,16 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
     this.subscriptions.appChange = this.commonService.appChange.subscribe(app => {
       this.getFlows()
     });
-    this.subscriptions['processflow.delete'] = this.commonService.processflow.delete.subscribe(data => {
+    this.subscriptions['processflow.delete'] = this.commonService.processFlow.delete.subscribe(data => {
       this.getFlows()
     });
-    this.subscriptions['processflow.status'] = this.commonService.processflow.status.subscribe(data => {
+    this.subscriptions['processflow.status'] = this.commonService.processFlow.status.subscribe(data => {
       const index = this.processflowList.findIndex(e => e._id === data[0]._id);
       if (index !== -1) {
         this.processflowList[index].status = data[0].status;
       }
     });
-    this.subscriptions['processflow.new'] = this.commonService.processflow.new.subscribe(data => {
+    this.subscriptions['processflow.new'] = this.commonService.processFlow.new.subscribe(data => {
       this.getFlows()
     });
     // interval(10000).subscribe(() => {
@@ -193,7 +193,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
                 this.router.navigate([
                   '/app/',
                   this.commonService.app._id,
-                  'processflow',
+                  'processFlow',
                   id,
                 ]);
               } else {
@@ -286,7 +286,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
       this.processflowList = res;
       this.processflowList.forEach(e => {
         if (e.status == 'Pending') {
-          this.commonService.updateStatus(e._id, 'processflow');
+          this.commonService.updateStatus(e._id, 'processFlow');
         }
       })
     }, err => {
@@ -440,7 +440,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
               (d) => {
                 this.ts.info('Deploying data pipe...');
                 item.status = 'Pending';
-                this.commonService.updateStatus(item._id, 'processflow');
+                this.commonService.updateStatus(item._id, 'processFlow');
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -490,7 +490,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
                   this.ts.info('Starting data pipe...');
                 }
                 item.status = 'Pending';
-                this.commonService.updateStatus(item._id, 'processflow');
+                this.commonService.updateStatus(item._id, 'processFlow');
               },
               (err) => {
                 this.commonService.errorToast(err);
@@ -515,7 +515,7 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
             this.showLazyLoader = false;
             this.ts.info(d.message ? d.message : 'Deleting Data Pipe...');
             this.records[data.index].status = 'Pending';
-            this.commonService.updateDelete(this.records[data.index]._id, 'processflow')
+            this.commonService.updateDelete(this.records[data.index]._id, 'processFlow')
           },
           (err) => {
             this.showLazyLoader = false;
@@ -530,12 +530,12 @@ export class ProcessFlowsComponent implements OnInit, OnDestroy {
 
   editFlow(item: any) {
     this.appService.edit = item._id;
-    this.router.navigate(['/app/', this.commonService.app._id, 'processflow', this.appService.edit,
+    this.router.navigate(['/app/', this.commonService.app._id, 'processFlow', this.appService.edit,
     ]);
   }
 
   viewFlow(item: any) {
-    this.router.navigate(['/app', this.commonService.app._id, 'processflow', item._id]);
+    this.router.navigate(['/app', this.commonService.app._id, 'processFlow', item._id]);
   }
 
   deleteFlow(index: number) {

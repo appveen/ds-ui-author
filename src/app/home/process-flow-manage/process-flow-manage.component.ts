@@ -14,7 +14,7 @@ import { B2bFlowService } from '../b2b-flows-manage/b2b-flow.service';
 @Component({
   selector: 'odp-process-flow-manage',
   templateUrl: './process-flow-manage.component.html',
-  styleUrls: ['./process-flow-manage.component.scss']
+  styleUrls: ['./process-flow-manage.component.scss'],
 })
 export class ProcessFlowManageComponent implements OnInit, OnDestroy{
 
@@ -172,7 +172,7 @@ export class ProcessFlowManageComponent implements OnInit, OnDestroy{
       this.processNodeList = res;
       this.nodeList.forEach(e => {
         if (e.status == 'Pending') {
-          this.commonService.updateStatus(e._id, 'processflow');
+          this.commonService.updateStatus(e._id, 'processFlow');
         }
       })
     }, err => {
@@ -357,10 +357,10 @@ export class ProcessFlowManageComponent implements OnInit, OnDestroy{
       if (deploy) {
         this.apiCalls.deploy = false;
         this.ts.success('Saved ' + payload.name + ' and deployment process has started.');
-        this.router.navigate(['/app', this.commonService.app._id, 'processflow']);
+        this.router.navigate(['/app', this.commonService.app._id, 'processFlow']);
       } else {
         this.ts.success('Saved ' + payload.name + '.');
-        this.router.navigate(['/app', this.commonService.app._id, 'processflow']);
+        this.router.navigate(['/app', this.commonService.app._id, 'processFlow']);
       }
     }, (err: any) => {
       this.apiCalls.save = false;
@@ -388,7 +388,7 @@ export class ProcessFlowManageComponent implements OnInit, OnDestroy{
         this.deploy();
       } else {
         this.ts.success('Saved ' + payload.name + '.');
-        this.router.navigate(['/app', this.commonService.app._id, 'processflow']);
+        this.router.navigate(['/app', this.commonService.app._id, 'processFlow']);
       }
     }, err => {
       this.apiCalls.save = false;
@@ -402,7 +402,7 @@ export class ProcessFlowManageComponent implements OnInit, OnDestroy{
       this.commonService.put('config', `/${this.commonService.app._id}/flow/utils/${this.edit.id}/deploy`, { app: this.commonService.app._id }).subscribe(res => {
         this.apiCalls.deploy = false;
         this.ts.success('Saved ' + this.flowData.name + ' and deployment process has started.');
-        this.router.navigate(['/app', this.commonService.app._id, 'processflow']);
+        this.router.navigate(['/app', this.commonService.app._id, 'processFlow']);
         this.commonService.updateStatus(this.edit.id, 'flow');
         this.appService.getFlows();
       }, err => {
@@ -414,7 +414,7 @@ export class ProcessFlowManageComponent implements OnInit, OnDestroy{
 
   cancel() {
     if (!this.edit.status || this.edit.editClicked || !this.edit.id) {
-      this.router.navigate(['/app', this.commonService.app._id, 'processflow']);
+      this.router.navigate(['/app', this.commonService.app._id, 'processFlow']);
     } else {
       if (!this.edit.editClicked) {
         this.edit.status = false;

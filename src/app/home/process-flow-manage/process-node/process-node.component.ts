@@ -24,6 +24,7 @@ export class ProcessFlowNodeComponent implements OnInit {
   selectedPathType: any;
   selectedNode: any;
   showDeleteNodeIcon: boolean;
+  anchorType: string = '';
   constructor(private flowService: B2bFlowService) {
     this.index = -1;
     this.nodeListChange = new EventEmitter();
@@ -56,7 +57,21 @@ export class ProcessFlowNodeComponent implements OnInit {
       this.currNode.onSuccess.forEach((item: any) => {
         const nextNode = this.nodeList.find((e: any) => e._id == item._id);
         if (nextNode) {
-          const path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 146, this.currNode.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
+          const type = this.currNode.type ;
+          let path;
+          if(item)
+          if(item.type === 'top' ){
+            path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 56, this.currNode.coordinates.y - 40 , nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5)
+          } else if(item.type === 'bottom'){
+            path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 56, this.currNode.coordinates.y + 74, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5)
+          }else 
+          if(this.anchorType === 'top'){
+            path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 56, this.currNode.coordinates.y - 40 , nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5)
+          } else if(this.anchorType === 'bottom'){
+            path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 56, this.currNode.coordinates.y + 74, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5)
+          } else{
+            path = this.flowService.generateLinkPath(this.currNode.coordinates.x + (type === 'DECISION' ? 112 : 146), this.currNode.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5)
+          }
           this.successPaths.push({
             _id: nextNode._id,
             name: item.name,
@@ -67,21 +82,21 @@ export class ProcessFlowNodeComponent implements OnInit {
         }
       });
     }
-    if (this.currNode.onError && this.currNode.onError.length > 0) {
-      this.currNode.onError.forEach((item: any) => {
-        const nextNode = this.nodeList.find((e: any) => e._id == item._id);
-        if (nextNode) {
-          const path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 146, this.currNode.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
-          this.errorPaths.push({
-            _id: nextNode._id,
-            name: item.name,
-            color: item.color,
-            prevNode: this.currNode._id,
-            path
-          });
-        }
-      });
-    }
+    // if (this.currNode.onError && this.currNode.onError.length > 0) {
+    //   this.currNode.onError.forEach((item: any) => {
+    //     const nextNode = this.nodeList.find((e: any) => e._id == item._id);
+    //     if (nextNode) {
+    //       const path = this.flowService.generateLinkPath(this.currNode.coordinates.x + 146, this.currNode.coordinates.y + 18, nextNode.coordinates.x - 6, nextNode.coordinates.y + 18, 1.5);
+    //       this.errorPaths.push({
+    //         _id: nextNode._id,
+    //         name: item.name,
+    //         color: item.color,
+    //         prevNode: this.currNode._id,
+    //         path
+    //       });
+    //     }
+    //   });
+    // }
   }
 
   createPaths(source: any, target: any) {
@@ -93,9 +108,14 @@ export class ProcessFlowNodeComponent implements OnInit {
       if (!sourceNode.onSuccess) {
         sourceNode.onSuccess = [];
       }
-      sourceNode.onSuccess.push({
-        _id: targetNode._id
-      });
+      const type = source?.classList.contains('top') ? 'top' : source?.classList.contains('bottom') ? 'bottom' : undefined;
+      const obj = {
+        _id: targetNode._id,
+      }
+      if(type){
+        obj['type'] = type
+      }
+      sourceNode.onSuccess.push(obj);
     }
   }
 
@@ -115,6 +135,12 @@ export class ProcessFlowNodeComponent implements OnInit {
         return true;
       } else if (place == 'end' && this.flowService.anchorSelected.classList.contains('end')) {
         return true;
+      }
+      else if(place == 'top' && this.flowService.anchorSelected.classList.contains('top')){
+        return true
+      }
+      else if(place == 'bottom' && this.flowService.anchorSelected.classList.contains('bottom')){
+        return true
       }
     }
     return false;
@@ -172,6 +198,10 @@ export class ProcessFlowNodeComponent implements OnInit {
         this.flowService.reCreatePaths.emit();
       }
     }
+    if(this.currNode?.type === 'DECISION'){
+      this.anchorType = (event.target as HTMLElement).classList.contains('start') ? 'start': (event.target as HTMLElement).classList.contains('top') ? 'top' : 'bottom'
+    }
+   
   }
 
   getPathTextStyle(path: any) {
@@ -179,8 +209,8 @@ export class ProcessFlowNodeComponent implements OnInit {
     if (!nextNode) {
       return '';
     }
-    let sourceNodeX = (this.currNode.coordinates.x + this.nodeType === 'Decision' ? 100 : 140);
-    let sourceNodeY = (this.currNode.coordinates.y + this.nodeType === 'Decision' ? 100 : 36);
+    let sourceNodeX = (this.currNode.coordinates.x +  140);
+    let sourceNodeY = (this.currNode.coordinates.y +  36);
     let x = (nextNode.coordinates.x - sourceNodeX) / 2 + sourceNodeX;
     let y = (nextNode.coordinates.y - sourceNodeY) / 2 + sourceNodeY;
     return {
