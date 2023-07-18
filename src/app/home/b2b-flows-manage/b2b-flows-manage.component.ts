@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ElementRef, Event
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { delay, tap } from 'rxjs/operators';
+import { delay, switchMap, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 import { Breadcrumb } from 'src/app/utils/interfaces/breadcrumb';
@@ -51,6 +51,8 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   showPathProperties: boolean;
   selectedPath: any;
+  processNodeList: any = [];
+
   activeTab: number;
   constructor(private commonService: CommonService,
     private appService: AppService,
@@ -150,6 +152,31 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     if (this.pageChangeModalTemplateRef) {
       this.pageChangeModalTemplateRef.close(false);
     }
+  }
+
+  getProcessNodes(){
+    this.nodeList = [];
+    return this.commonService.get('config', `/${this.commonService.app._id}/processnode/utils/count`).pipe(switchMap((count: any) => {
+      return this.commonService.get('config', `/${this.commonService.app._id}/processnode`, {
+        count: count,
+      });
+    })).subscribe((res: any) => {
+    
+      // res.forEach(item => {
+      //   item.url = 'https://' + this.commonService.userDetails.fqdn + `/b2b/pipes/${this.app}` + item.inputNode.options.path;
+      //   // this.flowList.push(item);
+      // });
+      this.processNodeList = res;
+      // this.nodeList.forEach(e => {
+      //   if (e.status == 'Pending') {
+      //     this.commonService.updateStatus(e._id, 'node');
+      //   }
+      // })
+    }, err => {
+      
+      console.log(err);
+      this.commonService.errorToast(err);
+    });
   }
 
   resetSelection() {
@@ -316,9 +343,9 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
       this.flowData.status = 'RUNNING';
     }
     if (this.edit.id) {
-      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, payload);
+      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/${'flow'}/${this.edit.id}`, payload);
     } else {
-      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload);
+      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/${'flow'}`, payload);
     }
     this.subscriptions['save'] = request.subscribe((res: any) => {
       this.apiCalls.save = false;
@@ -343,9 +370,9 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
     this.apiCalls.save = true;
     this.saved = true
     if (this.edit.id) {
-      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/flow/${this.edit.id}`, payload);
+      request = this.commonService.put('partnerManager', `/${this.commonService.app._id}/${'flow'}/${this.edit.id}`, payload);
     } else {
-      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload);
+      request = this.commonService.post('partnerManager', `/${this.commonService.app._id}/${'flow'}`, payload);
     }
     this.subscriptions['save'] = request.subscribe(res => {
       this.apiCalls.save = false;

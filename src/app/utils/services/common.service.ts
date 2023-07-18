@@ -84,7 +84,7 @@ export class CommonService {
     status: EventEmitter<any>;
     delete: EventEmitter<any>;
   };
-  processflow: {
+  processFlow: {
     new: EventEmitter<any>;
     status: EventEmitter<any>;
     delete: EventEmitter<any>;
@@ -1259,11 +1259,11 @@ export class CommonService {
         })
       }, 10000)
     }
-    if (type == 'processflow' && !this.timeInterval[_id]) {
+    if (type == 'processFlow' && !this.timeInterval[_id]) {
       this.timeInterval[_id] = setInterval(() => {
         this.get('config', `/${this.app._id}/processflow`, { filter: { "_id": _id } }).subscribe(res => {
           if (res[0].status != 'Pending') {
-            self.processflow.status.emit(res);
+            self.processFlow.status.emit(res);
             clearInterval(this.timeInterval[_id])
             delete this.timeInterval[_id]
           }
@@ -1318,11 +1318,11 @@ export class CommonService {
         })
       }, 10000)
     }
-    if (type == 'processflow') {
+    if (type == 'processFlow') {
       this.timeInterval[_id] = setInterval(() => {
         this.get('config', `/${this.app._id}/processflow`, { filter: { "_id": _id } }).subscribe(res => {
           if (!res.length) {
-            self.processflow.delete.emit(_id);
+            self.processFlow.delete.emit(_id);
             clearInterval(this.timeInterval[_id])
             delete this.timeInterval[_id]
           }
