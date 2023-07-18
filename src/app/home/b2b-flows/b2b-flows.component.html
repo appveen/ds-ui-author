@@ -150,13 +150,17 @@
 <div [ngClass]="{'show':showNewFlowWindow}"
     class="new-flow-window p-4 position-fixed border-left bg-white d-flex flex-column" [formGroup]="form">
     <div class="d-flex align-items-center justify-content-between mb-3">
-        <span class="font-22 fw-500">New Data Pipe</span>
-        <span class="dsi dsi-close hover" (click)="showNewFlowWindow=false;"></span>
+        <span class="font-22 fw-500">{{ isClone ? 'Cloning' : 'New'}} Data Pipe</span>
+        <span class="dsi dsi-close hover" (click)="showNewFlowWindow=false; isClone=false"></span>
     </div>
+    <p *ngIf="isClone">
+        <span class="text-muted">You are Cloning:&nbsp;</span>
+        <span class="font-weight-bold">{{ form.value.name.replace(' Copy', '') }}</span>
+    </p>
     <div *ngIf="showNewFlowWindow" class="d-flex flex-column w-100">
         <div class="d-flex flex-column w-100">
             <label for="name" class="font-13 text-secondary">
-                <span class="text">Name</span>
+                <span class="text"> {{ isClone ? 'Clone' : '' }} Name</span>
                 <sup class="text-danger font-normal" ngbTooltip="Mandatory field">*</sup>
             </label>
             <div class="name-wrapper position-relative mb-3">
