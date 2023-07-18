@@ -63,7 +63,13 @@ export class NodeMappingComponent implements OnInit {
       this.allTargets.forEach((item: any) => {
         let temp = this.tempMappings.find((e: any) => e.target.dataPath == item.dataPath);
         if (temp && temp.source && temp.source.length > 0) {
-          item.source = (temp.source || []).map((source: any) => this.allSources.find((src: any) => src._id == source._id)).filter(e => e);
+          item.source = (temp.source || []).map((source: any) => {
+            let t = this.allSources.find((src: any) => src._id == source._id);
+            if (!t) {
+              t = this.allConstants.find((src: any) => src._id == source._id);
+            }
+            return t;
+          }).filter(e => e);
         }
         if (temp && temp.formula) {
           item.formula = temp.formula;
