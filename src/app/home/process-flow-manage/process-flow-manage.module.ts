@@ -30,7 +30,6 @@ import { SideCanvasModule } from 'src/app/utils/side-canvas/side-canvas.module';
 import { StyledTextModule } from 'src/app/utils/styled-text/styled-text.module';
 import { SwitchModule } from 'src/app/utils/switch/switch.module';
 
-import { ViewBoxDirective } from '../b2b-flows-manage/view-box.directive';
 import { ProcessFlowNodeComponent } from './process-node/process-node.component';
 import { ProcessNodePropertiesComponent } from './process-node-properties/process-node-properties.component';
 import { PathConditionCreatorComponent } from './path-properties/path-condition-creator/path-condition-creator.component';
@@ -50,8 +49,7 @@ const routes: Routes = [
     ProcessFlowNodeComponent,
     ProcessNodePropertiesComponent,
     PathConditionCreatorComponent,
-    PathPropertiesComponent,
-    ViewBoxDirective
+    PathPropertiesComponent
   ],
   imports: [
     CommonModule,
