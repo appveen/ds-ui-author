@@ -107,6 +107,7 @@ export class NodeMappingComponent implements OnInit {
 
   configureMappingData() {
     this.pathList = [];
+    this.allSources = [];
     let temp = [];
     if (this.currNode.dataStructure && this.currNode.dataStructure[this.source] && this.currNode.dataStructure[this.source].definition) {
       temp = this.appService.cloneObject(this.currNode.dataStructure[this.source].definition) || [];
@@ -148,23 +149,6 @@ export class NodeMappingComponent implements OnInit {
           this.allSources = this.allSources.concat(this.flattenSource(node, outgoing, 'responseBody'));
         }
       }
-    });
-  }
-
-  getStringArrayAsDefinition(arr: Array<string>) {
-    return arr.map((e: string) => {
-      let temp: any = {};
-      temp.key = e;
-      temp.properties = {
-        name: e,
-        dataPath: e,
-        dataPathSegs: [e],
-      };
-      temp.type = 'String';
-      if (e == 'responseBody' || e == 'requestBody' || e == 'headers') {
-        temp.type = 'Object';
-      }
-      return temp;
     });
   }
 

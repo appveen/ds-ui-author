@@ -58,7 +58,7 @@ export class NodePropertiesComponent implements OnInit {
     if (this.currNode && !this.currNode.options.retry) {
       this.currNode.options.retry = {};
     }
-    if(this.currNode && !this.currNode.options.conditionType){
+    if (this.currNode && !this.currNode.options.conditionType) {
       this.currNode.options.conditionType = 'ifElse';
     }
     const options: GetOptions = {
@@ -117,6 +117,39 @@ export class NodePropertiesComponent implements OnInit {
       console.log(type);
     }
     this.currNode.options = { retry: {} };
+    this.currNode.mappings = [];
+    this.currNode.type = type;
+    this.currNode.options = {
+      method: 'POST',
+      headers: {},
+      contentType: 'application/json'
+    };
+
+    if (type == 'DATASERVICE') {
+      this.currNode.options.update = true;
+      this.currNode.options.insert = true;
+    }
+
+    if (type == 'FOREACH' || type == 'REDUCE') {
+      this.currNode.options.startNode = null;
+    }
+
+    if (type == 'CODEBLOCK') {
+      const tempCode = [];
+      tempCode.push('//use logger for logging');
+      tempCode.push('async function execute(context, node) {');
+      tempCode.push('\ttry {');
+      tempCode.push('\t\t//Write Your code here');
+      tempCode.push('\t\t');
+      tempCode.push('\t\treturn context;');
+      tempCode.push('\t} catch(err) {');
+      tempCode.push('\t\tlogger.error(err);');
+      tempCode.push('\t\tthrow err;');
+      tempCode.push('\t}');
+      tempCode.push('}');
+      this.currNode.options.code = tempCode.join('\n');
+    }
+
     this.changesDone.emit()
   }
 
@@ -343,15 +376,15 @@ export class NodePropertiesComponent implements OnInit {
       && this.currNode.type != 'CONVERT_CSV_JSON';
   }
 
-  get processFlowNode(){
+  get processFlowNode() {
     return this.currNode?.type === 'SYSTEM'
-    || this.currNode?.type === 'USER'
-    || this.currNode?.type === 'DECISION'
-    || this.currNode?.type === 'EVENT'
-    
+      || this.currNode?.type === 'USER'
+      || this.currNode?.type === 'DECISION'
+      || this.currNode?.type === 'EVENT'
+
   }
 
-  get dropDownLabel(){
+  get dropDownLabel() {
     const obj = {
       'SYSTEM': 'System Task',
       'USER': 'User Task',
@@ -361,7 +394,7 @@ export class NodePropertiesComponent implements OnInit {
     return obj[this.currNode?.type]
   }
 
-  nodesFromType(type){
+  nodesFromType(type) {
     return this.processNodeList.filter(node => node.type === type)
   }
 }
