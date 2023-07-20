@@ -1,0 +1,56 @@
+<div>
+    <div class="d-flex align-items-center justify-content-between px-4 py-2 mt-4">
+        <span class="font-20 fw-600">Path Properties</span>
+        <div class="d-flex">
+            <button type="button" class="btn btn-link" (click)="deletePath()">
+                <span class="dsi dsi-trash text-danger"></span>
+            </button>
+            <button type="button" class="btn btn-link" (click)="cancel()">
+                <span class="dsi dsi-close"></span>
+            </button>
+        </div>
+    </div>
+    <hr>
+</div>
+<div class="p-3">
+    <div class="form-group d-flex align-items-center justify-content-start">
+        <div class="d-flex align-items-center justify-content-start mr-4">
+            <odp-round-radio [edit]="edit" [checked]="pathType=='success'"
+                (checkedChange)="onPathTypeChange($event,'success')">
+            </odp-round-radio>
+            <span class="ml-3">Success</span>
+        </div>
+        <div class="d-flex align-items-center justify-content-start">
+            <odp-round-radio [edit]="edit" [checked]="pathType=='error'"
+                (checkedChange)="onPathTypeChange($event,'error')">
+            </odp-round-radio>
+            <span class="ml-3">Error</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="font-14 fw-400 text-dark" for="pathName">Path Name</label>
+        <input id="pathName" type="text" class="form-control" [(ngModel)]="name"
+            (ngModelChange)="changesDone.emit();onChange()">
+    </div>
+    <div class="form-group">
+        <label class="font-14 fw-400 text-dark" for="pathColor">Path Color</label>
+        <div class="d-flex align-items-center justify-content-start">
+            <div *ngIf="color" class="selected-color hover rounded" [style]="'background:#'+color"
+                (click)="toggle['colorPicker']=!toggle['colorPicker']"></div>
+            <div *ngIf="!color" class="selected-color hover rounded bg-secondary"
+                (click)="toggle['colorPicker']=!toggle['colorPicker']"></div>
+        </div>
+    </div>
+    <div *ngIf="toggle['colorPicker']" class="form-group">
+        <odp-color-picker #colorpicker [(color)]="color" (colorChange)="onChange();">
+        </odp-color-picker>
+    </div>
+    <div class="form-group">
+        <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between" for="nodeName">
+            <span>Path Condition</span>
+        </label>
+        <odp-process-path-condition-creator [nodeList]="nodeList" [(value)]="condition"
+            [prevNode]="path.path._id"></odp-process-path-condition-creator>
+    </div>
+</div>

@@ -51,7 +51,6 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   showPathProperties: boolean;
   selectedPath: any;
-  isProcessFlow: boolean = false;
   processNodeList: any = [];
 
   activeTab: number;
@@ -191,13 +190,12 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
 
   getFlow(id: string, draft?: boolean) {
     this.apiCalls.getFlow = true;
-    let path = `/${this.commonService.app._id}/${'flow'}/${id}`;
+    let path = `/${this.commonService.app._id}/flow/${id}`;
     if (draft) {
       path += '?draft=true';
     }
     this.showCodeEditor = false;
-    const component = 'partnerManager'
-    this.subscriptions['getFlow'] = this.commonService.get(component, path).subscribe(res => {
+    this.subscriptions['getFlow'] = this.commonService.get('partnerManager', path).subscribe(res => {
       this.breadcrumbPaths.push({
         active: true,
         label: res.name + ' (Edit)'

@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { B2bFlowsManageComponent } from './b2b-flows-manage.component';
-import { ViewBoxDirective } from './view-box.directive';
 import { ClickOutsideModule } from 'src/app/utils/directives/click-outside/click-outside.module';
 import { BreadcrumbModule } from 'src/app/utils/breadcrumb/breadcrumb.module';
 import { SearchBoxModule } from 'src/app/utils/search-box/search-box.module';
@@ -64,6 +63,7 @@ import { FlowVolumeMountsComponent } from './flow-volume-mounts/flow-volume-moun
 import { SideCanvasModule } from 'src/app/utils/side-canvas/side-canvas.module';
 import { MappingPresetComponent } from './node-properties/node-mapping/mapping-preset/mapping-preset.component';
 import { FileRwPropertiesComponent } from './node-properties/file-rw-properties/file-rw-properties.component';
+import { ViewBoxModule } from 'src/app/utils/view-box/view-box.module';
 
 const routes: Routes = [
   {
@@ -74,7 +74,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     B2bFlowsManageComponent,
-    ViewBoxDirective,
     FlowNodeComponent,
     NodePropertiesComponent,
     NodeMappingComponent,
@@ -135,7 +134,8 @@ const routes: Routes = [
     ChangeOnEditModule,
     AutocompleteOnEditModule,
     EditorModule,
-    SideCanvasModule
+    SideCanvasModule,
+    ViewBoxModule
   ],
   exports: [B2bFlowsManageComponent],
   providers: [B2bFlowService, MappingService, ChangeOnEditComponent, B2bPathService]

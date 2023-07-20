@@ -32,8 +32,9 @@ import { SwitchModule } from 'src/app/utils/switch/switch.module';
 
 import { ProcessFlowNodeComponent } from './process-node/process-node.component';
 import { ProcessNodePropertiesComponent } from './process-node-properties/process-node-properties.component';
-import { PathConditionCreatorComponent } from './path-properties/path-condition-creator/path-condition-creator.component';
-import { PathPropertiesComponent } from './path-properties/path-properties.component';
+import { ProcessPathConditionCreatorComponent } from './process-path-properties/process-path-condition-creator/process-path-condition-creator.component';
+import { ProcessPathPropertiesComponent } from './process-path-properties/process-path-properties.component';
+import { ViewBoxModule } from 'src/app/utils/view-box/view-box.module';
 
 
 const routes: Routes = [
@@ -48,8 +49,9 @@ const routes: Routes = [
     ProcessFlowManageComponent,
     ProcessFlowNodeComponent,
     ProcessNodePropertiesComponent,
-    PathConditionCreatorComponent,
-    PathPropertiesComponent
+    ProcessPathConditionCreatorComponent,
+    ProcessPathPropertiesComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -81,7 +83,8 @@ const routes: Routes = [
     ChangeOnEditModule,
     AutocompleteOnEditModule,
     EditorModule,
-    SideCanvasModule
+    SideCanvasModule,
+    ViewBoxModule
   ]
 })
 export class ProcessFlowManageModule { }

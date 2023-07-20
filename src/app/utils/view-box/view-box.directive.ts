@@ -1,6 +1,4 @@
-import { Directive, ElementRef, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { switchMap, map, takeUntil } from 'rxjs/operators';
+import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 
 @Directive({
   selector: '[odpViewBox]'
