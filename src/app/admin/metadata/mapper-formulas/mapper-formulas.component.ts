@@ -93,6 +93,7 @@ export class MapperFormulasComponent implements OnInit {
       this.fetchAllFormulas();
       this.createFormulaLoader = false;
       this.ts.success('Formula Deleted.');
+      this.selectedFormula = null;
     }, err => {
       this.createFormulaLoader = false;
       this.commonService.errorToast(err);
