@@ -13,6 +13,7 @@ import { MappingService } from '../mapping.service';
 export class FormulaEditorComponent implements OnInit {
 
   @Input() data: any;
+  @Input() edit: any;
   @Output() dataChange: EventEmitter<any>;
   @Output() close: EventEmitter<any>;
   tempData: any;
@@ -30,6 +31,9 @@ export class FormulaEditorComponent implements OnInit {
     this.close = new EventEmitter();
     this.availableMethods = [];
     this.usedFormulas = [];
+    this.edit = {
+      status: false
+    }
   }
 
   ngOnInit(): void {

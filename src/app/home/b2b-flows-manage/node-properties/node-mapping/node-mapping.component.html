@@ -19,12 +19,12 @@
                     <span>Data From Source</span>
                 </div>
             </div>
-            <div *ngIf="mappingType=='custom'" class="d-flex align-items-center justify-content-end">
+            <div *ngIf="mappingType=='custom' && edit.status" class="d-flex align-items-center justify-content-end">
                 <button type="button" class="btn btn-link d-flex align-items-center" (click)="doFuzzyMapping()">
                     <span class="dsi dsi-mapping mr-2"></span>
                     <span>Fuzzy Mappings</span>
                 </button>
-                <button type="button" class="btn btn-link d-flex align-items-center" (click)="doClearMapping()">
+                <button type="button" class="btn btn-link d-flex align-items-center" (click)="doClearMapping()" *ngIf="edit.status">
                     <span class="dsi dsi-ban mr-2"></span>
                     <span>Clear Mappings</span>
                 </button>
@@ -40,7 +40,7 @@
                         <div class="source-list font-12">
                             <ng-container *ngFor="let def of allConstants">
                                 <div class="data-field d-flex align-items-center justify-content-start pl-2"
-                                    draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                                    [draggable]="edit.status" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
                                     <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
                                     <div class="field-type mr-2">
                                         <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
@@ -77,7 +77,7 @@
                                 <ng-container *ngFor="let def of allSources">
                                     <div *ngIf="!isSourceItemCollapsed(def) && def.nodeId == node._id"
                                         class="data-field d-flex align-items-center justify-content-start"
-                                        draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                                        [draggable]="edit.status" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
                                         <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
                                         <div class="toggle-btn d-flex align-items-center justify-content-center">
                                             <span *ngIf="showToggleBtn(def)" class="dsi hover text-muted"
@@ -132,12 +132,12 @@
                                 </a>
                                 <odp-formula-editor *ngIf="def._showFn"
                                     class="function-wrapper position-absolute bg-white border rounded" [data]="def"
-                                    (close)="def._showFn=false"></odp-formula-editor>
+                                    (close)="def._showFn=false" [edit]="edit"></odp-formula-editor>
                                 <div class="mapped-sources d-flex ml-3 text-secondary font-12">
                                     <div *ngFor="let source of def.source"
                                         class="border rounded px-1 mr-1 d-flex align-items-center">
                                         <span>{{source.name}}</span>
-                                        <span (click)="removeSource(def,source)"
+                                        <span (click)="removeSource(def,source)" *ngIf="edit.status"
                                             class="dsi dsi-minus-circle text-danger hover ml-1 font-14"></span>
                                     </div>
                                 </div>

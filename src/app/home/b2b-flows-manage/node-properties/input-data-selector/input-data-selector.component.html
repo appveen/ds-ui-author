@@ -6,10 +6,10 @@
             <span class="text-dark text-truncate" *ngIf="!isCustomBody" [innerHTML]="userSelectedValue"></span>
         </span>
         <div class="d-flex align-items-center justify-content-end">
-            <span *ngIf="data"
+            <span *ngIf="data && edit.status"
                 class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
                 (click)="unsetData()"></span>
-            <span class="icon dsi dsi-settings text-accent hover d-flex align-items-center justify-content-center"
+            <span class="icon dsi dsi-settings text-accent hover d-flex align-items-center justify-content-center" *ngIf="edit.status"
                 (click)="showCustomWindow=true;"></span>
         </div>
     </div>

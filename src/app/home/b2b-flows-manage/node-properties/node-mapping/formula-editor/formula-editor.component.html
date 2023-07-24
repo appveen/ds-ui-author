@@ -10,7 +10,7 @@
         <div class="source-list-wrapper">
             <div class="source-list font-10">
                 <div *ngFor="let item of sourceList"
-                    class="border-bottom p-1 d-flex align-items-center justify-content-start" draggable="true"
+                    class="border-bottom p-1 d-flex align-items-center justify-content-start" [draggable]="edit.status"
                     (drag)="onSourceDrag($event,item)">
                     {{item.name}}
                 </div>
@@ -21,7 +21,7 @@
             <div class="d-flex align-items-center font-12 text-nowrap">
                 <ng-container *ngFor="let item of usedFormulas;let fni=index">
                     <ng-container *ngTemplateOutlet="formula;context:{item:item}"></ng-container>
-                    <span class="dsi dsi-minus-circle text-danger hover ml-1 font-12"
+                    <span *ngIf="edit.status" class="dsi dsi-minus-circle text-danger hover ml-1 font-12"
                         (click)="removeUsedFn(item,fni)"></span>
                 </ng-container>
             </div>
@@ -33,7 +33,7 @@
             </div>
             <div class="suggestion-list font-10">
                 <div *ngFor="let item of availableMethods"
-                    class="border-bottom p-1 d-flex align-items-center justify-content-start" draggable="true"
+                    class="border-bottom p-1 d-flex align-items-center justify-content-start" [draggable]="edit.status"
                     (drag)="onFunctionDrag($event,item)">
                     <div class="d-flex align-items-center">
                         <span class="name text-accent fw-500">{{item.name}}</span>(

@@ -118,7 +118,7 @@
 </ng-template>
 
 
-<div *ngIf="contextMenuStyle" class="available-nodes-dropdown bg-white position-fixed border rounded"
+<div *ngIf="contextMenuStyle && edit.status" class="available-nodes-dropdown bg-white position-fixed border rounded"
     [ngStyle]="contextMenuStyle" odpClickOutside (outside)="contextMenuStyle=null">
     <div class="node-item border-bottom pl-3 pr-2 py-2 d-flex align-items-center justify-content-between hover">
         <div class="d-flex align-items-center">

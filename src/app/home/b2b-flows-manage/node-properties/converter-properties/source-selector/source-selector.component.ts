@@ -15,6 +15,7 @@ export class SourceSelectorComponent {
 
   @Input() currNode: any;
   @Input() source: any;
+  @Input() edit: any;
   @Output() sourceChange: EventEmitter<any>;
   showConverterWindow: boolean;
   sourceList: Array<any>;
@@ -28,6 +29,9 @@ export class SourceSelectorComponent {
     this.showConverterWindow = false;
     this.sourceList = [];
     this.sourceChange = new EventEmitter();
+    this.edit = {
+      status: false
+    }
   }
 
   ngOnInit(): void {

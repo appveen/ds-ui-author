@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment';
 export class ConverterPropertiesComponent implements OnInit {
 
   @Input() flowData: any;
+  @Input() edit: any;
   @Input() data: any;
   @Output() close: EventEmitter<any>;
   showConverterWindow: boolean;
@@ -37,6 +38,9 @@ export class ConverterPropertiesComponent implements OnInit {
     this.reCreatePaths = new EventEmitter();
     this.clearMappings = new EventEmitter();
     this.close = new EventEmitter();
+    this.edit = {
+      status: false
+    }
   }
 
   ngOnInit(): void {

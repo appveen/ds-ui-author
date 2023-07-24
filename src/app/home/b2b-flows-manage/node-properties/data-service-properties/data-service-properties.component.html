@@ -4,7 +4,7 @@
     </label>
     <div *ngIf="isDataServiceSelected" class="border rounded p-2 d-flex align-items-center justify-content-between">
         <span>{{currNode?.options?.dataService?.name}}</span>
-        <span class="dsi dsi-remove text-danger hover" (click)="currNode.options.dataService=null"></span>
+        <span class="dsi dsi-remove text-danger hover" (click)="currNode.options.dataService=null" *ngIf="edit.status"></span>
     </div>
     <odp-service-selector *ngIf="!isDataServiceSelected" [edit]="edit" [(data)]="currNode.options.dataService"
         (dataChange)="selectDataService($event)">
@@ -143,15 +143,15 @@
         <div class="border-bottom font-14 fw-500 mb-3 pb-1">Advanced Settings</div>
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark" for="requestTimeout">Timeout (sec)</label>
-            <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout" (keydown.delete)="$event.stopPropagation();">
+            <input id="requestTimeout" class="form-control" type="number" [(ngModel)]="currNode.options.timeout" (keydown.delete)="$event.stopPropagation();" [readonly]="!edit.status">
         </div>
         <div class="form-group position-relative">
             <label class="font-14 fw-400 text-dark" for="retryCount">Retry Count</label>
-            <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count" (keydown.delete)="$event.stopPropagation();">
+            <input id="retryCount" class="form-control" type="number" [(ngModel)]="currNode.options.retry.count" (keydown.delete)="$event.stopPropagation();" [readonly]="!edit.status">
         </div>
         <div class="form-group position-relative mb-0">
             <label class="font-14 fw-400 text-dark" for="retryInterval">Retry Interval (sec)</label>
-            <input id="retryInterval" class="form-control" type="number" [(ngModel)]="currNode.options.retry.interval" (keydown.delete)="$event.stopPropagation();">
+            <input id="retryInterval" class="form-control" type="number" [(ngModel)]="currNode.options.retry.interval" (keydown.delete)="$event.stopPropagation();" [readonly]="!edit.status">
         </div>
     </div>
 </ng-container>
