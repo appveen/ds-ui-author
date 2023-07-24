@@ -187,7 +187,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
               `/${this.commonService.app._id}/flow/` + id
             );
           } else {
-            request = this.commonService.delete(
+            request = this.commonService.put(
               'partnerManager',
               `/${this.commonService.app._id}/flow/utils/${id}/draftDelete`
             );
