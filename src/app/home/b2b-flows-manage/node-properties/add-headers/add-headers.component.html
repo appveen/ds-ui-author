@@ -4,10 +4,10 @@
         <span class="text-secondary" *ngIf="headerList.length==0">Configure</span>
         <span class="text-dark" *ngIf="headerList.length>0">{{headerList.length}} Headers</span>
         <div class="d-flex align-items-center justify-content-end">
-            <span *ngIf="headerList.length>0"
+            <span *ngIf="headerList.length>0 || edit.status"
                 class="icon dsi dsi-minus-circle text-danger hover d-flex align-items-center justify-content-center"
                 (click)="clearHeaders()"></span>
-            <span class="icon dsi dsi-settings text-accent hover d-flex align-items-center justify-content-center"
+            <span class="icon dsi dsi-settings text-accent hover d-flex align-items-center justify-content-center" *ngIf="edit.status"
                 (click)="showHeader()"></span>
         </div>
     </div>

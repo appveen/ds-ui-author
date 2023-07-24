@@ -37,7 +37,7 @@
             </div>
             <div class="form-group" *ngIf="currNode?.type!='ERROR'">
                 <label class="font-14 fw-400 text-dark" for="nodeType">Node Type</label>
-                <select id="nodeType" class="form-control" [(ngModel)]="currNode.type"
+                <select [disabled]="!edit.status" id="nodeType" class="form-control" [(ngModel)]="currNode.type"
                     (ngModelChange)="onTypeChange($event); changesDone.emit()">
                     <option *ngIf="isInputNode" value="API">API Receiver</option>
                     <option *ngIf="isInputNode" value="TIMER">Timer</option>
@@ -111,7 +111,7 @@
             <ng-container *ngIf="currNode?.type=='API'">
                 <div class="form-group">
                     <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
-                    <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
+                    <select [disabled]="!edit.status" id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
                         (ngModelChange)="changesDone.emit()">
                         <option value="POST" selected>POST</option>
                         <option value="GET">GET</option>
@@ -127,7 +127,7 @@
                 </div>
                 <div class="form-group">
                     <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
-                    <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
+                    <select [disabled]="!edit.status" id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
                         (ngModelChange)="changesDone.emit()">
                         <option value="application/json" selected>application/json</option>
                         <option value="application/xml">application/xml</option>
@@ -172,7 +172,7 @@
             </div>
             <div class="form-group">
                 <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
-                <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
+                <select [disabled]="!edit.status" id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
                     (ngModelChange)="changesDone.emit()">
                     <option value="POST" selected>POST</option>
                     <option value="GET">GET</option>
@@ -203,7 +203,7 @@
             </div>
             <div class="form-group">
                 <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
-                <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
+                <select [disabled]="!edit.status" id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
                     (ngModelChange)="changesDone.emit()">
                     <option value="POST" selected>POST</option>
                     <option value="GET">GET</option>
@@ -432,7 +432,7 @@
                 </div>
                 <div class="form-group">
                     <label class="font-14 fw-400 text-dark" for="nodeHTTPMethod">HTTP Method</label>
-                    <select id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
+                    <select [disabled]="!edit.status" id="nodeHTTPMethod" class="form-control" [(ngModel)]="currNode.options.method"
                         (ngModelChange)="changesDone.emit()">
                         <option value="POST" selected>POST</option>
                         <option value="GET">GET</option>
@@ -452,7 +452,7 @@
                 <label class="font-14 fw-400 text-dark d-flex align-items-center justify-content-between"
                     for="nodeStatusCode">
                     Status Code
-                    <span class="dsi dsi-settings text-primary hover"
+                    <span class="dsi dsi-settings text-primary hover" *ngIf="edit.status"
                         (click)="toggle['statusCode']=!toggle['statusCode']"></span>
                 </label>
                 <odp-node-data-selector [edit]="edit" [(toggle)]="toggle['statusCode']" [currNode]="currNode"
@@ -461,7 +461,7 @@
             </div>
             <div class="form-group position-relative">
                 <label class="font-14 fw-400 text-dark" for="nodeContentType">Content-Type</label>
-                <select id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
+                <select [disabled]="!edit.status" id="nodeContentType" class="form-control" [(ngModel)]="currNode.options.contentType"
                     (ngModelChange)="changesDone.emit()">
                     <option value="application/json" selected>application/json</option>
                     <option value="application/xml">application/xml</option>
@@ -494,7 +494,7 @@
         || currNode.type == 'CONVERT_XML_JSON'
         || currNode.type == 'CONVERT_JSON_CSV'
         || currNode.type == 'CONVERT_CSV_JSON'">
-            <odp-converter-properties [flowData]="flowData" [(data)]="currNode"></odp-converter-properties>
+            <odp-converter-properties [flowData]="flowData" [(data)]="currNode" [edit]="edit"></odp-converter-properties>
         </ng-container>
 
         <ng-container *ngIf="processFlowNode">

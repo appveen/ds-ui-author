@@ -5,7 +5,7 @@
     <input type="text" name="searchTerm" id="searchTerm" maxlength="40" #searchInput [ngModel]="searchTerm"
       (ngModelChange)="onChange($event)" (keyup.enter)="onEnterKey($event)" (keyup.backspace)="onBackspaceKey($event)"
       (keydown.control.backspace)="onCtrlBackspace($event)" (focus)="onFocus($event)" autocomplete="off"
-      (blur)="onBlur($event)" class="form-control" [ngClass]="{'ignore-outside': ignoreOutside}" [class.full-width]="fullWidth" odpAutoFocus>
+      (blur)="onBlur($event)" class="form-control" [ngClass]="{'ignore-outside': ignoreOutside}" [class.full-width]="fullWidth" odpAutoFocus [readonly]="!edit.status">
     <div *ngIf="!searchInput.value" [@slide]="slideState" class="position-absolute text-muted"
       [ngClass]="{'ignore-outside': ignoreOutside}" (click)="searchInput.focus()">
       <span class="fas fa-search mr-2" [ngClass]="{'ignore-outside': ignoreOutside}"

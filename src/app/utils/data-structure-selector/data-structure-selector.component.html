@@ -21,7 +21,7 @@
             </span>
         </div> -->
     </div>
-    <button type="button" class="btn btn-link d-flex align-items-center" (click)="showWindow=!showWindow">
+    <button type="button" class="btn btn-link d-flex align-items-center" (click)="showWindow=!showWindow" *ngIf="edit.status">
         <span class="dsi dsi-settings"></span>
     </button>
 </div>

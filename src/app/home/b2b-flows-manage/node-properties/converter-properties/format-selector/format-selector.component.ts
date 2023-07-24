@@ -11,6 +11,7 @@ import { CommonService, GetOptions } from 'src/app/utils/services/common.service
 })
 export class FormatSelectorComponent {
   @Input() format: any;
+  @Input() edit: any;
   @Output() formatChange: EventEmitter<any>;
   showConverterWindow: boolean;
   formatList: Array<any>;
@@ -28,10 +29,15 @@ export class FormatSelectorComponent {
       sort: 'name'
     };
     this.formatChange = new EventEmitter();
+    this.edit= {
+      status: false
+    }
   }
 
   ngOnInit(): void {
-    this.loadInitial();
+    if(this.edit.status){
+      this.loadInitial()
+    }
   }
 
   loadInitial() {

@@ -19,11 +19,11 @@
         </div>
         <div class="d-flex align-items-center justify-content-end">
             <div class="d-flex align-items-center justify-content-end">
-                <button type="button" class="btn btn-link d-flex align-items-center" (click)="doFuzzyMapping()">
+                <button type="button" class="btn btn-link d-flex align-items-center" (click)="doFuzzyMapping()" *ngIf="edit.status">
                     <span class="dsi dsi-mapping mr-2"></span>
                     <span>Fuzzy Mappings</span>
                 </button>
-                <button type="button" class="btn btn-link d-flex align-items-center" (click)="doClearMapping()">
+                <button type="button" class="btn btn-link d-flex align-items-center" (click)="doClearMapping()" *ngIf="edit.status">
                     <span class="dsi dsi-ban mr-2"></span>
                     <span>Clear Mappings</span>
                 </button>
@@ -39,7 +39,7 @@
                         <div class="source-list font-12">
                             <ng-container *ngFor="let def of allConstants">
                                 <div class="data-field d-flex align-items-center justify-content-start pl-2"
-                                    draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                                   [draggable]="edit.status" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
                                     <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
                                     <div class="field-type mr-2">
                                         <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
@@ -72,16 +72,16 @@
                                 <span class="font-12 fw-500 text-accent mr-2">{{sourceNode.name}}</span>
                                 <!-- <span class="font-16 fw-500 text-dark mx-2">:</span>
                                 <span class="font-12 fw-500 text-accent mr-2">{{sourceFormat.name}}</span> -->
-                                <span class="dsi dsi-trash font-14 fw-500 text-danger hover"
+                                <span class="dsi dsi-trash font-14 fw-500 text-danger hover" *ngIf="edit.status"
                                     (click)="sourceFormat=null;removeSourceNode()"></span>
                             </div>
                         </div>
-                        <odp-source-selector *ngIf="!sourceFormat" [currNode]="data"
+                        <odp-source-selector *ngIf="!sourceFormat" [currNode]="data" [edit]="edit"
                             [(source)]="sourceNode"></odp-source-selector>
                         <div class="source-list" *ngIf="sourceFormat">
                             <ng-container *ngFor="let def of allSources">
                                 <div class="data-field d-flex align-items-center justify-content-start pl-2"
-                                    draggable="true" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
+                                   [draggable]="edit.status" (dragstart)="onDragStart($event,def)" [attr.data-id]="def._id">
                                     <div class="spacer" [ngStyle]="{'width':(def.depth*10)+'px'}"></div>
                                     <div class="field-type mr-2">
                                         <odp-field-type [field]="def" [onMapper]="true"></odp-field-type>
@@ -111,11 +111,11 @@
                         <span class="font-18 fw-500">Target</span>
                         <div class="d-flex align-items-center" *ngIf="targetFormat">
                             <span class="font-12 fw-500 text-accent mr-2">{{targetFormat.name}}</span>
-                            <span class="dsi dsi-trash font-14 fw-500 text-danger hover"
+                            <span class="dsi dsi-trash font-14 fw-500 text-danger hover" *ngIf=""
                                 (click)="targetFormat=null;removeTarget()"></span>
                         </div>
                     </div>
-                    <odp-format-selector *ngIf="!targetFormat" [(format)]="targetFormat"></odp-format-selector>
+                    <odp-format-selector *ngIf="!targetFormat" [(format)]="targetFormat" [edit]="edit"></odp-format-selector>
                     <div *ngIf="targetFormat" class="target-field-list">
                         <div *ngFor="let def of allTargets" class="target-field-list-item position-relative">
                             <div class="data-field d-flex align-items-center justify-content-start"
