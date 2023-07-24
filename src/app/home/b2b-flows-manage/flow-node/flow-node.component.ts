@@ -127,12 +127,14 @@ export class FlowNodeComponent implements OnInit {
     });
   }
 
-  // @HostListener('document:keydown', ['$event'])
-  // onDeleteKey(event: any) {
-  //   if (((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') {
-  //     this.deletePath();
-  //   }
-  // }
+  @HostListener('document:keydown', ['$event'])
+  onDeleteKey(event: any) {
+    if (((event.metaKey || event.ctrlKey) && event.key == 'Backspace') || event.key == 'Delete') {
+      if(this.selectedPath){
+        this.deletePath();
+      }
+    }
+  }
 
   deletePath() {
     let onSuccess = true;
@@ -179,8 +181,8 @@ export class FlowNodeComponent implements OnInit {
     if (!nextNode) {
       return '';
     }
-    let sourceNodeX = (this.currNode.coordinates.x + this.nodeType === 'Decision' ? 100 : 140);
-    let sourceNodeY = (this.currNode.coordinates.y + this.nodeType === 'Decision' ? 100 : 36);
+    let sourceNodeX = (this.currNode.coordinates.x +  140);
+    let sourceNodeY = (this.currNode.coordinates.y +  36);
     let x = (nextNode.coordinates.x - sourceNodeX) / 2 + sourceNodeX;
     let y = (nextNode.coordinates.y - sourceNodeY) / 2 + sourceNodeY;
     return {
