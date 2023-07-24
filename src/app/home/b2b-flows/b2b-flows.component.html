@@ -103,7 +103,7 @@
                                 <!-- <span class="fw-600 font-13 hover mr-3"
                                     *ngIf="item.status !== 'Active' && canStartStopFlow(i)"
                                     (click)="toggleFlowStatus(i)">Start</span> -->
-                                <span class="fw-600 font-13 hover mr-3" *ngIf="canStartStopFlow(i)"
+                                <span class="fw-600 font-13 hover mr-3" *ngIf="canStartStopFlow(i) && item.status != 'Draft'"
                                     (click)="toggleFlowStatus(item)">{{item.status === 'Active' ? 'Stop' :
                                     'Start'}}</span>
                                 <span class="dsi dsi-more-vertical hover mr-3 ignore-outside"
