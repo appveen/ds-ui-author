@@ -32,7 +32,7 @@
                 <div *ngFor="let key of keyList; let usrIndex = index" class="d-flex" [id]="'key' + usrIndex"
                     (click)="showDetails(key)">
                     <div class="selectedTab" [ngStyle]="{
-              background: key._id === selectedKey?._id ? '#ff6f00' : 'none'
+              background: key._id === selectedKey?._id ? '#3B5AAA' : 'none'
             }"></div>
                     <div class="keyList w-100" [ngClass]="{ selected: key._id === selectedKey?._id }">
                         <div class="d-flex flex-column hover p-3">

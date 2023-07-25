@@ -367,7 +367,7 @@ $weights: 200,
 }
 
 .nav-active {
-  color: #181818;
+  color: $primary
 }
 
 // // Custom scrollbar
@@ -742,7 +742,7 @@ $weights: 200,
 /*---- AG-GRID START ----*/
 .ag-theme-balham {
   @include ag-theme-balham((balham-active-color: $primary));
-  font-family: "Inter";
+  font-family: "Manrope";
   font-size: 14px;
 
 
@@ -890,7 +890,7 @@ $weights: 200,
 }
 
 .selected {
-  background: rgba($orange, 0.04);
+  background: $primary95;
 }
 
 .selectedTab {
@@ -899,7 +899,7 @@ $weights: 200,
 }
 
 .icon-primary {
-  color: $orange
+  color: $primary
 }
 
 .btn-delete {

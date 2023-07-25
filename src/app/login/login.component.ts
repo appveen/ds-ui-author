@@ -99,12 +99,12 @@ export class LoginComponent
 
   ngAfterViewInit() {
     const self = this;
-    self.titleService.setTitle('data.stack: Author');
+    self.titleService.setTitle('datanimbus.io: Author');
   }
 
   ngAfterContentChecked() {
     const self = this;
-    self.titleService.setTitle('data.stack: Author');
+    self.titleService.setTitle('datanimbus.io: Author');
   }
 
   onSubmit(event: Event) {

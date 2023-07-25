@@ -45,7 +45,7 @@
           <div *ngFor="let user of userList; let usrIndex = index" class="d-flex" [id]="'user' + usrIndex"
             (click)="showDetails(user)">
             <div class="selectedTab" [ngStyle]="{
-                background: user._id === details?._id ? '#ff6f00' : 'none'
+                background: user._id === details?._id ? '#3B5AAA' : 'none'
               }"></div>
             <div class="userList" style="flex-grow: 1" [ngClass]="{ selected: user._id === details?._id }">
               <div class="d-flex hover">
