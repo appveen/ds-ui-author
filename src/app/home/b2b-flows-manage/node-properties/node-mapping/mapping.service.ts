@@ -64,7 +64,15 @@ export class MappingService {
               list = list.concat(this.flatten(type, item.definition[0].definition, item));
             }
           } else if (item.type == 'Object') {
-            list = list.concat(this.flatten(type, item.definition, item));
+            if(item.properties._typeChanged === 'Relation'){
+              const idDef = item.definition.filter(d => d.key === '_id')[0];
+              idDef.properties['dataPath'] = item.dataPath+'._id';
+              idDef.properties['dataPathSegs'] = [item.dataPath,'_id'];
+              list = list.concat(this.flatten(type, [idDef], item))
+            }
+            else{
+              list = list.concat(this.flatten(type, item.definition, item));
+            }
           }
         });
       };

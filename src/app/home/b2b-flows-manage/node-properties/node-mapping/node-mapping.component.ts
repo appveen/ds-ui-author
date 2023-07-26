@@ -202,12 +202,12 @@ export class NodeMappingComponent implements OnInit {
       if (!def.source) {
         def.source = [];
       }
-      if (temp && def.type != 'Array' && temp.dataPath.indexOf('[#]') == -1 && def.source.length == 0) {
+      if (temp && def.type != 'Array' && temp.dataPath?.indexOf('[#]') == -1 && def.source.length == 0) {
         def.source.push(temp);
       }
     });
     this.allTargets.forEach((def: any) => {
-      if (def.type !== 'Array' && def.dataPath.indexOf('[#]') == -1) {
+      if (def.type !== 'Array' && def.dataPath?.indexOf('[#]') == -1) {
         const fuse = new Fuse(this.allSources.filter(e => e.type != 'Object'), options);
         let result = fuse.search(def.dataPath).filter(e => e.score < 0.3);
         if (!def.source) {
@@ -307,7 +307,15 @@ export class NodeMappingComponent implements OnInit {
               list = list.concat(this.flattenSource(node, def.definition[0].definition, bodyKey, def));
             }
           } else if (def.type == 'Object') {
-            list = list.concat(this.flattenSource(node, def.definition, bodyKey, def));
+            if(def.properties._typeChanged === 'Relation'){
+              const idDef = def.definition.filter(d => d.key === '_id')[0];
+              idDef.properties['dataPath'] = def.dataPath+'._id';
+              idDef.properties['dataPathSegs'] = [def.dataPath,'_id'];
+              list = list.concat(this.flattenSource(node, [idDef], bodyKey, def))
+            }
+            else{
+              list = list.concat(this.flattenSource(node, def.definition, bodyKey, def));
+            }
           }
         });
       };
@@ -394,14 +402,14 @@ export class NodeMappingComponent implements OnInit {
     }
 
     if (def.type == 'Array') {
-      let allTargets = this.allTargets.filter(e => e.dataPath.startsWith(def.dataPath) && e.dataPath != def.dataPath);
+      let allTargets = this.allTargets.filter(e => e.dataPath?.startsWith(def.dataPath) && e.dataPath != def.dataPath);
       if (allTargets && allTargets.length > 0) {
         allTargets.forEach(e => {
           e.hide = true;
         });
       }
-    } else if (def.dataPath.indexOf('[#]') > -1) {
-      let path = def.dataPath.split('[#].')[0];
+    } else if (def.dataPath?.indexOf('[#]') > -1) {
+      let path = def.dataPath?.split('[#].')[0] || '';
       let temp = this.allTargets.find(e => e.dataPath == path);
       if (temp) {
         temp.disabled = true;
@@ -452,10 +460,10 @@ export class NodeMappingComponent implements OnInit {
 
   markAttributesDisabled(def: any) {
     this.allTargets.forEach(item => {
-      if (item.dataPath.startsWith(def.dataPath)) {
+      if (item.dataPath?.startsWith(def.dataPath)) {
         item.hide = false;
       }
-      let targetPath = def.dataPath.split('[#]')[0];
+      let targetPath = def?.dataPath?.split('[#]')[0] || '';
       let matchingTarget = this.allTargets.find(e => e.dataPath == targetPath);
       if (matchingTarget) {
         if (matchingTarget.definition && matchingTarget.definition[0] && matchingTarget.definition[0].definition && matchingTarget.definition[0].definition.every(e => !e.source || e.source.length == 0)) {
@@ -485,10 +493,10 @@ export class NodeMappingComponent implements OnInit {
     if (def.type == 'Object' || def.type == 'Array') {
       return false;
     }
-    let key = def.dataPath.split('[#].')[0];
+    let key = def?.dataPath?.split('[#].')[0] || '';
     flag = this.targetExpandCollapseObjects[key];
     if (!flag) {
-      let segments = def.dataPath.split('.');
+      let segments = def?.dataPath?.split('.') || [];
       let temp = JSON.parse(JSON.stringify(segments));
       segments.forEach((key) => {
         temp.pop();
