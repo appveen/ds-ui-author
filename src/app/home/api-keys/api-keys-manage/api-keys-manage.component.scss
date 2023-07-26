@@ -21,10 +21,10 @@
 
 .tab-list {
     .tab-list-item {
-        border-bottom: 3px solid transparent;
+        border-bottom: 2px solid transparent;
 
         &:hover {
-            border-bottom-color: $secondary;
+            border-bottom-color: $primary;
         }
 
         &.active {

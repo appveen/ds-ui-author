@@ -34,7 +34,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentChecked,
     private appService: AppService,
     private cdr: ChangeDetectorRef) {
     const self = this;
-    self.titleService.setTitle('data.stack: Author');
+    self.titleService.setTitle('datanimbus.io: Author');
     self.subscriptions = {};
   }
 
@@ -63,7 +63,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentChecked,
       if (!self.appService.loginComponent) {
         self.sessionExpired = true;
       }
-      self.titleService.setTitle('Session Expired! - data.stack: Author');
+      self.titleService.setTitle('Session Expired! - datanimbus.io: Author');
     });
     self.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {

@@ -143,7 +143,7 @@
   &::after {
     content: 'days';
     position: absolute;
-    color: $gray-500;
+    color: $gray-60;
     right: 20px;
     top: 6px;
     font-weight: bold;
@@ -337,7 +337,7 @@
 
 .list-hover {
   &:hover {
-    background: rgba($orange, 0.04);
+    background: $primary95;
   }
 }
 
@@ -364,14 +364,14 @@
   &:hover {
     text-decoration: underline;
     text-underline-offset: 10px;
-    text-decoration-color: $orange;
+    text-decoration-color: $primary;
   }
 }
 
 .active {
   text-decoration: underline;
   text-underline-offset: 10px;
-  text-decoration-color: $orange;
+  text-decoration-color: $primary;
   text-decoration-thickness: 2px;
   color: $headings;
 }
@@ -383,7 +383,7 @@
 }
 
 .msg {
-  background: #FF6F00;
+  background: $primary;
   opacity: 0.04;
   border-radius: 0px 0px 6px 6px
 }

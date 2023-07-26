@@ -147,7 +147,7 @@
 
   // On mouse-over, add a grey background color
   &:hover input~.team-selected {
-    background-color: $gray-400;
+    background-color: $gray-70;
   }
 
   // When the checkbox is checked, add a blue background
@@ -289,7 +289,7 @@
   }
 
   &:hover {
-    background: rgba($orange, 0.04);
+    background: $primary95;
   }
 }
 
@@ -325,7 +325,7 @@
   &:hover {
     text-decoration: underline;
     text-underline-offset: 10px;
-    text-decoration-color: $orange;
+    text-decoration-color: $primary;
     text-decoration-thickness: 2px;
 
   }
@@ -334,7 +334,7 @@
 .active {
   text-decoration: underline;
   text-underline-offset: 10px;
-  text-decoration-color: $orange;
+  text-decoration-color: $primary;
   text-decoration-thickness: 2px;
   color: $headings;
 }
@@ -395,7 +395,7 @@
 }
 
 ::ng-deep .ag-theme-balham {
-  font-family: "Inter";
+  font-family: "Manrope";
   font-size: 14px;
 
   .ag-root-wrapper {
