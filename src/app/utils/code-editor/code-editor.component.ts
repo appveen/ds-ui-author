@@ -1,5 +1,5 @@
 /// <reference path="../../../../node_modules/monaco-editor/monaco.d.ts" />
-import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges, ElementRef, SimpleChanges } from '@angular/core';
 import { AppService } from '../services/app.service';
 
 let loadedMonaco = false;
@@ -73,9 +73,12 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (this.codeEditorInstance) {
       this.codeEditorInstance.updateOptions({ fontSize: this.fontSize, theme: this.theme, readOnly: !this.edit.status });
+    }
+    if (changes.code && changes.code.currentValue !== changes.code.previousValue && this.code == undefined ) {
+      this.codeEditorInstance.setValue('');
     }
   }
 
