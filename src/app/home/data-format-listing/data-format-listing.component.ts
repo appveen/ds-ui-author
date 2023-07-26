@@ -107,7 +107,9 @@ export class DataFormatListingComponent implements OnInit, OnDestroy {
     const payload = this.form.value;
     payload.app = this.commonService.app._id;
     payload.definition = this.definition;
-    payload.type = this.dataType;
+    if(this.dataType){
+      payload.type = this.dataType;
+    }
     this.showLazyLoader = true;
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/dataFormat`, payload).subscribe(res => {
       this.ts.success('DataFormat Created.');
