@@ -633,7 +633,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     deleteUsers(users?: Array<any>) {
         const deleteReqArr = (!!users?.length ? users : this.selectedUsers).map(
-            usr => new Promise((resolve, reject) => this.commonService.delete('user', '/admin/user/' + usr._id).subscribe(resolve, reject))
+            usr => new Promise((resolve, reject) => this.commonService.delete('user', '/admin/user/' + usr._id, {noApp: true}).subscribe(resolve, reject))
         );
         this.showSpinner = true;
         Promise.all(deleteReqArr).then(
@@ -642,6 +642,7 @@ export class UserListComponent implements OnInit, OnDestroy {
                 this.agGrid.api.deselectAll();
                 this.agGrid.api.purgeInfiniteCache();
                 this.ts.success(`${deleteReqArr.length > 1 ? 'Users' : 'User'} deleted successfully`)
+                this.agGrid?.api?.refreshInfiniteCache();
                 this.deleteSelectedModalRef.close(true);
             },
             err => {
