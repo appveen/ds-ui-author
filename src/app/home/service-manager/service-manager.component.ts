@@ -209,8 +209,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         this.connectorList = res;
         this.mongoList = res.filter(ele => ele.type === 'MONGODB');
         if (res.length > 0) {
-          this.defaultDC = res.filter(ele => ele.category === 'DB').find(ele => this.checkDefault(ele._id));
-          this.defaultFC = res.filter(ele => ele.category === 'STORAGE').find(ele => this.checkDefault(ele._id));
+          this.defaultDC = res.filter(ele => ele.category === 'DB').find(ele => this.checkDefault(ele._id))?._id || '';
+          this.defaultFC = res.filter(ele => ele.category === 'STORAGE').find(ele => this.checkDefault(ele._id))?._id || '';
         }
         this.appService.connectorsList = res;
       }, err => {
@@ -232,12 +232,12 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.form.reset({ name: this.searchTerm });
     this.form.get('schemaFree').setValue(false);
     this.form.get('connectors').get('data').setValue({
-      _id: this.defaultDC._id
+      _id: this.defaultDC
     })
-      this.fetchTables(this.defaultDC._id)
+      this.fetchTables(this.defaultDC)
 
     this.form.get('connectors').get('file').setValue({
-      _id: this.defaultFC._id
+      _id: this.defaultDC
     })
     this.showNewServiceWindow = true;
   }
@@ -946,10 +946,10 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     }
     else {
       this.form.get('connectors').get('data').setValue({
-        _id: this.defaultDC._id
+        _id: this.defaultDC
       })
       this.form.get('connectors').get('file').setValue({
-        _id: this.defaultFC._id
+        _id: this.defaultDC
       })
     }
   }
