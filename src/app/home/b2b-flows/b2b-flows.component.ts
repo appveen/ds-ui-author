@@ -142,6 +142,9 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
       const index = this.flowList.findIndex(e => e._id === data[0]._id);
       if (index !== -1) {
         this.flowList[index].status = data[0].status;
+        const msg = data[0]._id + ' is now ' + data[0].status;
+       data[0].status === 'Active' ? this.ts.success(msg) : this.ts.error(msg)
+         
       }
     });
     this.subscriptions['flow.new'] = this.commonService.flow.new.subscribe(data => {
