@@ -397,11 +397,12 @@ export class CommonService {
         .get('user', '/data/app/' + app._id)
         .subscribe(
           (res: any) => {
-            self.appData = res;
-            app.logo = res.logo;
-            app.appCenterStyle = res.appCenterStyle;
-            app.description = res.description;
-            app.serviceVersionValidity = res.serviceVersionValidity;
+            const data = res[0];
+            self.appData = data;
+            app.logo = data.logo;
+            app.appCenterStyle = data.appCenterStyle;
+            app.description = data.description;
+            app.serviceVersionValidity = data.serviceVersionValidity;
             if (!app.firstLetter) {
               app.firstLetter = app._id.charAt(0);
             }
