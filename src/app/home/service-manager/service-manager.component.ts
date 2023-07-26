@@ -237,7 +237,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
       this.fetchTables(this.defaultDC)
 
     this.form.get('connectors').get('file').setValue({
-      _id: this.defaultDC
+      _id: this.defaultFC
     })
     this.showNewServiceWindow = true;
   }
@@ -949,7 +949,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         _id: this.defaultDC
       })
       this.form.get('connectors').get('file').setValue({
-        _id: this.defaultDC
+        _id: this.defaultFC
       })
     }
   }
