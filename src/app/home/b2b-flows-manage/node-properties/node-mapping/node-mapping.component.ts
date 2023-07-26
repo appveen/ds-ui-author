@@ -458,7 +458,7 @@ export class NodeMappingComponent implements OnInit {
       let targetPath = def.dataPath.split('[#]')[0];
       let matchingTarget = this.allTargets.find(e => e.dataPath == targetPath);
       if (matchingTarget) {
-        if (matchingTarget.definition && matchingTarget.definition[0] && matchingTarget.definition[0].definition.every(e => !e.source || e.source.length == 0)) {
+        if (matchingTarget.definition && matchingTarget.definition[0] && matchingTarget.definition[0].definition && matchingTarget.definition[0].definition.every(e => !e.source || e.source.length == 0)) {
           matchingTarget.disabled = false;
         }
       }
