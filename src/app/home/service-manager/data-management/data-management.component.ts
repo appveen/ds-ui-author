@@ -61,7 +61,7 @@ export class DataManagementComponent implements OnInit {
     self.showLazyLoader = true;
     self.retainDataHistory = true;
     self.commonService.get('user', '/data/app/' + id, { noApp: true }).subscribe(res => {
-      self.appData = Object.assign(self.appData, res);
+      self.appData = res[0]
       if (!self.appData['connectors']) {
         self.appData['connectors'] = {
           data: {

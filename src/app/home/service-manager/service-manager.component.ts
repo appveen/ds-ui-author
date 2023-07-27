@@ -209,8 +209,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
         this.connectorList = res;
         this.mongoList = res.filter(ele => ele.type === 'MONGODB');
         if (res.length > 0) {
-          this.defaultDC = res.filter(ele => ele.category === 'DB').find(ele => this.checkDefault(ele._id))?._id;
-          this.defaultFC = res.filter(ele => ele.category === 'STORAGE').find(ele => this.checkDefault(ele._id))?._id;
+          this.defaultDC = res.filter(ele => ele.category === 'DB').find(ele => this.checkDefault(ele._id))?._id || '';
+          this.defaultFC = res.filter(ele => ele.category === 'STORAGE').find(ele => this.checkDefault(ele._id))?._id || '';
         }
         this.appService.connectorsList = res;
       }, err => {
@@ -234,7 +234,8 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
     this.form.get('connectors').get('data').setValue({
       _id: this.defaultDC
     })
-    this.fetchTables(this.defaultDC)
+      this.fetchTables(this.defaultDC)
+
     this.form.get('connectors').get('file').setValue({
       _id: this.defaultFC
     })
