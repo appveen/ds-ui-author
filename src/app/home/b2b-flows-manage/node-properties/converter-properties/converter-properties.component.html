@@ -111,7 +111,7 @@
                         <span class="font-18 fw-500">Target</span>
                         <div class="d-flex align-items-center" *ngIf="targetFormat">
                             <span class="font-12 fw-500 text-accent mr-2">{{targetFormat.name}}</span>
-                            <span class="dsi dsi-trash font-14 fw-500 text-danger hover" *ngIf=""
+                            <span class="dsi dsi-trash font-14 fw-500 text-danger hover" *ngIf="edit.status"
                                 (click)="targetFormat=null;removeTarget()"></span>
                         </div>
                     </div>
