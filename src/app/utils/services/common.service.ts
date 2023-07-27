@@ -844,10 +844,15 @@ export class CommonService {
     const self = this;
     const URL = environment.url[type] + url;
     let httpParams = new HttpParams();
-    httpParams = httpParams.set(
-      'filter',
-      JSON.stringify({ app: this.app?._id })
-    );
+    if(data?.noApp){
+     data = {}
+    }
+    else{
+      httpParams = httpParams.set(
+        'filter',
+        JSON.stringify({ app: this.app?._id })
+      );
+    }
     return self.http.request(
       new HttpRequest('DELETE', URL, data, {
         headers: self._getHeaders(false),
