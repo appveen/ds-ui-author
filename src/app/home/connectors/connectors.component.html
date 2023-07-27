@@ -10,7 +10,7 @@
   <div class="options d-flex justify-content-between align-items-center w-100 pt-2 mb-4">
     <div class="fw-600 font-22">Connectors</div>
     <div class="d-flex align-items-center">
-      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+      <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null" [edit]="{status:true}"></odp-search-box>
       <button class="add-new btn btn-primary ml-3 d-flex align-items-center" *ngIf="hasManagePermission('CON')"
         (click)="newConnector()">
         <span class="dsi dsi-plus mr-2"></span>
