@@ -21,7 +21,7 @@
         </ng-container>
         <div class="mr-3">
           <odp-search-box (enteredText)="enterToSelect($event)" (reset)="enterToSelect('reset')" [selectOnEnter]="true"
-            (enteredPressed)="enterToSelect($event)"></odp-search-box>
+            (enteredPressed)="enterToSelect($event)" [edit]="{status:true}"></odp-search-box>
         </div>
         <button *ngIf="hasPermission('PMUBC')" type="button" class="add-new btn btn-white border mr-3"
           routerLink="bulk-import" ngbTooltip="Bulk Import" id="bulkimport">

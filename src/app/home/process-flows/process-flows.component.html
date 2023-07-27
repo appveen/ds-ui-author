@@ -13,7 +13,7 @@
             <span></span>
         </div>
         <div class="d-flex align-items-center">
-            <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null"></odp-search-box>
+            <odp-search-box (enteredText)="searchTerm=$event" (reset)="searchTerm=null" [edit]="{status:true}"></odp-search-box>
             <button type="button" id="data-management" class="btn btn-white d-flex align-items-center border ml-3"
                 [routerLink]="['settings']">
                 <span class="dsi dsi-settings text-secondary"></span>
