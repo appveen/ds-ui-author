@@ -33,14 +33,14 @@ export class ListFlowComponent implements OnInit {
         if (ev > 0) {
           return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, {
             count: ev,
-            select: '_id app name'
+            select: '_id app name',
           });
         } else {
           return of([]);
         }
       })).subscribe((res) => {
         this.showLazyLoader = false;
-        this.dataList = res;
+        this.dataList = res.reverse() || [];
       }, err => {
         this.showLazyLoader = false;
         this.commonService.errorToast(err);

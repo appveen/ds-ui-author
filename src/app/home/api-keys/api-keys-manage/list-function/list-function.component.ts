@@ -40,7 +40,7 @@ export class ListFunctionComponent implements OnInit {
         }
       })).subscribe((res) => {
         this.showLazyLoader = false;
-        this.dataList = res;
+        this.dataList = res.reverse() || [];
       }, err => {
         this.showLazyLoader = false;
         this.commonService.errorToast(err);
