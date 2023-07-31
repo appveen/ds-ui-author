@@ -378,7 +378,10 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
   }
 
   canDeployFlow(flow) {
-    if (!flow.draftVersion) {
+    if(flow.status === 'Draft'){
+      return true;
+    }
+    if (!flow.draftVersion ) {
       return false;
     }
     if (this.commonService.userDetails.isSuperAdmin) {

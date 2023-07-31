@@ -272,11 +272,20 @@ export class B2bFlowsManageComponent implements OnInit, OnDestroy {
   }
 
   discardDraft() {
-    const path = `/${this.commonService.app._id}/flow/utils/${this.edit.id}/draftDelete`;
+    const isNew = !this.flowData.hasOwnProperty('draftVersion');
+    const path = isNew ? `/${this.commonService.app._id}/flow/${this.edit.id}` : `/${this.commonService.app._id}/flow/utils/${this.edit.id}/draftDelete`;
     this.apiCalls.discardDraft = true;
-    this.subscriptions['discardDraft'] = this.commonService.put('partnerManager', path, {}).subscribe(res => {
+    const call = isNew ? this.commonService.delete('partnerManager', path, {}) : this.commonService.put('partnerManager', path, {});
+    this.subscriptions['discardDraft'] = call.subscribe(res => {
       this.apiCalls.discardDraft = false;
-      this.getFlow(this.flowData._id);
+      this.ts.success('Draft Deleted.');
+      if(isNew){
+        this.router.navigate(['/app', this.commonService.app._id, 'flow']);
+      }
+      else{
+        this.getFlow(this.flowData._id);
+      }
+      
     }, err => {
       this.apiCalls.discardDraft = false;
       this.commonService.errorToast(err);
