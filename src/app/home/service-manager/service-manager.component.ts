@@ -407,6 +407,7 @@ export class ServiceManagerComponent implements OnInit, OnDestroy {
 
   triggerClone() {
     const payload = this.cloneForm.value;
+    payload.simpleDate = this.cloneData.simpleDate
     payload.app = this.commonService.app._id;
     if (payload.desTab) {
       payload.definition = this.cloneData.definition;
