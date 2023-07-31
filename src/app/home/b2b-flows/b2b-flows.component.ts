@@ -233,6 +233,7 @@ export class B2bFlowsComponent implements OnInit, OnDestroy {
     if (this.form.get('type').value === 'PLUGIN') {
       payload.inputNode.options.plugin = this.selectedPlugin;
     }
+    payload.skipAuth = true;
     this.commonService.post('partnerManager', `/${this.commonService.app._id}/flow`, payload).subscribe(res => {
       this.showLazyLoader = false;
       this.form.reset({ type: 'API' });
