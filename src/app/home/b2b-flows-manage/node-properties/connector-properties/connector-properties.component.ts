@@ -46,7 +46,7 @@ export class ConnectorPropertiesComponent implements OnInit {
     this.commonService.get('user', `/${this.commonService.app._id}/connector`, {
       sort: 'name',
       select: 'name type category',
-      count: 10,
+      count: 5,
       filter: {
         type: {
           $in: this.typeList

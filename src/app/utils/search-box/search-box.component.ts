@@ -38,7 +38,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     this.enteredPressed = new EventEmitter<string>();
     this.reset = new EventEmitter<string>();
     this.edit= {
-      status: false
+      status: true
     }
   }
   ngOnInit() {
