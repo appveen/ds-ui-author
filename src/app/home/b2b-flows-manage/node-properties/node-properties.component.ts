@@ -80,7 +80,6 @@ export class NodePropertiesComponent implements OnInit {
       }
     });
 
-    this.flowData.skipAuth = true;
     if (this.flowData?.inputNode?.type === 'FILE') {
       this.flowData.inputNode.options['contentType'] = 'multipart/form-data'
     }
