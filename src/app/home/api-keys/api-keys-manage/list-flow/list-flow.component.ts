@@ -33,7 +33,8 @@ export class ListFlowComponent implements OnInit {
         if (ev > 0) {
           return this.commonService.get('partnerManager', `/${this.commonService.app._id}/flow`, {
             count: ev,
-            select: '_id app name'
+            select: '_id app name',
+            sort: '-_metadata.lastUpdated'
           });
         } else {
           return of([]);
